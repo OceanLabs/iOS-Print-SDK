@@ -683,19 +683,22 @@ UIViewControllerPreviewingDelegate>
 
 -(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
-    
     self.editingPrintPhoto.edits = cropper.edits;
     
-    //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
+    [self.collectionView reloadData];
+    
+    //Find the new previewSourceView for the dismiss animation
     for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++){
         if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingPrintPhoto){
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (indexPath){
-                [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-                UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
-                UIView *imageView = [cell viewWithTag:10];
-                imageView.hidden = YES;
-                cropper.previewSourceView = imageView;
+                OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+                if (!cell){
+                    continue;
+                }
+                UIView *containerView = cell.printContainerView;
+                containerView.hidden = YES;
+                cropper.previewSourceView = containerView;
             }
         }
     }
@@ -710,6 +713,12 @@ UIViewControllerPreviewingDelegate>
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
 #endif
+}
+
+- (void)scrollCropViewController:(OLScrollCropViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
+    [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
+    self.editingPrintPhoto = asset;
 }
 
 #pragma mark - Tear down and restore

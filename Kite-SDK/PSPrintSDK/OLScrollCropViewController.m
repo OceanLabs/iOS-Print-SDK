@@ -36,6 +36,8 @@
 #import "OLEditingToolsView.h"
 #import "OLAsset+Private.h"
 #import "OLUserSession.h"
+#import "OLImagePickerViewController.h"
+#import "OLNavigationController.h"
 
 const NSInteger kOLEditDrawerTagTextTools = 11;
 const NSInteger kOLEditDrawerTagColors = 21;
@@ -43,7 +45,7 @@ const NSInteger kOLEditDrawerTagFonts = 31;
 const NSInteger kOLEditDrawerTagImageTools = 10;
 const NSInteger kOLEditDrawerTagImages = 30;
 
-@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate>
+@interface OLScrollCropViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate, OLImagePickerViewControllerDelegate>
 @property (weak, nonatomic) UIButton *doneButton;
 @property (assign, nonatomic) NSInteger initialOrientation;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
@@ -74,6 +76,8 @@ const NSInteger kOLEditDrawerTagImages = 30;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewBottomCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewRightCon;
 @property (weak, nonatomic) IBOutlet UIView *printContainerView;
+
+@property (strong, nonatomic) OLAsset *replacedAsset;
 
 @end
 
@@ -235,17 +239,7 @@ const NSInteger kOLEditDrawerTagImages = 30;
     
     self.drawerView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.5];
     
-    
-    [self.editingTools.ctaButton addTarget:self action:@selector(onBarButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"tools-icon"] forState:UIControlStateNormal];
-    [self.editingTools.button3 setImage:[UIImage imageNamedInKiteBundle:@"Tt"] forState:UIControlStateNormal];
-    [self.editingTools.button2 setImage:[UIImage imageNamedInKiteBundle:@"rotate"] forState:UIControlStateNormal];
-    [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
-    
-    [self.editingTools.button1 addTarget:self action:@selector(onButton1Clicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self.editingTools.button2 addTarget:self action:@selector(onButton2Clicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.editingTools.button3 addTarget:self action:@selector(onButton3Clicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.editingTools.button4 addTarget:self action:@selector(onButton4Clicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self setupButtons];
     
     self.doneButton = self.editingTools.ctaButton;
     self.doneButton.enabled = NO;
@@ -597,6 +591,24 @@ const NSInteger kOLEditDrawerTagImages = 30;
 
 #pragma mark Buttons
 
+- (void)setupButtons{
+    [self.editingTools.ctaButton addTarget:self action:@selector(onBarButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"add-image-icon"] forState:UIControlStateNormal];
+    self.editingTools.button1.tag = kOLEditDrawerTagImages;
+    [self.editingTools.button1 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.editingTools.button2 setImage:[UIImage imageNamedInKiteBundle:@"tools-icon"] forState:UIControlStateNormal];
+    self.editingTools.button2.tag = kOLEditDrawerTagImageTools;
+    [self.editingTools.button2 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.editingTools.button3 setImage:[UIImage imageNamedInKiteBundle:@"Tt"] forState:UIControlStateNormal];
+    [self.editingTools.button3 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
+     [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+}
+
 - (void)onBarButtonDoneTapped:(id)sender {
     self.edits.cropImageRect = [self.cropView getImageRect];
     self.edits.cropImageFrame = [self.cropView getFrameRect];
@@ -616,7 +628,9 @@ const NSInteger kOLEditDrawerTagImages = 30;
         textOnPhoto.fontSize = textField.font.pointSize;
         [self.edits.textsOnPhoto addObject:textOnPhoto];
     }
-    
+    if (self.replacedAsset && [self.delegate respondsToSelector:@selector(scrollCropViewController:didReplaceAssetWithAsset:)]){
+        [self.delegate scrollCropViewController:self didReplaceAssetWithAsset:self.replacedAsset];
+    }
     if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didFinishCroppingImage:)]){
         [self.delegate scrollCropViewController:self didFinishCroppingImage:[self.cropView editedImage]];
     }
@@ -662,20 +676,6 @@ const NSInteger kOLEditDrawerTagImages = 30;
     }
 }
 
-- (void)onButton1Clicked:(UIButton *)sender{
-    sender.tag = kOLEditDrawerTagImageTools;
-    [self onButtonClicked:sender];
-}
-
-- (void)onButton2Clicked:(UIButton *)sender{
-}
-
-- (void)onButton3Clicked:(UIButton *)sender{
-}
-
-- (void)onButton4Clicked:(UIButton *)sender{
-}
-
 - (void)selectButton:(UIButton *)sender{
     switch (sender.tag) {
         case kOLEditDrawerTagTextTools:
@@ -684,6 +684,9 @@ const NSInteger kOLEditDrawerTagImages = 30;
         case kOLEditDrawerTagImageTools:
             self.drawerLabel.text = NSLocalizedString(@"TOOLS", @"");
             break;
+        case kOLEditDrawerTagImages:
+            [self showImagePicker];
+            return;
             
         default:
             break;
@@ -1178,6 +1181,67 @@ const NSInteger kOLEditDrawerTagImages = 30;
 
 - (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper {
     self.doneButton.enabled = YES;
+}
+
+#pragma mark Image Picker
+
+- (void)showImagePicker{
+    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.delegate = self;
+    vc.selectedAssets = [[NSMutableArray alloc] init];
+    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+}
+
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
+    [vc dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    self.replacedAsset = addedAssets.lastObject;
+    if (self.replacedAsset){
+        self.doneButton.enabled = YES;
+        id view = [self.view viewWithTag:1010];
+        if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+            [(UIActivityIndicatorView *)view startAnimating];
+        }
+        
+        for (UITextField *tf in self.textFields){
+            [tf removeFromSuperview];
+        }
+        __weak OLScrollCropViewController *welf = self;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self.replacedAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.cropView setProgress:progress];
+                });
+            } completion:^(UIImage *image){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.fullImage = image;
+                    
+                    self.edits = [self.replacedAsset.edits copy];
+                    NSArray *copy = [[NSArray alloc] initWithArray:self.edits.textsOnPhoto copyItems:NO];
+                    for (OLTextOnPhoto *textOnPhoto in copy){
+                        UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
+                        textField.text = textOnPhoto.text;
+                        textField.transform = textOnPhoto.transform;
+                        textField.textColor = textOnPhoto.color;
+                        textField.font = [OLKiteUtils fontWithName:textOnPhoto.fontName size:textOnPhoto.fontSize];
+                        [self.edits.textsOnPhoto removeObject:textOnPhoto];
+                    }
+                    
+                    [self setupImage];
+                    
+                    id view = [welf.view viewWithTag:1010];
+                    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                        [(UIActivityIndicatorView *)view stopAnimating];
+                    }
+                });
+            }];
+        });
+        
+    }
+    
+    [vc dismissViewControllerAnimated:YES completion:NULL];
 }
 
 @end
