@@ -873,4 +873,10 @@ CGFloat const RESET_DURATION = 0.10f;
     return true;
 }
 
+- (void)setGesturesEnabled:(BOOL)enabled{
+    for (UIGestureRecognizer *gesture in self.gestureRecognizers){
+        gesture.enabled = enabled;
+    }
+}
+
 @end

@@ -253,7 +253,7 @@ const NSInteger kOLEditTagCrop = 40;
         }
         
         self.cropView.clipsToBounds = YES;
-        self.cropView.userInteractionEnabled = NO;
+        [self.cropView setGesturesEnabled:NO];
         [self.view bringSubviewToFront:self.printContainerView];
         [self.view bringSubviewToFront:self.cropView];
         [self.view bringSubviewToFront:self.previewView];
@@ -867,7 +867,7 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)onButtonCropClicked:(UIButton *)sender{
     sender.selected = YES;
     self.cropView.clipsToBounds = NO;
-    self.cropView.userInteractionEnabled = YES;
+    [self.cropView setGesturesEnabled:YES];
     self.printContainerView.hidden = YES;
     [self.view sendSubviewToBack:self.cropView];
     for (UIView *view in self.cropFrameEdges){
@@ -889,7 +889,7 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)exitCropMode{
     self.cropView.clipsToBounds = YES;
-    self.cropView.userInteractionEnabled = NO;
+    [self.cropView setGesturesEnabled:NO];
     self.printContainerView.hidden = NO;
     [self.view bringSubviewToFront:self.cropView];
     for (UIView *view in self.cropFrameEdges){
