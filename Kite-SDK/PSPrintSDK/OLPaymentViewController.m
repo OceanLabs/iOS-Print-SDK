@@ -378,6 +378,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         selectedPaymentMethod = kOLPaymentMethodApplePay;
     }
     [self updateSelectedPaymentMethodView];
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.paymentButton1 setBackgroundColor:[UIColor clearColor]];
+        [self.paymentButton1 setTitleColor:[OLKiteABTesting sharedInstance].lightThemeColor1 forState:UIControlStateNormal];
+        self.paymentButton1.layer.cornerRadius = 2;
+        self.paymentButton1.layer.borderColor = [OLKiteABTesting sharedInstance].lightThemeColor1.CGColor;
+        self.paymentButton1.layer.borderWidth = 1;
+        
+        [self.paymentButton2 setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
