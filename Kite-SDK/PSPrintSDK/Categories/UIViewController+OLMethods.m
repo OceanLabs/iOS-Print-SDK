@@ -80,7 +80,12 @@
         qtyLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)count];
         qtyLabel.minimumScaleFactor = 0.5;
         qtyLabel.adjustsFontSizeToFitWidth = YES;
-        qtyLabel.backgroundColor = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
+        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+            qtyLabel.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+        }
+        else{
+            qtyLabel.backgroundColor = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
+        }
         [qtyLabel makeRoundRectWithRadius:6.5];
         
         [basketButton addSubview:qtyLabel];

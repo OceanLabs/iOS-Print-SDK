@@ -748,6 +748,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
         
+        if (!unitCost){
+            return;
+        }
+        
         expectedCost = [expectedCost decimalNumberByAdding:[unitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)([job extraCopies] + 1)*[numUnitsInJob integerValue]]]]];
     }
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){

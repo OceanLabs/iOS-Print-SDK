@@ -211,6 +211,10 @@ static BOOL hasMoved;
     self.ctaButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.ctaButton.titleLabel.minimumScaleFactor = 0.5;
     
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    
     self.title = NSLocalizedStringFromTableInBundle(@"Reposition the Photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     
     if (self.imageCropView){
@@ -658,6 +662,9 @@ static BOOL hasMoved;
     
     else {
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"moreCell" forIndexPath:indexPath];
+        if ([OLKiteABTesting sharedInstance].lightThemeColor2){
+            [cell.contentView setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
+        }
         return cell;
     }
     

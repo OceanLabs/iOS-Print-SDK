@@ -77,6 +77,10 @@
 		2E5D95AC1CA984E00080EF07 /* OLUpsellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */; };
 		2E5D95AD1CA984E00080EF07 /* OLUpsellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */; };
 		2E5D95AE1CA984E00080EF07 /* OLUpsellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */; };
+		2E6131EF1D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */; };
+		2E6131F01D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */; };
+		2E6131F11D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */; };
+		2E6131F21D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */; };
 		2E645B351BE7D16E009B662B /* OLProductDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */; };
 		2E645B361BE7D170009B662B /* OLProductDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */; };
 		2E645B371BE7D173009B662B /* OLProductOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11541BD7C716000BC80E /* OLProductOptionsViewController.m */; };
@@ -892,6 +896,8 @@
 		2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentLineItem.m; sourceTree = "<group>"; };
 		2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLIntegratedCheckoutViewController.h; sourceTree = "<group>"; };
 		2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLIntegratedCheckoutViewController.m; sourceTree = "<group>"; };
+		2E6131ED1D5DD3C800BEFCC2 /* UIColor+OLHexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+OLHexString.h"; sourceTree = "<group>"; };
+		2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+OLHexString.m"; sourceTree = "<group>"; };
 		2E6561101D1C341A0092001C /* OLSelectedEffectButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSelectedEffectButton.h; sourceTree = "<group>"; };
 		2E6561111D1C341A0092001C /* OLSelectedEffectButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSelectedEffectButton.m; sourceTree = "<group>"; };
 		2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPopupOptionsImageView.h; sourceTree = "<group>"; };
@@ -1793,6 +1799,8 @@
 				3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */,
 				3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */,
 				3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */,
+				2E6131ED1D5DD3C800BEFCC2 /* UIColor+OLHexString.h */,
+				2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */,
 				3DEF0D161A964881000F1E66 /* NSString+Formatting.h */,
 				3DEF0D171A964881000F1E66 /* NSString+Formatting.m */,
 				3D8122EF1A75A46D004E7297 /* UIImageView+FadeIn.h */,
@@ -3038,6 +3046,7 @@
 				2E898CA21CC518180041CCD8 /* OLImageCachingManager.m in Sources */,
 				2E898CA31CC518180041CCD8 /* AssetDataSource.m in Sources */,
 				2E898CA41CC518180041CCD8 /* UIView+RoundRect.m in Sources */,
+				2E6131F01D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */,
 				2E898CA51CC518180041CCD8 /* OLCountry.m in Sources */,
 				2E2BF4481CCDFAF100725561 /* OLKiteTheme.m in Sources */,
 				2E898CA71CC518180041CCD8 /* ALAssetsLibrary+Singleton.m in Sources */,
@@ -3134,6 +3143,7 @@
 				2EA3D3841C9C04B500B99BCD /* OLPrintOrderCost.m in Sources */,
 				2EA3D3851C9C04B500B99BCD /* OLEditPhotobookViewController.m in Sources */,
 				2EA3D3861C9C04B500B99BCD /* UIView+RMUtils.m in Sources */,
+				2E6131F21D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */,
 				2EA3D3871C9C04B500B99BCD /* OLPrintOrder+History.m in Sources */,
 				2EA3D3881C9C04B500B99BCD /* OLStripeCard.m in Sources */,
 				2EA3D3891C9C04B500B99BCD /* OLAsset.m in Sources */,
@@ -3370,6 +3380,7 @@
 				2EADD84A1BE79D6D0051CD31 /* OLPhotobookPrintJob.m in Sources */,
 				2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 				2EADD84B1BE79D6D0051CD31 /* OLPaymentLineItem.m in Sources */,
+				2E6131EF1D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */,
 				2EADD84C1BE79D6D0051CD31 /* OLPrintJob.m in Sources */,
 				2EAB0ADB1CDB504E00625BD6 /* ALAsset+OLAccessibilityLabel.m in Sources */,
 			);
@@ -3493,6 +3504,7 @@
 				E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */,
 				E29C85901BE3B5C50041D4CF /* OLInfoPageViewController.m in Sources */,
 				2EAB0AC91CDB504C00625BD6 /* OLAssetsViewControllerTransition.m in Sources */,
+				2E6131F11D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */,
 				E29C85911BE3B5C50041D4CF /* OLIntegratedCheckoutViewController.m in Sources */,
 				E29C85921BE3B5C50041D4CF /* OLProductGroup.m in Sources */,
 				2E96BAC11D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,

@@ -41,6 +41,11 @@ static NSString *const kOLKiteThemeReceiptSuccessBg = @"themeReceiptSuccessBg";
 static NSString *const kOLKiteThemeReceiptFailureBg = @"themeReceiptFailureBg";
 static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 
+static NSString *const kOLKiteLightThemeColor1 = @"ly.kite.theme.light.color.1";
+static NSString *const kOLKiteLightThemeColor2 = @"ly.kite.theme.light.color.2";
+static NSString *const kOLKiteLightThemeColor3 = @"ly.kite.theme.light.color.3";
+static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
+
 @interface OLKiteABTesting : NSObject
 
 @property (assign, nonatomic) BOOL launchedWithPrintOrder;
@@ -49,6 +54,7 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 @property (assign, nonatomic, readonly) BOOL requirePhoneNumber;
 @property (assign, nonatomic, readonly) BOOL hidePrice;
 @property (assign, nonatomic, readonly) BOOL offerPayPal;
+@property (assign, nonatomic, readonly) BOOL skipProductOverview;
 @property (strong, nonatomic, readonly) NSString *qualityBannerType;
 @property (strong, nonatomic, readonly) NSString *checkoutScreenType;
 @property (strong, nonatomic, readonly) NSString *productTileStyle;
@@ -64,6 +70,10 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 @property (strong, nonatomic, readonly) NSString *receiptSuccessBgURL;
 @property (strong, nonatomic, readonly) NSString *receiptFailureBgURL;
 @property (strong, nonatomic, readonly) NSString *supportEmail;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColor1;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColor2;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColor3;
+- (UIFont *)lightThemeFont1WithSize:(CGFloat)size;
 
 @property (strong, nonatomic) NSDictionary *userConfig;
 @property (strong, nonatomic) OLKiteTheme *theme;

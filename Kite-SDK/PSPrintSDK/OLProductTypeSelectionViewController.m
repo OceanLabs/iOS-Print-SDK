@@ -229,6 +229,10 @@
             identifier = @"OLTypeSelectionViewController";
         }
     }
+    else if ([OLKiteABTesting sharedInstance].skipProductOverview && ![OLKiteABTesting sharedInstance].launchedWithPrintOrder && product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
+        identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]];
+    }
+    
     if (!identifier){
         identifier = @"OLProductOverviewViewController";
     }
@@ -316,6 +320,13 @@
     
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
         textView.backgroundColor = [product labelColor];
+    }
+    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"MinimalWhite"]){
+        UILabel *priceLabel = [cell.contentView viewWithTag:301];
+        UILabel *detailsLabel = [cell.contentView viewWithTag:302];
+        
+        priceLabel.text = [product unitCost];
+        detailsLabel.text = [product.productTemplate shortDescription];
     }
     else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];

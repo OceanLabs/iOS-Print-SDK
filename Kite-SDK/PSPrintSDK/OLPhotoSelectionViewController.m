@@ -215,6 +215,13 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     self.addPhotosHintView.layer.shadowOffset = CGSizeMake(5, 5);
     self.addPhotosHintView.layer.shadowRadius = 5;
     self.addPhotosHintView.layer.shadowOpacity = 0.3;
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.buttonNext setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    if ([OLKiteABTesting sharedInstance].lightThemeColor2){
+        [self.addPhotosButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
+    }
 }
 
 - (void)viewDidLayoutSubviews{

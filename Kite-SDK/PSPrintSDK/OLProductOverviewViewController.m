@@ -93,6 +93,9 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsViewHeightCon;
 @property (weak, nonatomic) IBOutlet UIView *detailsSeparator;
 @property (assign, nonatomic) CGFloat originalBoxConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *separatorHeightCon;
+@property (weak, nonatomic) IBOutlet UIImageView *whiteGradient;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *whiteGradientTopCon;
 
 @property (strong, nonatomic) OLProductDetailsViewController *productDetails;
 
@@ -171,6 +174,11 @@
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
         [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+    }
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.callToActionButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+        [self.detailsSeparator setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
     
 //    if ([OLKiteABTesting sharedInstance].darkTheme && [OLKiteABTesting sharedInstance].darkThemeColor1){

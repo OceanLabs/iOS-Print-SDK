@@ -76,6 +76,7 @@ static CGFloat fadeTime = 0.3;
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
 @property (strong, nonatomic) NSBlockOperation *templateSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *remotePlistSyncOperation;
+@property (strong, nonatomic) NSBlockOperation *remotePlistFetchOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
 
 @end
@@ -238,8 +239,11 @@ static CGFloat fadeTime = 0.3;
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
     self.transitionOperation = [[NSBlockOperation alloc] init];
+    self.remotePlistFetchOperation = [[NSBlockOperation alloc] init];
+
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
+    [self.remotePlistFetchOperation addDependency:self.templateSyncOperation];
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
@@ -260,18 +264,22 @@ static CGFloat fadeTime = 0.3;
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
     }
     else{
-        [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
-            [self.operationQueue addOperation:self.remotePlistSyncOperation];
-            
+        __weak OLKiteViewController *welf = self;
+        [self.remotePlistFetchOperation addExecutionBlock:^(){
+            [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
+                [welf.operationQueue addOperation:welf.remotePlistSyncOperation];
+                
 #ifndef OL_NO_ANALYTICS
-            if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-                [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
-            }
-            else{
-                [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
-            }
+                if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+                    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
+                }
+                else{
+                    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
+                }
 #endif
+            }];
         }];
+        [self.operationQueue addOperation:self.remotePlistFetchOperation];
         [OLProductTemplate sync];
     }
     
