@@ -388,6 +388,11 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         [self.paymentButton2 setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.paymentButton1.titleLabel setFont:font];
+        [self.paymentButton2.titleLabel setFont:font];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
