@@ -222,6 +222,11 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     if ([OLKiteABTesting sharedInstance].lightThemeColor2){
         [self.addPhotosButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
     }
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.buttonNext.titleLabel setFont:font];
+    }
 }
 
 - (void)viewDidLayoutSubviews{

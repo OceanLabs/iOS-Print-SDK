@@ -214,6 +214,10 @@ static BOOL hasMoved;
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.ctaButton.titleLabel setFont:font];
+    }
     
     self.title = NSLocalizedStringFromTableInBundle(@"Reposition the Photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     

@@ -158,6 +158,10 @@ UIViewControllerPreviewingDelegate>
     }
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.nextButton.titleLabel setFont:font];
+    }
     [self.collectionView addSubview:self.nextButton];
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){

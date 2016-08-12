@@ -649,6 +649,11 @@
     
     productTypeLabel.text = product.productTemplate.templateClass;
     
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        productTypeLabel.font = font;
+    }
+    
     UIActivityIndicatorView *activityIndicator = (id)[cell.contentView viewWithTag:41];
     [activityIndicator startAnimating];
     

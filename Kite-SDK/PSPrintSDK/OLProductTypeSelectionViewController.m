@@ -305,6 +305,10 @@
     [product setCoverImageToImageView:imageView];
     
     UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        textView.font = font;
+    }
     
     if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
         if (product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
@@ -327,10 +331,21 @@
         
         priceLabel.text = [product unitCost];
         detailsLabel.text = [product.productTemplate shortDescription];
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            priceLabel.font = font;
+            detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
+        }
     }
     else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
         button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            [button.titleLabel setFont:font];
+        }
     }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
@@ -341,6 +356,11 @@
         
         button.backgroundColor = [product labelColor];
         [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            [button.titleLabel setFont:font];
+        }
     }
     
     return cell;

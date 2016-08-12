@@ -3868,7 +3868,7 @@ to rearrange the photos</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="details-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="bMp-Op-YBx">
-                                                <rect key="frame" x="75" y="20" width="8" height="5"/>
+                                                <rect key="frame" x="296" y="20" width="8" height="5"/>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -3879,12 +3879,18 @@ to rearrange the photos</string>
                                             <constraint firstItem="CCQ-J9-y3B" firstAttribute="centerY" secondItem="kWa-iF-wa4" secondAttribute="centerY" id="476-Gd-iny"/>
                                             <constraint firstItem="yP4-uo-deY" firstAttribute="leading" secondItem="kWa-iF-wa4" secondAttribute="leading" constant="10" id="7qS-RO-ytT"/>
                                             <constraint firstItem="X4d-8D-TEz" firstAttribute="centerY" secondItem="kWa-iF-wa4" secondAttribute="centerY" id="DaF-gt-iKh"/>
+                                            <constraint firstItem="bMp-Op-YBx" firstAttribute="centerX" secondItem="kWa-iF-wa4" secondAttribute="centerX" id="aSG-r9-WPM"/>
                                             <constraint firstAttribute="bottom" secondItem="yP4-uo-deY" secondAttribute="bottom" id="lHs-h9-O4E"/>
                                             <constraint firstAttribute="trailing" secondItem="yP4-uo-deY" secondAttribute="trailing" constant="10" id="lk7-yc-dJk"/>
                                             <constraint firstAttribute="height" constant="45" id="oMz-k2-vla"/>
                                             <constraint firstItem="CCQ-J9-y3B" firstAttribute="leading" secondItem="kWa-iF-wa4" secondAttribute="leading" constant="20" id="wMg-fc-yVk"/>
                                             <constraint firstItem="bMp-Op-YBx" firstAttribute="centerY" secondItem="CCQ-J9-y3B" secondAttribute="centerY" id="yl3-x9-JqE"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="0du-0d-KNc"/>
+                                            </mask>
+                                        </variation>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="sUf-49-msX" appends="YES" id="jay-V7-GW4"/>
                                         </connections>
