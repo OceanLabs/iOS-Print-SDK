@@ -255,6 +255,15 @@ UITableViewDataSource, UITextFieldDelegate>
                                                                                  action:@selector(onButtonPayClicked)];
     }
     
+    UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
+    if (color1){
+        self.navigationItem.rightBarButtonItem.tintColor = color1;
+    }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.navigationItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName : font} forState:UIControlStateNormal];
+    }
+    
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
