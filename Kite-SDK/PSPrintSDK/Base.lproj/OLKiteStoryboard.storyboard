@@ -2825,10 +2825,10 @@ some images!</string>
                                             <rect key="frame" x="139" y="122" width="20" height="20"/>
                                         </activityIndicatorView>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="40" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SJo-JT-deP">
-                                            <rect key="frame" x="9" y="9" width="281" height="193"/>
+                                            <rect key="frame" x="9" y="9" width="281" height="214.5"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="300" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zY2-nf-cFp">
-                                            <rect key="frame" x="18" y="212" width="45" height="20.5"/>
+                                            <rect key="frame" x="18" y="233.5" width="45" height="20.5"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="170" id="l0r-Zu-48I"/>
                                                 <constraint firstAttribute="height" constant="35" id="l3f-KQ-4fG"/>
@@ -2844,13 +2844,7 @@ some images!</string>
                                             </variation>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="301" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NTv-v4-WNd">
-                                            <rect key="frame" x="239" y="212" width="42" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.50588235294117645" green="0.51764705882352935" blue="0.52941176470588236" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="302" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem Ipsum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kn8-hk-AIx">
-                                            <rect key="frame" x="18" y="235" width="99.5" height="21"/>
+                                            <rect key="frame" x="239" y="233.5" width="42" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.50588235294117645" green="0.51764705882352935" blue="0.52941176470588236" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
@@ -2863,17 +2857,15 @@ some images!</string>
                                     <constraint firstAttribute="trailing" secondItem="zY2-nf-cFp" secondAttribute="trailing" id="Abf-He-aQR"/>
                                     <constraint firstItem="NTv-v4-WNd" firstAttribute="trailing" secondItem="SJo-JT-deP" secondAttribute="trailing" constant="-9" id="EJH-Vd-3fy"/>
                                     <constraint firstItem="SJo-JT-deP" firstAttribute="leading" secondItem="1rh-NX-m8g" secondAttribute="leading" constant="9" id="EcW-Fc-9nA"/>
-                                    <constraint firstItem="Kn8-hk-AIx" firstAttribute="leading" secondItem="zY2-nf-cFp" secondAttribute="leading" id="HCC-zJ-FMb"/>
                                     <constraint firstItem="zY2-nf-cFp" firstAttribute="leading" secondItem="SJo-JT-deP" secondAttribute="leading" constant="9" id="J8G-pO-Bx6"/>
                                     <constraint firstItem="NTv-v4-WNd" firstAttribute="centerY" secondItem="zY2-nf-cFp" secondAttribute="centerY" id="KqU-YP-9H2"/>
                                     <constraint firstAttribute="trailing" secondItem="SJo-JT-deP" secondAttribute="trailing" constant="9" id="Q05-1X-KLe"/>
                                     <constraint firstAttribute="centerX" secondItem="uzz-5q-GdV" secondAttribute="centerX" constant="0.5" id="QSu-8A-0Tw"/>
-                                    <constraint firstAttribute="bottom" secondItem="SJo-JT-deP" secondAttribute="bottom" constant="62" id="Rwy-F7-Uaf"/>
                                     <constraint firstItem="NTv-v4-WNd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="zY2-nf-cFp" secondAttribute="trailing" constant="5" id="UAe-Jn-jUm"/>
                                     <constraint firstItem="zY2-nf-cFp" firstAttribute="top" secondItem="SJo-JT-deP" secondAttribute="bottom" constant="10" id="Unp-cD-nbF"/>
                                     <constraint firstItem="SJo-JT-deP" firstAttribute="top" secondItem="1rh-NX-m8g" secondAttribute="top" constant="9" id="aer-YW-XCM"/>
-                                    <constraint firstItem="Kn8-hk-AIx" firstAttribute="top" secondItem="zY2-nf-cFp" secondAttribute="bottom" constant="2.5" id="ge9-4l-7Zd"/>
                                     <constraint firstAttribute="centerY" secondItem="uzz-5q-GdV" secondAttribute="centerY" id="s0G-ZB-mGv"/>
+                                    <constraint firstAttribute="bottom" secondItem="zY2-nf-cFp" secondAttribute="bottom" constant="10" id="zBe-fP-isJ"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">

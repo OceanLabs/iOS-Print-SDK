@@ -44,6 +44,7 @@
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
 #import "OLKiteUtils.h"
+#import "OLImageDownloader.h"
 
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
@@ -341,7 +342,17 @@ static CGFloat fadeTime = 0.3;
                     [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
                     if (self.navigationController.viewControllers.count <= 1){
                         UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+                        
+                        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+                        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+                            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+                                if (error) return;
+                                ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                            }];
+                        }
+                        else{
                         ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                        }
                         [welf fadeToViewController:nvc];
                     }
                     else{
@@ -360,7 +371,16 @@ static CGFloat fadeTime = 0.3;
             [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:welf.userSelectedPhotos];
             if (self.navigationController.viewControllers.count <= 1){
                 UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+                if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+                    [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+                        if (error) return;
+                        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                    }];
+                }
+                else{
+                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                }
                 [welf fadeToViewController:nvc];
             }
             else{
@@ -387,7 +407,16 @@ static CGFloat fadeTime = 0.3;
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
         if (self.navigationController.viewControllers.count <= 1){
             UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-            vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+            NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+            if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+                [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+                    if (error) return;
+                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                }];
+            }
+            else{
+                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+            }
             [welf fadeToViewController:nvc];
         }
         else{

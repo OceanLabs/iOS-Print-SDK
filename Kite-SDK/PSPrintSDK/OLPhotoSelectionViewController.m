@@ -186,6 +186,11 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
+    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
 #endif

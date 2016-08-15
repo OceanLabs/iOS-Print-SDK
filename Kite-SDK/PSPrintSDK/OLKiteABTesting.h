@@ -39,6 +39,7 @@ static NSString *const kOLKiteThemeReceiptSuccess = @"themeReceiptSuccess";
 static NSString *const kOLKiteThemeReceiptFailure = @"themeReceiptFailure";
 static NSString *const kOLKiteThemeReceiptSuccessBg = @"themeReceiptSuccessBg";
 static NSString *const kOLKiteThemeReceiptFailureBg = @"themeReceiptFailureBg";
+static NSString *const kOLKiteThemeCancelButtonIcon = @"themeCancelButtonIcon";
 static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 
 static NSString *const kOLKiteLightThemeColor1 = @"ly.kite.theme.light.color.1";
@@ -69,11 +70,13 @@ static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 @property (strong, nonatomic, readonly) NSString *receiptFailureURL;
 @property (strong, nonatomic, readonly) NSString *receiptSuccessBgURL;
 @property (strong, nonatomic, readonly) NSString *receiptFailureBgURL;
+@property (strong, nonatomic, readonly) NSString *cancelButtonIconURL;
 @property (strong, nonatomic, readonly) NSString *supportEmail;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor1;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor2;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor3;
 - (UIFont *)lightThemeFont1WithSize:(CGFloat)size;
+- (NSString *)backButtonText;
 
 @property (strong, nonatomic) NSDictionary *userConfig;
 @property (strong, nonatomic) OLKiteTheme *theme;

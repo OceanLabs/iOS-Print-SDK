@@ -50,6 +50,7 @@ static NSString *const kOLKiteABTestPaymentScreen = @"ly.kite.abtest.payment_scr
 static NSString *const kOLKiteABTestCoverPhotoVariants = @"ly.kite.abtest.cover_photo_variants";
 
 static NSString *const kOLKiteABTestSkipProductOverview = @"ly.kite.abtest.skip_product_overview";
+static NSString *const kOLKiteABTestMinimalNavigationBar = @"ly.kite.abtest.minimal_navigationbar";
 
 id safeObject(id obj){
     return obj ? obj : @"";
@@ -61,6 +62,7 @@ static dispatch_once_t srand48OnceToken;
 
 @property (assign, nonatomic, readwrite) BOOL offerAddressSearch;
 @property (assign, nonatomic, readwrite) BOOL skipProductOverview;
+@property (assign, nonatomic) BOOL minimalNavigationBar;
 @property (assign, nonatomic, readwrite) BOOL requirePhoneNumber;
 @property (assign, nonatomic, readwrite) BOOL hidePrice;
 @property (assign, nonatomic, readwrite) BOOL offerPayPal;
@@ -145,6 +147,12 @@ static dispatch_once_t srand48OnceToken;
     }
     [defaults setObject:s forKey:kOLKiteThemeReceiptFailureBg];
     
+    s = userConfig[kOLKiteThemeCancelButtonIcon];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/x.png", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeCancelButtonIcon];
+    
     s = userConfig[kOLKiteThemeSupportEmail];
     if (!s && user){
         s = [NSString stringWithFormat:@"appsupport@%@.com", user];
@@ -168,7 +176,7 @@ static dispatch_once_t srand48OnceToken;
 
 - (void)prefetchRemoteImages{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg]){
+    for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg, kOLKiteThemeCancelButtonIcon]){
         NSURL *url = [NSURL URLWithString:[defaults objectForKey:s]];
         if (url){
             [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
@@ -187,6 +195,10 @@ static dispatch_once_t srand48OnceToken;
     }
     
     return _promoBannerText;
+}
+
+- (NSString *)backButtonText{
+    return self.minimalNavigationBar ? @"" : NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
 }
 
 - (NSString *)headerLogoURL{
@@ -212,6 +224,11 @@ static dispatch_once_t srand48OnceToken;
 - (NSString *)receiptFailureBgURL{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults objectForKey:kOLKiteThemeReceiptFailureBg];
+}
+
+- (NSString *)cancelButtonIconURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeCancelButtonIcon];
 }
 
 - (NSString *)supportEmail{
@@ -453,6 +470,21 @@ static dispatch_once_t srand48OnceToken;
                                          }];
 }
 
+- (void)setupMinimalNavigationBarTest{
+    self.minimalNavigationBar = NO;
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestMinimalNavigationBar];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0, @"No" : @1};
+    }
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestMinimalNavigationBar
+                            conditions:@{
+                                         @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                         @"No" : safeObject(experimentDict[@"No"])
+                                         } block:^(id choice) {
+                                             self.minimalNavigationBar = [choice isEqualToString:@"Yes"];
+                                         }];
+}
+
 - (void)setupOfferAddressSearchTest{
     self.offerAddressSearch = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
@@ -595,6 +627,7 @@ static dispatch_once_t srand48OnceToken;
     [self setupShowProductDescriptionScreenBeforeShippingTest];
     [self setupHidePriceTest];
     [self setupSkipProductOverviewTest];
+    [self setupMinimalNavigationBarTest];
     [self groupSetupShippingScreenTests];
 }
 
