@@ -45,6 +45,7 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 static NSString *const kOLKiteLightThemeColor1 = @"ly.kite.theme.light.color.1";
 static NSString *const kOLKiteLightThemeColor2 = @"ly.kite.theme.light.color.2";
 static NSString *const kOLKiteLightThemeColor3 = @"ly.kite.theme.light.color.3";
+static NSString *const kOLKiteLightThemeTitleColor1 = @"ly.kite.theme.light.titleColor.1";
 static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 
 @interface OLKiteABTesting : NSObject
@@ -75,6 +76,7 @@ static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor1;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor2;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor3;
+@property (strong, nonatomic, readonly) UIColor *lightThemeTitleColor1;
 - (UIFont *)lightThemeFont1WithSize:(CGFloat)size;
 - (NSString *)backButtonText;
 

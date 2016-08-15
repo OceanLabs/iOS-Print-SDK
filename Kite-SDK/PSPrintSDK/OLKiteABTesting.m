@@ -266,6 +266,16 @@ static dispatch_once_t srand48OnceToken;
     return color;
 }
 
+- (UIColor *)lightThemeTitleColor1{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:kOLKiteLightThemeTitleColor1];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    return color;
+}
+
 - (UIFont *)lightThemeFont1WithSize:(CGFloat)size{
     UIFont *font;
     
@@ -295,6 +305,7 @@ static dispatch_once_t srand48OnceToken;
     [defaults removeObjectForKey:kOLKiteLightThemeColor1];
     [defaults removeObjectForKey:kOLKiteLightThemeColor2];
     [defaults removeObjectForKey:kOLKiteLightThemeColor3];
+    [defaults removeObjectForKey:kOLKiteLightThemeTitleColor1];
     
     [defaults synchronize];
 }
