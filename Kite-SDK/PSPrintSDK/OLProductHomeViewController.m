@@ -100,7 +100,7 @@
     [OLAnalytics trackProductSelectionScreenViewed];
 #endif
 
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
@@ -648,6 +648,11 @@
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     
     productTypeLabel.text = product.productTemplate.templateClass;
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        productTypeLabel.font = font;
+    }
     
     UIActivityIndicatorView *activityIndicator = (id)[cell.contentView viewWithTag:41];
     [activityIndicator startAnimating];

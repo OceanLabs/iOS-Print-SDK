@@ -79,9 +79,25 @@ static const NSInteger kRowAddAddressManually = 0;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
+    
     self.tableView.allowsMultipleSelection = self.allowMultipleSelection;
     self.allowMultipleSelection = _allowMultipleSelection;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrinSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
+    
+    UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
+    if (color1){
+        self.navigationItem.rightBarButtonItem.tintColor = color1;
+    }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.navigationItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName : font} forState:UIControlStateNormal];
+    }
+    
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }

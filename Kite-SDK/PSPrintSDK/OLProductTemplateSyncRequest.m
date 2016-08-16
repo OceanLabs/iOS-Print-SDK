@@ -226,6 +226,7 @@
                                 UIEdgeInsets imageBleed = UIEdgeInsetsZero;
                                 UIEdgeInsets imageBorder = UIEdgeInsetsZero;
                                 NSString *maskImageURL;
+                                NSString *shortDescription;
                                 NSString *productBackgroundImageURL;
                                 NSString *productHighlightsURL;
                                 NSString *code;
@@ -248,6 +249,8 @@
                                     maskImageURL = [product[@"mask_url"] isKindOfClass:[NSString class]] ? product[@"mask_url"] : nil;
                                     productBackgroundImageURL = [product[@"product_background_image_url"] isKindOfClass:[NSString class]] ? product[@"product_background_image_url"] : nil;
                                     productHighlightsURL = [product[@"product_highlights_url"] isKindOfClass:[NSString class]] ? product[@"product_highlights_url"] : nil;
+                                    
+                                    shortDescription = [product[@"short_description"] isKindOfClass:[NSString class]] ? product[@"short_description"] : nil;
                                     
                                     if ([product[@"ios_sdk_product_shots"] isKindOfClass:[NSArray class]]){
                                         productShots = product[@"ios_sdk_product_shots"];
@@ -401,6 +404,7 @@
                                     t.productCode = code;
                                     t.imageBleed = imageBleed;
                                     t.maskImageURL = [NSURL URLWithString:maskImageURL];
+                                    t.shortDescription = shortDescription;
                                     t.productBackgroundImageURL = [NSURL URLWithString:productBackgroundImageURL];
                                     t.productHighlightsImageURL = [NSURL URLWithString:productHighlightsURL];
                                     t.sizePx = sizePx;

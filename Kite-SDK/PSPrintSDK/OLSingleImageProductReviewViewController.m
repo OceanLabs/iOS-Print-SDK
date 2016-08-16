@@ -211,6 +211,14 @@ static BOOL hasMoved;
     self.ctaButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.ctaButton.titleLabel.minimumScaleFactor = 0.5;
     
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.ctaButton.titleLabel setFont:font];
+    }
+    
     self.title = NSLocalizedStringFromTableInBundle(@"Reposition the Photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     
     if (self.imageCropView){
@@ -234,7 +242,7 @@ static BOOL hasMoved;
     [self.imageCropView addGestureRecognizer:gesture];
     
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
@@ -658,6 +666,9 @@ static BOOL hasMoved;
     
     else {
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"moreCell" forIndexPath:indexPath];
+        if ([OLKiteABTesting sharedInstance].lightThemeColor2){
+            [cell.contentView setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
+        }
         return cell;
     }
     

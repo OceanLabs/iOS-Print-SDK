@@ -186,6 +186,11 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
+    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
 #endif
@@ -215,6 +220,18 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     self.addPhotosHintView.layer.shadowOffset = CGSizeMake(5, 5);
     self.addPhotosHintView.layer.shadowRadius = 5;
     self.addPhotosHintView.layer.shadowOpacity = 0.3;
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.buttonNext setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    if ([OLKiteABTesting sharedInstance].lightThemeColor2){
+        [self.addPhotosButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
+    }
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.buttonNext.titleLabel setFont:font];
+    }
 }
 
 - (void)viewDidLayoutSubviews{

@@ -38,6 +38,7 @@
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLAnalytics.h"
+#import "OLImageDownloader.h"
 
 static const NSUInteger kTagTextField = 99;
 
@@ -100,9 +101,28 @@ static const NSUInteger kTagTextField = 99;
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:self.editingExistingSavedAddress ? NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [NSBundle mainBundle], @"") : NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [NSBundle mainBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onSaveButtonClicked)];
     self.navigationItem.rightBarButtonItem = doneButton;
     
+    UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
+    if (color1){
+        self.navigationItem.rightBarButtonItem.tintColor = color1;
+    }
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.navigationItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName : font} forState:UIControlStateNormal];
+    }
+    
     if ([self.navigationController.viewControllers firstObject] == self){
-        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [NSBundle mainBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onCancelButtonClicked)];
-        self.navigationItem.leftBarButtonItem = cancelButton;
+        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+                if (error) return;
+                self.navigationItem.leftBarButtonItem= [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(onCancelButtonClicked)];
+            }];
+        }
+        else{
+            UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [NSBundle mainBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onCancelButtonClicked)];
+            self.navigationItem.leftBarButtonItem = cancelButton;
+        }
     }
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){

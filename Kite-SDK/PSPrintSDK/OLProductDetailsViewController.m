@@ -63,6 +63,11 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.detailsLabel setFont:font];
+    }
+    
 //    if ([OLKiteABTesting sharedInstance].darkTheme){
 //        self.detailsLabel.textColor = [UIColor whiteColor];
 //        self.optionLabel.textColor = [UIColor whiteColor];
@@ -103,6 +108,12 @@
         OLProductTemplateOption *option = self.product.productTemplate.options.firstObject;
         self.optionLabel.text = option.name;
         self.selectedOptionLabel.text = [option nameForSelection:self.product.selectedOptions[[option code]]];
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            [self.optionLabel setFont:font];
+            [self.selectedOptionLabel setFont:font];
+        }
     }
 }
 

@@ -35,6 +35,20 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [attributes setObject:font forKey:NSFontAttributeName];
+        self.navigationBar.titleTextAttributes = attributes;
+    }
+    
+    UIColor *titleColor1 = [OLKiteABTesting sharedInstance].lightThemeTitleColor1;
+    if (titleColor1){
+        self.navigationBar.tintColor = titleColor1;
+        [attributes setObject:titleColor1 forKey:NSForegroundColorAttributeName];
+        self.navigationBar.titleTextAttributes = attributes;
+    }
+    
 //    if ([OLKiteABTesting sharedInstance].darkTheme){
 //        self.navigationBar.barTintColor = [UIColor blackColor];
 //        self.navigationBar.tintColor = [UIColor grayColor];

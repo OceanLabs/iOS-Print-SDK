@@ -30,6 +30,7 @@
 #import "OLProductOptionsViewController.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLAnalytics.h"
+#import "OLKiteABTesting.h"
 
 @interface OLProductOptionsViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -109,6 +110,11 @@
     UILabel *label = (UILabel *)[cell viewWithTag:20];
     OLProductTemplateOption *option = self.product.productTemplate.options[indexPath.section];
     label.text = [option nameForSelection:option.selections[indexPath.row]];
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [label setFont:font];
+    }
     
     UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
     if ([self.product.selectedOptions[option.code] isEqualToString:option.selections[indexPath.row]]){

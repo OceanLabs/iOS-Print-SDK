@@ -93,6 +93,9 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsViewHeightCon;
 @property (weak, nonatomic) IBOutlet UIView *detailsSeparator;
 @property (assign, nonatomic) CGFloat originalBoxConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *separatorHeightCon;
+@property (weak, nonatomic) IBOutlet UIImageView *whiteGradient;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *whiteGradientTopCon;
 
 @property (strong, nonatomic) OLProductDetailsViewController *productDetails;
 
@@ -105,6 +108,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
     
     [self setupDetailsView];
     
@@ -171,6 +179,15 @@
     }
     else if (self.product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
         [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+    }
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.callToActionButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+        [self.detailsSeparator setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.callToActionButton.titleLabel setFont:font];
     }
     
 //    if ([OLKiteABTesting sharedInstance].darkTheme && [OLKiteABTesting sharedInstance].darkThemeColor1){
@@ -265,6 +282,11 @@
     
     self.arrowImageView = self.productDetails.arrowImageView;
     self.costLabel = self.productDetails.priceLabel;
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.costLabel setFont:font];
+    }
     
     UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:self.productDetails];
     nvc.navigationBarHidden = YES;

@@ -52,6 +52,8 @@
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
 #import "OLLuhn.h"
+#import "OLImageDownloader.h"
+#import "OLKiteABTesting.h"
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -192,8 +194,16 @@ UITableViewDataSource, UITextFieldDelegate>
             }
         }
 
-        
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+                if (error) return;
+                self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
+            }];
+        }
+        else{
+            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+        }
     }
     
     return self;
@@ -211,6 +221,7 @@ UITableViewDataSource, UITextFieldDelegate>
     else{
         [buttonPay setTitle: NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     }
+    [buttonPay setBackgroundColor:[[OLKiteABTesting sharedInstance] lightThemeColor1]];
     [buttonPay makeRoundRect];
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44 + 40)];
@@ -244,6 +255,15 @@ UITableViewDataSource, UITextFieldDelegate>
                                                                                   style:UIBarButtonItemStyleDone
                                                                                  target:self
                                                                                  action:@selector(onButtonPayClicked)];
+    }
+    
+    UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
+    if (color1){
+        self.navigationItem.rightBarButtonItem.tintColor = color1;
+    }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.navigationItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName : font} forState:UIControlStateNormal];
     }
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){

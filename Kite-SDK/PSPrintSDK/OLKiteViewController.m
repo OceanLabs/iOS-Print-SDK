@@ -44,6 +44,7 @@
 #import "OLKiteABTesting.h"
 #import "UIImage+ColorAtPixel.h"
 #import "OLKiteUtils.h"
+#import "OLImageDownloader.h"
 
 
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
@@ -76,6 +77,7 @@ static CGFloat fadeTime = 0.3;
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
 @property (strong, nonatomic) NSBlockOperation *templateSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *remotePlistSyncOperation;
+@property (strong, nonatomic) NSBlockOperation *remotePlistFetchOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
 
 @end
@@ -238,8 +240,11 @@ static CGFloat fadeTime = 0.3;
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
     self.transitionOperation = [[NSBlockOperation alloc] init];
+    self.remotePlistFetchOperation = [[NSBlockOperation alloc] init];
+
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
+    [self.remotePlistFetchOperation addDependency:self.templateSyncOperation];
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
@@ -260,18 +265,22 @@ static CGFloat fadeTime = 0.3;
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
     }
     else{
-        [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
-            [self.operationQueue addOperation:self.remotePlistSyncOperation];
-            
+        __weak OLKiteViewController *welf = self;
+        [self.remotePlistFetchOperation addExecutionBlock:^(){
+            [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
+                [welf.operationQueue addOperation:welf.remotePlistSyncOperation];
+                
 #ifndef OL_NO_ANALYTICS
-            if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-                [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
-            }
-            else{
-                [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
-            }
+                if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+                    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
+                }
+                else{
+                    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
+                }
 #endif
+            }];
         }];
+        [self.operationQueue addOperation:self.remotePlistFetchOperation];
         [OLProductTemplate sync];
     }
     
@@ -333,7 +342,17 @@ static CGFloat fadeTime = 0.3;
                     [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
                     if (self.navigationController.viewControllers.count <= 1){
                         UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+                        
+                        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+                        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+                            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+                                if (error) return;
+                                ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                            }];
+                        }
+                        else{
                         ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                        }
                         [welf fadeToViewController:nvc];
                     }
                     else{
@@ -352,7 +371,16 @@ static CGFloat fadeTime = 0.3;
             [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:welf.userSelectedPhotos];
             if (self.navigationController.viewControllers.count <= 1){
                 UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+                if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+                    [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+                        if (error) return;
+                        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                    }];
+                }
+                else{
+                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                }
                 [welf fadeToViewController:nvc];
             }
             else{
@@ -379,7 +407,16 @@ static CGFloat fadeTime = 0.3;
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
         if (self.navigationController.viewControllers.count <= 1){
             UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-            vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+            NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+            if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+                [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+                    if (error) return;
+                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                }];
+            }
+            else{
+                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+            }
             [welf fadeToViewController:nvc];
         }
         else{
