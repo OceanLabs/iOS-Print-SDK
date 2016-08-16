@@ -53,6 +53,7 @@
 #import "OLKiteUtils.h"
 #import "OLLuhn.h"
 #import "OLImageDownloader.h"
+#import "OLKiteABTesting.h"
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -220,6 +221,7 @@ UITableViewDataSource, UITextFieldDelegate>
     else{
         [buttonPay setTitle: NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     }
+    [buttonPay setBackgroundColor:[[OLKiteABTesting sharedInstance] lightThemeColor1]];
     [buttonPay makeRoundRect];
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44 + 40)];
