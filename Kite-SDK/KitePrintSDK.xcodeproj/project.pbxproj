@@ -77,10 +77,6 @@
 		2E5D95AC1CA984E00080EF07 /* OLUpsellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */; };
 		2E5D95AD1CA984E00080EF07 /* OLUpsellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */; };
 		2E5D95AE1CA984E00080EF07 /* OLUpsellViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */; };
-		2E6131EF1D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */; };
-		2E6131F01D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */; };
-		2E6131F11D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */; };
-		2E6131F21D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */; };
 		2E645B351BE7D16E009B662B /* OLProductDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */; };
 		2E645B361BE7D170009B662B /* OLProductDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */; };
 		2E645B371BE7D173009B662B /* OLProductOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAD11541BD7C716000BC80E /* OLProductOptionsViewController.m */; };
@@ -623,6 +619,7 @@
 		E22963921C43DDF9002A90CA /* CTAssetThumbnailStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = E229631D1C43DC90002A90CA /* CTAssetThumbnailStacks.m */; };
 		E22963931C43DDFC002A90CA /* CTAssetThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = E229631F1C43DC90002A90CA /* CTAssetThumbnailView.m */; };
 		E22963941C43DE24002A90CA /* libCTAssetsPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22963671C43DD21002A90CA /* libCTAssetsPicker.a */; };
+		E237FA641D63035600A7912E /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
 		E29C858B1BE3B5C50041D4CF /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
 		E29C858E1BE3B5C50041D4CF /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
@@ -896,8 +893,6 @@
 		2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentLineItem.m; sourceTree = "<group>"; };
 		2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLIntegratedCheckoutViewController.h; sourceTree = "<group>"; };
 		2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLIntegratedCheckoutViewController.m; sourceTree = "<group>"; };
-		2E6131ED1D5DD3C800BEFCC2 /* UIColor+OLHexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+OLHexString.h"; sourceTree = "<group>"; };
-		2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+OLHexString.m"; sourceTree = "<group>"; };
 		2E6561101D1C341A0092001C /* OLSelectedEffectButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSelectedEffectButton.h; sourceTree = "<group>"; };
 		2E6561111D1C341A0092001C /* OLSelectedEffectButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSelectedEffectButton.m; sourceTree = "<group>"; };
 		2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPopupOptionsImageView.h; sourceTree = "<group>"; };
@@ -1268,6 +1263,8 @@
 		E229635F1C43DCDF002A90CA /* PureLayoutDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PureLayoutDefines.h; path = vendor/PureLayout/PureLayout/PureLayout/PureLayoutDefines.h; sourceTree = "<group>"; };
 		E22963671C43DD21002A90CA /* libCTAssetsPicker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCTAssetsPicker.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22963951C43DF29002A90CA /* CTAssetsPickerController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = CTAssetsPickerController.bundle; path = vendor/CTAssetsPickerController.bundle; sourceTree = SOURCE_ROOT; };
+		E237FA621D63035600A7912E /* UIColor+OLHexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+OLHexString.h"; path = "PSPrintSDK/Categories/UIColor+OLHexString.h"; sourceTree = "<group>"; };
+		E237FA631D63035600A7912E /* UIColor+OLHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+OLHexString.m"; path = "PSPrintSDK/Categories/UIColor+OLHexString.m"; sourceTree = "<group>"; };
 		E24452E61BFD20C80086BF03 /* PayPalConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalConfiguration.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalConfiguration.h"; sourceTree = "<group>"; };
 		E24452E71BFD20C80086BF03 /* PayPalFuturePaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalFuturePaymentViewController.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalFuturePaymentViewController.h"; sourceTree = "<group>"; };
 		E24452E81BFD20C80086BF03 /* PayPalMobile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalMobile.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalMobile.h"; sourceTree = "<group>"; };
@@ -1789,6 +1786,8 @@
 		2EA8BEC11A48509E008A9248 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				E237FA621D63035600A7912E /* UIColor+OLHexString.h */,
+				E237FA631D63035600A7912E /* UIColor+OLHexString.m */,
 				2E53E0CB1C1AEAAD00BF7887 /* UIViewController+OLMethods.h */,
 				2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */,
 				3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */,
@@ -1799,8 +1798,6 @@
 				3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */,
 				3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */,
 				3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */,
-				2E6131ED1D5DD3C800BEFCC2 /* UIColor+OLHexString.h */,
-				2E6131EE1D5DD3C800BEFCC2 /* UIColor+OLHexString.m */,
 				3DEF0D161A964881000F1E66 /* NSString+Formatting.h */,
 				3DEF0D171A964881000F1E66 /* NSString+Formatting.m */,
 				3D8122EF1A75A46D004E7297 /* UIImageView+FadeIn.h */,
@@ -2469,6 +2466,7 @@
 				2E89E4351CC6218100C9EE93 /* [CP] Embed Pods Frameworks */,
 				4725309EF80D2315EB50E573 /* [CP] Embed Pods Frameworks */,
 				D801D965E628C76A96EAF7B6 /* [CP] Copy Pods Resources */,
+				5B056D1E2BDF7B73AB227580 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2506,6 +2504,7 @@
 				2EADD8551BE79D6D0051CD31 /* Resources */,
 				1F2A45680D8F91AE446B1B42 /* [CP] Embed Pods Frameworks */,
 				25F251D912C22DDCD4AD9784 /* [CP] Copy Pods Resources */,
+				597D095728C0BDB14B419D31 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2526,6 +2525,7 @@
 				CD73BF87186215790009DE03 /* Resources */,
 				F6BC9A4FFAC7D6C34042D38F /* [CP] Embed Pods Frameworks */,
 				D7B65291D575359923FFAA7A /* [CP] Copy Pods Resources */,
+				865BCBE0822B56080AC6D796 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2859,6 +2859,36 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		597D095728C0BDB14B419D31 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5B056D1E2BDF7B73AB227580 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		65AFD3F0B85AB4008107FCC9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2887,6 +2917,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		865BCBE0822B56080AC6D796 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A5C135E7BF18F5D8A7843D7D /* [CP] Check Pods Manifest.lock */ = {
@@ -3046,7 +3091,6 @@
 				2E898CA21CC518180041CCD8 /* OLImageCachingManager.m in Sources */,
 				2E898CA31CC518180041CCD8 /* AssetDataSource.m in Sources */,
 				2E898CA41CC518180041CCD8 /* UIView+RoundRect.m in Sources */,
-				2E6131F01D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */,
 				2E898CA51CC518180041CCD8 /* OLCountry.m in Sources */,
 				2E2BF4481CCDFAF100725561 /* OLKiteTheme.m in Sources */,
 				2E898CA71CC518180041CCD8 /* ALAssetsLibrary+Singleton.m in Sources */,
@@ -3143,7 +3187,6 @@
 				2EA3D3841C9C04B500B99BCD /* OLPrintOrderCost.m in Sources */,
 				2EA3D3851C9C04B500B99BCD /* OLEditPhotobookViewController.m in Sources */,
 				2EA3D3861C9C04B500B99BCD /* UIView+RMUtils.m in Sources */,
-				2E6131F21D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */,
 				2EA3D3871C9C04B500B99BCD /* OLPrintOrder+History.m in Sources */,
 				2EA3D3881C9C04B500B99BCD /* OLStripeCard.m in Sources */,
 				2EA3D3891C9C04B500B99BCD /* OLAsset.m in Sources */,
@@ -3285,6 +3328,7 @@
 				2EAB0AE91CDB504E00625BD6 /* OLAssetsViewCell.m in Sources */,
 				2E5D95AC1CA984E00080EF07 /* OLUpsellViewController.m in Sources */,
 				2EAB0ADD1CDB504E00625BD6 /* ALAsset+OLIsEqual.m in Sources */,
+				E237FA641D63035600A7912E /* UIColor+OLHexString.m in Sources */,
 				2EADD8071BE79D6D0051CD31 /* UIImageView+FadeIn.m in Sources */,
 				2EADD8081BE79D6D0051CD31 /* OLAddressSearchRequest.m in Sources */,
 				2EAB0AEB1CDB504E00625BD6 /* OLAssetsViewControllerTransition.m in Sources */,
@@ -3380,7 +3424,6 @@
 				2EADD84A1BE79D6D0051CD31 /* OLPhotobookPrintJob.m in Sources */,
 				2E25FEFB1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 				2EADD84B1BE79D6D0051CD31 /* OLPaymentLineItem.m in Sources */,
-				2E6131EF1D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */,
 				2EADD84C1BE79D6D0051CD31 /* OLPrintJob.m in Sources */,
 				2EAB0ADB1CDB504E00625BD6 /* ALAsset+OLAccessibilityLabel.m in Sources */,
 			);
@@ -3504,7 +3547,6 @@
 				E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */,
 				E29C85901BE3B5C50041D4CF /* OLInfoPageViewController.m in Sources */,
 				2EAB0AC91CDB504C00625BD6 /* OLAssetsViewControllerTransition.m in Sources */,
-				2E6131F11D5DD3C800BEFCC2 /* UIColor+OLHexString.m in Sources */,
 				E29C85911BE3B5C50041D4CF /* OLIntegratedCheckoutViewController.m in Sources */,
 				E29C85921BE3B5C50041D4CF /* OLProductGroup.m in Sources */,
 				2E96BAC11D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
