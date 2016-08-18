@@ -221,7 +221,6 @@ UITableViewDataSource, UITextFieldDelegate>
     else{
         [buttonPay setTitle: NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     }
-    [buttonPay setBackgroundColor:[[OLKiteABTesting sharedInstance] lightThemeColor1]];
     [buttonPay makeRoundRect];
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44 + 40)];
@@ -260,6 +259,7 @@ UITableViewDataSource, UITextFieldDelegate>
     UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
     if (color1){
         self.navigationItem.rightBarButtonItem.tintColor = color1;
+        [buttonPay setBackgroundColor:[[OLKiteABTesting sharedInstance] lightThemeColor1]];
     }
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
     if (font){
