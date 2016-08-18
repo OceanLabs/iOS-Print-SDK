@@ -552,6 +552,9 @@
 		2EBDA6DE1CEB1B0500397082 /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
 		2EBDA6DF1CEB1B0500397082 /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
 		2EBDA6E01CEB1B0500397082 /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
+		2EC43DDB1D65B3D000915DDE /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
+		2EC43DDC1D65B3D100915DDE /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
+		2EC43DDD1D65B3D200915DDE /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
 		2ED36B3A1C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */; };
 		2ED389911C917D2000DC2314 /* OLPhotoTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED389901C917D2000DC2314 /* OLPhotoTextField.m */; };
@@ -3028,6 +3031,7 @@
 				2E898C641CC518180041CCD8 /* DogsAssetCollectionDataSource.m in Sources */,
 				2E96BAC01D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
 				2E898C651CC518180041CCD8 /* OLGreetingCardPrintJob.m in Sources */,
+				2EC43DDB1D65B3D000915DDE /* UIColor+OLHexString.m in Sources */,
 				2E67B9261D2671DE00914D56 /* OLPhotoTextField.m in Sources */,
 				2E898C671CC518180041CCD8 /* OLAddressEditViewController.m in Sources */,
 				2E898C681CC518180041CCD8 /* OLKiteUtils.m in Sources */,
@@ -3176,6 +3180,7 @@
 				2EA3D37C1C9C04B500B99BCD /* UIImageView+FadeIn.m in Sources */,
 				2EA3D37D1C9C04B500B99BCD /* OLAddressSearchRequest.m in Sources */,
 				2E67B9231D264FD600914D56 /* OLPaymentViewControllerV2.m in Sources */,
+				2EC43DDD1D65B3D200915DDE /* UIColor+OLHexString.m in Sources */,
 				2EA3D37E1C9C04B500B99BCD /* OLPayPalCard.m in Sources */,
 				2EA3D37F1C9C04B500B99BCD /* OLProductPrintJob.m in Sources */,
 				2EB715DE1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m in Sources */,
@@ -3624,6 +3629,7 @@
 				E29C85DD1BE3B5C50041D4CF /* OLPrintOrder.m in Sources */,
 				2E645B381BE7D176009B662B /* OLProductOptionsViewController.m in Sources */,
 				2E67B92C1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
+				2EC43DDC1D65B3D100915DDE /* UIColor+OLHexString.m in Sources */,
 				E29C85DE1BE3B5C50041D4CF /* OLProductTemplateSyncRequest.m in Sources */,
 				E29C85E41BE3B5C50041D4CF /* OLProductTypeSelectionViewController.m in Sources */,
 				E29C85E51BE3B5C50041D4CF /* OLPrintOrderRequest.m in Sources */,
