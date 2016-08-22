@@ -69,7 +69,7 @@
 @property (strong, nonatomic) NSMutableArray<OLImagePickerProvider *> *providers;
 
 @property (strong, nonatomic) NSArray<OLAsset *> *originalSelectedAssets;
-@property (strong, nonatomic) UIView *triangle;
+@property (strong, nonatomic) UIView *selectedProviderIndicator;
 
 @end
 
@@ -185,30 +185,20 @@
     view.layer.shadowOffset = CGSizeMake(0, 1);
     view.layer.shadowRadius = 2;
     
-    self.triangle = [[UIView alloc] init];
-    self.triangle.backgroundColor = [UIColor whiteColor];
+    self.selectedProviderIndicator = [[UIView alloc] init];
+    self.selectedProviderIndicator.backgroundColor = self.sourcesCollectionView.tintColor;
     
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    
-    // Create a path with the triagle in it.
-    UIBezierPath* polygonPath = [UIBezierPath bezierPath];
-    [polygonPath moveToPoint: CGPointMake(0, 0)];
-    [polygonPath addLineToPoint: CGPointMake(24, 0)];
-    [polygonPath addLineToPoint: CGPointMake(12, 12)];
-    [polygonPath closePath];
-    
-    maskLayer.path = polygonPath.CGPath;
-    self.triangle.layer.mask = maskLayer;
-    
-    [self.visualEffectView addSubview:self.triangle];
-    view = self.triangle;
+    [self.visualEffectView addSubview:self.selectedProviderIndicator];
+    view = self.selectedProviderIndicator;
     
     view.translatesAutoresizingMaskIntoConstraints = NO;
     views = NSDictionaryOfVariableBindings(view);
     con = [[NSMutableArray alloc] init];
     
-    visuals = @[@"H:|-(-12)-[view(24)]",
-                         @"V:[view(12)]-(-12)-|"];
+    CGFloat width = [self collectionView:self.sourcesCollectionView layout:self.sourcesCollectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width;
+    
+    visuals = @[[NSString stringWithFormat:@"H:|-0-[view(%f)]", width],
+                         @"V:[view(1.5)]-0-|"];
     
     
     for (NSString *visual in visuals) {
@@ -233,7 +223,7 @@
         [self addBasketIconToTopRight];
     }
     
-    [self positionTriangle];
+    [self positionSelectedProviderIndicator];
 }
 
 - (void)setupLibraryProviderAtIndex:(NSInteger)index{
@@ -403,7 +393,7 @@
     [super viewDidLayoutSubviews];
     
     [self updateTopConForVc:self.pageController.viewControllers.firstObject];
-    [self positionTriangle];
+    [self positionSelectedProviderIndicator];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -513,7 +503,7 @@
     [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[pageViewController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
     self.nextButton.hidden = NO;
     ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).nextButton.hidden = YES;
-    [self positionTriangle];
+    [self positionSelectedProviderIndicator];
 }
 
 #pragma mark CollectionView
@@ -534,14 +524,11 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(80, collectionView.frame.size.height);
+    return CGSizeMake(95, collectionView.frame.size.height);
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
-    
-    CGFloat margin = MAX((size.width - [self collectionView:collectionView numberOfItemsInSection:0] * [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width)/2.0, 5);
-    return UIEdgeInsetsMake(0, margin, 0, margin);
+    return UIEdgeInsetsZero;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -558,17 +545,17 @@
     
     [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:NULL];
     
-    [self positionTriangle];
+    [self positionSelectedProviderIndicator];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [self positionTriangle];
+    [self positionSelectedProviderIndicator];
 }
 
-- (void)positionTriangle{
+- (void)positionSelectedProviderIndicator{
     UICollectionViewCell *cell = [self.sourcesCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0]];
     
-    self.triangle.transform = CGAffineTransformMakeTranslation([self.sourcesCollectionView convertRect:cell.frame toView:self.view].origin.x + cell.frame.size.width/2.0, 0);
+    self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation([self.sourcesCollectionView convertRect:cell.frame toView:self.view].origin.x, 0);
 }
 
 #pragma mark Navigation
