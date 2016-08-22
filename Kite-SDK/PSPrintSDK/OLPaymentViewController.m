@@ -756,7 +756,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     for (id<OLPrintJob> job in self.printOrder.jobs){
         OLProductTemplate *template = [OLProductTemplate templateWithId:[job templateId]];
         
-        NSDictionary *costDict = template.originalCostsByCurrencyCode ? template.originalCostsByCurrencyCode : template.costsByCurrencyCode;
+        NSDictionary *costDict = template.originalCostsByCurrencyCode.count != 0 ? template.originalCostsByCurrencyCode : template.costsByCurrencyCode;
         NSDecimalNumber *sheetCost = costDict[[self.printOrder currencyCode]];
         NSUInteger sheetQuanity = template.quantityPerSheet == 0 ? 1 : template.quantityPerSheet;
         NSUInteger numSheets = (NSUInteger) ceil([OLProduct productWithTemplateId:[job templateId]].quantityToFulfillOrder / sheetQuanity);
@@ -771,10 +771,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         
         NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
-        
-        if (!unitCost){
-            return;
-        }
         
         expectedCost = [expectedCost decimalNumberByAdding:[unitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)([job extraCopies] + 1)*[numUnitsInJob integerValue]]]]];
     }
