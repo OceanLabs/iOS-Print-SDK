@@ -71,6 +71,8 @@ static NSOperationQueue *imageOperationQueue;
 @property (strong, nonatomic) OLPhotoEdits *edits;
 @property (strong, nonatomic) NSString *uuid;
 
+@property (strong, nonatomic) id metadata; //Not saved
+
 @property (nonatomic, readwrite) NSString *mimeType;
 @property (nonatomic, readwrite) long long assetId;
 @property (nonatomic, readwrite) NSURL *previewURL;
@@ -390,7 +392,7 @@ static NSOperationQueue *imageOperationQueue;
     }
     BOOL fullResolution = CGSizeEqualToSize(size, OLAssetMaximumSize);
     
-    if (fullResolution || !applyEdits){
+    if (fullResolution || (!applyEdits && self.isEdited)){
         self.cachedEditedImage = nil;
     }
     
