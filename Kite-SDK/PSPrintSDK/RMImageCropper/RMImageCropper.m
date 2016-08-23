@@ -1,6 +1,11 @@
 #import "RMImageCropper.h"
-
 #import "UIView+RMUtils.h"
+
+#import "OLKitePrintSDK.h"
+
+@interface OLKitePrintSDK ()
++ (BOOL)allowsImageZooming;
+@end
 
 @interface RMImageCropper ()
 
@@ -68,19 +73,23 @@ CGFloat const RESET_DURATION = 0.10f;
     pan.delegate = self;
     [self addGestureRecognizer:pan];
     
-    UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchRecognized:)];
-    pinch.delegate = self;
-    [self addGestureRecognizer:pinch];
-    
-    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapRecognized:)];
-    doubleTap.delegate = self;
-    doubleTap.numberOfTapsRequired = 2;
-    [self addGestureRecognizer:doubleTap];
-    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapRecognized:)];
     tap.delegate = self;
-    [tap requireGestureRecognizerToFail:doubleTap];
+    
     [self addGestureRecognizer:tap];
+    
+    if ([OLKitePrintSDK allowsImageZooming]){
+        UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchRecognized:)];
+        pinch.delegate = self;
+        [self addGestureRecognizer:pinch];
+        
+        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapRecognized:)];
+        doubleTap.delegate = self;
+        doubleTap.numberOfTapsRequired = 2;
+        [self addGestureRecognizer:doubleTap];
+        
+        [tap requireGestureRecognizerToFail:doubleTap];
+    }
 }
 
 - (void)setFrame:(CGRect)frame
