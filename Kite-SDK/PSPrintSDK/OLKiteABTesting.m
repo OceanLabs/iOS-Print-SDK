@@ -50,6 +50,7 @@ static NSString *const kOLKiteABTestPaymentScreen = @"ly.kite.abtest.payment_scr
 static NSString *const kOLKiteABTestCoverPhotoVariants = @"ly.kite.abtest.cover_photo_variants";
 
 static NSString *const kOLKiteABTestSkipProductOverview = @"ly.kite.abtest.skip_product_overview";
+static NSString *const kOLKiteABTestDisableProductCategories = @"ly.kite.abtest.disable_product_categories";
 static NSString *const kOLKiteABTestMinimalNavigationBar = @"ly.kite.abtest.minimal_navigationbar";
 
 id safeObject(id obj){
@@ -62,6 +63,7 @@ static dispatch_once_t srand48OnceToken;
 
 @property (assign, nonatomic, readwrite) BOOL offerAddressSearch;
 @property (assign, nonatomic, readwrite) BOOL skipProductOverview;
+@property (assign, nonatomic, readwrite) BOOL disableProductCategories;
 @property (assign, nonatomic) BOOL minimalNavigationBar;
 @property (assign, nonatomic, readwrite) BOOL requirePhoneNumber;
 @property (assign, nonatomic, readwrite) BOOL hidePrice;
@@ -466,6 +468,21 @@ static dispatch_once_t srand48OnceToken;
                                 }];
 }
 
+- (void)setupDisableProductCategories{
+    self.disableProductCategories = NO;
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestDisableProductCategories];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0, @"No" : @1};
+    }
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestDisableProductCategories
+                            conditions:@{
+                                         @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                         @"No" : safeObject(experimentDict[@"No"])
+                                         } block:^(id choice) {
+                                             self.disableProductCategories = [choice isEqualToString:@"Yes"];
+                                         }];
+}
+
 - (void)setupSkipProductOverviewTest{
     self.skipProductOverview = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestSkipProductOverview];
@@ -638,6 +655,7 @@ static dispatch_once_t srand48OnceToken;
     [self setupShowProductDescriptionScreenBeforeShippingTest];
     [self setupHidePriceTest];
     [self setupSkipProductOverviewTest];
+    [self setupDisableProductCategories];
     [self setupMinimalNavigationBarTest];
     [self groupSetupShippingScreenTests];
 }

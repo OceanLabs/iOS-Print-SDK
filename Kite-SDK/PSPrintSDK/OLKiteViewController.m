@@ -530,7 +530,10 @@ static CGFloat fadeTime = 0.3;
     if (group.products.count > 1){
         return @"OLTypeSelectionViewController";
     }
-    else {
+    else if ([OLKiteABTesting sharedInstance].disableProductCategories && [OLKiteABTesting sharedInstance].skipProductOverview){
+        return [OLKiteUtils reviewViewControllerIdentifierForProduct:group.products.firstObject photoSelectionScreen:YES];
+    }
+    else{
         return @"OLProductOverviewViewController";
     }
 }

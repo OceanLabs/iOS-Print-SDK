@@ -1733,7 +1733,7 @@ to rearrange the photos</string>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ProductCellMinimalWhite" id="SHB-yQ-TmV">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ProductCellMinimal" id="SHB-yQ-TmV">
                                 <rect key="frame" x="0.0" y="64" width="299" height="264"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -2084,6 +2084,66 @@ to rearrange the photos</string>
                                     <constraint firstAttribute="trailing" secondItem="YE6-hr-FaL" secondAttribute="trailing" id="xCM-gv-lvV"/>
                                 </constraints>
                                 <size key="customSize" width="600" height="84"/>
+                            </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ProductCellMinimalWhite" id="bIs-7f-qa2" userLabel="ProductCellClassic">
+                                <rect key="frame" x="0.0" y="948" width="299" height="264"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="299" height="264"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" tag="41" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="gcn-ir-muD">
+                                            <rect key="frame" x="139" y="122" width="20" height="20"/>
+                                        </activityIndicatorView>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="40" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Nhi-Md-f9B">
+                                            <rect key="frame" x="9" y="9" width="281" height="214.5"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="300" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="nTJ-f3-7ZP">
+                                            <rect key="frame" x="18" y="233.5" width="45" height="20.5"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="35" id="hMg-kN-wvS"/>
+                                                <constraint firstAttribute="width" constant="170" id="kHX-J1-btA"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.29411764709999999" green="0.30980392159999998" blue="0.3294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="kHX-J1-btA"/>
+                                                    <exclude reference="hMg-kN-wvS"/>
+                                                </mask>
+                                            </variation>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="301" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v2z-iE-4IB">
+                                            <rect key="frame" x="239" y="233.5" width="42" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.50588235290000005" green="0.51764705879999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="Nhi-Md-f9B" firstAttribute="leading" secondItem="bIs-7f-qa2" secondAttribute="leading" constant="9" id="3Ih-46-Grt"/>
+                                    <constraint firstItem="nTJ-f3-7ZP" firstAttribute="leading" secondItem="Nhi-Md-f9B" secondAttribute="leading" constant="9" id="9Rx-LV-ZMg"/>
+                                    <constraint firstItem="v2z-iE-4IB" firstAttribute="centerY" secondItem="nTJ-f3-7ZP" secondAttribute="centerY" id="9Ug-NK-ppZ"/>
+                                    <constraint firstItem="Nhi-Md-f9B" firstAttribute="top" secondItem="bIs-7f-qa2" secondAttribute="top" constant="9" id="CAz-TC-6cZ"/>
+                                    <constraint firstAttribute="centerX" secondItem="gcn-ir-muD" secondAttribute="centerX" constant="0.5" id="F8j-fJ-qhi"/>
+                                    <constraint firstAttribute="trailing" secondItem="nTJ-f3-7ZP" secondAttribute="trailing" id="Kcb-wK-yK6"/>
+                                    <constraint firstItem="nTJ-f3-7ZP" firstAttribute="top" secondItem="Nhi-Md-f9B" secondAttribute="bottom" constant="10" id="Mcv-YN-wwH"/>
+                                    <constraint firstAttribute="bottom" secondItem="nTJ-f3-7ZP" secondAttribute="bottom" constant="16" id="TUX-wu-MwV"/>
+                                    <constraint firstItem="v2z-iE-4IB" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nTJ-f3-7ZP" secondAttribute="trailing" constant="5" id="Ztm-5y-kBF"/>
+                                    <constraint firstItem="v2z-iE-4IB" firstAttribute="trailing" secondItem="Nhi-Md-f9B" secondAttribute="trailing" constant="-9" id="feu-V4-JJQ"/>
+                                    <constraint firstAttribute="bottom" secondItem="nTJ-f3-7ZP" secondAttribute="bottom" constant="10" id="qn1-rN-4IB"/>
+                                    <constraint firstAttribute="trailing" secondItem="Nhi-Md-f9B" secondAttribute="trailing" constant="9" id="sr7-wu-TLh"/>
+                                    <constraint firstAttribute="centerY" secondItem="gcn-ir-muD" secondAttribute="centerY" id="uUK-X0-cu3"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="TUX-wu-MwV"/>
+                                        <exclude reference="Kcb-wK-yK6"/>
+                                    </mask>
+                                </variation>
                             </collectionViewCell>
                         </cells>
                         <connections>

@@ -29,6 +29,7 @@
 
 #import "OLProductGroup.h"
 #import "OLProduct.h"
+#import "OLKiteABTesting.h"
 
 
 static OLProductGroup *findGroupWithTemplateClass(NSArray *groups, NSString *templateClass) {
@@ -66,7 +67,7 @@ static OLProductGroup *findGroupWithTemplateClass(NSArray *groups, NSString *tem
             continue;
         }
         
-        OLProductGroup *group = findGroupWithTemplateClass(groups, product.productTemplate.templateClass);
+        OLProductGroup *group = [OLKiteABTesting sharedInstance].disableProductCategories ? nil : findGroupWithTemplateClass(groups, product.productTemplate.templateClass);
         if (group == nil) {
             group = [[OLProductGroup alloc] initWithTemplateClassName:product.productTemplate.templateClass];
             [groups addObject:group];

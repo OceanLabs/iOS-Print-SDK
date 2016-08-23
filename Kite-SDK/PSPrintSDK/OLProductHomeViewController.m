@@ -664,6 +664,21 @@
 //        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
 //        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
 //    }
+    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"MinimalWhite"]){
+        UILabel *priceLabel = [cell.contentView viewWithTag:301];
+        UILabel *detailsLabel = [cell.contentView viewWithTag:302];
+        
+        priceLabel.text = [product unitCost];
+        detailsLabel.text = [product.productTemplate shortDescription];
+        
+        productTypeLabel.text = product.productTemplate.templateType;
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            priceLabel.font = font;
+            detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
+        }
+    }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
         button.layer.shadowColor = [[UIColor blackColor] CGColor];
