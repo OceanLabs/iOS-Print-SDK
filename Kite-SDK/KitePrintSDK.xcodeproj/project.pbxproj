@@ -1063,6 +1063,7 @@
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
 		2EE94D3D1B501D900086590C /* ALAssetsLibrary+Singleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ALAssetsLibrary+Singleton.h"; path = "PSPrintSDK/Categories/ALAssetsLibrary+Singleton.h"; sourceTree = "<group>"; };
 		2EE94D3E1B501D900086590C /* ALAssetsLibrary+Singleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ALAssetsLibrary+Singleton.m"; path = "PSPrintSDK/Categories/ALAssetsLibrary+Singleton.m"; sourceTree = "<group>"; };
+		2EEB52FA1D6C8F4C0066B802 /* OLKiteViewController+Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OLKiteViewController+Theme.h"; sourceTree = "<group>"; };
 		2EF439291BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderSubmitStatusRequest.h; sourceTree = "<group>"; };
 		2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintOrderSubmitStatusRequest.m; sourceTree = "<group>"; };
 		2EF53E391B55421A00BF936A /* UIImage+ColorAtPixel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ColorAtPixel.h"; path = "PSPrintSDK/Categories/UIImage+ColorAtPixel.h"; sourceTree = "<group>"; };
@@ -1686,6 +1687,7 @@
 				3D8122E21A759E41004E7297 /* RMImageCropper */,
 				2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */,
 				2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */,
+				2EEB52FA1D6C8F4C0066B802 /* OLKiteViewController+Theme.h */,
 				2E0A72641A6FB07000BC5AE7 /* OLScrollCropViewController.h */,
 				2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */,
 				2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */,

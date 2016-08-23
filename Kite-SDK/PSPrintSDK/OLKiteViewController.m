@@ -107,6 +107,30 @@ static CGFloat fadeTime = 0.3;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
 }
 
+- (UIImageView *)loadingImageView{
+    if (!_loadingImageView){
+        [self.view class]; //Force viewDidLoad;
+    }
+    
+    return _loadingImageView;
+}
+
+- (UINavigationBar *)navigationBar{
+    if (!_navigationBar){
+        [self.view class]; //Force viewDidLoad;
+    }
+    
+    return _navigationBar;
+}
+
+- (UINavigationItem *)customNavigationItem{
+    if (!_customNavigationItem){
+         [self.view class]; //Force viewDidLoad;
+    }
+    
+    return _customNavigationItem;
+}
+
 -(OLPrintOrder *) printOrder{
     if (!_printOrder){
         _printOrder = [OLPrintOrder loadOrder];
