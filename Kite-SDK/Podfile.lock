@@ -1,10 +1,10 @@
 PODS:
-  - Bolts (1.7.0):
-    - Bolts/AppLinks (= 1.7.0)
-    - Bolts/Tasks (= 1.7.0)
-  - Bolts/AppLinks (1.7.0):
+  - Bolts (1.8.4):
+    - Bolts/AppLinks (= 1.8.4)
+    - Bolts/Tasks (= 1.8.4)
+  - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
-  - Bolts/Tasks (1.7.0)
+  - Bolts/Tasks (1.8.4)
   - CSStickyHeaderFlowLayout (0.2.10)
   - CTAssetsPickerController (3.3.1):
     - PureLayout (~> 3.0.0)
@@ -18,7 +18,7 @@ PODS:
     - FBSDKCoreKit
   - InstagramImagePicker (1.1.7):
     - NXOAuth2Client (~> 1.2.8)
-  - KITAssetsPickerController (1.0.6):
+  - KITAssetsPickerController (1.0.9):
     - PureLayout (~> 3.0.0)
   - MPFlipViewController (0.0.2)
   - NXOAuth2Client (1.2.8)
@@ -47,7 +47,7 @@ DEPENDENCIES:
   - TSMarkdownParser
 
 SPEC CHECKSUMS:
-  Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   CSStickyHeaderFlowLayout: 5366582779d8b7c9ba9b9cc729c218cc23888776
   CTAssetsPickerController: b1d1d50ab87cf6b8b13531de5f4530482e7e53ed
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
@@ -55,7 +55,7 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b
   FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
   InstagramImagePicker: 3b1afb10b1b3e5625b8ef64dfabd13464467020d
-  KITAssetsPickerController: 449bf9ba1f6be9e2926462ce5df871f0a63e86f2
+  KITAssetsPickerController: bcb94b0b3267006fa666041f18a2370a00a9b105
   MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-SDK: 98ab60b137b7fd35ab5a785d11f042f6858b4f11
