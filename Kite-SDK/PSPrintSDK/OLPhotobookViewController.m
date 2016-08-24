@@ -2010,7 +2010,7 @@ UINavigationControllerDelegate, OLUpsellViewControllerDelegate
     }
 #endif
 #ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-    else if ([picker isKindOfClass:[KITAssetsPickerController class]]){
+    else if ([picker conformsToProtocol:@protocol(KITCustomAssetPickerController)]){
         NSMutableArray *olAssets = [[NSMutableArray alloc] init];
         for (id<OLAssetDataSource> asset in assets){
             if ([asset isKindOfClass:[OLPrintPhoto class]]){
