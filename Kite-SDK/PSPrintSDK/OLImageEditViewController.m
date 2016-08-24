@@ -193,9 +193,6 @@ const NSInteger kOLEditTagCrop = 40;
         }
     }
     
-//    [self.cropView setClipsToBounds:NO];
-//    self.cropView.backgroundColor = [UIColor clearColor];
-    
     self.initialOrientation = self.fullImage.imageOrientation;
     self.cropView.delegate = self;
     
