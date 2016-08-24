@@ -202,7 +202,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 + (OLAsset *)assetWithImageAsJPEG:(UIImage *)image {
-    return [[OLAsset alloc] initWithImageData:UIImageJPEGRepresentation(image, 0.8) mimeType:kOLMimeTypeJPEG];
+    return [[OLAsset alloc] initWithImageData:UIImageJPEGRepresentation(image, 0.7) mimeType:kOLMimeTypeJPEG];
 }
 
 + (OLAsset *)assetWithImageAsPNG:(UIImage *)image {
@@ -260,76 +260,9 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
-    switch (self.assetType) {
-        case kOLAssetTypePHAsset:{
-            PHImageManager *imageManager = [PHImageManager defaultManager];
-            PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-            options.synchronous = NO;
-            options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
-            options.networkAccessAllowed = YES;
-            [imageManager requestImageForAsset:self.phAsset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
-                if (result){
-                    handler(UIImageJPEGRepresentation(result, 0.7).length, nil);
-                }
-                else{
-                    self.corrupt = YES;
-                    handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : info[PHImageErrorKey] ? info[PHImageErrorKey] : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
-                }
-            }];
-            break;
-        }
-        case kOLAssetTypeDataSource: {
-            NSAssert(self.dataSource, @"oops somehow instantiated a OLAsset in non consistent state");
-            [self.dataSource dataLengthWithCompletionHandler:^(long long dataLength, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (dataLength > 0){
-                        handler(dataLength, error);
-                    }
-                    else{
-                        self.corrupt = YES;
-                        handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
-                    }
-                });
-            }];
-            break;
-        }
-        case kOLAssetTypeImageData: {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (self.imageData.length > 0){
-                    handler(self.imageData.length, nil);
-                }
-                else{
-                    self.corrupt = YES;
-                    handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
-                }
-            });
-            break;
-        }
-        case kOLAssetTypeImageFilePath: {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSError *attributesError = nil;
-                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:self.imageFilePath error:&attributesError];
-                NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
-                if ([fileSizeNumber longLongValue] > 0){
-                    handler([fileSizeNumber longLongValue], attributesError);
-                }
-                else{
-                    self.corrupt = YES;
-                    handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
-                }
-            });
-            
-            break;
-        }
-        case kOLAssetTypeRemoteImageURL: {
-                handler(0, nil);
-            break;
-        }
-        case kOLAssetTypeCorrupt:
-            handler(0, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
-            break;
-    }
-    
+    [self dataWithCompletionHandler:^(NSData *data, NSError *error){
+        handler(data.length, error);
+    }];
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
@@ -375,8 +308,16 @@ static NSOperationQueue *imageOperationQueue;
             break;
         }
         case kOLAssetTypeRemoteImageURL: {
-            //TODO could be edited
-//            NSAssert(NO, @"don't be calling dataWithCompletionHandler on an image URL OLAsset as it has no meaning");
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:self.imageURL progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+                [self resizeImage:image size:OLAssetMaximumSize applyEdits:YES completion:^(UIImage *image){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (!error) {
+                            self.cachedEditedImage = image;
+                            handler(UIImageJPEGRepresentation(image, 0.7), nil);
+                        }
+                    });
+                }];
+            }];
             break;
         }
         case kOLAssetTypeCorrupt:

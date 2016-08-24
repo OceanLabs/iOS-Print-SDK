@@ -62,4 +62,22 @@
     return self;
 }
 
+- (NSArray *)buttons{
+    NSMutableArray *buttons = [[NSMutableArray alloc] init];
+    if (self.button1){
+        [buttons addObject:self.button1];
+    }
+    if (self.button2){
+        [buttons addObject:self.button2];
+    }
+    if (self.button3){
+        [buttons addObject:self.button3];
+    }
+    if (self.button4){
+        [buttons addObject:self.button4];
+    }
+    
+    return buttons;
+}
+
 @end

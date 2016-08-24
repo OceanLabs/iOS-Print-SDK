@@ -29,6 +29,7 @@
 
 #import <UIKit/UIKit.h>
 #import "OLRemoteImageCropper.h"
+#import "OLViewController.h"
 
 @class OLImageEditViewController;
 @class OLPhotoEdits;
@@ -45,7 +46,7 @@
 
 @end
 
-@interface OLImageEditViewController : UIViewController
+@interface OLImageEditViewController : OLViewController
 
 @property (strong, nonatomic) UIImage *fullImage;
 @property (copy, nonatomic) OLPhotoEdits *edits;
@@ -60,5 +61,8 @@
 @property (assign, nonatomic) BOOL forceSourceViewDimensions;
 @property (assign, nonatomic) BOOL skipPresentAnimation;
 @property (assign, nonatomic) UIEdgeInsets borderInsets;
+@property (strong, nonatomic) OLAsset *asset;
+@property (weak, nonatomic) UIButton *ctaButton;
+
 
 @end
