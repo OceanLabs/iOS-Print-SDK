@@ -318,6 +318,15 @@
     }];
 }
 
+- (void)onButtonCropClicked:(UIButton *)sender{
+    sender.selected = YES;
+    [self.cropView setGesturesEnabled:YES];
+}
+
+- (void)exitCropMode{
+    [self.cropView setGesturesEnabled:NO];
+}
+
 #pragma mark OLUpsellViewControllerDelegate
 
 - (void)userDidDeclineUpsell:(OLUpsellViewController *)vc{

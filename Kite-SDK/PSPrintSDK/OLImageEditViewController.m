@@ -60,10 +60,6 @@ const NSInteger kOLEditTagCrop = 40;
 @property (assign, nonatomic) CGFloat textFieldKeyboardDiff;
 @property (assign, nonatomic) BOOL resizingTextField;
 @property (assign, nonatomic) BOOL rotatingTextField;
-@property (weak, nonatomic) IBOutlet UIView *drawerView;
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *drawerHeightCon;
-@property (weak, nonatomic) IBOutlet UILabel *drawerLabel;
 
 @property (strong, nonatomic) OLPhotoTextField *activeTextField;
 @property (assign, nonatomic) CGFloat originalDrawerHeight;
@@ -121,25 +117,25 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)setActiveTextField:(OLPhotoTextField *)activeTextField{
     if (activeTextField){
-        if (self.collectionView.tag != kOLEditTagTextTools && activeTextField != _activeTextField){ //Showing colors/fonts for another textField. Dismiss first
+        if (self.editingTools.collectionView.tag != kOLEditTagTextTools && activeTextField != _activeTextField){ //Showing colors/fonts for another textField. Dismiss first
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-                self.collectionView.tag = kOLEditTagTextTools;
+                self.editingTools.collectionView.tag = kOLEditTagTextTools;
                 
-                self.drawerHeightCon.constant = self.originalDrawerHeight;
+                self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
                 [self.view layoutIfNeeded];
                 
-                [self.collectionView reloadData];
-                self.collectionView.tag = kOLEditTagTextTools;
+                [self.editingTools.collectionView reloadData];
+                self.editingTools.collectionView.tag = kOLEditTagTextTools;
                 [self showDrawerWithCompletionHandler:NULL];
             }];
         }
         else{
-            self.collectionView.tag = kOLEditTagTextTools;
+            self.editingTools.collectionView.tag = kOLEditTagTextTools;
             
-            self.drawerHeightCon.constant = self.originalDrawerHeight;
+            self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
             [self.view layoutIfNeeded];
             
-            [self.collectionView reloadData];
+            [self.editingTools.collectionView reloadData];
             [self showDrawerWithCompletionHandler:NULL];
         }
     }
@@ -178,10 +174,11 @@ const NSInteger kOLEditTagCrop = 40;
     
     self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor darkGrayColor], [UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor yellowColor], [UIColor magentaColor], [UIColor cyanColor], [UIColor brownColor], [UIColor orangeColor], [UIColor purpleColor], [UIColor colorWithRed:0.890 green:0.863 blue:0.761 alpha:1.000], [UIColor colorWithRed:0.765 green:0.678 blue:0.588 alpha:1.000], [UIColor colorWithRed:0.624 green:0.620 blue:0.612 alpha:1.000], [UIColor colorWithRed:0.976 green:0.910 blue:0.933 alpha:1.000], [UIColor colorWithRed:0.604 green:0.522 blue:0.741 alpha:1.000], [UIColor colorWithRed:0.996 green:0.522 blue:0.886 alpha:1.000], [UIColor colorWithRed:0.392 green:0.271 blue:0.576 alpha:1.000], [UIColor colorWithRed:0.906 green:0.573 blue:0.565 alpha:1.000], [UIColor colorWithRed:0.984 green:0.275 blue:0.404 alpha:1.000], [UIColor colorWithRed:0.918 green:0.000 blue:0.200 alpha:1.000], [UIColor colorWithRed:0.776 green:0.176 blue:0.157 alpha:1.000], [UIColor colorWithRed:0.965 green:0.831 blue:0.239 alpha:1.000], [UIColor colorWithRed:0.961 green:0.682 blue:0.118 alpha:1.000], [UIColor colorWithRed:0.945 green:0.482 blue:0.204 alpha:1.000], [UIColor colorWithRed:0.827 green:0.859 blue:0.898 alpha:1.000], [UIColor colorWithRed:0.616 green:0.710 blue:0.851 alpha:1.000], [UIColor colorWithRed:0.400 green:0.541 blue:0.784 alpha:1.000], [UIColor colorWithRed:0.400 green:0.541 blue:0.784 alpha:1.000], [UIColor colorWithRed:0.173 green:0.365 blue:0.725 alpha:1.000], [UIColor colorWithRed:0.102 green:0.247 blue:0.361 alpha:1.000], [UIColor colorWithRed:0.765 green:0.933 blue:0.898 alpha:1.000], [UIColor colorWithRed:0.506 green:0.788 blue:0.643 alpha:1.000], [UIColor colorWithRed:0.345 green:0.502 blue:0.400 alpha:1.000], [UIColor colorWithRed:0.337 green:0.427 blue:0.208 alpha:1.000]];
     
-    self.collectionView.dataSource = self;
-    self.collectionView.delegate = self;
+    [self registerCollectionViewCells];
+    self.editingTools.collectionView.dataSource = self;
+    self.editingTools.collectionView.delegate = self;
     
-    self.originalDrawerHeight = self.drawerHeightCon.constant;
+    self.originalDrawerHeight = self.editingTools.drawerHeightCon.constant;
     
     if (self.previewView && !self.skipPresentAnimation){
         self.view.backgroundColor = [UIColor clearColor];
@@ -238,8 +235,9 @@ const NSInteger kOLEditTagCrop = 40;
     
     self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     UIView *view = self.visualEffectView;
-    [self.drawerView addSubview:view];
-    [self.drawerView sendSubviewToBack:view];
+    
+    [self.editingTools.drawerView addSubview:view];
+    [self.editingTools.drawerView sendSubviewToBack:view];
     
     view.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *views = NSDictionaryOfVariableBindings(view);
@@ -255,7 +253,13 @@ const NSInteger kOLEditTagCrop = 40;
     
     [view.superview addConstraints:con];
     
-    self.drawerView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.5];
+    [self.view insertSubview:self.editingTools.drawerView belowSubview:self.editingTools];
+    
+    [self.editingTools.drawerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.editingTools.drawerView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.editingTools.drawerView.superview attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
+    [self.editingTools.drawerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.editingTools.drawerView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.editingTools.drawerView.superview attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
+    [self.editingTools.drawerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.editingTools.drawerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.editingTools.drawerView.superview attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    
+    self.editingTools.drawerView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.5];
     
     [self setupButtons];
     
@@ -273,7 +277,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self.view bringSubviewToFront:self.printContainerView];
     [self.view bringSubviewToFront:self.cropView];
     [self.view bringSubviewToFront:self.previewView];
-    [self.view bringSubviewToFront:self.drawerView];
+    [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
     
     UIEdgeInsets b = [self imageInsetsOnContainer];
@@ -305,7 +309,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (CGFloat)heightForButtons{
-    return 64 + self.drawerView.frame.size.height;
+    return 64 + self.editingTools.drawerView.frame.size.height;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -591,7 +595,7 @@ const NSInteger kOLEditTagCrop = 40;
     self.editingTools.button3.selected = NO;
     self.editingTools.button4.selected = NO;
     [UIView animateWithDuration:0.25 animations:^{
-        self.drawerView.transform = CGAffineTransformIdentity;
+        self.editingTools.drawerView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished){
         [self.view bringSubviewToFront:self.editingTools];
         if (handler){
@@ -601,18 +605,18 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
-    if (self.collectionView.tag == kOLEditTagTextTools){
-        self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT TOOLS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    if (self.editingTools.collectionView.tag == kOLEditTagTextTools){
+        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT TOOLS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
-    else if (self.collectionView.tag == kOLEditTagTextColors){
-        self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT COLOUR", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    else if (self.editingTools.collectionView.tag == kOLEditTagTextColors){
+        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT COLOUR", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
-    else if (self.collectionView.tag == kOLEditTagFonts){
-        self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FONTS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    else if (self.editingTools.collectionView.tag == kOLEditTagFonts){
+        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FONTS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     //set height
     [UIView animateWithDuration:0.25 animations:^{
-        self.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.drawerView.frame.size.height);
+        self.editingTools.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.editingTools.drawerView.frame.size.height);
     } completion:^(BOOL finished){
         if (handler){
             handler(finished);
@@ -620,7 +624,7 @@ const NSInteger kOLEditTagCrop = 40;
     }];
     
     for (UIButton *b in [self.editingTools buttons]){
-        if (b.tag / 10 == self.collectionView.tag / 10){
+        if (b.tag / 10 == self.editingTools.collectionView.tag / 10){
             b.selected = YES;
         }
     }
@@ -723,13 +727,13 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)selectButton:(UIButton *)sender{
     switch (sender.tag) {
         case kOLEditTagImageTools:
-            self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"IMAGE TOOLS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+            self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"IMAGE TOOLS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             break;
         case kOLEditTagImages:
             [self showImagePicker];
             return;
         case kOLEditTagBorderColors:
-            self.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"COLOURS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+            self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"COLOURS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
 
             break;
         case kOLEditTagCrop:
@@ -741,8 +745,8 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     sender.selected = YES;
-    self.collectionView.tag = sender.tag;
-    [self.collectionView reloadData];
+    self.editingTools.collectionView.tag = sender.tag;
+    [self.editingTools.collectionView reloadData];
     
     [self showDrawerWithCompletionHandler:NULL];
 }
@@ -899,12 +903,12 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (IBAction)onDrawerButtonDoneClicked:(UIButton *)sender {
     [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-        self.collectionView.tag = kOLEditTagTextTools;
+        self.editingTools.collectionView.tag = kOLEditTagTextTools;
         
-        self.drawerHeightCon.constant = self.originalDrawerHeight;
+        self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
         [self.view layoutIfNeeded];
         
-        [self.collectionView reloadData];
+        [self.editingTools.collectionView reloadData];
         [self showDrawerWithCompletionHandler:NULL];
     }];
 }
@@ -942,6 +946,8 @@ const NSInteger kOLEditTagCrop = 40;
     UICollectionViewCell *cell;
     if (collectionView.tag == kOLEditTagTextTools){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
+        [self setupToolCell:cell];
+        
         [cell viewWithTag:10].tintColor = [UIColor blackColor];
         [(UILabel *)[cell viewWithTag:20] setTextColor:[UIColor blackColor]];
         if (indexPath.item == 0){
@@ -955,6 +961,8 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == kOLEditTagImageTools){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
+        [self setupToolCell:cell];
+        
         [cell viewWithTag:10].tintColor = [UIColor blackColor];
         [(UILabel *)[cell viewWithTag:20] setTextColor:[UIColor blackColor]];
         if (indexPath.item == 0){
@@ -1015,7 +1023,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
-    if (self.collectionView.tag == kOLEditTagFonts){
+    if (self.editingTools.collectionView.tag == kOLEditTagFonts){
         return 0;
     }
     
@@ -1024,10 +1032,10 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == kOLEditTagTextTools || collectionView.tag == kOLEditTagImageTools){
-        return CGSizeMake(self.collectionView.frame.size.height * 1.2, self.collectionView.frame.size.height);
+        return CGSizeMake(self.editingTools.collectionView.frame.size.height * 1.25, self.editingTools.collectionView.frame.size.height);
     }
     if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == kOLEditTagBorderColors){
-        return CGSizeMake(self.collectionView.frame.size.height, self.collectionView.frame.size.height);
+        return CGSizeMake(self.editingTools.collectionView.frame.size.height, self.editingTools.collectionView.frame.size.height);
     }
     else if (collectionView.tag == kOLEditTagFonts){
         return CGSizeMake(collectionView.frame.size.width - 40, 30);
@@ -1038,7 +1046,7 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     if (collectionView.tag == kOLEditTagTextTools || collectionView.tag == kOLEditTagImageTools){
-        CGFloat margin = MAX((collectionView.frame.size.width - ([self collectionView:collectionView layout:self.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]].width * [self collectionView:collectionView numberOfItemsInSection:section] + [self collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section] * ([self collectionView:collectionView numberOfItemsInSection:section]-1)))/2.0, 5);
+        CGFloat margin = MAX((collectionView.frame.size.width - ([self collectionView:collectionView layout:self.editingTools.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]].width * [self collectionView:collectionView numberOfItemsInSection:section] + [self collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section] * ([self collectionView:collectionView numberOfItemsInSection:section]-1)))/2.0, 5);
         return UIEdgeInsetsMake(0, margin, 0, margin);
     }
     else if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == kOLEditTagBorderColors){
@@ -1052,13 +1060,12 @@ const NSInteger kOLEditTagCrop = 40;
     if (collectionView.tag == kOLEditTagTextTools){
         if (indexPath.item == 0){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-                [self.view bringSubviewToFront:self.drawerView];
-                [self.view bringSubviewToFront:self.cropView];
+                [self.editingTools bringSubviewToFront:self.editingTools.drawerView];
                 collectionView.tag = kOLEditTagFonts;
                 
-                self.drawerHeightCon.constant = self.originalDrawerHeight + 150;
+                self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight + 150;
                 [self.view layoutIfNeeded];
-                [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+                [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
                 
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
@@ -1066,10 +1073,9 @@ const NSInteger kOLEditTagCrop = 40;
         }
         else if (indexPath.item == 1){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-                [self.view bringSubviewToFront:self.drawerView];
-                [self.view bringSubviewToFront:self.cropView];
+                [self.editingTools bringSubviewToFront:self.editingTools.drawerView];
                 collectionView.tag = kOLEditTagTextColors;
-                [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+                [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
@@ -1104,6 +1110,55 @@ const NSInteger kOLEditTagCrop = 40;
         self.ctaButton.enabled = YES;
         [collectionView reloadData];
     }
+}
+
+- (void)registerCollectionViewCells{
+    [self.editingTools.collectionView registerClass:[OLButtonCollectionViewCell class] forCellWithReuseIdentifier:@"fontCell"];
+    [self.editingTools.collectionView registerClass:[OLButtonCollectionViewCell class] forCellWithReuseIdentifier:@"iconCell"];
+    [self.editingTools.collectionView registerClass:[OLButtonCollectionViewCell class] forCellWithReuseIdentifier:@"toolCell"];
+    [self.editingTools.collectionView registerClass:[OLColorSelectionCollectionViewCell class] forCellWithReuseIdentifier:@"colorSelectionCell"];
+}
+
+- (void)setupFontCell:(UICollectionViewCell *)cell{
+    
+}
+
+- (void)setupToolCell:(UICollectionViewCell *)cell{
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.contentMode = UIViewContentModeCenter;
+    imageView.tag = 10;
+    
+    UILabel *label = [[UILabel alloc] init];
+    label.tag = 20;
+    label.font = [UIFont systemFontOfSize:12];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.minimumScaleFactor = 0.5;
+    if ([label respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]){
+        label.allowsDefaultTighteningForTruncation = YES;
+    }
+    
+    [cell.contentView addSubview:imageView];
+    [cell.contentView addSubview:label];
+    
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(label, imageView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[imageView]-0-|", @"H:|-0-[label]-0-|",
+                         @"V:|-0-[imageView(20)]-3-[label]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [label.superview addConstraints:con];
+
+}
+
+- (void)setupIconCell:(UICollectionViewCell *)cell{
+    
 }
 
 #pragma mark Keyboard Notifications
@@ -1200,14 +1255,14 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     if (self.activeTextField == textField){
-        if (self.collectionView.tag == kOLEditTagFonts){
+        if (self.editingTools.collectionView.tag == kOLEditTagFonts){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-                self.collectionView.tag = kOLEditTagTextTools;
+                self.editingTools.collectionView.tag = kOLEditTagTextTools;
                 
-                self.drawerHeightCon.constant = self.originalDrawerHeight;
+                self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
                 [self.view layoutIfNeeded];
                 
-                [self.collectionView reloadData];
+                [self.editingTools.collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
         }
