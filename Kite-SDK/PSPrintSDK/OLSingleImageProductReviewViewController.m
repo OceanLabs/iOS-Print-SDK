@@ -87,6 +87,10 @@
 
 @implementation OLSingleImageProductReviewViewController
 
+- (CGFloat)aspectRatio{
+    return 1.435714286;
+}
+
 -(void)viewDidLoad{
     [super viewDidLoad];
     

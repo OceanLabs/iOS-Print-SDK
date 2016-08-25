@@ -157,14 +157,6 @@ const NSInteger kOLEditTagCrop = 40;
     self.activeTextField = nil;
 }
 
-- (CGFloat)aspectRatio{
-    if (_aspectRatio == 0){
-        _aspectRatio = 1.435714286;
-    }
-    
-    return _aspectRatio;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -286,8 +278,11 @@ const NSInteger kOLEditTagCrop = 40;
     self.cropViewBottomCon.constant = b.bottom ;
     self.cropViewLeftCon.constant = -b.left;
     
-    self.printContainerView.backgroundColor = self.edits.borderColor ? self.edits.borderColor : [UIColor whiteColor];
-    
+    self.printContainerView.backgroundColor = [self containerBackgroundColor];
+}
+
+- (UIColor *)containerBackgroundColor{
+    return self.edits.borderColor ? self.edits.borderColor : [UIColor whiteColor];
 }
 
 - (BOOL)hasEditableBorder{

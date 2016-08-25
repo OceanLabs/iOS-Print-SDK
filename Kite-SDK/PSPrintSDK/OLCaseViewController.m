@@ -37,20 +37,17 @@
 
 @interface OLSingleImageProductReviewViewController (Private)
 
-@property (weak, nonatomic) IBOutlet UIView *containerView;
-@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 -(void) doCheckout;
+@property (weak, nonatomic) IBOutlet UIView *printContainerView;
 
 @end
 
 @interface OLCaseViewController ()
 
 @property (assign, nonatomic) BOOL downloadedMask;
-@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (strong, nonatomic) IBOutlet UIVisualEffectView *caseVisualEffectView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 @property (strong, nonatomic) UIImage *maskImage;
-@property (strong, nonatomic) OLAsset *imageDisplayed;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
@@ -59,6 +56,10 @@
 @end
 
 @implementation OLCaseViewController
+
+- (CGFloat)aspectRatio{
+    return self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width;
+}
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -105,43 +106,22 @@
         return;
     }
     
-    if (!self.visualEffectView){
-        UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-        
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        UIView *view = self.visualEffectView;
-        [view.layer setMasksToBounds:YES];
-        [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                             @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-    }
-    
-    
     UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
-    [self.containerView removeConstraint:self.maskAspectRatio];
-    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
-    [self.containerView addConstraints:@[con]];
-    self.maskAspectRatio = con;
+    [self.printContainerView removeConstraint:self.aspectRatioConstraint];
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.printContainerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.printContainerView attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
+    [self.printContainerView addConstraints:@[con]];
+    self.aspectRatioConstraint = con;
     
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
     
-    [self maskWithImage:tempMask targetView:self.imageCropView];
+    [self maskWithImage:tempMask targetView:self.cropView];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+}
+
+- (UIColor *)containerBackgroundColor{
+    return [UIColor clearColor];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -159,7 +139,7 @@
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
         self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
         [self.view layoutIfNeeded];
-        [self maskWithImage:self.maskImage targetView:self.imageCropView];
+        [self maskWithImage:self.maskImage targetView:self.cropView];
     }completion:^(id <UIViewControllerTransitionCoordinatorContext> context){}];
 }
 
@@ -174,15 +154,15 @@
             av.tag = 99;
             [av show];
         } else {
-            [self.containerView removeConstraint:self.maskAspectRatio];
-            NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width constant:0];
-            [self.containerView addConstraints:@[con]];
+            [self.printContainerView removeConstraint:self.aspectRatioConstraint];
+            NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.printContainerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.printContainerView attribute:NSLayoutAttributeWidth multiplier:self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width constant:0];
+            [self.printContainerView addConstraints:@[con]];
             
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             
             self.maskImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-            [self maskWithImage:self.maskImage targetView:self.imageCropView];
+            [self maskWithImage:self.maskImage targetView:self.cropView];
             
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
                 self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
@@ -191,12 +171,10 @@
                 self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
              }];
             
-            self.visualEffectView.hidden = YES;
+            self.caseVisualEffectView.hidden = YES;
             self.downloadedMask = YES;
             [self.maskActivityIndicator removeFromSuperview];
             self.maskActivityIndicator = nil;
-            
-            self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
         }
     }];
 }
@@ -221,7 +199,7 @@
 }
 
 -(void) doCheckout{
-    if (!self.imageCropView.image || !self.downloadedMask) {
+    if (!self.cropView.image || !self.downloadedMask) {
         return;
     }
     [super doCheckout];
