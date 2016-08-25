@@ -432,6 +432,19 @@
         }];
     }
 }
+- (IBAction)onInfoButtonTapped:(UIButton *)sender {
+    CGPoint buttonPosition = [sender.superview convertPoint:CGPointZero toView:self.collectionView];
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:buttonPosition];
+    
+    OLProduct *product = [self.productGroups[indexPath.item] products].firstObject;
+    
+    OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+    vc.delegate = self.delegate;
+    vc.userSelectedPhotos = self.userSelectedPhotos;
+    [vc safePerformSelector:@selector(setProduct:) withObject:product];
+    
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
@@ -669,7 +682,6 @@
         UILabel *detailsLabel = [cell.contentView viewWithTag:302];
         
         priceLabel.text = [product unitCost];
-        detailsLabel.text = [product.productTemplate shortDescription];
         
         productTypeLabel.text = product.productTemplate.templateType;
         
@@ -677,6 +689,13 @@
         if (font){
             priceLabel.font = font;
             detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
+        }
+        
+        NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:product.productTemplate.productDescription] mutableCopy];
+        detailsLabel.text = attributedString.string;
+        
+        if (![OLKiteABTesting sharedInstance].skipProductOverview){
+            [[cell.contentView viewWithTag:303] removeFromSuperview];
         }
     }
     else{
