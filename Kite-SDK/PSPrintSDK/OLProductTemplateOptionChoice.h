@@ -27,11 +27,20 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-#import "OLProduct.h"
+#import <Foundation/Foundation.h>
 
-@interface OLProductOptionsViewController : UIViewController
+@interface OLProductTemplateOptionChoice : NSObject
 
-@property (strong, nonatomic) OLProduct *product;
+@property (strong, nonatomic) NSString *name;
+@property (strong, nonatomic) NSString *code;
+@property (strong, nonatomic) NSURL *iconURL;
+@property (strong, nonatomic) NSString *iconImageName;
+@property (strong, nonatomic) UIColor *color;
+@property (strong, nonatomic) NSDictionary *extraCostDict;
+@property (strong, nonatomic) NSURL *productOverlay;
+@property (assign, nonatomic) UIEdgeInsets borderOverride;
+
+- (void)iconWithCompletionHandler:(void(^)(UIImage *icon))handler;
+- (NSString *)extraCost;
 
 @end

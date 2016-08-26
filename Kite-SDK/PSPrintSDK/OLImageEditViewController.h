@@ -31,6 +31,7 @@
 #import "OLRemoteImageCropper.h"
 #import "OLViewController.h"
 #import "OLEditingToolsView.h"
+#import "OLProduct.h"
 
 @class OLImageEditViewController;
 @class OLPhotoEdits;
@@ -65,6 +66,7 @@
 @property (strong, nonatomic) OLAsset *asset;
 @property (weak, nonatomic) UIButton *ctaButton;
 @property (weak, nonatomic) IBOutlet OLEditingToolsView *editingTools;
+@property (strong, nonatomic) OLProduct *product;
 
 
 

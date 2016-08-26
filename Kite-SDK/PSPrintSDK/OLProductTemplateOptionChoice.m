@@ -27,58 +27,17 @@
 //  THE SOFTWARE.
 //
 
-#import "OLProductTemplateOption.h"
+#import "OLProductTemplateOptionChoice.h"
 
-@interface OLProductTemplateOption ()
-
-@property (strong, nonatomic, readwrite) NSArray <OLProductTemplateOptionChoice *> *choices;
-
-@end
-
-@implementation OLProductTemplateOption
-
-- (instancetype)initWithDictionary:(NSDictionary *)options{
-    if (self = [super init]){
-        _code = options[@"code"];
-        _name = options[@"name"];
-        
-        NSMutableArray *choices = [[NSMutableArray alloc] init];
-        if (![options[@"options"] isKindOfClass:[NSArray class]]){
-            return nil;
-        }
-        for (NSDictionary *dict in options[@"options"]){
-            if (![dict isKindOfClass:[NSDictionary class]]){
-                continue;
-            }
-            OLProductTemplateOptionChoice *choice = [[OLProductTemplateOptionChoice alloc] init];
-            choice.code = dict[@"code"];
-            choice.name = dict[@"name"];
-            if (dict[@"icon"]){
-                choice.iconURL = [NSURL URLWithString:dict[@"icon"]];
-            }
-            if (dict[@"color"]){
-//                choice.color =
-            }
-            if (dict[@"extraCost"]){
-//                choice.extraCost = 
-            }
-            if (dict[@"productOverlay"]){
-                choice.productOverlay = [NSURL URLWithString:dict[@"productOverlay"]];
-            }
-            if (dict[@"borderOverride"]){
-//                choice.borderOverride = UIEdgeInsetsMake(0, 0, 0, 0);
-            }
-            
-            [choices addObject:choice];
-        }
-        _choices = choices;
-    }
-    return self;
-}
+@implementation OLProductTemplateOptionChoice
 
 - (void)iconWithCompletionHandler:(void(^)(UIImage *icon))handler{
     handler(nil);
     //TODO
+}
+
+- (NSString *)extraCost{
+    return nil;
 }
 
 @end

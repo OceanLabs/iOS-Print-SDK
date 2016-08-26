@@ -105,8 +105,8 @@ typedef enum {
         _selectedOptions = [[NSMutableDictionary alloc] init];
         
         OLProductTemplateOption *firstOption = [self.productTemplate.options firstObject];
-        if (firstOption.selections.count > 0){
-            _selectedOptions[firstOption.code] = firstOption.selections.firstObject;
+        if (firstOption.choices.count > 0){
+            _selectedOptions[firstOption.code] = firstOption.choices.firstObject;
         }
     }
     return _selectedOptions;
