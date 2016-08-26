@@ -1016,12 +1016,20 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
-    return 25;
+    if(collectionView.tag == kOLEditTagBorderColors){
+        return 25;
+    }
+    else{
+        return 10;
+    }
 }
 
 - (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
-    if (self.editingTools.collectionView.tag == kOLEditTagFonts){
+    if (collectionView.tag == kOLEditTagFonts){
         return 0;
+    }
+    else if (collectionView.tag == kOLEditTagTextTools || collectionView.tag == kOLEditTagImageTools){
+        return 10;
     }
     
     return 25;
@@ -1029,7 +1037,7 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == kOLEditTagTextTools || collectionView.tag == kOLEditTagImageTools){
-        return CGSizeMake(self.editingTools.collectionView.frame.size.height * 1.25, self.editingTools.collectionView.frame.size.height);
+        return CGSizeMake(self.editingTools.collectionView.frame.size.height * 1.5, self.editingTools.collectionView.frame.size.height);
     }
     if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == kOLEditTagBorderColors){
         return CGSizeMake(self.editingTools.collectionView.frame.size.height, self.editingTools.collectionView.frame.size.height);
@@ -1129,6 +1137,7 @@ const NSInteger kOLEditTagCrop = 40;
     label.tag = 20;
     label.font = [UIFont systemFontOfSize:12];
     label.textAlignment = NSTextAlignmentCenter;
+    label.adjustsFontSizeToFitWidth = YES;
     label.minimumScaleFactor = 0.5;
     if ([label respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]){
         label.allowsDefaultTighteningForTruncation = YES;
