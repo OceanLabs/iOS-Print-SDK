@@ -33,7 +33,6 @@
 #import "OLKiteUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIView+RoundRect.h"
-#import "OLEditingToolsView.h"
 #import "OLAsset+Private.h"
 #import "OLUserSession.h"
 #import "OLImagePickerViewController.h"
@@ -63,7 +62,6 @@ const NSInteger kOLEditTagCrop = 40;
 
 @property (strong, nonatomic) OLPhotoTextField *activeTextField;
 @property (assign, nonatomic) CGFloat originalDrawerHeight;
-@property (weak, nonatomic) IBOutlet OLEditingToolsView *editingTools;
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
 @property (strong, nonatomic) IBOutletCollection(UIImageView) NSArray *cropFrameEdges;
@@ -266,11 +264,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     self.cropView.clipsToBounds = YES;
     [self.cropView setGesturesEnabled:NO];
-    [self.view bringSubviewToFront:self.printContainerView];
-    [self.view bringSubviewToFront:self.cropView];
-    [self.view bringSubviewToFront:self.previewView];
-    [self.view bringSubviewToFront:self.editingTools.drawerView];
-    [self.view bringSubviewToFront:self.editingTools];
+    [self orderViews];
     
     UIEdgeInsets b = [self imageInsetsOnContainer];
     self.cropViewTopCon.constant = -b.top;
@@ -279,6 +273,14 @@ const NSInteger kOLEditTagCrop = 40;
     self.cropViewLeftCon.constant = -b.left;
     
     self.printContainerView.backgroundColor = [self containerBackgroundColor];
+}
+
+- (void)orderViews{
+    [self.view bringSubviewToFront:self.printContainerView];
+    [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.previewView];
+    [self.view bringSubviewToFront:self.editingTools.drawerView];
+    [self.view bringSubviewToFront:self.editingTools];
 }
 
 - (UIColor *)containerBackgroundColor{

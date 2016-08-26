@@ -30,6 +30,7 @@
 #import <UIKit/UIKit.h>
 #import "OLRemoteImageCropper.h"
 #import "OLViewController.h"
+#import "OLEditingToolsView.h"
 
 @class OLImageEditViewController;
 @class OLPhotoEdits;
@@ -63,6 +64,8 @@
 @property (assign, nonatomic) UIEdgeInsets borderInsets;
 @property (strong, nonatomic) OLAsset *asset;
 @property (weak, nonatomic) UIButton *ctaButton;
+@property (weak, nonatomic) IBOutlet OLEditingToolsView *editingTools;
+
 
 
 @end

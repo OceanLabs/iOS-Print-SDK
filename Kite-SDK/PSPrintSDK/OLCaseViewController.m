@@ -124,6 +124,15 @@
     return [UIColor clearColor];
 }
 
+- (void)orderViews{
+    [self.view bringSubviewToFront:self.deviceView];
+    [self.view bringSubviewToFront:self.printContainerView];
+    [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.highlightsView];
+    [self.view bringSubviewToFront:self.editingTools.drawerView];
+    [self.view bringSubviewToFront:self.editingTools];
+}
+
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
