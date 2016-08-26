@@ -613,7 +613,7 @@ const NSInteger kOLEditTagCrop = 40;
     else if (self.editingTools.collectionView.tag == kOLEditTagFonts){
         self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FONTS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
-    //set height
+
     [UIView animateWithDuration:0.25 animations:^{
         self.editingTools.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.editingTools.drawerView.frame.size.height);
     } completion:^(BOOL finished){
