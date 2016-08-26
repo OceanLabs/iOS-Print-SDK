@@ -595,6 +595,8 @@ const NSInteger kOLEditTagCrop = 40;
         self.editingTools.drawerView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished){
         [self.view bringSubviewToFront:self.editingTools];
+        self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
+        [self.view layoutIfNeeded];
         if (handler){
             handler(finished);
         }
@@ -999,6 +1001,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == kOLEditTagFonts){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fontCell" forIndexPath:indexPath];
+        [self setupFontCell:cell];
         UILabel *label = [cell viewWithTag:10];
         [label makeRoundRectWithRadius:4];
         label.text = self.fonts[indexPath.item];
@@ -1125,7 +1128,31 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupFontCell:(UICollectionViewCell *)cell{
+    UILabel *label = [[UILabel alloc] init];
+    label.tag = 10;
+    label.font = [UIFont systemFontOfSize:17];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.adjustsFontSizeToFitWidth = YES;
+    label.minimumScaleFactor = 0.3;
+    if ([label respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]){
+        label.allowsDefaultTighteningForTruncation = YES;
+    }
     
+    [cell.contentView addSubview:label];
+    
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(label);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[label]-0-|",
+                         @"V:|-0-[label]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [label.superview addConstraints:con];
 }
 
 - (void)setupToolCell:(UICollectionViewCell *)cell{
