@@ -106,7 +106,7 @@ typedef enum {
         
         OLProductTemplateOption *firstOption = [self.productTemplate.options firstObject];
         if (firstOption.choices.count > 0){
-            _selectedOptions[firstOption.code] = firstOption.choices.firstObject;
+            _selectedOptions[firstOption.code] = firstOption.choices.firstObject.code;
         }
     }
     return _selectedOptions;
