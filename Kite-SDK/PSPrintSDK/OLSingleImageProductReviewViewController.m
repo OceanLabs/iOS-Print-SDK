@@ -66,10 +66,13 @@
 - (void)saveOrder;
 @end
 
-@interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate>
+@interface OLImageEditViewController ()
+- (void)orderViews;
+- (void)onButtonClicked:(UIButton *)sender;
+@end
 
+@interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate, OLScrollCropViewControllerDelegate>
 @property (nonatomic, copy) void (^saveJobCompletionHandler)();
-
 @end
 
 @interface OLProduct ()
@@ -93,6 +96,8 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    
+    self.delegate = self;
     
     self.title = NSLocalizedStringFromTableInBundle(@"Create Image", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     
@@ -169,6 +174,17 @@
         [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLUserSession currentSession].userSelectedPhotos.count];
     }
 #endif
+}
+
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    
+    self.hintView.transform = CGAffineTransformMakeTranslation(self.editingTools.button1.frame.size.width / 2.0, 0);
+}
+
+- (void)orderViews{
+    [super orderViews];
+    [self.view bringSubviewToFront:self.hintView];
 }
 
 - (void)onButtonDoneTapped:(id)sender{
@@ -329,6 +345,23 @@
 
 - (void)exitCropMode{
     [self.cropView setGesturesEnabled:NO];
+}
+
+- (void)onButtonClicked:(UIButton *)sender {
+    NSTimeInterval duration = 0.3;
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.hintView.alpha = 0;
+    } completion:NULL];
+    
+    [super onButtonClicked:sender];
+}
+
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    [[OLUserSession currentSession].userSelectedPhotos addObject:asset];
+}
+
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+    //Do nothing
 }
 
 #pragma mark OLUpsellViewControllerDelegate

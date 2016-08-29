@@ -784,7 +784,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
 }
 
-- (IBAction)onButtonClicked:(UIButton *)sender {
+- (void)onButtonClicked:(UIButton *)sender {
     void (^buttonAction)() = ^void(){
         [self selectButton:sender];
     };
@@ -1029,6 +1029,10 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == OLProductTemplateOptionTypeGeneric){
         OLProductTemplateOptionChoice *choice = self.selectedOption.choices[indexPath.item];
+        __block UIImage *fallbackIcon;
+        [choice iconWithCompletionHandler:^(UIImage *image){ //Fallback image returns syncronously
+            fallbackIcon = image;
+        }];
         if (choice.extraCost){
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"labelCell" forIndexPath:indexPath];
             [self setupLabelCell:cell];
@@ -1037,7 +1041,7 @@ const NSInteger kOLEditTagCrop = 40;
             [(UILabel *)[cell viewWithTag:20] setNumberOfLines:2];
             [(UILabel *)[cell viewWithTag:20] setText:[NSString stringWithFormat:@"%@\n%@", choice.name, choice.extraCost]];
         }
-        else if (choice.iconImageName || choice.iconURL){
+        else if (choice.iconImageName || choice.iconURL || fallbackIcon){
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
             [self setupToolCell:cell];
             
@@ -1068,7 +1072,7 @@ const NSInteger kOLEditTagCrop = 40;
         }
         label.textColor = [UIColor blackColor];
     }
-    
+    cell.clipsToBounds = NO;
     return cell;
 }
 
@@ -1230,7 +1234,7 @@ const NSInteger kOLEditTagCrop = 40;
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
     NSArray *visuals = @[@"H:|-0-[imageView]-0-|", @"H:|-0-[label]-0-|",
-                         @"V:|-0-[imageView(20)]-3-[label]-0-|"];
+                         @"V:|-0-[imageView(20)]-5-[label]-0-|"];
     
     
     for (NSString *visual in visuals) {
@@ -1428,6 +1432,10 @@ const NSInteger kOLEditTagCrop = 40;
     self.asset = addedAssets.lastObject;
     self.edits = [self.asset.edits copy];
     if (self.asset){
+        if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didReplaceAssetWithAsset:)]){
+            [self.delegate scrollCropViewController:self didReplaceAssetWithAsset:self.asset];
+        }
+        
         self.ctaButton.enabled = YES;
         id view = [self.view viewWithTag:1010];
         if ([view isKindOfClass:[UIActivityIndicatorView class]]){

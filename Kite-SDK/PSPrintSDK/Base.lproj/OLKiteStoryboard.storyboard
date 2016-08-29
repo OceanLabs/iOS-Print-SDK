@@ -1870,7 +1870,7 @@ to rearrange the photos</string>
                                 <rect key="frame" x="152" y="84" width="296" height="425"/>
                             </imageView>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Bh-Hi-gAg">
-                                <rect key="frame" x="16" y="404" width="215" height="110"/>
+                                <rect key="frame" x="-22" y="430" width="215" height="110"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38x-9y-Ixf">
                                         <rect key="frame" x="15" y="6" width="200" height="67"/>
@@ -1917,10 +1917,10 @@ some images!</string>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="top" relation="greaterThanOrEqual" secondItem="xRf-1g-got" secondAttribute="bottom" constant="20" id="OhO-Pg-eUE"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" priority="750" constant="20" id="Pqp-YU-I7m"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="20" id="QHW-0P-dKc"/>
-                            <constraint firstItem="0Bh-Hi-gAg" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="16" id="RLs-gD-nD7"/>
+                            <constraint firstItem="0Bh-Hi-gAg" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="-22" id="RLs-gD-nD7"/>
                             <constraint firstItem="ulu-rb-y7r" firstAttribute="trailing" secondItem="nF0-F4-GDd" secondAttribute="trailing" id="VuM-Ly-CPX"/>
                             <constraint firstItem="ulu-rb-y7r" firstAttribute="leading" secondItem="nF0-F4-GDd" secondAttribute="leading" id="XPG-KL-qhC"/>
-                            <constraint firstItem="QM0-Ve-Vzs" firstAttribute="top" secondItem="0Bh-Hi-gAg" secondAttribute="bottom" constant="41" id="ZMw-3z-8GE"/>
+                            <constraint firstItem="QM0-Ve-Vzs" firstAttribute="top" secondItem="0Bh-Hi-gAg" secondAttribute="bottom" constant="15" id="ZMw-3z-8GE"/>
                             <constraint firstItem="aRb-s3-73M" firstAttribute="bottom" secondItem="nF0-F4-GDd" secondAttribute="bottom" id="gDy-wJ-Y6o"/>
                             <constraint firstItem="QM0-Ve-Vzs" firstAttribute="top" relation="greaterThanOrEqual" secondItem="nF0-F4-GDd" secondAttribute="bottom" constant="46" id="mT9-vx-pwa"/>
                             <constraint firstItem="ulu-rb-y7r" firstAttribute="bottom" secondItem="nF0-F4-GDd" secondAttribute="bottom" id="ply-PQ-elO"/>
@@ -2589,7 +2589,7 @@ some images!</string>
                                 </constraints>
                             </view>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="abk-We-G3a">
-                                <rect key="frame" x="16" y="404" width="215" height="110"/>
+                                <rect key="frame" x="-22" y="430" width="215" height="110"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start by tapping on this button" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UmH-R9-S2V">
                                         <rect key="frame" x="15" y="74" width="200" height="21"/>
@@ -2629,10 +2629,10 @@ some images!</string>
                         <constraints>
                             <constraint firstItem="F6s-yG-aS1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OdO-qS-nBf" secondAttribute="leading" constant="20" id="9EE-6I-Yxr"/>
                             <constraint firstItem="7ME-5X-tJJ" firstAttribute="leading" secondItem="OdO-qS-nBf" secondAttribute="leading" id="DuU-wv-ZAv"/>
-                            <constraint firstItem="abk-We-G3a" firstAttribute="leading" secondItem="OdO-qS-nBf" secondAttribute="leading" constant="16" id="MLq-7x-3aN"/>
+                            <constraint firstItem="abk-We-G3a" firstAttribute="leading" secondItem="OdO-qS-nBf" secondAttribute="leading" constant="-22" id="MLq-7x-3aN"/>
                             <constraint firstItem="VhG-fc-Saa" firstAttribute="top" secondItem="7ME-5X-tJJ" secondAttribute="bottom" id="N41-Y4-DXv"/>
                             <constraint firstAttribute="trailing" secondItem="F6s-yG-aS1" secondAttribute="trailing" priority="750" constant="20" id="VJw-dp-XsZ"/>
-                            <constraint firstItem="7ME-5X-tJJ" firstAttribute="top" secondItem="abk-We-G3a" secondAttribute="bottom" constant="41" id="VtD-o7-wru"/>
+                            <constraint firstItem="7ME-5X-tJJ" firstAttribute="top" secondItem="abk-We-G3a" secondAttribute="bottom" constant="15" id="VtD-o7-wru"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="F6s-yG-aS1" secondAttribute="trailing" constant="20" id="Z6x-Y2-HyB"/>
                             <constraint firstItem="F6s-yG-aS1" firstAttribute="leading" secondItem="OdO-qS-nBf" secondAttribute="leading" priority="750" constant="20" id="a1V-1G-eMi"/>
                             <constraint firstAttribute="centerY" secondItem="F6s-yG-aS1" secondAttribute="centerY" priority="750" id="b0D-Tn-EZA"/>

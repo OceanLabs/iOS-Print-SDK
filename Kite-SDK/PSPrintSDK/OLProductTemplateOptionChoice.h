@@ -29,6 +29,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class OLProductTemplateOption;
+
 @interface OLProductTemplateOptionChoice : NSObject
 
 @property (strong, nonatomic) NSString *name;
@@ -39,6 +41,7 @@
 @property (strong, nonatomic) NSDictionary *extraCostDict;
 @property (strong, nonatomic) NSURL *productOverlay;
 @property (assign, nonatomic) UIEdgeInsets borderOverride;
+@property (weak, nonatomic) OLProductTemplateOption *option;
 
 - (void)iconWithCompletionHandler:(void(^)(UIImage *icon))handler;
 - (NSString *)extraCost;

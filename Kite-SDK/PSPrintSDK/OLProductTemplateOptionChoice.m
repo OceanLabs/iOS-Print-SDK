@@ -28,12 +28,45 @@
 //
 
 #import "OLProductTemplateOptionChoice.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLImageDownloader.h"
+#import "OLProductTemplateOption.h"
 
 @implementation OLProductTemplateOptionChoice
 
 - (void)iconWithCompletionHandler:(void(^)(UIImage *icon))handler{
     handler(nil);
-    //TODO
+    if (self.iconURL){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.iconURL withCompletionHandler:^(UIImage *image, NSError *error){
+            if (error || !image){
+                handler([self fallbackIcon]);
+            }
+            else{
+                handler(image);
+            }
+        }];
+    }
+    else{
+        handler([self fallbackIcon]);
+    }
+}
+
+- (UIImage *)fallbackIcon{
+    if (self.iconImageName){
+        return [UIImage imageNamedInKiteBundle:self.iconImageName];
+    }
+    else{ //Match known options with embedded assets
+        if ([self.option.code isEqualToString:@"case_style"]){
+            if ([self.code isEqualToString:@"gloss"]){
+                return [UIImage imageNamedInKiteBundle:@"case-options-gloss"];
+            }
+            else if ([self.code isEqualToString:@"matte"]){
+                return [UIImage imageNamedInKiteBundle:@"case-options-matte"];
+            }
+        }
+    }
+    
+    return nil;
 }
 
 - (NSString *)extraCost{

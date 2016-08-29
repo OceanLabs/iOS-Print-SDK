@@ -36,7 +36,6 @@
 
 @interface OLSingleImageProductReviewViewController : OLImageEditViewController
 
-@property (strong, nonatomic) OLProduct *product;
 @property (weak, nonatomic) IBOutlet UIView *hintView;
 
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;

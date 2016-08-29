@@ -28,10 +28,14 @@
 //
 
 #import "OLProductTemplateOption.h"
+#import "OLImageDownloader.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 @interface OLProductTemplateOption ()
 
 @property (strong, nonatomic, readwrite) NSArray <OLProductTemplateOptionChoice *> *choices;
+@property (strong, nonatomic) NSURL *iconURL;
+@property (strong, nonatomic) NSString *iconImageName;
 
 @end
 
@@ -51,6 +55,7 @@
                 continue;
             }
             OLProductTemplateOptionChoice *choice = [[OLProductTemplateOptionChoice alloc] init];
+            choice.option = self;
             choice.code = dict[@"code"];
             choice.name = dict[@"name"];
             if (dict[@"icon"]){
@@ -78,7 +83,32 @@
 
 - (void)iconWithCompletionHandler:(void(^)(UIImage *icon))handler{
     handler(nil);
-    //TODO
+    if (self.iconURL){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.iconURL withCompletionHandler:^(UIImage *image, NSError *error){
+            if (error || !image){
+                handler([self fallbackIcon]);
+            }
+            else{
+                handler(image);
+            }
+        }];
+    }
+    else{
+        handler([self fallbackIcon]);
+    }
+}
+
+- (UIImage *)fallbackIcon{
+    if (self.iconImageName){
+        return [UIImage imageNamedInKiteBundle:self.iconImageName];
+    }
+    else{ //Match known options with embedded assets
+        if ([self.code isEqualToString:@"case_style"]){
+            return [UIImage imageNamedInKiteBundle:@"case-options"];
+        }
+    }
+    
+    return nil;
 }
 
 @end

@@ -39,7 +39,7 @@
                                 <color key="titleColor" red="0.34901960780000002" green="0.75686274509999996" blue="0.89019607840000003" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                         </button>
-                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vaT-8t-8VO">
+                        <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vaT-8t-8VO">
                             <rect key="frame" x="0.0" y="29" width="600" height="40"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>

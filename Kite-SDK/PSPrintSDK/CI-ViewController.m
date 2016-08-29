@@ -128,10 +128,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 - (IBAction)onButtonPrintRemotePhotos:(id)sender {
     if (![self isAPIKeySet]) return;
-    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]];
+    NSArray *assets = @[];
     
     [self printWithAssets:assets];
 }

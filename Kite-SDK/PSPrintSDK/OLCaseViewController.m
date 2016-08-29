@@ -131,6 +131,7 @@
     [self.view bringSubviewToFront:self.highlightsView];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
+    [self.view bringSubviewToFront:self.hintView];
 }
 
 - (void)viewDidAppear:(BOOL)animated{

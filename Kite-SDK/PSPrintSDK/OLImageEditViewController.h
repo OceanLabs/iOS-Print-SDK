@@ -40,12 +40,11 @@
 @protocol OLScrollCropViewControllerDelegate <NSObject>
 
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage;
-- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper;
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset;
 
 @optional
 - (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper;
-
+- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper;
 @end
 
 @interface OLImageEditViewController : OLViewController
