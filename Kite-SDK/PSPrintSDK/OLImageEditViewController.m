@@ -1421,6 +1421,7 @@ const NSInteger kOLEditTagCrop = 40;
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     vc.delegate = self;
     vc.selectedAssets = [[NSMutableArray alloc] init];
+    vc.maximumPhotos = 1;
     [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 

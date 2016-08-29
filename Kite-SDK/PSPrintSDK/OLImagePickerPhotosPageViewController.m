@@ -36,6 +36,7 @@
 #import "OLImagePickerPhotosPageViewController+Instagram.h"
 #import "UIView+RoundRect.h"
 #import "OLAsset+Private.h"
+#import "OLKiteUtils.h"
 
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
@@ -338,9 +339,30 @@ NSInteger OLImagePickerMargin = 0;
         else if ([asset isKindOfClass:[OLAsset class]]){
             printPhoto = asset;
         }
+        
+        if (self.imagePicker.maximumPhotos == 1){
+            [self.imagePicker.selectedAssets addObject:printPhoto];
+            [self.imagePicker.nextButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+        }
+        
         if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
             [self.imagePicker.selectedAssets removeObject:printPhoto];
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+        }
+        else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){
+            UIAlertController *alert =
+            [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Maximum Photos Reached", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+                                                message:[NSString stringWithFormat:self.imagePicker.maximumPhotos == 1 ? NSLocalizedStringFromTableInBundle(@"Please select only %ld photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") : NSLocalizedStringFromTableInBundle(@"Please select up to %ld photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)self.imagePicker.maximumPhotos]
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *action =
+            [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+                                     style:UIAlertActionStyleDefault
+                                   handler:nil];
+            
+            [alert addAction:action];
+            
+            [self.imagePicker presentViewController:alert animated:YES completion:nil];
         }
         else{
             [self.imagePicker.selectedAssets addObject:printPhoto];

@@ -42,8 +42,6 @@
 @interface OLImagePickerPhotosPageViewController : OLImagePickerPageViewController
 
 @property (assign, nonatomic) NSInteger quantityPerItem;
-@property (assign, nonatomic) NSInteger minimumPhotos;
-@property (assign, nonatomic) NSInteger maximumPhotos;
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *albumsCollectionView;

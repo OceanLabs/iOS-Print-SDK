@@ -47,6 +47,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *nextButton;
 @property (weak, nonatomic) id<OLImagePickerViewControllerDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *selectedAssets;
+@property (assign, nonatomic) NSInteger maximumPhotos;
+@property (assign, nonatomic) NSInteger minimumPhotos;
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (void)reloadPageController;
 - (void)onButtonNextClicked:(UIButton *)sender;
