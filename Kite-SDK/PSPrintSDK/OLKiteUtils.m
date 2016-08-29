@@ -256,6 +256,9 @@
                                               if (error){
                                                   failure(error);
                                               }
+                                              else if (!((data && [(NSHTTPURLResponse *)response statusCode] >= 200 && [(NSHTTPURLResponse *)response statusCode] <= 299))){
+                                                  failure([NSError errorWithDomain:@"ly.kite.remoteconfig" code:[(NSHTTPURLResponse *)response statusCode] userInfo:nil]);
+                                              }
                                               else if (data){
                                                   NSURL *fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"remote.plist"]];
                                                   [data writeToURL:fileURL atomically:YES];

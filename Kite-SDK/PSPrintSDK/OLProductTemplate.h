@@ -66,6 +66,7 @@ typedef enum {
 @property (assign, nonatomic) OLTemplateUI templateUI;
 @property (strong, nonatomic) NSString *_Nullable templateClass;
 @property (strong, nonatomic) NSString *_Nullable templateType;
+@property (strong, nonatomic) NSString *_Nullable shortDescription;
 @property (strong, nonatomic) UIColor *_Nullable labelColor;
 @property (assign, nonatomic) CGSize sizeCm;
 @property (assign, nonatomic) CGSize sizeInches;

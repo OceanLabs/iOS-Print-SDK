@@ -62,6 +62,11 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.detailsLabel setFont:font];
+    }
+    
 //    if ([OLKiteABTesting sharedInstance].darkTheme){
 //        self.detailsLabel.textColor = [UIColor whiteColor];
 //        self.optionLabel.textColor = [UIColor whiteColor];

@@ -541,6 +541,9 @@
 		2EBDA6DE1CEB1B0500397082 /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
 		2EBDA6DF1CEB1B0500397082 /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
 		2EBDA6E01CEB1B0500397082 /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
+		2EC43DDB1D65B3D000915DDE /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
+		2EC43DDC1D65B3D100915DDE /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
+		2EC43DDD1D65B3D200915DDE /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
 		2ED36B3A1C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */; };
 		2ED389911C917D2000DC2314 /* OLPhotoTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED389901C917D2000DC2314 /* OLPhotoTextField.m */; };
@@ -617,6 +620,9 @@
 		E22963931C43DDFC002A90CA /* CTAssetThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = E229631F1C43DC90002A90CA /* CTAssetThumbnailView.m */; };
 		E22963941C43DE24002A90CA /* libCTAssetsPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22963671C43DD21002A90CA /* libCTAssetsPicker.a */; };
 		E29C858E1BE3B5C50041D4CF /* OLImageEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLImageEditViewController.m */; };
+		E237FA641D63035600A7912E /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
+		E29C858B1BE3B5C50041D4CF /* OLURLDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = CDE0744A188D7730009ADFA2 /* OLURLDataSource.m */; };
+		E29C858E1BE3B5C50041D4CF /* OLScrollCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLScrollCropViewController.m */; };
 		E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
 		E29C85901BE3B5C50041D4CF /* OLInfoPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */; };
 		E29C85911BE3B5C50041D4CF /* OLIntegratedCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */; };
@@ -1019,6 +1025,7 @@
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
 		2EEB52FE1D7062870066B802 /* OLProductTemplateOptionChoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOptionChoice.h; sourceTree = "<group>"; };
 		2EEB52FF1D7062870066B802 /* OLProductTemplateOptionChoice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOptionChoice.m; sourceTree = "<group>"; };
+		2EEB52FA1D6C8F4C0066B802 /* OLKiteViewController+Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OLKiteViewController+Theme.h"; sourceTree = "<group>"; };
 		2EF439291BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderSubmitStatusRequest.h; sourceTree = "<group>"; };
 		2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintOrderSubmitStatusRequest.m; sourceTree = "<group>"; };
 		2EF53E391B55421A00BF936A /* UIImage+OLUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+OLUtils.h"; path = "PSPrintSDK/Categories/UIImage+OLUtils.h"; sourceTree = "<group>"; };
@@ -1218,6 +1225,8 @@
 		E229635F1C43DCDF002A90CA /* PureLayoutDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PureLayoutDefines.h; path = vendor/PureLayout/PureLayout/PureLayout/PureLayoutDefines.h; sourceTree = "<group>"; };
 		E22963671C43DD21002A90CA /* libCTAssetsPicker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCTAssetsPicker.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22963951C43DF29002A90CA /* CTAssetsPickerController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = CTAssetsPickerController.bundle; path = vendor/CTAssetsPickerController.bundle; sourceTree = SOURCE_ROOT; };
+		E237FA621D63035600A7912E /* UIColor+OLHexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+OLHexString.h"; path = "PSPrintSDK/Categories/UIColor+OLHexString.h"; sourceTree = "<group>"; };
+		E237FA631D63035600A7912E /* UIColor+OLHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+OLHexString.m"; path = "PSPrintSDK/Categories/UIColor+OLHexString.m"; sourceTree = "<group>"; };
 		E24452E61BFD20C80086BF03 /* PayPalConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalConfiguration.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalConfiguration.h"; sourceTree = "<group>"; };
 		E24452E71BFD20C80086BF03 /* PayPalFuturePaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalFuturePaymentViewController.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalFuturePaymentViewController.h"; sourceTree = "<group>"; };
 		E24452E81BFD20C80086BF03 /* PayPalMobile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayPalMobile.h; path = "vendor/PayPal-iOS-SDK/PayPalMobile/PayPalMobile.h"; sourceTree = "<group>"; };
@@ -1590,6 +1599,7 @@
 				3D8122E21A759E41004E7297 /* RMImageCropper */,
 				2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */,
 				2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */,
+				2EEB52FA1D6C8F4C0066B802 /* OLKiteViewController+Theme.h */,
 				2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */,
 				2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */,
 				2EF53E3C1B5549B900BF936A /* OLInfoPageViewController.h */,
@@ -1655,6 +1665,8 @@
 		2EA8BEC11A48509E008A9248 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				E237FA621D63035600A7912E /* UIColor+OLHexString.h */,
+				E237FA631D63035600A7912E /* UIColor+OLHexString.m */,
 				2E53E0CB1C1AEAAD00BF7887 /* UIViewController+OLMethods.h */,
 				2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */,
 				3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */,
@@ -2240,6 +2252,7 @@
 				2E89E4351CC6218100C9EE93 /* [CP] Embed Pods Frameworks */,
 				4725309EF80D2315EB50E573 /* [CP] Embed Pods Frameworks */,
 				D801D965E628C76A96EAF7B6 /* [CP] Copy Pods Resources */,
+				5B056D1E2BDF7B73AB227580 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2277,6 +2290,7 @@
 				2EADD8551BE79D6D0051CD31 /* Resources */,
 				1F2A45680D8F91AE446B1B42 /* [CP] Embed Pods Frameworks */,
 				25F251D912C22DDCD4AD9784 /* [CP] Copy Pods Resources */,
+				597D095728C0BDB14B419D31 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2297,6 +2311,7 @@
 				CD73BF87186215790009DE03 /* Resources */,
 				F6BC9A4FFAC7D6C34042D38F /* [CP] Embed Pods Frameworks */,
 				D7B65291D575359923FFAA7A /* [CP] Copy Pods Resources */,
+				865BCBE0822B56080AC6D796 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2630,6 +2645,36 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		597D095728C0BDB14B419D31 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5B056D1E2BDF7B73AB227580 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		65AFD3F0B85AB4008107FCC9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2658,6 +2703,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		865BCBE0822B56080AC6D796 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A5C135E7BF18F5D8A7843D7D /* [CP] Check Pods Manifest.lock */ = {
@@ -2755,6 +2815,7 @@
 				2E96BADE1D2FC109002F5F74 /* qrinput.c in Sources */,
 				2E96BAC01D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
 				2E898C651CC518180041CCD8 /* OLGreetingCardPrintJob.m in Sources */,
+				2EC43DDB1D65B3D000915DDE /* UIColor+OLHexString.m in Sources */,
 				2E67B9261D2671DE00914D56 /* OLPhotoTextField.m in Sources */,
 				2E898C671CC518180041CCD8 /* OLAddressEditViewController.m in Sources */,
 				2E898C681CC518180041CCD8 /* OLKiteUtils.m in Sources */,
@@ -2912,6 +2973,7 @@
 				2EA3D37D1C9C04B500B99BCD /* OLAddressSearchRequest.m in Sources */,
 				2EB612E91D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */,
 				2E67B9231D264FD600914D56 /* OLPaymentViewControllerV2.m in Sources */,
+				2EC43DDD1D65B3D200915DDE /* UIColor+OLHexString.m in Sources */,
 				2EA3D37E1C9C04B500B99BCD /* OLPayPalCard.m in Sources */,
 				2EA3D37F1C9C04B500B99BCD /* OLProductPrintJob.m in Sources */,
 				2EB715DE1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m in Sources */,
@@ -3054,6 +3116,7 @@
 				2EADD8021BE79D6D0051CD31 /* OLKiteViewController.m in Sources */,
 				2EADD8041BE79D6D0051CD31 /* OLPhotobookPageContentViewController.m in Sources */,
 				2E5D95AC1CA984E00080EF07 /* OLUpsellViewController.m in Sources */,
+				E237FA641D63035600A7912E /* UIColor+OLHexString.m in Sources */,
 				2EADD8071BE79D6D0051CD31 /* UIImageView+FadeIn.m in Sources */,
 				2EADD8081BE79D6D0051CD31 /* OLAddressSearchRequest.m in Sources */,
 				2E96BAE51D2FC109002F5F74 /* rscode.c in Sources */,
@@ -3342,6 +3405,7 @@
 				2E36A1DE1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
 				2EB612F41D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2E67B92C1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
+				2EC43DDC1D65B3D100915DDE /* UIColor+OLHexString.m in Sources */,
 				E29C85DE1BE3B5C50041D4CF /* OLProductTemplateSyncRequest.m in Sources */,
 				E29C85E41BE3B5C50041D4CF /* OLProductTypeSelectionViewController.m in Sources */,
 				E29C85E51BE3B5C50041D4CF /* OLPrintOrderRequest.m in Sources */,

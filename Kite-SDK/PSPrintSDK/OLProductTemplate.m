@@ -61,6 +61,7 @@ static NSString *const kKeyGridCountX = @"co.oceanlabs.pssdk.kKeyGridCountX";
 static NSString *const kKeyGridCountY = @"co.oceanlabs.pssdk.kKeyGridCountY";
 static NSString *const kKeySupportedOptions = @"co.oceanlabs.pssdk.kKeySupportedOptions";
 static NSString *const kKeyUpsellOffers = @"co.oceanlabs.pssdk.kKeyUpsellOffers";
+static NSString *const kKeyShortDescription = @"co.oceanlabs.pssdk.kKeyShortDescription";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -402,6 +403,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeInteger:self.gridCountY forKey:kKeyGridCountY];
     [aCoder encodeObject:self.supportedOptions forKey:kKeySupportedOptions];
     [aCoder encodeObject:self.upsellOffers forKey:kKeyUpsellOffers];
+    [aCoder encodeObject:self.shortDescription forKey:kKeyShortDescription];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -434,6 +436,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _gridCountY = [aDecoder decodeIntegerForKey:kKeyGridCountY];
         self.supportedOptions = [aDecoder decodeObjectForKey:kKeySupportedOptions];
         self.upsellOffers = [aDecoder decodeObjectForKey:kKeyUpsellOffers];
+        self.shortDescription = [aDecoder decodeObjectForKey:kKeyShortDescription];
     }
     
     return self;

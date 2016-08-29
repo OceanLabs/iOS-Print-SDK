@@ -42,6 +42,7 @@
 #import "OLPaymentViewController.h"
 #import "OLImagePickerViewController.h"
 #import "OLNavigationController.h"
+#import "OLKiteABTesting.h"
 
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionHelp = 1;
@@ -94,7 +95,7 @@ static const NSInteger kSectionPages = 2;
     
     self.title = NSLocalizedString(@"Move Pages", @"");
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
@@ -127,7 +128,16 @@ static const NSInteger kSectionPages = 2;
     [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     [self.nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.nextButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    else{
+        [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+    }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.nextButton.titleLabel setFont:font];
+    }
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
     [self.collectionView addSubview:self.nextButton];

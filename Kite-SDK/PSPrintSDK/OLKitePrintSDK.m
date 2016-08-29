@@ -97,6 +97,7 @@ static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
 static BOOL QRCodeUploadEnabled = NO;
 static BOOL isKiosk = NO;
+static BOOL allowImageZooming = YES;
 
 static NSString *paypalAccountId = nil;
 static NSString *paypalPublicKey = nil;
@@ -300,6 +301,14 @@ static NSString *instagramRedirectURI = nil;
     
     [OLPayPalCard clearLastUsedCard];
     [OLStripeCard clearLastUsedCard];
+}
+
++ (void)setAllowsImageZooming:(BOOL)allowZoom{
+    allowImageZooming = allowZoom;
+}
+
++ (BOOL)allowsImageZooming{
+    return allowImageZooming;
 }
 
 #pragma mark - Internal

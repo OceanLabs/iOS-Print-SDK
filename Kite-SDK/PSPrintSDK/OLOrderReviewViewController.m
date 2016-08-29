@@ -115,7 +115,7 @@ UIViewControllerPreviewingDelegate>
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
@@ -139,9 +139,18 @@ UIViewControllerPreviewingDelegate>
     [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     [self.nextButton setTitle:NSLocalizedString(@"Add to Basket", @"") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.nextButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    else{
+        [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+    }
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.nextButton.titleLabel setFont:font];
+    }
     [self.collectionView addSubview:self.nextButton];
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
@@ -580,6 +589,9 @@ UIViewControllerPreviewingDelegate>
     
     UIButton *enhanceButton = (UIButton *)[cell.contentView viewWithTag:11];
     [enhanceButton addTarget:self action:@selector(onButtonEnhanceClicked:) forControlEvents:UIControlEventTouchUpInside];
+    if ([OLKiteABTesting sharedInstance].lightThemeColor2){
+        [enhanceButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
+    }
     
     UIButton *upButton = (UIButton *)[cell.contentView viewWithTag:12];
     [upButton addTarget:self action:@selector(onButtonUpArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -589,6 +601,11 @@ UIViewControllerPreviewingDelegate>
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies]+1]];
+    if ([OLKiteABTesting sharedInstance].lightThemeColor3){
+        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+        [upButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+        [downButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+    }
     
     OLAsset *printPhoto = (OLAsset*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
     CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];

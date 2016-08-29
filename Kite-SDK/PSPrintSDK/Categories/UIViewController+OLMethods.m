@@ -40,6 +40,7 @@
 #import "OLKiteABTesting.h"
 #import "UIView+RoundRect.h"
 #import "OLUserSession.h"
+#import "OLImageDownloader.h"
 
 @interface OLPaymentViewController ()
 - (void)onBarButtonOrdersClicked;
@@ -77,25 +78,20 @@
         qtyLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)count];
         qtyLabel.minimumScaleFactor = 0.5;
         qtyLabel.adjustsFontSizeToFitWidth = YES;
-        qtyLabel.backgroundColor = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
+        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+            qtyLabel.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+        }
+        else{
+            qtyLabel.backgroundColor = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
+        }
         [qtyLabel makeRoundRectWithRadius:6.5];
         
         [basketButton addSubview:qtyLabel];
-        if ([self.navigationController.navigationBar.tintColor isEqual:imageView.tintColor]){
-            imageView.tintColor = [UIColor colorWithRed:0.349 green:0.361 blue:0.365 alpha:1.000];
-        }
-        else{
-            imageView.tintColor = self.navigationController.navigationBar.tintColor;
-        }
+        imageView.tintColor = [UIColor colorWithRed:0.349 green:0.361 blue:0.365 alpha:1.000];
     }
     else{
         [imageView setImage:[UIImage imageNamedInKiteBundle:@"cart-empty"]];
-        if ([self.navigationController.navigationBar.tintColor isEqual:imageView.tintColor]){
-            imageView.tintColor = [UIColor colorWithRed:0.349 green:0.361 blue:0.365 alpha:1.000];
-        }
-        else{
-            imageView.tintColor = self.navigationController.navigationBar.tintColor;
-        }
+        imageView.tintColor = [UIColor colorWithRed:0.349 green:0.361 blue:0.365 alpha:1.000];
     }
     
     if (self.isPushed){
@@ -122,7 +118,16 @@
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
         [(OLPaymentViewController *)vc setPresentedModally:YES];
         
-        [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
+        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+                if (error) return;
+                [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:vc action:@selector(dismiss)];
+            }];
+        }
+        else{
+            [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
+        }
         
 //        if ([self isMemberOfClass:[OLPaymentViewController class]]){
 //            [(UIViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"menu_button_orders"] style:UIBarButtonItemStylePlain target:vc action:@selector(onBarButtonOrdersClicked)];
