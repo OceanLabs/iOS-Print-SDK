@@ -95,11 +95,12 @@
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eId-4o-ISN">
                     <rect key="frame" x="499.5" y="0.0" width="100" height="100"/>
+                    <color key="backgroundColor" red="0.34901960780000002" green="0.75686274509999996" blue="0.89019607840000003" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="100" id="jM8-f8-Svx"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                    <state key="normal" title="Done" backgroundImage="blue-bg">
+                    <state key="normal" title="Done">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <state key="disabled" backgroundImage="grey-bg"/>
@@ -158,7 +159,6 @@
     </objects>
     <resources>
         <image name="add-image-icon" width="24" height="24"/>
-        <image name="blue-bg" width="100" height="44"/>
         <image name="grey-bg" width="100" height="44"/>
         <image name="paint-bucket-icon" width="21" height="19"/>
         <image name="shirt-size-icon" width="24" height="21"/>

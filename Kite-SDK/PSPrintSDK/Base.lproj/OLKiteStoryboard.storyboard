@@ -1515,8 +1515,8 @@ to rearrange the photos</string>
                                             <nil key="highlightedColor"/>
                                             <variation key="default">
                                                 <mask key="constraints">
-                                                    <exclude reference="e1P-yq-X5O"/>
                                                     <exclude reference="dWM-A2-67N"/>
+                                                    <exclude reference="e1P-yq-X5O"/>
                                                 </mask>
                                             </variation>
                                         </label>
@@ -1839,7 +1839,7 @@ to rearrange the photos</string>
                                 </variation>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ProductCellDark" id="z8N-Tf-9o7">
-                                <rect key="frame" x="150.5" y="596" width="299" height="264"/>
+                                <rect key="frame" x="150.5" y="862" width="299" height="264"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="299" height="264"/>
@@ -2095,9 +2095,6 @@ some images!</string>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="0Cd-3J-LPU" kind="relationship" relationship="rootViewController" id="UqI-DQ-l6k"/>
-                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pcz-Pp-cBS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2148,6 +2145,7 @@ some images!</string>
                                         </view>
                                         <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ywb-1O-Wlz">
                                             <rect key="frame" x="0.0" y="305" width="46" height="46"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="46" id="1AX-ZK-XDQ"/>
                                                 <constraint firstAttribute="width" constant="46" id="xbt-MJ-Szf"/>
@@ -2166,6 +2164,8 @@ some images!</string>
                                         </label>
                                         <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iox-F6-2wa">
                                             <rect key="frame" x="92" y="305" width="46" height="46"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="tintColor" red="0.96470588239999999" green="0.73333333329999995" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <state key="normal" title="Button" image="button_arrow_up">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
@@ -4356,5 +4356,6 @@ only £9.99 £8.99</string>
         <image name="right chevron" width="12" height="19"/>
         <image name="tag" width="16" height="14"/>
         <image name="tick" width="12" height="9"/>
+        <image name="white gradient" width="374" height="100"/>
     </resources>
 </document>
