@@ -700,8 +700,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
 }
 
-- (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
+- (void)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
     if (self.ctaButton.enabled && self.previewView && [self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){ //discard changes
+        [self exitCropMode];
         self.previewSourceView.hidden = NO;
         
         UIEdgeInsets b = [self imageInsetsOnContainer];
