@@ -88,13 +88,16 @@ NSInteger OLImagePickerMargin = 0;
     self.collectionView.dataSource = self;
     self.albumsCollectionView.dataSource = self;
     self.albumsCollectionView.delegate = self;
-        
+    
     self.albumsCollectionView.transform = CGAffineTransformMakeRotation(M_PI);
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     self.albumLabel.text = self.provider.collections.firstObject.name;
     self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
+    
+    self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
+    [self.nextButton setTitle:self.imagePicker.nextButton.currentTitle forState:UIControlStateNormal];
     
     UIVisualEffect *blurEffect;
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
@@ -464,7 +467,6 @@ NSInteger OLImagePickerMargin = 0;
     BOOL isOpening = CGAffineTransformIsIdentity(self.albumsContainerView.transform);
     
     if (isOpening){
-        self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
         self.nextButton.hidden = NO;
         self.imagePicker.nextButton.hidden = YES;
     }
@@ -534,7 +536,6 @@ NSInteger OLImagePickerMargin = 0;
             CGFloat time = ABS(0.8 - (0.8 * percentComplete));
             
             if (opening){
-                self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
                 self.nextButton.hidden = NO;
                 self.imagePicker.nextButton.hidden = YES;
                 
