@@ -172,6 +172,7 @@ const NSInteger kOLEditTagCrop = 40;
     self.editingTools.collectionView.delegate = self;
     
     self.textFieldsView = [[UIView alloc] init];
+    self.textFieldsView.userInteractionEnabled = NO;
     [self.view insertSubview:self.textFieldsView aboveSubview:self.cropView];
     self.textFieldsView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
