@@ -76,6 +76,7 @@ static const NSInteger kSectionPages = 2;
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 @property (strong, nonatomic) UIButton *nextButton;
 @property (assign, nonatomic) BOOL autoAddedCover;
+@property (assign, nonatomic) BOOL shownImagePicker;
 
 @end
 
@@ -161,7 +162,8 @@ static const NSInteger kSectionPages = 2;
         self.haveCachedCells = YES;
     }
     
-    if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
+    if (!self.shownImagePicker && [OLUserSession currentSession].userSelectedPhotos.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
+        self.shownImagePicker = YES;
         [self photobook:self.childViewControllers[1] userDidTapOnImageWithIndex:0];
     }
 }
@@ -844,6 +846,24 @@ static const NSInteger kSectionPages = 2;
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    if (self.longPressImageIndex == -1){
+        self.coverPhoto = asset;
+        self.interactionPhotobook.coverPhoto = self.coverPhoto;
+        [self.interactionPhotobook loadCoverPhoto];
+    }
+    else{
+        NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.photobookPhotos[self.longPressImageIndex]];
+        [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
+        [self.photobookPhotos replaceObjectAtIndex:self.longPressImageIndex withObject:asset];
+        
+        self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
+        [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
+    }
+    
+}
+
+
 #pragma mark - Adding new images
 
 - (void)addMorePhotosFromView:(UIView *)view{
@@ -889,6 +909,7 @@ static const NSInteger kSectionPages = 2;
         }
     }
     
+    [self.photobookPhotos removeObjectsInArray:removedAssets];
     [self updatePhotobookPhotos];
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         if (!photobook.bookClosed){

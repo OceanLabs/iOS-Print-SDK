@@ -686,6 +686,22 @@ static const CGFloat kBookEdgePadding = 38;
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    if (self.croppingPrintPhoto == self.coverPhoto){
+        self.coverPhoto = asset;
+        [self loadCoverPhoto];
+    }
+    else{
+        NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.croppingPrintPhoto];
+        [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
+        index = [self.photobookPhotos indexOfObjectIdenticalTo:self.croppingPrintPhoto];
+        [self.photobookPhotos replaceObjectAtIndex:index withObject:asset];
+        
+         [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
+    }
+    self.croppingPrintPhoto = asset;
+}
+
 #pragma mark - UIPageViewControllerDataSource and delegate
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
@@ -1512,7 +1528,7 @@ static const CGFloat kBookEdgePadding = 38;
             }
         }
     }
-    
+    [self.photobookPhotos removeObjectsInArray:removedAssets];
     [self updatePhotobookPhotos];
     for (OLPhotobookPageContentViewController *page in self.pageController.viewControllers){
         [page loadImageWithCompletionHandler:NULL];
