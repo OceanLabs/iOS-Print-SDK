@@ -464,6 +464,7 @@ NSInteger OLImagePickerMargin = 0;
     BOOL isOpening = CGAffineTransformIsIdentity(self.albumsContainerView.transform);
     
     if (isOpening){
+        self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
         self.nextButton.hidden = NO;
         self.imagePicker.nextButton.hidden = YES;
     }
@@ -533,6 +534,7 @@ NSInteger OLImagePickerMargin = 0;
             CGFloat time = ABS(0.8 - (0.8 * percentComplete));
             
             if (opening){
+                self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
                 self.nextButton.hidden = NO;
                 self.imagePicker.nextButton.hidden = YES;
                 
