@@ -434,7 +434,7 @@ static NSOperationQueue *imageOperationQueue;
 - (void)resizeImage:(UIImage *)image size:(CGSize)size applyEdits:(BOOL)applyEdits completion:(void(^)(UIImage *image))handler{
     __block UIImage *blockImage = image;
     void (^localBlock)() = ^{
-        if (self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical){
+        if ((self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical) && applyEdits){
             blockImage = [UIImage imageWithCGImage:blockImage.CGImage scale:blockImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:blockImage.imageOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
         }
         
