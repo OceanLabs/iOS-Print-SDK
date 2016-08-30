@@ -599,6 +599,7 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Drawer
 
 - (void)dismissDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
+    self.selectedOption = nil;
     self.editingTools.button1.selected = NO;
     self.editingTools.button2.selected = NO;
     self.editingTools.button3.selected = NO;
@@ -1047,7 +1048,6 @@ const NSInteger kOLEditTagCrop = 40;
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"labelCell" forIndexPath:indexPath];
             [self setupLabelCell:cell];
             
-            
             [(UILabel *)[cell viewWithTag:20] setNumberOfLines:2];
             [(UILabel *)[cell viewWithTag:20] setText:[NSString stringWithFormat:@"%@\n%@", choice.name, choice.extraCost]];
         }
@@ -1066,6 +1066,11 @@ const NSInteger kOLEditTagCrop = 40;
             
             [(UILabel *)[cell viewWithTag:10] setText:choice.name];
         }
+        
+        if (self.selectedOption.type == OLProductTemplateOptionTypeGeneric){
+            [(OLButtonCollectionViewCell *)cell setSelectable:YES];
+        }
+        [cell setSelected:[self.product.selectedOptions[self.selectedOption.code] isEqualToString:choice.code]];
     }
     else if (collectionView.tag == kOLEditTagFonts){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fontCell" forIndexPath:indexPath];
@@ -1152,7 +1157,7 @@ const NSInteger kOLEditTagCrop = 40;
         }
         
     }
-    if (collectionView.tag == kOLEditTagImageTools){
+    else if (collectionView.tag == kOLEditTagImageTools){
         if (indexPath.item == 0){
             [self onButtonHorizontalFlipClicked:nil];
         }
@@ -1179,6 +1184,15 @@ const NSInteger kOLEditTagCrop = 40;
         [self.activeTextField updateSize];
         self.ctaButton.enabled = YES;
         [collectionView reloadData];
+    }
+    else if (self.selectedOption){
+        self.product.selectedOptions[self.selectedOption.code] = self.selectedOption.choices[indexPath.item].code;
+        
+        for (NSIndexPath *visibleIndexPath in [collectionView indexPathsForVisibleItems]){
+            if (![visibleIndexPath isEqual:indexPath]){
+                [collectionView cellForItemAtIndexPath:visibleIndexPath].selected = NO;
+            }
+        }
     }
 }
 
