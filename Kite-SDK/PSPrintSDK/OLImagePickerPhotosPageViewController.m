@@ -69,6 +69,12 @@ NSInteger OLImagePickerMargin = 0;
     self.inProgressPhotosRequest = nil;
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    [self.collectionView reloadData];
+}
+
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
@@ -166,6 +172,11 @@ NSInteger OLImagePickerMargin = 0;
         OLAsset *printPhoto;
         if ([asset isKindOfClass:[PHAsset class]]){
             printPhoto = [OLAsset assetWithPHAsset:asset];
+            
+            //If it's already selected use the existing OLAsset instead of the newly created one
+            if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
+                printPhoto = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:printPhoto]];
+            }
         }
         else if ([asset isKindOfClass:[OLAsset class]]){
             printPhoto = asset;
@@ -176,6 +187,41 @@ NSInteger OLImagePickerMargin = 0;
         }
         else{
             checkmark.hidden = YES;
+        }
+        
+        UILabel *qtyLabel = [cell viewWithTag:11];
+        if (!qtyLabel){
+            qtyLabel = [[UILabel alloc] init];
+            qtyLabel.tag = 11;
+            
+            qtyLabel.backgroundColor = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
+            qtyLabel.textColor = [UIColor whiteColor];
+            qtyLabel.font = [UIFont systemFontOfSize:11];
+            qtyLabel.textAlignment = NSTextAlignmentCenter;
+            
+            [cell.contentView addSubview:qtyLabel];
+            qtyLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(qtyLabel);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:[qtyLabel(22)]-8-|",
+                                 @"V:|-8-[qtyLabel(22)]"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [qtyLabel.superview addConstraints:con];
+            [qtyLabel makeRoundRectWithRadius:11];
+        }
+        
+        if (printPhoto.extraCopies > 0){
+            qtyLabel.hidden = NO;
+            qtyLabel.text = [NSString stringWithFormat:@"%d", (int)printPhoto.extraCopies+1];
+        }
+        else{
+            qtyLabel.hidden = YES;
         }
     }
     else{
