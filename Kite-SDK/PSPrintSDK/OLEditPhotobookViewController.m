@@ -847,18 +847,13 @@ static const NSInteger kSectionPages = 2;
 #pragma mark - Adding new images
 
 - (void)addMorePhotosFromView:(UIView *)view{
-//    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:kSectionPages] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
-    
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    if ([self.photobookPhotos indexOfObject:self.coverPhoto] == NSNotFound){
+        [[OLUserSession currentSession].userSelectedPhotos removeObject:self.coverPhoto];
+    }
     vc.selectedAssets = [OLUserSession currentSession].userSelectedPhotos;
     vc.delegate = self;
-//    vc.modalPresentationStyle = UIModalPresentationPopover;
-//    vc.preferredContentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
-//    
-//    UIPopoverPresentationController *povc = vc.popoverPresentationController;
-//    povc.sourceView = view;
-//    povc.sourceRect = view.frame;
-//    povc.delegate = self;
+    vc.maximumPhotos = self.product.quantityToFulfillOrder;
     
     [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }

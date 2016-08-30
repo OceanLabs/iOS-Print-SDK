@@ -1483,8 +1483,12 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (void)addMorePhotosFromView:(UIView *)view{
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    if ([self.photobookPhotos indexOfObject:self.coverPhoto] == NSNotFound){
+        [[OLUserSession currentSession].userSelectedPhotos removeObject:self.coverPhoto];
+    }
     vc.selectedAssets = [OLUserSession currentSession].userSelectedPhotos;
     vc.delegate = self;
+    vc.maximumPhotos = self.product.quantityToFulfillOrder;
     
     [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
