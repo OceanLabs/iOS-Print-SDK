@@ -55,7 +55,7 @@ const NSInteger kOLEditTagCrop = 40;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView2;
 @property (strong, nonatomic) NSArray<UIColor *> *availableColors;
-@property (weak, nonatomic) IBOutlet UIView *textFieldsView;
+@property (strong, nonatomic) UIView *textFieldsView;
 @property (strong, nonatomic) NSArray<NSString *> *fonts;
 @property (assign, nonatomic) CGFloat textFieldKeyboardDiff;
 @property (assign, nonatomic) BOOL resizingTextField;
@@ -170,6 +170,14 @@ const NSInteger kOLEditTagCrop = 40;
     [self registerCollectionViewCells];
     self.editingTools.collectionView.dataSource = self;
     self.editingTools.collectionView.delegate = self;
+    
+    self.textFieldsView = [[UIView alloc] init];
+    [self.view insertSubview:self.textFieldsView aboveSubview:self.cropView];
+    self.textFieldsView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
+    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeHeight multiplier:1 constant:0]];
     
     self.originalDrawerHeight = self.editingTools.drawerHeightCon.constant;
     

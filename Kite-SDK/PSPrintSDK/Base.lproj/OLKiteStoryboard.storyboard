@@ -365,10 +365,6 @@ to rearrange the photos</string>
                                     <constraint firstAttribute="width" secondItem="nok-mW-saD" secondAttribute="height" multiplier="2:1" id="ImC-Qv-Ju3"/>
                                 </constraints>
                             </view>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dfz-X0-9uf">
-                                <rect key="frame" x="10" y="155" width="580" height="290"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qn0-C6-SBY">
                                 <rect key="frame" x="590" y="0.0" width="10" height="600"/>
                                 <color key="backgroundColor" red="0.22745098039215686" green="0.22745098039215686" blue="0.22745098039215686" alpha="0.75" colorSpace="calibratedRGB"/>
@@ -481,8 +477,6 @@ to rearrange the photos</string>
                             <constraint firstItem="dhm-If-ZBZ" firstAttribute="leading" secondItem="onG-Z7-5X1" secondAttribute="leading" priority="750" constant="10" id="Gmo-kA-bJC"/>
                             <constraint firstItem="nok-mW-saD" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" priority="750" constant="8" id="H4k-lK-38g"/>
                             <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="OUl-7d-l9B" secondAttribute="bottom" id="HAn-cd-mvk"/>
-                            <constraint firstItem="Dfz-X0-9uf" firstAttribute="top" secondItem="nok-mW-saD" secondAttribute="top" id="Hb9-2N-hJ2"/>
-                            <constraint firstItem="Dfz-X0-9uf" firstAttribute="trailing" secondItem="nok-mW-saD" secondAttribute="trailing" id="Hgg-DI-0if"/>
                             <constraint firstItem="JBu-Sx-wDM" firstAttribute="top" secondItem="f6w-s4-OgW" secondAttribute="bottom" id="ITc-nM-2aF"/>
                             <constraint firstItem="Qn0-C6-SBY" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" constant="-20" id="JXz-N4-pTd"/>
                             <constraint firstItem="Qn0-C6-SBY" firstAttribute="leading" secondItem="nok-mW-saD" secondAttribute="trailing" id="Mue-eE-3Jm"/>
@@ -491,7 +485,6 @@ to rearrange the photos</string>
                             <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="nok-mW-saD" secondAttribute="bottom" priority="750" constant="8" id="NuE-55-TZV"/>
                             <constraint firstItem="qk7-Gg-AZh" firstAttribute="top" secondItem="nok-mW-saD" secondAttribute="bottom" id="OaI-Mg-Jy3"/>
                             <constraint firstItem="nok-mW-saD" firstAttribute="bottom" secondItem="JBu-Sx-wDM" secondAttribute="bottom" constant="-2" id="PQs-Qv-bmq"/>
-                            <constraint firstItem="Dfz-X0-9uf" firstAttribute="bottom" secondItem="nok-mW-saD" secondAttribute="bottom" id="Pb7-fn-Iei"/>
                             <constraint firstItem="nok-mW-saD" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" priority="750" constant="10" id="Q1H-Oj-kvx"/>
                             <constraint firstItem="y5O-eZ-nT4" firstAttribute="leading" secondItem="nok-mW-saD" secondAttribute="trailing" constant="-273" id="RZd-YG-HVB"/>
                             <constraint firstItem="dhm-If-ZBZ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="onG-Z7-5X1" secondAttribute="leading" constant="10" id="S4E-iW-fcD"/>
@@ -509,7 +502,6 @@ to rearrange the photos</string>
                             <constraint firstItem="nok-mW-saD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="onG-Z7-5X1" secondAttribute="leading" constant="10" id="cKh-Hz-uSr"/>
                             <constraint firstItem="dhm-If-ZBZ" firstAttribute="top" secondItem="nok-mW-saD" secondAttribute="top" id="cax-89-uu1"/>
                             <constraint firstAttribute="trailing" secondItem="nok-mW-saD" secondAttribute="trailing" priority="750" constant="10" id="cbV-yc-5n7"/>
-                            <constraint firstItem="Dfz-X0-9uf" firstAttribute="leading" secondItem="nok-mW-saD" secondAttribute="leading" id="dze-Jh-Par"/>
                             <constraint firstItem="UnN-26-ErI" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" constant="-20" id="eQx-5U-8zb"/>
                             <constraint firstAttribute="trailing" secondItem="UnN-26-ErI" secondAttribute="trailing" id="eZc-Fv-OxM"/>
                             <constraint firstItem="TAm-mR-qRl" firstAttribute="leading" secondItem="JBu-Sx-wDM" secondAttribute="trailing" id="f5r-bw-E2q"/>
@@ -564,7 +556,6 @@ to rearrange the photos</string>
                         <outlet property="editingTools" destination="OUY-aN-rJm" id="PpN-0V-7Ub"/>
                         <outlet property="navigationBar" destination="UnN-26-ErI" id="HEv-KT-eWW"/>
                         <outlet property="printContainerView" destination="dhm-If-ZBZ" id="271-aT-k0Q"/>
-                        <outlet property="textFieldsView" destination="Dfz-X0-9uf" id="zbL-bc-vEu"/>
                         <outletCollection property="allViews" destination="nok-mW-saD" id="hDJ-K2-Sde"/>
                         <outletCollection property="allViews" destination="Qn0-C6-SBY" id="gL4-5c-hp0"/>
                         <outletCollection property="allViews" destination="OUl-7d-l9B" id="zQ7-oy-PXG"/>
