@@ -140,9 +140,9 @@ const NSInteger kOLEditTagCrop = 40;
             [self showDrawerWithCompletionHandler:NULL];
         }
     }
-//    else{
-//        [self dismissDrawerWithCompletionHandler:NULL];
-//    }
+    else if (self.editingTools.collectionView.tag == kOLEditTagTextTools){
+        [self dismissDrawerWithCompletionHandler:NULL];
+    }
      _activeTextField = activeTextField;
 }
 
