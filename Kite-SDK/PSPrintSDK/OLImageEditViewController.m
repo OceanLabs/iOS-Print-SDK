@@ -80,14 +80,6 @@ const NSInteger kOLEditTagCrop = 40;
 
 @implementation OLImageEditViewController
 
-- (OLAsset *)asset{
-    if (!_asset){
-        _asset = [OLUserSession currentSession].userSelectedPhotos.lastObject;
-    }
-    
-    return _asset;
-}
-
 -(NSArray<NSString *> *) fonts{
     if (!_fonts){
         NSMutableArray<NSString *> *fonts = [[NSMutableArray<NSString *> alloc] init];
@@ -410,9 +402,12 @@ const NSInteger kOLEditTagCrop = 40;
         [super dismissViewControllerAnimated:NO completion:completion];
     }
     else{
+        [self exitCropMode];
+        
         UIEdgeInsets b = [self imageInsetsOnContainer];
         [self.printContainerView addSubview:self.cropView];
         self.cropView.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.previewView.frame.size.height - b.top - b.bottom);
+        self.cropView.imageView.transform = self.edits.cropTransform;
         self.previewView  = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
         
         self.previewView.frame = self.printContainerView.frame;

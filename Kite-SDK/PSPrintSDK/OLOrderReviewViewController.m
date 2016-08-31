@@ -740,16 +740,4 @@ UIViewControllerPreviewingDelegate>
     self.editingPrintPhoto = asset;
 }
 
-#pragma mark - Tear down and restore
-
-- (void)tearDownLargeObjectsFromMemory{
-    [super tearDownLargeObjectsFromMemory];
-    [self.collectionView reloadData];
-}
-
-- (void)recreateTornDownLargeObjectsToMemory{
-    [super recreateTornDownLargeObjectsToMemory];
-    [self.collectionView reloadData];
-}
-
 @end

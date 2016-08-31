@@ -90,6 +90,14 @@
 
 @implementation OLSingleImageProductReviewViewController
 
+- (OLAsset *)asset{
+    if (!super.asset){
+        super.asset = [OLUserSession currentSession].userSelectedPhotos.lastObject;
+    }
+    
+    return super.asset;
+}
+
 - (CGFloat)aspectRatio{
     return 1.435714286;
 }
