@@ -40,8 +40,14 @@
         view.frame = self.bounds;
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:view];
+        
+        [self.collectionView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizer:)]];
     }
     return self;
+}
+
+- (void)tapGestureRecognizer:(id)sender{
+    //Do nothing for now
 }
 
 -  (id)initWithFrame:(CGRect)aRect
