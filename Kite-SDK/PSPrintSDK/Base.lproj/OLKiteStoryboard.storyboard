@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="16A313a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -1408,7 +1408,7 @@ to rearrange the photos</string>
                                                         <constraint firstAttribute="height" constant="33" id="v3Y-1p-RlO"/>
                                                     </constraints>
                                                 </imageView>
-                                                <imageView hidden="YES" userInteractionEnabled="NO" tag="30" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tick" translatesAutoresizingMaskIntoConstraints="NO" id="9Ko-p3-0ar">
+                                                <imageView hidden="YES" userInteractionEnabled="NO" tag="30" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OL-tick" translatesAutoresizingMaskIntoConstraints="NO" id="9Ko-p3-0ar">
                                                     <rect key="frame" x="575" y="20" width="12" height="9"/>
                                                 </imageView>
                                             </subviews>
@@ -1757,8 +1757,8 @@ to rearrange the photos</string>
                                             <nil key="highlightedColor"/>
                                             <variation key="default">
                                                 <mask key="constraints">
-                                                    <exclude reference="e1P-yq-X5O"/>
                                                     <exclude reference="dWM-A2-67N"/>
+                                                    <exclude reference="e1P-yq-X5O"/>
                                                 </mask>
                                             </variation>
                                         </label>
@@ -5151,6 +5151,7 @@ only £9.99 £8.99</string>
         </scene>
     </scenes>
     <resources>
+        <image name="OL-tick" width="12" height="9"/>
         <image name="add-image-icon" width="24" height="24"/>
         <image name="airplane" width="17" height="12"/>
         <image name="apple-pay-method" width="45" height="29"/>
@@ -5189,7 +5190,6 @@ only £9.99 £8.99</string>
         <image name="shirt-size-icon" width="24" height="21"/>
         <image name="tag" width="16" height="14"/>
         <image name="template chevron" width="12" height="19"/>
-        <image name="tick" width="12" height="9"/>
         <image name="tools-icon" width="15" height="20"/>
         <image name="white gradient" width="374" height="100"/>
     </resources>

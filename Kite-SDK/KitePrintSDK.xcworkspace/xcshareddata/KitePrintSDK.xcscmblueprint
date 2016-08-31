@@ -1,44 +1,48 @@
 {
-  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69",
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69+++6D092E7",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : 0,
-    "E762C42BC8C71A1AD1A00E2FC726C42A9BF54268" : 0,
-    "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5" : 0,
-    "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8" : 0,
-    "52A24398B96ECA98EF0E72469CA9225C49AA7C9D" : 0,
-    "F61DC60BC95E56633C6D23109E750F3609E16C8F" : 0,
-    "701B5006D938B65FD42237DDAF25824304CA7A66" : 0,
-    "DEF69B637476FC5A11C1E68BB97C88EC6D295A4E" : 0,
-    "E6248D77DBBC6B1D6F6059D14C6A0B9ED1677585" : 0,
-    "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : 0,
-    "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758" : 0,
-    "117B65B3A14F5CB598DC962723F820AC63399A6A" : 0,
-    "9015EB48116202885FDED716D35167A5D0CCD9C6" : 0,
-    "E41BE06B78DB194196625258C5006B52033E0ECA" : 0,
-    "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C" : 0,
-    "5928309140879E871CA2C91C35635A4223DBC07C" : 0
+    "E41BE06B78DB194196625258C5006B52033E0ECA+++58B5A9E" : 0,
+    "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5+++FA3013C" : 0,
+    "9015EB48116202885FDED716D35167A5D0CCD9C6+++95CB392" : 0,
+    "DEF69B637476FC5A11C1E68BB97C88EC6D295A4E+++58FC244" : 0,
+    "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8+++D3E8ABF" : 0,
+    "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758+++277B698" : 0,
+    "E6248D77DBBC6B1D6F6059D14C6A0B9ED1677585+++4EDC49A" : 0,
+    "5928309140879E871CA2C91C35635A4223DBC07C+++EDD7B54" : 0,
+    "E41BE06B78DB194196625258C5006B52033E0ECA+++296935A" : 0,
+    "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C+++3BE4F8B" : 0,
+    "52A24398B96ECA98EF0E72469CA9225C49AA7C9D+++97125F8" : 0,
+    "117B65B3A14F5CB598DC962723F820AC63399A6A+++BA9D6C4" : 0,
+    "E762C42BC8C71A1AD1A00E2FC726C42A9BF54268+++73200C8" : 0,
+    "E28E36D423EC87798E52E2BF482E9F7A1E6479D6+++C2B00A7" : 0,
+    "F61DC60BC95E56633C6D23109E750F3609E16C8F+++BD5C7E5" : 0,
+    "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69+++6D092E7" : 0,
+    "701B5006D938B65FD42237DDAF25824304CA7A66+++03EE5FC" : 0,
+    "E41BE06B78DB194196625258C5006B52033E0ECA+++450347F" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0B2FBC93-3D22-431F-B53A-EB76A20DFDBA",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "E28E36D423EC87798E52E2BF482E9F7A1E6479D6" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SDWebImage\/",
-    "E762C42BC8C71A1AD1A00E2FC726C42A9BF54268" : "iOS-Print-SDK\/Kite-SDK\/vendor\/CTAssetsPickerController\/",
-    "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SVProgressHUD\/",
-    "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8" : "iOS-Print-SDK\/Kite-SDK\/vendor\/AFNetworking\/",
-    "52A24398B96ECA98EF0E72469CA9225C49AA7C9D" : "iOS-Print-SDK\/Kite-SDK\/vendor\/DACircularProgress\/",
-    "F61DC60BC95E56633C6D23109E750F3609E16C8F" : "sticky9\/",
-    "701B5006D938B65FD42237DDAF25824304CA7A66" : "iOS-Print-SDK\/Kite-SDK\/vendor\/CSStickyHeaderFlowLayout\/",
-    "DEF69B637476FC5A11C1E68BB97C88EC6D295A4E" : "iOS-Print-SDK\/Kite-SDK\/vendor\/PayPal-iOS-SDK\/",
-    "E6248D77DBBC6B1D6F6059D14C6A0B9ED1677585" : "iOS-Print-SDK\/Kite-SDK\/vendor\/PureLayout\/",
-    "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69" : "iOS-Print-SDK\/",
-    "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758" : "iOS-Print-SDK\/Kite-SDK\/vendor\/MPFlipViewController\/",
-    "117B65B3A14F5CB598DC962723F820AC63399A6A" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SkyLab\/",
-    "9015EB48116202885FDED716D35167A5D0CCD9C6" : "iOS-Print-SDK\/Kite-SDK\/vendor\/TSMarkdownParser\/",
-    "E41BE06B78DB194196625258C5006B52033E0ECA" : "iOS-Print-SDK\/Kite-SDK\/Kite-SDK\/vendor\/ios-qr-encoder\/",
-    "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C" : "iOS-Print-SDK\/Kite-SDK\/vendor\/UIColor-HexString\/",
-    "5928309140879E871CA2C91C35635A4223DBC07C" : "iOS-Print-SDK\/Kite-SDK\/vendor\/UICKeyChainStore\/"
+    "E41BE06B78DB194196625258C5006B52033E0ECA+++58B5A9E" : "iOS-Print-SDK\/Kite-SDK\/vendor\/ios-qr-encoder\/",
+    "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5+++FA3013C" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SVProgressHUD\/",
+    "9015EB48116202885FDED716D35167A5D0CCD9C6+++95CB392" : "iOS-Print-SDK\/Kite-SDK\/vendor\/TSMarkdownParser\/",
+    "DEF69B637476FC5A11C1E68BB97C88EC6D295A4E+++58FC244" : "iOS-Print-SDK\/Kite-SDK\/vendor\/PayPal-iOS-SDK\/",
+    "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8+++D3E8ABF" : "iOS-Print-SDK\/Kite-SDK\/vendor\/AFNetworking\/",
+    "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758+++277B698" : "iOS-Print-SDK\/Kite-SDK\/vendor\/MPFlipViewController\/",
+    "E6248D77DBBC6B1D6F6059D14C6A0B9ED1677585+++4EDC49A" : "iOS-Print-SDK\/Kite-SDK\/vendor\/PureLayout\/",
+    "5928309140879E871CA2C91C35635A4223DBC07C+++EDD7B54" : "iOS-Print-SDK\/Kite-SDK\/vendor\/UICKeyChainStore\/",
+    "E41BE06B78DB194196625258C5006B52033E0ECA+++296935A" : "iOS-Print-SDK\/Kite-SDK\/Kite-SDK\/vendor\/ios-qr-encoder\/",
+    "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C+++3BE4F8B" : "iOS-Print-SDK\/Kite-SDK\/vendor\/UIColor-HexString\/",
+    "52A24398B96ECA98EF0E72469CA9225C49AA7C9D+++97125F8" : "iOS-Print-SDK\/Kite-SDK\/vendor\/DACircularProgress\/",
+    "117B65B3A14F5CB598DC962723F820AC63399A6A+++BA9D6C4" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SkyLab\/",
+    "E762C42BC8C71A1AD1A00E2FC726C42A9BF54268+++73200C8" : "iOS-Print-SDK\/Kite-SDK\/vendor\/CTAssetsPickerController\/",
+    "E28E36D423EC87798E52E2BF482E9F7A1E6479D6+++C2B00A7" : "iOS-Print-SDK\/Kite-SDK\/vendor\/SDWebImage\/",
+    "F61DC60BC95E56633C6D23109E750F3609E16C8F+++BD5C7E5" : "sticky9\/",
+    "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69+++6D092E7" : "iOS-Print-SDK\/",
+    "701B5006D938B65FD42237DDAF25824304CA7A66+++03EE5FC" : "iOS-Print-SDK\/Kite-SDK\/vendor\/CSStickyHeaderFlowLayout\/",
+    "E41BE06B78DB194196625258C5006B52033E0ECA+++450347F" : "iOS-Print-SDK\/Kite-SDK\/Kite-SDK\/vendor\/ios-qr-encoder\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "KitePrintSDK",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -47,87 +51,92 @@
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mattt\/SkyLab.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "117B65B3A14F5CB598DC962723F820AC63399A6A"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "117B65B3A14F5CB598DC962723F820AC63399A6A+++BA9D6C4"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/danielamitay\/DACircularProgress.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "52A24398B96ECA98EF0E72469CA9225C49AA7C9D"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "52A24398B96ECA98EF0E72469CA9225C49AA7C9D+++97125F8"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kishikawakatsumi\/UICKeyChainStore.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5928309140879E871CA2C91C35635A4223DBC07C"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5928309140879E871CA2C91C35635A4223DBC07C+++EDD7B54"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/OceanLabs\/CSStickyHeaderFlowLayout",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "701B5006D938B65FD42237DDAF25824304CA7A66"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "701B5006D938B65FD42237DDAF25824304CA7A66+++03EE5FC"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/laptobbe\/TSMarkdownParser.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9015EB48116202885FDED716D35167A5D0CCD9C6"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9015EB48116202885FDED716D35167A5D0CCD9C6+++95CB392"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:OceanLabs\/iOS-Print-SDK.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "98E520DDA0AE776CF47A7A4A2C7C2ABBE041AE69+++6D092E7"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/TransitApp\/SVProgressHUD.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9E1ECC80773D1F4F22D03CB4DEA298B3CB57FAF5+++FA3013C"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kevinrenskers\/UIColor-HexString.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D6BE2D61E9BC08BACB7354BA664FBBA6CB260E4C+++3BE4F8B"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/AFNetworking\/AFNetworking.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8+++D3E8ABF"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mpospese\/MPFlipViewController.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DE1BCDB9BD2BF95E86A6E4610C039E0FEADFD758+++277B698"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/paypal\/PayPal-iOS-SDK.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DEF69B637476FC5A11C1E68BB97C88EC6D295A4E"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DEF69B637476FC5A11C1E68BB97C88EC6D295A4E+++58FC244"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/rs\/SDWebImage.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E28E36D423EC87798E52E2BF482E9F7A1E6479D6"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E28E36D423EC87798E52E2BF482E9F7A1E6479D6+++C2B00A7"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/moqod\/ios-qr-code-encoder.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E41BE06B78DB194196625258C5006B52033E0ECA"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E41BE06B78DB194196625258C5006B52033E0ECA+++296935A"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/moqod\/ios-qr-code-encoder.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E41BE06B78DB194196625258C5006B52033E0ECA"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E41BE06B78DB194196625258C5006B52033E0ECA+++450347F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/moqod\/ios-qr-code-encoder.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E41BE06B78DB194196625258C5006B52033E0ECA+++58B5A9E"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/smileyborg\/PureLayout",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E6248D77DBBC6B1D6F6059D14C6A0B9ED1677585"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E6248D77DBBC6B1D6F6059D14C6A0B9ED1677585+++4EDC49A"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/github.com\/chiunam\/CTAssetsPickerController",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E762C42BC8C71A1AD1A00E2FC726C42A9BF54268"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E762C42BC8C71A1AD1A00E2FC726C42A9BF54268+++73200C8"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/OceanLabs\/Sticky9-iOS.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F61DC60BC95E56633C6D23109E750F3609E16C8F"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F61DC60BC95E56633C6D23109E750F3609E16C8F+++BD5C7E5"
     }
   ]
 }
