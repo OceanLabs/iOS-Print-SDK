@@ -138,7 +138,7 @@ const NSInteger kOLEditTagCrop = 40;
      _activeTextField = activeTextField;
 }
 
-- (void)dismissKeyboard{
+- (void)onTapGestureRecognized:(id)sender{
     for (OLPhotoTextField *textField in self.textFields){
         if ([textField isFirstResponder]){
             [textField resignFirstResponder];
@@ -148,6 +148,10 @@ const NSInteger kOLEditTagCrop = 40;
     
     [self.activeTextField hideButtons];
     self.activeTextField = nil;
+    
+    if (self.editingTools.collectionView.tag != kOLEditTagCrop){
+    [self dismissDrawerWithCompletionHandler:NULL];
+    }
 }
 
 - (void)viewDidLoad {
@@ -208,9 +212,9 @@ const NSInteger kOLEditTagCrop = 40;
         self.centerYCon.constant = [self.centerYConConstant integerValue];
     }
     
-    UITapGestureRecognizer *dismissKeyboardTapGesture = [[UITapGestureRecognizer alloc] init];
-    [dismissKeyboardTapGesture addTarget:self action:@selector(dismissKeyboard)];
-    [self.view addGestureRecognizer:dismissKeyboardTapGesture];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] init];
+    [tapGesture addTarget:self action:@selector(onTapGestureRecognized:)];
+    [self.view addGestureRecognizer:tapGesture];
     
     NSArray *copy = [[NSArray alloc] initWithArray:self.edits.textsOnPhoto copyItems:NO];
     for (OLTextOnPhoto *textOnPhoto in copy){
