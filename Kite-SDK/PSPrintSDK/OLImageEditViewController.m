@@ -717,6 +717,7 @@ const NSInteger kOLEditTagCrop = 40;
             [UIView animateWithDuration:0.7 animations:^{
                 self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), -M_PI_4);
             }completion:^(BOOL finished){
+                self.previewView = nil;
                 if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){
                     [self.delegate scrollCropViewControllerDidCancel:self];
                 }
