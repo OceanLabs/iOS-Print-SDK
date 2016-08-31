@@ -262,10 +262,6 @@ const NSInteger kOLEditTagCrop = 40;
     self.ctaButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.ctaButton.titleLabel.minimumScaleFactor = 0.5;
     
-    for (UIView *view in self.cropFrameEdges){
-        view.hidden = YES;
-    }
-    
     self.cropView.clipsToBounds = YES;
     [self.cropView setGesturesEnabled:NO];
     [self orderViews];
@@ -910,14 +906,20 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
-    sender.selected = YES;
-    self.cropView.clipsToBounds = NO;
-    [self.cropView setGesturesEnabled:YES];
-    self.printContainerView.hidden = YES;
-    [self.view sendSubviewToBack:self.cropView];
     for (UIView *view in self.cropFrameEdges){
-        view.hidden = NO;
+        [self.view bringSubviewToFront:view];
     }
+    sender.selected = YES;
+    [UIView animateWithDuration:0.2 animations:^{
+        self.printContainerView.alpha = 0;
+        for (UIView *view in self.cropFrameEdges){
+            view.alpha = 1;
+        }
+    } completion:^(BOOL finished){
+        self.cropView.clipsToBounds = NO;
+        [self.cropView setGesturesEnabled:YES];
+        [self.view sendSubviewToBack:self.cropView];
+    }];
 }
 
 - (IBAction)onDrawerButtonDoneClicked:(UIButton *)sender {
@@ -934,12 +936,18 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)exitCropMode{
     self.cropView.clipsToBounds = YES;
-    [self.cropView setGesturesEnabled:NO];
-    self.printContainerView.hidden = NO;
     [self.view bringSubviewToFront:self.cropView];
     for (UIView *view in self.cropFrameEdges){
-        view.hidden = YES;
+        [self.view bringSubviewToFront:view];
     }
+    [UIView animateWithDuration:0.2 animations:^{
+        self.printContainerView.alpha = 1;
+        for (UIView *view in self.cropFrameEdges){
+            view.alpha = 0;
+        }
+    } completion:^(BOOL finished){
+        [self.cropView setGesturesEnabled:NO];
+    }];
 }
 
 #pragma mark CollectionView
