@@ -209,7 +209,7 @@
 }
 
 -(void) doCheckout{
-    if (!self.cropView.image || !self.downloadedMask) {
+    if (!self.downloadedMask) {
         return;
     }
     [super doCheckout];

@@ -330,6 +330,10 @@ if ([OLKiteABTesting sharedInstance].lightThemeColor1){
 
 -(void) doCheckout{
     if (!self.cropView.image) {
+        NSTimeInterval duration = 0.3;
+        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.hintView.alpha = 1;
+        } completion:NULL];
         return;
     }
     
