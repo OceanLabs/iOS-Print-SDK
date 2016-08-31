@@ -702,9 +702,11 @@ const NSInteger kOLEditTagCrop = 40;
         [self exitCropMode];
         self.previewSourceView.hidden = NO;
         
+        CGAffineTransform t = [self.cropView.imageView transform];
         UIEdgeInsets b = [self imageInsetsOnContainer];
         [self.printContainerView addSubview:self.cropView];
         self.cropView.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.previewView.frame.size.height - b.top - b.bottom);
+        self.cropView.imageView.transform = t;
         self.previewView  = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
         
         self.previewView.frame = self.printContainerView.frame;
@@ -718,9 +720,8 @@ const NSInteger kOLEditTagCrop = 40;
             [UIView animateWithDuration:0.7 animations:^{
                 self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), -M_PI_4);
             }completion:^(BOOL finished){
-                self.previewView = nil;
                 if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){
-                    [self.delegate scrollCropViewControllerDidCancel:self];
+                    [self.delegate scrollCropViewControllerDidDropChanges:self];
                 }
                 else{
                     [self dismissViewControllerAnimated:NO completion:NULL];
