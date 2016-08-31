@@ -598,6 +598,7 @@ const NSInteger kOLEditTagCrop = 40;
     [UIView animateWithDuration:0.25 animations:^{
         self.editingTools.drawerView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished){
+        self.editingTools.collectionView.tag = -1;
         [self.view bringSubviewToFront:self.editingTools];
         self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
         [self.view layoutIfNeeded];
@@ -795,6 +796,12 @@ const NSInteger kOLEditTagCrop = 40;
     // Nothing is selected: just action
     if (!self.editingTools.button1.selected && !self.editingTools.button2.selected && !self.editingTools.button3.selected && !self.editingTools.button4.selected){
         buttonAction();
+    }
+    // Sender is selected but we're showing a 2nd or 3rd level drawer: return to 1st level
+    else if (sender.selected && (self.editingTools.collectionView.tag == kOLEditTagTextTools || self.editingTools.collectionView.tag == kOLEditTagFonts || self.editingTools.collectionView.tag == kOLEditTagTextColors || (self.selectedOption && self.product.productTemplate.options.count != 1))){
+        [self deselectSelectedButtonWithCompletionHandler:^(){
+            buttonAction();
+        }];
     }
     // Sender is selected: just deselect
     else if (sender.selected){
