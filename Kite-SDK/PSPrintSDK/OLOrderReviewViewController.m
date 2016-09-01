@@ -672,7 +672,7 @@ UIViewControllerPreviewingDelegate>
     NSInteger numberOfCellsPerRow = collectionView.frame.size.width / cellSize.width;
     CGFloat margin = MAX((collectionView.frame.size.width - (cellSize.width * numberOfCellsPerRow))/(numberOfCellsPerRow+1), 5);
     
-    return UIEdgeInsetsMake(0, margin, 0, margin);
+    return UIEdgeInsetsMake(10, margin, 0, margin);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
