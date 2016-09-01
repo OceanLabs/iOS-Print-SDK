@@ -278,12 +278,6 @@ const NSInteger kOLEditTagCrop = 40;
     [self.cropView setGesturesEnabled:NO];
     [self orderViews];
     
-    UIEdgeInsets b = [self imageInsetsOnContainer];
-    self.cropViewTopCon.constant = b.top;
-    self.cropViewRightCon.constant = b.right;
-    self.cropViewBottomCon.constant = b.bottom ;
-    self.cropViewLeftCon.constant = b.left;
-    
     self.printContainerView.backgroundColor = [self containerBackgroundColor];
     
     [self.cropView removeConstraint:self.aspectRatioConstraint];
@@ -311,7 +305,7 @@ const NSInteger kOLEditTagCrop = 40;
     UIEdgeInsets b = self.borderInsets;
     CGFloat margin = 10;
     
-    CGFloat width = self.view.frame.size.width;
+    CGFloat width = self.printContainerView.frame.size.width;
     width -= margin * 2;
     width -= (NSInteger)((self.view.frame.size.width / width)-1) * margin;
     
@@ -399,6 +393,15 @@ const NSInteger kOLEditTagCrop = 40;
         
         aCircle.fillColor=[UIColor blackColor].CGColor;
         self.cropView.layer.mask=aCircle;
+    }
+    
+    UIEdgeInsets b = [self imageInsetsOnContainer];
+    if (self.cropViewTopCon.constant != b.top || self.cropViewRightCon.constant != b.right || self.cropViewBottomCon.constant != b.bottom || self.cropViewLeftCon.constant != b.left){
+        self.cropViewTopCon.constant = b.top;
+        self.cropViewRightCon.constant = b.right;
+        self.cropViewBottomCon.constant = b.bottom;
+        self.cropViewLeftCon.constant = b.left;
+        [self.view setNeedsLayout];
     }
 }
 
