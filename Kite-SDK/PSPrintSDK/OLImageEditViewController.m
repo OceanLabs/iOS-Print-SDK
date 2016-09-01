@@ -303,12 +303,8 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (UIEdgeInsets)imageInsetsOnContainer{
     UIEdgeInsets b = self.borderInsets;
-    CGFloat margin = 10;
     
     CGFloat width = self.printContainerView.frame.size.width;
-    width -= margin * 2;
-    width -= (NSInteger)((self.view.frame.size.width / width)-1) * margin;
-    
     CGFloat height = (width * (1.0 - b.left - b.right)) * self.aspectRatio;
     height = height / (1 - b.top - b.bottom);
     
@@ -402,6 +398,8 @@ const NSInteger kOLEditTagCrop = 40;
         self.cropViewBottomCon.constant = b.bottom;
         self.cropViewLeftCon.constant = b.left;
         [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+        self.cropView.imageView.transform = self.edits.cropTransform;
     }
 }
 
@@ -417,7 +415,7 @@ const NSInteger kOLEditTagCrop = 40;
         
         UIEdgeInsets b = [self imageInsetsOnContainer];
         [self.printContainerView addSubview:self.cropView];
-        self.cropView.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.previewView.frame.size.height - b.top - b.bottom);
+        self.cropView.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.printContainerView.frame.size.height - b.top - b.bottom);
         self.cropView.imageView.transform = self.edits.cropTransform;
         self.previewView  = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
         
