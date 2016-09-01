@@ -144,6 +144,9 @@ NSInteger OLImagePickerMargin = 0;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
         [self.collectionView.collectionViewLayout invalidateLayout];
+        
+        //Ignore warning about this collection view, works fine.
+        [self.albumsCollectionView.collectionViewLayout invalidateLayout];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         
     }];
