@@ -29,12 +29,13 @@
 
 #import "OLImagePickerLoginPageViewController.h"
 #import "UIView+RoundRect.h"
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
+#import "FBSDKLoginManager.h"
 #import "OLImagePickerViewController.h"
 #import <NXOAuth2Client/NXOAuth2AccountStore.h>
 #import "OLKitePrintSDK.h"
 #import "OLInstagramLoginWebViewController.h"
 #import "OLNavigationController.h"
+#import "OLKiteUtils.h"
 
 @interface OLImagePickerLoginPageViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
@@ -57,6 +58,7 @@
     }
     else if (self.provider.providerType == OLImagePickerProviderTypePhotoLibrary){
         providerName = [UIDevice currentDevice].localizedModel;
+        [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Authorise", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     }
     self.label.text = [NSString stringWithFormat:@"We need access to your %@ photos", providerName];
     
@@ -85,6 +87,7 @@
         }];
     }
     else if (self.provider.providerType == OLImagePickerProviderTypePhotoLibrary){
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
     }
 }
 

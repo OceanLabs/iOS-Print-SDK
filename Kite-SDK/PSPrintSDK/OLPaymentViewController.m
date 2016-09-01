@@ -48,9 +48,6 @@
 #import "OLProductTemplate.h"
 #import "OLUserSession.h"
 #import "OLCountry.h"
-#ifdef OL_OFFER_JUDOPAY
-#import "OLJudoPayCard.h"
-#endif
 #import "NSObject+Utils.h"
 #import "OLConstants.h"
 #import "OLCreditCardCaptureViewController.h"
@@ -113,6 +110,10 @@ static OLPaymentMethod selectedPaymentMethod;
 
 static BOOL haveLoadedAtLeastOnce = NO;
 
+@interface OLProductTemplate ()
+@property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
+@end
+
 @interface OLProductPrintJob ()
 @property (strong, nonatomic) NSMutableDictionary *options;
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
@@ -154,9 +155,6 @@ static BOOL haveLoadedAtLeastOnce = NO;
 @end
 
 @interface OLKitePrintSDK (Private)
-#ifdef OL_OFFER_JUDOPAY
-+ (BOOL)useJudoPayForGBP;
-#endif
 + (BOOL)useStripeForCreditCards;
 
 #ifdef OL_KITE_OFFER_PAYPAL
@@ -290,13 +288,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
     
     if (self.navigationController.viewControllers.firstObject == self){
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
+        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+                if (error) return;
+                self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(dismiss)];
+            }];
+        }
+        else{
+            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
+        }
     }
     
     [self sanitizeBasket];
@@ -368,6 +375,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         selectedPaymentMethod = kOLPaymentMethodApplePay;
     }
     [self updateSelectedPaymentMethodView];
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.paymentButton1 setBackgroundColor:[UIColor clearColor]];
+        [self.paymentButton1 setTitleColor:[OLKiteABTesting sharedInstance].lightThemeColor1 forState:UIControlStateNormal];
+        self.paymentButton1.layer.cornerRadius = 2;
+        self.paymentButton1.layer.borderColor = [OLKiteABTesting sharedInstance].lightThemeColor1.CGColor;
+        self.paymentButton1.layer.borderWidth = 1;
+        
+        [self.paymentButton2 setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.paymentButton1.titleLabel setFont:font];
+        [self.paymentButton2.titleLabel setFont:font];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -715,7 +737,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     for (id<OLPrintJob> job in self.printOrder.jobs){
         OLProductTemplate *template = [OLProductTemplate templateWithId:[job templateId]];
         
-        NSDecimalNumber *sheetCost = [template costPerSheetInCurrencyCode:[self.printOrder currencyCode]];
+        NSDictionary *costDict = template.originalCostsByCurrencyCode.count != 0 ? template.originalCostsByCurrencyCode : template.costsByCurrencyCode;
+        NSDecimalNumber *sheetCost = costDict[[self.printOrder currencyCode]];
         NSUInteger sheetQuanity = template.quantityPerSheet == 0 ? 1 : template.quantityPerSheet;
         NSUInteger numSheets = (NSUInteger) ceil([OLProduct productWithTemplateId:[job templateId]].quantityToFulfillOrder / sheetQuanity);
         NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];
@@ -942,9 +965,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     OLNavigationController *navController = [[OLNavigationController alloc] init];
     
     navController.viewControllers = vcs;
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissPresentedViewController)];
-    
-    ((UIViewController *)[vcs firstObject]).navigationItem.leftBarButtonItem = doneButton;
+    NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+    if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+            if (error) return;
+            ((UIViewController *)[vcs firstObject]).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(dismissPresentedViewController)];
+        }];
+    }
+    else{
+       ((UIViewController *)[vcs firstObject]).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismissPresentedViewController)];
+    }
     
     return navController;
 }
@@ -1105,12 +1135,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             if ([OLKitePrintSDK useStripeForCreditCards]){
                 card = [OLStripeCard lastUsedCard];
             }
-#ifdef OL_OFFER_JUDOPAY
-            else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
-                card = [OLJudoPayCard lastUsedCard];
-            }
-#endif
-            
             
             if (card == nil) {
                 [self payWithNewCard];
@@ -1125,11 +1149,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                     if ([OLKitePrintSDK useStripeForCreditCards]){
                         [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
                     }
-#ifdef OL_OFFER_JUDOPAY
-                    else if ([OLKitePrintSDK useJudoPayForGBP] && [self.printOrder.currencyCode isEqualToString:@"GBP"]) {
-                        [self payWithExistingJudoPayCard:[OLJudoPayCard lastUsedCard]];
-                    }
-#endif
                     else {
                         [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
                     }
@@ -1151,11 +1170,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)payWithExistingPayPalCard:(OLPayPalCard *)card {
-#ifdef OL_OFFER_JUDOPAY
-    if ([OLKitePrintSDK useJudoPayForGBP]) {
-        NSAssert(![self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should be used for GBP orders (and only for Kite internal use)");
-    }
-#endif
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
     [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
@@ -1192,28 +1206,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }];
     }];
 }
-
-#ifdef OL_OFFER_JUDOPAY
-- (void)payWithExistingJudoPayCard:(OLJudoPayCard *)card {
-    NSAssert([self.printOrder.currencyCode isEqualToString:@"GBP"], @"JudoPay should only be used for GBP orders (and only for Kite internal use)");
-    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
-    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
-        [card chargeCard:[cost totalCostInCurrency:@"GBP"] currency:kOLJudoPayCurrencyGBP description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
-            if (error) {
-                [SVProgressHUD dismiss];
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
-                [self presentViewController:ac animated:YES completion:NULL];
-                return;
-            }
-            
-            [self submitOrderForPrintingWithProofOfPayment:proofOfPayment paymentMethod:@"Credit Card" completion:^void(PKPaymentAuthorizationStatus status){}];
-            [card saveAsLastUsedCard];
-        }];
-    }];
-}
-#endif
 
 #ifdef OL_KITE_OFFER_PAYPAL
 - (IBAction)onButtonPayWithPayPalClicked {
@@ -1492,6 +1484,15 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [[(UINavigationController *)vc view] class]; //force viewDidLoad;
         [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
         
+        UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
+        if (color1){
+            [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem.tintColor = color1;
+        }
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            [[(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName : font} forState:UIControlStateNormal];
+        }
+        
         nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];
     }];
@@ -1736,7 +1737,27 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
         
-        priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
+        NSDecimalNumber *originalUnitCost = product.originalUnitCostDecimalNumber;
+        NSDecimalNumber *finalUnitCost = [product unitCostDecimalNumber];
+        
+        [[cell viewWithTag:1000] removeFromSuperview];
+        
+        if (originalUnitCost){
+            UILabel *finalCostLabel = [[UILabel alloc] init];
+            finalCostLabel.font = priceLabel.font;
+            finalCostLabel.tag = 1000;
+            finalCostLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[finalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
+            [cell addSubview:finalCostLabel];
+            finalCostLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            [cell addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeTop multiplier:1 constant:-5]];
+            [cell addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+            
+            NSString *s = [[numUnitsInJob decimalNumberByMultiplyingBy:[originalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
+            priceLabel.attributedText = [[NSAttributedString alloc] initWithString:s attributes:@{NSFontAttributeName : priceLabel.font, NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSForegroundColorAttributeName : [UIColor colorWithWhite:0.40 alpha:1.000]}];
+        }
+        else{
+            priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[finalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
+        }
         
         if ([numUnitsInJob integerValue] == 1){
             productNameLabel.text = product.productTemplate.name;

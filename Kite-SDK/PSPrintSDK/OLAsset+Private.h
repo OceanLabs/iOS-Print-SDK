@@ -37,8 +37,8 @@ typedef enum {
     kOLAssetTypeImageFilePath,
     kOLAssetTypeImageData,
     kOLAssetTypeDataSource,
-    kOLAssetTypeFacebookPhoto,
-    kOLAssetTypeInstagramPhoto
+//    kOLAssetTypeFacebookPhoto,
+//    kOLAssetTypeInstagramPhoto
 } OLAssetType;
 
 @interface OLAsset (FriendMethods)
@@ -57,5 +57,6 @@ typedef enum {
 @property (assign, nonatomic) NSInteger extraCopies;
 @property (strong, nonatomic) OLPhotoEdits *edits;
 @property (strong, nonatomic) NSString *uuid;
+@property (strong, nonatomic) id metadata;
 @end
 

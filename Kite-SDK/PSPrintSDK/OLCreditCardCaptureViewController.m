@@ -33,15 +33,10 @@
 #import "SVProgressHUD.h"
 #endif
 
-#ifdef OL_OFFER_JUDOPAY
-#import "OLJudoPayCard.h"
-#endif
-
 #import "OLCreditCardCaptureViewController.h"
 #import "OLConstants.h"
 #import "OLPayPalCard.h"
 #import "OLPrintOrder.h"
-//#import "CardIO.h"
 #import "OLKitePrintSDK.h"
 #import <AVFoundation/AVFoundation.h>
 #import "NSString+Formatting.h"
@@ -52,6 +47,8 @@
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
 #import "OLLuhn.h"
+#import "OLImageDownloader.h"
+#import "OLKiteABTesting.h"
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -112,9 +109,6 @@ static CardType getCardType(NSString *cardNumber) {
 }
 
 @interface OLKitePrintSDK (Private)
-#ifdef OL_OFFER_JUDOPAY
-+ (BOOL)useJudoPayForGBP;
-#endif
 + (BOOL)useStripeForCreditCards;
 @end
 
@@ -176,21 +170,29 @@ UITableViewDataSource, UITextFieldDelegate>
         
         if (printOrder){
             if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
-                self.title = NSLocalizedString(@"Pay with Credit Card (TEST)", @"");
+                self.title = NSLocalizedStringFromTableInBundle(@"Pay with Credit Card (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             } else {
-                self.title = NSLocalizedString(@"Pay with Credit Card", @"");
+                self.title = NSLocalizedStringFromTableInBundle(NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             }
         }
         else{
             if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
-                self.title = NSLocalizedString(@"Add Credit Card (TEST)", @"");
+                self.title = NSLocalizedStringFromTableInBundle(@"Add Credit Card (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             } else {
-                self.title = NSLocalizedString(@"Add Credit Card", @"");
+                self.title = NSLocalizedStringFromTableInBundle(@"Add Credit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             }
         }
 
-        
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+                if (error) return;
+                self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
+            }];
+        }
+        else{
+            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+        }
     }
     
     return self;
@@ -203,10 +205,10 @@ UITableViewDataSource, UITextFieldDelegate>
     buttonPay.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
     [buttonPay addTarget:self action:@selector(onButtonPayClicked) forControlEvents:UIControlEventTouchUpInside];
     if (self.printOrder){
-        [buttonPay setTitle:NSLocalizedString(@"Pay", @"") forState:UIControlStateNormal];
+        [buttonPay setTitle: NSLocalizedStringFromTableInBundle(@"Pay", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     }
     else{
-        [buttonPay setTitle:NSLocalizedString(@"Add", @"") forState:UIControlStateNormal];
+        [buttonPay setTitle: NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     }
     [buttonPay makeRoundRect];
     
@@ -231,16 +233,26 @@ UITableViewDataSource, UITextFieldDelegate>
     self.tableView.tableFooterView = footerView;
     
     if (self.printOrder){
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Pay", @"")
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Pay", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
                                                                              style:UIBarButtonItemStyleDone
                                                                             target:self
                                                                             action:@selector(onButtonPayClicked)];
     }
     else{
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add", @"")
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
                                                                                   style:UIBarButtonItemStyleDone
                                                                                  target:self
                                                                                  action:@selector(onButtonPayClicked)];
+    }
+    
+    UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
+    if (color1){
+        self.navigationItem.rightBarButtonItem.tintColor = color1;
+        [buttonPay setBackgroundColor:[[OLKiteABTesting sharedInstance] lightThemeColor1]];
+    }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.navigationItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName : font} forState:UIControlStateNormal];
     }
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
@@ -467,10 +479,10 @@ UITableViewDataSource, UITextFieldDelegate>
         self.textFieldCardNumber = textField;
         
     } else if (indexPath.section == kOLSectionExpiryDate) {
-        textField.placeholder = NSLocalizedString(@"MM/YY", @"");
+        textField.placeholder = NSLocalizedStringFromTableInBundle(@"MM/YY", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         self.textFieldExpiryDate = textField;
     } else if (indexPath.section == kOLSectionCVV) {
-        textField.placeholder = NSLocalizedString(@"CVV", @"");
+        textField.placeholder = NSLocalizedStringFromTableInBundle(@"CVV", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         self.textFieldCVV = textField;
     }
     

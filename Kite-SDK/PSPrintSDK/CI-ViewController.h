@@ -27,9 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
-#import "OLAsset.h"
+#import <UIKit/UIKit.h>
 
-@interface OLURLDataSource : NSObject <OLAssetDataSource>
-- (id)initWithURLString:(NSString *)url;
+@interface CIViewController : UIViewController
+@property (nonatomic, weak) IBOutlet UILabel *label;
 @end

@@ -35,6 +35,8 @@
 #import "OLImagePickerPhotosPageViewController+Facebook.h"
 #import "OLImagePickerPhotosPageViewController+Instagram.h"
 #import "UIView+RoundRect.h"
+#import "OLAsset+Private.h"
+#import "OLKiteUtils.h"
 
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
@@ -53,6 +55,24 @@ NSInteger OLImagePickerMargin = 0;
     [super viewDidDisappear:animated];
     
     [self closeAlbumsDrawer];
+    [self.albumRequestForNextPage cancel];
+    [self.inProgressRequest cancel];
+    [self.inProgressMediaRequest cancel];
+    [self.nextMediaRequest cancel];
+    [self.nextPageRequest cancel];
+    [self.inProgressPhotosRequest cancel];
+    self.albumRequestForNextPage = nil;
+    self.inProgressRequest = nil;
+    self.inProgressMediaRequest = nil;
+    self.nextMediaRequest = nil;
+    self.nextPageRequest = nil;
+    self.inProgressPhotosRequest = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    [self.collectionView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -68,13 +88,16 @@ NSInteger OLImagePickerMargin = 0;
     self.collectionView.dataSource = self;
     self.albumsCollectionView.dataSource = self;
     self.albumsCollectionView.delegate = self;
-        
+    
     self.albumsCollectionView.transform = CGAffineTransformMakeRotation(M_PI);
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     self.albumLabel.text = self.provider.collections.firstObject.name;
     self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
+    
+    self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
+    [self.nextButton setTitle:self.imagePicker.nextButton.currentTitle forState:UIControlStateNormal];
     
     UIVisualEffect *blurEffect;
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
@@ -100,9 +123,11 @@ NSInteger OLImagePickerMargin = 0;
     [self.view bringSubviewToFront:self.albumsContainerView];
     
     if (self.provider.providerType == OLImagePickerProviderTypeFacebook && (self.provider.collections.count == 0 || self.provider.collections[self.showingCollectionIndex].count == 0)){
+        [self.activityIndicator startAnimating];
         [self loadFacebookAlbums];
     }
     else if (self.provider.providerType == OLImagePickerProviderTypeInstagram && (self.provider.collections.count == 0 || self.provider.collections[self.showingCollectionIndex].count == 0)){
+        [self.activityIndicator startAnimating];
         [self startImageLoading];
     }
     
@@ -150,16 +175,56 @@ NSInteger OLImagePickerMargin = 0;
         OLAsset *printPhoto;
         if ([asset isKindOfClass:[PHAsset class]]){
             printPhoto = [OLAsset assetWithPHAsset:asset];
+            
+            //If it's already selected use the existing OLAsset instead of the newly created one
+            if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
+                printPhoto = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:printPhoto]];
+            }
         }
         else if ([asset isKindOfClass:[OLAsset class]]){
             printPhoto = asset;
         }
         
-        if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
+        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
             checkmark.hidden = NO;
         }
         else{
             checkmark.hidden = YES;
+        }
+        
+        UILabel *qtyLabel = [cell viewWithTag:11];
+        if (!qtyLabel){
+            qtyLabel = [[UILabel alloc] init];
+            qtyLabel.tag = 11;
+            
+            qtyLabel.backgroundColor = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
+            qtyLabel.textColor = [UIColor whiteColor];
+            qtyLabel.font = [UIFont systemFontOfSize:11];
+            qtyLabel.textAlignment = NSTextAlignmentCenter;
+            
+            [cell.contentView addSubview:qtyLabel];
+            qtyLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(qtyLabel);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:[qtyLabel(22)]-8-|",
+                                 @"V:|-8-[qtyLabel(22)]"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [qtyLabel.superview addConstraints:con];
+            [qtyLabel makeRoundRectWithRadius:11];
+        }
+        
+        if (printPhoto.extraCopies > 0){
+            qtyLabel.hidden = NO;
+            qtyLabel.text = [NSString stringWithFormat:@"%d", (int)printPhoto.extraCopies+1];
+        }
+        else{
+            qtyLabel.hidden = YES;
         }
     }
     else{
@@ -168,7 +233,10 @@ NSInteger OLImagePickerMargin = 0;
         OLRemoteImageView *imageView = [cell viewWithTag:10];
         
         if (self.provider.collections[indexPath.item].coverAsset){
-            [imageView setAndFadeInImageWithOLAsset:self.provider.collections[indexPath.item].coverAsset size:imageView.frame.size applyEdits:NO placeholder:nil completionHandler:NULL];
+            __weak OLRemoteImageView *weakImageView = imageView;
+            [imageView setAndFadeInImageWithOLAsset:self.provider.collections[indexPath.item].coverAsset size:imageView.frame.size applyEdits:NO placeholder:nil progress:^(float progress){
+                [weakImageView setProgress:progress];
+            } completionHandler:NULL];
         }
         else{
             [self setAssetOfCollection:self.provider.collections[indexPath.item] withIndex:0 toImageView:imageView forCollectionView:collectionView];
@@ -198,13 +266,20 @@ NSInteger OLImagePickerMargin = 0;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
         options.resizeMode = PHImageRequestOptionsResizeModeFast;
         
-        //TODO progress
+        options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [imageView setProgress:progress];
+            });
+        };
         
         CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         [imageView setAndFadeInImageWithPHAsset:asset size:CGSizeMake(cellSize.width * [OLUserSession currentSession].screenScale, cellSize.height * [OLUserSession currentSession].screenScale) options:options];
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
-        [imageView setAndFadeInImageWithOLAsset:asset size:imageView.frame.size applyEdits:NO placeholder:nil completionHandler:NULL];
+        __weak OLRemoteImageView *weakImageView = imageView;
+        [imageView setAndFadeInImageWithOLAsset:asset size:imageView.frame.size applyEdits:NO placeholder:nil progress:^(float progress){
+            [weakImageView setProgress:progress];
+        } completionHandler:NULL];
     }
 }
 
@@ -313,12 +388,35 @@ NSInteger OLImagePickerMargin = 0;
         else if ([asset isKindOfClass:[OLAsset class]]){
             printPhoto = asset;
         }
-        if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
-            [[OLUserSession currentSession].userSelectedPhotos removeObject:printPhoto];
+        
+        if (self.imagePicker.maximumPhotos == 1){
+            [self.imagePicker.selectedAssets addObject:printPhoto];
+            [self.imagePicker.nextButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+        }
+        
+        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
+            [self.imagePicker.selectedAssets removeObject:printPhoto];
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
         }
+        else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){
+            UIAlertController *alert =
+            [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Maximum Photos Reached", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+                                                message:[NSString stringWithFormat:self.imagePicker.maximumPhotos == 1 ? NSLocalizedStringFromTableInBundle(@"Please select only %ld photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") : NSLocalizedStringFromTableInBundle(@"Please select up to %ld photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)self.imagePicker.maximumPhotos]
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *action =
+            [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+                                     style:UIAlertActionStyleDefault
+                                   handler:nil];
+            
+            [alert addAction:action];
+            
+            [self.imagePicker presentViewController:alert animated:YES completion:nil];
+        }
         else{
-            [[OLUserSession currentSession].userSelectedPhotos addObject:printPhoto];
+            [self.imagePicker.selectedAssets addObject:printPhoto];
+            printPhoto.edits = nil;
+            [printPhoto unloadImage];
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
         }
         
@@ -336,6 +434,7 @@ NSInteger OLImagePickerMargin = 0;
         if (self.provider.providerType == OLImagePickerProviderTypeFacebook && self.provider.collections[self.showingCollectionIndex].count == 0){
             self.photos = [[NSMutableArray alloc] init];
             self.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:(OLFacebookAlbum *)self.provider.collections[self.showingCollectionIndex].metaData];
+            [self.activityIndicator startAnimating];
             [self loadNextFacebookPage];
         }
     }

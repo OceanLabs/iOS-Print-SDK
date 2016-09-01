@@ -48,7 +48,6 @@
 @end
 
 @interface OLPrintOrderSubmitStatusRequest ()
-
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (nonatomic, strong) OLBaseRequest *req;
 

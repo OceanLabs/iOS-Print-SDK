@@ -124,4 +124,12 @@
  */
 + (BOOL)isKiosk;
 
+/**
+ *  Allow or disallow the image editing functionality to zoom images (pinch and double tap gestures)
+ *  Default value is yes.
+ *
+ *  @param allowZoom Boolean value to allow or disallow zoom.
+ */
++ (void)setAllowsImageZooming:(BOOL)allowZoom;
+
 @end

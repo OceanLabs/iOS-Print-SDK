@@ -98,7 +98,7 @@
     [OLAnalytics trackProductSelectionScreenViewed];
 #endif
 
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
@@ -430,6 +430,18 @@
         }];
     }
 }
+- (IBAction)onInfoButtonTapped:(UIButton *)sender {
+    CGPoint buttonPosition = [sender.superview convertPoint:CGPointZero toView:self.collectionView];
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:buttonPosition];
+    
+    OLProduct *product = [self.productGroups[indexPath.item] products].firstObject;
+    
+    OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+    vc.delegate = self.delegate;
+    [vc safePerformSelector:@selector(setProduct:) withObject:product];
+    
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
@@ -542,7 +554,7 @@
     OLProductGroup *group = self.productGroups[indexPath.row];
     OLProduct *product = [group.products firstObject];
     product.uuid = nil;
-    [OLUserSession currentSession].userSelectedPhotos = nil;
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
     
     NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
     
@@ -635,6 +647,11 @@
     
     productTypeLabel.text = product.productTemplate.templateClass;
     
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        productTypeLabel.font = font;
+    }
+    
     UIActivityIndicatorView *activityIndicator = (id)[cell.contentView viewWithTag:41];
     [activityIndicator startAnimating];
     
@@ -645,6 +662,27 @@
 //        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
 //        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
 //    }
+    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"MinimalWhite"]){
+        UILabel *priceLabel = [cell.contentView viewWithTag:301];
+        UILabel *detailsLabel = [cell.contentView viewWithTag:302];
+        
+        priceLabel.text = [product unitCost];
+        
+        productTypeLabel.text = product.productTemplate.templateType;
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            priceLabel.font = font;
+            detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
+        }
+        
+        NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:product.productTemplate.productDescription] mutableCopy];
+        detailsLabel.text = attributedString.string;
+        
+        if (![OLKiteABTesting sharedInstance].skipProductOverview){
+            [[cell.contentView viewWithTag:303] removeFromSuperview];
+        }
+    }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
         button.layer.shadowColor = [[UIColor blackColor] CGColor];

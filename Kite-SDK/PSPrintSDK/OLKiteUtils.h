@@ -58,10 +58,6 @@
 
 + (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size;
 
-#ifdef OL_KITE_OFFER_APPLE_PAY
-+(BOOL)isApplePayAvailable;
-#endif
-
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;

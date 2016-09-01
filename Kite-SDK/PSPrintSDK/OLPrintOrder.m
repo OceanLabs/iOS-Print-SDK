@@ -41,6 +41,7 @@
 #import "OLPrintOrderCost.h"
 #import "OLProductPrintJob.h"
 #import "OLPrintOrderSubmitStatusRequest.h"
+#import "OLPaymentViewController.h"
 
 static NSString *const kKeyProofOfPayment = @"co.oceanlabs.pssdk.kKeyProofOfPayment";
 static NSString *const kKeyVoucherCode = @"co.oceanlabs.pssdk.kKeyVoucherCode";
@@ -61,6 +62,8 @@ static NSString *const kKeyOrderOptOutOfEmail = @"co.oceanlabs.pssdk.kKeyOrderOp
 static NSString *const kKeyOrderShipToStore = @"co.oceanlabs.pssdk.kKeyOrderShipToStore";
 static NSString *const kKeyOrderPayInStore = @"co.oceanlabs.pssdk.kKeyOrderPayInStore";
 static NSString *const kKeyOrderPaymentMethod = @"co.oceanlabs.pssdk.kKeyOrderPaymentMethod";
+
+static NSString *const kKeySavedOrderSDKVersion = @"co.oceanlabs.pssdk.kKeySavedOrderSDKVersion";
 
 static NSMutableArray *inProgressPrintOrders; // Tracks all currently in progress print orders. This is useful as it means they won't be dealloc'd if a user doesn't come a strong reference to them but still expects the completion handler callback
 
@@ -468,7 +471,7 @@ static NSBlockOperation *templateSyncOperation;
 - (void)setProofOfPayment:(NSString *)proofOfPayment {
     _proofOfPayment = proofOfPayment;
     if (proofOfPayment && ![proofOfPayment isEqualToString:@""]) {
-        NSAssert([proofOfPayment hasPrefix:@"AP-"] || [proofOfPayment hasPrefix:@"PAY-"] || [proofOfPayment hasPrefix:@"tok_"] || [proofOfPayment hasPrefix:@"PAUTH-"] || [proofOfPayment hasPrefix:@"J-"], @"Proof of payment must be a PayPal REST payment confirmation id or a PayPal Adaptive Payment pay key or JudoPay receiptId i.e. PAY-..., AP-... or J-");
+        NSAssert([proofOfPayment hasPrefix:@"AP-"] || [proofOfPayment hasPrefix:@"PAY-"] || [proofOfPayment hasPrefix:@"tok_"] || [proofOfPayment hasPrefix:@"PAUTH-"], @"Proof of payment must be a PayPal REST payment confirmation id or a PayPal Adaptive Payment pay key i.e. PAY-..., AP-... or J-");
     }
 }
 
@@ -479,10 +482,10 @@ static NSBlockOperation *templateSyncOperation;
         [json setObject:self.proofOfPayment forKey:@"proof_of_payment"];
         
         if ([self.proofOfPayment hasPrefix:@"AP-"] || [self.proofOfPayment hasPrefix:@"PAY-"] || [self.proofOfPayment hasPrefix:@"PAUTH-"]){
-            json[@"account_id"] = stringOrEmptyString([OLKitePrintSDK paypalAccountId]);
+            json[@"payment_account_id"] = stringOrEmptyString([OLKitePrintSDK paypalAccountId]);
         }
         else if ([self.proofOfPayment hasPrefix:@"tok_"]){
-            json[@"account_id"] = stringOrEmptyString([OLKitePrintSDK stripeAccountId]);
+            json[@"payment_account_id"] = stringOrEmptyString([OLKitePrintSDK stripeAccountId]);
         }
     }
     
@@ -552,6 +555,7 @@ static NSBlockOperation *templateSyncOperation;
     hash = 31 * hash + [self.promoCode hash];
     hash = 31 * hash + (self.shipToStore ? 39 : 0);
     hash = 31 * hash + (self.payInStore ? 73 : 0);
+    hash = 31 * hash + ([OLPaymentViewController isApplePayAvailable] ? 47 : 0);
     for (id<OLPrintJob> job in self.jobs){
         if (job.address.country){
             hash = 32 * hash + [job.address.country.codeAlpha3 hash];
@@ -627,12 +631,16 @@ static NSBlockOperation *templateSyncOperation;
 
 - (void)saveOrder {
     [NSKeyedArchiver archiveRootObject:self toFile:[OLPrintOrder orderFilePath]];
-//    [self cleanupDisk];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:kOLKiteSDKVersion forKey:kKeySavedOrderSDKVersion];
 }
 
 + (id)loadOrder {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![[defaults objectForKey:kKeySavedOrderSDKVersion] isEqualToString:kOLKiteSDKVersion]){
+        return nil;
+    }
     OLPrintOrder *order = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder orderFilePath]];
-//    [order cleanupDisk];
     return order;
 }
 

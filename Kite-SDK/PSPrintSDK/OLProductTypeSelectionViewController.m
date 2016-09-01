@@ -105,7 +105,7 @@
         self.automaticallyAdjustsScrollViewInsets = NO;
         self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
@@ -126,7 +126,7 @@
         self.title = NSLocalizedString(self.templateClass, @"");
     }
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
@@ -208,7 +208,7 @@
     
     OLProduct *product = self.products[indexPath.row];
     product.uuid = nil;
-    [OLUserSession currentSession].userSelectedPhotos = nil;
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
     
     NSString *identifier;
     NSMutableArray *posters = [[NSMutableArray alloc] init];
@@ -222,6 +222,10 @@
             identifier = @"OLTypeSelectionViewController";
         }
     }
+    else if ([OLKiteABTesting sharedInstance].skipProductOverview && ![OLKiteABTesting sharedInstance].launchedWithPrintOrder && product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
+        identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]];
+    }
+    
     if (!identifier){
         identifier = @"OLProductOverviewViewController";
     }
@@ -283,6 +287,10 @@
     [product setCoverImageToImageView:imageView];
     
     UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        textView.font = font;
+    }
     
     if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
         if (product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
@@ -299,9 +307,27 @@
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
         textView.backgroundColor = [product labelColor];
     }
+    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"MinimalWhite"]){
+        UILabel *priceLabel = [cell.contentView viewWithTag:301];
+        UILabel *detailsLabel = [cell.contentView viewWithTag:302];
+        
+        priceLabel.text = [product unitCost];
+        detailsLabel.text = [product.productTemplate shortDescription];
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            priceLabel.font = font;
+            detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
+        }
+    }
     else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
         button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            [button.titleLabel setFont:font];
+        }
     }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
@@ -312,6 +338,11 @@
         
         button.backgroundColor = [product labelColor];
         [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            [button.titleLabel setFont:font];
+        }
     }
     
     return cell;

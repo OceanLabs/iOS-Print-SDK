@@ -42,14 +42,13 @@
 @interface OLImagePickerPhotosPageViewController : OLImagePickerPageViewController
 
 @property (assign, nonatomic) NSInteger quantityPerItem;
-@property (assign, nonatomic) NSInteger minimumPhotos;
-@property (assign, nonatomic) NSInteger maximumPhotos;
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *albumsCollectionView;
 @property (weak, nonatomic) IBOutlet UIView *albumLabelContainer;
 @property (weak, nonatomic) IBOutlet UILabel *albumLabel;
 @property (assign, nonatomic) NSInteger showingCollectionIndex;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 - (NSUInteger)numberOfCellsPerRow;
 - (void)closeAlbumsDrawer;

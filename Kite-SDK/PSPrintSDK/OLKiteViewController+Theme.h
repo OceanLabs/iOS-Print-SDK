@@ -27,11 +27,23 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-#import "OLProduct.h"
+#import "OLKiteViewController.h"
 
-@interface OLProductOptionsViewController : UIViewController
+@interface OLKiteViewController (Theme)
 
-@property (strong, nonatomic) OLProduct *product;
+/**
+ *  The navigation bar of the loading screen. Available for customization.
+ */
+@property (weak, nonatomic, nullable) IBOutlet UINavigationBar *navigationBar;
+
+/**
+ *  The navigation item of the loading screen. Use this to customize the leftBarButtonItem (the cancel button)
+ */
+@property (weak, nonatomic, nullable) IBOutlet UINavigationItem *customNavigationItem;
+
+/**
+ *  The loading image view. Available for customization.
+ */
+@property (weak, nonatomic, nullable) IBOutlet UIImageView *loadingImageView;
 
 @end

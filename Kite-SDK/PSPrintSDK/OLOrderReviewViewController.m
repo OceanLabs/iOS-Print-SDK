@@ -49,6 +49,8 @@
 #import "OLImagePreviewViewController.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
+#import "UIImageView+FadeIn.h"
+#import "OLInfoBanner.h"
 
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
@@ -59,10 +61,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @end
 
 @interface OLKiteViewController ()
-
-@property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
-
 @end
 
 @interface OLPrintOrder (Private)
@@ -91,6 +90,7 @@ UIViewControllerPreviewingDelegate>
 @property (strong, nonatomic) UIButton *addMorePhotosButton;
 @property (assign, nonatomic) NSUInteger indexOfPhotoToDelete;
 @property (strong, nonatomic) UIButton *nextButton;
+@property (strong, nonatomic) OLInfoBanner *infoBanner;
 
 @end
 
@@ -115,7 +115,7 @@ UIViewControllerPreviewingDelegate>
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
@@ -127,6 +127,11 @@ UIViewControllerPreviewingDelegate>
     if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
+    
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    });
 }
 
 - (void)setupCtaButton{
@@ -134,9 +139,18 @@ UIViewControllerPreviewingDelegate>
     [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     [self.nextButton setTitle:NSLocalizedString(@"Add to Basket", @"") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.nextButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    else{
+        [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+    }
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.nextButton.titleLabel setFont:font];
+    }
     [self.collectionView addSubview:self.nextButton];
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
@@ -145,8 +159,7 @@ UIViewControllerPreviewingDelegate>
         }
         
         if(!self.editingPrintJob){
-            OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
-            self.editingPrintJob = [kiteVc.printOrder.jobs firstObject];
+            self.editingPrintJob = [[OLUserSession currentSession].printOrder.jobs firstObject];
             self.product.uuid = self.editingPrintJob.uuid;
         }
     }
@@ -262,7 +275,7 @@ UIViewControllerPreviewingDelegate>
     // URL and the user did not manipulate it in any way.
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLAsset *photo in self.checkoutPhotos) {
-        [photoAssets addObject:[OLAsset assetWithDataSource:[photo copy]]];
+        [photoAssets addObject:[photo copy]];
     }
     
     // ensure order is maxed out by adding duplicates as necessary
@@ -277,7 +290,7 @@ UIViewControllerPreviewingDelegate>
     NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
 #endif
     
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
@@ -319,7 +332,7 @@ UIViewControllerPreviewingDelegate>
 - (void)doCheckout {
     [self saveJobWithCompletionHandler:NULL];
     
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
@@ -389,7 +402,7 @@ UIViewControllerPreviewingDelegate>
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
@@ -481,10 +494,7 @@ UIViewControllerPreviewingDelegate>
         cell = cell.superview;
     }
     
-    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:10];
-    if (!imageView.image){
-        return;
-    }
+    UIView *printView = [(OLCircleMaskCollectionViewCell *)cell printContainerView];
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
     self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
@@ -493,15 +503,19 @@ UIViewControllerPreviewingDelegate>
         
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 0;
+            self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
+        } completion:^(BOOL finished){
+            [self.infoBanner removeFromSuperview];
         }];
-        OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        cropVc.borderInsets = self.product.productTemplate.imageBorder;
         cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
         cropVc.delegate = self;
         cropVc.aspectRatio = [self productAspectRatio];
         
-        cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
-        cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
-        cropVc.previewSourceView = imageView;
+        cropVc.previewView = [printView snapshotViewAfterScreenUpdates:YES];
+        cropVc.previewView.frame = [printView.superview convertRect:printView.frame toView:nil];
+        cropVc.previewSourceView = printView;
         cropVc.providesPresentationContextTransitionStyle = true;
         cropVc.definesPresentationContext = true;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
@@ -565,35 +579,19 @@ UIViewControllerPreviewingDelegate>
     }
     
     [view.superview addConstraints:con];
+        
+    [cell.activityView startAnimating];
     
-    UIView *borderView = [cell.contentView viewWithTag:399];
-    
-    UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)[cell.contentView viewWithTag:278];
-    [activityIndicator startAnimating];
-    
-    UIView *oldView = [cell.contentView viewWithTag:10];
-    [oldView removeFromSuperview];
-    
-    OLRemoteImageView *cellImage = [[OLRemoteImageView alloc] initWithFrame:borderView.frame];
-    cellImage.tag = 10;
-    cellImage.translatesAutoresizingMaskIntoConstraints = NO;
-    cellImage.contentMode = UIViewContentModeScaleAspectFill;
-    cellImage.clipsToBounds = YES;
-    [cell.contentView insertSubview:cellImage aboveSubview:activityIndicator];
-    
-    if ([self.presentedViewController isKindOfClass:[OLScrollCropViewController class]]){
-        OLScrollCropViewController *cropVc = (OLScrollCropViewController *)self.presentedViewController;
-        if (oldView == cropVc.previewSourceView){
-            cropVc.previewSourceView = cellImage;
-            cellImage.hidden = YES;
-        }
+    cell.imageView.userInteractionEnabled = YES;
+    if (cell.imageView.gestureRecognizers.count == 0){
+        [cell.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
     }
-    
-    cellImage.userInteractionEnabled = YES;
-    [cellImage addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
     
     UIButton *enhanceButton = (UIButton *)[cell.contentView viewWithTag:11];
     [enhanceButton addTarget:self action:@selector(onButtonEnhanceClicked:) forControlEvents:UIControlEventTouchUpInside];
+    if ([OLKiteABTesting sharedInstance].lightThemeColor2){
+        [enhanceButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
+    }
     
     UIButton *upButton = (UIButton *)[cell.contentView viewWithTag:12];
     [upButton addTarget:self action:@selector(onButtonUpArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -603,14 +601,30 @@ UIViewControllerPreviewingDelegate>
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies]+1]];
+    if ([OLKiteABTesting sharedInstance].lightThemeColor3){
+        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+        [upButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+        [downButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+    }
     
     OLAsset *printPhoto = (OLAsset*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
-    [printPhoto imageWithSize:cellImage.frame.size applyEdits:YES progress:^(float progress){
-        [cellImage setProgress:progress];
-    } completion:^(UIImage *image){
+    CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    
+    UIEdgeInsets b = self.product.productTemplate.imageBorder;
+    
+    cell.imageViewTopCon.constant = b.top * (cellSize.height - [self heightForButtons]);
+    cell.imageViewRightCon.constant = b.right * cellSize.width;
+    cell.imageViewBottomCon.constant = b.bottom * (cellSize.height - [self heightForButtons]);
+    cell.imageViewLeftCon.constant = b.left * cellSize.width;
+    
+    [cell setNeedsLayout];
+    [cell layoutIfNeeded];
+    
+    [cell.imageView setAndFadeInImageWithOLAsset:printPhoto size:cell.imageView.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+        [cell.imageView setProgress:progress];
+    } completionHandler:^(){
         dispatch_async(dispatch_get_main_queue(), ^{
-            [activityIndicator stopAnimating];
-            cellImage.image = image;
+            [cell.activityView stopAnimating];
         });
     }];
     
@@ -619,75 +633,57 @@ UIViewControllerPreviewingDelegate>
         [cell setNeedsDisplay];
     }
     
-    UIEdgeInsets b = self.product.productTemplate.imageBorder;
-    
-    NSLayoutConstraint *topCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeTop multiplier:1 constant:b.top];
-    NSLayoutConstraint *leftCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeLeft multiplier:1 constant:b.left];
-    NSLayoutConstraint *rightCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:borderView attribute:NSLayoutAttributeRight multiplier:1 constant:-b.right];
-    NSLayoutConstraint *bottomCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationLessThanOrEqual toItem:borderView attribute:NSLayoutAttributeBottom multiplier:1 constant:-b.bottom];
-    
-    NSLayoutConstraint *aspectRatioCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:cellImage attribute:NSLayoutAttributeWidth multiplier:[self productAspectRatio] constant:0];
-    aspectRatioCon.priority = 750;
-    NSLayoutConstraint *activityCenterXCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
-    NSLayoutConstraint *activityCenterYCon = [NSLayoutConstraint constraintWithItem:cellImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activityIndicator attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-    
-    [borderView.superview addConstraints:@[topCon, leftCon, rightCon, bottomCon, activityCenterYCon, activityCenterXCon]];
-    [cellImage addConstraints:@[aspectRatioCon]];
-    
-    
+    cell.printContainerView.backgroundColor = printPhoto.edits.borderColor ? printPhoto.edits.borderColor : [UIColor whiteColor];
     
     return cell;
+}
+
+- (CGFloat)heightForButtons{
+    return 51;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
     
-    //Everything is designed and calculated based on a 320 view width. Scale up as necessary for larger phones.
-    CGFloat screenWidthFactor = 1;
-    //Only change the scale for portrait phones.
-    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.width < self.view.frame.size.height){
-        screenWidthFactor = self.view.frame.size.width / 320;
-    }
+    CGFloat margin = [self collectionView:collectionView layout:collectionView.collectionViewLayout minimumInteritemSpacingForSectionAtIndex:indexPath.section];
     
-    CGFloat margin = 20;
-    CGFloat heightForButtons = 51;
-    CGFloat imageWidth = 320 - margin * 2  - b.right - b.left;
-    CGFloat imageHeight = imageWidth * [self productAspectRatio];
-    CGFloat height = (imageHeight + b.top + b.bottom) * screenWidthFactor + margin + heightForButtons;
-    CGFloat width = (imageWidth + b.right + b.left) * screenWidthFactor + margin * 2;
+    UIEdgeInsets sectionInsets = [self collectionView:collectionView layout:collectionView.collectionViewLayout insetForSectionAtIndex:indexPath.section];
+    CGFloat width = self.view.frame.size.width;
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height > self.view.frame.size.width){
+        width = self.view.frame.size.width;
+    }
+    else{
+        width = MIN(width, 320.0);
+    }
+    width -= sectionInsets.left + sectionInsets.right;
+    width -= (NSInteger)((self.view.frame.size.width / width)-1) * margin;
+    
+    CGFloat height = (width * (1.0 - b.left - b.right)) * [self productAspectRatio];
+    height = height / (1 - b.top - b.bottom);
+    height += [self heightForButtons];
     
     return CGSizeMake(width, height);
 }
 
--(CGFloat)marginBetweenCellsForCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout{
-    CGFloat width = self.view.bounds.size.width;
-    CGFloat cellWidth = [self collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width;
-    int cellsPerRow = width / cellWidth;
-    CGFloat spaceLeft = width - (cellsPerRow * cellWidth);
-    CGFloat margin = spaceLeft / (cellsPerRow + 1);
-    return margin;
-}
-
-// 3
 - (UIEdgeInsets)collectionView:
 (UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
-    CGFloat margin = [self marginBetweenCellsForCollectionView:collectionView layout:collectionViewLayout];
-    return UIEdgeInsetsMake(0, margin, 0, margin);
+    CGFloat margin = 15;
+    return UIEdgeInsetsMake(margin, margin, margin, margin);
 }
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
 {
-    return 0;//[self marginBetweenCellsForCollectionView:collectionView layout:collectionViewLayout];
+    return 20;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
-    return 0.0;
+    return 35;
 }
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
-- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:YES completion:^{
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 1;
@@ -696,7 +692,7 @@ UIViewControllerPreviewingDelegate>
     }];
 }
 
-- (void)scrollCropViewControllerDidDropChanges:(OLScrollCropViewController *)cropper{
+- (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
     [UIView animateWithDuration:0.25 animations:^{
         self.nextButton.alpha = 1;
         self.navigationController.navigationBar.alpha = 1;
@@ -704,21 +700,24 @@ UIViewControllerPreviewingDelegate>
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 
--(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+-(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
-    
     self.editingPrintPhoto.edits = cropper.edits;
     
-    //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
+    [self.collectionView reloadData];
+    
+    //Find the new previewSourceView for the dismiss animation
     for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++){
         if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingPrintPhoto){
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (indexPath){
-                [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-                UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
-                UIView *imageView = [cell viewWithTag:10];
-                imageView.hidden = YES;
-                cropper.previewSourceView = imageView;
+                OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+                if (!cell){
+                    continue;
+                }
+                UIView *containerView = cell.printContainerView;
+                containerView.hidden = YES;
+                cropper.previewSourceView = containerView;
             }
         }
     }
@@ -735,16 +734,10 @@ UIViewControllerPreviewingDelegate>
 #endif
 }
 
-#pragma mark - Tear down and restore
-
-- (void)tearDownLargeObjectsFromMemory{
-    [super tearDownLargeObjectsFromMemory];
-    [self.collectionView reloadData];
-}
-
-- (void)recreateTornDownLargeObjectsToMemory{
-    [super recreateTornDownLargeObjectsToMemory];
-    [self.collectionView reloadData];
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
+    [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
+    self.editingPrintPhoto = asset;
 }
 
 @end

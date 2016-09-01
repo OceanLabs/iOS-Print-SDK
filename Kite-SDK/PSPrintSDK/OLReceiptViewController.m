@@ -71,12 +71,6 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 @end
 
-@interface OLKiteViewController ()
-
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-
-@end
-
 @implementation OLReceiptViewController
 
 //- (BOOL)prefersStatusBarHidden {
@@ -209,6 +203,16 @@ static const NSUInteger kSectionErrorRetry = 2;
     
     if (self.presentedModally || [OLKiteABTesting sharedInstance].launchedWithPrintOrder) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
+        
+        UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
+        if (color1){
+            self.navigationItem.rightBarButtonItem.tintColor = color1;
+        }
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            [self.navigationItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName : font} forState:UIControlStateNormal];
+        }
+        
         self.navigationController.viewControllers = @[self];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
         self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];

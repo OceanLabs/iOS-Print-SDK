@@ -61,6 +61,7 @@ static NSString *const kKeyGridCountX = @"co.oceanlabs.pssdk.kKeyGridCountX";
 static NSString *const kKeyGridCountY = @"co.oceanlabs.pssdk.kKeyGridCountY";
 static NSString *const kKeySupportedOptions = @"co.oceanlabs.pssdk.kKeySupportedOptions";
 static NSString *const kKeyUpsellOffers = @"co.oceanlabs.pssdk.kKeyUpsellOffers";
+static NSString *const kKeyShortDescription = @"co.oceanlabs.pssdk.kKeyShortDescription";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -85,6 +86,16 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 @end
 
 @implementation OLProductTemplate
+
+- (UIEdgeInsets)imageBorder{
+    //If these numbers are > 1 then they represent points based on a 320 point width.
+    if (_imageBorder.top >= 1 && _imageBorder.left >= 1 && _imageBorder.bottom >= 1 && _imageBorder.right >= 1){
+        return UIEdgeInsetsMake(_imageBorder.top/320.0, _imageBorder.left/320.0, _imageBorder.bottom/320.0, _imageBorder.right/320.0);
+    }
+    else{
+        return _imageBorder;
+    }
+}
 
 - (NSURL *)coverPhotoURL{
     NSString *testResult = [OLKiteABTesting sharedInstance].coverPhotoId;
@@ -392,6 +403,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeInteger:self.gridCountY forKey:kKeyGridCountY];
     [aCoder encodeObject:self.supportedOptions forKey:kKeySupportedOptions];
     [aCoder encodeObject:self.upsellOffers forKey:kKeyUpsellOffers];
+    [aCoder encodeObject:self.shortDescription forKey:kKeyShortDescription];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -424,6 +436,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _gridCountY = [aDecoder decodeIntegerForKey:kKeyGridCountY];
         self.supportedOptions = [aDecoder decodeObjectForKey:kKeySupportedOptions];
         self.upsellOffers = [aDecoder decodeObjectForKey:kKeyUpsellOffers];
+        self.shortDescription = [aDecoder decodeObjectForKey:kKeyShortDescription];
     }
     
     return self;

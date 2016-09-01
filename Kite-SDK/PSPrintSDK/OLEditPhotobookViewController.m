@@ -35,11 +35,14 @@
 #import "OLPhotobookPageContentViewController.h"
 #import "OLPhotobookViewController.h"
 #import "OLPopupOptionsImageView.h"
-#import "OLScrollCropViewController.h"
+#import "OLImageEditViewController.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
 #import "UIViewController+OLMethods.h"
 #import "OLPaymentViewController.h"
+#import "OLImagePickerViewController.h"
+#import "OLNavigationController.h"
+#import "OLKiteABTesting.h"
 
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionHelp = 1;
@@ -58,7 +61,7 @@ static const NSInteger kSectionPages = 2;
 #endif
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,UINavigationControllerDelegate>
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL haveCachedCells;
@@ -73,6 +76,7 @@ static const NSInteger kSectionPages = 2;
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 @property (strong, nonatomic) UIButton *nextButton;
 @property (assign, nonatomic) BOOL autoAddedCover;
+@property (assign, nonatomic) BOOL shownImagePicker;
 
 @end
 
@@ -92,7 +96,7 @@ static const NSInteger kSectionPages = 2;
     
     self.title = NSLocalizedString(@"Move Pages", @"");
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
@@ -125,7 +129,16 @@ static const NSInteger kSectionPages = 2;
     [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     [self.nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.nextButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    else{
+        [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+    }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [self.nextButton.titleLabel setFont:font];
+    }
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
     [self.collectionView addSubview:self.nextButton];
@@ -149,7 +162,8 @@ static const NSInteger kSectionPages = 2;
         self.haveCachedCells = YES;
     }
     
-    if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
+    if (!self.shownImagePicker && [OLUserSession currentSession].userSelectedPhotos.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
+        self.shownImagePicker = YES;
         [self photobook:self.childViewControllers[1] userDidTapOnImageWithIndex:0];
     }
 }
@@ -375,6 +389,14 @@ static const NSInteger kSectionPages = 2;
     return count;
 }
 
+- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller{
+    return UIModalPresentationNone;
+}
+
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller traitCollection:(UITraitCollection *)traitCollection {
+    return UIModalPresentationNone;
+}
+
 #pragma mark - Menu Actions
 
 - (void)deletePage{
@@ -406,7 +428,7 @@ static const NSInteger kSectionPages = 2;
         cropPhoto = self.photobookPhotos[self.longPressImageIndex];
         imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
     }
-    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
     
@@ -798,15 +820,15 @@ static const NSInteger kSectionPages = 2;
 
 #pragma mark - OLScrollCropView delegate
 
-- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (void)scrollCropViewControllerDidDropChanges:(OLScrollCropViewController *)cropper{
+- (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 
--(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+-(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     if (self.longPressImageIndex == -1){
         [self.coverPhoto unloadImage];
         self.coverPhoto.edits = cropper.edits;
@@ -824,10 +846,99 @@ static const NSInteger kSectionPages = 2;
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    if (self.longPressImageIndex == -1){
+        self.coverPhoto = asset;
+        self.interactionPhotobook.coverPhoto = self.coverPhoto;
+        [self.interactionPhotobook loadCoverPhoto];
+    }
+    else{
+        NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.photobookPhotos[self.longPressImageIndex]];
+        [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
+        [self.photobookPhotos replaceObjectAtIndex:self.longPressImageIndex withObject:asset];
+        
+        self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
+        [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
+    }
+    
+}
+
+
 #pragma mark - Adding new images
 
 - (void)addMorePhotosFromView:(UIView *)view{
-   
+    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    if ([self.photobookPhotos indexOfObject:self.coverPhoto] == NSNotFound){
+        [[OLUserSession currentSession].userSelectedPhotos removeObject:self.coverPhoto];
+    }
+    vc.selectedAssets = [OLUserSession currentSession].userSelectedPhotos;
+    vc.delegate = self;
+    vc.maximumPhotos = self.product.quantityToFulfillOrder;
+    
+    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+}
+
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
+    [vc dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    
+    if (self.replacingImageNumber){
+        if ([self.replacingImageNumber integerValue] == -1){
+            self.coverPhoto = nil;
+            self.addNewPhotosAtIndex = -1;
+        }
+        else{
+            self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
+        }
+        self.replacingImageNumber = nil;
+    }
+    
+    if (self.addNewPhotosAtIndex == -1){
+            self.coverPhoto = [addedAssets firstObject];
+        addedAssets = [[addedAssets subarrayWithRange:NSMakeRange(1, assets.count - 1)] mutableCopy];
+        self.addNewPhotosAtIndex = 0;
+        
+        for (OLPhotobookViewController *photobook in self.childViewControllers){
+            if ([photobook bookClosed]){
+                photobook.coverPhoto = self.coverPhoto;
+                [photobook loadCoverPhoto];
+                break;
+            }
+        }
+    }
+    
+    [self.photobookPhotos removeObjectsInArray:removedAssets];
+    [self updatePhotobookPhotos];
+    for (OLPhotobookViewController *photobook in self.childViewControllers){
+        if (!photobook.bookClosed){
+            photobook.photobookPhotos = self.photobookPhotos;
+            for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
+                [page loadImageWithCompletionHandler:NULL];
+            }
+        }
+    }
+    [self updateUserSelectedPhotos];
+    
+    if (!self.autoAddedCover && assets.count > 0){
+        self.autoAddedCover = YES;
+        if (!self.coverPhoto){
+            self.coverPhoto = addedAssets.firstObject;
+            [assets removeObject:self.coverPhoto];
+            [assets insertObject:self.coverPhoto atIndex:0];
+            for (OLPhotobookViewController *photobook in self.childViewControllers){
+                if ([photobook bookClosed]){
+                    photobook.coverPhoto = self.coverPhoto;
+                    [photobook loadCoverPhoto];
+                    break;
+                }
+            }
+        }
+    }
+    
+    [vc dismissViewControllerAnimated:YES completion:^(void){}];
+    
 }
 
 @end

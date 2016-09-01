@@ -36,6 +36,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLProductTemplateOption.h"
 #import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
 
 typedef enum {
     kSizeUnitsInches,
@@ -104,8 +105,8 @@ typedef enum {
         _selectedOptions = [[NSMutableDictionary alloc] init];
         
         OLProductTemplateOption *firstOption = [self.productTemplate.options firstObject];
-        if (firstOption.selections.count > 0){
-            _selectedOptions[firstOption.code] = firstOption.selections.firstObject;
+        if (firstOption.choices.count > 0){
+            _selectedOptions[firstOption.code] = firstOption.choices.firstObject.code;
         }
     }
     return _selectedOptions;
@@ -352,29 +353,29 @@ typedef enum {
     if (self.productTemplate.productDescriptionMarkdown && ![self.productTemplate.productDescriptionMarkdown isEqualToString:@""]){
         return [self.productTemplate.productDescriptionMarkdown stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
     }
-
+    
     //Fall back to the old field
     NSString *s = @"";
     
     //Add description
     if (self.productTemplate.productDescription && ![self.productTemplate.productDescription isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Description**\n%@\n\n", [self.productTemplate.productDescription stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Description**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [self.productTemplate.productDescription stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]]];
     }
     
     //Add size info
     OLTemplateUI templateClass = self.productTemplate.templateUI;
     if (templateClass != kOLTemplateUICase){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Size**\n%@\n\n", self.dimensions]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Size**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.dimensions]];
     }
     
     //Add qty info
     if (self.packInfo && ![self.packInfo isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Quantity**\n%lu\n\n", (unsigned long)self.quantityToFulfillOrder]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Quantity**\n%lu\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long)self.quantityToFulfillOrder]];
     }
     
     //Add price info
     if ([OLKiteABTesting sharedInstance].hidePrice){
-        s = [s stringByAppendingString:[NSString stringWithFormat:@"**Price**\n%@\n\n", self.unitCost]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Price**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.unitCost]];
     }
     
     //Add shipping info
@@ -383,17 +384,17 @@ typedef enum {
         if (![OLKiteABTesting sharedInstance].hidePrice){
             NSDecimalNumber *original = [self.productTemplate originalShippingCostForCountry:[OLCountry countryForCurrentLocale]];
             if (original){
-                s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedString(@"**Shipping**\n~%@~ %@\n\n", @""), [original formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]], [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
+                s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Shipping**\n~%@~ %@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [original formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]], [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
             }
             else{
-            s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedString(@"**Shipping**\n%@\n\n", @""), [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
+                s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Shipping**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
             }
         }
     }
     else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, don't add any shipping info
     }
     else{
-        s = [s stringByAppendingString:NSLocalizedString(@"**Shipping**\nFREE\n\n", @"")];
+        s = [s stringByAppendingString:NSLocalizedStringFromTableInBundle(@"**Shipping**\nFREE\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     }
     
     //Add quality guarantee

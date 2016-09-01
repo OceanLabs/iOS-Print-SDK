@@ -98,6 +98,7 @@
                 [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
             }
             welf.overflowMedia = @[];
+            [self.activityIndicator stopAnimating];
         }
         
         // Insert new items

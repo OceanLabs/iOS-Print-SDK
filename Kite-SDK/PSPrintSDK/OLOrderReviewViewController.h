@@ -29,7 +29,7 @@
 
 #import <UIKit/UIKit.h>
 #import "OLPrintOrder.h"
-#import "OLScrollCropViewController.h"
+#import "OLImageEditViewController.h"
 #import "OLKiteViewController.h"
 #import "OLCollectionViewController.h"
 

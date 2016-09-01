@@ -54,13 +54,8 @@
 }
 
 -(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos || _userSelectedPhotos.count == 0){
-        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
-        for (id asset in self.appAssets){
-            OLAsset *printPhoto = asset;
-            [mutableUserSelectedPhotos addObject:printPhoto];
-        }
-        _userSelectedPhotos = mutableUserSelectedPhotos;
+    if (!_userSelectedPhotos){
+        _userSelectedPhotos = [[NSMutableArray alloc] init];
     }
     return _userSelectedPhotos;
 }
@@ -74,6 +69,11 @@
     }
     _printOrder.userSelectedPhotos = self.userSelectedPhotos;
     return _printOrder;
+}
+
+- (void)resetUserSelectedPhotos{
+    [self.userSelectedPhotos removeAllObjects];
+    [self.userSelectedPhotos addObjectsFromArray:self.appAssets];
 }
 
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions{

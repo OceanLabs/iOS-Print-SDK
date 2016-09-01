@@ -166,8 +166,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *declineButton;
 @end
 
-@interface OLScrollCropViewController ()
-- (IBAction)onBarButtonDoneTapped:(UIBarButtonItem *)sender;
+@interface OLImageEditViewController ()
+- (IBAction)onButtonDoneTapped:(UIBarButtonItem *)sender;
 - (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender;
 @end
 
@@ -700,7 +700,7 @@
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
     XCTAssert(sb);
     
-    OLScrollCropViewController *cropVc = [sb instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    OLImageEditViewController *cropVc = [sb instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.enableCircleMask = YES;
     cropVc.aspectRatio = 1.1;
     

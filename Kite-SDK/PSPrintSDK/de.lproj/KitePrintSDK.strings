@@ -1,0 +1,314 @@
+/* No comment provided by engineer. */
+"401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.";
+
+/* No comment provided by engineer. */
+"500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Interner Server Fehler beim Hochladen. Bitte nocheinmal probieren";
+
+/* No comment provided by engineer. */
+"Add" = "hinzufügen";
+
+/* No comment provided by engineer. */
+"Add Address" = "Adresse hinzufügen";
+
+/* No comment provided by engineer. */
+"Add Another Recipient" = "anderen Empfänger hinzufügen";
+
+/* No comment provided by engineer. */
+"Add Credit/Debit Card" = "neue Adresse hinzufügen";
+
+/* No comment provided by engineer. */
+"Add more" = "Add more";
+
+/* No comment provided by engineer. */
+"Add New Address" = "neue Adresse hinzufügen";
+
+/* No comment provided by engineer. */
+"Add Payment Method" = "Zahlungsmethode hinzufügen";
+
+/* No comment provided by engineer. */
+"Add photos from:" = "Fotos hinzufügen aus:";
+
+/* No comment provided by engineer. */
+"Add to Basket" = "in den Korb legen";
+
+/* No comment provided by engineer. */
+"Address Book" = "Adressbuch";
+
+/* No comment provided by engineer. */
+"Address Search" = "Adressensuche";
+
+/* No comment provided by engineer. */
+"Back" = "Zurück";
+
+/* No comment provided by engineer. */
+"Camera Roll" = "Filmrolle";
+
+/* No comment provided by engineer. */
+"Cancel" = "löschen";
+
+/* No comment provided by engineer. */
+"Card Number" = "Kartennummer";
+
+/* No comment provided by engineer. */
+"Checking Code" = "Überprüfung Gutscheincode";
+
+/* No comment provided by engineer. */
+"Checkout" = "Check out";
+
+/* No comment provided by engineer. */
+"Checkout for Free!" = "Kostenlos Checkout";
+
+/* No comment provided by engineer. */
+"Choose Address" = "Adresse auswählen";
+
+/* No comment provided by engineer. */
+"Choose Country" = "Land auswählen";
+
+/* No comment provided by engineer. */
+"Choose Delivery Address" = "Lieferadresse auswählen";
+
+/* No comment provided by engineer. */
+"City" = "Stadt";
+
+/* No comment provided by engineer. */
+"Clearing Code" = "Freischalt Gutscheincode";
+
+/* No comment provided by engineer. */
+"Country" = "Land";
+
+/* No comment provided by engineer. */
+"County" = "Land";
+
+/* No comment provided by engineer. */
+"Credit Card" = "Kreditkarte";
+
+/* No comment provided by engineer. */
+"Delivery Address" = "Lieferadresse";
+
+/* No comment provided by engineer. */
+"Delivery Details" = "Lieferbedingungen";
+
+/* No comment provided by engineer. */
+"Done" = "erledigt";
+
+/* No comment provided by engineer. */
+"Edit Address" = "Adresse bearbeiten";
+
+/* No comment provided by engineer. */
+"Email" = "E-Mail";
+
+/* No comment provided by engineer. */
+"Enter a valid credit card number" = "gültige Kreditkartennummer eintragen";
+
+/* No comment provided by engineer. */
+"Enter a valid CVV number" = "gültige CVV Nummer eintragen";
+
+/* No comment provided by engineer. */
+"Enter a valid expiry date" = "gültiges Ablaufdatum eintragen";
+
+/* No comment provided by engineer. */
+"Enter Address Manually" = "Adresse manuell eintragen";
+
+/* No comment provided by engineer. */
+"Failed to get the price of the order. Please try again." = "Preisermittlung der Order fehlgeschlagen.Bitte erneut versuchen";
+
+/* No comment provided by engineer. */
+"Failed to store card details with PayPal. Please try again." = "Speicherung der Kreditkartendaten fehlgeschlagen. Bitte erneut versuchen";
+
+/* No comment provided by engineer. */
+"Failed to synchronize product templates. Please try again." = "Synchronisation der Produkt-Templates fehlgeschlagen Bitte erneut versuchen";
+
+/* No comment provided by engineer. */
+"Failed to validate the order. Please try again." = "Orderbestätigung fehlgeschlagen. Bitte erneut versuchen";
+
+/* No comment provided by engineer. */
+"First Name" = "Vorname";
+
+/* Invalid CVV payment failed error dialog title */
+"Invalid CVV" = "Ungültige  CW?";
+
+/* No comment provided by engineer. */
+"Invalid Email Address" = "Ungültige E-Mail Adresse";
+
+/* No comment provided by engineer. */
+"Invalid Phone Number" = "Ungültige Telefonnummer";
+
+/* No comment provided by engineer. */
+"Last Name" = "Familienname";
+
+/* No comment provided by engineer. */
+"Line 1" = "Leitung 1";
+
+/* No comment provided by engineer. */
+"Line 2" = "Leitung 1";
+
+/* No comment provided by engineer. */
+"Missing Delivery Address" = "Fehlende Lieferadresse";
+
+/* No comment provided by engineer. */
+"New Payment" = "Neue Zahlung";
+
+/* No comment provided by engineer. */
+"Next" = "Nächster";
+
+/* No comment provided by engineer. */
+"OK" = "Ok";
+
+/* No comment provided by engineer. */
+"Only registered %d/%d image URLs with the asset endpoint" = "Only registered %d/%d image URLs with the asset endpoint";
+
+/* No comment provided by engineer. */
+"Oops" = "Oops";
+
+/* No comment provided by engineer. */
+"Oops!" = "Oops!";
+
+/* No comment provided by engineer. */
+"Order Id" = "Bestell ID";
+
+/* No comment provided by engineer. */
+"Order Summary" = "Bestellübersicht";
+
+/* No comment provided by engineer. */
+"Pay %@" = "Bezahlen %@";
+
+/* No comment provided by engineer. */
+"Pay with card ending %@" = "Bezahlen mit Karten-Endnummer %@";
+
+/* No comment provided by engineer. */
+"Pay with new card" = " mit neuer Karte bezahlen";
+
+/* No comment provided by engineer. */
+"Paying With" = "Paying With";
+
+/* No comment provided by engineer. */
+"Payment" = "Zahlung";
+
+/* No comment provided by engineer. */
+"Payment (TEST)" = "Zahlung (Test)";
+
+/* Payment declined error dialog title */
+"Payment Declined" = "Zahlung abgelehnt";
+
+/* Generic payment failed error dialog title */
+"Payment Failed" = "Zahlung gescheitert";
+
+/* No comment provided by engineer. */
+"Phone" = "Telefon";
+
+/* No comment provided by engineer. */
+"Please choose an address to have your order shipped to" = "Bitte Lieferadresse wählen";
+
+/* No comment provided by engineer. */
+"Please enter a card expiry date in the future" = "Bitte ein Kartenablaufdatum in der Zukunft eingeben";
+
+/* No comment provided by engineer. */
+"Please enter a valid card number" = "Bitte gültige Kartennummer eingeben";
+
+/* No comment provided by engineer. */
+"Please enter a valid email address" = "Bitte eine gültige E-Mail Sdresse eingeben";
+
+/* No comment provided by engineer. */
+"Please enter a valid phone number" = "Bitte gültige Telefonnummer eingeben";
+
+/* No comment provided by engineer. */
+"Postcode" = "Postleitzahl";
+
+/* No comment provided by engineer. */
+"Print order submission failed with a %lu HTTP response status code. Please try again." = "Druckordereingabe fehlgeschlagen mit %lu  HTTP Staus Code";
+
+/* No comment provided by engineer. */
+"Print these" = "Print these";
+
+/* No comment provided by engineer. */
+"Processing" = "Aufbereitung";
+
+/* No comment provided by engineer. */
+"Reposition the Photo" = "Reposition the Photo";
+
+/* No comment provided by engineer. */
+"Required by the postal service in case there are any issues during delivery." = "Für die Postzustellung erforderlich, um Probleme bei der Zustellung zu vermeiden.";
+
+/* No comment provided by engineer. */
+"Retry" = "Bitte erneut versuchen";
+
+/* No comment provided by engineer. */
+"Review" = "Review";
+
+/* No comment provided by engineer. */
+"Save" = "sichern";
+
+/* No comment provided by engineer. */
+"Search by postcode, street or address" = "Suche nach Postleitzahl, Straße oder Adresse";
+
+/* No comment provided by engineer. */
+"Search by street, address or ZIP code" = "Suche nach Straße Adresse oder Postleitzahl";
+
+/* No comment provided by engineer. */
+"Search for Address" = "Nach Adresse suchen";
+
+/* No comment provided by engineer. */
+"Shipping" = "Versand";
+
+/* No comment provided by engineer. */
+"State" = "Status";
+
+/* No comment provided by engineer. */
+"Tap to edit" = "Tap to edit";
+
+/* No comment provided by engineer. */
+"This is the 3-4 digit verification number/security code normally found on the back of your card" = "Dies ist die 3-4- stellige Prüfnummer / Sicherheitscode normalerweise auf der Rückseite Ihrer Karte gefunden";
+
+/* No comment provided by engineer. */
+"Total" = "Gesamt";
+
+/* No comment provided by engineer. */
+"Transfer from your phone" = "Transfer von Ihrem Mobiltelepnon";
+
+/* Generic payment failed error dialog message */
+"Unfortunately we failed to take a payment from your card. Please try again." = "Leider war die Zahlung mit Ihrer Karte nicht erfolgreich, Bitte versuchen Sie es noch einmal.";
+
+/* No comment provided by engineer. */
+"Uploading Images \n%lu / %lu" = "Bilder hochladen \n%lu / %lu";
+
+/* No comment provided by engineer. */
+"We'll send you confirmation and order updates." = "Wir werden Dir eine Orderbestätigung und Bestell-Aktualisierungen zusenden";
+
+/* No comment provided by engineer. */
+"We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.";
+
+/* No comment provided by engineer. */
+"You can add %d more for the same price." = "You can add %d more for the same price.";
+
+/* Invalid CVV payment failed error dialog message */
+"You have entered an invalid CVV number. Please check it and try again." = "Deine CVV Nummer ist ungültig, Bitte überprüfe sie und versuche es noch einmal.";
+
+/* No comment provided by engineer. */
+"You've selected %d photos." = "You've selected %d photos.";
+
+/* No comment provided by engineer. */
+"Your 16 digit card number" = "Ihre 16-stellige Kartennummer";
+
+/* No comment provided by engineer. */
+"Your card expiry date" = "Ihre Karte Ablaufdatum";
+
+/* Payment declined error dialog message */
+"Your payment has been declined. Please check your card details and try again." = "Deine Zahlung ist abgelehnt worden. Bitte überprüfe sie und versuche es noch einmal.";
+
+/* No comment provided by engineer. */
+"Your payment was not approved (transaction state: %@). Please try again." = "Deine Zahlung ist nicht anerkannt worden (Vorgang: %@) Bitte versuche es noch einmal.";
+
+/* No comment provided by engineer. */
+"ZIP Code" = "Postleitzahl";
+
+"Please enter your first name and last name" = "Geben Sie bitte Ihren Vor-und Nachnamen ein";
+"**Shipping**\nFREE\n\n" = "**Versand**\nFREI\n\n";
+"**Shipping**\n%@\n\n" = "**Versand**\n%@\n\n";
+"**Shipping**\n~%@~ %@\n\n" = "**Versand**\n~%@~ %@\n\n";
+"**Price**\n%@\n\n" = "**Price**\n%@\n\n";
+"**Quantity**\n%lu\n\n" = "**Quantity**\n%lu\n\n";
+"**Size**\n%@\n\n" = "**Size**\n%@\n\n";
+"**Description**\n%@\n\n" = "**Beschreibung**\n%@\n\n";
+
+"Pay with Credit Card (TEST)" = "Mit Karte bezahlen (TEST)";
+"Pay with Credit Card" = "Mit Karte bezahlen";

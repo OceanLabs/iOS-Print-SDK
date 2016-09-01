@@ -44,8 +44,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 @import Photos;
 
 @interface ViewController () <UINavigationControllerDelegate, OLKiteDelegate>
-@property (weak, nonatomic) IBOutlet UIButton *localPhotosButton;
-@property (weak, nonatomic) IBOutlet UIButton *remotePhotosButton;
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
@@ -113,10 +111,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (BOOL)isAPIKeySet {
-#ifdef OL_KITE_CI_DEPLOY
-    return YES;
-#endif
-    
     if (![[[NSProcessInfo processInfo]environment][@"OL_KITE_UI_TEST"] isEqualToString:@"1"]){
         if ([[self apiKey] isEqualToString:@"REPLACE_WITH_YOUR_API_KEY"] && ![OLKitePrintSDK apiKey]) {
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"API Key Required" message:@"Set your API keys at the top of ViewController.m before you can print. This can be found under your profile at http://kite.ly" preferredStyle:UIAlertControllerStyleAlert];
@@ -141,15 +135,10 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)printWithAssets:(NSArray *)assets {
-#ifdef OL_KITE_CI_DEPLOY
-    [self setupCIDeploymentWithAssets:assets];
-    return;
-#else
     if (![[[NSProcessInfo processInfo]environment][@"OL_KITE_UI_TEST"] isEqualToString:@"1"]){
         if (![self isAPIKeySet]) return;
         [OLKitePrintSDK setAPIKey:[self apiKey] withEnvironment:[self environment]];
     }
-#endif
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     vc.userEmail = @"";
@@ -200,10 +189,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 //    return YES;
 //}
 
-- (IBAction)onButtonKiteClicked:(UIButton *)sender {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.kite.ly"]];
-}
-
 - (BOOL)shouldShowContinueShoppingButton{
     return YES;
 }
@@ -212,92 +197,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #ifdef OL_KITE_VERBOSE
     NSLog(@"%@", info);
 #endif
-}
-
-#pragma mark Internal
-
-- (void)setupCIDeploymentWithAssets:(NSArray *)assets{
-    BOOL shouldOfferAPIChange = YES;
-    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    
-    if (!([pasteboard containsPasteboardTypes: [NSArray arrayWithObject:@"public.utf8-plain-text"]] && pasteboard.string.length == 40)) {
-        shouldOfferAPIChange = NO;
-    }
-    
-    if (shouldOfferAPIChange){
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Possible API key detected in clipboard", @"") message:NSLocalizedString(@"Do you want to use this instead of the built-in ones?", @"") preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"") style:UIAlertActionStyleDefault handler:^(id action){
-#define STRINGIZE(x) #x
-#define STRINGIZE2(x) STRINGIZE(x)
-#define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
-            [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
-            
-#ifdef OL_KITE_OFFER_APPLE_PAY
-            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-#endif
-            
-            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets info:@{}];
-            vc.userEmail = @"";
-            vc.userPhone = @"";
-            vc.delegate = self;
-            
-            [self addCatsAndDogsImagePickersToKite:vc];
-            
-            [self presentViewController:vc animated:YES completion:NULL];
-        }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDefault handler:^(id action){
-            [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
-            
-#ifdef OL_KITE_OFFER_APPLE_PAY
-            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-            [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-#endif
-            
-            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-            vc.userEmail = @"";
-            vc.userPhone = @"";
-            vc.delegate = self;
-            [self presentViewController:vc animated:YES completion:NULL];
-        }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and use staging", @"") style:UIAlertActionStyleDefault handler:^(id action){
-            [OLKitePrintSDK setUseStaging:YES];
-            [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
-            
-#ifdef OL_KITE_OFFER_APPLE_PAY
-            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-            [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-#endif
-            
-            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-            vc.userEmail = @"";
-            vc.userPhone = @"";
-            vc.delegate = self;
-            
-            [self addCatsAndDogsImagePickersToKite:vc];
-            
-            [self presentViewController:vc animated:YES completion:NULL];
-        }]];
-        [self presentViewController:ac animated:YES completion:NULL];
-    }
-    else{
-#define STRINGIZE(x) #x
-#define STRINGIZE2(x) STRINGIZE(x)
-#define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
-        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
-        
-#ifdef OL_KITE_OFFER_APPLE_PAY
-        [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-#endif
-        
-        OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-        vc.userEmail = @"";
-        vc.userPhone = @"";
-        vc.delegate = self;
-       
-        [self addCatsAndDogsImagePickersToKite:vc];
-        
-        [self presentViewController:vc animated:YES completion:NULL];
-    }
 }
 
 @end

@@ -31,6 +31,7 @@
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
+#import "UIColor+OLHexString.h"
 #include <stdlib.h>
 
 
@@ -48,6 +49,10 @@ static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.a
 static NSString *const kOLKiteABTestPaymentScreen = @"ly.kite.abtest.payment_screen";
 static NSString *const kOLKiteABTestCoverPhotoVariants = @"ly.kite.abtest.cover_photo_variants";
 
+static NSString *const kOLKiteABTestSkipProductOverview = @"ly.kite.abtest.skip_product_overview";
+static NSString *const kOLKiteABTestDisableProductCategories = @"ly.kite.abtest.disable_product_categories";
+static NSString *const kOLKiteABTestMinimalNavigationBar = @"ly.kite.abtest.minimal_navigationbar";
+
 id safeObject(id obj){
     return obj ? obj : @"";
 }
@@ -57,6 +62,9 @@ static dispatch_once_t srand48OnceToken;
 @interface OLKiteABTesting ()
 
 @property (assign, nonatomic, readwrite) BOOL offerAddressSearch;
+@property (assign, nonatomic, readwrite) BOOL skipProductOverview;
+@property (assign, nonatomic, readwrite) BOOL disableProductCategories;
+@property (assign, nonatomic) BOOL minimalNavigationBar;
 @property (assign, nonatomic, readwrite) BOOL requirePhoneNumber;
 @property (assign, nonatomic, readwrite) BOOL hidePrice;
 @property (assign, nonatomic, readwrite) BOOL offerPayPal;
@@ -85,10 +93,7 @@ static dispatch_once_t srand48OnceToken;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     NSString *s;
-    NSString *user = [userConfig[@"user_type"] lowercaseString];
-    if ([user isEqualToString:@"kite_test"] || [user isEqualToString:@"standard"]) {
-        user = nil;
-    }
+    NSString *user = [self userTheme];
     
     s = userConfig[kOLKiteThemeHeaderLogoImageURL];
     if (!s && user){
@@ -144,6 +149,12 @@ static dispatch_once_t srand48OnceToken;
     }
     [defaults setObject:s forKey:kOLKiteThemeReceiptFailureBg];
     
+    s = userConfig[kOLKiteThemeCancelButtonIcon];
+    if (!s && user){
+        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/x.png", user];
+    }
+    [defaults setObject:s forKey:kOLKiteThemeCancelButtonIcon];
+    
     s = userConfig[kOLKiteThemeSupportEmail];
     if (!s && user){
         s = [NSString stringWithFormat:@"appsupport@%@.com", user];
@@ -167,7 +178,7 @@ static dispatch_once_t srand48OnceToken;
 
 - (void)prefetchRemoteImages{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg]){
+    for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg, kOLKiteThemeCancelButtonIcon]){
         NSURL *url = [NSURL URLWithString:[defaults objectForKey:s]];
         if (url){
             [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
@@ -186,6 +197,10 @@ static dispatch_once_t srand48OnceToken;
     }
     
     return _promoBannerText;
+}
+
+- (NSString *)backButtonText{
+    return self.minimalNavigationBar ? @"" : NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
 }
 
 - (NSString *)headerLogoURL{
@@ -213,9 +228,67 @@ static dispatch_once_t srand48OnceToken;
     return [defaults objectForKey:kOLKiteThemeReceiptFailureBg];
 }
 
+- (NSString *)cancelButtonIconURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteThemeCancelButtonIcon];
+}
+
 - (NSString *)supportEmail{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults objectForKey:kOLKiteThemeSupportEmail];
+}
+
+- (UIColor *)lightThemeColor1{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:kOLKiteLightThemeColor1];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    return color;
+}
+
+- (UIColor *)lightThemeColor2{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:kOLKiteLightThemeColor2];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    return color;
+}
+
+- (UIColor *)lightThemeColor3{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:kOLKiteLightThemeColor3];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    return color;
+}
+
+- (UIColor *)lightThemeTitleColor1{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:kOLKiteLightThemeTitleColor1];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    return color;
+}
+
+- (UIFont *)lightThemeFont1WithSize:(CGFloat)size{
+    UIFont *font;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *fontName = [defaults objectForKey:kOLKiteLightThemeFont1];
+    
+    if (fontName){
+        font = [UIFont fontWithName:fontName size:size];
+    }
+    
+    return font;
 }
 
 - (void)resetTheme{
@@ -230,13 +303,40 @@ static dispatch_once_t srand48OnceToken;
     [defaults removeObjectForKey:kOLKiteThemeReceiptSuccessBg];
     [defaults removeObjectForKey:kOLKiteThemeReceiptFailureBg];
     [defaults removeObjectForKey:kOLKiteThemeSupportEmail];
+    [defaults removeObjectForKey:kOLKiteLightThemeFont1];
+    [defaults removeObjectForKey:kOLKiteLightThemeColor1];
+    [defaults removeObjectForKey:kOLKiteLightThemeColor2];
+    [defaults removeObjectForKey:kOLKiteLightThemeColor3];
+    [defaults removeObjectForKey:kOLKiteLightThemeTitleColor1];
+    
+    [defaults synchronize];
+}
+
+- (NSString *)userTheme{
+    NSString *user = [_userConfig[@"theme"] lowercaseString];
+    if (!user){
+        [_userConfig[@"user_type"] lowercaseString];
+    }
+    if ([user isEqualToString:@"kite_test"] || [user isEqualToString:@"standard"]) {
+        user = nil;
+    }
+    return user;
 }
 
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
     [self resetTheme];
     [OLKiteABTesting fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
         if (error){
-            [OLKiteABTesting fetchRemotePlistWithURL:@"https://s3.amazonaws.com/sdk-static/kite-ios-remote.plist" completionHandler:^(NSError *error2){
+            NSString *user = [self userTheme];
+            NSString *url;
+            if (user){
+                url = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/kite-ios-remote.plist", user];
+            }
+            else{
+                url = @"https://s3.amazonaws.com/sdk-static/kite-ios-remote.plist";
+            }
+            
+            [OLKiteABTesting fetchRemotePlistWithURL:url completionHandler:^(NSError *error2){
                 [self setupABTestVariants];
                 handler();
             }];
@@ -319,14 +419,15 @@ static dispatch_once_t srand48OnceToken;
     
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
     if (!experimentDict) {
-        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0, @"Dark" : @0};
+        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0, @"Dark" : @0, @"MinimalWhite" : @0};
     }
     [OLKiteABTesting splitTestWithName:kOLKiteABTestProductTileStyle
                    conditions:@{
                                 @"Classic" : safeObject(experimentDict[@"Classic"]),
                                 @"A" : safeObject(experimentDict[@"A"]),
                                 @"B" : safeObject(experimentDict[@"B"]),
-                                @"Dark" : safeObject(experimentDict[@"Dark"])
+                                @"Dark" : safeObject(experimentDict[@"Dark"]),
+                                @"MinimalWhite" : safeObject(experimentDict[@"MinimalWhite"])
                                 } block:^(id choice) {
                                     self.productTileStyle = choice;
                                 }];
@@ -365,6 +466,51 @@ static dispatch_once_t srand48OnceToken;
                                 } block:^(id choice) {
                                     self.launchWithPrintOrderVariant = choice;
                                 }];
+}
+
+- (void)setupDisableProductCategories{
+    self.disableProductCategories = NO;
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestDisableProductCategories];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0, @"No" : @1};
+    }
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestDisableProductCategories
+                            conditions:@{
+                                         @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                         @"No" : safeObject(experimentDict[@"No"])
+                                         } block:^(id choice) {
+                                             self.disableProductCategories = [choice isEqualToString:@"Yes"];
+                                         }];
+}
+
+- (void)setupSkipProductOverviewTest{
+    self.skipProductOverview = NO;
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestSkipProductOverview];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0, @"No" : @1};
+    }
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestSkipProductOverview
+                            conditions:@{
+                                         @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                         @"No" : safeObject(experimentDict[@"No"])
+                                         } block:^(id choice) {
+                                             self.skipProductOverview = [choice isEqualToString:@"Yes"];
+                                         }];
+}
+
+- (void)setupMinimalNavigationBarTest{
+    self.minimalNavigationBar = NO;
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestMinimalNavigationBar];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0, @"No" : @1};
+    }
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestMinimalNavigationBar
+                            conditions:@{
+                                         @"Yes" : safeObject(experimentDict[@"Yes"]),
+                                         @"No" : safeObject(experimentDict[@"No"])
+                                         } block:^(id choice) {
+                                             self.minimalNavigationBar = [choice isEqualToString:@"Yes"];
+                                         }];
 }
 
 - (void)setupOfferAddressSearchTest{
@@ -508,6 +654,9 @@ static dispatch_once_t srand48OnceToken;
     [self setupHidePriceTest];
     [self setupShowProductDescriptionScreenBeforeShippingTest];
     [self setupHidePriceTest];
+    [self setupSkipProductOverviewTest];
+    [self setupDisableProductCategories];
+    [self setupMinimalNavigationBarTest];
     [self groupSetupShippingScreenTests];
 }
 

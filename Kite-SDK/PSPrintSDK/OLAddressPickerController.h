@@ -28,6 +28,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLNavigationController.h"
 
 @class OLAddressPickerController;
 
@@ -36,7 +37,7 @@
 - (void)addressPickerDidCancelPicking:(OLAddressPickerController *)picker;
 @end
 
-@interface OLAddressPickerController : UINavigationController
+@interface OLAddressPickerController : OLNavigationController
 
 @property (weak, nonatomic) id<UINavigationControllerDelegate, OLAddressPickerControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL allowsMultipleSelection;

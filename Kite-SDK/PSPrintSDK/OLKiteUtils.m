@@ -40,6 +40,7 @@
 #import "OLKiteViewController.h"
 #import "OLPaymentViewControllerV2.h"
 #import "OLUserSession.h"
+#import "FBSDKLoginManager.h"
 
 @class OLCustomPhotoProvider;
 
@@ -47,11 +48,9 @@
 
 +(NSString *)appleMerchantID;
 
-#ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
 + (NSString *) instagramClientID;
-#endif
 
 + (BOOL)QRCodeUploadEnabled;
 
@@ -78,11 +77,11 @@
 }
 
 + (BOOL)instagramEnabled{
-#ifdef OL_KITE_OFFER_INSTAGRAM
-    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
-#else
+    if (YES){ //Check what needs to be checked in terms of installation
+        return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
+    }
+    
     return NO;
-#endif
 }
 
 + (BOOL)qrCodeUploadEnabled {
@@ -90,11 +89,12 @@
 }
 
 + (BOOL)facebookEnabled{
-#ifdef OL_KITE_OFFER_FACEBOOK
-    return YES;
-#else
+    //TODO check that it is actually set up
+    if ([FBSDKLoginManager class]){
+        return YES;
+    }
+    
     return NO;
-#endif
 }
 
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
@@ -123,14 +123,6 @@
     OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
     return kiteVC.delegate;
 }
-
-#ifdef OL_KITE_OFFER_APPLE_PAY
-+(BOOL)isApplePayAvailable{
-    PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
-    
-    return [Stripe canSubmitPaymentRequest:request];
-}
-#endif
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
     if ([[OLKiteABTesting sharedInstance].paymentScreen isEqualToString:@"V2"]){
@@ -263,6 +255,9 @@
                                           dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                                               if (error){
                                                   failure(error);
+                                              }
+                                              else if (!((data && [(NSHTTPURLResponse *)response statusCode] >= 200 && [(NSHTTPURLResponse *)response statusCode] <= 299))){
+                                                  failure([NSError errorWithDomain:@"ly.kite.remoteconfig" code:[(NSHTTPURLResponse *)response statusCode] userInfo:nil]);
                                               }
                                               else if (data){
                                                   NSURL *fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"remote.plist"]];

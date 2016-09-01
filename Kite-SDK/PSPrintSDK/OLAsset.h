@@ -61,7 +61,7 @@ extern NSString *const kOLMimeTypePDF;
  *  Protocol for a custom class to implement if they want to provide the data for an OLAsset.
  *  For example a custom image class that isn't built in to OLAsset can be used with OLAsset by implementing this protocol.
  */
-@protocol OLAssetDataSource <NSObject, NSCoding>
+@protocol OLAssetDataSource <NSObject, NSCoding, NSCopying>
 /**
  *  The mime type of the image
  *

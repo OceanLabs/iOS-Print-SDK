@@ -39,7 +39,14 @@ static NSString *const kOLKiteThemeReceiptSuccess = @"themeReceiptSuccess";
 static NSString *const kOLKiteThemeReceiptFailure = @"themeReceiptFailure";
 static NSString *const kOLKiteThemeReceiptSuccessBg = @"themeReceiptSuccessBg";
 static NSString *const kOLKiteThemeReceiptFailureBg = @"themeReceiptFailureBg";
+static NSString *const kOLKiteThemeCancelButtonIcon = @"themeCancelButtonIcon";
 static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
+
+static NSString *const kOLKiteLightThemeColor1 = @"ly.kite.theme.light.color.1";
+static NSString *const kOLKiteLightThemeColor2 = @"ly.kite.theme.light.color.2";
+static NSString *const kOLKiteLightThemeColor3 = @"ly.kite.theme.light.color.3";
+static NSString *const kOLKiteLightThemeTitleColor1 = @"ly.kite.theme.light.titleColor.1";
+static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 
 @interface OLKiteABTesting : NSObject
 
@@ -49,6 +56,8 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 @property (assign, nonatomic, readonly) BOOL requirePhoneNumber;
 @property (assign, nonatomic, readonly) BOOL hidePrice;
 @property (assign, nonatomic, readonly) BOOL offerPayPal;
+@property (assign, nonatomic, readonly) BOOL skipProductOverview;
+@property (assign, nonatomic, readonly) BOOL disableProductCategories;
 @property (strong, nonatomic, readonly) NSString *qualityBannerType;
 @property (strong, nonatomic, readonly) NSString *checkoutScreenType;
 @property (strong, nonatomic, readonly) NSString *productTileStyle;
@@ -63,7 +72,14 @@ static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
 @property (strong, nonatomic, readonly) NSString *receiptFailureURL;
 @property (strong, nonatomic, readonly) NSString *receiptSuccessBgURL;
 @property (strong, nonatomic, readonly) NSString *receiptFailureBgURL;
+@property (strong, nonatomic, readonly) NSString *cancelButtonIconURL;
 @property (strong, nonatomic, readonly) NSString *supportEmail;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColor1;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColor2;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColor3;
+@property (strong, nonatomic, readonly) UIColor *lightThemeTitleColor1;
+- (UIFont *)lightThemeFont1WithSize:(CGFloat)size;
+- (NSString *)backButtonText;
 
 @property (strong, nonatomic) NSDictionary *userConfig;
 @property (strong, nonatomic) OLKiteTheme *theme;
