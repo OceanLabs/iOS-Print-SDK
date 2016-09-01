@@ -401,8 +401,13 @@
     self.rotationSize = size;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.sourcesCollectionView.collectionViewLayout invalidateLayout];
+        self.selectedProviderIndicator.alpha = 0;
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
-        
+        [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
+        [self positionSelectedProviderIndicator];
+        [UIView animateWithDuration:0.25 animations:^{
+            self.selectedProviderIndicator.alpha = 1;
+        }];
     }];
 }
 
