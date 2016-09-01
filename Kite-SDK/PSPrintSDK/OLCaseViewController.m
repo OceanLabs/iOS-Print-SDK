@@ -58,6 +58,10 @@
 @implementation OLCaseViewController
 
 - (CGFloat)aspectRatio{
+    if (CGSizeEqualToSize(self.product.productTemplate.sizePx, CGSizeZero)){
+        return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
+    }
+    
     return self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width;
 }
 
@@ -75,6 +79,10 @@
             [[NSOperationQueue mainQueue] addOperation:op1];
         }];
     }
+    else{
+        [self.caseVisualEffectView removeFromSuperview];
+        [self.maskActivityIndicator removeFromSuperview];
+    }
     if (self.product.productTemplate.productHighlightsImageURL){
         NSOperation *op2 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op2];
@@ -83,6 +91,9 @@
             [[NSOperationQueue mainQueue] addOperation:op2];
         }];
     }
+    else{
+        [self.highlightsView removeFromSuperview];
+    }
     if (self.product.productTemplate.productBackgroundImageURL){
         NSOperation *op3 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op3];
@@ -90,6 +101,9 @@
         [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL withCompletionHandler:^(UIImage *image, NSError *error){
             [[NSOperationQueue mainQueue] addOperation:op3];
         }];
+    }
+    else{
+        [self.deviceView removeFromSuperview];
     }
     
     [[NSOperationQueue mainQueue] addOperation:self.downloadImagesOperation];
@@ -102,26 +116,24 @@
     
     self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
     
-    if (self.downloadedMask){
-        return;
+    if (!self.downloadedMask && self.product.productTemplate.maskImageURL){
+        UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
+        [self.cropView removeConstraint:self.aspectRatioConstraint];
+        NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
+        [self.cropView addConstraints:@[con]];
+        self.aspectRatioConstraint = con;
+        
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+        
+        [self maskWithImage:tempMask targetView:self.cropView];
+        
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     }
-    
-    UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
-    [self.printContainerView removeConstraint:self.aspectRatioConstraint];
-    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.printContainerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.printContainerView attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
-    [self.printContainerView addConstraints:@[con]];
-    self.aspectRatioConstraint = con;
-    
-    [self.view setNeedsLayout];
-    [self.view layoutIfNeeded];
-    
-    [self maskWithImage:tempMask targetView:self.cropView];
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
 - (UIColor *)containerBackgroundColor{
-    return [UIColor clearColor];
+    return self.product.productTemplate.maskImageURL ? [UIColor clearColor] : [UIColor whiteColor];
 }
 
 - (void)orderViews{
@@ -136,11 +148,14 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-        [self applyDownloadedMask];
-    }];
-    [block addDependency:self.downloadImagesOperation];
-    [[NSOperationQueue mainQueue] addOperation:block];
+    
+    if (self.product.productTemplate.maskImageURL){
+        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+            [self applyDownloadedMask];
+        }];
+        [block addDependency:self.downloadImagesOperation];
+        [[NSOperationQueue mainQueue] addOperation:block];
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -157,6 +172,7 @@
     if (self.downloadedMask){
         return;
     }
+    
     [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.maskImageURL priority:1 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (error) {
@@ -164,9 +180,9 @@
             av.tag = 99;
             [av show];
         } else {
-            [self.printContainerView removeConstraint:self.aspectRatioConstraint];
-            NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.printContainerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.printContainerView attribute:NSLayoutAttributeWidth multiplier:self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width constant:0];
-            [self.printContainerView addConstraints:@[con]];
+            [self.cropView removeConstraint:self.aspectRatioConstraint];
+            NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:[self aspectRatio] constant:0];
+            [self.cropView addConstraints:@[con]];
             
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
@@ -184,16 +200,23 @@
             self.caseVisualEffectView.hidden = YES;
             self.downloadedMask = YES;
             [self.maskActivityIndicator removeFromSuperview];
-            self.maskActivityIndicator = nil;
         }
     }];
 }
 
 -(void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
+    if (!maskImage){
+        return;
+    }
+    
     CALayer *_maskingLayer = [CALayer layer];
     CGRect f = targetView.bounds;
     UIEdgeInsets imageBleed = self.product.productTemplate.imageBleed;
     CGSize size = self.product.productTemplate.sizePx;
+    
+    if (CGSizeEqualToSize(size, CGSizeZero)){
+        size = self.product.productTemplate.sizeCm;
+    }
     
     UIEdgeInsets adjustedBleed = UIEdgeInsetsMake(f.size.height * imageBleed.top / size.height,
                                                   f.size.width * imageBleed.left / size.width,

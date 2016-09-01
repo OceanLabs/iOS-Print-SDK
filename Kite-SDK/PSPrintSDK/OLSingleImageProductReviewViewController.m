@@ -135,8 +135,8 @@
     }
     
     self.ctaButton.enabled = YES;
-
-if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
@@ -443,25 +443,6 @@ if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         }
     }];
 }
-
-//#pragma mark - UIGestureRecognizer Delegate
-//
-//- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-//    return YES;
-//}
-//
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-//    if ((gestureRecognizer.view == self.cropView && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) || (![otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] && otherGestureRecognizer.state == UIGestureRecognizerStateEnded)){
-//        gestureRecognizer.enabled = NO;
-//        gestureRecognizer.enabled = YES;
-//        return NO;
-//    }
-//    return YES;
-//}
-//
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-//    return YES;
-//}
 
 
 @end

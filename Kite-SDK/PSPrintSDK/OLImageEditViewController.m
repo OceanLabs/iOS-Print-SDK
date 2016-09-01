@@ -108,6 +108,14 @@ const NSInteger kOLEditTagCrop = 40;
     return _textFields;
 }
 
+- (UIEdgeInsets)borderInsets{
+    if (self.product){
+        return self.product.productTemplate.imageBorder;
+    }
+    
+    return _borderInsets;
+}
+
 - (void)setActiveTextField:(OLPhotoTextField *)activeTextField{
     if (activeTextField){
         if (self.editingTools.collectionView.tag != kOLEditTagTextTools && activeTextField != _activeTextField){ //Showing colors/fonts for another textField. Dismiss first
@@ -271,12 +279,16 @@ const NSInteger kOLEditTagCrop = 40;
     [self orderViews];
     
     UIEdgeInsets b = [self imageInsetsOnContainer];
-    self.cropViewTopCon.constant = -b.top;
+    self.cropViewTopCon.constant = b.top;
     self.cropViewRightCon.constant = b.right;
     self.cropViewBottomCon.constant = b.bottom ;
-    self.cropViewLeftCon.constant = -b.left;
+    self.cropViewLeftCon.constant = b.left;
     
     self.printContainerView.backgroundColor = [self containerBackgroundColor];
+    
+    [self.cropView removeConstraint:self.aspectRatioConstraint];
+    self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
+    [self.cropView addConstraints:@[self.aspectRatioConstraint]];
 }
 
 - (void)orderViews{
@@ -338,10 +350,6 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupImage{
-    [self.cropView removeConstraint:self.aspectRatioConstraint];
-    self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
-    [self.cropView addConstraints:@[self.aspectRatioConstraint]];
-    
     if (self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical){
         self.cropView.image = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.fullImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.fullImage.imageOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
     }
