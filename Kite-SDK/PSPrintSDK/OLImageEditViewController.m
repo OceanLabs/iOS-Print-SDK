@@ -364,12 +364,6 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    for (NSLayoutConstraint *con in self.cropView.superview.constraints){
-        if ((con.firstItem == self.cropView && con.firstAttribute == NSLayoutAttributeWidth) || (con.firstItem == self.cropView && con.firstAttribute == NSLayoutAttributeHeight)){
-            [self.cropView.superview removeConstraint:con];
-        }
-    }
-    [self.cropView removeConstraint:self.aspectRatioConstraint];
     self.cropView.imageView.image = nil;
     self.edits.cropImageRect = [self.cropView getImageRect];
     self.edits.cropImageFrame = [self.cropView getFrameRect];
