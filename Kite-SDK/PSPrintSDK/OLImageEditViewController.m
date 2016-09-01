@@ -378,6 +378,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     [coordinator animateAlongsideTransition:^(id context){
         [self setupImage];
+        [self.editingTools.collectionView.collectionViewLayout invalidateLayout];
     }completion:NULL];
 }
 
