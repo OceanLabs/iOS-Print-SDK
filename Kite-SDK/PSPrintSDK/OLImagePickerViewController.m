@@ -71,6 +71,7 @@
 @property (strong, nonatomic) NSArray<OLAsset *> *originalSelectedAssets;
 @property (strong, nonatomic) UIView *selectedProviderIndicator;
 
+@property (assign, nonatomic) BOOL viewWillDisappear;
 @end
 
 @interface OLProduct ()
@@ -213,6 +214,8 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
+    self.viewWillDisappear = NO;
+    
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
@@ -224,6 +227,12 @@
     }
     
     [self positionSelectedProviderIndicator];
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    self.viewWillDisappear = YES;
 }
 
 - (void)setupLibraryProviderAtIndex:(NSInteger)index{
@@ -380,6 +389,9 @@
 
 - (void)updateTopConForVc:(UIViewController *)vc{
     if ([vc isKindOfClass:[OLImagePickerPhotosPageViewController class]]){
+        if (self.viewWillDisappear && !self.navigationController){
+            return;
+        }
         ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainerTopCon.constant = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height;
         ((OLImagePickerPhotosPageViewController *)vc).collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height + ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainer.frame.size.height, 0, 70, 0);
         ((OLImagePickerPhotosPageViewController *)vc).albumsContainerHeight.constant = self.view.frame.size.height;
