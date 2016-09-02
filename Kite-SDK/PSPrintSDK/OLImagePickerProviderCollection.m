@@ -81,7 +81,7 @@
 }
 
 - (id)objectAtIndex:(NSUInteger)index{
-    if (self.fetchResult){
+    if (self.fetchResult && self.fetchResult.count > index){
         return [self.fetchResult objectAtIndex:index];
     }
     if (self.array.count > index){
