@@ -147,6 +147,8 @@ NSInteger OLImagePickerMargin = 0;
         
         //Ignore warning about this collection view, works fine.
         [self.albumsCollectionView.collectionViewLayout invalidateLayout];
+        
+        self.albumsContainerView.transform = CGAffineTransformIdentity;
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         
     }];
