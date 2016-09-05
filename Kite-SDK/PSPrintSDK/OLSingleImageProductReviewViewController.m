@@ -258,13 +258,7 @@
     job.redeemedOffer = self.product.redeemedOffer;
     self.product.uuid = job.uuid;
     self.editingPrintJob = job;
-    if ([printOrder.jobs containsObject:self.editingPrintJob]){
-        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
-        [existingJob setExtraCopies:[existingJob extraCopies]+1];
-    }
-    else{
-        [printOrder addPrintJob:self.editingPrintJob];
-    }
+    [printOrder addPrintJob:self.editingPrintJob];
     
     [printOrder saveOrder];
     

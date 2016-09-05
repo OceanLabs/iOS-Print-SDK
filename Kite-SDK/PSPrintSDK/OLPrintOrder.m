@@ -295,7 +295,11 @@ static NSBlockOperation *templateSyncOperation;
 }
 
 - (void)removePrintJob:(id<OLPrintJob>)job {
-    [(NSMutableArray *) self.jobs removeObject:job];
+    NSUInteger index = [self.jobs indexOfObjectIdenticalTo:job];
+    if (index == NSNotFound){
+        index = [self.jobs indexOfObject:job];
+    }
+    [(NSMutableArray *)self.jobs removeObjectAtIndex:index];
 }
 
 - (BOOL)hasCachedCost {

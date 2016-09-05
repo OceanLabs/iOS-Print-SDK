@@ -250,20 +250,4 @@ static NSString *const kKeyBorderColor = @"co.oceanlabs.psprintstudio.kKeyBorder
     return retVal;
 }
 
-- (NSUInteger) hash {
-    NSUInteger val = 31 * [NSValue valueWithCGRect:self.cropImageRect].hash;
-    val = 39 * val + [NSValue valueWithCGRect:self.cropImageFrame].hash;
-    val = 36 * val + [NSValue valueWithCGSize:self.cropImageSize].hash;
-    val = 37 * val + [NSValue valueWithCGAffineTransform:self.cropTransform].hash;
-    val = 38 * val + self.counterClockwiseRotations;
-    val = 39 * val + self.flipVertical;
-    val = 40 * val + self.flipHorizontal;
-    for (OLTextOnPhoto *textOnPhoto in self.textsOnPhoto){
-        val = 41 * val + textOnPhoto.hash;
-    }
-    val = 42 * val + self.borderColor.hash;
-    
-    return val;
-}
-
 @end

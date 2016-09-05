@@ -387,7 +387,7 @@ NSInteger OLImagePickerMargin = 0;
     if ([asset isKindOfClass:[PHAsset class]]){
         printPhoto = [OLAsset assetWithPHAsset:asset];
         if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
-            printPhoto = [OLUserSession currentSession].userSelectedPhotos[[[OLUserSession currentSession].userSelectedPhotos indexOfObject:printPhoto]];
+            printPhoto = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:printPhoto]];
         }
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
@@ -436,6 +436,10 @@ NSInteger OLImagePickerMargin = 0;
             printPhoto.edits = nil;
             [printPhoto unloadImage];
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
+            
+            if (self.imagePicker.maximumPhotos == 1){
+                [self.imagePicker.nextButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+            }
         }
         
         [self.imagePicker updateTitleBasedOnSelectedPhotoQuanitity];
