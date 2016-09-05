@@ -69,6 +69,7 @@
 @interface OLImageEditViewController ()
 - (void)orderViews;
 - (void)onButtonClicked:(UIButton *)sender;
+- (void)saveEditsToAsset:(OLAsset *)asset;
 @end
 
 @interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate, OLScrollCropViewControllerDelegate>
@@ -211,10 +212,7 @@
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
-    self.asset.edits.cropImageFrame = [self.cropView getFrameRect];
-    self.asset.edits.cropImageRect = [self.cropView getImageRect];
-    self.asset.edits.cropImageSize = [self.cropView croppedImageSize];
-    self.asset.edits.cropTransform = self.cropView.imageView.transform;
+    [self saveEditsToAsset:self.asset];
     
     OLAsset *asset = [self.asset copy];
     [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){

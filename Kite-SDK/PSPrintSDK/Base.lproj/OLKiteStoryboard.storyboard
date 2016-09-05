@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cpC-15-nyB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -1922,12 +1922,12 @@ to rearrange the photos</string>
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aRb-s3-73M">
-                                <rect key="frame" x="152" y="84" width="296" height="425"/>
-                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nF0-F4-GDd" userLabel="Container View">
                                 <rect key="frame" x="152" y="84" width="296" height="425"/>
                                 <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aRb-s3-73M">
+                                        <rect key="frame" x="0.0" y="0.0" width="296" height="425"/>
+                                    </imageView>
                                     <activityIndicatorView opaque="NO" tag="1010" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6Lh-tc-HKt">
                                         <rect key="frame" x="138" y="202" width="20" height="20"/>
                                     </activityIndicatorView>
@@ -1950,25 +1950,33 @@ to rearrange the photos</string>
                                         <rect key="frame" x="138" y="203" width="20" height="20"/>
                                         <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </activityIndicatorView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ulu-rb-y7r">
+                                        <rect key="frame" x="0.0" y="0.0" width="296" height="425"/>
+                                    </imageView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="QG3-xs-Ep4" firstAttribute="leading" secondItem="nF0-F4-GDd" secondAttribute="leading" id="4d3-HD-f7O"/>
+                                    <constraint firstItem="aRb-s3-73M" firstAttribute="leading" secondItem="nF0-F4-GDd" secondAttribute="leading" id="5FP-n1-uAd"/>
+                                    <constraint firstAttribute="trailing" secondItem="aRb-s3-73M" secondAttribute="trailing" id="5Xt-Ce-rVV"/>
+                                    <constraint firstItem="ulu-rb-y7r" firstAttribute="leading" secondItem="nF0-F4-GDd" secondAttribute="leading" id="6AO-L5-OOt"/>
                                     <constraint firstAttribute="centerY" secondItem="3eC-J9-SCj" secondAttribute="centerY" constant="-0.5" id="8At-gA-gyg"/>
+                                    <constraint firstItem="ulu-rb-y7r" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="top" id="9K5-Hu-jmp"/>
                                     <constraint firstItem="33O-65-cUP" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="top" id="Kmr-Pi-DIN"/>
+                                    <constraint firstAttribute="bottom" secondItem="aRb-s3-73M" secondAttribute="bottom" id="PsT-E4-a8h"/>
                                     <constraint firstItem="6Lh-tc-HKt" firstAttribute="centerX" secondItem="33O-65-cUP" secondAttribute="centerX" id="QGI-y9-RDg"/>
                                     <constraint firstAttribute="bottom" secondItem="33O-65-cUP" secondAttribute="bottom" id="RKT-ZU-vV9"/>
                                     <constraint firstItem="QG3-xs-Ep4" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="top" id="aZ6-DS-pKQ"/>
                                     <constraint firstAttribute="trailing" secondItem="33O-65-cUP" secondAttribute="trailing" id="cva-WG-Dzs"/>
+                                    <constraint firstAttribute="bottom" secondItem="ulu-rb-y7r" secondAttribute="bottom" id="grc-Uk-0Vc"/>
+                                    <constraint firstItem="aRb-s3-73M" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="top" id="jgV-5U-m8B"/>
                                     <constraint firstAttribute="trailing" secondItem="QG3-xs-Ep4" secondAttribute="trailing" id="oUs-CI-5Tg"/>
                                     <constraint firstAttribute="centerX" secondItem="3eC-J9-SCj" secondAttribute="centerX" id="ot1-Sw-Nfg"/>
                                     <constraint firstItem="6Lh-tc-HKt" firstAttribute="centerY" secondItem="33O-65-cUP" secondAttribute="centerY" id="pPs-Ku-fV9"/>
                                     <constraint firstItem="33O-65-cUP" firstAttribute="leading" secondItem="nF0-F4-GDd" secondAttribute="leading" id="q40-hk-iMm"/>
                                     <constraint firstAttribute="bottom" secondItem="QG3-xs-Ep4" secondAttribute="bottom" id="tX0-pX-ua0"/>
+                                    <constraint firstAttribute="trailing" secondItem="ulu-rb-y7r" secondAttribute="trailing" id="uio-4v-c6W"/>
                                 </constraints>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ulu-rb-y7r">
-                                <rect key="frame" x="152" y="84" width="296" height="425"/>
-                            </imageView>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Bh-Hi-gAg">
                                 <rect key="frame" x="-22" y="430" width="215" height="110"/>
                                 <subviews>
@@ -2009,26 +2017,18 @@ an image!</string>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nF0-F4-GDd" secondAttribute="trailing" constant="20" id="5nb-zZ-1qv"/>
-                            <constraint firstItem="aRb-s3-73M" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="top" id="8vJ-DU-Ag8"/>
                             <constraint firstAttribute="centerY" secondItem="nF0-F4-GDd" secondAttribute="centerY" constant="4" id="9iD-gI-xqw"/>
-                            <constraint firstItem="aRb-s3-73M" firstAttribute="leading" secondItem="nF0-F4-GDd" secondAttribute="leading" id="AhX-hj-7ZS"/>
                             <constraint firstItem="QM0-Ve-Vzs" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" id="Aha-9J-sho"/>
                             <constraint firstAttribute="centerX" secondItem="nF0-F4-GDd" secondAttribute="centerX" id="CvE-yA-mWQ"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="top" relation="greaterThanOrEqual" secondItem="xRf-1g-got" secondAttribute="bottom" constant="20" id="OhO-Pg-eUE"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" priority="750" constant="20" id="Pqp-YU-I7m"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="20" id="QHW-0P-dKc"/>
                             <constraint firstItem="0Bh-Hi-gAg" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="-22" id="RLs-gD-nD7"/>
-                            <constraint firstItem="ulu-rb-y7r" firstAttribute="trailing" secondItem="nF0-F4-GDd" secondAttribute="trailing" id="VuM-Ly-CPX"/>
-                            <constraint firstItem="ulu-rb-y7r" firstAttribute="leading" secondItem="nF0-F4-GDd" secondAttribute="leading" id="XPG-KL-qhC"/>
                             <constraint firstItem="QM0-Ve-Vzs" firstAttribute="top" secondItem="0Bh-Hi-gAg" secondAttribute="bottom" constant="15" id="ZMw-3z-8GE"/>
-                            <constraint firstItem="aRb-s3-73M" firstAttribute="bottom" secondItem="nF0-F4-GDd" secondAttribute="bottom" id="gDy-wJ-Y6o"/>
                             <constraint firstItem="QM0-Ve-Vzs" firstAttribute="top" relation="greaterThanOrEqual" secondItem="nF0-F4-GDd" secondAttribute="bottom" constant="46" id="mT9-vx-pwa"/>
-                            <constraint firstItem="ulu-rb-y7r" firstAttribute="bottom" secondItem="nF0-F4-GDd" secondAttribute="bottom" id="ply-PQ-elO"/>
                             <constraint firstItem="Mvu-z2-gQf" firstAttribute="top" secondItem="QM0-Ve-Vzs" secondAttribute="bottom" id="rWF-QN-zW2"/>
                             <constraint firstAttribute="trailing" secondItem="nF0-F4-GDd" secondAttribute="trailing" priority="750" constant="20" id="t3Q-8z-ksk"/>
-                            <constraint firstItem="aRb-s3-73M" firstAttribute="trailing" secondItem="nF0-F4-GDd" secondAttribute="trailing" id="xDQ-aC-LlO"/>
                             <constraint firstAttribute="trailing" secondItem="QM0-Ve-Vzs" secondAttribute="trailing" id="yDO-C0-fU9"/>
-                            <constraint firstItem="ulu-rb-y7r" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="top" id="yeQ-dC-rcf"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>

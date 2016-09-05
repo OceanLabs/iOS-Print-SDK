@@ -95,6 +95,9 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 -(OLPhotoEdits *) edits{
+    if (!_edits && self.asset){
+        _edits = [self.asset.edits copy];
+    }
     if (!_edits){
         _edits = [[OLPhotoEdits alloc] init];
     }
@@ -671,7 +674,7 @@ const NSInteger kOLEditTagCrop = 40;
      [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)onButtonDoneTapped:(id)sender {
+- (void)saveEditsToAsset:(OLAsset *)asset{
     self.edits.cropImageRect = [self.cropView getImageRect];
     self.edits.cropImageFrame = [self.cropView getFrameRect];
     self.edits.cropImageSize = [self.cropView croppedImageSize];
@@ -690,6 +693,15 @@ const NSInteger kOLEditTagCrop = 40;
         textOnPhoto.fontSize = textField.font.pointSize;
         [self.edits.textsOnPhoto addObject:textOnPhoto];
     }
+    
+    if (asset){
+        asset.edits = self.edits;
+    }
+}
+
+- (void)onButtonDoneTapped:(id)sender {
+    [self saveEditsToAsset:nil];
+    
     if (self.asset && [self.delegate respondsToSelector:@selector(scrollCropViewController:didReplaceAssetWithAsset:)]){
         [self.delegate scrollCropViewController:self didReplaceAssetWithAsset:self.asset];
     }

@@ -47,6 +47,7 @@ static NSString *const kKeyALAssetURL = @"co.oceanlabs.pssdk.kKeyALAssetURL";
 static NSString *const kKeyDataSource = @"co.oceanlabs.pssdk.kKeyDataSource";
 static NSString *const kKeyImageURL = @"co.oceanlabs.pssdk.kKeyImageURL";
 static NSString *const kKeyPHAssetLocalId = @"co.oceanlabs.pssdk.kKeyPHAssetLocalId";
+static NSString *const kKeyImageEdits = @"co.oceanlabs.pssdk.kKeyImageEdits";
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
@@ -517,8 +518,17 @@ static NSOperationQueue *imageOperationQueue;
     return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical || !(CGAffineTransformIsIdentity(self.edits.cropTransform) || self.edits.textsOnPhoto.count > 0);
 }
 
-- (NSUInteger)hash {
-    return 31 * (31 * (31 * (31 * (self.mimeType.hash * 31 + self.imageData.hash) + self.imageFilePath.hash) + [self.phAsset localIdentifier].hash) + self.dataSource.hash) + self.imageURL.hash; //TODO missing
+- (NSUInteger) hash {
+    NSUInteger val = 31 * self.mimeType.hash;
+    val = 39 * val + self.imageData.hash;
+    val = 36 * val + self.imageFilePath.hash;
+    val = 37 * val + [self.phAsset localIdentifier].hash;
+    val = 38 * val + self.extraCopies;
+    val = 39 * val +  self.dataSource.hash;
+    val = 40 * val + self.imageURL.hash;
+    val = 41 * val + self.edits.hash;
+    
+    return val;
 }
 
 - (BOOL)isEqual:(id)object {
@@ -531,6 +541,10 @@ static NSOperationQueue *imageOperationQueue;
     }
     
     if (![self.mimeType isEqualToString:[object mimeType]]) {
+        return NO;
+    }
+    
+    if (![self.edits isEqual:[object edits]]){
         return NO;
     }
     
@@ -583,6 +597,7 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeObject:self.dataSource forKey:kKeyDataSource];
     [aCoder encodeObject:self.imageURL forKey:kKeyImageURL];
     [aCoder encodeObject:[self.phAsset localIdentifier] forKey:kKeyPHAssetLocalId];
+    [aCoder encodeObject:self.edits forKey:kKeyImageEdits];
     // TODO: encode uploaded including asset id & preview url?!
 }
 
@@ -602,6 +617,7 @@ static NSOperationQueue *imageOperationQueue;
         self.imageData = [aDecoder decodeObjectForKey:kKeyImageData];
         self.dataSource = [aDecoder decodeObjectForKey:kKeyDataSource];
         self.imageURL = [aDecoder decodeObjectForKey:kKeyImageURL];
+        self.edits = [aDecoder decodeObjectForKey:kKeyImageEdits];
         
         NSString *localId = [aDecoder decodeObjectForKey:kKeyPHAssetLocalId];
         if (localId){
