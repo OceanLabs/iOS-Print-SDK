@@ -381,27 +381,40 @@ NSInteger OLImagePickerMargin = 0;
     }
 }
 
-
+- (OLAsset *)assetForIndexPath:(NSIndexPath *)indexPath{
+    id asset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
+    OLAsset *printPhoto;
+    if ([asset isKindOfClass:[PHAsset class]]){
+        printPhoto = [OLAsset assetWithPHAsset:asset];
+        if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
+            printPhoto = [OLUserSession currentSession].userSelectedPhotos[[[OLUserSession currentSession].userSelectedPhotos indexOfObject:printPhoto]];
+        }
+    }
+    else if ([asset isKindOfClass:[OLAsset class]]){
+        printPhoto = asset;
+    }
+    
+    return printPhoto;
+}
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
-        id asset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
-        OLAsset *printPhoto;
-        if ([asset isKindOfClass:[PHAsset class]]){
-            printPhoto = [OLAsset assetWithPHAsset:asset];
-        }
-        else if ([asset isKindOfClass:[OLAsset class]]){
-            printPhoto = asset;
-        }
-        
-        if (self.imagePicker.maximumPhotos == 1){
-            [self.imagePicker.selectedAssets addObject:printPhoto];
-            [self.imagePicker.nextButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-        }
+        OLAsset *printPhoto = [self assetForIndexPath:indexPath];
         
         if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
-            [self.imagePicker.selectedAssets removeObject:printPhoto];
-            [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+            if ([printPhoto isEdited]){
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
+                    [self.imagePicker.selectedAssets removeObject:printPhoto];
+                    [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+                }]];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+                [self presentViewController:ac animated:YES completion:NULL];
+            }
+            else{
+                [self.imagePicker.selectedAssets removeObject:printPhoto];
+                [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+            }
         }
         else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){
             UIAlertController *alert =

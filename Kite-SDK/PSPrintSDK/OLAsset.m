@@ -514,7 +514,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (BOOL)isEdited{
-    return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical;
+    return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical || !(CGAffineTransformIsIdentity(self.edits.cropTransform) || self.edits.textsOnPhoto.count > 0);
 }
 
 - (NSUInteger)hash {
