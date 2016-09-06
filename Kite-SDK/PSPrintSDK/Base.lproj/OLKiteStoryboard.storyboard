@@ -1923,35 +1923,35 @@ to rearrange the photos</string>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nF0-F4-GDd" userLabel="Container View">
-                                <rect key="frame" x="152" y="84" width="296" height="425"/>
+                                <rect key="frame" x="143" y="84" width="314" height="451"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aRb-s3-73M">
-                                        <rect key="frame" x="0.0" y="0.0" width="296" height="425"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="314" height="451"/>
                                     </imageView>
                                     <activityIndicatorView opaque="NO" tag="1010" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6Lh-tc-HKt">
-                                        <rect key="frame" x="138" y="202" width="20" height="20"/>
+                                        <rect key="frame" x="147" y="215" width="20" height="20"/>
                                     </activityIndicatorView>
                                     <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="33O-65-cUP" customClass="OLRemoteImageCropper">
-                                        <rect key="frame" x="0.0" y="0.0" width="296" height="425"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="314" height="451"/>
                                         <color key="backgroundColor" red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="33O-65-cUP" secondAttribute="height" multiplier="296:425" id="8RF-d6-5TS"/>
                                         </constraints>
                                     </view>
                                     <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QG3-xs-Ep4">
-                                        <rect key="frame" x="0.0" y="0.0" width="296" height="425"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="314" height="451"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="hXp-Qn-g8W">
-                                            <rect key="frame" x="0.0" y="0.0" width="296" height="425"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="314" height="451"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </view>
                                         <blurEffect style="light"/>
                                     </visualEffectView>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="3eC-J9-SCj">
-                                        <rect key="frame" x="138" y="203" width="20" height="20"/>
+                                        <rect key="frame" x="147" y="216" width="20" height="20"/>
                                         <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </activityIndicatorView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ulu-rb-y7r">
-                                        <rect key="frame" x="0.0" y="0.0" width="296" height="425"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="314" height="451"/>
                                     </imageView>
                                 </subviews>
                                 <constraints>
@@ -2017,7 +2017,7 @@ an image!</string>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nF0-F4-GDd" secondAttribute="trailing" constant="20" id="5nb-zZ-1qv"/>
-                            <constraint firstAttribute="centerY" secondItem="nF0-F4-GDd" secondAttribute="centerY" constant="4" id="9iD-gI-xqw"/>
+                            <constraint firstAttribute="centerY" secondItem="nF0-F4-GDd" secondAttribute="centerY" id="9iD-gI-xqw"/>
                             <constraint firstItem="QM0-Ve-Vzs" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" id="Aha-9J-sho"/>
                             <constraint firstAttribute="centerX" secondItem="nF0-F4-GDd" secondAttribute="centerX" id="CvE-yA-mWQ"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="top" relation="greaterThanOrEqual" secondItem="xRf-1g-got" secondAttribute="bottom" constant="20" id="OhO-Pg-eUE"/>
@@ -2025,11 +2025,16 @@ an image!</string>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="20" id="QHW-0P-dKc"/>
                             <constraint firstItem="0Bh-Hi-gAg" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="-22" id="RLs-gD-nD7"/>
                             <constraint firstItem="QM0-Ve-Vzs" firstAttribute="top" secondItem="0Bh-Hi-gAg" secondAttribute="bottom" constant="15" id="ZMw-3z-8GE"/>
-                            <constraint firstItem="QM0-Ve-Vzs" firstAttribute="top" relation="greaterThanOrEqual" secondItem="nF0-F4-GDd" secondAttribute="bottom" constant="46" id="mT9-vx-pwa"/>
+                            <constraint firstItem="QM0-Ve-Vzs" firstAttribute="top" relation="greaterThanOrEqual" secondItem="nF0-F4-GDd" secondAttribute="bottom" constant="20" id="mT9-vx-pwa"/>
                             <constraint firstItem="Mvu-z2-gQf" firstAttribute="top" secondItem="QM0-Ve-Vzs" secondAttribute="bottom" id="rWF-QN-zW2"/>
                             <constraint firstAttribute="trailing" secondItem="nF0-F4-GDd" secondAttribute="trailing" priority="750" constant="20" id="t3Q-8z-ksk"/>
                             <constraint firstAttribute="trailing" secondItem="QM0-Ve-Vzs" secondAttribute="trailing" id="yDO-C0-fU9"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="9iD-gI-xqw"/>
+                            </mask>
+                        </variation>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="MzK-fr-8PT"/>
@@ -4314,10 +4319,10 @@ only £9.99 £8.99</string>
         <image name="crop-corner-dr" width="23" height="23"/>
         <image name="crop-corner-ul" width="23" height="23"/>
         <image name="crop-corner-ur" width="23" height="23"/>
-        <image name="crop-line-down" width="5" height="5"/>
-        <image name="crop-line-left" width="5" height="5"/>
-        <image name="crop-line-right" width="5" height="5"/>
-        <image name="crop-line-up" width="5" height="5"/>
+        <image name="crop-line-down" width="8" height="5"/>
+        <image name="crop-line-left" width="5" height="8"/>
+        <image name="crop-line-right" width="5" height="8"/>
+        <image name="crop-line-up" width="8" height="5"/>
         <image name="details-arrow" width="8" height="5"/>
         <image name="envelope" width="14" height="9"/>
         <image name="frame_border" width="290" height="313"/>
