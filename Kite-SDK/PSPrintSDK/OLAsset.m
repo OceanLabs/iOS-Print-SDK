@@ -497,7 +497,7 @@ static NSOperationQueue *imageOperationQueue;
     return val;
 }
 
-- (BOOL)isEqual:(id)object {
+- (BOOL)isEqual:(id)object ignoreEdits:(BOOL)ignoreEdits{
     if (![object isKindOfClass:[OLAsset class]]) {
         return NO;
     }
@@ -507,6 +507,10 @@ static NSOperationQueue *imageOperationQueue;
     }
     
     if (![self.mimeType isEqualToString:[object mimeType]]) {
+        return NO;
+    }
+    
+    if (![self.edits isEqual:[object edits]] && !ignoreEdits){
         return NO;
     }
     
@@ -530,6 +534,10 @@ static NSOperationQueue *imageOperationQueue;
         default:
             return NO;
     }
+}
+
+- (BOOL)isEqual:(id)object {
+    return [self isEqual:object ignoreEdits:NO];
 }
 
 - (id)copyWithZone:(NSZone *)zone{

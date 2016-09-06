@@ -176,7 +176,7 @@ NSInteger OLImagePickerMargin = 0;
         [self setAssetOfCollection:self.provider.collections[self.showingCollectionIndex] withIndex:indexPath.item toImageView:imageView forCollectionView:collectionView];
         
         UIImageView *checkmark = [cell viewWithTag:20];
-        id asset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
+        id asset = [self assetForIndexPath:indexPath];
         OLAsset *printPhoto;
         if ([asset isKindOfClass:[PHAsset class]]){
             printPhoto = [OLAsset assetWithPHAsset:asset];
@@ -263,6 +263,19 @@ NSInteger OLImagePickerMargin = 0;
 
 - (void)setAssetOfCollection:(OLImagePickerProviderCollection *)collection withIndex:(NSInteger)index toImageView:(OLRemoteImageView *)imageView forCollectionView:(UICollectionView *)collectionView{
     id asset = [collection objectAtIndex:index];
+    
+    for (OLAsset *selectedAsset in self.imagePicker.selectedAssets){
+        if ([asset isKindOfClass:[PHAsset class]]){
+            if ([asset isEqual:selectedAsset.phAsset]){
+                asset = selectedAsset;
+                break;
+            }
+        }
+        else if ([asset isEqual:selectedAsset ignoreEdits:YES]){
+            asset = selectedAsset;
+            break;
+        }
+    }
     
     if ([asset isKindOfClass:[PHAsset class]]){
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -392,6 +405,13 @@ NSInteger OLImagePickerMargin = 0;
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
         printPhoto = asset;
+    }
+    
+    for (OLAsset *asset in self.imagePicker.selectedAssets){
+        if ([printPhoto isEqual:asset ignoreEdits:YES]){
+            printPhoto = asset;
+            break;
+        }
     }
     
     return printPhoto;
