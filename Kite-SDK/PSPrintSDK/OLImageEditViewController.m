@@ -1076,10 +1076,12 @@ const NSInteger kOLEditTagCrop = 40;
     }
     sender.selected = YES;
     [UIView animateWithDuration:0.2 animations:^{
-//        self.printContainerView.alpha = 0;
         for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 1;
+            [view.superview bringSubviewToFront:view];
         }
+        [self.view bringSubviewToFront:self.editingTools];
+        [self.view bringSubviewToFront:self.navigationBar];
     } completion:^(BOOL finished){
         self.cropView.clipsToBounds = NO;
         [self.view sendSubviewToBack:self.cropView];
@@ -1093,7 +1095,6 @@ const NSInteger kOLEditTagCrop = 40;
         [self.printContainerView bringSubviewToFront:view];
     }
     [UIView animateWithDuration:0.2 animations:^{
-        //        self.printContainerView.alpha = 1;
         for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 0;
         }
