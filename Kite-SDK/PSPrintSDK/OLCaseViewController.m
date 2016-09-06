@@ -39,6 +39,7 @@
 
 -(void) doCheckout;
 @property (weak, nonatomic) IBOutlet UIView *printContainerView;
+@property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
 
 @end
 
@@ -206,6 +207,8 @@
 
 -(void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
     if (!maskImage){
+        [targetView.layer.mask removeFromSuperlayer];
+        targetView.layer.mask = nil;
         return;
     }
     
@@ -229,6 +232,41 @@
                                      f.size.height - (adjustedBleed.top + adjustedBleed.bottom));
     [_maskingLayer setContents:(id)[maskImage CGImage]];
     [targetView.layer setMask:_maskingLayer];
+}
+
+- (void)onButtonCropClicked:(UIButton *)sender{
+    for (UIView *view in self.cropFrameGuideViews){
+        [self.printContainerView bringSubviewToFront:view];
+    }
+    sender.selected = YES;
+    [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *view in self.cropFrameGuideViews){
+            view.alpha = 1;
+            [view.superview bringSubviewToFront:view];
+            self.highlightsView.alpha = 0;
+        }
+        [self.view bringSubviewToFront:self.editingTools];
+    } completion:^(BOOL finished){
+        self.cropView.clipsToBounds = NO;
+        [self maskWithImage:nil targetView:self.cropView];
+        [self.view sendSubviewToBack:self.cropView];
+    }];
+}
+
+- (void)exitCropMode{
+    self.cropView.clipsToBounds = YES;
+    [self maskWithImage:self.maskImage targetView:self.cropView];
+    [self orderViews];
+    for (UIView *view in self.cropFrameGuideViews){
+        [self.printContainerView bringSubviewToFront:view];
+    }
+    [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *view in self.cropFrameGuideViews){
+            view.alpha = 0;
+            self.highlightsView.alpha = 1;
+        }
+    } completion:^(BOOL finished){
+    }];
 }
 
 -(void) doCheckout{

@@ -282,7 +282,6 @@ const NSInteger kOLEditTagCrop = 40;
     self.ctaButton.titleLabel.minimumScaleFactor = 0.5;
     
     self.cropView.clipsToBounds = YES;
-    [self.cropView setGesturesEnabled:NO];
     [self orderViews];
     
     self.printContainerView.backgroundColor = [self containerBackgroundColor];
@@ -313,7 +312,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView sendSubviewToBack:cornerTR];
     cornerTR.translatesAutoresizingMaskIntoConstraints = NO;
     [cornerTR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTR attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTop multiplier:1 constant:-2]];
-    [cornerTR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTR attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:-2]];
+    [cornerTR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTR attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:2]];
     
     UIImageView *cornerBR = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-corner-dr"]];
     [cornerBR setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
@@ -322,8 +321,8 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView addSubview:cornerBR];
     [self.printContainerView sendSubviewToBack:cornerBR];
     cornerBR.translatesAutoresizingMaskIntoConstraints = NO;
-    [cornerBR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBR attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:-2]];
-    [cornerBR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBR attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:-2]];
+    [cornerBR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBR attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:2]];
+    [cornerBR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBR attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:2]];
     
     UIImageView *cornerBL = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-corner-dl"]];
     [cornerBL setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
@@ -332,7 +331,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView addSubview:cornerBL];
     [self.printContainerView sendSubviewToBack:cornerBL];
     cornerBL.translatesAutoresizingMaskIntoConstraints = NO;
-    [cornerBL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBL attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:-2]];
+    [cornerBL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBL attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:2]];
     [cornerBL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBL attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeLeading multiplier:1 constant:-2]];
     
      UIImageView *lineLeft = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-line-left"]];
@@ -352,7 +351,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView sendSubviewToBack:lineRight];
     lineRight.translatesAutoresizingMaskIntoConstraints = NO;
     [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:5]];
-    [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:-2]];
+    [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:2]];
     [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:cornerBR attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
     [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:cornerTR attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
 
@@ -372,11 +371,53 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView sendSubviewToBack:lineBottom];
     lineBottom.translatesAutoresizingMaskIntoConstraints = NO;
     [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:5]];
-    [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:-2]];
+    [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:2]];
     [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:cornerBL attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
     [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:cornerBR attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
     
+    UIView *darkViewTop = [[UIView alloc] init];
+    darkViewTop.translatesAutoresizingMaskIntoConstraints = NO;
+    darkViewTop.backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
+    [self.view addSubview:darkViewTop];
+    [self.view sendSubviewToBack:darkViewTop];
+    [self.cropFrameGuideViews addObject:darkViewTop];
+    [darkViewTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewTop attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+    [darkViewTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewTop attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:darkViewTop.superview attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
+    [darkViewTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewTop attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:darkViewTop.superview attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
+    [darkViewTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewTop attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+    
+    UIView *darkViewLeft = [[UIView alloc] init];
+    darkViewLeft.translatesAutoresizingMaskIntoConstraints = NO;
+    darkViewLeft.backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
+    [self.view addSubview:darkViewLeft];
+    [self.view sendSubviewToBack:darkViewLeft];
+    [self.cropFrameGuideViews addObject:darkViewLeft];
+    [darkViewLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewLeft attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:darkViewTop attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    [darkViewLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewLeft attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:darkViewLeft.superview attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
+    [darkViewLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewLeft attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:darkViewLeft.superview attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    [darkViewLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewLeft attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
 
+    UIView *darkViewRight = [[UIView alloc] init];
+    darkViewRight.translatesAutoresizingMaskIntoConstraints = NO;
+    darkViewRight.backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
+    [self.view addSubview:darkViewRight];
+    [self.view sendSubviewToBack:darkViewRight];
+    [self.cropFrameGuideViews addObject:darkViewRight];
+    [darkViewRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewRight attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:darkViewTop attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    [darkViewRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewRight attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:darkViewRight.superview attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    [darkViewRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewRight attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:darkViewRight.superview attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
+    [darkViewRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewRight attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
+
+    UIView *darkViewBottom = [[UIView alloc] init];
+    darkViewBottom.translatesAutoresizingMaskIntoConstraints = NO;
+    darkViewBottom.backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
+    [self.view addSubview:darkViewBottom];
+    [self.view sendSubviewToBack:darkViewBottom];
+    [self.cropFrameGuideViews addObject:darkViewBottom];
+    [darkViewBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewBottom attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.bottomLayoutGuide attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    [darkViewBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewBottom attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:darkViewLeft attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
+    [darkViewBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewBottom attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:darkViewRight attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
+    [darkViewBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewBottom attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
     
     for (UIView *view in self.cropFrameGuideViews){
         view.alpha = 0;
@@ -1041,8 +1082,22 @@ const NSInteger kOLEditTagCrop = 40;
         }
     } completion:^(BOOL finished){
         self.cropView.clipsToBounds = NO;
-        [self.cropView setGesturesEnabled:YES];
         [self.view sendSubviewToBack:self.cropView];
+    }];
+}
+
+- (void)exitCropMode{
+    self.cropView.clipsToBounds = YES;
+    [self orderViews];
+    for (UIView *view in self.cropFrameGuideViews){
+        [self.printContainerView bringSubviewToFront:view];
+    }
+    [UIView animateWithDuration:0.2 animations:^{
+        //        self.printContainerView.alpha = 1;
+        for (UIView *view in self.cropFrameGuideViews){
+            view.alpha = 0;
+        }
+    } completion:^(BOOL finished){
     }];
 }
 
@@ -1055,22 +1110,6 @@ const NSInteger kOLEditTagCrop = 40;
         
         [self.editingTools.collectionView reloadData];
         [self showDrawerWithCompletionHandler:NULL];
-    }];
-}
-
-- (void)exitCropMode{
-    self.cropView.clipsToBounds = YES;
-    [self orderViews];
-    for (UIView *view in self.cropFrameGuideViews){
-        [self.printContainerView bringSubviewToFront:view];
-    }
-    [UIView animateWithDuration:0.2 animations:^{
-//        self.printContainerView.alpha = 1;
-        for (UIView *view in self.cropFrameGuideViews){
-            view.alpha = 0;
-        }
-    } completion:^(BOOL finished){
-        [self.cropView setGesturesEnabled:NO];
     }];
 }
 
