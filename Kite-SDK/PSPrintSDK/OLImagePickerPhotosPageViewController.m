@@ -47,7 +47,7 @@
 
 @end
 
-NSInteger OLImagePickerMargin = 0;
+CGFloat OLImagePickerMargin = 1.5;
 
 @implementation OLImagePickerPhotosPageViewController
 
@@ -371,7 +371,7 @@ NSInteger OLImagePickerMargin = 0;
     
     if (collectionView.tag == 10){
         float numberOfCellsPerRow = [self numberOfCellsPerRow];
-        CGFloat width = ceilf(size.width/numberOfCellsPerRow);
+        CGFloat width = ((size.width - ((float)OLImagePickerMargin * (numberOfCellsPerRow-1.0)))/numberOfCellsPerRow);
         CGFloat height = width;
         
         return CGSizeMake(width, height);
@@ -383,11 +383,7 @@ NSInteger OLImagePickerMargin = 0;
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     if (collectionView.tag == 10){
-        CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
-        
-        CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-        CGFloat diff = size.width - (cellSize.width * [self numberOfCellsPerRow]);
-        return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
+        return UIEdgeInsetsMake(0, 0, 0, 0);
     }
     else{
         return UIEdgeInsetsMake(10, 0, self.albumLabelContainerTopCon.constant + 10, 0);
