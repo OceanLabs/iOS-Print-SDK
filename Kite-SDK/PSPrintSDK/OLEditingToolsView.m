@@ -32,6 +32,14 @@
 
 @implementation OLEditingToolsView
 
+- (void)setColor:(UIColor *)color{
+    self.button1.effectColor = color;
+    self.button2.effectColor = color;
+    self.button3.effectColor = color;
+    self.button4.effectColor = color;
+    [self.ctaButton setBackgroundColor:color];
+}
+
 -(id)initWithCoder:(NSCoder *)aDecoder{
     if ((self = [super initWithCoder:aDecoder])){
         UIView *view = [[[NSBundle bundleForClass:self.class] loadNibNamed:@"OLEditingToolsView"
