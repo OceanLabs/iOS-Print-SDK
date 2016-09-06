@@ -467,7 +467,7 @@ const NSInteger kOLEditTagCrop = 40;
                 self.previewView.frame = self.printContainerView.frame;
             }completion:^(BOOL finished){
                 [UIView animateWithDuration:0.25 animations:^{
-                    self.view.backgroundColor = [UIColor blackColor];
+                    self.view.backgroundColor = [UIColor colorWithWhite:0.227 alpha:1.000];
                     for (UIView *view in self.allViews){
                         view.alpha = 1;
                     }
