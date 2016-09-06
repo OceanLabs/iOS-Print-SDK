@@ -351,15 +351,6 @@
     }];
 }
 
-- (void)onButtonCropClicked:(UIButton *)sender{
-    sender.selected = YES;
-    [self.cropView setGesturesEnabled:YES];
-}
-
-- (void)exitCropMode{
-    [self.cropView setGesturesEnabled:NO];
-}
-
 - (void)onButtonClicked:(UIButton *)sender {
     NSTimeInterval duration = 0.3;
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{

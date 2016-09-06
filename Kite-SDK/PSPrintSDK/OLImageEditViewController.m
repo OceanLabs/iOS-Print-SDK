@@ -38,6 +38,7 @@
 #import "OLImagePickerViewController.h"
 #import "OLNavigationController.h"
 #import "OLProductTemplateOption.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -65,7 +66,8 @@ const NSInteger kOLEditTagCrop = 40;
 @property (assign, nonatomic) CGFloat originalDrawerHeight;
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
-@property (strong, nonatomic) IBOutletCollection(UIImageView) NSArray *cropFrameEdges;
+//@property (strong, nonatomic) IBOutletCollection(UIImageView) NSArray *cropFrameEdges;
+@property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewTopCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewLeftCon;
@@ -178,6 +180,8 @@ const NSInteger kOLEditTagCrop = 40;
     self.editingTools.collectionView.dataSource = self;
     self.editingTools.collectionView.delegate = self;
     
+    [self setupCropGuides];
+    
     self.textFieldsView = [[UIView alloc] init];
     self.textFieldsView.userInteractionEnabled = NO;
     [self.view insertSubview:self.textFieldsView aboveSubview:self.cropView];
@@ -286,6 +290,98 @@ const NSInteger kOLEditTagCrop = 40;
     [self.cropView removeConstraint:self.aspectRatioConstraint];
     self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
     [self.cropView addConstraints:@[self.aspectRatioConstraint]];
+}
+
+- (void)setupCropGuides{
+    self.cropFrameGuideViews = [[NSMutableArray alloc] init];
+    
+    UIImageView *cornerTL = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-corner-ul"]];
+    [cornerTL setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    [cornerTL setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.cropFrameGuideViews addObject:cornerTL];
+    [self.printContainerView addSubview:cornerTL];
+    [self.printContainerView sendSubviewToBack:cornerTL];
+    cornerTL.translatesAutoresizingMaskIntoConstraints = NO;
+    [cornerTL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTL attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTop multiplier:1 constant:-2]];
+    [cornerTL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTL attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeLeading multiplier:1 constant:-2]];
+
+    UIImageView *cornerTR = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-corner-ur"]];
+    [cornerTR setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    [cornerTR setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.cropFrameGuideViews addObject:cornerTR];
+    [self.printContainerView addSubview:cornerTR];
+    [self.printContainerView sendSubviewToBack:cornerTR];
+    cornerTR.translatesAutoresizingMaskIntoConstraints = NO;
+    [cornerTR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTR attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTop multiplier:1 constant:-2]];
+    [cornerTR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTR attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:-2]];
+    
+    UIImageView *cornerBR = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-corner-dr"]];
+    [cornerBR setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    [cornerBR setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.cropFrameGuideViews addObject:cornerBR];
+    [self.printContainerView addSubview:cornerBR];
+    [self.printContainerView sendSubviewToBack:cornerBR];
+    cornerBR.translatesAutoresizingMaskIntoConstraints = NO;
+    [cornerBR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBR attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:-2]];
+    [cornerBR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBR attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:-2]];
+    
+    UIImageView *cornerBL = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-corner-dl"]];
+    [cornerBL setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    [cornerBL setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.cropFrameGuideViews addObject:cornerBL];
+    [self.printContainerView addSubview:cornerBL];
+    [self.printContainerView sendSubviewToBack:cornerBL];
+    cornerBL.translatesAutoresizingMaskIntoConstraints = NO;
+    [cornerBL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBL attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:-2]];
+    [cornerBL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBL attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeLeading multiplier:1 constant:-2]];
+    
+     UIImageView *lineLeft = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-line-left"]];
+    [self.cropFrameGuideViews addObject:lineLeft];
+    [self.printContainerView addSubview:lineLeft];
+    [self.printContainerView sendSubviewToBack:lineLeft];
+    lineLeft.translatesAutoresizingMaskIntoConstraints = NO;
+    [lineLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineLeft attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:5]];
+    [lineLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineLeft attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeLeading multiplier:1 constant:-2]];
+    [lineLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineLeft attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:cornerBL attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+    [lineLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineLeft attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:cornerTL attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    
+    
+    UIImageView *lineRight = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-line-right"]];
+    [self.cropFrameGuideViews addObject:lineRight];
+    [self.printContainerView addSubview:lineRight];
+    [self.printContainerView sendSubviewToBack:lineRight];
+    lineRight.translatesAutoresizingMaskIntoConstraints = NO;
+    [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:5]];
+    [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:-2]];
+    [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:cornerBR attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+    [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:cornerTR attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+
+    UIImageView *lineTop = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-line-up"]];
+    [self.cropFrameGuideViews addObject:lineTop];
+    [self.printContainerView addSubview:lineTop];
+    [self.printContainerView sendSubviewToBack:lineTop];
+    lineTop.translatesAutoresizingMaskIntoConstraints = NO;
+    [lineTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineTop attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:5]];
+    [lineTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineTop attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTop multiplier:1 constant:-2]];
+    [lineTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineTop attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:cornerTL attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
+    [lineTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineTop attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:cornerTR attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
+    
+    UIImageView *lineBottom = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-line-down"]];
+    [self.cropFrameGuideViews addObject:lineBottom];
+    [self.printContainerView addSubview:lineBottom];
+    [self.printContainerView sendSubviewToBack:lineBottom];
+    lineBottom.translatesAutoresizingMaskIntoConstraints = NO;
+    [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:5]];
+    [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:-2]];
+    [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:cornerBL attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
+    [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:cornerBR attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
+    
+
+    
+    for (UIView *view in self.cropFrameGuideViews){
+        view.alpha = 0;
+    }
+    
 }
 
 - (void)orderViews{
@@ -934,13 +1030,13 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
-    for (UIView *view in self.cropFrameEdges){
-        [self.view bringSubviewToFront:view];
+    for (UIView *view in self.cropFrameGuideViews){
+        [self.printContainerView bringSubviewToFront:view];
     }
     sender.selected = YES;
     [UIView animateWithDuration:0.2 animations:^{
-        self.printContainerView.alpha = 0;
-        for (UIView *view in self.cropFrameEdges){
+//        self.printContainerView.alpha = 0;
+        for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 1;
         }
     } completion:^(BOOL finished){
@@ -964,13 +1060,13 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)exitCropMode{
     self.cropView.clipsToBounds = YES;
-    [self.view bringSubviewToFront:self.cropView];
-    for (UIView *view in self.cropFrameEdges){
-        [self.view bringSubviewToFront:view];
+    [self orderViews];
+    for (UIView *view in self.cropFrameGuideViews){
+        [self.printContainerView bringSubviewToFront:view];
     }
     [UIView animateWithDuration:0.2 animations:^{
-        self.printContainerView.alpha = 1;
-        for (UIView *view in self.cropFrameEdges){
+//        self.printContainerView.alpha = 1;
+        for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 0;
         }
     } completion:^(BOOL finished){
