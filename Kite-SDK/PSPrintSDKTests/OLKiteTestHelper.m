@@ -39,10 +39,4 @@
     return [fetchResult objectAtIndex:fetchResult.count-1];
 }
 
-+ (OLPrintPhoto *)aPrintPhoto{
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = (OLAsset *)[OLKiteTestHelper imageAssets].firstObject;
-    return printPhoto;
-}
-
 @end

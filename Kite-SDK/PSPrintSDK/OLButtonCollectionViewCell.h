@@ -31,4 +31,6 @@
 
 @interface OLButtonCollectionViewCell : UICollectionViewCell
 
+@property (assign, nonatomic) BOOL selectable;
+
 @end

@@ -38,7 +38,8 @@
 #import "OLCheckoutViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
-#import "OLPaymentViewControllerV2.h"
+#import "OLUserSession.h"
+#import "FBSDKLoginManager.h"
 
 @class OLCustomPhotoProvider;
 
@@ -46,11 +47,9 @@
 
 +(NSString *)appleMerchantID;
 
-#ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
 + (NSString *) instagramClientID;
-#endif
 
 + (BOOL)QRCodeUploadEnabled;
 
@@ -77,11 +76,11 @@
 }
 
 + (BOOL)instagramEnabled{
-#ifdef OL_KITE_OFFER_INSTAGRAM
-    return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
-#else
+    if (YES){ //Check what needs to be checked in terms of installation
+        return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
+    }
+    
     return NO;
-#endif
 }
 
 + (BOOL)qrCodeUploadEnabled {
@@ -89,11 +88,12 @@
 }
 
 + (BOOL)facebookEnabled{
-#ifdef OL_KITE_OFFER_FACEBOOK
-    return YES;
-#else
+    //TODO check that it is actually set up
+    if ([FBSDKLoginManager class]){
+        return YES;
+    }
+    
     return NO;
-#endif
 }
 
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
@@ -104,12 +104,7 @@
         return NO;
     }
     
-    BOOL customProvidersAvailable = NO;
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-    customProvidersAvailable = kiteVc.customImageProviders.count > 0;
-#endif
-    
-    return [OLKiteUtils cameraRollEnabled:topVc] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || customProvidersAvailable;
+    return [OLKiteUtils cameraRollEnabled:topVc] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || kiteVc.customImageProviders.count > 0;
 }
 
 + (BOOL)cameraRollEnabled:(UIViewController *)topVc{
@@ -123,109 +118,14 @@
     return YES;
 }
 
-+ (NSInteger)cameraRollProviderIndex:(UIViewController *)topVc{
-    NSInteger index = -1;
-    if ([OLKiteUtils cameraRollEnabled:topVc]){
-        index++;
-    }
-    
-    return index;
-}
-
-+ (NSInteger)facebookProviderIndex:(UIViewController *)topVc{
-    NSInteger index = -1;
-    if (![OLKiteUtils facebookEnabled]){
-        return index;
-    }
-    else{
-        index++;
-    }
-    
-    if ([OLKiteUtils cameraRollEnabled:topVc]){
-        index++;
-    }
-    
-    return index;
-}
-
-+ (NSInteger)instagramProviderIndex:(UIViewController *)topVc{
-    NSInteger index = -1;
-    if (![OLKiteUtils instagramEnabled]){
-        return index;
-    }
-    else{
-        index++;
-    }
-    
-    if ([OLKiteUtils cameraRollEnabled:topVc]){
-        index++;
-    }
-    if ([OLKiteUtils facebookEnabled]){
-        index++;
-    }
-    
-    return index;
-}
-
-+ (NSInteger)qrCodeProviderStartIndex:(UIViewController *)topVc{
-    NSInteger index = 0;
-    
-    if ([OLKiteUtils cameraRollEnabled:topVc]){
-        index++;
-    }
-    if ([OLKiteUtils facebookEnabled]){
-        index++;
-    }
-    if ([OLKiteUtils instagramEnabled]){
-        index++;
-    }
-    
-    return index;
-}
-
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-+ (NSInteger)customProvidersStartIndex:(UIViewController *)topVc{
-    NSInteger index = 0;
-
-    if ([OLKiteUtils cameraRollEnabled:topVc]){
-        index++;
-    }
-    if ([OLKiteUtils facebookEnabled]){
-        index++;
-    }
-    if ([OLKiteUtils instagramEnabled]){
-        index++;
-    }
-    if ([OLKiteUtils qrCodeUploadEnabled]){
-        index++;
-    }
-    
-    return index;
-}
-#endif
-
 + (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
     OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
     return kiteVC.delegate;
 }
 
-#ifdef OL_KITE_OFFER_APPLE_PAY
-+(BOOL)isApplePayAvailable{
-    PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
-    
-    return [Stripe canSubmitPaymentRequest:request];
-}
-#endif
-
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
-    if ([[OLKiteABTesting sharedInstance].paymentScreen isEqualToString:@"V2"]){
-        OLPaymentViewController *vc = [[OLPaymentViewControllerV2 alloc] initWithPrintOrder:printOrder];
-        handler(vc);
-    }
-    else{
-        OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
-        handler(vc);
-    }
+    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
+    handler(vc);
 }
 
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
@@ -269,7 +169,7 @@
         return @"OLPaymentViewController";
     }
     else if (photoSelectionScreen){
-        return @"PhotoSelectionViewController";
+        return @"OLImagePickerViewController";
     }
     else if (templateUI == kOLTemplateUIPoster){
         return @"OLPosterViewController";

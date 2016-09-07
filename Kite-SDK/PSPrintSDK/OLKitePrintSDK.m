@@ -53,12 +53,8 @@
 #else
 #import "PayPalMobile.h"
 #endif
-
 #endif
 
-#ifdef OL_OFFER_JUDOPAY
-#import "OLJudoPayCard.h"
-#endif
 #import "OLProductHomeViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteABTesting.h"
@@ -69,21 +65,20 @@
 #else
 #import "Stripe+ApplePay.h"
 #endif
+#endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
+#ifdef COCOAPODS
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+#import "FBSDKLoginManager.h"
+#import "FBSDKCoreKit.h"
 #endif
 
 #endif
 #import "OLPaymentViewController.h"
 #import "OLKiteUtils.h"
-
-static NSString *const kJudoClientId      = @"100170-877";
-static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
-static NSString *const kJudoSandboxSecret  = @"3bf983df93ceb422bc81fd0289c3eb95ea1d39d990ba27306679ed069826805c";
-static NSString *const kJudoLiveToken     = @"JjOZ49Z9XCYy2FAc";
-static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c3bddd4d883d9aef5e94788def934";
 
 static NSString *apiKey = nil;
 static NSString *applePayMerchantID = nil;
@@ -96,9 +91,6 @@ static NSString *const kOLStagingEndpointLive = @"https://staging.kite.ly";
 static NSString *const kOLStagingEndpointSandbox = @"https://staging.kite.ly";
 static NSString *const kOLAPIEndpointVersion = @"v3.0";
 
-#ifdef OL_OFFER_JUDOPAY
-static BOOL useJudoPayForGBP = NO;
-#endif
 static BOOL useStripeForCreditCards = YES;
 static BOOL cacheTemplates = NO;
 static BOOL useStaging = NO;
@@ -116,26 +108,11 @@ static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
 static NSString *instagramRedirectURI = nil;
 
-#ifdef OL_KITE_OFFER_ADOBE
-static NSString* creativeSDKClientId = nil;
-static NSString* creativeSDKClientSecret = nil;
-#endif
-
 @interface OLPrintOrder ()
 - (void)saveOrder;
 @end
 
 @implementation OLKitePrintSDK
-
-#ifdef OL_OFFER_JUDOPAY
-+ (BOOL)useJudoPayForGBP {
-    return useJudoPayForGBP;
-}
-
-+ (void)setUseJudoPayForGBP:(BOOL)use {
-    useJudoPayForGBP = use;
-}
-#endif
 
 + (BOOL)useStripeForCreditCards {
     return useStripeForCreditCards;
@@ -174,14 +151,8 @@ static NSString* creativeSDKClientSecret = nil;
     [OLStripeCard setClientId:[self stripePublishableKey]];
     if (environment == kOLKitePrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
-#ifdef OL_OFFER_JUDOPAY
-        [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
-#endif
     } else {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
-#ifdef OL_OFFER_JUDOPAY
-        [OLJudoPayCard setClientId:kJudoClientId token:kJudoSandboxToken secret:kJudoSandboxSecret withEnvironment:kOLJudoPayEnvironmentSandbox];
-#endif
     }
 }
 
@@ -270,21 +241,6 @@ static NSString* creativeSDKClientSecret = nil;
     return NSLocalizedString(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"");
 }
 
-#ifdef OL_KITE_OFFER_ADOBE
-+ (void)setAdobeCreativeSDKEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret{
-    creativeSDKClientSecret = secret;
-    creativeSDKClientId = clientID;
-}
-
-+ (NSString *)adobeCreativeSDKClientSecret{
-    return creativeSDKClientSecret;
-}
-
-+ (NSString *)adobeCreativeSDKClientID{
-    return creativeSDKClientId;
-}
-#endif
-
 + (void)setIsKiosk:(BOOL)enabled{
     isKiosk = enabled;
 }
@@ -359,35 +315,21 @@ static NSString* creativeSDKClientSecret = nil;
 
 
 + (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
-#ifdef OL_KITE_OFFER_INSTAGRAM
     instagramSecret = secret;
     instagramClientID = clientID;
     instagramRedirectURI = redirectURI;
-#endif
 }
 
 + (NSString *)instagramRedirectURI {
-#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramRedirectURI;
-#else
-    return nil;
-#endif
 }
 
 + (NSString *)instagramSecret{
-#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramSecret;
-#else
-    return nil;
-#endif
 }
 
 + (NSString *)instagramClientID{
-#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramClientID;
-#else
-    return nil;
-#endif
 }
 
 + (void)setPayPalAccountId:(NSString *)accountId{

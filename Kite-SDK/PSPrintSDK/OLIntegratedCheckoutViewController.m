@@ -132,25 +132,15 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     }
     
     if (!flag){
-        if ([UIAlertController class]) // iOS 8 or greater
-        {
-            UIAlertController *alert= [UIAlertController
-                                       alertControllerWithTitle:NSLocalizedString(@"", @"")
-                                       message:errorMessage
-                                       preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault
-                                                       handler:^(UIAlertAction * action){}];
-            
-            [alert addAction:ok];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-        else{
-            UIAlertView* dialog = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"", @"")
-                                                             message:errorMessage
-                                                            delegate:self
-                                                   cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil, nil];
-            [dialog show];
-        }
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:NSLocalizedString(@"", @"")
+                                   message:errorMessage
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * action){}];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
     }
     
     
@@ -335,31 +325,30 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
                 self.textFieldLastName.clearButtonMode = UITextFieldViewModeNever;
                 self.textFieldLastName.delegate = self;
                 self.textFieldLastName.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Last Name", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+            {
+                UIView *view = self.textFieldLastName;
+                view.translatesAutoresizingMaskIntoConstraints = NO;
+                tf.translatesAutoresizingMaskIntoConstraints = NO;
+                NSDictionary *views = NSDictionaryOfVariableBindings(view, tf);
+                NSMutableArray *con = [[NSMutableArray alloc] init];
                 
-                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-                    UIView *view = self.textFieldLastName;
-                    view.translatesAutoresizingMaskIntoConstraints = NO;
-                    tf.translatesAutoresizingMaskIntoConstraints = NO;
-                    NSDictionary *views = NSDictionaryOfVariableBindings(view, tf);
-                    NSMutableArray *con = [[NSMutableArray alloc] init];
-                    
-                    NSArray *visuals = @[@"H:|-20-[tf]-0-[view]-0-|"];
-                    
-                    
-                    for (NSString *visual in visuals) {
-                        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-                    }
-                    
-                    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-                    [con addObject:centerY];
-                    
-                    [cell addConstraints:con];
-                    
-                    centerY = [NSLayoutConstraint constraintWithItem:tf attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:tf.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-                    [cell addConstraint:centerY];
-                    
-                    [cell addConstraint:[NSLayoutConstraint constraintWithItem:tf attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.textFieldLastName attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
+                NSArray *visuals = @[@"H:|-20-[tf]-0-[view]-0-|"];
+                
+                
+                for (NSString *visual in visuals) {
+                    [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
                 }
+                
+                NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                [con addObject:centerY];
+                
+                [cell addConstraints:con];
+                
+                centerY = [NSLayoutConstraint constraintWithItem:tf attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:tf.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+                [cell addConstraint:centerY];
+                
+                [cell addConstraint:[NSLayoutConstraint constraintWithItem:tf attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.textFieldLastName attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
+            }
                 
                 break;
             case 1:
@@ -565,24 +554,22 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     [inputField setReturnKeyType:UIReturnKeyNext];
     [cell addSubview:inputField];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-        UIView *view = inputField;
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-20-[view]-0-|", @"V:[view(43)]"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-        [con addObject:centerY];
-        
-        [view.superview addConstraints:con];
+    UIView *view = inputField;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-20-[view]-0-|", @"V:[view(43)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
+    
+    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+    [con addObject:centerY];
+    
+    [view.superview addConstraints:con];
     
     
     return cell;

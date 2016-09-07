@@ -43,7 +43,6 @@
 @interface OLPhotobookViewController : UIViewController
 
 @property (strong, nonatomic) OLProduct *product;
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) NSNumber *editingPageNumber;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
@@ -53,13 +52,13 @@
 @property (assign, nonatomic) BOOL editMode;
 @property (assign, nonatomic) BOOL startOpen;
 @property (assign, nonatomic, readonly) BOOL bookClosed;
-@property (strong, nonatomic) OLPrintPhoto *coverPhoto;
+@property (strong, nonatomic) OLAsset *coverPhoto;
 @property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
 
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
 
 - (void)loadCoverPhoto;
-
+- (void)setUserSelectedPhotos:(NSMutableArray<OLAsset *> *)userSelectedPhotos;
 - (void)saveJobWithCompletionHandler:(void(^)())handler;
 
 @end

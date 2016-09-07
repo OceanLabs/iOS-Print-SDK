@@ -37,6 +37,7 @@ static NSString *const kKeyCCRotations = @"co.oceanlabs.psprintstudio.kKeyCCRota
 static NSString *const kKeyFlipHorizontal = @"co.oceanlabs.psprintstudio.kKeyFlipHorizontal";
 static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipVertical";
 static NSString *const kKeyTextsOnPhoto = @"co.oceanlabs.psprintstudio.kKeyTextsOnPhoto";
+static NSString *const kKeyBorderColor = @"co.oceanlabs.psprintstudio.kKeyBorderColor";
 
 @implementation OLPhotoEdits
 
@@ -64,6 +65,7 @@ static NSString *const kKeyTextsOnPhoto = @"co.oceanlabs.psprintstudio.kKeyTexts
         _flipHorizontal = [aDecoder decodeBoolForKey:kKeyFlipHorizontal];
         _flipVertical = [aDecoder decodeBoolForKey:kKeyFlipVertical];
         _textsOnPhoto = [aDecoder decodeObjectForKey:kKeyTextsOnPhoto];
+        _borderColor = [aDecoder decodeObjectForKey:kKeyBorderColor];
     }
     return self;
 }
@@ -77,6 +79,7 @@ static NSString *const kKeyTextsOnPhoto = @"co.oceanlabs.psprintstudio.kKeyTexts
     [aCoder encodeBool:self.flipHorizontal forKey:kKeyFlipHorizontal];
     [aCoder encodeBool:self.flipVertical forKey:kKeyFlipVertical];
     [aCoder encodeObject:self.textsOnPhoto forKey:kKeyTextsOnPhoto];
+    [aCoder encodeObject:self.borderColor forKey:kKeyBorderColor];
 }
 
 - (void)performHorizontalFlipEditFromOrientation:(UIImageOrientation)orientation{
@@ -224,6 +227,7 @@ static NSString *const kKeyTextsOnPhoto = @"co.oceanlabs.psprintstudio.kKeyTexts
     copy.flipHorizontal = self.flipHorizontal;
     copy.flipVertical = self.flipVertical;
     copy.textsOnPhoto = [[NSMutableArray alloc] initWithArray:self.textsOnPhoto copyItems:YES];
+    copy.borderColor = self.borderColor;
 
     return copy;
 }
@@ -237,9 +241,10 @@ static NSString *const kKeyTextsOnPhoto = @"co.oceanlabs.psprintstudio.kKeyTexts
         retVal &= CGSizeEqualToSize(self.cropImageSize, other.cropImageSize);
         retVal &= CGAffineTransformEqualToTransform(self.cropTransform, other.cropTransform);
         retVal &= self.counterClockwiseRotations == other.counterClockwiseRotations;
-        retVal &= self.flipHorizontal == self.flipHorizontal;
-        retVal &= self.flipVertical == self.flipVertical;
+        retVal &= self.flipHorizontal == other.flipHorizontal;
+        retVal &= self.flipVertical == other.flipVertical;
         retVal &= [self.textsOnPhoto isEqualToArray:other.textsOnPhoto];
+        retVal &= [self.borderColor isEqual:other.borderColor];
     }
     
     return retVal;

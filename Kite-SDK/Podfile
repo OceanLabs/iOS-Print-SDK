@@ -6,14 +6,13 @@ def shared_pods
     pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
     pod 'Stripe', '~> 5.1.4'
     pod 'Stripe/ApplePay'
-    pod 'CTAssetsPickerController'
-    pod 'InstagramImagePicker'
     pod 'DACircularProgress'
-    pod 'FacebookImagePicker'
     pod 'CSStickyHeaderFlowLayout'
     pod 'MPFlipViewController'
     pod 'TSMarkdownParser'
-    pod 'KITAssetsPickerController'
+    pod 'NXOAuth2Client'
+    pod 'FBSDKCoreKit', '~> 4.8.0'
+    pod 'FBSDKLoginKit', '~> 4.8.0'
 end
 
 target 'KiteSDK-Demo' do

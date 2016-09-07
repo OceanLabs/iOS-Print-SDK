@@ -37,37 +37,26 @@
 #import "OLProductTypeSelectionViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLAnalytics.h"
-#import "OLPrintPhoto.h"
 #import "OLProductGroup.h"
 #import "OLNavigationController.h"
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 #import "OLKiteUtils.h"
-#import "OLImageDownloader.h"
-
-
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+#import "OLUserSession.h"
 #import "OLCustomPhotoProvider.h"
-#endif
-
-static const NSInteger kTagNoProductsAlertView = 99;
-static const NSInteger kTagTemplateSyncFailAlertView = 100;
+#import "OLAsset+Private.h"
+#import "OLImageDownloader.h"
 
 static CGFloat fadeTime = 0.3;
 
 
-@interface OLKiteViewController () <UIAlertViewDelegate>
+@interface OLKiteViewController ()
 
-@property (strong, nonatomic) NSArray *assets;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
-#endif
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 
 
 //@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
@@ -86,14 +75,6 @@ static CGFloat fadeTime = 0.3;
 
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
-
-@end
-
-@interface OLPrintOrder (Private)
-
-@property (weak, nonatomic) NSArray *userSelectedPhotos;
-- (void)saveOrder;
-+ (id)loadOrder;
 
 @end
 
@@ -131,20 +112,8 @@ static CGFloat fadeTime = 0.3;
     return _customNavigationItem;
 }
 
--(OLPrintOrder *) printOrder{
-    if (!_printOrder){
-        _printOrder = [OLPrintOrder loadOrder];
-    }
-    if (!_printOrder){
-        _printOrder = [[OLPrintOrder alloc] init];
-    }
-    _printOrder.userSelectedPhotos = self.userSelectedPhotos;
-    return _printOrder;
-}
-
 - (void)clearBasket{
-    self.printOrder = [[OLPrintOrder alloc] init];
-    [self.printOrder saveOrder];
+    [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];
 }
 
 //- (void)setUseDarkTheme:(BOOL)useDarkTheme{
@@ -171,19 +140,6 @@ static CGFloat fadeTime = 0.3;
 //    return [[self.childViewControllers firstObject] preferredStatusBarStyle];
 //}
 
--(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos || _userSelectedPhotos.count == 0){
-        NSMutableArray *mutableUserSelectedPhotos = [[NSMutableArray alloc] init];
-        for (id asset in self.assets){
-            OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-            printPhoto.asset = asset;
-            [mutableUserSelectedPhotos addObject:printPhoto];
-        }
-        _userSelectedPhotos = mutableUserSelectedPhotos;
-    }
-    return _userSelectedPhotos;
-}
-
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets{
     NSAssert(![OLKiteUtils assetArrayContainsPDF:assets], @"If you want to use a pre-rendered PDF, please use initWithPrintOrder");
     
@@ -198,8 +154,9 @@ static CGFloat fadeTime = 0.3;
     [OLAnalytics setExtraInfo:info];
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
-        self.assets = assets;
-        self.printOrder.userData = info;
+        [OLUserSession currentSession].appAssets = assets;
+        [[OLUserSession currentSession] resetUserSelectedPhotos];
+        [OLUserSession currentSession].printOrder.userData = info;
     }
     [OLKiteABTesting sharedInstance].launchedWithPrintOrder = NO;
     
@@ -210,30 +167,26 @@ static CGFloat fadeTime = 0.3;
     [OLAnalytics setExtraInfo:info];
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
-        self.printOrder = printOrder;
-        self.printOrder.userData = info;
-        self.assets = [[printOrder.jobs firstObject] assetsForUploading];
+        [OLUserSession currentSession].printOrder = printOrder;
+        [OLUserSession currentSession].printOrder.userData = info;
+        [OLUserSession currentSession].appAssets = [[printOrder.jobs firstObject] assetsForUploading];
         [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printOrder != nil;
     }
     return self;
 }
 
-- (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
+- (void)addCustomPhotoProviderWithCollections:(NSArray <OLImagePickerProviderCollection *>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
     if (!self.customImageProviders){
-        self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
+        self.customImageProviders = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
     }
-    [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithCollections:collections name:name icon:image]];
-#endif
+    [self.customImageProviders addObject:[[OLImagePickerProvider alloc] initWithCollections:(NSArray <id<NSFastEnumeration>> *)collections name:name icon:image]];
 }
 
 - (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon{
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
     if (!self.customImageProviders){
-        self.customImageProviders = [[NSMutableArray<OLCustomPhotoProvider *> alloc] init];
+        self.customImageProviders = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
     }
     [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithController:vc name:name icon:icon]];
-#endif
 }
 
 -(void)viewDidLoad {
@@ -254,9 +207,7 @@ static CGFloat fadeTime = 0.3;
         self.customNavigationItem.title = @"";
     }
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        [OLPrintPhoto calcScreenScaleForTraitCollection:self.traitCollection];
-    }
+    [[OLUserSession currentSession] calcScreenScaleForTraitCollection:self.traitCollection];
     
     [OLAnalytics setKiteDelegate:self.delegate];
     
@@ -334,24 +285,16 @@ static CGFloat fadeTime = 0.3;
         NSString *nextVcNavIdentifier;
         OLProduct *product;
         if (groups.count == 0 && !([OLProductTemplate templates].count != 0 && [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
-            if ([UIAlertController class]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                     [welf dismiss];
                 }]];
                 [welf presentViewController:ac animated:YES completion:NULL];
-            }
-            else{
-                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") delegate:welf cancelButtonTitle:NSLocalizedString(@"OK", @"")  otherButtonTitles:nil];
-                av.tag = kTagNoProductsAlertView;
-                av.delegate = welf;
-                [av show];
-            }
             return;
         }
         else if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-            BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[welf.printOrder.jobs firstObject] assetsForUploading]];
-            OLProduct *product = [OLProduct productWithTemplateId:[[welf.printOrder.jobs firstObject] templateId]];
+            BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[[OLUserSession currentSession].printOrder.jobs firstObject] assetsForUploading]];
+            OLProduct *product = [OLProduct productWithTemplateId:[[[OLUserSession currentSession].printOrder.jobs firstObject] templateId]];
             NSString *identifier;
             if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"] && [product isValidProductForUI]){
                 identifier = @"OLProductOverviewViewController";
@@ -360,7 +303,7 @@ static CGFloat fadeTime = 0.3;
                 identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:welf]];
             }
             else{
-                [OLKiteUtils checkoutViewControllerForPrintOrder:welf.printOrder handler:^(id vc){
+                [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
                     [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
                     [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
                     [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
@@ -392,7 +335,6 @@ static CGFloat fadeTime = 0.3;
             [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
             [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
             [vc safePerformSelector:@selector(setProduct:) withObject:product];
-            [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:welf.userSelectedPhotos];
             if (self.navigationController.viewControllers.count <= 1){
                 UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                 NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
@@ -427,7 +369,6 @@ static CGFloat fadeTime = 0.3;
         [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
         [vc safePerformSelector:@selector(setFilterProducts:) withObject:welf.filterProducts];
-        [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:welf.userSelectedPhotos];
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
         if (self.navigationController.viewControllers.count <= 1){
             UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
@@ -505,23 +446,14 @@ static CGFloat fadeTime = 0.3;
         if (error.code == kOLKiteSDKErrorCodeMaintenanceMode) {
             message = kOLKiteSDKErrorMessageMaintenanceMode;
         }
-        
-        if ([UIAlertController class]){
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
-                [self dismiss];
-            }]];
-            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                [OLProductTemplate sync];
-            }]];
-            [self presentViewController:alert animated:YES completion:^(void){}];
-        }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:@"" message:message delegate:self cancelButtonTitle:NSLocalizedString(@"Retry", @"")  otherButtonTitles:NSLocalizedString(@"Cancel", @""), nil];
-            av.tag = kTagTemplateSyncFailAlertView;
-            av.delegate = self;
-            [av show];
-        }
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+            [self dismiss];
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+            [OLProductTemplate sync];
+        }]];
+        [self presentViewController:alert animated:YES completion:^(void){}];
     }
     
     else{
@@ -535,21 +467,6 @@ static CGFloat fadeTime = 0.3;
     return [(UINavigationController *)self.childViewControllers.firstObject viewControllers];
 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == kTagTemplateSyncFailAlertView) {
-        if (buttonIndex == 0){
-            [OLProductTemplate sync];
-        }
-        else{
-            [self dismiss];
-        }
-    } else if (alertView.tag == kTagNoProductsAlertView) {
-        [self dismiss];
-    }
-}
-#endif
-
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
     if (group.products.count > 1){
         return @"OLTypeSelectionViewController";
@@ -562,31 +479,14 @@ static CGFloat fadeTime = 0.3;
     }
 }
 
+- (void)didReceiveMemoryWarning{
+    for (OLAsset *asset in [OLUserSession currentSession].userSelectedPhotos){
+        [asset unloadImage];
+    }
+}
+
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 @end

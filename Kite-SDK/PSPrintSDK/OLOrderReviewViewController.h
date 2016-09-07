@@ -29,7 +29,7 @@
 
 #import <UIKit/UIKit.h>
 #import "OLPrintOrder.h"
-#import "OLScrollCropViewController.h"
+#import "OLImageEditViewController.h"
 #import "OLKiteViewController.h"
 #import "OLCollectionViewController.h"
 
@@ -38,7 +38,6 @@
 @interface OLOrderReviewViewController : OLCollectionViewController <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (nonatomic, strong) OLProduct *product;
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray *checkoutPhotos;
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;

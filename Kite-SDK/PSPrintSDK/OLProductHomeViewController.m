@@ -47,12 +47,12 @@
 #import "OLProductOverviewViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProductTypeSelectionViewController.h"
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
 #import "OLImageDownloader.h"
+#import "OLUserSession.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -67,8 +67,6 @@
 @interface OLKiteViewController (Private)
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 - (void)dismiss;
 
 @end
@@ -440,7 +438,6 @@
     
     OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
     vc.delegate = self.delegate;
-    vc.userSelectedPhotos = self.userSelectedPhotos;
     [vc safePerformSelector:@selector(setProduct:) withObject:product];
     
     [self.navigationController pushViewController:vc animated:YES];
@@ -476,7 +473,7 @@
     CGSize size = self.view.frame.size;
     if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
         CGFloat height = 110;
-        if ([self isHorizontalSizeClassCompact] && size.height > size.width){
+        if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width){
             height = (self.view.frame.size.width * height) / 375.0;
         }
         return CGSizeMake(self.view.frame.size.width, height);
@@ -490,7 +487,7 @@
 //        height = 200;
 //    }
     
-    if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) {
         if (numberOfCells == 2){
             return CGSizeMake(size.width, halfScreenHeight);
         }
@@ -557,14 +554,12 @@
     OLProductGroup *group = self.productGroups[indexPath.row];
     OLProduct *product = [group.products firstObject];
     product.uuid = nil;
-    [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos = nil;
-    self.userSelectedPhotos = [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos;
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
     
     NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
     
     id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
     [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
-    [vc safePerformSelector:@selector(setUserSelectedPhotos:) withObject:self.userSelectedPhotos];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
@@ -590,19 +585,11 @@
     NSInteger numberOfProducts = [self.productGroups count];
     
     CGSize size = self.view.frame.size;
-    if (!(numberOfProducts % 2 == 0) && (!([self isHorizontalSizeClassCompact]) || size.height < size.width)){
+    if (!(numberOfProducts % 2 == 0) && (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact || size.height < size.width)){
         extras = 1;
     }
     
     return numberOfProducts + extras;
-}
-
-- (void)fixCellFrameOnIOS7:(UICollectionViewCell *)cell {
-    // Ugly hack to fix cell frame on iOS 7 iPad. For whatever reason the frame size is not as per collectionView:layout:sizeForItemAtIndexPath:, others also experiencing this issue http://stackoverflow.com/questions/25804588/auto-layout-in-uicollectionviewcell-not-working
-    if (SYSTEM_VERSION_LESS_THAN(@"8")) {
-        [[cell contentView] setFrame:[cell bounds]];
-        [[cell contentView] setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -616,7 +603,6 @@
     
     if (indexPath.item >= self.productGroups.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
-        [self fixCellFrameOnIOS7:cell];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
             if (error) return;
@@ -635,7 +621,6 @@
     
     NSString *identifier = [NSString stringWithFormat:@"ProductCell%@", [OLKiteABTesting sharedInstance].productTileStyle];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    [self fixCellFrameOnIOS7:cell];
     
     UIView *view = cell.contentView;
     view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -721,41 +706,6 @@
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
 }
-
-#pragma mark - Tear down and restore
-
-//- (void)tearDownLargeObjectsFromMemory{
-//    [super tearDownLargeObjectsFromMemory];
-//    [self.collectionView reloadData];
-//}
-//
-//- (void)recreateTornDownLargeObjectsToMemory{
-//    [super recreateTornDownLargeObjectsToMemory];
-//    [self.collectionView reloadData];
-//}
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 
 @end

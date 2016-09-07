@@ -87,6 +87,16 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 @implementation OLProductTemplate
 
+- (UIEdgeInsets)imageBorder{
+    //If these numbers are > 1 then they represent points based on a 320 point width.
+    if (_imageBorder.top >= 1 && _imageBorder.left >= 1 && _imageBorder.bottom >= 1 && _imageBorder.right >= 1){
+        return UIEdgeInsetsMake(_imageBorder.top/320.0, _imageBorder.left/320.0, _imageBorder.bottom/320.0, _imageBorder.right/320.0);
+    }
+    else{
+        return _imageBorder;
+    }
+}
+
 - (NSURL *)coverPhotoURL{
     NSString *testResult = [OLKiteABTesting sharedInstance].coverPhotoId;
     NSURL *coverPhotoURL;

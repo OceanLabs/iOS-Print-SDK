@@ -28,7 +28,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLPrintPhoto.h"
 
 @interface OLRemoteImageView : UIImageView 
 

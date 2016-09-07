@@ -30,16 +30,12 @@
 #import <UIKit/UIKit.h>
 
 #import "OLKitePrintSDK.h"
-#import "OLScrollCropViewController.h"
+#import "OLImageEditViewController.h"
 
 @class OLProduct;
 
-@interface OLSingleImageProductReviewViewController : OLViewController <OLScrollCropViewControllerDelegate>
+@interface OLSingleImageProductReviewViewController : OLImageEditViewController
 
-@property (strong, nonatomic) OLProduct *product;
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
-@property (weak, nonatomic) id<OLKiteDelegate> delegate;
-@property (strong, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) IBOutlet UIView *hintView;
 
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;

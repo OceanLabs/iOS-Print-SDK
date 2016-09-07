@@ -51,6 +51,11 @@
     self.loadingView.thicknessRatio = 1;
     self.loadingView.hidden = YES;
     
+    self.loadingView.clipsToBounds = NO;
+    self.loadingView.layer.shadowColor = [[UIColor blackColor] CGColor];
+    self.loadingView.layer.shadowOpacity = .4;
+    self.loadingView.layer.shadowRadius = 5;
+        
     [self addSubview:self.loadingView];
 }
 

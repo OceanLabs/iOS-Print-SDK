@@ -29,13 +29,12 @@
 
 #import <UIKit/UIKit.h>
 #import "OLViewController.h"
+#import "OLImagePickerProviderCollection.h"
 
 @class OLPrintOrder;
 @class OLKiteViewController;
-@class ALAssetsGroup;
 @class OLAsset;
 
-@protocol KITAssetCollectionDataSource;
 @protocol KITCustomAssetPickerController;
 
 /**
@@ -44,17 +43,6 @@
 @protocol OLKiteDelegate <NSObject>
 
 @optional
-/**
- *  Asks the delegate if a group should be set as the default.
- *   Deprecated: If your deployment target is at least 8.0, you should install the 'iOS8' subspec that installs a new PHAsset-based photo picker.
- *
- *  @param controller The active OLKiteViewController
- *  @param group      The group to evaluate
- *
- *  @return A boolean value that shows if this group is default of not.
- */
-- (BOOL)kiteController:(OLKiteViewController * _Nullable)controller isDefaultAssetsGroup:(ALAssetsGroup * _Nonnull)group NS_DEPRECATED_IOS(7_0, 8_0);
-
 /**
  *  Asks the delegate if the user should be allowed to add more photos to their products (other than the ones provided by the host app). Default value is YES.
  *
@@ -189,8 +177,9 @@
 
 /**
  *  Clear all the orders that have been saved in the shopping basket.
+ *  Deprecated: Use `[[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];` instead
  */
-- (void)clearBasket;
+- (void)clearBasket __deprecated_msg("Use cleanupUserSession: on singleton object OLUserSession with the OLUserSessionCleanupOptionBasket object");
 
 /**
  *  Add a custom source for the photo picker
@@ -201,7 +190,7 @@
  *  @param name        The name for the source
  *  @param image       An image to be used as an icon (where applicable)
  */
-- (void)addCustomPhotoProviderWithCollections:(NSArray <id<KITAssetCollectionDataSource>>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image;
+- (void)addCustomPhotoProviderWithCollections:(NSArray <OLImagePickerProviderCollection *>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image;
 
 /**
  *  Add your own photo picker.
