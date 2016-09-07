@@ -39,6 +39,7 @@
 
 -(void) doCheckout;
 @property (weak, nonatomic) IBOutlet UIView *printContainerView;
+@property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
 
 @end
 
@@ -156,6 +157,9 @@
         [block addDependency:self.downloadImagesOperation];
         [[NSOperationQueue mainQueue] addOperation:block];
     }
+    else{
+        [self applyProductImageLayers];
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -190,12 +194,7 @@
             self.maskImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
             [self maskWithImage:self.maskImage targetView:self.cropView];
             
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-                self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-            }];
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-                self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-             }];
+            [self applyProductImageLayers];
             
             self.caseVisualEffectView.hidden = YES;
             self.downloadedMask = YES;
@@ -204,8 +203,19 @@
     }];
 }
 
+- (void)applyProductImageLayers{
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+        self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+    }];
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+        self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+    }];
+}
+
 -(void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
     if (!maskImage){
+        [targetView.layer.mask removeFromSuperlayer];
+        targetView.layer.mask = nil;
         return;
     }
     
@@ -229,6 +239,41 @@
                                      f.size.height - (adjustedBleed.top + adjustedBleed.bottom));
     [_maskingLayer setContents:(id)[maskImage CGImage]];
     [targetView.layer setMask:_maskingLayer];
+}
+
+- (void)onButtonCropClicked:(UIButton *)sender{
+    for (UIView *view in self.cropFrameGuideViews){
+        [self.printContainerView bringSubviewToFront:view];
+    }
+    sender.selected = YES;
+    [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *view in self.cropFrameGuideViews){
+            view.alpha = 1;
+            [view.superview bringSubviewToFront:view];
+            self.highlightsView.alpha = 0;
+        }
+        [self.view bringSubviewToFront:self.editingTools];
+    } completion:^(BOOL finished){
+        self.cropView.clipsToBounds = NO;
+        [self maskWithImage:nil targetView:self.cropView];
+        [self.view sendSubviewToBack:self.cropView];
+    }];
+}
+
+- (void)exitCropMode{
+    self.cropView.clipsToBounds = YES;
+    [self maskWithImage:self.maskImage targetView:self.cropView];
+    [self orderViews];
+    for (UIView *view in self.cropFrameGuideViews){
+        [self.printContainerView bringSubviewToFront:view];
+    }
+    [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *view in self.cropFrameGuideViews){
+            view.alpha = 0;
+            self.highlightsView.alpha = 1;
+        }
+    } completion:^(BOOL finished){
+    }];
 }
 
 -(void) doCheckout{

@@ -38,7 +38,6 @@
 #import "OLCheckoutViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
-#import "OLPaymentViewControllerV2.h"
 #import "OLUserSession.h"
 #import "FBSDKLoginManager.h"
 
@@ -125,14 +124,8 @@
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
-    if ([[OLKiteABTesting sharedInstance].paymentScreen isEqualToString:@"V2"]){
-        OLPaymentViewController *vc = [[OLPaymentViewControllerV2 alloc] initWithPrintOrder:printOrder];
-        handler(vc);
-    }
-    else{
-        OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
-        handler(vc);
-    }
+    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
+    handler(vc);
 }
 
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{

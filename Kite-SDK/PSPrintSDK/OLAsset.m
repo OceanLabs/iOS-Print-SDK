@@ -47,6 +47,7 @@ static NSString *const kKeyALAssetURL = @"co.oceanlabs.pssdk.kKeyALAssetURL";
 static NSString *const kKeyDataSource = @"co.oceanlabs.pssdk.kKeyDataSource";
 static NSString *const kKeyImageURL = @"co.oceanlabs.pssdk.kKeyImageURL";
 static NSString *const kKeyPHAssetLocalId = @"co.oceanlabs.pssdk.kKeyPHAssetLocalId";
+static NSString *const kKeyImageEdits = @"co.oceanlabs.pssdk.kKeyImageEdits";
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
@@ -266,64 +267,14 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
-    switch (self.assetType) {
-        case kOLAssetTypePHAsset:{
-            PHImageManager *imageManager = [PHImageManager defaultManager];
-            PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-            options.synchronous = NO;
-            options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
-            options.networkAccessAllowed = YES;
-            [imageManager requestImageForAsset:self.phAsset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage *result, NSDictionary *info){
-                if (result){
-                    handler(UIImageJPEGRepresentation(result, 0.7), nil);
-                }
-                else{
-                    self.corrupt = YES;
-                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                    handler(data, nil);
-                }
-            }];
-            break;
+    [self imageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image){
+        if (image){ //&& !error
+            handler(UIImageJPEGRepresentation(image, 0.7), nil);
         }
-        case kOLAssetTypeDataSource: {
-            NSAssert(self.dataSource, @"oops somehow instantiated a OLAsset in non consistent state");
-            [self.dataSource dataWithCompletionHandler:^(NSData *data, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    handler(data, error);
-                });
-            }];
-            
-            break;
-        }
-        case kOLAssetTypeImageData: {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                handler(self.imageData, nil);
-            });
-            break;
-        }
-        case kOLAssetTypeImageFilePath: {
-            NSError *error = nil;
-            NSData *data = [NSData dataWithContentsOfFile:self.imageFilePath options:0 error:&error];
-            handler(data, error);
-            break;
-        }
-        case kOLAssetTypeRemoteImageURL: {
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:self.imageURL progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-                [self resizeImage:image size:OLAssetMaximumSize applyEdits:YES completion:^(UIImage *image){
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (!error) {
-                            self.cachedEditedImage = image;
-                            handler(UIImageJPEGRepresentation(image, 0.7), nil);
-                        }
-                    });
-                }];
-            }];
-            break;
-        }
-        case kOLAssetTypeCorrupt:
+        else{
             handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
-            break;
-    }
+        }
+    }];
 }
 
 - (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image))handler{
@@ -364,22 +315,37 @@ static NSOperationQueue *imageOperationQueue;
             //Don't request less than a 400x400 image, otherwise the Photos Framework tries to be useful and returns a low-res, prerendered image which loses the rotation metadata (but is rotated correctly). This messes up the rotation from our editor.
             CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(MAX(size.width * [OLUserSession currentSession].screenScale, 400), MAX(size.height * [OLUserSession currentSession].screenScale, 400));
             [imageManager requestImageForAsset:self.phAsset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
-                if (applyEdits){
-                    [self resizeImage:image size:size applyEdits:YES completion:^(UIImage *image){
-                        self.cachedEditedImage = image;
-                        handler(image);
-                    }];
+                if (image){
+                    if (applyEdits){
+                        [self resizeImage:image size:size applyEdits:YES completion:^(UIImage *image){
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                self.cachedEditedImage = image;
+                                handler(image);
+                            });
+                        }];
+                    }
+                    else{ //Image is already resized, no need to do it again
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            self.cachedEditedImage = image;
+                            handler(image);
+                        });
+                    }
                 }
-                else{ //Image is already resized, no need to do it again
-                    self.cachedEditedImage = image;
-                    handler(image);
+                else{
+                    self.corrupt = YES;
+                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        handler([UIImage imageWithData:data]);
+                    });
                 }
             }];
         }
         else if (self.assetType == kOLAssetTypeImageData){
             [self resizeImage:[UIImage imageWithData:self.imageData] size:size applyEdits:YES completion:^(UIImage *image){
-                self.cachedEditedImage = image;
-                handler(image);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.cachedEditedImage = image;
+                    handler(image);
+                });
             }];
         }
         else if (self.assetType == kOLAssetTypeImageFilePath){
@@ -424,7 +390,9 @@ static NSOperationQueue *imageOperationQueue;
         }
         else if (self.assetType == kOLAssetTypeCorrupt){
             NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-            handler([UIImage imageWithData:data]);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler([UIImage imageWithData:data]);
+            });
         }
         
     }];
@@ -514,14 +482,22 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (BOOL)isEdited{
-    return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical;
+    return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical || !(CGAffineTransformIsIdentity(self.edits.cropTransform) || self.edits.textsOnPhoto.count > 0);
 }
 
-- (NSUInteger)hash {
-    return 31 * (31 * (31 * (31 * (self.mimeType.hash * 31 + self.imageData.hash) + self.imageFilePath.hash) + [self.phAsset localIdentifier].hash) + self.dataSource.hash) + self.imageURL.hash; //TODO missing
+- (NSUInteger) hash {
+    NSUInteger val = 31 * self.mimeType.hash;
+    val = 39 * val + self.imageData.hash;
+    val = 36 * val + self.imageFilePath.hash;
+    val = 37 * val + [self.phAsset localIdentifier].hash;
+    val = 38 * val + self.extraCopies;
+    val = 39 * val +  self.dataSource.hash;
+    val = 40 * val + self.imageURL.hash;
+    
+    return val;
 }
 
-- (BOOL)isEqual:(id)object {
+- (BOOL)isEqual:(id)object ignoreEdits:(BOOL)ignoreEdits{
     if (![object isKindOfClass:[OLAsset class]]) {
         return NO;
     }
@@ -531,6 +507,10 @@ static NSOperationQueue *imageOperationQueue;
     }
     
     if (![self.mimeType isEqualToString:[object mimeType]]) {
+        return NO;
+    }
+    
+    if (![self.edits isEqual:[object edits]] && !ignoreEdits){
         return NO;
     }
     
@@ -554,6 +534,10 @@ static NSOperationQueue *imageOperationQueue;
         default:
             return NO;
     }
+}
+
+- (BOOL)isEqual:(id)object {
+    return [self isEqual:object ignoreEdits:NO];
 }
 
 - (id)copyWithZone:(NSZone *)zone{
@@ -583,6 +567,7 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeObject:self.dataSource forKey:kKeyDataSource];
     [aCoder encodeObject:self.imageURL forKey:kKeyImageURL];
     [aCoder encodeObject:[self.phAsset localIdentifier] forKey:kKeyPHAssetLocalId];
+    [aCoder encodeObject:self.edits forKey:kKeyImageEdits];
     // TODO: encode uploaded including asset id & preview url?!
 }
 
@@ -602,6 +587,7 @@ static NSOperationQueue *imageOperationQueue;
         self.imageData = [aDecoder decodeObjectForKey:kKeyImageData];
         self.dataSource = [aDecoder decodeObjectForKey:kKeyDataSource];
         self.imageURL = [aDecoder decodeObjectForKey:kKeyImageURL];
+        self.edits = [aDecoder decodeObjectForKey:kKeyImageEdits];
         
         NSString *localId = [aDecoder decodeObjectForKey:kKeyPHAssetLocalId];
         if (localId){

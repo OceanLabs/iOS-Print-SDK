@@ -476,16 +476,7 @@
     }
     self.product.uuid = job.uuid;
     self.editingPrintJob = job;
-    if ([printOrder.jobs containsObject:self.editingPrintJob]){
-        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
-        [existingJob setExtraCopies:[existingJob extraCopies]+1];
-        for (NSString *option in self.product.selectedOptions.allKeys){
-            [job setValue:self.product.selectedOptions[option] forOption:option];
-        }
-    }
-    else{
-        [printOrder addPrintJob:self.editingPrintJob];
-    }
+    [printOrder addPrintJob:self.editingPrintJob];
     
     [printOrder saveOrder];
     

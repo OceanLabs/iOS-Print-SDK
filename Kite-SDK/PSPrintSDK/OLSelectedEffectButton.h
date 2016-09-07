@@ -10,4 +10,6 @@
 
 @interface OLSelectedEffectButton : UIButton
 
+@property (strong, nonatomic) UIColor *effectColor;
+
 @end

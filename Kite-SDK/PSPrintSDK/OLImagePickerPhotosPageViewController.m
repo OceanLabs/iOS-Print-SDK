@@ -47,7 +47,7 @@
 
 @end
 
-NSInteger OLImagePickerMargin = 0;
+CGFloat OLImagePickerMargin = 1.5;
 
 @implementation OLImagePickerPhotosPageViewController
 
@@ -144,6 +144,11 @@ NSInteger OLImagePickerMargin = 0;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
         [self.collectionView.collectionViewLayout invalidateLayout];
+        
+        //Ignore warning about this collection view, works fine.
+        [self.albumsCollectionView.collectionViewLayout invalidateLayout];
+        
+        self.albumsContainerView.transform = CGAffineTransformIdentity;
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         
     }];
@@ -171,7 +176,7 @@ NSInteger OLImagePickerMargin = 0;
         [self setAssetOfCollection:self.provider.collections[self.showingCollectionIndex] withIndex:indexPath.item toImageView:imageView forCollectionView:collectionView];
         
         UIImageView *checkmark = [cell viewWithTag:20];
-        id asset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
+        id asset = [self assetForIndexPath:indexPath];
         OLAsset *printPhoto;
         if ([asset isKindOfClass:[PHAsset class]]){
             printPhoto = [OLAsset assetWithPHAsset:asset];
@@ -258,6 +263,19 @@ NSInteger OLImagePickerMargin = 0;
 
 - (void)setAssetOfCollection:(OLImagePickerProviderCollection *)collection withIndex:(NSInteger)index toImageView:(OLRemoteImageView *)imageView forCollectionView:(UICollectionView *)collectionView{
     id asset = [collection objectAtIndex:index];
+    
+    for (OLAsset *selectedAsset in self.imagePicker.selectedAssets){
+        if ([asset isKindOfClass:[PHAsset class]]){
+            if ([asset isEqual:selectedAsset.phAsset]){
+                asset = selectedAsset;
+                break;
+            }
+        }
+        else if ([asset isEqual:selectedAsset ignoreEdits:YES]){
+            asset = selectedAsset;
+            break;
+        }
+    }
     
     if ([asset isKindOfClass:[PHAsset class]]){
         PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -353,7 +371,7 @@ NSInteger OLImagePickerMargin = 0;
     
     if (collectionView.tag == 10){
         float numberOfCellsPerRow = [self numberOfCellsPerRow];
-        CGFloat width = ceilf(size.width/numberOfCellsPerRow);
+        CGFloat width = ((size.width - ((float)OLImagePickerMargin * (numberOfCellsPerRow-1.0)))/numberOfCellsPerRow);
         CGFloat height = width;
         
         return CGSizeMake(width, height);
@@ -365,38 +383,54 @@ NSInteger OLImagePickerMargin = 0;
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     if (collectionView.tag == 10){
-        CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
-        
-        CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-        CGFloat diff = size.width - (cellSize.width * [self numberOfCellsPerRow]);
-        return UIEdgeInsetsMake(0, diff/2.0, 0, diff/2.0);
+        return UIEdgeInsetsMake(0, 0, 0, 0);
     }
     else{
         return UIEdgeInsetsMake(10, 0, self.albumLabelContainerTopCon.constant + 10, 0);
     }
 }
 
-
+- (OLAsset *)assetForIndexPath:(NSIndexPath *)indexPath{
+    id asset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
+    OLAsset *printPhoto;
+    if ([asset isKindOfClass:[PHAsset class]]){
+        printPhoto = [OLAsset assetWithPHAsset:asset];
+        if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
+            printPhoto = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:printPhoto]];
+        }
+    }
+    else if ([asset isKindOfClass:[OLAsset class]]){
+        printPhoto = asset;
+    }
+    
+    for (OLAsset *asset in self.imagePicker.selectedAssets){
+        if ([printPhoto isEqual:asset ignoreEdits:YES]){
+            printPhoto = asset;
+            break;
+        }
+    }
+    
+    return printPhoto;
+}
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
-        id asset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
-        OLAsset *printPhoto;
-        if ([asset isKindOfClass:[PHAsset class]]){
-            printPhoto = [OLAsset assetWithPHAsset:asset];
-        }
-        else if ([asset isKindOfClass:[OLAsset class]]){
-            printPhoto = asset;
-        }
-        
-        if (self.imagePicker.maximumPhotos == 1){
-            [self.imagePicker.selectedAssets addObject:printPhoto];
-            [self.imagePicker.nextButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-        }
+        OLAsset *printPhoto = [self assetForIndexPath:indexPath];
         
         if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
-            [self.imagePicker.selectedAssets removeObject:printPhoto];
-            [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+            if ([printPhoto isEdited]){
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
+                    [self.imagePicker.selectedAssets removeObject:printPhoto];
+                    [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+                }]];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+                [self presentViewController:ac animated:YES completion:NULL];
+            }
+            else{
+                [self.imagePicker.selectedAssets removeObject:printPhoto];
+                [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+            }
         }
         else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){
             UIAlertController *alert =
@@ -418,6 +452,10 @@ NSInteger OLImagePickerMargin = 0;
             printPhoto.edits = nil;
             [printPhoto unloadImage];
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
+            
+            if (self.imagePicker.maximumPhotos == 1){
+                [self.imagePicker.nextButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+            }
         }
         
         [self.imagePicker updateTitleBasedOnSelectedPhotoQuanitity];

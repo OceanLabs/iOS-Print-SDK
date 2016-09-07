@@ -49,6 +49,7 @@
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *selectedAssets;
 @property (assign, nonatomic) NSInteger maximumPhotos;
 @property (assign, nonatomic) NSInteger minimumPhotos;
+@property (assign, nonatomic) BOOL overrideImagePickerMode;
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (void)reloadPageController;
 - (void)onButtonNextClicked:(UIButton *)sender;

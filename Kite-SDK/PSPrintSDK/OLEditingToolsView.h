@@ -28,13 +28,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLSelectedEffectButton.h"
 IB_DESIGNABLE
 @interface OLEditingToolsView : UIView
 
-@property (weak, nonatomic) IBOutlet UIButton *button1;
-@property (weak, nonatomic) IBOutlet UIButton *button2;
-@property (weak, nonatomic) IBOutlet UIButton *button3;
-@property (weak, nonatomic) IBOutlet UIButton *button4;
+@property (weak, nonatomic) IBOutlet OLSelectedEffectButton *button1;
+@property (weak, nonatomic) IBOutlet OLSelectedEffectButton *button2;
+@property (weak, nonatomic) IBOutlet OLSelectedEffectButton *button3;
+@property (weak, nonatomic) IBOutlet OLSelectedEffectButton *button4;
 
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 
@@ -44,6 +45,7 @@ IB_DESIGNABLE
 @property (weak, nonatomic) IBOutlet UILabel *drawerLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *drawerHeightCon;
 
+- (void)setColor:(UIColor *)color;
 - (NSArray *)buttons;
 
 

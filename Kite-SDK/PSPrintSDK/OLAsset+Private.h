@@ -51,6 +51,7 @@ typedef enum {
 - (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image))handler;
 - (void)unloadImage;
 - (BOOL)isEdited;
+- (BOOL)isEqual:(id)object ignoreEdits:(BOOL)ignoreEdits;
 @property (nonatomic, readonly) OLAssetType assetType;
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSURL *imageURL;
@@ -58,5 +59,6 @@ typedef enum {
 @property (strong, nonatomic) OLPhotoEdits *edits;
 @property (strong, nonatomic) NSString *uuid;
 @property (strong, nonatomic) id metadata;
+@property (strong, nonatomic) PHAsset *phAsset;
 @end
 

@@ -69,6 +69,7 @@
 @interface OLImageEditViewController ()
 - (void)orderViews;
 - (void)onButtonClicked:(UIButton *)sender;
+- (void)saveEditsToAsset:(OLAsset *)asset;
 @end
 
 @interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate, OLScrollCropViewControllerDelegate>
@@ -211,10 +212,7 @@
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
-    self.asset.edits.cropImageFrame = [self.cropView getFrameRect];
-    self.asset.edits.cropImageRect = [self.cropView getImageRect];
-    self.asset.edits.cropImageSize = [self.cropView croppedImageSize];
-    self.asset.edits.cropTransform = self.cropView.imageView.transform;
+    [self saveEditsToAsset:self.asset];
     
     OLAsset *asset = [self.asset copy];
     [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
@@ -260,13 +258,7 @@
     job.redeemedOffer = self.product.redeemedOffer;
     self.product.uuid = job.uuid;
     self.editingPrintJob = job;
-    if ([printOrder.jobs containsObject:self.editingPrintJob]){
-        id<OLPrintJob> existingJob = printOrder.jobs[[printOrder.jobs indexOfObject:self.editingPrintJob]];
-        [existingJob setExtraCopies:[existingJob extraCopies]+1];
-    }
-    else{
-        [printOrder addPrintJob:self.editingPrintJob];
-    }
+    [printOrder addPrintJob:self.editingPrintJob];
     
     [printOrder saveOrder];
     
@@ -357,15 +349,6 @@
             }];
         }
     }];
-}
-
-- (void)onButtonCropClicked:(UIButton *)sender{
-    sender.selected = YES;
-    [self.cropView setGesturesEnabled:YES];
-}
-
-- (void)exitCropMode{
-    [self.cropView setGesturesEnabled:NO];
 }
 
 - (void)onButtonClicked:(UIButton *)sender {
