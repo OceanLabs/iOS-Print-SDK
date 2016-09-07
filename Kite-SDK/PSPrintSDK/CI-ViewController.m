@@ -190,6 +190,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             vc.userEmail = @"";
             vc.userPhone = @"";
             vc.delegate = self;
+            
+            [self addCatsAndDogsImagePickersToKite:vc];
+            
             [self presentViewController:vc animated:YES completion:NULL];
         }]];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and use staging", @"") style:UIAlertActionStyleDefault handler:^(id action){

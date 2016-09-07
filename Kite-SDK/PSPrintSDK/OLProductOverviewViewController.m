@@ -215,6 +215,9 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
+    [self.product.selectedOptions removeAllObjects];
+    self.product.uuid = nil;
+    
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){

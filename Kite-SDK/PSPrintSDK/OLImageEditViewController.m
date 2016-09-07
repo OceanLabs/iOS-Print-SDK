@@ -78,6 +78,8 @@ const NSInteger kOLEditTagCrop = 40;
 
 @property (weak, nonatomic) OLProductTemplateOption *selectedOption;
 
+@property (strong, nonatomic) UITextField *borderTextField;
+
 @end
 
 @implementation OLImageEditViewController
@@ -152,6 +154,8 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onTapGestureRecognized:(id)sender{
+    [self.borderTextField resignFirstResponder];
+    
     for (OLPhotoTextField *textField in self.textFields){
         if ([textField isFirstResponder]){
             [textField resignFirstResponder];
@@ -159,7 +163,9 @@ const NSInteger kOLEditTagCrop = 40;
         }
     }
     
-    [self.activeTextField hideButtons];
+    if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+        [self.activeTextField hideButtons];
+    }
     self.activeTextField = nil;
     
     if (self.editingTools.collectionView.tag != kOLEditTagCrop){
@@ -513,7 +519,15 @@ const NSInteger kOLEditTagCrop = 40;
     [coordinator animateAlongsideTransition:^(id context){
         [self setupImage];
         [self.editingTools.collectionView.collectionViewLayout invalidateLayout];
-    }completion:NULL];
+    }completion:^(id context){
+        NSString *borderString = self.borderTextField.text;
+        if (borderString){
+            [self.borderTextField removeFromSuperview];
+            self.borderTextField = nil;
+            [self setupBottomBorderTextField];
+            self.borderTextField.text = borderString;
+        }
+    }];
 }
 
 -(void)viewDidLayoutSubviews{
@@ -535,6 +549,41 @@ const NSInteger kOLEditTagCrop = 40;
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
         self.cropView.imageView.transform = self.edits.cropTransform;
+    }
+}
+
+- (void)setupBottomBorderTextField{
+    if (self.borderInsets.bottom / self.borderInsets.top >= 1.1 && !self.borderTextField){
+        UITextField *tf = [[UITextField alloc] init];
+        tf.delegate = self;
+        tf.autocorrectionType = UITextAutocorrectionTypeNo;
+        tf.tintColor = self.editingTools.ctaButton.backgroundColor;
+        tf.textAlignment = NSTextAlignmentCenter;
+        tf.adjustsFontSizeToFitWidth = YES;
+        tf.minimumFontSize = 1;
+        tf.placeholder = @"Tap to Add Text";
+        tf.font = [UIFont fontWithName:@"HelveticaNeue" size:35];
+        tf.textColor = [UIColor blackColor];
+        self.borderTextField = tf;
+        
+        [self.printContainerView addSubview:tf];
+        
+        UIView *cropView = self.cropView;
+        tf.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(tf, cropView);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        UIEdgeInsets insets = [self imageInsetsOnContainer];
+        
+        NSArray *visuals = @[[NSString stringWithFormat:@"H:|-%f-[tf]-%f-|", insets.left - 5, insets.right - 5],
+                             @"V:[cropView]-10-[tf(40)]"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [tf.superview addConstraints:con];
     }
 }
 
@@ -653,9 +702,13 @@ const NSInteger kOLEditTagCrop = 40;
         
         if (self.activeTextField != textField){
             [self.activeTextField resignFirstResponder];
-            [self.activeTextField hideButtons];
+            if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+                [self.activeTextField hideButtons];
+            }
             self.activeTextField = (OLPhotoTextField *)textField;
-            [self.activeTextField showButtons];
+            if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+                [self.activeTextField showButtons];
+            }
         }
     }
     else if (gesture.state == UIGestureRecognizerStateChanged){
@@ -834,6 +887,10 @@ const NSInteger kOLEditTagCrop = 40;
     if (asset){
         asset.edits = self.edits;
     }
+    
+    if (self.borderTextField.text){
+        self.product.selectedOptions[@"polaroid_text"] = self.borderTextField.text;
+    }
 }
 
 - (void)onButtonDoneTapped:(id)sender {
@@ -981,7 +1038,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     [self.activeTextField resignFirstResponder];
-    [self.activeTextField hideButtons];
+    if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+        [self.activeTextField hideButtons];
+    }
     self.activeTextField = nil;
     
     [self.edits performHorizontalFlipEditFromOrientation:self.cropView.imageView.image.imageOrientation];
@@ -1001,7 +1060,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     [self.activeTextField resignFirstResponder];
-    [self.activeTextField hideButtons];
+    if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+        [self.activeTextField hideButtons];
+    }
     self.activeTextField = nil;
     
     for (UITextField *textField in self.textFields){
@@ -1349,7 +1410,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == kOLEditTagFonts){
         [self.activeTextField setFont:[OLKiteUtils fontWithName:self.fonts[indexPath.item] size:self.activeTextField.font.pointSize]];
-        [self.activeTextField updateSize];
+        if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+            [self.activeTextField updateSize];
+        }
         self.ctaButton.enabled = YES;
         [collectionView reloadData];
     }
@@ -1483,11 +1546,17 @@ const NSInteger kOLEditTagCrop = 40;
     [UIView animateWithDuration:[durationNumber doubleValue] delay:0 options:[curveNumber unsignedIntegerValue] animations:^{
         [self.view layoutIfNeeded];
         
-        for (UITextField *textField in self.textFields){
-            if ([textField isFirstResponder]){
-                textField.transform = CGAffineTransformTranslate(textField.transform, 0, self.textFieldKeyboardDiff);
-                self.textFieldKeyboardDiff = 0;
-                break;
+        if ([self.borderTextField isFirstResponder]){
+            self.printContainerView.transform = CGAffineTransformIdentity;
+            self.textFieldKeyboardDiff = 0;
+        }
+        else{
+            for (UITextField *textField in self.textFields){
+                if ([textField isFirstResponder]){
+                    self.printContainerView.transform = CGAffineTransformIdentity;
+                    self.textFieldKeyboardDiff = 0;
+                    break;
+                }
             }
         }
     }completion:NULL];
@@ -1499,17 +1568,28 @@ const NSInteger kOLEditTagCrop = 40;
     NSNumber *durationNumber = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     NSNumber *curveNumber = [info objectForKey:UIKeyboardAnimationCurveUserInfoKey];
     
-    for (UITextField *textField in self.textFields){
-        if ([textField isFirstResponder]){
-            CGPoint p = [self.cropView convertRect:textField.frame toView:nil].origin;
-            
-            CGFloat diff = p.y + textField.frame.size.height - (self.view.frame.size.height - keyboardHeight);
-            if (diff > 0) {
-                textField.transform = CGAffineTransformTranslate(textField.transform, 0, -diff);
-                self.textFieldKeyboardDiff = diff;
+    if ([self.borderTextField isFirstResponder]){
+        CGPoint p = [self.printContainerView convertRect:self.borderTextField.frame toView:nil].origin;
+        
+        CGFloat diff = p.y + self.borderTextField.frame.size.height - (self.view.frame.size.height - keyboardHeight);
+        if (diff > 0) {
+            self.printContainerView.transform = CGAffineTransformMakeTranslation(0, -diff);
+            self.textFieldKeyboardDiff = diff;
+        }
+    }
+    else{
+        for (UITextField *textField in self.textFields){
+            if ([textField isFirstResponder]){
+                CGPoint p = [self.cropView convertRect:textField.frame toView:nil].origin;
+                
+                CGFloat diff = p.y + textField.frame.size.height - (self.view.frame.size.height - keyboardHeight);
+                if (diff > 0) {
+                    self.printContainerView.transform = CGAffineTransformMakeTranslation(0, -diff);
+                    self.textFieldKeyboardDiff = diff;
+                }
+                
+                break;
             }
-            
-            break;
         }
     }
     
@@ -1532,7 +1612,9 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark - UITextFieldDelegate
 
 - (void)textFieldDidChange:(UITextField *)textField{
-    [(OLPhotoTextField *)textField updateSize];
+    if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+        [(OLPhotoTextField *)textField updateSize];
+    }
     
     self.ctaButton.enabled = YES;
 }
@@ -1543,12 +1625,14 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
-    [(OLPhotoTextField *)textField updateSize];
+    if ([textField isKindOfClass:[OLPhotoTextField class]]){
+        [(OLPhotoTextField *)textField updateSize];
+    }
     [textField setNeedsLayout];
     [textField layoutIfNeeded];
     
     //Remove empty textfield
-    if (!textField.text || [textField.text isEqualToString:@""]){
+    if ((!textField.text || [textField.text isEqualToString:@""]) && [textField isKindOfClass:[OLPhotoTextField class]]){
         [textField removeFromSuperview];
         [self.textFields removeObjectIdenticalTo:(OLPhotoTextField *)textField];
         self.activeTextField = nil;
@@ -1556,6 +1640,11 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    if (textField == self.borderTextField){
+        [self dismissDrawerWithCompletionHandler:NULL];
+        return YES;
+    }
+    
     if (self.activeTextField == textField){
         if (self.editingTools.collectionView.tag == kOLEditTagFonts){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
@@ -1568,14 +1657,19 @@ const NSInteger kOLEditTagCrop = 40;
                 [self showDrawerWithCompletionHandler:NULL];
             }];
         }
-
-        [(OLPhotoTextField *)textField updateSize];
+        if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+            [(OLPhotoTextField *)textField updateSize];
+        }
         return YES;
     }
     [self.activeTextField resignFirstResponder];
-    [self.activeTextField hideButtons];
+    if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+        [self.activeTextField hideButtons];
+    }
     self.activeTextField = (OLPhotoTextField *)textField;
-    [self.activeTextField showButtons];
+    if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+        [self.activeTextField showButtons];
+    }
     return NO;
 }
 

@@ -408,6 +408,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }
         }
         [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
+        [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
     }
     
     if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
@@ -1009,18 +1010,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [OLAnalytics trackPaymentScreenHitEditItemDone:editingVc.editingPrintJob inOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
         }];
-        
-        //If the user edits the job that they just created, prevent them from going back
-        NSMutableArray *navigationStack = [self.navigationController.viewControllers mutableCopy];
-        if (navigationStack.count > 1){
-            UIViewController *reviewVc = navigationStack[navigationStack.count-2];
-            OLProduct *reviewProduct = [reviewVc safePerformSelectorWithReturn:@selector(product) withObject:nil];
-            OLProduct *editingProduct = [editingVc safePerformSelectorWithReturn:@selector(product) withObject:nil];
-            if ([reviewProduct.uuid isEqualToString:editingProduct.uuid]){
-                [navigationStack removeObjectsInRange:NSMakeRange(1, navigationStack.count - 2)];
-                self.navigationController.viewControllers = navigationStack;
-            }
-        }
     }
 }
 
@@ -1916,11 +1905,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
     }
     
+    [OLUserSession currentSession].userSelectedPhotos = userSelectedPhotos;
+    
     if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard && !(product.productTemplate.templateUI == kOLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){
         OLImagePickerViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
         photoVc.product = product;
         photoVc.overrideImagePickerMode = YES;
-        [OLUserSession currentSession].userSelectedPhotos = userSelectedPhotos;
         return [self navViewControllerWithControllers:@[photoVc]];
     }
     else{
