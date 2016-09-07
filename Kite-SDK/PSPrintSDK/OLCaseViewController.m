@@ -35,12 +35,14 @@
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
 
-@interface OLSingleImageProductReviewViewController (Private)
+@interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
 
 -(void) doCheckout;
 @property (weak, nonatomic) IBOutlet UIView *printContainerView;
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
-
+- (UIEdgeInsets)imageInsetsOnContainer;
+@property (strong, nonatomic) UITextField *borderTextField;
+- (void)setupBottomBorderTextField;
 @end
 
 @interface OLCaseViewController ()
@@ -159,6 +161,10 @@
     }
     else{
         [self applyProductImageLayers];
+        [self setupBottomBorderTextField];
+        if (self.product.selectedOptions[@"polaroid_text"]){
+            self.borderTextField.text = self.product.selectedOptions[@"polaroid_text"];
+        }
     }
 }
 
@@ -277,7 +283,7 @@
 }
 
 -(void) doCheckout{
-    if (!self.downloadedMask) {
+    if (!self.downloadedMask && self.product.productTemplate.maskImageURL) {
         return;
     }
     [super doCheckout];

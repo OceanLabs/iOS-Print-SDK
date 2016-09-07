@@ -8,7 +8,6 @@ general:
   branches:
     ignore:
     - dev
-    - new-photo-selection
   artifacts:
     - "~/image.png"
 
