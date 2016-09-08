@@ -58,7 +58,18 @@
     }
     
     [button.superview addConstraints:con];
+}
+
+- (void)setSelected:(BOOL)selected{
+    [super setSelected:selected];
     
+    if (!self.colorForSelection){
+        return;
+    }
+    
+    if (self.borderView){
+        [self.borderView removeFromSuperview];
+    }
     self.borderView = [[UIView alloc] init];
     self.borderView.userInteractionEnabled = NO;
     [self.borderView makeRoundRectWithRadius:2];
@@ -67,11 +78,11 @@
     
     UIView *view = self.borderView;
     view.translatesAutoresizingMaskIntoConstraints = NO;
-    views = NSDictionaryOfVariableBindings(view);
-    con = [[NSMutableArray alloc] init];
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    visuals = @[@"H:|-0-[view]-0-|",
-                         @"V:|-(-8)-[view]-0-|"];
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                self.extendedSelectionBox ? @"V:|-(-8)-[view]-0-|" : @"V:|-(-5)-[view]-(-5)-|"];
     
     
     for (NSString *visual in visuals) {
@@ -79,20 +90,10 @@
     }
     
     [view.superview addConstraints:con];
-
-    
-}
-
-- (void)setSelected:(BOOL)selected{
-    [super setSelected:selected];
-    
-    if (!self.selectable){
-        return;
-    }
     
     if (selected){
         self.borderView.layer.borderWidth = 1.5;
-        self.borderView.layer.borderColor = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000].CGColor;
+        self.borderView.layer.borderColor = self.colorForSelection.CGColor;
     }
     else{
         self.borderView.layer.borderWidth = 0;

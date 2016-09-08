@@ -87,6 +87,8 @@ typedef enum {
 @property (strong, nonatomic, readonly) NSArray <OLProductTemplateOption *>*_Nullable options;
 @property (strong, nonatomic) OLProductRepresentation *_Nullable productRepresentation;
 @property (assign, nonatomic) BOOL printInStore;
+@property (strong, nonatomic) NSString *_Nullable collectionId;
+@property (strong, nonatomic) NSString *_Nullable collectionName;
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *_Nullable)costPerSheetInCurrencyCode:(NSString *_Nonnull)currencyCode;

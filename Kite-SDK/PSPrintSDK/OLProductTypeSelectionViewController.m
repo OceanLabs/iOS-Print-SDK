@@ -55,6 +55,7 @@
 
 @property (strong, nonatomic) NSMutableArray *products;
 @property (strong, nonatomic) NSMutableArray *allPosterProducts;
+@property (strong, nonatomic) NSMutableDictionary *collections;
 @property (assign, nonatomic) BOOL fromRotation;
 
 @end
@@ -65,6 +66,7 @@
     if (!_products){
         _products = [[NSMutableArray alloc] init];
         self.allPosterProducts = [[NSMutableArray alloc] init];
+        self.collections = [[NSMutableDictionary alloc] init];
         NSArray *allProducts = [OLProduct productsWithFilters:self.filterProducts];
         for (OLProduct *product in allProducts){
             if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){
@@ -84,8 +86,16 @@
                 }
             }
             if ([product.productTemplate.templateClass isEqualToString:self.templateClass]){
-                [_products addObject:product];
-                [self.allPosterProducts addObject:product];
+                if (!product.productTemplate.collectionId || !product.productTemplate.collectionName || ![self.collections.allKeys containsObject:[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]]){
+                    [_products addObject:product];
+                    [self.allPosterProducts addObject:product];
+                }
+                if (product.productTemplate.collectionId && product.productTemplate.collectionName){
+                    if (!self.collections[[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]]){
+                        self.collections[[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]] = [[NSMutableArray alloc] init];
+                    }
+                    [self.collections[[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]] addObject:product.productTemplate.identifier];
+                }
             }
         }
     }
@@ -231,6 +241,36 @@
     }
     OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
     vc.delegate = self.delegate;
+    
+    if (product.productTemplate.collectionName && product.productTemplate.collectionId){
+        NSMutableArray *options = [[NSMutableArray alloc] init];
+        for (NSString *templateId in self.collections[[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]]){
+            OLProductTemplate *template = [OLProductTemplate templateWithId:templateId];
+            if (!template){
+                continue;
+            }
+            OLProduct *otherProduct = [[OLProduct alloc] initWithTemplate:template];
+            [options addObject:@{
+                                 @"code" : otherProduct.productTemplate.identifier,
+                                 @"name" : [NSString stringWithFormat:@"%@\n%@", [otherProduct dimensions], [otherProduct unitCost]],
+                                 }];
+        }
+        
+        OLProductTemplateOption *collectionOption =
+        [[OLProductTemplateOption alloc] initWithDictionary:@{
+                                                              @"code" : product.productTemplate.collectionId,
+                                                              @"name" : product.productTemplate.collectionName,
+                                                              @"options" : options
+                                                              }];
+        collectionOption.iconImageName = @"tool-size";
+        for (OLProductTemplateOption *option in product.productTemplate.options){
+            if ([option.code isEqualToString:collectionOption.code]){
+                [(NSMutableArray *)product.productTemplate.options removeObjectIdenticalTo:option];
+            }
+        }
+        [(NSMutableArray *)product.productTemplate.options addObject:collectionOption];
+    }
+    
     [vc safePerformSelector:@selector(setProduct:) withObject:product];
     
     if ([vc isKindOfClass:[OLProductTypeSelectionViewController class]]){
@@ -292,6 +332,13 @@
         textView.font = font;
     }
     
+    BOOL inSizeCollectionFlag = NO;
+    for (NSString *s in self.collections){
+        if ([s isEqualToString:[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]]){
+            inSizeCollectionFlag = YES;
+        }
+    }
+    
     if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
         if (product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
             textView.text = NSLocalizedString(@"Single Photo Poster", @"");
@@ -299,6 +346,9 @@
         else{
             textView.text = [NSString stringWithFormat:@"%ldx%ld Collage", (long)product.productTemplate.gridCountX, (long)product.productTemplate.gridCountY];
         }
+    }
+    else if (inSizeCollectionFlag){
+        textView.text = [[[[product.productTemplate.templateType stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Small", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") withString:@""] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Medium", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") withString:@""] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Large", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") withString:@""] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
     }
     else{
         textView.text = product.productTemplate.templateType;
