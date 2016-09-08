@@ -31,6 +31,11 @@
 #import "OLPhotoTextField.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 
+@interface OLPhotoTextField()
+@property (assign, nonatomic) BOOL chromeHidden;
+@property (strong, nonatomic) CAShapeLayer *borderLayer;
+@end
+
 @implementation OLPhotoTextField
 
 - (CGRect)textRectForBounds:(CGRect)bounds {
@@ -73,6 +78,8 @@
     [rotateButton addTarget:self action:@selector(onButtonRotateLetGo:) forControlEvents:UIControlEventTouchUpInside];
     [rotateButton addTarget:self action:@selector(onButtonRotateLetGo:) forControlEvents:UIControlEventTouchUpOutside];
     rotateButton.alpha = 0;
+    
+    self.chromeHidden = YES;
 }
 
 - (void)onButtonResizeTouched:(UIButton *)sender{
@@ -126,19 +133,38 @@
 }
 
 - (void)hideButtons{
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeColor"];
+    animation.duration = 0.15;
+    animation.fromValue = (__bridge id _Nullable)([UIColor blackColor].CGColor);
+    animation.toValue = (__bridge id _Nullable)([UIColor clearColor].CGColor);
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    self.borderLayer.strokeColor = [UIColor clearColor].CGColor;
+    [self.borderLayer addAnimation:animation forKey:@"fadeOut"];
     [UIView animateWithDuration:0.15 animations:^{
         [self viewWithTag:10].alpha = 0;
         [self viewWithTag:20].alpha = 0;
         [self viewWithTag:30].alpha = 0;
+    }completion:^(BOOL finished){
+        self.chromeHidden = YES;
     }];
 }
 
 - (void)showButtons{
+    self.chromeHidden = NO;
+    [self setNeedsDisplay];
+    
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"strokeColor"];
+    animation.duration = 0.15;
+    animation.fromValue = (__bridge id _Nullable)([UIColor clearColor].CGColor);
+    animation.toValue = (__bridge id _Nullable)([UIColor blackColor].CGColor);
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    self.borderLayer.strokeColor = [UIColor blackColor].CGColor;
+    [self.borderLayer addAnimation:animation forKey:@"fadeIn"];
     [UIView animateWithDuration:0.15 animations:^{
         [self viewWithTag:10].alpha = 1;
         [self viewWithTag:20].alpha = 1;
         [self viewWithTag:30].alpha = 1;
-    }];
+    }completion:NULL];
 }
 
 - (void)updateSize{
@@ -160,6 +186,9 @@
 
 -(void)drawRect:(CGRect)rect
 {
+    if (self.borderLayer){
+        [self.borderLayer removeFromSuperlayer];
+    }
     CGFloat angle = atan2(self.transform.b, self.transform.a);
     CGAffineTransform translationOnly = CGAffineTransformIdentity;
     translationOnly.tx = self.transform.tx;
@@ -167,9 +196,14 @@
     self.transform = translationOnly;
     
     UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(15, 15, self.frame.size.width-30, self.frame.size.height-30)];
-    [[UIColor blackColor] setStroke];
     rectanglePath.lineWidth = 2;
-    [rectanglePath stroke];
+    
+    self.borderLayer = [[CAShapeLayer alloc] init];
+    self.borderLayer.path = rectanglePath.CGPath;
+    self.borderLayer.strokeColor = self.chromeHidden ? [UIColor clearColor].CGColor : [UIColor blackColor].CGColor;
+    self.borderLayer.lineWidth = 2;
+    self.borderLayer.fillColor = [UIColor clearColor].CGColor;
+    [self.layer insertSublayer:self.borderLayer below:[self viewWithTag:10].layer];
     
     [self layoutCornerButtons];
     
