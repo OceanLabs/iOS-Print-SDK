@@ -196,13 +196,14 @@
     self.transform = translationOnly;
     
     UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(15, 15, self.frame.size.width-30, self.frame.size.height-30)];
-    rectanglePath.lineWidth = 2;
+    rectanglePath.lineWidth = 1;
     
     self.borderLayer = [[CAShapeLayer alloc] init];
     self.borderLayer.path = rectanglePath.CGPath;
     self.borderLayer.strokeColor = self.chromeHidden ? [UIColor clearColor].CGColor : [UIColor blackColor].CGColor;
-    self.borderLayer.lineWidth = 2;
+    self.borderLayer.lineWidth = 1;
     self.borderLayer.fillColor = [UIColor clearColor].CGColor;
+    self.borderLayer.lineDashPattern = @[@4, @2];
     [self.layer insertSublayer:self.borderLayer below:[self viewWithTag:10].layer];
     
     [self layoutCornerButtons];
