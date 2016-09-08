@@ -202,7 +202,7 @@ CGFloat OLImagePickerMargin = 1.5;
             qtyLabel = [[UILabel alloc] init];
             qtyLabel.tag = 11;
             
-            qtyLabel.backgroundColor = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
+            qtyLabel.backgroundColor = self.nextButton.backgroundColor;
             qtyLabel.textColor = [UIColor whiteColor];
             qtyLabel.font = [UIFont systemFontOfSize:11];
             qtyLabel.textAlignment = NSTextAlignmentCenter;

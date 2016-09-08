@@ -35,7 +35,6 @@
 
 @property (strong, nonatomic, readwrite) NSArray <OLProductTemplateOptionChoice *> *choices;
 @property (strong, nonatomic) NSURL *iconURL;
-@property (strong, nonatomic) NSString *iconImageName;
 
 @end
 

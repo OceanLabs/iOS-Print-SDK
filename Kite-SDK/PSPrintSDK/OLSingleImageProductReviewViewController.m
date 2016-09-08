@@ -232,6 +232,13 @@
 }
 
 - (void)saveJobNowWithCompletionHandler:(void(^)())handler {
+    if (self.product.productTemplate.collectionName && self.product.productTemplate.collectionId){
+        NSString *templateId = self.product.selectedOptions[self.product.productTemplate.collectionId];
+        if (templateId){
+            self.product = [OLProduct productWithTemplateId:templateId];
+        }
+    }
+    
     OLAsset *asset = [self.asset copy];
     NSArray *assetArray = @[asset];
     

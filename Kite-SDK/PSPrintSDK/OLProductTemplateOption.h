@@ -44,6 +44,7 @@ typedef enum {
 @property (strong, nonatomic) NSString *code;
 @property (assign, nonatomic) OLProductTemplateOptionType type;
 @property (strong, nonatomic, readonly) NSArray <OLProductTemplateOptionChoice *> *choices;
+@property (strong, nonatomic) NSString *iconImageName;
 
 
 - (instancetype)initWithDictionary:(NSDictionary *)options;

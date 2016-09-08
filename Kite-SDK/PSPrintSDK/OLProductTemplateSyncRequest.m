@@ -233,6 +233,8 @@
                                 CGSize sizePx = CGSizeZero;
                                 NSString *classPhoto;
                                 NSArray *supportedOptions;
+                                NSString *collectionId;
+                                NSString *collectionName;
                                 OLProductRepresentation *productRepresentation;
                                 if (product){
                                     NSArray *coverPhotoDicts = product[@"cover_photo_variants"];
@@ -245,6 +247,9 @@
                                             }
                                         }
                                     }
+                                    
+                                    collectionId = [product[@"collection_id"] isKindOfClass:[NSString class]] ? product[@"collection_id"] : nil;
+                                    collectionName = [product[@"collection_name"] isKindOfClass:[NSString class]] ? product[@"collection_name"] : nil;
                                     
                                     maskImageURL = [product[@"mask_url"] isKindOfClass:[NSString class]] ? product[@"mask_url"] : nil;
                                     productBackgroundImageURL = [product[@"product_background_image_url"] isKindOfClass:[NSString class]] ? product[@"product_background_image_url"] : nil;
@@ -418,6 +423,9 @@
                                     t.supportedOptions = supportedOptions;
                                     t.productRepresentation = productRepresentation;
                                     t.printInStore = printInStore;
+                                    
+                                    t.collectionId = collectionId;
+                                    t.collectionName = collectionName;
                                     
                                     NSMutableArray <OLUpsellOffer *>*upsellOffersClean = [[NSMutableArray alloc] init];
                                     for (NSDictionary *offerDict in upsellOffers){

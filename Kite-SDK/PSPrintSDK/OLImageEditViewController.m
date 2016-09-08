@@ -1297,7 +1297,7 @@ const NSInteger kOLEditTagCrop = 40;
         }
         
         if (self.selectedOption.type == OLProductTemplateOptionTypeGeneric){
-            [(OLButtonCollectionViewCell *)cell setSelectable:YES];
+            [(OLButtonCollectionViewCell *)cell setColorForSelection:self.editingTools.ctaButton.backgroundColor];
         }
         [cell setSelected:[self.product.selectedOptions[self.selectedOption.code] isEqualToString:choice.code]];
     }
@@ -1309,7 +1309,7 @@ const NSInteger kOLEditTagCrop = 40;
         label.text = self.fonts[indexPath.item];
         label.font = [OLKiteUtils fontWithName:label.text size:17];
         if ([self.activeTextField.font.fontName isEqualToString:label.text]){
-            label.backgroundColor = [UIColor colorWithRed:0.349 green:0.757 blue:0.890 alpha:1.000];
+            label.backgroundColor = self.editingTools.ctaButton.backgroundColor;
         }
         else{
             label.backgroundColor = [UIColor clearColor];
@@ -1346,6 +1346,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == kOLEditTagFonts){
         return CGSizeMake(collectionView.frame.size.width - 40, 30);
+    }
+    else if (collectionView.tag == OLProductTemplateOptionTypeGeneric){
+        return CGSizeMake(100, self.editingTools.collectionView.frame.size.height);
     }
     
     return CGSizeMake(self.editingTools.collectionView.frame.size.height * 1.5, self.editingTools.collectionView.frame.size.height);
@@ -1437,6 +1440,7 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)setupLabelCell:(UICollectionViewCell *)cell{
     UILabel *label = [[UILabel alloc] init];
+    label.numberOfLines = 2;
     label.tag = 10;
     label.font = [UIFont systemFontOfSize:17];
     label.textAlignment = NSTextAlignmentCenter;
@@ -1464,6 +1468,8 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupToolCell:(UICollectionViewCell *)cell{
+    [(OLButtonCollectionViewCell *)cell setExtendedSelectionBox:YES];
+    
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.contentMode = UIViewContentModeCenter;
     imageView.tag = 10;
