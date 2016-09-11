@@ -90,7 +90,7 @@
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 #ifdef COCOAPODS
-#import <Stripe.h>
+#import <Stripe/Stripe.h>
 #else
 #import "Stripe.h"
 #endif
