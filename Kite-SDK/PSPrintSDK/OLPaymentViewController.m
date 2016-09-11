@@ -93,7 +93,7 @@
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 #ifdef COCOAPODS
-#import <Stripe/Stripe+ApplePay.h>
+#import <Stripe.h>
 #else
 #import "Stripe+ApplePay.h"
 #endif
@@ -283,11 +283,17 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
++ (NSArray<NSString *> *)supportedPKPaymentNetworks {
+    NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
+    if ((&PKPaymentNetworkDiscover) != NULL) {
+        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
+    }
+    return supportedNetworks;
+}
+
 +(BOOL)isApplePayAvailable{
 #ifdef OL_KITE_OFFER_APPLE_PAY
-    PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
-    
-    return [Stripe canSubmitPaymentRequest:request];
+    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
 #else
     return NO;
 #endif

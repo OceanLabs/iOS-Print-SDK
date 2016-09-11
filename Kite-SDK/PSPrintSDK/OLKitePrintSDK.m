@@ -65,9 +65,9 @@
 #import "OLAddressEditViewController.h"
 #ifdef OL_KITE_OFFER_APPLE_PAY
 #ifdef COCOAPODS
-#import <Stripe/Stripe+ApplePay.h>
+#import <Stripe.h>
 #else
-#import "Stripe+ApplePay.h"
+#import "Stripe.h"
 #endif
 
 #ifdef OL_KITE_OFFER_FACEBOOK

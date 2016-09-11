@@ -4,8 +4,7 @@ inhibit_all_warnings!
 def shared_pods
     pod 'SVProgressHUD', '1.1.3'
     pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
-    pod 'Stripe', '~> 5.1.4'
-    pod 'Stripe/ApplePay'
+    pod 'Stripe', '~> 8.0.6'
     pod 'CTAssetsPickerController'
     pod 'InstagramImagePicker'
     pod 'DACircularProgress'
