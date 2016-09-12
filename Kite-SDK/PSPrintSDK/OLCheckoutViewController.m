@@ -532,6 +532,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (section == kSectionDeliveryDetails){
         return 0;
     }
+    if (section == kSectionPhoneNumber){
+        return 44;
+    }
     if (![self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![self.kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
         return 28;
     }
