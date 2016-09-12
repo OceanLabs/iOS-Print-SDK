@@ -91,7 +91,7 @@
 
 #ifdef OL_KITE_OFFER_APPLE_PAY
 #ifdef COCOAPODS
-#import <Stripe/Stripe+ApplePay.h>
+#import <Stripe/Stripe.h>
 #else
 #import "Stripe+ApplePay.h"
 #endif
@@ -100,6 +100,7 @@
 
 @import PassKit;
 @import AddressBook;
+@import Contacts;
 
 static NSString *const kSectionOrderSummary = @"kSectionOrderSummary";
 static NSString *const kSectionPromoCodes = @"kSectionPromoCodes";
@@ -271,11 +272,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
++ (NSArray<NSString *> *)supportedPKPaymentNetworks {
+    NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
+    if ((&PKPaymentNetworkDiscover) != NULL) {
+        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
+    }
+    return supportedNetworks;
+}
+
 +(BOOL)isApplePayAvailable{
+#ifdef __IPHONE_10_0
+    if (![CNContact class]){
+        return NO;
+    }
+#endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
-    PKPaymentRequest *request = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
-    
-    return [Stripe canSubmitPaymentRequest:request];
+    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
 #else
     return NO;
 #endif
@@ -1545,7 +1557,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 [[NSOperationQueue mainQueue] addOperation:self.applePayDismissOperation];
             }
             if (error){
-                //Apple Pay only available on ios 8+ so no need to worry about UIAlertController not available.
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self.navigationController popViewControllerAnimated:YES];
@@ -1558,9 +1569,22 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
                                    completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    ABRecordRef address = payment.shippingAddress;
     OLAddress *shippingAddress = [[OLAddress alloc] init];
-    shippingAddress.recipientFirstName = (__bridge_transfer NSString *)ABRecordCopyValue(address, kABPersonFirstNameProperty);
+    NSString *email;
+    NSString *phone;
+#ifdef __IPHONE_10_0
+    shippingAddress.recipientFirstName = payment.shippingContact.name.givenName;
+    shippingAddress.recipientLastName = payment.shippingContact.name.familyName;
+    shippingAddress.line1 = payment.shippingContact.postalAddress.street;
+    shippingAddress.city = payment.shippingContact.postalAddress.city;
+    shippingAddress.stateOrCounty = payment.shippingContact.postalAddress.state;
+    shippingAddress.zipOrPostcode = payment.shippingContact.postalAddress.postalCode;
+    shippingAddress.country = [OLCountry countryForCode:payment.shippingContact.postalAddress.ISOCountryCode];
+    email = payment.shippingContact.emailAddress;
+    phone = [payment.shippingContact.phoneNumber stringValue];
+#else 
+    ABRecordRef address = payment.shippingAddress;
+    shippingAddress.recipientFirstName = (__bridge_transfer NSString *)ABRecordCopyValue(address, givenName);
     shippingAddress.recipientLastName = (__bridge_transfer NSString *)ABRecordCopyValue(address, kABPersonLastNameProperty);
     
     CFTypeRef values = ABRecordCopyValue(address, kABPersonAddressProperty);
@@ -1586,10 +1610,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         completion(PKPaymentAuthorizationStatusInvalidShippingPostalAddress);
         return;
     }
-    
-    self.printOrder.shippingAddress = shippingAddress;
-    NSString *email;
-    NSString *phone;
+
     CFTypeRef emails = ABRecordCopyValue(address, kABPersonEmailProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(emails); i++){
         email = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(emails, i));
@@ -1598,6 +1619,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     for (NSInteger i = 0; i < ABMultiValueGetCount(phones); i++){
         phone = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(phones, i));
     }
+#endif
+    
+    self.printOrder.shippingAddress = shippingAddress;
     
     self.printOrder.email = email;
     self.printOrder.phone = phone;
@@ -1618,9 +1642,55 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }];
 }
 
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingContact:(PKContact *)contact completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKShippingMethod *> *, NSArray <PKPaymentSummaryItem *>*))completion{
+    OLAddress *shippingAddress = [[OLAddress alloc] init];
+    shippingAddress.country = [OLCountry countryForCode:contact.postalAddress.ISOCountryCode];
+    
+    self.printOrder.shippingAddress = shippingAddress;
+    for (id<OLPrintJob> printJob in self.printOrder.jobs){
+        if ([printJob respondsToSelector:@selector(setAddress:)]){
+            [printJob setAddress:nil];
+        }
+    }
+    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+        [self costCalculationCompletedWithError:error];
+        NSMutableArray *lineItems = [[NSMutableArray alloc] init];
+        for (OLPaymentLineItem *item in cost.lineItems){
+            [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
+        }
+        
+        // if a special discount exists, then add a Discount line item
+        if (cost.specialPromoDiscount){
+            NSDecimalNumber *currencyDiscount = cost.specialPromoDiscount[self.printOrder.currencyCode];
+            if ([currencyDiscount doubleValue] != 0) {
+                if ([currencyDiscount doubleValue] > 0) {
+                    currencyDiscount = [currencyDiscount decimalNumberByMultiplyingBy:(NSDecimalNumber *)[NSDecimalNumber numberWithInteger:-1]];
+                }
+                
+                for (PKPaymentSummaryItem *item in lineItems){
+                    if ([item.amount doubleValue] < 0){
+                        [lineItems removeObject:item];
+                    }
+                }
+                
+                [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Promotional Discount", @"") amount:currencyDiscount]];
+            }
+        }
+        
+        [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
+        if (!error){
+            completion(PKPaymentAuthorizationStatusSuccess, nil, lineItems);
+        }
+        else{
+            self.printOrder.shippingAddress = nil;
+            completion(PKPaymentAuthorizationStatusFailure, nil, nil);
+        }
+    }];
+}
+
+#ifndef __IPHONE_10_0
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingAddress:(ABRecordRef)address completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKShippingMethod *> *, NSArray <PKPaymentSummaryItem *>*))completion{
     OLAddress *shippingAddress = [[OLAddress alloc] init];
-    
     CFTypeRef values = ABRecordCopyValue(address, kABPersonAddressProperty);
     for (NSInteger i = 0; i < ABMultiValueGetCount(values); i++){
         NSDictionary *dict = (__bridge NSDictionary *)ABMultiValueCopyValueAtIndex(values, i);
@@ -1677,6 +1747,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
     }];
 }
+#endif
 
 #endif
 

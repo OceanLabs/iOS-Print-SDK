@@ -668,8 +668,6 @@
         
         priceLabel.text = [product unitCost];
         
-        productTypeLabel.text = product.productTemplate.templateType;
-        
         UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
         if (font){
             priceLabel.font = font;
