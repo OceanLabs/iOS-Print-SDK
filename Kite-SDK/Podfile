@@ -7,7 +7,6 @@ def shared_pods
     pod 'Stripe', '~> 5.1.4'
     pod 'Stripe/ApplePay'
     pod 'DACircularProgress'
-    pod 'CSStickyHeaderFlowLayout'
     pod 'MPFlipViewController'
     pod 'TSMarkdownParser'
     pod 'NXOAuth2Client'

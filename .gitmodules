@@ -4,9 +4,6 @@
 [submodule "Kite-SDK/vendor/DACircularProgress"]
 	path = Kite-SDK/vendor/DACircularProgress
 	url = https://github.com/danielamitay/DACircularProgress.git
-[submodule "Kite-SDK/vendor/CSStickyHeaderFlowLayout"]
-	path = Kite-SDK/vendor/CSStickyHeaderFlowLayout
-	url = https://github.com/OceanLabs/CSStickyHeaderFlowLayout
 [submodule "Kite-SDK/vendor/TSMarkdownParser"]
 	path = Kite-SDK/vendor/TSMarkdownParser
 	url = https://github.com/laptobbe/TSMarkdownParser.git

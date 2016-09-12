@@ -390,7 +390,6 @@
 		2EA3D3C81C9C04B500B99BCD /* OLPhotobookPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */; };
 		2EA3D3C91C9C04B500B99BCD /* OLPaymentLineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */; };
 		2EA3D3CA1C9C04B500B99BCD /* OLPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9CF4A4187592A900F067B6 /* OLPrintJob.m */; };
-		2EA3D3D01C9C04B500B99BCD /* libCSSStickyHeaderFlowLayout.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058DE1BF3FAA7009CFAF6 /* libCSSStickyHeaderFlowLayout.a */; };
 		2EA3D3D11C9C04B500B99BCD /* libMPFlipViewController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */; };
 		2EA3D3D21C9C04B500B99BCD /* libDACircularProgress.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */; };
 		2EA3D3D31C9C04B500B99BCD /* libTSMarkdownParser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */; };
@@ -576,9 +575,6 @@
 		E22058D71BF3FA43009CFAF6 /* MPFlipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83FF1BE2855F0041D4CF /* MPFlipViewController.m */; };
 		E22058D81BF3FA43009CFAF6 /* MPTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84011BE2855F0041D4CF /* MPTransition.m */; };
 		E22058D91BF3FA8C009CFAF6 /* libMPFlipViewController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */; };
-		E22058E71BF3FAEE009CFAF6 /* CSStickyHeaderFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83D61BE280EA0041D4CF /* CSStickyHeaderFlowLayout.m */; };
-		E22058E81BF3FAEE009CFAF6 /* CSStickyHeaderFlowLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83D81BE280EA0041D4CF /* CSStickyHeaderFlowLayoutAttributes.m */; };
-		E22058E91BF3FAFE009CFAF6 /* libCSSStickyHeaderFlowLayout.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058DE1BF3FAA7009CFAF6 /* libCSSStickyHeaderFlowLayout.a */; };
 		E22963701C43DD54002A90CA /* ALView+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E22963581C43DCDF002A90CA /* ALView+PureLayout.m */; };
 		E22963711C43DD57002A90CA /* NSArray+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229635A1C43DCDF002A90CA /* NSArray+PureLayout.m */; };
 		E22963721C43DD5B002A90CA /* NSLayoutConstraint+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = E229635C1C43DCDF002A90CA /* NSLayoutConstraint+PureLayout.m */; };
@@ -748,15 +744,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		E22058CA1BF3FA0C009CFAF6 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058DC1BF3FAA7009CFAF6 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
@@ -1136,7 +1123,6 @@
 		E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTSMarkdownParser.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDACircularProgress.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMPFlipViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E22058DE1BF3FAA7009CFAF6 /* libCSSStickyHeaderFlowLayout.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCSSStickyHeaderFlowLayout.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22962EF1C43DC90002A90CA /* CTAssetCheckmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTAssetCheckmark.h; path = vendor/CTAssetsPickerController/CTAssetsPickerController/CTAssetCheckmark.h; sourceTree = "<group>"; };
 		E22962F01C43DC90002A90CA /* CTAssetCheckmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CTAssetCheckmark.m; path = vendor/CTAssetsPickerController/CTAssetsPickerController/CTAssetCheckmark.m; sourceTree = "<group>"; };
 		E22962F11C43DC90002A90CA /* CTAssetCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTAssetCollectionViewCell.h; path = vendor/CTAssetsPickerController/CTAssetsPickerController/CTAssetCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1300,7 +1286,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EA3D3D01C9C04B500B99BCD /* libCSSStickyHeaderFlowLayout.a in Frameworks */,
 				2EA3D3D11C9C04B500B99BCD /* libMPFlipViewController.a in Frameworks */,
 				2EA3D3D21C9C04B500B99BCD /* libDACircularProgress.a in Frameworks */,
 				2EA3D3D31C9C04B500B99BCD /* libTSMarkdownParser.a in Frameworks */,
@@ -1376,13 +1361,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E22058DB1BF3FAA7009CFAF6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E22963641C43DD21002A90CA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1396,7 +1374,6 @@
 			files = (
 				2E25C7071D460A8C00B5BD8C /* libPayPalMobile.a in Frameworks */,
 				E22963941C43DE24002A90CA /* libCTAssetsPicker.a in Frameworks */,
-				E22058E91BF3FAFE009CFAF6 /* libCSSStickyHeaderFlowLayout.a in Frameworks */,
 				E22058D91BF3FA8C009CFAF6 /* libMPFlipViewController.a in Frameworks */,
 				E22058C71BF3F9F7009CFAF6 /* libDACircularProgress.a in Frameworks */,
 				E22058B71BF3F96F009CFAF6 /* libTSMarkdownParser.a in Frameworks */,
@@ -1796,7 +1773,6 @@
 				E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */,
 				E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */,
 				E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */,
-				E22058DE1BF3FAA7009CFAF6 /* libCSSStickyHeaderFlowLayout.a */,
 				E22963671C43DD21002A90CA /* libCTAssetsPicker.a */,
 				2EA3D3E31C9C04B500B99BCD /* libKiteSDKMinimal.a */,
 				2E898CEA1CC518180041CCD8 /* Kite-CI-Deploy.app */,
@@ -2381,23 +2357,6 @@
 			productReference = E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		E22058DD1BF3FAA7009CFAF6 /* CSSStickyHeaderFlowLayout */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E22058E41BF3FAA7009CFAF6 /* Build configuration list for PBXNativeTarget "CSSStickyHeaderFlowLayout" */;
-			buildPhases = (
-				E22058DA1BF3FAA7009CFAF6 /* Sources */,
-				E22058DB1BF3FAA7009CFAF6 /* Frameworks */,
-				E22058DC1BF3FAA7009CFAF6 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = CSSStickyHeaderFlowLayout;
-			productName = CSSStickyHeaderFlowLayout;
-			productReference = E22058DE1BF3FAA7009CFAF6 /* libCSSStickyHeaderFlowLayout.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		E22963661C43DD21002A90CA /* CTAssetsPicker */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E229636D1C43DD21002A90CA /* Build configuration list for PBXNativeTarget "CTAssetsPicker" */;
@@ -2475,9 +2434,6 @@
 					E22058CB1BF3FA0C009CFAF6 = {
 						CreatedOnToolsVersion = 7.1;
 					};
-					E22058DD1BF3FAA7009CFAF6 = {
-						CreatedOnToolsVersion = 7.1;
-					};
 					E22963661C43DD21002A90CA = {
 						CreatedOnToolsVersion = 7.2;
 					};
@@ -2513,7 +2469,6 @@
 				E22058AC1BF3F946009CFAF6 /* TSMarkdownParser */,
 				E22058BB1BF3F9BF009CFAF6 /* DACircularProgress */,
 				E22058CB1BF3FA0C009CFAF6 /* MPFlipViewController */,
-				E22058DD1BF3FAA7009CFAF6 /* CSSStickyHeaderFlowLayout */,
 				E22963661C43DD21002A90CA /* CTAssetsPicker */,
 			);
 		};
@@ -3252,15 +3207,6 @@
 				E22058D61BF3FA43009CFAF6 /* MPFlipTransition.m in Sources */,
 				E22058D71BF3FA43009CFAF6 /* MPFlipViewController.m in Sources */,
 				E22058D81BF3FA43009CFAF6 /* MPTransition.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058DA1BF3FAA7009CFAF6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E22058E71BF3FAEE009CFAF6 /* CSStickyHeaderFlowLayout.m in Sources */,
-				E22058E81BF3FAEE009CFAF6 /* CSStickyHeaderFlowLayoutAttributes.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4322,49 +4268,6 @@
 			};
 			name = Release;
 		};
-		E22058E51BF3FAA7009CFAF6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Debug;
-		};
-		E22058E61BF3FAA7009CFAF6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Release;
-		};
 		E229636E1C43DD21002A90CA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4551,15 +4454,6 @@
 			buildConfigurations = (
 				E22058D31BF3FA0C009CFAF6 /* Debug */,
 				E22058D41BF3FA0C009CFAF6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E22058E41BF3FAA7009CFAF6 /* Build configuration list for PBXNativeTarget "CSSStickyHeaderFlowLayout" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E22058E51BF3FAA7009CFAF6 /* Debug */,
-				E22058E61BF3FAA7009CFAF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
