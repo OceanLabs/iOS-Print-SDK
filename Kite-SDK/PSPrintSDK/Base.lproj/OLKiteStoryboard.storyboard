@@ -1788,8 +1788,8 @@ to rearrange the photos</string>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="oWX-GP-km1"/>
                                         <exclude reference="7Ge-tH-YDH"/>
+                                        <exclude reference="oWX-GP-km1"/>
                                     </mask>
                                 </variation>
                             </collectionViewCell>
