@@ -71,6 +71,12 @@
 
 @end
 
+@interface OLProductTypeSelectionViewController ()
+-(NSMutableArray *) products;
+@property (strong, nonatomic) NSMutableDictionary *collections;
+@end
+
+
 @interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
 @property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
@@ -559,11 +565,46 @@
     NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
     
     id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
+    [vc safePerformSelector:@selector(setProduct:) withObject:product];
+    
+    if ([vc isKindOfClass:[OLProductTypeSelectionViewController class]] && product.productTemplate.collectionName && product.productTemplate.collectionId){
+        [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
+        [vc products];
+        NSMutableArray *options = [[NSMutableArray alloc] init];
+        for (NSString *templateId in ((OLProductTypeSelectionViewController *)vc).collections[[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]]){
+            OLProductTemplate *template = [OLProductTemplate templateWithId:templateId];
+            if (!template){
+                continue;
+            }
+            OLProduct *otherProduct = [[OLProduct alloc] initWithTemplate:template];
+            [options addObject:@{
+                                 @"code" : otherProduct.productTemplate.identifier,
+                                 @"name" : [NSString stringWithFormat:@"%@\n%@", [otherProduct dimensions], [otherProduct unitCost]],
+                                 }];
+        }
+        
+        OLProductTemplateOption *collectionOption =
+        [[OLProductTemplateOption alloc] initWithDictionary:@{
+                                                              @"code" : product.productTemplate.collectionId,
+                                                              @"name" : product.productTemplate.collectionName,
+                                                              @"options" : options
+                                                              }];
+        collectionOption.iconImageName = @"tool-size";
+        for (OLProductTemplateOption *option in product.productTemplate.options){
+            if ([option.code isEqualToString:collectionOption.code]){
+                [(NSMutableArray *)product.productTemplate.options removeObjectIdenticalTo:option];
+            }
+        }
+        [(NSMutableArray *)product.productTemplate.options addObject:collectionOption];
+        
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+        [vc safePerformSelector:@selector(setProduct:) withObject:product];
+    }
+    
     [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
-    [vc safePerformSelector:@selector(setProduct:) withObject:product];
     
     return vc;
 }
