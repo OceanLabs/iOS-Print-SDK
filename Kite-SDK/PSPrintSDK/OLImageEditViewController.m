@@ -48,6 +48,10 @@ const NSInteger kOLEditTagImageTools = 30;
 /**/const NSInteger kOLEditTagFonts = 33;
 const NSInteger kOLEditTagCrop = 40;
 
+@interface OLKiteViewController ()
+@property (strong, nonatomic) NSArray *fontNames;
+@end
+
 @interface OLImageEditViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate, OLImagePickerViewControllerDelegate>
 @property (assign, nonatomic) NSInteger initialOrientation;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
@@ -85,6 +89,10 @@ const NSInteger kOLEditTagCrop = 40;
 @implementation OLImageEditViewController
 
 -(NSArray<NSString *> *) fonts{
+    if (!_fonts){
+        OLKiteViewController *kvc = [OLKiteUtils kiteVcForViewController:self];
+        _fonts = [kvc fontNames];
+    }
     if (!_fonts){
         NSMutableArray<NSString *> *fonts = [[NSMutableArray<NSString *> alloc] init];
         for (NSString *familyName in [UIFont familyNames]){

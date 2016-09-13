@@ -203,4 +203,11 @@
  */
 - (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon;
 
+
+/**
+ Provide a set of font names to be used in image editing (text on photo);
+
+ @param fontNames The font names array
+ */
+- (void)setFontNamesForImageEditing:(NSArray<NSString *> *_Nullable)fontNames;
 @end

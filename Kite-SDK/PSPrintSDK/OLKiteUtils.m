@@ -218,7 +218,7 @@
         }
     }
     
-    return nil;
+    return [self kiteVcForViewController:theVc.presentingViewController];
 }
 
 + (BOOL)assetArrayContainsPDF:(NSArray *)array{

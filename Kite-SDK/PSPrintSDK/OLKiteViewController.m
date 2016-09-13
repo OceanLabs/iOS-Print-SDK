@@ -57,6 +57,7 @@ static CGFloat fadeTime = 0.3;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
+@property (strong, nonatomic) NSArray *fontNames;
 
 
 //@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
@@ -187,6 +188,10 @@ static CGFloat fadeTime = 0.3;
         self.customImageProviders = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
     }
     [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithController:vc name:name icon:icon]];
+}
+
+- (void)setFontNamesForImageEditing:(NSArray<NSString *> *_Nullable)fontNames{
+    self.fontNames = fontNames;
 }
 
 -(void)viewDidLoad {
