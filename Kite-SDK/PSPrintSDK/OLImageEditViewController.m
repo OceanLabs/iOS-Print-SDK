@@ -690,6 +690,7 @@ const NSInteger kOLEditTagCrop = 40;
     static CGFloat originalAngle;
     
     if (gesture.state == UIGestureRecognizerStateBegan){
+        [self.cropView setGesturesEnabled:NO];
         original = gesture.view.transform;
         originalFrame = gesture.view.frame;
         CGPoint gesturePoint = [gesture locationInView:self.cropView];
@@ -777,6 +778,7 @@ const NSInteger kOLEditTagCrop = 40;
         }
     }
     else if (gesture.state == UIGestureRecognizerStateEnded){
+        [self.cropView setGesturesEnabled:YES];
         self.resizingTextField = NO;
         self.rotatingTextField = NO;
     }
