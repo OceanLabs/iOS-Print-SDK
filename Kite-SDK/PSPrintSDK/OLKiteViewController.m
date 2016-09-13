@@ -113,6 +113,10 @@ static CGFloat fadeTime = 0.3;
     return _customNavigationItem;
 }
 
+- (OLPrintOrder *)basketOrder{
+    return [OLUserSession currentSession].printOrder;
+}
+
 - (void)clearBasket{
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];
 }
