@@ -9,8 +9,8 @@ def shared_pods
     pod 'MPFlipViewController'
     pod 'TSMarkdownParser'
     pod 'NXOAuth2Client'
-    pod 'FBSDKCoreKit', '~> 4.8.0'
-    pod 'FBSDKLoginKit', '~> 4.8.0'
+    pod 'FBSDKCoreKit', '~> 4.11.0'
+    pod 'FBSDKLoginKit', '~> 4.11.0'
 end
 
 target 'KiteSDK-Demo' do

@@ -6,16 +6,9 @@ PODS:
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
   - DACircularProgress (2.3.1)
-  - FBSDKCoreKit (4.8.0):
-    - Bolts (~> 1.1)
-    - FBSDKCoreKit/arc (= 4.8.0)
-    - FBSDKCoreKit/no-arc (= 4.8.0)
-  - FBSDKCoreKit/arc (4.8.0):
-    - Bolts (~> 1.1)
-  - FBSDKCoreKit/no-arc (4.8.0):
-    - Bolts (~> 1.1)
-    - FBSDKCoreKit/arc
-  - FBSDKLoginKit (4.8.0):
+  - FBSDKCoreKit (4.11.0):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.11.0):
     - FBSDKCoreKit
   - MPFlipViewController (0.0.2)
   - NXOAuth2Client (1.2.8)
@@ -26,8 +19,8 @@ PODS:
 
 DEPENDENCIES:
   - DACircularProgress
-  - FBSDKCoreKit (~> 4.8.0)
-  - FBSDKLoginKit (~> 4.8.0)
+  - FBSDKCoreKit (~> 4.11.0)
+  - FBSDKLoginKit (~> 4.11.0)
   - MPFlipViewController
   - NXOAuth2Client
   - PayPal-iOS-SDK/Core (~> 2.12.5)
@@ -38,8 +31,8 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  FBSDKCoreKit: 66a935d17b6e00b6b64e604f2eb9b72c9ab7deb8
-  FBSDKLoginKit: d893fcbb98d854496925e9ff73c67b896982d3c4
+  FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b
+  FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
   MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-SDK: 98ab60b137b7fd35ab5a785d11f042f6858b4f11
@@ -47,6 +40,6 @@ SPEC CHECKSUMS:
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
   TSMarkdownParser: 64cb52fe5a518b4875a6167a650cb0ed4b18cea5
 
-PODFILE CHECKSUM: cdca5a8129f539c81ae14fce2bfa35acd4ee2c11
+PODFILE CHECKSUM: ee8573fa643445bddb71bfb7e0b0b47d3e96719e
 
 COCOAPODS: 1.0.1
