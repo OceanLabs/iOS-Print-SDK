@@ -142,6 +142,10 @@ static CGFloat fadeTime = 0.3;
     return _printOrder;
 }
 
+- (OLPrintOrder *)basketOrder{
+    return self.printOrder;
+}
+
 - (void)clearBasket{
     self.printOrder = [[OLPrintOrder alloc] init];
     [self.printOrder saveOrder];

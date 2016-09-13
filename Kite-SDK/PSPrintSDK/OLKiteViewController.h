@@ -192,6 +192,16 @@
  */
 - (void)clearBasket;
 
+
+/**
+ Returns the printOrder object that is used to handle the active basket
+ 
+ Note: A new object may be created when the user has successfully paid for and submitted their basket.
+
+ @return the basket print order object
+ */
+- (OLPrintOrder *_Nonnull)basketOrder;
+
 /**
  *  Add a custom source for the photo picker
  *  (Needs the 'ImageProviders' subspec or this method won't do anything. See
