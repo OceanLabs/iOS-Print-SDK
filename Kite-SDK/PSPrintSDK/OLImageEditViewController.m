@@ -459,9 +459,19 @@ const NSInteger kOLEditTagCrop = 40;
 - (UIEdgeInsets)imageInsetsOnContainer{
     UIEdgeInsets b = self.borderInsets;
     
-    CGFloat width = self.printContainerView.frame.size.width;
-    CGFloat height = (width * (1.0 - b.left - b.right)) * self.aspectRatio;
-    height = height / (1 - b.top - b.bottom);
+    CGFloat width = 0;
+    CGFloat height = 0;
+    if (self.view.frame.size.height > self.view.frame.size.width){
+        width = self.printContainerView.frame.size.width;
+        height = (width * (1.0 - b.left - b.right)) * self.aspectRatio;
+        height = height / (1 - b.top - b.bottom);
+    }
+    else{
+        height = self.printContainerView.frame.size.height;
+        width = (height * (1.0 - b.top - b.bottom)) / self.aspectRatio;
+        width = width / (1 - b.left - b.right);
+
+    }
     
     return UIEdgeInsetsMake(b.top * height, b.left * width, b.bottom * height, b.right * width);
 }
