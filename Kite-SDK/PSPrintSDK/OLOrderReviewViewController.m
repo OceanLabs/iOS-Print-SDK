@@ -737,14 +737,16 @@ UIViewControllerPreviewingDelegate>
         if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingPrintPhoto){
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (indexPath){
-                [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                [UIView animateWithDuration:0 animations:^{
+                    [self.collectionView performBatchUpdates:^{
+                        [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                    } completion:nil];
+                }];
                 OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
                 if (!cell){
                     continue;
                 }
-                UIView *containerView = cell.printContainerView;
-                containerView.hidden = YES;
-                cropper.previewSourceView = containerView;
+                cropper.previewSourceView = cell.printContainerView;
             }
         }
     }

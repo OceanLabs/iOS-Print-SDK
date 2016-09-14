@@ -503,6 +503,7 @@ const NSInteger kOLEditTagCrop = 40;
                     }
                 } completion:^(BOOL finished){
                     [self.previewView removeFromSuperview];
+                    self.previewSourceView.hidden = NO;
                 }];
             }];
         }];
@@ -631,6 +632,7 @@ const NSInteger kOLEditTagCrop = 40;
         
         self.previewView.frame = self.printContainerView.frame;
         [self.view addSubview:self.previewView];
+        self.previewSourceView.hidden = YES;
         [UIView animateWithDuration:0.25 animations:^{
             self.view.backgroundColor = [UIColor clearColor];
             for (UIView *view in self.allViews){
