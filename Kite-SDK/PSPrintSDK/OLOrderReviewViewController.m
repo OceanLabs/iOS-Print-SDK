@@ -653,8 +653,8 @@ UIViewControllerPreviewingDelegate>
     
     cell.printContainerView.backgroundColor = printPhoto.edits.borderColor ? printPhoto.edits.borderColor : [UIColor whiteColor];
     
+    [[cell.imageView.superview viewWithTag:1556] removeFromSuperview];
     if (printPhoto.edits.bottomBorderText.text){
-        [[cell.imageView.superview viewWithTag:1556] removeFromSuperview];
         [self setupBottomBorderTextFieldOnView:cell];
         [(UITextView *)[cell.imageView.superview viewWithTag:1556] setText:printPhoto.edits.bottomBorderText.text];
     }
