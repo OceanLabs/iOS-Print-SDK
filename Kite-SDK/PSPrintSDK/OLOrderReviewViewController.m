@@ -410,12 +410,13 @@ UIViewControllerPreviewingDelegate>
 }
 
 - (void)setupBottomBorderTextFieldOnView:(OLCircleMaskCollectionViewCell *)cell{
+    CGFloat heightFactor = cell.imageView.frame.size.height / 212.0;
     UITextField *tf = [[UITextField alloc] init];
     tf.userInteractionEnabled = NO;
     tf.textAlignment = NSTextAlignmentCenter;
     tf.adjustsFontSizeToFitWidth = YES;
     tf.minimumFontSize = 1;
-    tf.font = [UIFont fontWithName:@"HelveticaNeue" size:35];
+    tf.font = [UIFont fontWithName:@"HelveticaNeue" size:35 * heightFactor];
     tf.textColor = [UIColor blackColor];
     tf.tag = 1556;
     
@@ -427,7 +428,7 @@ UIViewControllerPreviewingDelegate>
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
     NSArray *visuals = @[@"H:|-5-[tf]-5-|",
-                         @"V:[imageView]-10-[tf(40)]"];
+                         [NSString stringWithFormat:@"V:[imageView]-%f-[tf(%f)]", 8.0 * heightFactor, 40.0 * heightFactor]];
     
     
     for (NSString *visual in visuals) {

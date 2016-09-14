@@ -578,6 +578,8 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)setupBottomBorderTextField{
     if (self.borderInsets.bottom / self.borderInsets.top >= 1.1 && !self.borderTextField){
+        CGFloat heightFactor = self.cropView.frame.size.height / 212.0;
+        
         UITextField *tf = [[UITextField alloc] init];
         tf.delegate = self;
         tf.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -585,8 +587,8 @@ const NSInteger kOLEditTagCrop = 40;
         tf.textAlignment = NSTextAlignmentCenter;
         tf.adjustsFontSizeToFitWidth = YES;
         tf.minimumFontSize = 1;
-        tf.placeholder = @"Tap to Add Text";
-        tf.font = [UIFont fontWithName:@"HelveticaNeue" size:35];
+        tf.placeholder = @"Add Text";
+        tf.font = [UIFont fontWithName:@"HelveticaNeue" size:35 * heightFactor];
         tf.textColor = [UIColor blackColor];
         self.borderTextField = tf;
         
@@ -600,7 +602,7 @@ const NSInteger kOLEditTagCrop = 40;
         UIEdgeInsets insets = [self imageInsetsOnContainer];
         
         NSArray *visuals = @[[NSString stringWithFormat:@"H:|-%f-[tf]-%f-|", insets.left - 5, insets.right - 5],
-                             @"V:[cropView]-10-[tf(40)]"];
+                             [NSString stringWithFormat:@"V:[cropView]-%f-[tf(%f)]", 8.0 * heightFactor, 40.0 * heightFactor]];
         
         
         for (NSString *visual in visuals) {
