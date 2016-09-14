@@ -732,13 +732,12 @@ UIViewControllerPreviewingDelegate>
     [self.editingPrintPhoto unloadImage];
     self.editingPrintPhoto.edits = cropper.edits;
     
-    [self.collectionView reloadData];
-    
     //Find the new previewSourceView for the dismiss animation
     for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++){
         if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingPrintPhoto){
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (indexPath){
+                [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
                 OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
                 if (!cell){
                     continue;
