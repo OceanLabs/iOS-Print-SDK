@@ -235,9 +235,10 @@
     if (self.product.productTemplate.collectionName && self.product.productTemplate.collectionId){
         NSString *templateId = self.product.selectedOptions[self.product.productTemplate.collectionId];
         if (templateId){
-            id selectedOptions = self.product.selectedOptions;
-            self.product = [OLProduct productWithTemplateId:templateId];
-            self.product.selectedOptions = selectedOptions;
+            OLProduct *product = [OLProduct productWithTemplateId:templateId];
+            product.selectedOptions = self.product.selectedOptions;
+            product.uuid = self.product.uuid;
+            self.product = product;
         }
     }
     
