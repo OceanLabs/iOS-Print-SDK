@@ -409,6 +409,34 @@ UIViewControllerPreviewingDelegate>
 #endif
 }
 
+- (void)setupBottomBorderTextFieldOnView:(OLCircleMaskCollectionViewCell *)cell{
+    UITextField *tf = [[UITextField alloc] init];
+    tf.userInteractionEnabled = NO;
+    tf.textAlignment = NSTextAlignmentCenter;
+    tf.adjustsFontSizeToFitWidth = YES;
+    tf.minimumFontSize = 1;
+    tf.font = [UIFont fontWithName:@"HelveticaNeue" size:35];
+    tf.textColor = [UIColor blackColor];
+    tf.tag = 1556;
+    
+    [cell.imageView.superview addSubview:tf];
+    
+    UIView *imageView = cell.imageView;
+    tf.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(tf, imageView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-5-[tf]-5-|",
+                         @"V:[imageView]-10-[tf(40)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [tf.superview addConstraints:con];
+}
+
 #pragma mark Button Actions
 
 - (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
@@ -623,6 +651,12 @@ UIViewControllerPreviewingDelegate>
     }
     
     cell.printContainerView.backgroundColor = printPhoto.edits.borderColor ? printPhoto.edits.borderColor : [UIColor whiteColor];
+    
+    if (printPhoto.edits.bottomBorderText.text){
+        [[cell.imageView.superview viewWithTag:1556] removeFromSuperview];
+        [self setupBottomBorderTextFieldOnView:cell];
+        [(UITextView *)[cell.imageView.superview viewWithTag:1556] setText:printPhoto.edits.bottomBorderText.text];
+    }
     
     return cell;
 }
