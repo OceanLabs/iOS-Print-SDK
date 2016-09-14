@@ -148,8 +148,8 @@
     [self.view bringSubviewToFront:self.hintView];
 }
 
-- (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
     
     if (self.product.productTemplate.maskImageURL){
         NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
@@ -205,12 +205,24 @@
 }
 
 - (void)applyProductImageLayers{
-    [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-        self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-    }];
-    [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-        self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-    }];
+    if (!self.deviceView.image){
+        self.deviceView.alpha = 0;
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+            self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            [UIView animateWithDuration:0.1 animations:^{
+                self.deviceView.alpha = 1;
+            }];
+        }];
+    }
+    if (!self.highlightsView.image){
+        self.highlightsView.alpha = 0;
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+            self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            [UIView animateWithDuration:0.1 animations:^{
+                self.highlightsView.alpha = 1;
+            }];
+        }];
+    }
 }
 
 -(void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
