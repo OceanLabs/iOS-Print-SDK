@@ -42,7 +42,6 @@
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
 - (UIEdgeInsets)imageInsetsOnContainer;
 @property (strong, nonatomic) UITextField *borderTextField;
-- (void)setupBottomBorderTextField;
 @end
 
 @interface OLCaseViewController ()
@@ -161,10 +160,6 @@
     }
     else{
         [self applyProductImageLayers];
-        [self setupBottomBorderTextField];
-        if (self.product.selectedOptions[@"polaroid_text"]){
-            self.borderTextField.text = self.product.selectedOptions[@"polaroid_text"];
-        }
     }
 }
 

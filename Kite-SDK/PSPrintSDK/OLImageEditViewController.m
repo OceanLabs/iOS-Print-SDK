@@ -483,6 +483,11 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
+    [self setupBottomBorderTextField];
+    if (self.edits.bottomBorderText.text){
+        self.borderTextField.text = self.edits.bottomBorderText.text;
+    }
+    
     if (self.previewView && !self.skipPresentAnimation){
         [UIView animateWithDuration:0.10 animations:^{
             self.previewView.alpha = 1;
@@ -905,13 +910,15 @@ const NSInteger kOLEditTagCrop = 40;
         [self.edits.textsOnPhoto addObject:textOnPhoto];
     }
     
+    if (self.borderTextField.text){
+        self.edits.bottomBorderText = [[OLTextOnPhoto alloc] init];
+        self.edits.bottomBorderText.text = self.borderTextField.text;
+    }
+
     if (asset){
         asset.edits = self.edits;
     }
     
-    if (self.borderTextField.text){
-        self.product.selectedOptions[@"polaroid_text"] = self.borderTextField.text;
-    }
 }
 
 - (void)onButtonDoneTapped:(id)sender {
@@ -1644,6 +1651,11 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     self.ctaButton.enabled = YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    self.ctaButton.enabled = YES;
+    return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
