@@ -295,7 +295,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
                 && [sheetQuantity isKindOfClass:[NSNumber class]] && [enabled isKindOfClass:[NSNumber class]]
                 && [sheetCosts isKindOfClass:[NSDictionary class]]) {
                 
-                NSMutableDictionary/*<String, NSDecimalNumber>*/ *costs = [[NSMutableDictionary alloc] init];
+                NSMutableDictionary<NSString *, NSDecimalNumber *> *costs = [[NSMutableDictionary alloc] init];
                 for (id key in sheetCosts) {
                     id val = sheetCosts[key];
                     if ([key isKindOfClass:[NSString class]] && [val isKindOfClass:[NSString class]]) {

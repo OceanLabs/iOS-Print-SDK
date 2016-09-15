@@ -52,7 +52,7 @@
 @implementation SignedS3RequestUploadDetails
 @end
 
-typedef void (^SignedS3UploadRequestCompletionHandler)(NSArray/*<SignedS3RequestUploadDetails>*/ *signedS3RequestUploadDetails, NSError *error);
+typedef void (^SignedS3UploadRequestCompletionHandler)(NSArray<SignedS3RequestUploadDetails *> *signedS3RequestUploadDetails, NSError *error);
 typedef void (^UploadToS3ProgressHandler)(long long bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite);
 typedef void (^UploadToS3CompletionHandler)(NSError *error);
 
@@ -100,7 +100,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     return [NSError errorWithDomain:kOLKiteSDKErrorDomain code:errorCode userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
 }
 
-- (void)registerImageURLAssets:(NSArray/*<OLAsset>*/ *)imageURLAssets completionHandler:(RegisterImageURLAssetsCompletionHandler)handler {
+- (void)registerImageURLAssets:(NSArray<OLAsset *> *)imageURLAssets completionHandler:(RegisterImageURLAssetsCompletionHandler)handler {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/asset/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
     NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
     
@@ -155,7 +155,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     }];
 }
 
-- (void)getSignedS3UploadRequestURLsWithAssets:(NSArray/*<OLAsset>*/ *)assets completionHandler:(SignedS3UploadRequestCompletionHandler)handler {
+- (void)getSignedS3UploadRequestURLsWithAssets:(NSArray<OLAsset *> *)assets completionHandler:(SignedS3UploadRequestCompletionHandler)handler {
     NSMutableString *mimeTypes = [[NSMutableString alloc] init];
     for (OLAsset *asset in assets) {
         if (mimeTypes.length > 0) {
@@ -298,7 +298,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     if (assetsToUpload.count > 0) {
         ++outstandingAsyncOperationsCount;
         __weak OLAssetUploadRequest *zelf = self;
-        [self getSignedS3UploadRequestURLsWithAssets:assetsToUpload completionHandler:^(NSArray/*<SignedS3RequestUploadDetails>*/ *signedS3RequestUploadDetails, NSError *error) {
+        [self getSignedS3UploadRequestURLsWithAssets:assetsToUpload completionHandler:^(NSArray<SignedS3RequestUploadDetails *> *signedS3RequestUploadDetails, NSError *error) {
             if (zelf.cancelled) return;
             NSAssert([NSThread isMainThread], @"Oops we should be calling back on the main thread");
             if (error && !notifiedDelegateOfSomeOutcome) {

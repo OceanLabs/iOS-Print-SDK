@@ -35,7 +35,7 @@
 
 @interface OLCountryListController : UITableViewController
 @property (strong, nonatomic) NSMutableArray *selected;
-@property (strong, nonatomic) NSMutableArray/*<NSArray<NSArray<OLCountry> > >*/ *sections;
+@property (strong, nonatomic) NSMutableArray<NSArray<OLCountry *> *> *sections;
 @end
 
 @interface OLCountryPickerController ()

@@ -88,7 +88,7 @@
 
 #pragma mark - OLAddressSelectionViewControllerDelegate methods
 
-- (void)addressSelectionController:(OLAddressSelectionViewController *)vc didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses {
+- (void)addressSelectionController:(OLAddressSelectionViewController *)vc didFinishPickingAddresses:(NSArray<OLAddress *> *)addresses {
     if (addresses.count > 0) {
         [self.delegate addressPicker:self didFinishPickingAddresses:addresses];
     } else {

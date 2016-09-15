@@ -772,7 +772,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 #pragma mark - OLAddressPickerController delegate
 
-- (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses {
+- (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray<OLAddress *> *)addresses {
     [self.shippingAddresses removeAllObjects];
     [self.selectedShippingAddresses removeAllObjects];
     for (OLAddress *address in addresses){

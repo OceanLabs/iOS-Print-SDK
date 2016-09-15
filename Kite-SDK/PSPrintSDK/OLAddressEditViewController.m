@@ -371,7 +371,7 @@ static const NSUInteger kTagTextField = 99;
 
 #pragma mark - OLCountryPickerControllerDelegate methods 
 
-- (void)countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray/*<OLCountry>*/ *)countries {
+- (void)countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray<OLCountry *> *)countries {
     [self dismissViewControllerAnimated:YES completion:nil];
     self.address.country = countries.lastObject;
     self.textFieldCountry.text = self.address.country.name;

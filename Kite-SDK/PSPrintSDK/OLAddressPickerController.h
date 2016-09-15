@@ -30,10 +30,11 @@
 #import <UIKit/UIKit.h>
 #import "OLNavigationController.h"
 
+@class OLAddress;
 @class OLAddressPickerController;
 
 @protocol OLAddressPickerControllerDelegate <NSObject>
-- (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses;
+- (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray<OLAddress *> *)addresses;
 - (void)addressPickerDidCancelPicking:(OLAddressPickerController *)picker;
 @end
 

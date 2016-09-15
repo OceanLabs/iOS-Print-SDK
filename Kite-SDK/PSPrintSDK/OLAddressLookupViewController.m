@@ -50,7 +50,7 @@
 @property (nonatomic, strong) UILabel *labelCountry;
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (nonatomic, strong) UISearchBar *searchBar;
-@property (nonatomic, strong) NSArray/*<OLAddress>*/ *searchResults;
+@property (nonatomic, strong) NSArray<OLAddress *> *searchResults;
 
 @property (nonatomic, strong) UIAlertView *errorAlertView;
 
@@ -231,7 +231,7 @@
 
 #pragma mark - OLCountryControllerPicker methods
 
-- (void)countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray/*<OLCountry>*/ *)countries {
+- (void)countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray<OLCountry *> *)countries {
     [self dismissViewControllerAnimated:YES completion:nil];
     if (self.country != countries.lastObject) {
         self.searchResults = @[]; // country has changed, clear the results as they're no longer applicable
