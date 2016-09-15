@@ -41,8 +41,8 @@ Use our SDK to unlock hidden revenue streams and add value for your users. *In u
 
 ## Requirements
 
-* Xcode 7
-* iOS 7.0+ target deployment
+* Xcode 8
+* iOS 8.0+ target deployment
 
 ## Installation
 
@@ -92,9 +92,9 @@ OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAss
 ```
 * Step 4: Profit!
 
-### iOS 9+ Security
+### iOS Security (ATS)
 
-Xcode 7 includes some new security features. In order to connect to the Kite servers you will need to add some exceptions to your project's info plist file. We need to add forward secrecy exceptions for Amazon S3 (which Kite uses) and PayPal (which is used for credit card processing even if you don't opt for PayPal integration). The following is what you need to copy your app's info plist:
+iOS includes a security feature called App Transport Security. In order to connect to the Kite servers you will need to add some exceptions to your project's info plist file. We need to add forward secrecy exceptions for Amazon S3 (which Kite uses) and PayPal (optional). The following is what you need to copy your app's info plist:
 
 ```
 	<key>NSAppTransportSecurity</key>
