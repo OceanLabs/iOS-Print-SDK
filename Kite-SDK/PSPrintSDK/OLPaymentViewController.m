@@ -1357,6 +1357,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         PayPalPaymentViewController *paymentViewController;
         PayPalConfiguration *payPalConfiguration = [[PayPalConfiguration alloc] init];
         payPalConfiguration.acceptCreditCards = NO;
+        payPalConfiguration.payPalShippingAddressOption = PayPalShippingAddressOptionProvided;
         paymentViewController = [[PayPalPaymentViewController alloc] initWithPayment:payment configuration:payPalConfiguration delegate:self];
         paymentViewController.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
         [self presentViewController:paymentViewController animated:YES completion:nil];
