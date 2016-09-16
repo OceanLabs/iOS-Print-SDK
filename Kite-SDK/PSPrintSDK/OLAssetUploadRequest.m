@@ -217,8 +217,13 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
                                                      delegateQueue:nil];
     
     self.s3UploadTask  = [session uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-        //TODO: Check HTTP codes
         if (zelf.cancelled) return;
+        NSInteger httpStatusCode = [(NSHTTPURLResponse *)response statusCode];
+        if ((httpStatusCode < 200 || httpStatusCode > 299) && httpStatusCode != 0) {
+            NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Image upload failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) httpStatusCode]);
+            
+            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
+        }
         if (error){
             dispatch_async(dispatch_get_main_queue(), ^{
                 completionHandler(error);

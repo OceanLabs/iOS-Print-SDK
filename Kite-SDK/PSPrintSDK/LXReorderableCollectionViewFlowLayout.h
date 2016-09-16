@@ -5,6 +5,7 @@
 //  Copyright (c) 2012 d--buzz. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 
 @interface LXReorderableCollectionViewFlowLayout : UICollectionViewFlowLayout <UIGestureRecognizerDelegate>
 
