@@ -31,6 +31,7 @@
 #import "OLInstagramImagePickerConstants.h"
 #import <NXOAuth2Client/NXOAuth2.h>
 #import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
 
 @interface OLKitePrintSDK ()
 + (NSString *)instagramRedirectURI;
@@ -131,8 +132,12 @@
 #pragma mark - Instagram Oauth notification callbacks
 
 - (void)onInstagramOAuthAuthenticateFail:(NSNotification *)notification {
-//    NSString *localizedErrorMessage = NSLocalizedString(@"Failed to log in to Instagram. Please check your internet connectivity and try again", @"");
-    //TODO show error
+    NSString *localizedErrorMessage = NSLocalizedString(@"Failed to log in to Instagram. Please check your internet connectivity and try again", @"");
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:localizedErrorMessage preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }]];
+    [self presentViewController:ac animated:YES completion:NULL];
 }
 
 - (void)onInstagramOAuthAccountStoreDidChange:(NSNotification *)notification {
