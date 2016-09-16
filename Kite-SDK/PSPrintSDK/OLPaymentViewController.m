@@ -1248,6 +1248,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         payment.currencyCode = self.printOrder.currencyCode;
         payment.shortDescription = self.printOrder.paymentDescription;
         payment.intent = PayPalPaymentIntentAuthorize;
+        payment.shippingAddress = [PayPalShippingAddress shippingAddressWithRecipientName:[NSString stringWithFormat:@"%@ %@", self.printOrder.shippingAddress.recipientFirstName, self.printOrder.shippingAddress.recipientLastName]
+                                                                                withLine1:self.printOrder.shippingAddress.line1
+                                                                                withLine2:self.printOrder.shippingAddress.line2
+                                                                                 withCity:self.printOrder.shippingAddress.city
+                                                                                withState:self.printOrder.shippingAddress.stateOrCounty
+                                                                           withPostalCode:self.printOrder.shippingAddress.zipOrPostcode
+                                                                          withCountryCode:self.printOrder.shippingAddress.country.codeAlpha2];
         NSAssert(payment.processable, @"oops");
         
         PayPalPaymentViewController *paymentViewController;
