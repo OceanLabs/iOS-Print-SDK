@@ -256,7 +256,6 @@
 		2E898CD21CC518180041CCD8 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C00E1C7B218D009C1E42 /* libsqlite3.0.tbd */; };
 		2E898CD31CC518180041CCD8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C00C1C7B2139009C1E42 /* CoreData.framework */; };
 		2E898CD41CC518180041CCD8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E24453101BFD2C460086BF03 /* Accelerate.framework */; };
-		2E898CD51CC518180041CCD8 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD550D94188AA20100782D75 /* AssetsLibrary.framework */; };
 		2E898CD61CC518180041CCD8 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD93BB35187869A100316492 /* AddressBook.framework */; };
 		2E898CD71CC518180041CCD8 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD93BB36187869A100316492 /* AddressBookUI.framework */; };
 		2E898CD81CC518180041CCD8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6D186215790009DE03 /* CoreGraphics.framework */; };
@@ -1210,7 +1209,6 @@
 				2E898CD21CC518180041CCD8 /* libsqlite3.0.tbd in Frameworks */,
 				2E898CD31CC518180041CCD8 /* CoreData.framework in Frameworks */,
 				2E898CD41CC518180041CCD8 /* Accelerate.framework in Frameworks */,
-				2E898CD51CC518180041CCD8 /* AssetsLibrary.framework in Frameworks */,
 				2E898CD61CC518180041CCD8 /* AddressBook.framework in Frameworks */,
 				2E898CD71CC518180041CCD8 /* AddressBookUI.framework in Frameworks */,
 				2E898CD81CC518180041CCD8 /* CoreGraphics.framework in Frameworks */,
