@@ -316,7 +316,7 @@ static CGFloat fadeTime = 0.3;
                     [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
                     [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
                     [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
-                    if (self.navigationController.viewControllers.count <= 1){
+                    if (welf.navigationController.viewControllers.count <= 1){
                         UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                         
                         NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
@@ -344,7 +344,7 @@ static CGFloat fadeTime = 0.3;
             [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
             [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
             [vc safePerformSelector:@selector(setProduct:) withObject:product];
-            if (self.navigationController.viewControllers.count <= 1){
+            if (welf.navigationController.viewControllers.count <= 1){
                 UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                 NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
                 if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
@@ -379,7 +379,7 @@ static CGFloat fadeTime = 0.3;
         [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
         [vc safePerformSelector:@selector(setFilterProducts:) withObject:welf.filterProducts];
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
-        if (self.navigationController.viewControllers.count <= 1){
+        if (welf.navigationController.viewControllers.count <= 1){
             UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
             NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
             if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
