@@ -141,7 +141,7 @@ static char tasksKey;
 
 - (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler{
     for (id key in self.tasks.allKeys){
-        if (![key isEqual:asset.localIdentifier]){
+        if (![key isEqual:asset.localIdentifier] && [self.tasks[key] isKindOfClass:[NSNumber class]]){
             PHImageRequestID requestID = (PHImageRequestID)[self.tasks[key] longValue];
             [[PHImageManager defaultManager] cancelImageRequest:requestID];
             [self.tasks removeObjectForKey:key];
