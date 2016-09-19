@@ -81,6 +81,10 @@
     //    }
     //    else{
     [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.alignment = NSTextAlignmentNatural;
+    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedString.length)];
     //    }
     
     NSRange strikeThroughRange = [[attributedString string] rangeOfString:@"\\~.*\\~" options:NSRegularExpressionSearch];
