@@ -420,7 +420,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }
         }
         [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
-        [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
+        [[OLUserSession currentSession] clearUserSelectedPhotos];
     }
     
     if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
@@ -799,7 +799,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void(^)())transistionToReceiptBlock{
     __weak OLPaymentViewController *welf = self;
     return ^{
-        [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
+        [[OLUserSession currentSession] clearUserSelectedPhotos];
         if ([welf.delegate respondsToSelector:@selector(shouldDismissPaymentViewControllerAfterPayment)] && self.delegate.shouldDismissPaymentViewControllerAfterPayment){
             [(UITableView *)[(OLReceiptViewController *)welf.delegate tableView] reloadData];
             [welf.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];

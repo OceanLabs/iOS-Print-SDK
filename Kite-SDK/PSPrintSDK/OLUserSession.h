@@ -50,4 +50,5 @@ typedef NSUInteger OLUserSessionCleanupOption;
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions;
 - (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;
 - (void)resetUserSelectedPhotos;
+- (void)clearUserSelectedPhotos;
 @end

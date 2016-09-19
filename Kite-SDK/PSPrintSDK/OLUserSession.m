@@ -32,6 +32,7 @@
 #import <NXOAuth2Client/NXOAuth2AccountStore.h>
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
+#import "OLAsset+Private.h"
 
 @interface OLPrintOrder (Private)
 
@@ -72,8 +73,16 @@
 }
 
 - (void)resetUserSelectedPhotos{
-    [self.userSelectedPhotos removeAllObjects];
+    [self clearUserSelectedPhotos];
     [self.userSelectedPhotos addObjectsFromArray:self.appAssets];
+}
+
+- (void)clearUserSelectedPhotos{
+    for (OLAsset *asset in self.userSelectedPhotos){
+        [asset unloadImage];
+    }
+    
+    [self.userSelectedPhotos removeAllObjects];
 }
 
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions{
