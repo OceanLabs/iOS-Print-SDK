@@ -2586,7 +2586,7 @@ an image!</string>
         <scene sceneID="kFc-fy-yh6">
             <objects>
                 <collectionViewController storyboardIdentifier="OLPosterViewController" id="AaA-7l-tb4" customClass="OLPosterViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="LuI-LA-fpj">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" dataMode="prototypes" id="LuI-LA-fpj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3353,12 +3353,10 @@ only £9.99 £8.99</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <pageControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="SlG-Jg-rlG">
-                                <frame key="frameInset" minX="20" minY="462" width="560" height="37"/>
+                            <pageControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="SlG-Jg-rlG">
                                 <color key="currentPageIndicatorTintColor" red="0.59607843140000005" green="0.59607843140000005" blue="0.59215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </pageControl>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y0x-Gv-fxJ" userLabel="Details view">
-                                <frame key="frameInset" minY="501" width="600" height="450"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y0x-Gv-fxJ" userLabel="Details view">
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <constraints>
@@ -3368,19 +3366,16 @@ only £9.99 £8.99</string>
                                     <outletCollection property="gestureRecognizers" destination="6U1-U8-FiW" appends="YES" id="ExD-Y0-O8M"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ewi-GK-x4I">
-                                <frame key="frameInset" minY="497" width="600" height="4"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewi-GK-x4I">
                                 <color key="backgroundColor" red="0.95294117649999999" green="0.47450980390000003" blue="0.37647058820000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="4" id="c0Y-bl-wxY"/>
                                 </constraints>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="white gradient" translatesAutoresizingMaskIntoConstraints="NO" id="o7X-JN-dxV">
-                                <frame key="frameInset" minY="545" width="600" height="100"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="white gradient" translatesAutoresizingMaskIntoConstraints="NO" id="o7X-JN-dxV">
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ra5-Gi-wGw">
-                                <frame key="frameInset" minX="5" minY="545" width="590" height="50"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ra5-Gi-wGw">
                                 <color key="backgroundColor" red="0.12549019610000001" green="0.49803921569999998" blue="0.65490196079999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="Yz0-ae-PVI"/>
