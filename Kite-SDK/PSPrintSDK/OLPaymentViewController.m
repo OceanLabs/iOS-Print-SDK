@@ -1709,6 +1709,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     shippingAddress.stateOrCounty = payment.shippingContact.postalAddress.state;
     shippingAddress.zipOrPostcode = payment.shippingContact.postalAddress.postalCode;
     shippingAddress.country = [OLCountry countryForCode:payment.shippingContact.postalAddress.ISOCountryCode];
+    if (!shippingAddress.country){
+        shippingAddress.country = [OLCountry countryForName:payment.shippingContact.postalAddress.country];
+    }
     email = payment.shippingContact.emailAddress;
     phone = [payment.shippingContact.phoneNumber stringValue];
 #else 
