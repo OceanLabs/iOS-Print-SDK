@@ -44,7 +44,6 @@ static const NSUInteger kTagInputFieldLabel = 100;
 @interface OLCheckoutViewController : UITableViewController
 
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
-@property (weak, nonatomic) id<OLKiteDelegate> kiteDelegate;
 
 @property (strong, nonatomic) NSMutableArray *shippingAddresses;
 @property (strong, nonatomic) NSMutableArray *selectedShippingAddresses;

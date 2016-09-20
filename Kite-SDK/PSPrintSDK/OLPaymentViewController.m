@@ -359,7 +359,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.shippingDetailsBox.alpha = 1;
     }
     
-    id<OLKiteDelegate> kiteDelegate = [OLKiteUtils kiteDelegate:self];
+    id<OLKiteDelegate> kiteDelegate = [OLUserSession currentSession].kiteDelegate;
     if (([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && ![kiteDelegate shouldShowContinueShoppingButton]) || [OLKiteABTesting sharedInstance].launchedWithPrintOrder || self.navigationController.viewControllers.firstObject == self){
         [self.paymentButton1 removeFromSuperview];
     }

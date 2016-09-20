@@ -113,6 +113,14 @@ static CGFloat fadeTime = 0.3;
     return _customNavigationItem;
 }
 
+- (void)setDelegate:(id<OLKiteDelegate>)delegate{
+    [OLUserSession currentSession].kiteDelegate = delegate;
+}
+
+- (id<OLKiteDelegate>)delegate{
+    return [OLUserSession currentSession].kiteDelegate;
+}
+
 - (OLPrintOrder *)basketOrder{
     return [OLUserSession currentSession].printOrder;
 }
@@ -217,8 +225,6 @@ static CGFloat fadeTime = 0.3;
     }
     
     [[OLUserSession currentSession] calcScreenScaleForTraitCollection:self.traitCollection];
-    
-    [OLAnalytics setKiteDelegate:self.delegate];
     
     self.operationQueue = [NSOperationQueue mainQueue];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
@@ -400,9 +406,7 @@ static CGFloat fadeTime = 0.3;
         //Prefetch themed-SDK images
         [[OLKiteABTesting sharedInstance] prefetchRemoteImages];
     }];
-    
-    [OLAnalytics setKiteDelegate:self.delegate];
-    
+        
     [self.operationQueue addOperation:self.transitionOperation];
 }
 
@@ -495,6 +499,7 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)dealloc{
+    [OLUserSession currentSession].kiteDelegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

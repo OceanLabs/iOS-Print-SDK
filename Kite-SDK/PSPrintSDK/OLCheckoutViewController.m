@@ -42,6 +42,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"
 #import "OLImageDownloader.h"
+#import "OLUserSession.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
@@ -332,7 +333,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         self.printOrder.shippingAddress = nil;
     }
         
-    if (![self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [self.kiteDelegate shouldStoreDeliveryAddresses]){
+    if (![[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:email forKey:kKeyEmailAddress];
         [defaults setObject:phone forKey:kKeyPhone];
@@ -351,7 +352,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.presentedModally = self.presentedModally;
     vc.delegate = self.delegate;
-    vc.kiteDelegate = self.kiteDelegate;
     vc.showOtherOptions = self.showOtherOptions;
     
     [self.navigationController pushViewController:vc animated:YES];
@@ -410,7 +410,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)populateDefaultEmailAndPhone {
-    if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+    if ([[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
         self.textFieldEmail.text = self.printOrder.email;
         self.textFieldPhone.text = self.printOrder.phone;
         return;
@@ -445,7 +445,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)userEmail {
     if (self.textFieldEmail == nil) {
-        if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+        if ([[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
             return @"";
         }
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -458,7 +458,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)userPhone {
     if (self.textFieldPhone == nil) {
-        if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+        if ([[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
             return @"";
         }
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -475,8 +475,8 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (BOOL)showPhoneEntryField {
-    if ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
-        return [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
+    if ([[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
+        return [[OLUserSession currentSession].kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
     }
     
     return [OLKiteABTesting sharedInstance].requirePhoneNumber;
@@ -532,7 +532,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (section == kSectionPhoneNumber){
         return 44;
     }
-    if (![self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![self.kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
+    if (![[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![[OLUserSession currentSession].kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
         return 28;
     }
     return 44;
@@ -542,7 +542,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (section != kSectionEmailAddress){
         return nil;
     }
-    if (![self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![self.kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
+    if (![[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![[OLUserSession currentSession].kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
         return nil;
     }
     

@@ -246,7 +246,6 @@ static const NSInteger kSectionPages = 2;
     photobook.userSelectedPhotos = [OLUserSession currentSession].userSelectedPhotos;
     photobook.photobookPhotos = self.photobookPhotos;
     photobook.product = self.product;
-    photobook.delegate = self.delegate;
     
     [self.navigationController pushViewController:photobook animated:YES];
 }
@@ -753,7 +752,6 @@ static const NSInteger kSectionPages = 2;
         }
         
         photobook.product = self.product;
-        photobook.delegate = self.delegate;
         photobook.editMode = YES;
         [self addChildViewController:photobook];
         photobook.view.alpha = 0;

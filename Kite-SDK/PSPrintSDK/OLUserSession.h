@@ -40,12 +40,15 @@ enum {
 };
 typedef NSUInteger OLUserSessionCleanupOption;
 
+@protocol OLKiteDelegate;
+
 @interface OLUserSession : NSObject
 
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *userSelectedPhotos;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSArray<OLAsset *> *appAssets;
 @property (assign, nonatomic) CGFloat screenScale;
+@property (weak, nonatomic) id<OLKiteDelegate>kiteDelegate;
 + (instancetype)currentSession;
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions;
 - (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;

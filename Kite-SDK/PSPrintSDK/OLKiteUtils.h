@@ -44,8 +44,6 @@
 
 + (NSString *)userPhone:(UIViewController *)topVC;
 
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-
 + (OLKiteViewController *)kiteVcForViewController:(UIViewController *)vc;
 
 + (BOOL)assetArrayContainsPDF:(NSArray *)array;

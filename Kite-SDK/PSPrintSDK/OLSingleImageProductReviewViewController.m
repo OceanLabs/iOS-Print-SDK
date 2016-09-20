@@ -353,7 +353,6 @@
             [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
                 [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
                 [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-                [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
                 
                 [self.navigationController pushViewController:vc animated:YES];
             }];

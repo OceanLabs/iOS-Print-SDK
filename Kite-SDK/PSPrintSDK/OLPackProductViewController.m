@@ -327,7 +327,6 @@ UIViewControllerPreviewingDelegate>
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
-        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
         [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
         [self.navigationController pushViewController:vc animated:YES];
     }
@@ -335,7 +334,6 @@ UIViewControllerPreviewingDelegate>
         [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
             [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
             [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
             
             [self.navigationController pushViewController:vc animated:YES];
         }];

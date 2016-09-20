@@ -43,7 +43,6 @@
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
-#import "FBSDKLoginManager.h"
 
 @class OLCustomPhotoProvider;
 
@@ -93,16 +92,16 @@
 
 + (BOOL)facebookEnabled{
     //TODO check that it is actually set up
-    if ([FBSDKLoginManager class]){
+//    if ([FBSDKLoginManager class]){
         return YES;
-    }
+//    }
     
-    return NO;
+//    return NO;
 }
 
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
     OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:topVc];
-    id<OLKiteDelegate> delegate = kiteVc.delegate;
+    id<OLKiteDelegate> delegate = [OLUserSession currentSession].kiteDelegate;
     
     if ([delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] && ![delegate kiteControllerShouldAllowUserToAddMorePhotos:kiteVc]){
         return NO;
@@ -120,11 +119,6 @@
     }
     
     return YES;
-}
-
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
-    return kiteVC.delegate;
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{

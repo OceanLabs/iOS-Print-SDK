@@ -39,6 +39,7 @@
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLUserSession.h"
 
 static const NSUInteger kSectionDeliveryDetails = 0;
 static const NSUInteger kSectionEmail = 1;
@@ -179,7 +180,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (void)populateDefaultDeliveryAddress {
-    if (![self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [self.kiteDelegate shouldStoreDeliveryAddresses]){
+    if (![[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *firstName = [defaults stringForKey:kKeyRecipientFirstName];
         NSString *lastName = [defaults stringForKey:kKeyRecipientName];
@@ -244,7 +245,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.delegate = self.delegate;
     
-    if (![self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [self.kiteDelegate shouldStoreDeliveryAddresses]){
+    if (![[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:email forKey:kKeyEmailAddress];
         [defaults setObject:phone forKey:kKeyPhone];
@@ -255,7 +256,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (void)saveAddress{
-    if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+    if ([[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
         return;
     }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -501,7 +502,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     self.activeTextView = nil;
 }
 
--(void) countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray *)countries{    
+-(void) countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray *)countries{
     [self dismissViewControllerAnimated:YES completion:nil];
     self.shippingAddress.country = countries.lastObject;
     self.textFieldCountry.text = self.shippingAddress.country.name;
