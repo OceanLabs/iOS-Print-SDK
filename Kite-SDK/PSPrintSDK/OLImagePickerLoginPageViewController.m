@@ -61,9 +61,12 @@
         [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Authorise", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     }
     self.label.text = [NSString stringWithFormat:@"We need access to your %@ photos", providerName];
+}
+
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
     
     [self.loginButton makeRoundRectWithRadius:self.loginButton.frame.size.height / 2.0];
-
 }
 
 - (IBAction)onButtonLoginTapped:(UIButton *)sender {
