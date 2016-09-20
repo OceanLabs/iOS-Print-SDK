@@ -43,6 +43,7 @@
 #import "OLImagePreviewViewController.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
+#import "UIImageView+FadeIn.h"
 
 CGFloat posterMargin = 2;
 
@@ -357,10 +358,11 @@ CGFloat posterMargin = 2;
     
     self.editingPrintPhoto = printPhoto;
     
-    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
-        previewVc.image = image;
-    }];
+    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
+    __weak OLImagePreviewViewController *weakVc = previewVc;
+    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingPrintPhoto size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+        [weakVc.imageView setProgress:progress];
+    }completionHandler:NULL];
     previewVc.providesPresentationContextTransitionStyle = true;
     previewVc.definesPresentationContext = true;
     previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;

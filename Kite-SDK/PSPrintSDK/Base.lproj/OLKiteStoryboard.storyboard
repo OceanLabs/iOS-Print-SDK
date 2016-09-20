@@ -90,7 +90,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oYN-uJ-Rfi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-465" y="989"/>
+            <point key="canvasLocation" x="-250" y="913"/>
         </scene>
         <!--Product Overview Page Content View Controller-->
         <scene sceneID="0If-qa-Bx3">
@@ -188,8 +188,8 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="XU5-O7-g23"/>
                                 <exclude reference="G30-im-oE3"/>
+                                <exclude reference="XU5-O7-g23"/>
                             </mask>
                         </variation>
                     </view>
@@ -201,23 +201,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hQe-al-rzP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-188" y="-1384"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="Xb6-HD-CEQ">
-            <objects>
-                <navigationController storyboardIdentifier="ProductsNavigationController" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2So-Cm-Lml" customClass="OLNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Hgc-vO-95m">
-                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="U81-HI-b1P" kind="relationship" relationship="rootViewController" id="LO8-Jc-CJG"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dKy-nE-KFa" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1057" y="-562"/>
+            <point key="canvasLocation" x="-247" y="-1338"/>
         </scene>
         <!--Frame Order Review View Controller-->
         <scene sceneID="6Dd-YI-JlP">
@@ -415,36 +399,6 @@ to rearrange the photos</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qG7-3J-9cO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2188" y="913"/>
-        </scene>
-        <!--Image Preview View Controller-->
-        <scene sceneID="8Tu-YV-F2q">
-            <objects>
-                <viewController storyboardIdentifier="OLImagePreviewViewController" id="o13-56-1Vl" customClass="OLImagePreviewViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="sGk-UT-FGv"/>
-                        <viewControllerLayoutGuide type="bottom" id="RYa-tY-59P"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="XQM-aU-k0a">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zUO-HA-dsg"/>
-                        </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="zUO-HA-dsg" secondAttribute="trailing" id="Cea-Z7-cbv"/>
-                            <constraint firstItem="zUO-HA-dsg" firstAttribute="leading" secondItem="XQM-aU-k0a" secondAttribute="leading" id="GeM-mx-VmD"/>
-                            <constraint firstItem="RYa-tY-59P" firstAttribute="top" secondItem="zUO-HA-dsg" secondAttribute="bottom" id="jRB-4D-Cc5"/>
-                            <constraint firstItem="zUO-HA-dsg" firstAttribute="top" secondItem="sGk-UT-FGv" secondAttribute="bottom" id="lcy-xH-48w"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="imageView" destination="zUO-HA-dsg" id="RdX-4j-gs8"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="MSf-Yy-h1x" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="493" y="1676"/>
         </scene>
         <!--Payment View Controller-->
         <scene sceneID="6kq-BL-dwu">
@@ -1150,7 +1104,7 @@ to rearrange the photos</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j3a-cE-iKY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3738" y="-1330"/>
+            <point key="canvasLocation" x="3746" y="-1345"/>
         </scene>
         <!--Photobook Page Blank Content View Controller-->
         <scene sceneID="fHu-Fx-0MW">
@@ -1232,7 +1186,7 @@ to rearrange the photos</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zbp-qJ-ahZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4402" y="-2130"/>
+            <point key="canvasLocation" x="4516" y="-1345"/>
         </scene>
         <!--Product Home View Controller-->
         <scene sceneID="utb-1P-DTs">
@@ -1618,7 +1572,7 @@ to rearrange the photos</string>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bnp-ON-2Gu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-188" y="-562"/>
+            <point key="canvasLocation" x="-249" y="-581"/>
         </scene>
         <!--Case View Controller-->
         <scene sceneID="RKn-QM-T9w">
@@ -1786,7 +1740,7 @@ an image!</string>
         <scene sceneID="dR2-z7-yB6">
             <objects>
                 <collectionViewController storyboardIdentifier="OrderReviewViewController" id="7wc-Kp-jtQ" customClass="OLPackProductViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2229,7 +2183,7 @@ an image!</string>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vsq-oC-uOo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="531" y="-562"/>
+            <point key="canvasLocation" x="529" y="-580"/>
         </scene>
         <!--Photobook View Controller-->
         <scene sceneID="VAM-9o-3tT">
@@ -2528,7 +2482,7 @@ an image!</string>
         <scene sceneID="kFc-fy-yh6">
             <objects>
                 <collectionViewController storyboardIdentifier="OLPosterViewController" id="AaA-7l-tb4" customClass="OLPosterViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="LuI-LA-fpj">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" dataMode="prototypes" id="LuI-LA-fpj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2870,7 +2824,7 @@ only £9.99 £8.99</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iQ8-0f-KPs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="524" y="-1320"/>
+            <point key="canvasLocation" x="530" y="-1338"/>
         </scene>
         <!--Image Picker Login Page View Controller-->
         <scene sceneID="bOS-mN-cdO">
@@ -3127,7 +3081,7 @@ only £9.99 £8.99</string>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1364" y="-1345"/>
+            <point key="canvasLocation" x="1364" y="-1338"/>
         </scene>
         <!--Pick Your Images-->
         <scene sceneID="4yn-Zk-3xA">
