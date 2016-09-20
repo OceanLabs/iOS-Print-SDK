@@ -70,22 +70,13 @@
             return;
         }
         
-//        NSMutableArray *paths = [[NSMutableArray alloc] init];
-//        for (NSUInteger i = 0; i < albums.count; ++i) {
-//            [paths addObject:[NSIndexPath indexPathForRow:welf.albums.count + i inSection:0]];
-//        }
         
         [welf.albums addObjectsFromArray:albums];
-//        if (welf.albums.count == albums.count) {
-//            // first insert request
-//            [welf.collectionView reloadData];
-//        } else {
-//            [welf.collectionView insertItemsAtIndexPaths:paths];
-//        }
         
         if (nextPageRequest) {
-            //            welf.tableView.tableFooterView = welf.loadingFooter;
-        } else {
+            
+        }
+        else {
             welf.albumLabel.text = welf.albums.firstObject.name;
             for (OLFacebookAlbum *album in welf.albums){
                 OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[[NSMutableArray alloc] init] name:album.name];
@@ -100,7 +91,6 @@
             
             welf.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:welf.albums.firstObject];
             [welf loadNextFacebookPage];
-            //            welf.tableView.tableFooterView = nil;
         }
         
     }];

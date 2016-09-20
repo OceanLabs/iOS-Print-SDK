@@ -90,13 +90,14 @@
     return [OLKitePrintSDK QRCodeUploadEnabled];
 }
 
-+ (BOOL)facebookEnabled{
-    //TODO check that it is actually set up
-//    if ([FBSDKLoginManager class]){
-        return YES;
-//    }
++ (BOOL)facebookEnabled{    
+    Class FBSDKLoginManagerClass = NSClassFromString (@"FBSDKLoginManager");
     
-//    return NO;
+    if ([FBSDKLoginManagerClass class]){
+        return YES;
+    }
+    
+    return NO;
 }
 
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc{

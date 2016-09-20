@@ -71,7 +71,12 @@
 }
 
 - (void)getPhotos:(OLFacebookPhotosForAlbumRequestHandler)handler {
-    if ([FBSDKAccessToken currentAccessToken]) {
+    Class FBSDKAccessTokenClass = NSClassFromString (@"FBSDKAccessToken");
+    SEL aSelector = NSSelectorFromString(@"currentAccessToken");
+    IMP imp = [FBSDKAccessTokenClass methodForSelector:aSelector];
+    id (*func)(id, SEL) = (void *)imp;
+    
+    if (func(FBSDKAccessTokenClass, aSelector)) {
         // connection is open, perform the request
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         NSString *graphPath = [NSString stringWithFormat:@"%@/photos?fields=picture,source,id,images&limit=100", self.album.albumId];
