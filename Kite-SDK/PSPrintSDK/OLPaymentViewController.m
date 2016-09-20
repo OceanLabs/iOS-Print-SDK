@@ -281,11 +281,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 +(BOOL)isApplePayAvailable{
-#ifdef __IPHONE_10_0
+    //Disable Apple Pay on iOS 8 because we need the Contacts framework. There's in issue in Xcode 8.0 that doesn't include some old symbols in PassKit that crashes iOS 9 apps built with frameworks on launch. Did Not test that they crash iOS 8, but disabled to be safe.
     if (![CNContact class]){
         return NO;
     }
-#endif
 #ifdef OL_KITE_OFFER_APPLE_PAY
     return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
 #else
@@ -1580,7 +1579,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     OLAddress *shippingAddress = [[OLAddress alloc] init];
     NSString *email;
     NSString *phone;
-#ifdef __IPHONE_10_0
     shippingAddress.recipientFirstName = payment.shippingContact.name.givenName;
     shippingAddress.recipientLastName = payment.shippingContact.name.familyName;
     shippingAddress.line1 = payment.shippingContact.postalAddress.street;
@@ -1593,44 +1591,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     email = payment.shippingContact.emailAddress;
     phone = [payment.shippingContact.phoneNumber stringValue];
-#else 
-    ABRecordRef address = payment.shippingAddress;
-    shippingAddress.recipientFirstName = (__bridge_transfer NSString *)ABRecordCopyValue(address, givenName);
-    shippingAddress.recipientLastName = (__bridge_transfer NSString *)ABRecordCopyValue(address, kABPersonLastNameProperty);
-    
-    CFTypeRef values = ABRecordCopyValue(address, kABPersonAddressProperty);
-    for (NSInteger i = 0; i < ABMultiValueGetCount(values); i++){
-        NSDictionary *dict = (__bridge_transfer NSDictionary *)ABMultiValueCopyValueAtIndex(values, i);
-        shippingAddress.line1 = [dict objectForKey:(id)kABPersonAddressStreetKey];
-        shippingAddress.city = [dict objectForKey:(id)kABPersonAddressCityKey];
-        shippingAddress.stateOrCounty = [dict objectForKey:(id)kABPersonAddressStateKey];
-        shippingAddress.zipOrPostcode = [dict objectForKey:(id)kABPersonAddressZIPKey];
-        shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryCodeKey]];
-        if (!shippingAddress.country){
-            shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryKey]];
-        }
-        if (!shippingAddress.country){
-            shippingAddress.country = [OLCountry countryForName:[dict objectForKey:(id)kABPersonAddressCountryKey]];
-        }
-        if (!shippingAddress.country){
-            completion(PKPaymentAuthorizationStatusFailure);
-        }
-    }
-    
-    if (![shippingAddress isValidAddress]){
-        completion(PKPaymentAuthorizationStatusInvalidShippingPostalAddress);
-        return;
-    }
-
-    CFTypeRef emails = ABRecordCopyValue(address, kABPersonEmailProperty);
-    for (NSInteger i = 0; i < ABMultiValueGetCount(emails); i++){
-        email = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(emails, i));
-    }
-    CFTypeRef phones = ABRecordCopyValue(address, kABPersonPhoneProperty);
-    for (NSInteger i = 0; i < ABMultiValueGetCount(phones); i++){
-        phone = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(phones, i));
-    }
-#endif
     
     self.printOrder.shippingAddress = shippingAddress;
     
