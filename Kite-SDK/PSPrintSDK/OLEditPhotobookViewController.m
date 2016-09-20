@@ -438,7 +438,7 @@ static const NSInteger kSectionPages = 2;
     cropVc.providesPresentationContextTransitionStyle = true;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    [cropPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+    [cropPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = cropPhoto.edits;
         //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;

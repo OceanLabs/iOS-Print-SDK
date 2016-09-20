@@ -108,7 +108,7 @@ CGFloat margin = 2;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
 //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
@@ -166,7 +166,7 @@ CGFloat margin = 2;
     self.editingPrintPhoto = printPhoto;
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         previewVc.image = image;
     }];
     previewVc.providesPresentationContextTransitionStyle = true;
@@ -182,7 +182,7 @@ CGFloat margin = 2;
     cropVc.aspectRatio = 1;
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image){
+    }completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
         cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
@@ -285,7 +285,7 @@ CGFloat margin = 2;
         OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
         [printPhoto imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
             [cellImage setProgress:progress];
-        }completion:^(UIImage *image){
+        }completion:^(UIImage *image, NSError *error){
             dispatch_async(dispatch_get_main_queue(), ^{
                 cellImage.image = image;
             });

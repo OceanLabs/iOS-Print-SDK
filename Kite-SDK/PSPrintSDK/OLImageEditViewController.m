@@ -1789,7 +1789,7 @@ const NSInteger kOLEditTagCrop = 40;
         dispatch_async(dispatch_get_main_queue(), ^{
             [welf.cropView setProgress:progress];
         });
-    } completion:^(UIImage *image){
+    } completion:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
             welf.fullImage = image;
             

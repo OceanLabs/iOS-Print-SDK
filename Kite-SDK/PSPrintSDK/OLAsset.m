@@ -267,11 +267,11 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
-    [self backgroundImageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image){
-        if (image){ //&& !error
+    [self backgroundImageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+        if (image && !error){
             NSData *data = UIImageJPEGRepresentation(image, 0.7);
             dispatch_async(dispatch_get_main_queue(), ^{
-               handler(data, nil);
+               handler(data, error);
             });
             
         }
@@ -283,19 +283,19 @@ static NSOperationQueue *imageOperationQueue;
     }];
 }
 
-- (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image))handler{
+- (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler{
     [self backgroundImageWithSize:size applyEdits:applyEdits progress:^(float p){
         dispatch_async(dispatch_get_main_queue(), ^{
             progress(p);
         });
-    }completion:^(UIImage *image){
+    }completion:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
-            handler(image);
+            handler(image, error);
         });
     }];
 }
 
-- (void)backgroundImageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image))handler{
+- (void)backgroundImageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler{
     if (!handler){
         //Nothing to do really
         return;
@@ -308,7 +308,7 @@ static NSOperationQueue *imageOperationQueue;
     
     if (self.cachedEditedImage) {
         if (size.height * [OLUserSession currentSession].screenScale <= self.cachedEditedImage.size.height || size.width * [OLUserSession currentSession].screenScale <= self.cachedEditedImage.size.width){
-            handler(self.cachedEditedImage);
+            handler(self.cachedEditedImage, nil);
             return;
         }
     }
@@ -337,20 +337,20 @@ static NSOperationQueue *imageOperationQueue;
                             if (!fullResolution){
                                 self.cachedEditedImage = image;
                             }
-                            handler(image);
+                            handler(image, nil);
                         }];
                     }
                     else{ //Image is already resized, no need to do it again
                         if (!fullResolution){
                             self.cachedEditedImage = image;
                         }
-                        handler(image);
+                        handler(image, nil);
                     }
                 }
                 else{
                     self.corrupt = YES;
                     NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                    handler([UIImage imageWithData:data]);
+                    handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
                 }
             }];
         }
@@ -359,7 +359,7 @@ static NSOperationQueue *imageOperationQueue;
                 if (!fullResolution){
                     self.cachedEditedImage = image;
                 }
-                handler(image);
+                handler(image, nil);
             }];
         }
         else if (self.assetType == kOLAssetTypeImageFilePath){
@@ -368,7 +368,7 @@ static NSOperationQueue *imageOperationQueue;
                 if (!fullResolution){
                     self.cachedEditedImage = image;
                 }
-                handler(image);
+                handler(image, nil);
             }];
         }
         else if (/*self.assetType == kOLAssetTypeFacebookPhoto || self.assetType == kOLAssetTypeInstagramPhoto || */self.assetType == kOLAssetTypeRemoteImageURL) {
@@ -385,7 +385,7 @@ static NSOperationQueue *imageOperationQueue;
                         if (progress){
                             progress(1);
                         }
-                        handler(image);
+                        handler(image, nil);
                     }
                 }];
             }];
@@ -396,13 +396,13 @@ static NSOperationQueue *imageOperationQueue;
                     if (!fullResolution){
                         self.cachedEditedImage = image;
                     }
-                    handler(image);
+                    handler(image, nil);
                 }];
             }];
         }
         else if (self.assetType == kOLAssetTypeCorrupt){
             NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-            handler([UIImage imageWithData:data]);
+            handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
         }
         
     }];

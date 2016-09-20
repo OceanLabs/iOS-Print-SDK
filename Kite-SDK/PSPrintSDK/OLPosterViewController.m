@@ -192,7 +192,7 @@ CGFloat posterMargin = 2;
     
     [printPhoto imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
         [imageView setProgress:progress];
-    } completion:^(UIImage *image){
+    } completion:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
             imageView.image = image;
             [activity stopAnimating];
@@ -329,7 +329,7 @@ CGFloat posterMargin = 2;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
         //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
@@ -358,7 +358,7 @@ CGFloat posterMargin = 2;
     self.editingPrintPhoto = printPhoto;
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         previewVc.image = image;
     }];
     previewVc.providesPresentationContextTransitionStyle = true;
@@ -374,7 +374,7 @@ CGFloat posterMargin = 2;
     cropVc.aspectRatio = 1;
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image){
+    }completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
         cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;

@@ -381,7 +381,7 @@ UIViewControllerPreviewingDelegate>
     self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
     
     OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         previewVc.image = image;
     }];
     previewVc.providesPresentationContextTransitionStyle = true;
@@ -397,7 +397,7 @@ UIViewControllerPreviewingDelegate>
     cropVc.aspectRatio = [self productAspectRatio];
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image){
+    }completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
         cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
@@ -517,7 +517,7 @@ UIViewControllerPreviewingDelegate>
     
     self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
     
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 0;

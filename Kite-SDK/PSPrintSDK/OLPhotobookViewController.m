@@ -566,7 +566,7 @@ static const CGFloat kBookEdgePadding = 38;
     if (self.coverImageView){
         [self.coverPhoto imageWithSize:self.coverImageView.frame.size applyEdits:YES progress:^(float progress){
             [welf.coverImageView setProgress:progress];
-        }completion:^(UIImage *image){
+        }completion:^(UIImage *image, NSError *error){
             dispatch_async(dispatch_get_main_queue(), ^{
                 welf.coverImageView.image = image;
             });
@@ -918,7 +918,7 @@ static const CGFloat kBookEdgePadding = 38;
         cropVc.definesPresentationContext = true;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         
-        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             [cropVc setFullImage:image];
             cropVc.edits = self.croppingPrintPhoto.edits;
 //            cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
@@ -972,7 +972,7 @@ static const CGFloat kBookEdgePadding = 38;
     else{
         UIImageView *imageView = [page imageView];
         self.croppingPrintPhoto = self.photobookPhotos[index];
-        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
             cropVc.delegate = self;
             cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
