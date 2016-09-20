@@ -30,7 +30,7 @@
 #import "OLProductOverviewViewController.h"
 #import "OLProductOverviewPageContentViewController.h"
 #import "OLProduct.h"
-#import "OLOrderReviewViewController.h"
+#import "OLPackProductViewController.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
 #import "OLProductTypeSelectionViewController.h"

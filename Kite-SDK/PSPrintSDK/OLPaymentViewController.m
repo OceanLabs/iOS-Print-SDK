@@ -63,7 +63,7 @@
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
-#import "OLOrderReviewViewController.h"
+#import "OLPackProductViewController.h"
 #import "OLPhotobookViewController.h"
 #import "NSObject+Utils.h"
 #import "OLProductOverviewViewController.h"
@@ -1012,7 +1012,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         return;
     }
     
-    OLOrderReviewViewController *editingVc = nvc.viewControllers.lastObject;
+    OLPackProductViewController *editingVc = nvc.viewControllers.lastObject;
     if ([editingVc respondsToSelector:@selector(saveJobWithCompletionHandler:)]){
         [editingVc saveJobWithCompletionHandler:^{
             [self.tableView reloadData];

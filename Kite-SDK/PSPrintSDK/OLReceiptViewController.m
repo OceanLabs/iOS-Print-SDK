@@ -44,7 +44,7 @@
 #import "OLConstants.h"
 #import "OLPaymentLineItem.h"
 #import "OLPrintOrderCost.h"
-#import "OLOrderReviewViewController.h"
+#import "OLPackProductViewController.h"
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+OLUtils.h"
@@ -65,7 +65,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)validateOrderSubmissionWithCompletionHandler:(void(^)(NSString *orderIdReceipt, NSError *error))handler;
 @end
 
-@interface OLOrderReviewViewController (Private)
+@interface OLPackProductViewController (Private)
 
 - (UIView *)footerViewForReceiptViewController:(UIViewController *)receiptVc;
 
@@ -155,7 +155,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     }
     
     if ([self.delegate respondsToSelector:@selector(footerViewForReceiptViewController:)]){
-        self.tableView.tableFooterView = [(OLOrderReviewViewController *)self.delegate footerViewForReceiptViewController:self];
+        self.tableView.tableFooterView = [(OLPackProductViewController *)self.delegate footerViewForReceiptViewController:self];
     }
 }
 

@@ -35,7 +35,7 @@
 
 @class OLProduct;
 
-@interface OLOrderReviewViewController : OLCollectionViewController <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
+@interface OLPackProductViewController : OLCollectionViewController <UINavigationControllerDelegate, OLScrollCropViewControllerDelegate>
 
 @property (nonatomic, strong) OLProduct *product;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;

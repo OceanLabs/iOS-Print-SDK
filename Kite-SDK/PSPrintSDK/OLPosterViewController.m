@@ -66,7 +66,7 @@ CGFloat posterMargin = 2;
 - (void)dismiss;
 @end
 
-@interface OLOrderReviewViewController (Private) <UICollectionViewDelegateFlowLayout>
+@interface OLPackProductViewController (Private) <UICollectionViewDelegateFlowLayout>
 
 - (BOOL) shouldGoToCheckout;
 - (void) doCheckout;

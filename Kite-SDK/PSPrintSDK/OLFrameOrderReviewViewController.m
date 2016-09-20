@@ -39,7 +39,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLUserSession.h"
 
-@interface OLOrderReviewViewController (Private)
+@interface OLPackProductViewController (Private)
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (BOOL) shouldGoToCheckout;

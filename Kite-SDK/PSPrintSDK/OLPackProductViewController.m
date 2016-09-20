@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import "OLOrderReviewViewController.h"
+#import "OLPackProductViewController.h"
 #import "OLAsset+Private.h"
 #import "OLProductPrintJob.h"
 #import "OLConstants.h"
@@ -82,7 +82,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@interface OLOrderReviewViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout,
+@interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout,
 UIViewControllerPreviewingDelegate>
 
 @property (weak, nonatomic) OLAsset *editingPrintPhoto;
@@ -94,7 +94,7 @@ UIViewControllerPreviewingDelegate>
 
 @end
 
-@implementation OLOrderReviewViewController
+@implementation OLPackProductViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
