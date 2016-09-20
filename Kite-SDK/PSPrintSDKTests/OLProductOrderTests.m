@@ -296,47 +296,5 @@
     [self submitJobs:@[job]];
 }
 
-- (void)testMultipleAddressesManual{
-    OLProductPrintJob *job1 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].firstObject]];
-    OLProductPrintJob *job2 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].lastObject]];
-    [self submitJobs:@[job1, job2]];
-}
-
-- (void)testMultipleAddresses{
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].firstObject]];
-    
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    [printOrder addPrintJob:job];
-    printOrder.email = @"ios_unit_test@kite.ly";
-    
-    OLAddress *address1 = [OLAddress kiteTeamAddress];
-    OLAddress *a = [[OLAddress alloc] init];
-    a.recipientFirstName = @"Deon";
-    a.recipientLastName = @"Botha";
-    a.line1         = @"27-28 Eastcastle House";
-    a.line2         = @"Eastcastle Street";
-    a.city          = @"London";
-    a.stateOrCounty = @"Greater London";
-    a.zipOrPostcode = @"W1W 8DH";
-    a.country       = [OLCountry countryForCode:@"GBR"];
-    
-    [printOrder duplicateJobsForAddresses:@[address1, a]];
-    XCTAssert(printOrder.jobs.count == 2, @"Should have 2 jobs, one for each address");
-    [printOrder discardDuplicateJobs];
-    XCTAssert(printOrder.jobs.count == 1, @"Should have only 1 job");
-    [printOrder duplicateJobsForAddresses:@[address1, a]];
-    XCTAssert(printOrder.jobs.count == 2, @"Should have 2 jobs, one for each address");
-    
-    XCTAssert(printOrder.shippingAddressesOfJobs.count == 2, @"Should have 2 addresses");
-    XCTAssert(([printOrder.shippingAddressesOfJobs.firstObject isEqual:address1] && [printOrder.shippingAddressesOfJobs.lastObject isEqual:a]) || ([printOrder.shippingAddressesOfJobs.firstObject isEqual:a] && [printOrder.shippingAddressesOfJobs.lastObject isEqual:address1]), @"Addresses should be equal to the above");
-    
-    [self submitOrder:printOrder WithSuccessHandler:NULL];
-    
-    [self waitForExpectationsWithTimeout:120 handler:nil];
-    
-    XCTAssert(printOrder.printed, @"Order not printed");
-    XCTAssert([printOrder.receipt hasPrefix:@"PS"], @"Order does not have valid receipt");
-}
-
 
 @end

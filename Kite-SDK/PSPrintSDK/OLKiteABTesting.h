@@ -63,7 +63,6 @@ static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 @property (strong, nonatomic, readonly) NSString *productTileStyle;
 @property (strong, nonatomic, readonly) NSString *promoBannerText;
 @property (strong, nonatomic, readonly) NSString *launchWithPrintOrderVariant;
-@property (assign, nonatomic, readonly) BOOL allowsMultipleRecipients;
 @property (strong, nonatomic, readonly) NSString *paymentScreen;
 @property (strong, nonatomic, readonly) NSString *coverPhotoId;
 

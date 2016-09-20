@@ -65,7 +65,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 - (BOOL)showPhoneEntryField;
 - (NSString *)userEmail;
 - (NSString *)userPhone;
-- (void)recalculateOrderCostIfNewSelectedCountryDiffers:(OLCountry *)selectedCountry;
 - (void)onButtonCheckboxClicked:(UIButton *)sender;
 
 @end
@@ -502,9 +501,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     self.activeTextView = nil;
 }
 
--(void) countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray *)countries{
-    [super recalculateOrderCostIfNewSelectedCountryDiffers:countries.lastObject];
-    
+-(void) countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray *)countries{    
     [self dismissViewControllerAnimated:YES completion:nil];
     self.shippingAddress.country = countries.lastObject;
     self.textFieldCountry.text = self.shippingAddress.country.name;

@@ -331,10 +331,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     else{
         self.printOrder.shippingAddress = nil;
     }
-    
-    [self.printOrder discardDuplicateJobs];
-    [self.printOrder duplicateJobsForAddresses:self.selectedShippingAddresses];
-    
+        
     if (![self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [self.kiteDelegate shouldStoreDeliveryAddresses]){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:email forKey:kKeyEmailAddress];
@@ -615,12 +612,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
                 cell.textLabel.textColor = kColourLightBlue;
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-            if (self.shippingAddresses.count > 0 && [OLKiteABTesting sharedInstance].allowsMultipleRecipients){
-                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Another Recipient", @"KitePrintSDK",[OLKiteUtils kiteBundle], @"");
-            }
-            else{
-                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
-            }
+            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         }
     } else if (indexPath.section == kSectionEmailAddress) {
         static NSString *const TextFieldCell = @"EmailFieldCell";
@@ -703,29 +695,14 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
-        if ([OLKiteABTesting sharedInstance].offerAddressSearch || [OLAddress addressBook].count > 0 || [OLKiteABTesting sharedInstance].allowsMultipleRecipients) {
-            if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && self.shippingAddresses.count > indexPath.row){
-                OLAddress *address = self.shippingAddresses[indexPath.row];
-                BOOL selected = YES;
-                if ([self.selectedShippingAddresses containsObject:address]) {
-                    selected = NO;
-                    [self.selectedShippingAddresses removeObject:address];
-                } else {
-                    [self.selectedShippingAddresses addObject:address];
-                }
-                
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.imageView.image = selected ? [UIImage imageNamedInKiteBundle:@"checkmark_on"] : [UIImage imageNamedInKiteBundle:@"checkmark_off"];
-            }
-            else{
+        if ([OLKiteABTesting sharedInstance].offerAddressSearch || [OLAddress addressBook].count > 0) {
                 OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
                 addressPicker.delegate = self;
                 addressPicker.allowsAddressSearch = [OLKiteABTesting sharedInstance].offerAddressSearch;
-                addressPicker.allowsMultipleSelection = [OLKiteABTesting sharedInstance].allowsMultipleRecipients;
+                addressPicker.allowsMultipleSelection = NO;
                 addressPicker.selected = self.shippingAddresses;
                 addressPicker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
                 [self presentViewController:addressPicker animated:YES completion:nil];
-            }
         } else {
             OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];
             editVc.delegate = self;
@@ -753,23 +730,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     self.activeTextView = textField;
 }
 
-- (void)recalculateOrderCostIfNewSelectedCountryDiffers:(NSArray *)selectedCountries {
-    //    if (self.printOrder.shippingAddress == nil) {
-    //        // just populate with a blank address for now with default local country -- this will get replaced on filling out address and proceeding to the next screen
-    //        self.printOrder.shippingAddress = [[OLAddress alloc] init];
-    //        self.printOrder.shippingAddress.country = self.shippingAddress ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
-    //    }
-    //
-    //    NSMutableArray *countries = [[NSMutableArray alloc] init];
-    //    for (OLAddress *address in self.printOrder.shippingAddress){
-    //        [countries addObject:address.country];
-    //    }
-    //    if (![countries isEqualToArray:selectedCountries]) {
-    //        // changing destination address voids internal printOrder cached costs, recalc early to speed things up before we hit the Payment screen
-    //        [self.printOrder costWithCompletionHandler:nil]; // ignore outcome, internally printOrder caches the result and this will speed up things when we hit the PaymentScreen
-    //    }
-}
-
 #pragma mark - OLAddressPickerController delegate
 
 - (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray<OLAddress *> *)addresses {
@@ -785,7 +745,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     for (OLAddress *address in addresses){
         [countries addObject:address.country];
     }
-    [self recalculateOrderCostIfNewSelectedCountryDiffers:addresses];
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:kSectionDeliveryDetails] withRowAnimation:UITableViewRowAnimationFade];
 }

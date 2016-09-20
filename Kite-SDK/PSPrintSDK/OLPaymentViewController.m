@@ -445,7 +445,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [super viewDidDisappear:animated];
     
     if (!self.navigationController){
-        [self.printOrder discardDuplicateJobs];
 #ifndef OL_NO_ANALYTICS
         if (!self.usedContinueShoppingButton){
             [OLAnalytics trackPaymentScreenHitBackForOrder:self.printOrder applePayIsAvailable:[self.class isApplePayAvailable] ? @"Yes" : @"No"];
@@ -455,7 +454,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)dismiss{
-    [self.printOrder discardDuplicateJobs];
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
     if (!self.usedContinueShoppingButton){
@@ -1345,7 +1343,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }
             if (addresses.count == 1){
                 self.printOrder.shippingAddress = [addresses anyObject];
-                [self.printOrder discardDuplicateJobs];
             }
             
             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -1864,7 +1861,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         if (addresses.count == 1){
             self.printOrder.shippingAddress = [addresses anyObject];
-            [self.printOrder discardDuplicateJobs];
         }
         
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];

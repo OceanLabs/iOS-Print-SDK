@@ -45,7 +45,6 @@ static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
 static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_banner_style";
 static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_banner_text";
 static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
-static NSString *const kOLKiteABTestAllowMultipleRecipients = @"ly.kite.abtest.allow_multiple_recipients";
 static NSString *const kOLKiteABTestPaymentScreen = @"ly.kite.abtest.payment_screen";
 static NSString *const kOLKiteABTestCoverPhotoVariants = @"ly.kite.abtest.cover_photo_variants";
 
@@ -75,7 +74,6 @@ static dispatch_once_t srand48OnceToken;
 @property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
 @property (strong, nonatomic, readwrite) NSString *paymentScreen;
 @property (strong, nonatomic, readwrite) NSString *coverPhotoId;
-@property (assign, nonatomic, readwrite) BOOL allowsMultipleRecipients;
 
 @end
 
@@ -623,28 +621,12 @@ static dispatch_once_t srand48OnceToken;
                                 }];
 }
 
-- (void)setupAllowMultipleRecipientsTest{
-    self.allowsMultipleRecipients = NO;
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestAllowMultipleRecipients];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0, @"No" : @1};
-    }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestAllowMultipleRecipients
-                   conditions:@{
-                                @"Yes" : safeObject(experimentDict[@"Yes"]),
-                                @"No" : safeObject(experimentDict[@"No"])
-                                } block:^(id choice) {
-                                    self.allowsMultipleRecipients = [choice isEqualToString:@"Yes"];
-                                }];
-}
-
 - (void)groupSetupShippingScreenTests{
     [self setupOfferAddressSearchTest];
     [self setupRequirePhoneNumberTest];
     [self setupShippingScreenTest];
     [self setupPaymentScreenTest];
     [self setupOfferPayPalTest];
-    [self setupAllowMultipleRecipientsTest];
 }
 
 - (void)setupABTestVariants{
