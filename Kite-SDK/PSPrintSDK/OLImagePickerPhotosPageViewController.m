@@ -136,6 +136,9 @@ CGFloat OLImagePickerMargin = 1.5;
         self.albumLabelContainer = nil;
         [self.albumsContainerView removeFromSuperview];
     }
+    
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
