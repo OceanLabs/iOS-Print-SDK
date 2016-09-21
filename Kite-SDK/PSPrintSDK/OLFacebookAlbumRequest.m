@@ -31,6 +31,7 @@
 #import "OLFacebookImagePickerConstants.h"
 #import "OLFacebookAlbum.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "OLFacebookSDKWrapper.h"
 
 @interface OLFacebookAlbumRequest ()
 @property (nonatomic, assign) BOOL cancelled;
@@ -56,7 +57,7 @@
 }
 
 - (void)getAlbums:(OLFacebookAlbumRequestHandler)handler {
-    if ([FBSDKAccessToken currentAccessToken]) {
+    if ([OLFacebookSDKWrapper currentAccessToken]) {
         // connection is open, perform the request
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         NSString *graphPath = @"me/albums?limit=100&fields=id,name,count,cover_photo";

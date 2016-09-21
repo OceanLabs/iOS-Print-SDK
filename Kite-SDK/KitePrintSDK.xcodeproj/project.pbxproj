@@ -490,6 +490,10 @@
 		2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
 		2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */; };
 		2EADD85F1BE79D6D0051CD31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF7D186215790009DE03 /* Main.storyboard */; };
+		2EB00A1C1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */; };
+		2EB00A1D1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */; };
+		2EB00A1E1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */; };
+		2EB00A1F1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */; };
 		2EB197911CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
 		2EB197921CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
 		2EB197931CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
@@ -900,6 +904,8 @@
 		2EAD11501BD79ED0000BC80E /* OLProductDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductDetailsViewController.h; sourceTree = "<group>"; };
 		2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductDetailsViewController.m; sourceTree = "<group>"; };
 		2EADD8651BE79D6D0051CD31 /* KiteSDK-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KiteSDK-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EB00A1A1D92735300668B29 /* OLFacebookSDKWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookSDKWrapper.h; sourceTree = "<group>"; };
+		2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookSDKWrapper.m; sourceTree = "<group>"; };
 		2EB1978F1CF872F200648696 /* OLPaymentMethodsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPaymentMethodsViewController.h; sourceTree = "<group>"; };
 		2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentMethodsViewController.m; sourceTree = "<group>"; };
 		2EB1C40F1B551D6000EFE0D0 /* OLKiteABTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteABTesting.h; sourceTree = "<group>"; };
@@ -1379,6 +1385,8 @@
 				2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */,
 				2E1E66F91D47A653002524A4 /* OLFacebookImagePickerConstants.h */,
 				2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */,
+				2EB00A1A1D92735300668B29 /* OLFacebookSDKWrapper.h */,
+				2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */,
 			);
 			name = Facebook;
 			sourceTree = "<group>";
@@ -2730,6 +2738,7 @@
 				2E898C9A1CC518180041CCD8 /* OLViewController.m in Sources */,
 				2E898C9B1CC518180041CCD8 /* NSDictionary+RequestParameterData.m in Sources */,
 				2E898C9C1CC518180041CCD8 /* OLRemoteImageCropper.m in Sources */,
+				2EB00A1D1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */,
 				2E1E66E11D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
 				2E37B1821D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				2EB919961D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m in Sources */,
@@ -2827,6 +2836,7 @@
 				2EA3D37C1C9C04B500B99BCD /* UIImageView+FadeIn.m in Sources */,
 				2EA3D37D1C9C04B500B99BCD /* OLAddressSearchRequest.m in Sources */,
 				2EB612E91D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */,
+				2EB00A1F1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */,
 				2EC43DDD1D65B3D200915DDE /* UIColor+OLHexString.m in Sources */,
 				2EA3D37E1C9C04B500B99BCD /* OLPayPalCard.m in Sources */,
 				2EA3D37F1C9C04B500B99BCD /* OLProductPrintJob.m in Sources */,
@@ -3016,6 +3026,7 @@
 				2EADD8251BE79D6D0051CD31 /* OLProductTypeSelectionViewController.m in Sources */,
 				2EADD8261BE79D6D0051CD31 /* OLPrintOrderRequest.m in Sources */,
 				2E837D481C3C1FBB004DA682 /* OLViewController.m in Sources */,
+				2EB00A1C1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */,
 				2E96BABF1D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
 				2E1E66E01D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
 				2ED36B3A1C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m in Sources */,
@@ -3224,6 +3235,7 @@
 				E29C85F31BE3B5C50041D4CF /* OLConstants.m in Sources */,
 				2EB612EE1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				E29C85F41BE3B5C50041D4CF /* OLProductOverviewPageContentViewController.m in Sources */,
+				2EB00A1E1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */,
 				2EB613071D48AFE800B48E29 /* OLInstagramImage.m in Sources */,
 				2E96BADB1D2FC109002F5F74 /* qrencode.c in Sources */,
 				E29C85F71BE3B5C50041D4CF /* OLReceiptViewController.m in Sources */,

@@ -48,6 +48,7 @@
 #import "OLKitePrintSDK.h"
 #import "UIViewController+OLMethods.h"
 #import "OLPaymentViewController.h"
+#import "OLFacebookSDKWrapper.h"
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
@@ -494,7 +495,7 @@
     
     OLImagePickerPageViewController *vc;
     
-    if (self.providers[index].providerType == OLImagePickerProviderTypeFacebook && ![FBSDKAccessToken currentAccessToken]){
+    if (self.providers[index].providerType == OLImagePickerProviderTypeFacebook && ![OLFacebookSDKWrapper currentAccessToken]){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
         vc.pageIndex = index;
     }
