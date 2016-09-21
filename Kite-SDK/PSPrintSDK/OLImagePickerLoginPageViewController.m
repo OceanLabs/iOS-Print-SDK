@@ -30,7 +30,7 @@
 #import "OLImagePickerLoginPageViewController.h"
 #import "UIView+RoundRect.h"
 #import "OLImagePickerViewController.h"
-#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#import "OLOAuth2AccountStore.h"
 #import "OLKitePrintSDK.h"
 #import "OLInstagramLoginWebViewController.h"
 #import "OLNavigationController.h"

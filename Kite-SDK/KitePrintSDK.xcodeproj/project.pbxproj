@@ -109,6 +109,26 @@
 		2E434AE31D36583700D1BD06 /* OLEditingToolsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */; };
 		2E434AE51D36675700D1BD06 /* OLEditingToolsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */; };
 		2E434AE61D36675700D1BD06 /* OLEditingToolsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */; };
+		2E480A971D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A8D1D92D060006C0EE6 /* OLOAuth2Constants.m */; };
+		2E480A981D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A8D1D92D060006C0EE6 /* OLOAuth2Constants.m */; };
+		2E480A991D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A8D1D92D060006C0EE6 /* OLOAuth2Constants.m */; };
+		2E480A9A1D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A8D1D92D060006C0EE6 /* OLOAuth2Constants.m */; };
+		2E480A9B1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A8F1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m */; };
+		2E480A9C1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A8F1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m */; };
+		2E480A9D1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A8F1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m */; };
+		2E480A9E1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A8F1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m */; };
+		2E480A9F1D92D060006C0EE6 /* OLOAuth2PostBodyPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A911D92D060006C0EE6 /* OLOAuth2PostBodyPart.m */; };
+		2E480AA01D92D060006C0EE6 /* OLOAuth2PostBodyPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A911D92D060006C0EE6 /* OLOAuth2PostBodyPart.m */; };
+		2E480AA11D92D060006C0EE6 /* OLOAuth2PostBodyPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A911D92D060006C0EE6 /* OLOAuth2PostBodyPart.m */; };
+		2E480AA21D92D060006C0EE6 /* OLOAuth2PostBodyPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A911D92D060006C0EE6 /* OLOAuth2PostBodyPart.m */; };
+		2E480AA31D92D060006C0EE6 /* OLOAuth2PostBodyStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A931D92D060006C0EE6 /* OLOAuth2PostBodyStream.m */; };
+		2E480AA41D92D060006C0EE6 /* OLOAuth2PostBodyStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A931D92D060006C0EE6 /* OLOAuth2PostBodyStream.m */; };
+		2E480AA51D92D060006C0EE6 /* OLOAuth2PostBodyStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A931D92D060006C0EE6 /* OLOAuth2PostBodyStream.m */; };
+		2E480AA61D92D060006C0EE6 /* OLOAuth2PostBodyStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A931D92D060006C0EE6 /* OLOAuth2PostBodyStream.m */; };
+		2E480AA71D92D060006C0EE6 /* OLOAuth2Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A961D92D060006C0EE6 /* OLOAuth2Request.m */; };
+		2E480AA81D92D060006C0EE6 /* OLOAuth2Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A961D92D060006C0EE6 /* OLOAuth2Request.m */; };
+		2E480AA91D92D060006C0EE6 /* OLOAuth2Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A961D92D060006C0EE6 /* OLOAuth2Request.m */; };
+		2E480AAA1D92D060006C0EE6 /* OLOAuth2Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480A961D92D060006C0EE6 /* OLOAuth2Request.m */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
 		2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
@@ -494,6 +514,38 @@
 		2EB00A1D1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */; };
 		2EB00A1E1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */; };
 		2EB00A1F1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */; };
+		2EB00A951D92C9D400668B29 /* NSData+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A771D92C9D400668B29 /* NSData+OLOAuth2.m */; };
+		2EB00A961D92C9D400668B29 /* NSData+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A771D92C9D400668B29 /* NSData+OLOAuth2.m */; };
+		2EB00A971D92C9D400668B29 /* NSData+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A771D92C9D400668B29 /* NSData+OLOAuth2.m */; };
+		2EB00A981D92C9D400668B29 /* NSData+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A771D92C9D400668B29 /* NSData+OLOAuth2.m */; };
+		2EB00A991D92C9D400668B29 /* NSString+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A791D92C9D400668B29 /* NSString+OLOAuth2.m */; };
+		2EB00A9A1D92C9D400668B29 /* NSString+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A791D92C9D400668B29 /* NSString+OLOAuth2.m */; };
+		2EB00A9B1D92C9D400668B29 /* NSString+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A791D92C9D400668B29 /* NSString+OLOAuth2.m */; };
+		2EB00A9C1D92C9D400668B29 /* NSString+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A791D92C9D400668B29 /* NSString+OLOAuth2.m */; };
+		2EB00A9D1D92C9D400668B29 /* NSURL+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A7B1D92C9D400668B29 /* NSURL+OLOAuth2.m */; };
+		2EB00A9E1D92C9D400668B29 /* NSURL+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A7B1D92C9D400668B29 /* NSURL+OLOAuth2.m */; };
+		2EB00A9F1D92C9D400668B29 /* NSURL+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A7B1D92C9D400668B29 /* NSURL+OLOAuth2.m */; };
+		2EB00AA01D92C9D400668B29 /* NSURL+OLOAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A7B1D92C9D400668B29 /* NSURL+OLOAuth2.m */; };
+		2EB00AA11D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A7E1D92C9D400668B29 /* OLOAuth2AccessToken.m */; };
+		2EB00AA21D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A7E1D92C9D400668B29 /* OLOAuth2AccessToken.m */; };
+		2EB00AA31D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A7E1D92C9D400668B29 /* OLOAuth2AccessToken.m */; };
+		2EB00AA41D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A7E1D92C9D400668B29 /* OLOAuth2AccessToken.m */; };
+		2EB00AA51D92C9D400668B29 /* OLOAuth2Account.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A801D92C9D400668B29 /* OLOAuth2Account.m */; };
+		2EB00AA61D92C9D400668B29 /* OLOAuth2Account.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A801D92C9D400668B29 /* OLOAuth2Account.m */; };
+		2EB00AA71D92C9D400668B29 /* OLOAuth2Account.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A801D92C9D400668B29 /* OLOAuth2Account.m */; };
+		2EB00AA81D92C9D400668B29 /* OLOAuth2Account.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A801D92C9D400668B29 /* OLOAuth2Account.m */; };
+		2EB00AA91D92C9D400668B29 /* OLOAuth2AccountStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A831D92C9D400668B29 /* OLOAuth2AccountStore.m */; };
+		2EB00AAA1D92C9D400668B29 /* OLOAuth2AccountStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A831D92C9D400668B29 /* OLOAuth2AccountStore.m */; };
+		2EB00AAB1D92C9D400668B29 /* OLOAuth2AccountStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A831D92C9D400668B29 /* OLOAuth2AccountStore.m */; };
+		2EB00AAC1D92C9D400668B29 /* OLOAuth2AccountStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A831D92C9D400668B29 /* OLOAuth2AccountStore.m */; };
+		2EB00AAD1D92C9D400668B29 /* OLOAuth2Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A851D92C9D400668B29 /* OLOAuth2Client.m */; };
+		2EB00AAE1D92C9D400668B29 /* OLOAuth2Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A851D92C9D400668B29 /* OLOAuth2Client.m */; };
+		2EB00AAF1D92C9D400668B29 /* OLOAuth2Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A851D92C9D400668B29 /* OLOAuth2Client.m */; };
+		2EB00AB01D92C9D400668B29 /* OLOAuth2Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A851D92C9D400668B29 /* OLOAuth2Client.m */; };
+		2EB00AB11D92C9D400668B29 /* OLOAuth2Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A881D92C9D400668B29 /* OLOAuth2Connection.m */; };
+		2EB00AB21D92C9D400668B29 /* OLOAuth2Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A881D92C9D400668B29 /* OLOAuth2Connection.m */; };
+		2EB00AB31D92C9D400668B29 /* OLOAuth2Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A881D92C9D400668B29 /* OLOAuth2Connection.m */; };
+		2EB00AB41D92C9D400668B29 /* OLOAuth2Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A881D92C9D400668B29 /* OLOAuth2Connection.m */; };
 		2EB197911CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
 		2EB197921CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
 		2EB197931CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
@@ -799,6 +851,16 @@
 		2E434AE71D36675700D1BD06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OLEditingToolsView.xib; sourceTree = "<group>"; };
 		2E455DFE1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDecimalNumber+CostFormatter.h"; path = "PSPrintSDK/Categories/NSDecimalNumber+CostFormatter.h"; sourceTree = "<group>"; };
 		2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDecimalNumber+CostFormatter.m"; path = "PSPrintSDK/Categories/NSDecimalNumber+CostFormatter.m"; sourceTree = "<group>"; };
+		2E480A8D1D92D060006C0EE6 /* OLOAuth2Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2Constants.m; sourceTree = "<group>"; };
+		2E480A8E1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2FileStreamWrapper.h; sourceTree = "<group>"; };
+		2E480A8F1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2FileStreamWrapper.m; sourceTree = "<group>"; };
+		2E480A901D92D060006C0EE6 /* OLOAuth2PostBodyPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2PostBodyPart.h; sourceTree = "<group>"; };
+		2E480A911D92D060006C0EE6 /* OLOAuth2PostBodyPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2PostBodyPart.m; sourceTree = "<group>"; };
+		2E480A921D92D060006C0EE6 /* OLOAuth2PostBodyStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2PostBodyStream.h; sourceTree = "<group>"; };
+		2E480A931D92D060006C0EE6 /* OLOAuth2PostBodyStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2PostBodyStream.m; sourceTree = "<group>"; };
+		2E480A941D92D060006C0EE6 /* OLOAuth2Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2Request.h; sourceTree = "<group>"; };
+		2E480A951D92D060006C0EE6 /* OLOAuth2TrustDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2TrustDelegate.h; sourceTree = "<group>"; };
+		2E480A961D92D060006C0EE6 /* OLOAuth2Request.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2Request.m; sourceTree = "<group>"; };
 		2E482B771BEB4C7D007460EA /* OLStripeCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeCard.h; sourceTree = "<group>"; };
 		2E482B781BEB4C7D007460EA /* OLStripeCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLStripeCard.m; sourceTree = "<group>"; };
 		2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTypeSelectionViewController.h; sourceTree = "<group>"; };
@@ -906,6 +968,27 @@
 		2EADD8651BE79D6D0051CD31 /* KiteSDK-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KiteSDK-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EB00A1A1D92735300668B29 /* OLFacebookSDKWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookSDKWrapper.h; sourceTree = "<group>"; };
 		2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookSDKWrapper.m; sourceTree = "<group>"; };
+		2EB00A761D92C9D400668B29 /* NSData+OLOAuth2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+OLOAuth2.h"; sourceTree = "<group>"; };
+		2EB00A771D92C9D400668B29 /* NSData+OLOAuth2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+OLOAuth2.m"; sourceTree = "<group>"; };
+		2EB00A781D92C9D400668B29 /* NSString+OLOAuth2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+OLOAuth2.h"; sourceTree = "<group>"; };
+		2EB00A791D92C9D400668B29 /* NSString+OLOAuth2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+OLOAuth2.m"; sourceTree = "<group>"; };
+		2EB00A7A1D92C9D400668B29 /* NSURL+OLOAuth2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+OLOAuth2.h"; sourceTree = "<group>"; };
+		2EB00A7B1D92C9D400668B29 /* NSURL+OLOAuth2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+OLOAuth2.m"; sourceTree = "<group>"; };
+		2EB00A7C1D92C9D400668B29 /* OLOAuth2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2.h; sourceTree = "<group>"; };
+		2EB00A7D1D92C9D400668B29 /* OLOAuth2AccessToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2AccessToken.h; sourceTree = "<group>"; };
+		2EB00A7E1D92C9D400668B29 /* OLOAuth2AccessToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2AccessToken.m; sourceTree = "<group>"; };
+		2EB00A7F1D92C9D400668B29 /* OLOAuth2Account.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2Account.h; sourceTree = "<group>"; };
+		2EB00A801D92C9D400668B29 /* OLOAuth2Account.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2Account.m; sourceTree = "<group>"; };
+		2EB00A811D92C9D400668B29 /* OLOAuth2Account+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLOAuth2Account+Private.h"; sourceTree = "<group>"; };
+		2EB00A821D92C9D400668B29 /* OLOAuth2AccountStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2AccountStore.h; sourceTree = "<group>"; };
+		2EB00A831D92C9D400668B29 /* OLOAuth2AccountStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2AccountStore.m; sourceTree = "<group>"; };
+		2EB00A841D92C9D400668B29 /* OLOAuth2Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2Client.h; sourceTree = "<group>"; };
+		2EB00A851D92C9D400668B29 /* OLOAuth2Client.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2Client.m; sourceTree = "<group>"; };
+		2EB00A861D92C9D400668B29 /* OLOAuth2ClientDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2ClientDelegate.h; sourceTree = "<group>"; };
+		2EB00A871D92C9D400668B29 /* OLOAuth2Connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2Connection.h; sourceTree = "<group>"; };
+		2EB00A881D92C9D400668B29 /* OLOAuth2Connection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2Connection.m; sourceTree = "<group>"; };
+		2EB00A891D92C9D400668B29 /* OLOAuth2ConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2ConnectionDelegate.h; sourceTree = "<group>"; };
+		2EB00A8A1D92C9D400668B29 /* OLOAuth2Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2Constants.h; sourceTree = "<group>"; };
 		2EB1978F1CF872F200648696 /* OLPaymentMethodsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPaymentMethodsViewController.h; sourceTree = "<group>"; };
 		2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentMethodsViewController.m; sourceTree = "<group>"; };
 		2EB1C40F1B551D6000EFE0D0 /* OLKiteABTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteABTesting.h; sourceTree = "<group>"; };
@@ -1537,6 +1620,7 @@
 				3DE2B0C01A77D2290092D97F /* Util */,
 				2EB612F61D48AFDA00B48E29 /* Instagram */,
 				2E1E66D91D4795C8002524A4 /* Facebook */,
+				2EB00A221D92C96B00668B29 /* NXOAuth2Client */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1615,6 +1699,44 @@
 				2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */,
 			);
 			name = Helpers;
+			sourceTree = "<group>";
+		};
+		2EB00A221D92C96B00668B29 /* NXOAuth2Client */ = {
+			isa = PBXGroup;
+			children = (
+				2EB00A761D92C9D400668B29 /* NSData+OLOAuth2.h */,
+				2EB00A771D92C9D400668B29 /* NSData+OLOAuth2.m */,
+				2EB00A781D92C9D400668B29 /* NSString+OLOAuth2.h */,
+				2EB00A791D92C9D400668B29 /* NSString+OLOAuth2.m */,
+				2EB00A7A1D92C9D400668B29 /* NSURL+OLOAuth2.h */,
+				2EB00A7B1D92C9D400668B29 /* NSURL+OLOAuth2.m */,
+				2EB00A7C1D92C9D400668B29 /* OLOAuth2.h */,
+				2EB00A7D1D92C9D400668B29 /* OLOAuth2AccessToken.h */,
+				2EB00A7E1D92C9D400668B29 /* OLOAuth2AccessToken.m */,
+				2EB00A7F1D92C9D400668B29 /* OLOAuth2Account.h */,
+				2EB00A801D92C9D400668B29 /* OLOAuth2Account.m */,
+				2EB00A811D92C9D400668B29 /* OLOAuth2Account+Private.h */,
+				2EB00A821D92C9D400668B29 /* OLOAuth2AccountStore.h */,
+				2EB00A831D92C9D400668B29 /* OLOAuth2AccountStore.m */,
+				2EB00A841D92C9D400668B29 /* OLOAuth2Client.h */,
+				2EB00A851D92C9D400668B29 /* OLOAuth2Client.m */,
+				2EB00A861D92C9D400668B29 /* OLOAuth2ClientDelegate.h */,
+				2EB00A871D92C9D400668B29 /* OLOAuth2Connection.h */,
+				2EB00A881D92C9D400668B29 /* OLOAuth2Connection.m */,
+				2EB00A891D92C9D400668B29 /* OLOAuth2ConnectionDelegate.h */,
+				2EB00A8A1D92C9D400668B29 /* OLOAuth2Constants.h */,
+				2E480A8D1D92D060006C0EE6 /* OLOAuth2Constants.m */,
+				2E480A8E1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.h */,
+				2E480A8F1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m */,
+				2E480A901D92D060006C0EE6 /* OLOAuth2PostBodyPart.h */,
+				2E480A911D92D060006C0EE6 /* OLOAuth2PostBodyPart.m */,
+				2E480A921D92D060006C0EE6 /* OLOAuth2PostBodyStream.h */,
+				2E480A931D92D060006C0EE6 /* OLOAuth2PostBodyStream.m */,
+				2E480A941D92D060006C0EE6 /* OLOAuth2Request.h */,
+				2E480A951D92D060006C0EE6 /* OLOAuth2TrustDelegate.h */,
+				2E480A961D92D060006C0EE6 /* OLOAuth2Request.m */,
+			);
+			name = NXOAuth2Client;
 			sourceTree = "<group>";
 		};
 		2EB612F61D48AFDA00B48E29 /* Instagram */ = {
@@ -2659,10 +2781,13 @@
 				2E898C561CC518180041CCD8 /* UIImage+OLUtils.m in Sources */,
 				2E96BADA1D2FC109002F5F74 /* qrencode.c in Sources */,
 				2E898C571CC518180041CCD8 /* OLCheckoutViewController.m in Sources */,
+				2E480A9C1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m in Sources */,
 				2E898C581CC518180041CCD8 /* OLPhotobookViewController.m in Sources */,
 				2EB612FE1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
+				2E480AA01D92D060006C0EE6 /* OLOAuth2PostBodyPart.m in Sources */,
 				2E96BAEA1D2FC109002F5F74 /* split.c in Sources */,
 				2E898C5A1CC518180041CCD8 /* OLPopupOptionsImageView.m in Sources */,
+				2EB00A961D92C9D400668B29 /* NSData+OLOAuth2.m in Sources */,
 				2EEB53011D7062870066B802 /* OLProductTemplateOptionChoice.m in Sources */,
 				2E434AE11D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 				2E898C5B1CC518180041CCD8 /* NSArray+QueryingExtras.m in Sources */,
@@ -2680,18 +2805,22 @@
 				2EC43DDB1D65B3D000915DDE /* UIColor+OLHexString.m in Sources */,
 				2E67B9261D2671DE00914D56 /* OLPhotoTextField.m in Sources */,
 				2E898C671CC518180041CCD8 /* OLAddressEditViewController.m in Sources */,
+				2EB00A9A1D92C9D400668B29 /* NSString+OLOAuth2.m in Sources */,
 				2E898C681CC518180041CCD8 /* OLKiteUtils.m in Sources */,
 				2E0FF2E41D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */,
 				2E898C6B1CC518180041CCD8 /* OLImagePreviewViewController.m in Sources */,
 				2EB612F31D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2E898C6C1CC518180041CCD8 /* OLCaseViewController.m in Sources */,
 				2E28CDFE1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */,
+				2EB00AA21D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */,
 				2E23EB9C1D5091FC00E2BF42 /* CI-ViewController.m in Sources */,
 				2E898C6E1CC518180041CCD8 /* OLFrameOrderReviewViewController.m in Sources */,
 				2E898C6F1CC518180041CCD8 /* OLApparelPrintJob.m in Sources */,
+				2EB00AA61D92C9D400668B29 /* OLOAuth2Account.m in Sources */,
 				2E96BAD21D2FC109002F5F74 /* bitstream.c in Sources */,
 				2E898C701CC518180041CCD8 /* OLKiteViewController.m in Sources */,
 				2E898C721CC518180041CCD8 /* OLPhotobookPageContentViewController.m in Sources */,
+				2E480AA81D92D060006C0EE6 /* OLOAuth2Request.m in Sources */,
 				2E898C751CC518180041CCD8 /* OLUpsellViewController.m in Sources */,
 				2E898C761CC518180041CCD8 /* UIImageView+FadeIn.m in Sources */,
 				2E898C771CC518180041CCD8 /* OLAddressSearchRequest.m in Sources */,
@@ -2699,7 +2828,9 @@
 				2E84835F1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
 				2E898C791CC518180041CCD8 /* OLProductPrintJob.m in Sources */,
 				2E898C7A1CC518180041CCD8 /* OLSingleImageProductReviewViewController.m in Sources */,
+				2EB00A9E1D92C9D400668B29 /* NSURL+OLOAuth2.m in Sources */,
 				2E898C7B1CC518180041CCD8 /* OLPosterViewController.m in Sources */,
+				2E480A981D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */,
 				2E67B9241D2671DA00914D56 /* OLTextOnPhoto.m in Sources */,
 				2E898C7C1CC518180041CCD8 /* OLRemoteImageView.m in Sources */,
 				2E898C7D1CC518180041CCD8 /* OLProductDetailsViewController.m in Sources */,
@@ -2721,6 +2852,7 @@
 				2EB612ED1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2E898C8C1CC518180041CCD8 /* OLAddress.m in Sources */,
 				2E36A1DD1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
+				2E480AA41D92D060006C0EE6 /* OLOAuth2PostBodyStream.m in Sources */,
 				2E898C8D1CC518180041CCD8 /* OLNavigationController.m in Sources */,
 				2E1E66E51D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2E898C8E1CC518180041CCD8 /* NSDecimalNumber+CostFormatter.m in Sources */,
@@ -2751,6 +2883,7 @@
 				2E898CA51CC518180041CCD8 /* OLCountry.m in Sources */,
 				2E2BF4481CCDFAF100725561 /* OLKiteTheme.m in Sources */,
 				2E898CA81CC518180041CCD8 /* OLCustomPhotoProvider.m in Sources */,
+				2EB00AAA1D92C9D400668B29 /* OLOAuth2AccountStore.m in Sources */,
 				2E898CA91CC518180041CCD8 /* OLConstants.m in Sources */,
 				2E898CAA1CC518180041CCD8 /* OLProductOverviewPageContentViewController.m in Sources */,
 				2E25FEFC1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
@@ -2763,6 +2896,7 @@
 				2E898CB01CC518180041CCD8 /* main.m in Sources */,
 				2E898CB21CC518180041CCD8 /* OLPostcardPrintJob.m in Sources */,
 				2E898CB31CC518180041CCD8 /* NSObject+Utils.m in Sources */,
+				2EB00AAE1D92C9D400668B29 /* OLOAuth2Client.m in Sources */,
 				2E898CB41CC518180041CCD8 /* OLAnalytics.m in Sources */,
 				2E898CB51CC518180041CCD8 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				2E898CB61CC518180041CCD8 /* OLCircleMaskCollectionViewCell.m in Sources */,
@@ -2782,6 +2916,7 @@
 				2E898CC41CC518180041CCD8 /* OLCountryPickerController.m in Sources */,
 				2E96BAE61D2FC109002F5F74 /* rscode.c in Sources */,
 				2E898CC51CC518180041CCD8 /* OLURLShortener.m in Sources */,
+				2EB00AB21D92C9D400668B29 /* OLOAuth2Connection.m in Sources */,
 				2E18DC521D913DB1004752D2 /* OLPrintPhoto.m in Sources */,
 				2EBDA6DE1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2E898CC61CC518180041CCD8 /* OLBaseRequest.m in Sources */,
@@ -2802,13 +2937,16 @@
 				2E1E66FE1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */,
 				2E1E66F11D479617002524A4 /* OLFacebookImage.m in Sources */,
 				2EB197941CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */,
+				2EB00AA81D92C9D400668B29 /* OLOAuth2Account.m in Sources */,
 				2EA3D35E1C9C04B500B99BCD /* OLCustomPhotoProvider.m in Sources */,
 				2E1E66E31D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
 				2EA3D35F1C9C04B500B99BCD /* OLPrintOrderCostRequest.m in Sources */,
 				2EBDA6E01CEB1B0500397082 /* OLImageDownloader.m in Sources */,
+				2E480AA21D92D060006C0EE6 /* OLOAuth2PostBodyPart.m in Sources */,
 				2EA3D3601C9C04B500B99BCD /* OLInfoPageViewController.m in Sources */,
 				2EA3D3611C9C04B500B99BCD /* OLIntegratedCheckoutViewController.m in Sources */,
 				2EA3D3621C9C04B500B99BCD /* OLProductGroup.m in Sources */,
+				2EB00AA01D92C9D400668B29 /* NSURL+OLOAuth2.m in Sources */,
 				2EA3D3631C9C04B500B99BCD /* UIImage+OLUtils.m in Sources */,
 				2EA3D3641C9C04B500B99BCD /* OLCheckoutViewController.m in Sources */,
 				2EA3D3651C9C04B500B99BCD /* OLPhotobookViewController.m in Sources */,
@@ -2838,9 +2976,11 @@
 				2EB612E91D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */,
 				2EB00A1F1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */,
 				2EC43DDD1D65B3D200915DDE /* UIColor+OLHexString.m in Sources */,
+				2EB00A9C1D92C9D400668B29 /* NSString+OLOAuth2.m in Sources */,
 				2EA3D37E1C9C04B500B99BCD /* OLPayPalCard.m in Sources */,
 				2EA3D37F1C9C04B500B99BCD /* OLProductPrintJob.m in Sources */,
 				2EB715DE1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m in Sources */,
+				2EB00AB41D92C9D400668B29 /* OLOAuth2Connection.m in Sources */,
 				2EA3D3801C9C04B500B99BCD /* OLSingleImageProductReviewViewController.m in Sources */,
 				2E96BAE41D2FC109002F5F74 /* qrspec.c in Sources */,
 				2EA3D3811C9C04B500B99BCD /* OLImagePreviewViewController.m in Sources */,
@@ -2851,6 +2991,7 @@
 				2EA3D3851C9C04B500B99BCD /* OLEditPhotobookViewController.m in Sources */,
 				2EA3D3861C9C04B500B99BCD /* UIView+RMUtils.m in Sources */,
 				2EB613001D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
+				2EB00AAC1D92C9D400668B29 /* OLOAuth2AccountStore.m in Sources */,
 				2EB612EF1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2EA3D3871C9C04B500B99BCD /* OLPrintOrder+History.m in Sources */,
 				2EA3D3881C9C04B500B99BCD /* OLStripeCard.m in Sources */,
@@ -2887,20 +3028,25 @@
 				2EA3D3A31C9C04B500B99BCD /* UITextField+Selection.m in Sources */,
 				2EA3D3A41C9C04B500B99BCD /* OLCollectionViewController.m in Sources */,
 				2EA3D3A61C9C04B500B99BCD /* LXReorderableCollectionViewFlowLayout.m in Sources */,
+				2E480A9E1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m in Sources */,
 				2EA3D3A71C9C04B500B99BCD /* OLImageCachingManager.m in Sources */,
 				2EA3D3A81C9C04B500B99BCD /* UIView+RoundRect.m in Sources */,
 				2EB715E41CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m in Sources */,
+				2E480A9A1D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */,
 				2EA3D3A91C9C04B500B99BCD /* OLCountry.m in Sources */,
 				2EA0087D1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
 				2E67B9271D2671DF00914D56 /* OLPhotoTextField.m in Sources */,
 				2EA3D3AC1C9C04B500B99BCD /* OLConstants.m in Sources */,
 				2E96BAEC1D2FC109002F5F74 /* split.c in Sources */,
+				2E480AAA1D92D060006C0EE6 /* OLOAuth2Request.m in Sources */,
 				2EA3D3AD1C9C04B500B99BCD /* OLProductOverviewPageContentViewController.m in Sources */,
 				2E7BDADD1D3E1713005F142C /* OLUserSession.m in Sources */,
 				2E67B9251D2671DB00914D56 /* OLTextOnPhoto.m in Sources */,
 				2E5D95AE1CA984E00080EF07 /* OLUpsellViewController.m in Sources */,
 				2EA3D3AF1C9C04B500B99BCD /* OLReceiptViewController.m in Sources */,
 				2EA3D3B01C9C04B500B99BCD /* OLAssetUploadRequest.m in Sources */,
+				2EB00A981D92C9D400668B29 /* NSData+OLOAuth2.m in Sources */,
+				2E480AA61D92D060006C0EE6 /* OLOAuth2PostBodyStream.m in Sources */,
 				2EA3D3B11C9C04B500B99BCD /* OLAddressPickerController.m in Sources */,
 				2E1E66EB1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				2EA3D3B41C9C04B500B99BCD /* OLPostcardPrintJob.m in Sources */,
@@ -2918,11 +3064,13 @@
 				2EA3D3BB1C9C04B500B99BCD /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				2EA3D3BC1C9C04B500B99BCD /* OLKiteABTesting.m in Sources */,
 				2EA3D3BD1C9C04B500B99BCD /* OLProductHomeViewController.m in Sources */,
+				2EB00AA41D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */,
 				2EA3D3BF1C9C04B500B99BCD /* OLViewController.m in Sources */,
 				2E37B1841D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				2E96BAD41D2FC109002F5F74 /* bitstream.c in Sources */,
 				2EA3D3C01C9C04B500B99BCD /* OLAddressSelectionViewController.m in Sources */,
 				2EA3D3C11C9C04B500B99BCD /* OLProductTemplateOption.m in Sources */,
+				2EB00AB01D92C9D400668B29 /* OLOAuth2Client.m in Sources */,
 				2EA3D3C31C9C04B500B99BCD /* RMImageCropper.m in Sources */,
 				2EA3D3C51C9C04B500B99BCD /* OLCountryPickerController.m in Sources */,
 				2EA3D3C71C9C04B500B99BCD /* OLBaseRequest.m in Sources */,
@@ -2947,10 +3095,13 @@
 				2EADD7E81BE79D6D0051CD31 /* OLPrintOrderCostRequest.m in Sources */,
 				2EB197911CF872F200648696 /* OLPaymentMethodsViewController.m in Sources */,
 				2EADD7E91BE79D6D0051CD31 /* OLInfoPageViewController.m in Sources */,
+				2E480A9B1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m in Sources */,
 				2EADD7EA1BE79D6D0051CD31 /* OLIntegratedCheckoutViewController.m in Sources */,
 				2EADD7EB1BE79D6D0051CD31 /* OLProductGroup.m in Sources */,
+				2E480A9F1D92D060006C0EE6 /* OLOAuth2PostBodyPart.m in Sources */,
 				2EB612FD1D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
 				2EADD7EC1BE79D6D0051CD31 /* UIImage+OLUtils.m in Sources */,
+				2EB00A951D92C9D400668B29 /* NSData+OLOAuth2.m in Sources */,
 				2EADD7ED1BE79D6D0051CD31 /* OLCheckoutViewController.m in Sources */,
 				2EEB53001D7062870066B802 /* OLProductTemplateOptionChoice.m in Sources */,
 				2EBDA6DD1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
@@ -2968,18 +3119,22 @@
 				2EADD7F61BE79D6D0051CD31 /* OLPackProductViewController.m in Sources */,
 				2EADD7F71BE79D6D0051CD31 /* OLProduct.m in Sources */,
 				2E96BAE91D2FC109002F5F74 /* split.c in Sources */,
+				2EB00A991D92C9D400668B29 /* NSString+OLOAuth2.m in Sources */,
 				2E7F516D1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */,
 				2EADD7FA1BE79D6D0051CD31 /* OLAddressEditViewController.m in Sources */,
 				2EADD7FB1BE79D6D0051CD31 /* OLKiteUtils.m in Sources */,
 				2EB612F21D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */,
 				2E7BDADA1D3E1713005F142C /* OLUserSession.m in Sources */,
+				2EB00AA11D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */,
 				2EADD7FE1BE79D6D0051CD31 /* OLCaseViewController.m in Sources */,
 				2EADD7FF1BE79D6D0051CD31 /* ViewController.m in Sources */,
 				2EADD8001BE79D6D0051CD31 /* OLFrameOrderReviewViewController.m in Sources */,
+				2EB00AA51D92C9D400668B29 /* OLOAuth2Account.m in Sources */,
 				2EADD8011BE79D6D0051CD31 /* OLApparelPrintJob.m in Sources */,
 				2EADD8021BE79D6D0051CD31 /* OLKiteViewController.m in Sources */,
 				2EADD8041BE79D6D0051CD31 /* OLPhotobookPageContentViewController.m in Sources */,
+				2E480AA71D92D060006C0EE6 /* OLOAuth2Request.m in Sources */,
 				2E5D95AC1CA984E00080EF07 /* OLUpsellViewController.m in Sources */,
 				E237FA641D63035600A7912E /* UIColor+OLHexString.m in Sources */,
 				2EADD8071BE79D6D0051CD31 /* UIImageView+FadeIn.m in Sources */,
@@ -2987,7 +3142,9 @@
 				2E96BAE51D2FC109002F5F74 /* rscode.c in Sources */,
 				2EADD8091BE79D6D0051CD31 /* OLPayPalCard.m in Sources */,
 				2E28CDFD1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */,
+				2EB00A9D1D92C9D400668B29 /* NSURL+OLOAuth2.m in Sources */,
 				2E96BAD51D2FC109002F5F74 /* mask.c in Sources */,
+				2E480A971D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */,
 				2EADD80A1BE79D6D0051CD31 /* OLProductPrintJob.m in Sources */,
 				2EADD80B1BE79D6D0051CD31 /* OLSingleImageProductReviewViewController.m in Sources */,
 				2E0FF2E31D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */,
@@ -3009,6 +3166,7 @@
 				2EADD8181BE79D6D0051CD31 /* OLKitePrintSDK.m in Sources */,
 				2EB612EC1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2E37B1811D229162003DAA84 /* OLProductRepresentation.m in Sources */,
+				2E480AA31D92D060006C0EE6 /* OLOAuth2PostBodyStream.m in Sources */,
 				2E36A1DC1D42094C00EA2F0F /* OLImagePickerProvider.m in Sources */,
 				E2AABA151C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m in Sources */,
 				2E1E66E41D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
@@ -3039,6 +3197,7 @@
 				2EADD82E1BE79D6D0051CD31 /* UIView+RoundRect.m in Sources */,
 				2EADD82F1BE79D6D0051CD31 /* OLCountry.m in Sources */,
 				2E2BF4471CCDFAF100725561 /* OLKiteTheme.m in Sources */,
+				2EB00AA91D92C9D400668B29 /* OLOAuth2AccountStore.m in Sources */,
 				2E0804B81C0DECE300F50D42 /* OLCustomPhotoProvider.m in Sources */,
 				2EADD8321BE79D6D0051CD31 /* OLConstants.m in Sources */,
 				2EB715E11CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m in Sources */,
@@ -3051,6 +3210,7 @@
 				2EADD8381BE79D6D0051CD31 /* main.m in Sources */,
 				2EADD83A1BE79D6D0051CD31 /* OLPostcardPrintJob.m in Sources */,
 				2E37B17B1D227EDA003DAA84 /* OLPageLayout.m in Sources */,
+				2EB00AAD1D92C9D400668B29 /* OLOAuth2Client.m in Sources */,
 				2EADD83B1BE79D6D0051CD31 /* NSObject+Utils.m in Sources */,
 				2EADD83C1BE79D6D0051CD31 /* OLAnalytics.m in Sources */,
 				2E96BAE11D2FC109002F5F74 /* qrspec.c in Sources */,
@@ -3070,6 +3230,7 @@
 				2EADD8481BE79D6D0051CD31 /* OLCountryPickerController.m in Sources */,
 				2E884F461D37B566007CA45A /* OLImagePickerViewController.m in Sources */,
 				E2AABA191C6FC6650007C1D7 /* OLURLShortener.m in Sources */,
+				2EB00AB11D92C9D400668B29 /* OLOAuth2Connection.m in Sources */,
 				2E18DC511D913DB1004752D2 /* OLPrintPhoto.m in Sources */,
 				2EADD8491BE79D6D0051CD31 /* OLBaseRequest.m in Sources */,
 				2EADD84A1BE79D6D0051CD31 /* OLPhotobookPrintJob.m in Sources */,
@@ -3156,7 +3317,9 @@
 				E29C85A11BE3B5C50041D4CF /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				E29C85A41BE3B5C50041D4CF /* OLPackProductViewController.m in Sources */,
 				E29C85A51BE3B5C50041D4CF /* OLProduct.m in Sources */,
+				2EB00AAB1D92C9D400668B29 /* OLOAuth2AccountStore.m in Sources */,
 				2EEB53021D7062870066B802 /* OLProductTemplateOptionChoice.m in Sources */,
+				2EB00AA71D92C9D400668B29 /* OLOAuth2Account.m in Sources */,
 				E29C85AB1BE3B5C50041D4CF /* OLAddressEditViewController.m in Sources */,
 				E29C85AC1BE3B5C50041D4CF /* OLKiteUtils.m in Sources */,
 				2E5BDC401CEDBF8200257B1A /* OLImageDownloadDelegate.m in Sources */,
@@ -3186,7 +3349,10 @@
 				E29C85C91BE3B5C50041D4CF /* UIView+RMUtils.m in Sources */,
 				E29C85CA1BE3B5C50041D4CF /* OLPrintOrder+History.m in Sources */,
 				2E37B17D1D227EDA003DAA84 /* OLPageLayout.m in Sources */,
+				2E480A9D1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m in Sources */,
+				2EB00A9F1D92C9D400668B29 /* NSURL+OLOAuth2.m in Sources */,
 				2E5D95AD1CA984E00080EF07 /* OLUpsellViewController.m in Sources */,
+				2EB00A971D92C9D400668B29 /* NSData+OLOAuth2.m in Sources */,
 				2E1E66D11D477B78002524A4 /* OLImagePickerPageViewController.m in Sources */,
 				2E96BADF1D2FC109002F5F74 /* qrinput.c in Sources */,
 				2E482B7B1BEB4C7D007460EA /* OLStripeCard.m in Sources */,
@@ -3203,7 +3369,9 @@
 				E29C85D31BE3B5C50041D4CF /* NSString+Formatting.m in Sources */,
 				2E96BAD71D2FC109002F5F74 /* mask.c in Sources */,
 				2E96BAE71D2FC109002F5F74 /* rscode.c in Sources */,
+				2EB00AAF1D92C9D400668B29 /* OLOAuth2Client.m in Sources */,
 				E29C85D41BE3B5C50041D4CF /* OLAddress.m in Sources */,
+				2EB00AA31D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */,
 				E29C85D61BE3B5C50041D4CF /* OLNavigationController.m in Sources */,
 				2E1E66E61D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2E8FD2711BF9E73B00F4FC5A /* OLPhotoEdits.m in Sources */,
@@ -3220,6 +3388,7 @@
 				2E67B92C1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				2EC43DDC1D65B3D100915DDE /* UIColor+OLHexString.m in Sources */,
 				E29C85DE1BE3B5C50041D4CF /* OLProductTemplateSyncRequest.m in Sources */,
+				2EB00AB31D92C9D400668B29 /* OLOAuth2Connection.m in Sources */,
 				E29C85E41BE3B5C50041D4CF /* OLProductTypeSelectionViewController.m in Sources */,
 				E29C85E51BE3B5C50041D4CF /* OLPrintOrderRequest.m in Sources */,
 				E29C85E61BE3B5C50041D4CF /* OLRemoteImageCropper.m in Sources */,
@@ -3240,15 +3409,18 @@
 				2E96BADB1D2FC109002F5F74 /* qrencode.c in Sources */,
 				E29C85F71BE3B5C50041D4CF /* OLReceiptViewController.m in Sources */,
 				E29C85F81BE3B5C50041D4CF /* OLAssetUploadRequest.m in Sources */,
+				2E480AA91D92D060006C0EE6 /* OLOAuth2Request.m in Sources */,
 				2EB715DD1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m in Sources */,
 				E29C85F91BE3B5C50041D4CF /* OLAddressPickerController.m in Sources */,
 				E29C85FE1BE3B5C50041D4CF /* OLPostcardPrintJob.m in Sources */,
+				2E480A991D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */,
 				E29C86011BE3B5C50041D4CF /* NSObject+Utils.m in Sources */,
 				2E28CDFF1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */,
 				E29C86021BE3B5C50041D4CF /* OLAnalytics.m in Sources */,
 				E29C86031BE3B5C50041D4CF /* OLCircleMaskCollectionViewCell.m in Sources */,
 				E29C86041BE3B5C50041D4CF /* OLCreditCardCaptureViewController.m in Sources */,
 				E29C86081BE3B5C50041D4CF /* OLAddressLookupViewController.m in Sources */,
+				2EB00A9B1D92C9D400668B29 /* NSString+OLOAuth2.m in Sources */,
 				2E1E66E21D4795EE002524A4 /* OLFacebookAlbum.m in Sources */,
 				2E18DC531D913DB1004752D2 /* OLPrintPhoto.m in Sources */,
 				2E7BDADC1D3E1713005F142C /* OLUserSession.m in Sources */,
@@ -3270,9 +3442,11 @@
 				2E37B1831D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				E29C86161BE3B5C50041D4CF /* OLPhotobookPrintJob.m in Sources */,
 				E29C86171BE3B5C50041D4CF /* OLPaymentLineItem.m in Sources */,
+				2E480AA11D92D060006C0EE6 /* OLOAuth2PostBodyPart.m in Sources */,
 				2E96BAE31D2FC109002F5F74 /* qrspec.c in Sources */,
 				2E36A1E41D420CDA00EA2F0F /* OLImagePickerProviderCollection.m in Sources */,
 				E29C86181BE3B5C50041D4CF /* OLPrintJob.m in Sources */,
+				2E480AA51D92D060006C0EE6 /* OLOAuth2PostBodyStream.m in Sources */,
 				2E25FEFD1CF2EF5D006E52E5 /* OLKeyChainStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3376,7 +3550,6 @@
 					"-l\"FBSDKCoreKit\"",
 					"-l\"FBSDKLoginKit\"",
 					"-l\"MPFlipViewController\"",
-					"-l\"NXOAuth2Client\"",
 					"-l\"PayPalMobile\"",
 					"-l\"SVProgressHUD\"",
 					"-l\"Stripe\"",
@@ -3483,7 +3656,6 @@
 					"-l\"FBSDKCoreKit\"",
 					"-l\"FBSDKLoginKit\"",
 					"-l\"MPFlipViewController\"",
-					"-l\"NXOAuth2Client\"",
 					"-l\"PayPalMobile\"",
 					"-l\"SVProgressHUD\"",
 					"-l\"Stripe\"",
@@ -3646,7 +3818,6 @@
 					"-l\"FBSDKCoreKit\"",
 					"-l\"FBSDKLoginKit\"",
 					"-l\"MPFlipViewController\"",
-					"-l\"NXOAuth2Client\"",
 					"-l\"PayPalMobile\"",
 					"-l\"SVProgressHUD\"",
 					"-l\"Stripe\"",
@@ -3750,7 +3921,6 @@
 					"-l\"FBSDKCoreKit\"",
 					"-l\"FBSDKLoginKit\"",
 					"-l\"MPFlipViewController\"",
-					"-l\"NXOAuth2Client\"",
 					"-l\"PayPalMobile\"",
 					"-l\"SVProgressHUD\"",
 					"-l\"Stripe\"",

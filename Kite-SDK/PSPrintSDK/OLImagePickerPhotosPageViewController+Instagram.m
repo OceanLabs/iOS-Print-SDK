@@ -29,7 +29,7 @@
 
 #import "OLImagePickerPhotosPageViewController+Instagram.h"
 #import "OLInstagramImagePickerConstants.h"
-#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#import "OLOAuth2AccountStore.h"
 #import "OLInstagramImage.h"
 #import "OLImagePickerProviderCollection.h"
 
@@ -65,9 +65,9 @@
             // clear all accounts and redo login...
             if (error.domain == kOLInstagramImagePickerErrorDomain && error.code == kOLInstagramImagePickerErrorCodeOAuthTokenInvalid) {
                 // need to renew auth token, start by clearing any accounts. A new one will be created as part of the login process.
-                NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-                for (NXOAuth2Account *account in instagramAccounts) {
-                    [[NXOAuth2AccountStore sharedStore] removeAccount:account];
+                NSArray *instagramAccounts = [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
+                for (OLOAuth2Account *account in instagramAccounts) {
+                    [[OLOAuth2AccountStore sharedStore] removeAccount:account];
                 }
                 
                 [welf.imagePicker reloadPageController];

@@ -29,7 +29,7 @@
 
 #import "OLUserSession.h"
 #import "OLKiteUtils.h"
-#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#import "OLOAuth2AccountStore.h"
 #import "OLAsset+Private.h"
 #import "OLPayPalCard.h"
 #import "OLStripeCard.h"
@@ -110,9 +110,9 @@
             }
         }
         
-        NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-        for (NXOAuth2Account *account in instagramAccounts) {
-            [[NXOAuth2AccountStore sharedStore] removeAccount:account];
+        NSArray *instagramAccounts = [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
+        for (OLOAuth2Account *account in instagramAccounts) {
+            [[OLOAuth2AccountStore sharedStore] removeAccount:account];
         }
         
         [OLFacebookSDKWrapper logout];

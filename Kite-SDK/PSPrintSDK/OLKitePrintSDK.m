@@ -27,22 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#ifdef OL_KITE_OFFER_FACEBOOK
-#ifdef COCOAPODS
-#import <NXOAuth2Client/NXOAuth2AccountStore.h>
-#else
-#import "NXOAuth2AccountStore.h"
-#endif
-#endif
-
-#ifdef OL_KITE_OFFER_INSTAGRAM
-#ifdef COCOAPODS
-#import <NXOAuth2Client/NXOAuth2AccountStore.h>
-#else
-#import "NXOAuth2AccountStore.h"
-#endif
-#endif
-
 #import "OLKitePrintSDK.h"
 #import "OLPayPalCard.h"
 #import "OLProductTemplate.h"

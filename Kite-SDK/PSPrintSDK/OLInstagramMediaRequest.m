@@ -30,7 +30,7 @@
 #import "OLInstagramMediaRequest.h"
 #import "OLInstagramImage.h"
 #import "OLInstagramImagePickerConstants.h"
-#import <NXOAuth2Client/NXOAuth2.h>
+#import "OLOAuth2.h"
 
 @interface OLInstagramMediaRequest ()
 @property (nonatomic, assign) BOOL cancelled;
@@ -56,11 +56,11 @@
 }
 
 - (void)fetchMediaWithCompletionHandler:(InstagramMediaRequestCompletionHandler)completionHandler {
-    NXOAuth2Account *account = [[[NXOAuth2AccountStore sharedStore] accounts] lastObject];
+    OLOAuth2Account *account = [[[OLOAuth2AccountStore sharedStore] accounts] lastObject];
     [self fetchMediaForAccount:account completionHandler:completionHandler];
 }
 
-- (void)fetchMediaForAccount:(NXOAuth2Account *)account completionHandler:(InstagramMediaRequestCompletionHandler)completionHandler {
+- (void)fetchMediaForAccount:(OLOAuth2Account *)account completionHandler:(InstagramMediaRequestCompletionHandler)completionHandler {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     if ([self.baseURL rangeOfString:@"access_token"].location == NSNotFound) {
@@ -69,7 +69,7 @@
     
     NSURL *url = [NSURL URLWithString:[self.baseURL stringByAppendingString:@"&count=100"]];
 
-    [NXOAuth2Request performMethod:@"GET"
+    [OLOAuth2Request performMethod:@"GET"
                         onResource:url
                    usingParameters:nil
                        withAccount:account
@@ -85,9 +85,9 @@
                        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
                        if (httpResponse.statusCode == 400 || httpResponse.statusCode == 401) {
                            // Kill all accounts and force the user to login again.
-                           NSArray *accounts = [[NXOAuth2AccountStore sharedStore] accounts];
-                           for (NXOAuth2Account *account in accounts) {
-                               [[NXOAuth2AccountStore sharedStore] removeAccount:account];
+                           NSArray *accounts = [[OLOAuth2AccountStore sharedStore] accounts];
+                           for (OLOAuth2Account *account in accounts) {
+                               [[OLOAuth2AccountStore sharedStore] removeAccount:account];
                            }
                            
                            NSError *error = [NSError errorWithDomain:kOLInstagramImagePickerErrorDomain code:kOLInstagramImagePickerErrorCodeOAuthTokenInvalid userInfo:@{NSLocalizedDescriptionKey: @"Instagram authorization token has expired. You'll need to log in again."}];

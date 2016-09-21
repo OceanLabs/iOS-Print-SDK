@@ -30,7 +30,7 @@
 #import <Foundation/Foundation.h>
 
 @class OLInstagramMediaRequest;
-@class NXOAuth2Account;
+@class OLOAuth2Account;
 
 
 
@@ -42,6 +42,6 @@ typedef void (^InstagramMediaRequestCompletionHandler)(NSError *error, NSArray *
 
 - (void)cancel;
 - (void)fetchMediaWithCompletionHandler:(InstagramMediaRequestCompletionHandler)completionHandler;
-- (void)fetchMediaForAccount:(NXOAuth2Account *)account completionHandler:(InstagramMediaRequestCompletionHandler)completionHandler;
+- (void)fetchMediaForAccount:(OLOAuth2Account *)account completionHandler:(InstagramMediaRequestCompletionHandler)completionHandler;
 
 @end

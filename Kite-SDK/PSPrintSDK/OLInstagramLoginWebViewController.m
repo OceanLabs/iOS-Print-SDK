@@ -29,7 +29,7 @@
 
 #import "OLInstagramLoginWebViewController.h"
 #import "OLInstagramImagePickerConstants.h"
-#import <NXOAuth2Client/NXOAuth2.h>
+#import "OLOAuth2.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
 
@@ -96,14 +96,14 @@
 }
 
 - (void)addInstagramLoginObservers {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onInstagramOAuthAuthenticateFail:) name:NXOAuth2AccountStoreDidFailToRequestAccessNotification object:[NXOAuth2AccountStore sharedStore]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onInstagramOAuthAccountStoreDidChange:) name:NXOAuth2AccountStoreAccountsDidChangeNotification object:[NXOAuth2AccountStore sharedStore]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onInstagramOAuthAuthenticateFail:) name:OLOAuth2AccountStoreDidFailToRequestAccessNotification object:[OLOAuth2AccountStore sharedStore]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onInstagramOAuthAccountStoreDidChange:) name:OLOAuth2AccountStoreAccountsDidChangeNotification object:[OLOAuth2AccountStore sharedStore]];
 }
 
 - (void)startAuthenticatingUser {
     self.activityIndicator.hidden = NO;
     [self.webView loadHTMLString:@"" baseURL:nil]; // clear WebView as we may be coming back to it for a second time and don't want any content to be on display.
-    [[NXOAuth2AccountStore sharedStore] requestAccessToAccountWithType:@"instagram"
+    [[OLOAuth2AccountStore sharedStore] requestAccessToAccountWithType:@"instagram"
                                    withPreparedAuthorizationURLHandler:^(NSURL *preparedURL){
                                        self.authURL = preparedURL;
                                        [self.webView loadRequest:[NSURLRequest requestWithURL:self.authURL]];
@@ -141,7 +141,7 @@
 }
 
 - (void)onInstagramOAuthAccountStoreDidChange:(NSNotification *)notification {
-    NXOAuth2Account *account = [notification.userInfo objectForKey:NXOAuth2AccountStoreNewAccountUserInfoKey];
+    OLOAuth2Account *account = [notification.userInfo objectForKey:OLOAuth2AccountStoreNewAccountUserInfoKey];
     if (account) {
         // a new account has been created
         [self.imagePicker reloadPageController];
@@ -154,7 +154,7 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     if ([request.URL.absoluteString hasPrefix:[OLKitePrintSDK instagramRedirectURI]]) {
         [self.webView stopLoading];
-        BOOL handled = [[NXOAuth2AccountStore sharedStore] handleRedirectURL:request.URL];
+        BOOL handled = [[OLOAuth2AccountStore sharedStore] handleRedirectURL:request.URL];
         if (!handled) {
             // Show the user a error message.
             NSString *errorReason = [self url:request.URL queryValueForName:@"error_reason"];
@@ -183,8 +183,8 @@
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NXOAuth2AccountStoreDidFailToRequestAccessNotification object:[NXOAuth2AccountStore sharedStore]];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NXOAuth2AccountStoreAccountsDidChangeNotification object:[NXOAuth2AccountStore sharedStore]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:OLOAuth2AccountStoreDidFailToRequestAccessNotification object:[OLOAuth2AccountStore sharedStore]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:OLOAuth2AccountStoreAccountsDidChangeNotification object:[OLOAuth2AccountStore sharedStore]];
 }
 
 @end
