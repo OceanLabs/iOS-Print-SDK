@@ -40,4 +40,64 @@
     return func(FBSDKAccessTokenClass, aSelector);
 }
 
++ (id)initGraphRequestWithGraphPath:(NSString *)graphPath{
+    Class FBSDKGraphRequestClass = NSClassFromString (@"FBSDKGraphRequest");
+    id graph = [FBSDKGraphRequestClass alloc];
+    
+    SEL aSelector = NSSelectorFromString(@"initWithGraphPath:parameters:");
+    IMP imp = [graph methodForSelector:aSelector];
+    id (*func)(id, SEL, id, id) = (void *)imp;
+    
+    graph = func(graph, aSelector, graphPath, @{});
+    return graph;
+}
+
++ (void)startGraphRequest:(id)graphRequest withCompletionHandler:(void(^)(id connection, id result, NSError *error))handler{
+    SEL aSelector = NSSelectorFromString(@"startWithCompletionHandler:");
+    IMP imp = [graphRequest methodForSelector:aSelector];
+    id (*func)(id, SEL, id) = (void *)imp;
+    
+    func(graphRequest, aSelector, handler);
+}
+
++ (void)login:(id)login withReadPermissions:(NSArray *)permissions fromViewController:(UIViewController *)vc handler:(void(^)(id result, NSError *error))handler{
+    SEL aSelector = NSSelectorFromString(@"logInWithReadPermissions:fromViewController:handler:");
+    IMP imp = [login methodForSelector:aSelector];
+    id (*func)(id, SEL, id, id, id) = (void *)imp;
+    
+    func(login, aSelector, permissions, vc, handler);
+}
+
++ (id)tokenString{
+    id token = [self currentAccessToken];
+    SEL aSelector = NSSelectorFromString(@"tokenString");
+    IMP imp = [token methodForSelector:aSelector];
+    id (*func)(id, SEL) = (void *)imp;
+    
+    return func(token, aSelector);
+}
+
++ (id)loginManager{
+    Class FBSDKLoginManagerClass = NSClassFromString (@"FBSDKLoginManager");
+    return [[FBSDKLoginManagerClass alloc] init];
+}
+
++ (void)logout{
+    id loginManager = [OLFacebookSDKWrapper loginManager];
+    SEL aSelector = NSSelectorFromString(@"logout");
+    IMP imp = [loginManager methodForSelector:aSelector];
+    id (*func)(id, SEL) = (void *)imp;
+    
+    func(loginManager, aSelector);
+}
+
++ (void)clearAccessToken{
+    Class FBSDKAccessTokenClass = NSClassFromString (@"FBSDKAccessToken");
+    SEL aSelector = NSSelectorFromString(@"setCurrentAccessToken:");
+    IMP imp = [FBSDKAccessTokenClass methodForSelector:aSelector];
+    id (*func)(id, SEL, id) = (void *)imp;
+    
+    func(FBSDKAccessTokenClass, aSelector, nil);
+}
+
 @end

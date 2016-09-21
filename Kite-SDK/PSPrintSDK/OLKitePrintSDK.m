@@ -47,39 +47,12 @@
 #import "OLPayPalCard.h"
 #import "OLProductTemplate.h"
 #import "OLStripeCard.h"
-#ifdef OL_KITE_OFFER_PAYPAL
-#ifdef COCOAPODS
-#import <PayPal-iOS-SDK/PayPalMobile.h>
-#else
-#import "PayPalMobile.h"
-#endif
-#endif
-
-#import "OLProductHomeViewController.h"
-#import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteABTesting.h"
-#import "OLAddressEditViewController.h"
-#ifdef OL_KITE_OFFER_APPLE_PAY
-#ifdef COCOAPODS
-#import <Stripe/Stripe.h>
-#else
-#import "Stripe.h"
-#endif
-#endif
-
-#ifdef OL_KITE_OFFER_FACEBOOK
-#ifdef COCOAPODS
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#else
-#import "FBSDKLoginManager.h"
-#import "FBSDKCoreKit.h"
-#endif
-
-#endif
-#import "OLPaymentViewController.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
+
+extern NSString *const PayPalEnvironmentProduction;
+extern NSString *const PayPalEnvironmentSandbox;
 
 static NSString *apiKey = nil;
 static NSString *applePayMerchantID = nil;

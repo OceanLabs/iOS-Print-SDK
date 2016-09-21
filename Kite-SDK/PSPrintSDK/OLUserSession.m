@@ -30,13 +30,12 @@
 #import "OLUserSession.h"
 #import "OLKiteUtils.h"
 #import <NXOAuth2Client/NXOAuth2AccountStore.h>
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
 #import "OLAsset+Private.h"
 #import "OLPayPalCard.h"
 #import "OLStripeCard.h"
 #import "OLKiteABTesting.h"
 #import "OLAddress+AddressBook.h"
+#import "OLFacebookSDKWrapper.h"
 
 @interface OLPrintOrder (Private)
 
@@ -116,9 +115,8 @@
             [[NXOAuth2AccountStore sharedStore] removeAccount:account];
         }
         
-        FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-        [loginManager logOut];
-        [FBSDKAccessToken setCurrentAccessToken:nil];
+        [OLFacebookSDKWrapper logout];
+        [OLFacebookSDKWrapper clearAccessToken];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionPersonal) == OLUserSessionCleanupOptionPersonal){
         [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientLastName = nil;

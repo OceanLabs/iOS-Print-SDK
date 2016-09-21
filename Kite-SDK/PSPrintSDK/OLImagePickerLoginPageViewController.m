@@ -29,13 +29,13 @@
 
 #import "OLImagePickerLoginPageViewController.h"
 #import "UIView+RoundRect.h"
-#import "FBSDKLoginManager.h"
 #import "OLImagePickerViewController.h"
 #import <NXOAuth2Client/NXOAuth2AccountStore.h>
 #import "OLKitePrintSDK.h"
 #import "OLInstagramLoginWebViewController.h"
 #import "OLNavigationController.h"
 #import "OLKiteUtils.h"
+#import "OLFacebookSDKWrapper.h"
 
 @interface OLImagePickerLoginPageViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
@@ -76,8 +76,7 @@
         [self presentViewController:nvc animated:YES completion:NULL];
     }
     else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
-        FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-        [login logInWithReadPermissions:@[@"public_profile", @"user_photos"] fromViewController:self handler:^(id result, NSError *error) {
+        [OLFacebookSDKWrapper login:[OLFacebookSDKWrapper loginManager] withReadPermissions:@[@"public_profile", @"user_photos"] fromViewController:self handler:^(id result, NSError *error) {
             if (error) {
                 //TODO show error?
             } else if ([result isCancelled]) {

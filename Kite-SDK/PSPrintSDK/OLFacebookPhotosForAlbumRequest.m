@@ -31,7 +31,6 @@
 #import "OLFacebookAlbum.h"
 #import "OLFacebookImage.h"
 #import "OLFacebookImagePickerConstants.h"
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "OLFacebookSDKWrapper.h"
 
 @interface OLFacebookPhotosForAlbumRequest ()
@@ -80,8 +79,8 @@
             graphPath = [graphPath stringByAppendingFormat:@"&after=%@", self.after];
         }
         
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath parameters:nil];
-        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        id request = [OLFacebookSDKWrapper initGraphRequestWithGraphPath:graphPath];
+        [OLFacebookSDKWrapper startGraphRequest:request withCompletionHandler:^(id connection, id result, NSError *error) {
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
             if (self.cancelled) {
                 return;

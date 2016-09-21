@@ -30,9 +30,8 @@
 #import "AppDelegate.h"
 #import "OLKitePrintSDK.h"
 
-#ifdef OL_KITE_OFFER_FACEBOOK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#endif
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {

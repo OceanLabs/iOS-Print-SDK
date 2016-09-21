@@ -43,7 +43,6 @@
 #import "OLImagePickerProviderCollection.h"
 #import "OLImagePickerProvider.h"
 #import "OLImagePickerLoginPageViewController.h"
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
 #import <NXOAuth2Client/NXOAuth2AccountStore.h>
 #import "OLKitePrintSDK.h"
 #import "UIViewController+OLMethods.h"

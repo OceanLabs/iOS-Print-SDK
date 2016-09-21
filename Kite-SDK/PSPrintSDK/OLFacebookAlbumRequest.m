@@ -30,7 +30,6 @@
 #import "OLFacebookAlbumRequest.h"
 #import "OLFacebookImagePickerConstants.h"
 #import "OLFacebookAlbum.h"
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "OLFacebookSDKWrapper.h"
 
 @interface OLFacebookAlbumRequest ()
@@ -65,8 +64,8 @@
             graphPath = [graphPath stringByAppendingFormat:@"&after=%@", self.after];
         }
         
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath parameters:nil];
-        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        id request = [OLFacebookSDKWrapper initGraphRequestWithGraphPath:graphPath];
+        [OLFacebookSDKWrapper startGraphRequest:request withCompletionHandler:^(id connection, id result, NSError *error) {
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
             if (self.cancelled) {
                 return;
@@ -103,7 +102,7 @@
                 album.albumId = albumId;
                 album.photoCount = [photoCount unsignedIntegerValue];
                 album.name = name;
-                album.coverPhotoURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=album&access_token=%@", album.albumId, [FBSDKAccessToken currentAccessToken].tokenString]];
+                album.coverPhotoURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=album&access_token=%@", album.albumId, [OLFacebookSDKWrapper tokenString]]];
                 [albums addObject:album];
             }
             

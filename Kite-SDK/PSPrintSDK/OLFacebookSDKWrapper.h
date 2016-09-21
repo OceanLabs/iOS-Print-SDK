@@ -32,5 +32,12 @@
 @interface OLFacebookSDKWrapper : NSObject
 
 + (id)currentAccessToken;
++ (void)startGraphRequest:(id)graphRequest withCompletionHandler:(void(^)(id connection, id result, NSError *error))handler;
++ (id)initGraphRequestWithGraphPath:(NSString *)graphPath;
++ (void)login:(id)login withReadPermissions:(NSArray *)permissions fromViewController:(UIViewController *)vc handler:(void(^)(id result, NSError *error))handler;
++ (id)tokenString;
++ (id)loginManager;
++ (void)logout;
++ (void)clearAccessToken;
 
 @end
