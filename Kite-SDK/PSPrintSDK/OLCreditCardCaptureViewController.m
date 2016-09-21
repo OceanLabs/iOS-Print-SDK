@@ -27,12 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <SVProgressHUD/SVProgressHUD.h>
-#else
 #import "SVProgressHUD.h"
-#endif
-
 #import "OLCreditCardCaptureViewController.h"
 #import "OLConstants.h"
 #import "OLPayPalCard.h"

@@ -33,11 +33,7 @@
 #import "OLCountryPickerController.h"
 #import "OLAddressEditViewController.h"
 #import "OLConstants.h"
-#ifdef COCOAPODS
-#import <SVProgressHUD/SVProgressHUD.h>
-#else
 #import "SVProgressHUD.h"
-#endif
 #import "OLKiteViewController.h"
 #import "OLKiteUtils.h"
 #import "OLKiteABTesting.h"

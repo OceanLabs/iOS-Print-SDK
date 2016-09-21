@@ -27,12 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <MPFlipViewController/MPFlipTransition.h>
-#else
 #import "MPFlipTransition.h"
-#endif
-
 #import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
