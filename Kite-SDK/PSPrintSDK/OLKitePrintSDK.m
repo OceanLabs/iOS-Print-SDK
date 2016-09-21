@@ -79,6 +79,7 @@
 #endif
 #import "OLPaymentViewController.h"
 #import "OLKiteUtils.h"
+#import "OLUserSession.h"
 
 static NSString *apiKey = nil;
 static NSString *applePayMerchantID = nil;
@@ -258,49 +259,7 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (void)endCustomerSession{
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    [printOrder saveOrder];
-    
-#ifdef OL_KITE_OFFER_INSTAGRAM
-    NSHTTPCookie *cookie;
-    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    NSArray *cookies = [NSArray arrayWithArray:[storage cookies]];
-    for (cookie in cookies) {
-        if ([cookie.domain containsString:@"instagram.com"]) {
-            [storage deleteCookie:cookie];
-        }
-    }
-
-    NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-    for (NXOAuth2Account *account in instagramAccounts) {
-        [[NXOAuth2AccountStore sharedStore] removeAccount:account];
-    }
-#endif
-    
-#ifdef OL_KITE_OFFER_FACEBOOK
-    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-    [loginManager logOut];
-    [FBSDKAccessToken setCurrentAccessToken:nil];
-#endif
-    
-    [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientLastName = nil;
-    [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientFirstName = nil;
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyEmailAddress"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyPhone"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyRecipientName"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyRecipientFirstName"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyLine1"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyLine2"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCity"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCounty"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyPostCode"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCountry"];
-    [defaults synchronize];
-    
-    [OLPayPalCard clearLastUsedCard];
-    [OLStripeCard clearLastUsedCard];
+    [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionAll];
 }
 
 + (void)setAllowsImageZooming:(BOOL)allowZoom{

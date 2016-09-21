@@ -33,6 +33,10 @@
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
 #import <FBSDKLoginKit/FBSDKLoginManager.h>
 #import "OLAsset+Private.h"
+#import "OLPayPalCard.h"
+#import "OLStripeCard.h"
+#import "OLKiteABTesting.h"
+#import "OLAddress+AddressBook.h"
 
 @interface OLPrintOrder (Private)
 
@@ -94,7 +98,8 @@
         [self.printOrder saveOrder];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionPayment) == OLUserSessionCleanupOptionPayment){
-        //TODO
+        [OLPayPalCard clearLastUsedCard];
+        [OLStripeCard clearLastUsedCard];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionSocial) == OLUserSessionCleanupOptionSocial){
         NSHTTPCookie *cookie;
@@ -115,9 +120,27 @@
         [loginManager logOut];
         [FBSDKAccessToken setCurrentAccessToken:nil];
     }
+    if ((cleanupOptions & OLUserSessionCleanupOptionPersonal) == OLUserSessionCleanupOptionPersonal){
+        [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientLastName = nil;
+        [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientFirstName = nil;
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyEmailAddress"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyPhone"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyRecipientName"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyRecipientFirstName"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyLine1"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyLine2"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCity"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCounty"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyPostCode"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCountry"];
+        [defaults synchronize];
+        
+        [OLAddress clearAddressBook];
+    }
     if ((cleanupOptions & OLUserSessionCleanupOptionAll) == OLUserSessionCleanupOptionAll){
-        self.userSelectedPhotos = nil;
-        //TODO
+        [self cleanupUserSession:OLUserSessionCleanupOptionPhotos | OLUserSessionCleanupOptionBasket | OLUserSessionCleanupOptionSocial | OLUserSessionCleanupOptionPersonal];
     }
     
 }

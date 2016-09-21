@@ -36,7 +36,8 @@ enum {
     OLUserSessionCleanupOptionBasket           = 1 << 1,
     OLUserSessionCleanupOptionPayment          = 1 << 2,
     OLUserSessionCleanupOptionSocial           = 1 << 3,
-    OLUserSessionCleanupOptionAll              = 1 << 4,
+    OLUserSessionCleanupOptionPersonal         = 1 << 4,
+    OLUserSessionCleanupOptionAll              = 1 << 5,
 };
 typedef NSUInteger OLUserSessionCleanupOption;
 
