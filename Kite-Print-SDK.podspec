@@ -11,20 +11,5 @@ Pod::Spec.new do |spec|
   spec.requires_arc	= true
   spec.platform		= :ios, '8.0'
   spec.social_media_url	= 'https://twitter.com/dbotha'
-  spec.default_subspec = 'Lite'
-
-  spec.subspec 'Lite' do |lite|
-  #subspec for developers who don't want the third party PayPal, Stripe, Facebook bloat
-  end
-
-  spec.subspec 'PayPal' do |paypal|
-    paypal.xcconfig	=  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_PAYPAL' }
-    paypal.dependency	'PayPal-iOS-SDK/Core', '~> 2.12.6'
-  end
-
-  spec.subspec 'ApplePay' do |apple|
-    apple.xcconfig	  =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_OFFER_APPLE_PAY' }
-    apple.dependency	  'Stripe', '8.0.6'
-  end
 
 end
