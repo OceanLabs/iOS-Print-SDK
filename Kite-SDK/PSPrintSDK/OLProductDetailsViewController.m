@@ -28,13 +28,13 @@
 //
 
 #import "OLProductDetailsViewController.h"
-#import "TSMarkdownParser.h"
+#import "OLMarkdownParser.h"
 #import "OLAnalytics.h"
 #import "OLKiteABTesting.h"
 
-@interface TSMarkdownParser ()
+@interface OLMarkDownParser ()
 
-- (void)addParsingRuleWithRegularExpression:(NSRegularExpression *)regularExpression block:(TSMarkdownParserMatchBlock)block;
+- (void)addParsingRuleWithRegularExpression:(NSRegularExpression *)regularExpression block:(OLMarkDownParserMatchBlock)block;
 
 @end
 
@@ -74,7 +74,7 @@
 //        self.priceLabel.textColor = [UIColor whiteColor];
 //    }
     
-    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
+    NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
     //    if ([OLKiteABTesting sharedInstance].darkTheme){
     //        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];

@@ -28,7 +28,7 @@
 //
 
 
-#import "TSMarkdownParser.h"
+#import "OLMarkdownParser.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLNavigationController.h"
@@ -328,7 +328,7 @@
     
     s = [self promoBannerParaText];
     if (s){
-        NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
+        NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
         
         [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
         
@@ -339,7 +339,7 @@
     
     s = [self promoBannerHeaderText];
     if (s){
-        NSMutableAttributedString *headerString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
+        NSMutableAttributedString *headerString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
         
         [headerString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, headerString.length)];
         UILabel *label = (UILabel *)[self.bannerView viewWithTag:20];
@@ -706,7 +706,7 @@
             detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
         }
         
-        NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:product.productTemplate.productDescription] mutableCopy];
+        NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:product.productTemplate.productDescription] mutableCopy];
         detailsLabel.text = attributedString.string;
         
         if (![OLKiteABTesting sharedInstance].skipProductOverview){

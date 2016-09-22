@@ -214,7 +214,7 @@
         animation.fromValue = [NSNumber numberWithFloat:self.progress];
         animation.toValue = [NSNumber numberWithFloat:pinnedProgress];
         animation.beginTime = CACurrentMediaTime() + initialDelay;
-        animation.delegate = self;
+        animation.delegate = (id<CAAnimationDelegate>)self;
         [self.circularProgressLayer addAnimation:animation forKey:@"progress"];
     } else {
         [self.circularProgressLayer setNeedsDisplay];

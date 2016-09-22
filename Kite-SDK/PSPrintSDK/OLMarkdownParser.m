@@ -6,20 +6,20 @@
 //  Copyright (c) 2014 Computertalk Sweden. All rights reserved.
 //
 
-#import "TSMarkdownParser.h"
+#import "OLMarkDownParser.h"
 
 @interface TSExpressionBlockPair : NSObject
 
 @property (nonatomic, strong) NSRegularExpression *regularExpression;
-@property (nonatomic, strong) TSMarkdownParserMatchBlock block;
+@property (nonatomic, strong) OLMarkDownParserMatchBlock block;
 
-+ (TSExpressionBlockPair *)pairWithRegularExpression:(NSRegularExpression *)regularExpression block:(TSMarkdownParserMatchBlock)block;
++ (TSExpressionBlockPair *)pairWithRegularExpression:(NSRegularExpression *)regularExpression block:(OLMarkDownParserMatchBlock)block;
 
 @end
 
 @implementation TSExpressionBlockPair
 
-+ (TSExpressionBlockPair *)pairWithRegularExpression:(NSRegularExpression *)regularExpression block:(TSMarkdownParserMatchBlock)block {
++ (TSExpressionBlockPair *)pairWithRegularExpression:(NSRegularExpression *)regularExpression block:(OLMarkDownParserMatchBlock)block {
     TSExpressionBlockPair *pair = [TSExpressionBlockPair new];
     pair.regularExpression = regularExpression;
     pair.block = block;
@@ -28,14 +28,14 @@
 
 @end
 
-@interface TSMarkdownParser ()
+@interface OLMarkDownParser ()
 
 @property (nonatomic, strong) NSMutableArray *parsingPairs;
 @property (nonatomic, copy) void (^paragraphParsingBlock)(NSMutableAttributedString *attributedString);
 
 @end
 
-@implementation TSMarkdownParser
+@implementation OLMarkDownParser
 
 - (instancetype)init {
     self = [super init];
@@ -59,9 +59,9 @@
 }
 
 + (instancetype)standardParser {
-    TSMarkdownParser *defaultParser = [self new];
+    OLMarkDownParser *defaultParser = [self new];
     
-    __weak TSMarkdownParser *weakParser = defaultParser;
+    __weak OLMarkDownParser *weakParser = defaultParser;
     
     [defaultParser addParagraphParsingWithFormattingBlock:^(NSMutableAttributedString *attributedString, NSRange range) {
         [attributedString addAttribute:NSFontAttributeName
@@ -155,17 +155,17 @@
 }
 
 // block regex
-static NSString *const TSMarkdownHeaderRegex    = @"^(#{%i}\\s{1})(?!#).*$";
-static NSString *const TSMarkdownListRegex      = @"^(\\*|\\+|\\-)[^\\*].+$";
+static NSString *const OLMarkDownHeaderRegex    = @"^(#{%i}\\s{1})(?!#).*$";
+static NSString *const OLMarkDownListRegex      = @"^(\\*|\\+|\\-)[^\\*].+$";
 
 // bracket regex
-static NSString *const TSMarkdownImageRegex     = @"\\!\\[.*?\\]\\(\\S*\\)";
-static NSString *const TSMarkdownLinkRegex      = @"(?<!\\!)\\[.*?\\]\\([^\\)]*\\)";
+static NSString *const OLMarkDownImageRegex     = @"\\!\\[.*?\\]\\(\\S*\\)";
+static NSString *const OLMarkDownLinkRegex      = @"(?<!\\!)\\[.*?\\]\\([^\\)]*\\)";
 
 // inline regex
-static NSString *const TSMarkdownMonospaceRegex = @"(`+)\\s*([\\s\\S]*?[^`])\\s*\\1(?!`)";
-static NSString *const TSMarkdownStrongRegex    = @"([\\*|_]{2}).+?\\1";
-static NSString *const TSMarkdownEmRegex        = @"([\\*|_]{1}).+?\\1";
+static NSString *const OLMarkDownMonospaceRegex = @"(`+)\\s*([\\s\\S]*?[^`])\\s*\\1(?!`)";
+static NSString *const OLMarkDownStrongRegex    = @"([\\*|_]{2}).+?\\1";
+static NSString *const OLMarkDownEmRegex        = @"([\\*|_]{1}).+?\\1";
 
 - (void)addParagraphParsingWithFormattingBlock:(void(^)(NSMutableAttributedString *attributedString, NSRange range))formattingBlock {
     self.paragraphParsingBlock = ^(NSMutableAttributedString *attributedString) {
@@ -175,8 +175,8 @@ static NSString *const TSMarkdownEmRegex        = @"([\\*|_]{1}).+?\\1";
 
 #pragma mark block parsing
 
-- (void)addHeaderParsingWithLevel:(int)header formattingBlock:(TSMarkdownParserFormattingBlock)formattingBlock {
-    NSString *headerRegex = [NSString stringWithFormat:TSMarkdownHeaderRegex, header];
+- (void)addHeaderParsingWithLevel:(int)header formattingBlock:(OLMarkDownParserFormattingBlock)formattingBlock {
+    NSString *headerRegex = [NSString stringWithFormat:OLMarkDownHeaderRegex, header];
     NSRegularExpression *headerExpression = [NSRegularExpression regularExpressionWithPattern:headerRegex options:0 | NSRegularExpressionAnchorsMatchLines error:nil];
     [self addParsingRuleWithRegularExpression:headerExpression withBlock:^(NSTextCheckingResult *match, NSMutableAttributedString *attributedString) {
         formattingBlock(attributedString, match.range);
@@ -184,8 +184,8 @@ static NSString *const TSMarkdownEmRegex        = @"([\\*|_]{1}).+?\\1";
     }];
 }
 
-- (void)addListParsingWithFormattingBlock:(TSMarkdownParserFormattingBlock)formattingBlock {
-    NSRegularExpression *listParsing = [NSRegularExpression regularExpressionWithPattern:TSMarkdownListRegex options:0|NSRegularExpressionAnchorsMatchLines error:nil];
+- (void)addListParsingWithFormattingBlock:(OLMarkDownParserFormattingBlock)formattingBlock {
+    NSRegularExpression *listParsing = [NSRegularExpression regularExpressionWithPattern:OLMarkDownListRegex options:0|NSRegularExpressionAnchorsMatchLines error:nil];
     [self addParsingRuleWithRegularExpression:listParsing withBlock:^(NSTextCheckingResult *match, NSMutableAttributedString *attributedString) {
         formattingBlock(attributedString, NSMakeRange(match.range.location, 1));
     }];
@@ -193,8 +193,8 @@ static NSString *const TSMarkdownEmRegex        = @"([\\*|_]{1}).+?\\1";
 
 #pragma mark bracket parsing
 
-- (void)addImageParsingWithImageFormattingBlock:(TSMarkdownParserFormattingBlock)formattingBlock alternativeTextFormattingBlock:(TSMarkdownParserFormattingBlock)alternativeFormattingBlock {
-    NSRegularExpression *headerExpression = [NSRegularExpression regularExpressionWithPattern:TSMarkdownImageRegex options:0 error:nil];
+- (void)addImageParsingWithImageFormattingBlock:(OLMarkDownParserFormattingBlock)formattingBlock alternativeTextFormattingBlock:(OLMarkDownParserFormattingBlock)alternativeFormattingBlock {
+    NSRegularExpression *headerExpression = [NSRegularExpression regularExpressionWithPattern:OLMarkDownImageRegex options:0 error:nil];
     [self addParsingRuleWithRegularExpression:headerExpression withBlock:^(NSTextCheckingResult *match, NSMutableAttributedString *attributedString) {
         NSUInteger imagePathStart = [attributedString.string rangeOfString:@"(" options:0 range:match.range].location;
         NSRange linkRange = NSMakeRange(imagePathStart, match.range.length+match.range.location- imagePathStart -1);
@@ -223,8 +223,8 @@ static NSString *const TSMarkdownEmRegex        = @"([\\*|_]{1}).+?\\1";
     }];
 }
 
-- (void)addLinkParsingWithFormattingBlock:(TSMarkdownParserFormattingBlock)formattingBlock {
-    NSRegularExpression *linkParsing = [NSRegularExpression regularExpressionWithPattern:TSMarkdownLinkRegex options:0 error:nil];
+- (void)addLinkParsingWithFormattingBlock:(OLMarkDownParserFormattingBlock)formattingBlock {
+    NSRegularExpression *linkParsing = [NSRegularExpression regularExpressionWithPattern:OLMarkDownLinkRegex options:0 error:nil];
     
     [self addParsingRuleWithRegularExpression:linkParsing withBlock:^(NSTextCheckingResult *match, NSMutableAttributedString *attributedString) {
         NSUInteger linkStartInResult = [attributedString.string rangeOfString:@"(" options:NSBackwardsSearch range:match.range].location;
@@ -251,8 +251,8 @@ static NSString *const TSMarkdownEmRegex        = @"([\\*|_]{1}).+?\\1";
 
 #pragma mark inline parsing
 
-- (void)addMonospacedParsingWithFormattingBlock:(TSMarkdownParserFormattingBlock)formattingBlock {
-    NSRegularExpression *monoParsing = [NSRegularExpression regularExpressionWithPattern:TSMarkdownMonospaceRegex options:0 error:nil];
+- (void)addMonospacedParsingWithFormattingBlock:(OLMarkDownParserFormattingBlock)formattingBlock {
+    NSRegularExpression *monoParsing = [NSRegularExpression regularExpressionWithPattern:OLMarkDownMonospaceRegex options:0 error:nil];
     [self addParsingRuleWithRegularExpression:monoParsing withBlock:^(NSTextCheckingResult *match, NSMutableAttributedString *attributedString) {
         formattingBlock(attributedString, match.range);
         [attributedString deleteCharactersInRange:NSMakeRange(match.range.location, 1)];
@@ -261,7 +261,7 @@ static NSString *const TSMarkdownEmRegex        = @"([\\*|_]{1}).+?\\1";
 }
 
 - (void)addStrongParsingWithFormattingBlock:(void(^)(NSMutableAttributedString *attributedString, NSRange range))formattingBlock {
-    NSRegularExpression *boldParsing = [NSRegularExpression regularExpressionWithPattern:TSMarkdownStrongRegex options:0 error:nil];
+    NSRegularExpression *boldParsing = [NSRegularExpression regularExpressionWithPattern:OLMarkDownStrongRegex options:0 error:nil];
     
     [self addParsingRuleWithRegularExpression:boldParsing withBlock:^(NSTextCheckingResult *match, NSMutableAttributedString *attributedString) {
         formattingBlock(attributedString, match.range);
@@ -271,8 +271,8 @@ static NSString *const TSMarkdownEmRegex        = @"([\\*|_]{1}).+?\\1";
     }];
 }
 
-- (void)addEmphasisParsingWithFormattingBlock:(TSMarkdownParserFormattingBlock)formattingBlock {
-    NSRegularExpression *emphasisParsing = [NSRegularExpression regularExpressionWithPattern:TSMarkdownEmRegex options:0 error:nil];
+- (void)addEmphasisParsingWithFormattingBlock:(OLMarkDownParserFormattingBlock)formattingBlock {
+    NSRegularExpression *emphasisParsing = [NSRegularExpression regularExpressionWithPattern:OLMarkDownEmRegex options:0 error:nil];
     
     [self addParsingRuleWithRegularExpression:emphasisParsing withBlock:^(NSTextCheckingResult *match, NSMutableAttributedString *attributedString) {
         formattingBlock(attributedString, match.range);
@@ -284,7 +284,7 @@ static NSString *const TSMarkdownEmRegex        = @"([\\*|_]{1}).+?\\1";
 
 #pragma mark -
 
-- (void)addParsingRuleWithRegularExpression:(NSRegularExpression *)regularExpression withBlock:(TSMarkdownParserMatchBlock)block {
+- (void)addParsingRuleWithRegularExpression:(NSRegularExpression *)regularExpression withBlock:(OLMarkDownParserMatchBlock)block {
     @synchronized (self) {
         [self.parsingPairs addObject:[TSExpressionBlockPair pairWithRegularExpression:regularExpression block:block]];
     }

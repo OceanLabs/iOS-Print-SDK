@@ -37,10 +37,10 @@
 		2E10F03B1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */; };
 		2E10F03C1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */; };
 		2E10F03D1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */; };
-		2E10F04D1D93CDE100014C19 /* TSMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */; };
-		2E10F04E1D93CDE100014C19 /* TSMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */; };
-		2E10F04F1D93CDE100014C19 /* TSMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */; };
-		2E10F0501D93CDE100014C19 /* TSMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */; };
+		2E10F04D1D93CDE100014C19 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
+		2E10F04E1D93CDE100014C19 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
+		2E10F04F1D93CDE100014C19 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
+		2E10F0501D93CDE100014C19 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
 		2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E18DC511D913DB1004752D2 /* OLPrintPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E18DC501D913DB1004752D2 /* OLPrintPhoto.m */; };
@@ -788,8 +788,8 @@
 		2E10F0331D93CC0900014C19 /* DACircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DACircularProgressView.m; sourceTree = "<group>"; };
 		2E10F0341D93CC0900014C19 /* DALabeledCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DALabeledCircularProgressView.h; sourceTree = "<group>"; };
 		2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DALabeledCircularProgressView.m; sourceTree = "<group>"; };
-		2E10F04B1D93CDE100014C19 /* TSMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMarkdownParser.h; sourceTree = "<group>"; };
-		2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMarkdownParser.m; sourceTree = "<group>"; };
+		2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLMarkdownParser.h; sourceTree = "<group>"; };
+		2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLMarkdownParser.m; sourceTree = "<group>"; };
 		2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePreviewViewController.h; sourceTree = "<group>"; };
 		2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePreviewViewController.m; sourceTree = "<group>"; };
 		2E18DC4F1D913DB1004752D2 /* OLPrintPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintPhoto.h; sourceTree = "<group>"; };
@@ -1439,8 +1439,8 @@
 		2E10F03E1D93CC3600014C19 /* TSMarkdownParser */ = {
 			isa = PBXGroup;
 			children = (
-				2E10F04B1D93CDE100014C19 /* TSMarkdownParser.h */,
-				2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */,
+				2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */,
+				2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */,
 			);
 			name = TSMarkdownParser;
 			sourceTree = "<group>";
@@ -2714,7 +2714,7 @@
 				2E898C511CC518180041CCD8 /* OLImageEditViewController.m in Sources */,
 				2E898C521CC518180041CCD8 /* OLPrintOrderCostRequest.m in Sources */,
 				2E898C531CC518180041CCD8 /* OLInfoPageViewController.m in Sources */,
-				2E10F04E1D93CDE100014C19 /* TSMarkdownParser.m in Sources */,
+				2E10F04E1D93CDE100014C19 /* OLMarkdownParser.m in Sources */,
 				2E898C541CC518180041CCD8 /* OLIntegratedCheckoutViewController.m in Sources */,
 				2E898C551CC518180041CCD8 /* OLProductGroup.m in Sources */,
 				2E898C561CC518180041CCD8 /* UIImage+OLUtils.m in Sources */,
@@ -2985,7 +2985,7 @@
 				2EA3D3A71C9C04B500B99BCD /* OLImageCachingManager.m in Sources */,
 				2EA3D3A81C9C04B500B99BCD /* UIView+RoundRect.m in Sources */,
 				2EB715E41CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m in Sources */,
-				2E10F0501D93CDE100014C19 /* TSMarkdownParser.m in Sources */,
+				2E10F0501D93CDE100014C19 /* OLMarkdownParser.m in Sources */,
 				2E480A9A1D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */,
 				2EA3D3A91C9C04B500B99BCD /* OLCountry.m in Sources */,
 				2EA0087D1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
@@ -3048,7 +3048,7 @@
 				2ED389911C917D2000DC2314 /* OLPhotoTextField.m in Sources */,
 				2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
 				2E84835E1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
-				2E10F04D1D93CDE100014C19 /* TSMarkdownParser.m in Sources */,
+				2E10F04D1D93CDE100014C19 /* OLMarkdownParser.m in Sources */,
 				2EADD7E71BE79D6D0051CD31 /* OLImageEditViewController.m in Sources */,
 				2E67B92A1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				2EADD7E81BE79D6D0051CD31 /* OLPrintOrderCostRequest.m in Sources */,
@@ -3312,7 +3312,7 @@
 				2EB613031D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2E53E0CE1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
 				2E1E66F01D479617002524A4 /* OLFacebookImage.m in Sources */,
-				2E10F04F1D93CDE100014C19 /* TSMarkdownParser.m in Sources */,
+				2E10F04F1D93CDE100014C19 /* OLMarkdownParser.m in Sources */,
 				E29C85D71BE3B5C50041D4CF /* NSDecimalNumber+CostFormatter.m in Sources */,
 				2E645B361BE7D170009B662B /* OLProductDetailsViewController.m in Sources */,
 				E29C85DA1BE3B5C50041D4CF /* OLProductOverviewViewController.m in Sources */,
