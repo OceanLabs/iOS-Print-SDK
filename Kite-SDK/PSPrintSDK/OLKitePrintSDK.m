@@ -35,9 +35,6 @@
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
 
-extern NSString *const PayPalEnvironmentProduction;
-extern NSString *const PayPalEnvironmentSandbox;
-
 static NSString *apiKey = nil;
 static NSString *applePayMerchantID = nil;
 static NSString *applePayPayToString = nil;
@@ -145,14 +142,12 @@ static NSString *instagramRedirectURI = nil;
     [OLAnalytics addPushDeviceToken:deviceToken];
 }
 
-#ifdef OL_KITE_OFFER_PAYPAL
 + (NSString *_Nonnull)paypalEnvironment {
     switch (environment) {
-        case kOLKitePrintSDKEnvironmentLive: return PayPalEnvironmentProduction;
-        case kOLKitePrintSDKEnvironmentSandbox: return PayPalEnvironmentSandbox;
+        case kOLKitePrintSDKEnvironmentLive: return @"live";/*PayPalEnvironmentProduction*/;
+        case kOLKitePrintSDKEnvironmentSandbox: return @"sandbox";/*PayPalEnvironmentSandbox*/;
     }
 }
-#endif
 
 + (NSString *_Nonnull)paypalClientId {
     return paypalPublicKey;

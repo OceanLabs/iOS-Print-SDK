@@ -38,6 +38,8 @@
 #import "OLUserSession.h"
 
 @class OLCustomPhotoProvider;
+@import Contacts;
+@import PassKit;
 
 @interface OLKitePrintSDK (Private)
 
@@ -113,6 +115,32 @@
     }
     
     return YES;
+}
+
++(BOOL)isApplePayAvailable{
+    //Disable Apple Pay on iOS 8 because we need the Contacts framework. There's in issue in Xcode 8.0 that doesn't include some old symbols in PassKit that crashes iOS 9 apps built with frameworks on launch. Did Not test that they crash iOS 8, but disabled to be safe.
+    if (![CNContact class]){
+        return NO;
+    }
+    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
+}
+
++ (NSArray<NSString *> *)supportedPKPaymentNetworks {
+    NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
+    if ((&PKPaymentNetworkDiscover) != NULL) {
+        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
+    }
+    return supportedNetworks;
+}
+
++ (BOOL)isPayPalAvailable{
+    Class PayPalMobileClass = NSClassFromString(@"PayPalMobile");
+    if ([PayPalMobileClass class]){
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{

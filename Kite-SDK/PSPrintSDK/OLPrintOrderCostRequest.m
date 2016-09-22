@@ -118,7 +118,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         [dict setValue:[extraDict objectForKey:[[extraDict allKeys] firstObject]] forKey:[[extraDict allKeys] firstObject]];
     }
     
-    if ([OLPaymentViewController isApplePayAvailable]){
+    if ([OLKiteUtils isApplePayAvailable]){
         dict = [dict mutableCopy];
         [dict setValue:@"APPLE_PAY" forKey:@"payment_gateway"];
     }

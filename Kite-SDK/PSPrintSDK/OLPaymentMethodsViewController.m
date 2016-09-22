@@ -57,13 +57,13 @@
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     NSInteger sections = 1; //Credit Cards for everyone!
     
-    if ([OLPaymentViewController isApplePayAvailable]){
+    if ([OLKiteUtils isApplePayAvailable]){
         sections++;
     }
     
-#ifdef OL_KITE_OFFER_PAYPAL
-    sections++;
-#endif
+    if ([OLKiteUtils isPayPalAvailable]){
+        sections++;
+    }
     
     return sections;
 }
@@ -115,7 +115,6 @@
             [cell viewWithTag:30].hidden = YES;
         }
     }
-#ifdef OL_KITE_OFFER_PAYPAL
     else if (method == kOLPaymentMethodPayPal){
         imageView.image = [UIImage imageNamed:@"paypal-method"];
         label.text = @"PayPal";
@@ -126,7 +125,6 @@
             [cell viewWithTag:30].hidden = YES;
         }
     }
-#endif
     else{
         NSAssert(NO, @"Too many cells?");
     }
@@ -165,25 +163,17 @@
     if (section == 0){
         return kOLPaymentMethodCreditCard;
     }
-    else if (section == 1 && [OLPaymentViewController isApplePayAvailable]){
+    else if (section == 1 && [OLKiteUtils isApplePayAvailable]){
         return kOLPaymentMethodApplePay;
     }
-    else if (section == 1 && [self isPayPalAvailable]){
+    else if (section == 1 && [OLKiteUtils isPayPalAvailable]){
         return kOLPaymentMethodPayPal;
     }
-    else if (section == 2 && [self isPayPalAvailable]){
+    else if (section == 2 && [OLKiteUtils isPayPalAvailable]){
         return kOLPaymentMethodPayPal;
     }
     NSAssert(NO, @"Should not reach here");
     return kOLPaymentMethodNone;
-}
-
-- (BOOL)isPayPalAvailable{
-#ifdef OL_KITE_OFFER_PAYPAL
-    return YES;
-#else
-    return NO;
-#endif
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{

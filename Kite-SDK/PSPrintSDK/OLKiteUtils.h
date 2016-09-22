@@ -53,6 +53,10 @@
 + (BOOL)facebookEnabled;
 + (BOOL)instagramEnabled;
 + (BOOL)qrCodeUploadEnabled;
++ (NSArray<NSString *> *)supportedPKPaymentNetworks;
++ (BOOL)isApplePayAvailable;
++ (BOOL)isPayPalAvailable;
+
 
 + (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size;
 

@@ -29,11 +29,14 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OLStripeWrapper : NSObject
-
-+ (id)initSTPAPIClientWithPublishableKey:(NSString *)key;
-+ (void)client:(id)client createTokenWithPayment:payment completion:(void(^)(id token, NSError *error))handler;
-+ (NSString *)tokenIdFromToken:(id)token;
-+ (void)setDefaultPublishableKey:(NSString *)key;
-
+@interface OLPayPalWrapper : NSObject
++ (id)payPalPaymentWithAmount:(NSDecimalNumber *)amount currencyCode:(NSString *)currencyCode shortDescription:(NSString *)shortDescription intent:(NSInteger)intent shippingAddress:(id)shippingAddress;
++ (id)payPalShippingAddressWithRecipientName:(NSString *)name withLine1:(NSString *)line1 withLine2:(NSString *)line2 withCity:(NSString *)city withState:(NSString *)state withPostalCode:(NSString *)postalCode withCountryCode:(NSString *)countryCode;
++ (id)payPalConfigurationWithShippingAddressOption:(NSInteger)option acceptCreditCards:(BOOL)acceptCCs;
++ (id)payPalPaymentViewControllerWithPayment:(id)payment
+                               configuration:(id)configuration
+                                    delegate:(id)delegate;
++ (NSDictionary *)confirmationWithPayment:(id)payment;
++ (void)preconnectWithEnvironment:(NSString *)env;
++ (void)initializeWithClientIdsForEnvironments:(NSDictionary *)dict;
 @end

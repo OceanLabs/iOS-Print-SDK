@@ -113,7 +113,6 @@
     
 }
 
-#ifdef OL_KITE_OFFER_PAYPAL
 - (void)testOLKitePrintSDK{
     //Live
     [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentLive];
@@ -144,7 +143,6 @@
     XCTAssert([[OLKitePrintSDK instagramSecret] isEqualToString:@"secret"], @"Instagram Fail");
     XCTAssert([[OLKitePrintSDK instagramRedirectURI] isEqualToString:@"redirect"], @"Instagram Fail");
 }
-#endif
 
 - (void)testInstantiateOLPrintJobException{
     @try {
