@@ -10,14 +10,14 @@
 #define DEFAULT_FLIPPING_PAGE_SHADOW_OPACITY 0.1
 #define DEFAULT_RUBBERBAND_MAX_PROGRESS (1./3)
 
-#import "MPFlipTransition.h"
-#import "MPAnimation.h"
+#import "OLFlipTransition.h"
+#import "OLAnimation.h"
 #import <QuartzCore/QuartzCore.h>
 #include <math.h>
 
-static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
+static inline double ol_radians (double degrees) {return degrees * M_PI/180;}
 
-@interface MPFlipTransition()
+@interface OLFlipTransition()
 
 @property (assign, nonatomic, getter = wasDestinationViewShown) BOOL destinationViewShown;
 @property (assign, nonatomic, getter = wereLayersBuilt) BOOL layersBuilt;
@@ -31,13 +31,13 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 @property (strong, nonatomic) CAGradientLayer *layerBackShadow;
 @property (strong, nonatomic) CALayer *layerFacingShadow;
 @property (strong, nonatomic) CALayer *layerRevealShadow;
-@property (assign, nonatomic) MPFlipAnimationStage stage;
+@property (assign, nonatomic) OLFlipAnimationStage stage;
 @property (weak, nonatomic) UIView *actingSource;
 @property (assign, nonatomic) CGRect sourceFrame;
 
 @end
 
-@implementation MPFlipTransition
+@implementation OLFlipTransition
 
 #pragma mark - Properties
 
@@ -66,7 +66,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 
 #pragma mark - init
 
-- (id)initWithSourceView:(UIView *)sourceView destinationView:(UIView *)destinationView duration:(NSTimeInterval)duration style:(MPFlipStyle)style completionAction:(MPTransitionAction)action {
+- (id)initWithSourceView:(UIView *)sourceView destinationView:(UIView *)destinationView duration:(NSTimeInterval)duration style:(OLFlipStyle)style completionAction:(OLTransitionAction)action {
 	self = [super initWithSourceView:sourceView destinationView:destinationView duration:duration timingCurve:UIViewAnimationCurveEaseInOut completionAction:action];
 	if (self)
 	{
@@ -75,7 +75,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 		_flippingPageShadowOpacity = DEFAULT_FLIPPING_PAGE_SHADOW_OPACITY;
 		_flipShadowColor = [UIColor blackColor];
 		_layersBuilt = NO;
-		_stage = MPFlipAnimationStage1;
+		_stage = OLFlipAnimationStage1;
 		_rubberbandMaximumProgress = DEFAULT_RUBBERBAND_MAX_PROGRESS;
 		_shouldRenderAllViews = YES;
 	}
@@ -118,13 +118,13 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 }
 
 // switching between the 2 halves of the animation - between front and back sides of the page we're turning
-- (void)switchToStage:(MPFlipAnimationStage)flipStage
+- (void)switchToStage:(OLFlipAnimationStage)flipStage
 {
 	// 0 = stage 1, 1 = stage 2
 	[CATransaction begin];
 	[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
 	
-	if (flipStage == MPFlipAnimationStage1)
+	if (flipStage == OLFlipAnimationStage1)
 	{
 		[self prepareForStage2];
 		[self.animationView.layer insertSublayer:self.layerFacing above:self.layerReveal]; // re-order these 2 layers
@@ -158,9 +158,9 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 	if (!isResizing && [self wereLayersBuilt])
 		return;
 
-	BOOL forwards = ([self style] & MPFlipStyleDirectionMask) != MPFlipStyleDirectionBackward;
-	BOOL vertical = ([self style] & MPFlipStyleOrientationMask) == MPFlipStyleOrientationVertical;
-	BOOL inward = ([self style] & MPFlipStylePerspectiveMask) == MPFlipStylePerspectiveReverse;
+	BOOL forwards = ([self style] & OLFlipStyleDirectionMask) != OLFlipStyleDirectionBackward;
+	BOOL vertical = ([self style] & OLFlipStyleOrientationMask) == OLFlipStyleOrientationVertical;
+	BOOL inward = ([self style] & OLFlipStylePerspectiveMask) == OLFlipStylePerspectiveReverse;
 	BOOL isRubberbanding = !self.destinationView;
 	
 	CGRect bounds = self.rect;
@@ -223,7 +223,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 	// facing Page = the other half of the current view (doesn't move, gets covered by back page during 2nd half)
 	// back Page   = the half of the next view that appears on the flipping page during 2nd half
 	// reveal Page = the other half of the next view (doesn't move, gets revealed by front page during 1st half)
-	UIImage *pageFrontImage = [MPAnimation renderImageFromView:self.sourceView withRect:forwards? lowerRect : upperRect transparentInsets:insets];
+	UIImage *pageFrontImage = [OLAnimation renderImageFromView:self.sourceView withRect:forwards? lowerRect : upperRect transparentInsets:insets];
 	
 	self.actingSource = [self sourceView]; // the view that is already part of the view hierarchy
 	UIView *containerView = [self.actingSource superview];
@@ -247,19 +247,19 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 	
 	switch (self.completionAction)
 	{
-		case MPTransitionActionAddRemove:
+		case OLTransitionActionAddRemove:
 			if (!isModal && !isRubberbanding)
 				[self.destinationView setFrame:[self.sourceView frame]];
 			if (!isRubberbanding && !isResizing)
 				[containerView addSubview:self.destinationView];
 			break;
 			
-		case MPTransitionActionShowHide:
+		case OLTransitionActionShowHide:
 			[self.destinationView setHidden:NO];
 			isDestinationViewAbove = isRubberbanding? NO : [self.destinationView isAboveSiblingView:self.sourceView];
 			break;
 			
-		case MPTransitionActionNone:
+		case OLTransitionActionNone:
 			if ([self.destinationView superview] == [self.sourceView superview])
 			{
 				isDestinationViewAbove = [self.destinationView isAboveSiblingView:self.sourceView];
@@ -285,10 +285,10 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 			break;
 	}
 	
-	UIImage *pageFacingImage = drawFacing? [MPAnimation renderImageFromView:self.sourceView withRect:forwards? upperRect : lowerRect] : nil;
+	UIImage *pageFacingImage = drawFacing? [OLAnimation renderImageFromView:self.sourceView withRect:forwards? upperRect : lowerRect] : nil;
 	
-	UIImage *pageBackImage = isRubberbanding? nil : [MPAnimation renderImageFromView:self.destinationView withRect:forwards? destUpperRect : destLowerRect transparentInsets:insets];
-	UIImage *pageRevealImage = drawReveal? [MPAnimation renderImageFromView:self.destinationView withRect:forwards? destLowerRect : destUpperRect] : nil;
+	UIImage *pageBackImage = isRubberbanding? nil : [OLAnimation renderImageFromView:self.destinationView withRect:forwards? destUpperRect : destLowerRect transparentInsets:insets];
+	UIImage *pageRevealImage = drawReveal? [OLAnimation renderImageFromView:self.destinationView withRect:forwards? destLowerRect : destUpperRect] : nil;
 	
 	CATransform3D transform = CATransform3DIdentity;
 	
@@ -499,9 +499,9 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 
 - (void)animateFlip1:(BOOL)isFallingBack fromProgress:(CGFloat)fromProgress toProgress:(CGFloat)toProgress withCompletion:(void (^)(BOOL finished))completion
 {
-	BOOL forwards = ([self style] & MPFlipStyleDirectionMask) != MPFlipStyleDirectionBackward;
-	BOOL vertical = ([self style] & MPFlipStyleOrientationMask) == MPFlipStyleOrientationVertical;
-	BOOL inward = ([self style] & MPFlipStylePerspectiveMask) == MPFlipStylePerspectiveReverse;
+	BOOL forwards = ([self style] & OLFlipStyleDirectionMask) != OLFlipStyleDirectionBackward;
+	BOOL vertical = ([self style] & OLFlipStyleOrientationMask) == OLFlipStyleOrientationVertical;
+	BOOL inward = ([self style] & OLFlipStylePerspectiveMask) == OLFlipStylePerspectiveReverse;
 	BOOL isRubberbanding = !self.destinationView;
 	
 	// 2-stage animation
@@ -528,8 +528,8 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 		// 2nd half of animation, once 1st half completes
 		if (toProgress == 1)
 		{
-			[self setStage:isFallingBack? MPFlipAnimationStage1 : MPFlipAnimationStage2];
-			[self switchToStage:isFallingBack? MPFlipAnimationStage1 : MPFlipAnimationStage2];
+			[self setStage:isFallingBack? OLFlipAnimationStage1 : OLFlipAnimationStage2];
+			[self switchToStage:isFallingBack? OLFlipAnimationStage1 : OLFlipAnimationStage2];
 			
 			[self animateFlip2:isFallingBack fromProgress:isFallingBack? 1 : 0 withCompletion:completion];
 		}
@@ -572,7 +572,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 		for (int frame = 0; frame <= frameCount; frame++)
 		{
 			progress = fromProgress + (toProgress - fromProgress) * ((float)frame) / frameCount;
-			cosOpacity = cos(mp_radians(90 * progress)) * coveredPageShadowOpacity;
+			cosOpacity = cos(ol_radians(90 * progress)) * coveredPageShadowOpacity;
 			if (frame == frameCount)
 				cosOpacity = 0;
 			[arrayOpacity addObject:[NSNumber numberWithFloat:cosOpacity]];
@@ -593,9 +593,9 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 - (void)animateFlip2:(BOOL)isFallingBack fromProgress:(CGFloat)fromProgress withCompletion:(void (^)(BOOL finished))completion
 {
 	// Second half of animation
-	BOOL forwards = ([self style] & MPFlipStyleDirectionMask) != MPFlipStyleDirectionBackward;
-	BOOL vertical = ([self style] & MPFlipStyleOrientationMask) == MPFlipStyleOrientationVertical;
-	BOOL inward = ([self style] & MPFlipStylePerspectiveMask) == MPFlipStylePerspectiveReverse;
+	BOOL forwards = ([self style] & OLFlipStyleDirectionMask) != OLFlipStyleDirectionBackward;
+	BOOL vertical = ([self style] & OLFlipStyleOrientationMask) == OLFlipStyleOrientationVertical;
+	BOOL inward = ([self style] & OLFlipStylePerspectiveMask) == OLFlipStylePerspectiveReverse;
 
 	// 1-stage animation
 	CALayer *layer = isFallingBack? self.layerFront : self.layerBack;
@@ -654,7 +654,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 		for (int frame = 0; frame <= frameCount; frame++)
 		{
 			progress = fromProgress + (toProgress - fromProgress) * ((float)frame) / frameCount;
-			sinOpacity = (sin(mp_radians(90 * progress))* coveredPageShadowOpacity);
+			sinOpacity = (sin(ol_radians(90 * progress))* coveredPageShadowOpacity);
 			if (frame == 0)
 				sinOpacity = 0;
 			[arrayOpacity addObject:[NSNumber numberWithFloat:sinOpacity]];
@@ -674,7 +674,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 
 // set view to any position within either half of the animation
 // progress ranges from 0 (start) to 1 (complete) within each of 2 animation stages
-- (void)setStage:(MPFlipAnimationStage)stage progress:(CGFloat)progress
+- (void)setStage:(OLFlipAnimationStage)stage progress:(CGFloat)progress
 {
 	if ([self stage] != stage)
 	{
@@ -682,7 +682,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 		[self switchToStage:stage];
 	}
 	
-	if (stage == MPFlipAnimationStage1)
+	if (stage == OLFlipAnimationStage1)
 		[self doFlip1:progress];
 	else
 		[self doFlip2:progress];
@@ -708,7 +708,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 	
 	[self.layerFront setTransform:[self flipTransform1:progress]];
 	[self.layerFrontShadow setOpacity:[self flippingPageShadowOpacity] * progress];
-	CGFloat cosOpacity = cos(mp_radians(90 * progress)) * [self coveredPageShadowOpacity];
+	CGFloat cosOpacity = cos(ol_radians(90 * progress)) * [self coveredPageShadowOpacity];
 	[self.layerRevealShadow setOpacity:cosOpacity];
 	
 	[CATransaction commit];
@@ -728,7 +728,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 	
 	[self.layerBack setTransform:[self flipTransform2:progress]];
 	[self.layerBackShadow setOpacity:[self flippingPageShadowOpacity] * (1- progress)];
-	CGFloat sinOpacity = sin(mp_radians(90 * progress)) * [self coveredPageShadowOpacity];
+	CGFloat sinOpacity = sin(ol_radians(90 * progress)) * [self coveredPageShadowOpacity];
 	[self.layerFacingShadow setOpacity:sinOpacity];
 		
 	[CATransaction commit];
@@ -741,9 +741,9 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 	CATransform3D tHalf1 = CATransform3DIdentity;
 	
 	// rotate away from viewer
-	BOOL forwards = ([self style] & MPFlipStyleDirectionMask) != MPFlipStyleDirectionBackward;
-	BOOL vertical = ([self style] & MPFlipStyleOrientationMask) == MPFlipStyleOrientationVertical;
-	tHalf1 = CATransform3DRotate(tHalf1, mp_radians(90 * progress * (forwards? -1 : 1)), vertical? -1 : 0, vertical? 0 : 1, 0);
+	BOOL forwards = ([self style] & OLFlipStyleDirectionMask) != OLFlipStyleDirectionBackward;
+	BOOL vertical = ([self style] & OLFlipStyleOrientationMask) == OLFlipStyleOrientationVertical;
+	tHalf1 = CATransform3DRotate(tHalf1, ol_radians(90 * progress * (forwards? -1 : 1)), vertical? -1 : 0, vertical? 0 : 1, 0);
 	
 	return tHalf1;
 }
@@ -755,16 +755,16 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 	CATransform3D tHalf2 = CATransform3DIdentity;
 	
 	// rotate away from viewer
-	BOOL forwards = ([self style] & MPFlipStyleDirectionMask) != MPFlipStyleDirectionBackward;
-	BOOL vertical = ([self style] & MPFlipStyleOrientationMask) == MPFlipStyleOrientationVertical;
-	tHalf2 = CATransform3DRotate(tHalf2, mp_radians(90 * (1 - progress)) * (forwards? 1 : -1), vertical? -1 : 0, vertical? 0 : 1, 0);
+	BOOL forwards = ([self style] & OLFlipStyleDirectionMask) != OLFlipStyleDirectionBackward;
+	BOOL vertical = ([self style] & OLFlipStyleOrientationMask) == OLFlipStyleOrientationVertical;
+	tHalf2 = CATransform3DRotate(tHalf2, ol_radians(90 * (1 - progress)) * (forwards? 1 : -1), vertical? -1 : 0, vertical? 0 : 1, 0);
 	
 	return tHalf2;
 }
 
 - (void)animateFromProgress:(CGFloat)fromProgress shouldFallBack:(BOOL)shouldFallBack completion:(void (^)(BOOL finished))completion
 {
-	BOOL isFrontPage = [self stage] == MPFlipAnimationStage1;
+	BOOL isFrontPage = [self stage] == OLFlipAnimationStage1;
 	if (shouldFallBack == isFrontPage) {
 		// we're either on 1st page falling back, or on 2nd page falling forward - simple 1 stage animation
 		[self animateFlip2:shouldFallBack fromProgress:fromProgress withCompletion:completion];
@@ -786,15 +786,15 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 	if (completed)
 	{
 		switch (self.completionAction) {
-			case MPTransitionActionAddRemove:
+			case OLTransitionActionAddRemove:
 				[self.sourceView removeFromSuperview];
 				break;
 				
-			case MPTransitionActionShowHide:
+			case OLTransitionActionShowHide:
 				[self.sourceView setHidden:YES];
 				break;
 				
-			case MPTransitionActionNone:
+			case OLTransitionActionNone:
 				// undo whatever actions we took during animation
 				if ([self wasDestinationViewShown])
 					[self.destinationView setHidden:YES];
@@ -803,15 +803,15 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 	}
 	else {
 		switch (self.completionAction) {
-			case MPTransitionActionAddRemove:
+			case OLTransitionActionAddRemove:
 				[self.destinationView removeFromSuperview];
 				break;
 				
-			case MPTransitionActionShowHide:
+			case OLTransitionActionShowHide:
 				[self.destinationView setHidden:YES];
 				break;
 				
-			case MPTransitionActionNone:
+			case OLTransitionActionNone:
 				// undo whatever actions we took during animation
 				if ([self wasDestinationViewShown])
 					[self.destinationView setHidden:YES];
@@ -837,21 +837,21 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 
 #pragma mark - Class methods
 
-+ (void)transitionFromViewController:(UIViewController *)fromController toViewController:(UIViewController *)toController duration:(NSTimeInterval)duration style:(MPFlipStyle)style completion:(void (^)(BOOL finished))completion
++ (void)transitionFromViewController:(UIViewController *)fromController toViewController:(UIViewController *)toController duration:(NSTimeInterval)duration style:(OLFlipStyle)style completion:(void (^)(BOOL finished))completion
 {
-	MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:fromController.view destinationView:toController.view duration:duration style:style completionAction:MPTransitionActionNone];
+	OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:fromController.view destinationView:toController.view duration:duration style:style completionAction:OLTransitionActionNone];
 	[flipTransition perform:completion];
 }
 
-+ (void)transitionFromView:(UIView *)fromView toView:(UIView *)toView duration:(NSTimeInterval)duration style:(MPFlipStyle)style transitionAction:(MPTransitionAction)action completion:(void (^)(BOOL finished))completion
++ (void)transitionFromView:(UIView *)fromView toView:(UIView *)toView duration:(NSTimeInterval)duration style:(OLFlipStyle)style transitionAction:(OLTransitionAction)action completion:(void (^)(BOOL finished))completion
 {
-	MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:fromView destinationView:toView duration:duration style:style completionAction:action];
+	OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:fromView destinationView:toView duration:duration style:style completionAction:action];
 	[flipTransition perform:completion];
 }
 
-+ (void)presentViewController:(UIViewController *)viewControllerToPresent from:(UIViewController *)presentingController duration:(NSTimeInterval)duration style:(MPFlipStyle)style completion:(void (^)(BOOL finished))completion
++ (void)presentViewController:(UIViewController *)viewControllerToPresent from:(UIViewController *)presentingController duration:(NSTimeInterval)duration style:(OLFlipStyle)style completion:(void (^)(BOOL finished))completion
 {		
-	MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:presentingController.view destinationView:viewControllerToPresent.view duration:duration style:style completionAction:MPTransitionActionNone];
+	OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:presentingController.view destinationView:viewControllerToPresent.view duration:duration style:style completionAction:OLTransitionActionNone];
 	
 	[flipTransition setPresentingController:presentingController];
 	
@@ -872,7 +872,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 	}];
 }
 
-+ (void)dismissViewControllerFromPresentingController:(UIViewController *)presentingController duration:(NSTimeInterval)duration style:(MPFlipStyle)style completion:(void (^)(BOOL finished))completion
++ (void)dismissViewControllerFromPresentingController:(UIViewController *)presentingController duration:(NSTimeInterval)duration style:(OLFlipStyle)style completion:(void (^)(BOOL finished))completion
 {
 	UIViewController *src = [presentingController presentedViewController];
 	if (!src)
@@ -889,7 +889,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 		dest = [dest parentViewController];
 	}
 	
-	MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:src.view destinationView:dest.view duration:duration style:style completionAction:MPTransitionActionNone];
+	OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:src.view destinationView:dest.view duration:duration style:style completionAction:OLTransitionActionNone];
 	[flipTransition setDismissing:YES];
 	[presentingController dismissViewControllerAnimated:NO completion:nil];
 	[flipTransition perform:^(BOOL finished) {
@@ -901,32 +901,32 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 
 @end
 
-#pragma mark - UIViewController(MPFlipTransition)
+#pragma mark - UIViewController(OLFlipTransition)
 
-@implementation UIViewController(MPFlipTransition)
+@implementation UIViewController(OLFlipTransition)
 
-- (void)presentViewController:(UIViewController *)viewControllerToPresent flipStyle:(MPFlipStyle)style completion:(void (^)(BOOL finished))completion
+- (void)presentViewController:(UIViewController *)viewControllerToPresent flipStyle:(OLFlipStyle)style completion:(void (^)(BOOL finished))completion
 {
-	[MPFlipTransition presentViewController:viewControllerToPresent from:self duration:[MPFlipTransition defaultDuration] style:style completion:completion];
+	[OLFlipTransition presentViewController:viewControllerToPresent from:self duration:[OLFlipTransition defaultDuration] style:style completion:completion];
 }
 
-- (void)dismissViewControllerWithFlipStyle:(MPFlipStyle)style completion:(void (^)(BOOL finished))completion
+- (void)dismissViewControllerWithFlipStyle:(OLFlipStyle)style completion:(void (^)(BOOL finished))completion
 {
-	[MPFlipTransition dismissViewControllerFromPresentingController:self duration:[MPFlipTransition defaultDuration] style:style completion:completion];
+	[OLFlipTransition dismissViewControllerFromPresentingController:self duration:[OLFlipTransition defaultDuration] style:style completion:completion];
 }
 
 @end
 
-#pragma mark - UINavigationController(MPFlipTransition)
+#pragma mark - UINavigationController(OLFlipTransition)
 
-@implementation UINavigationController(MPFlipTransition)
+@implementation UINavigationController(OLFlipTransition)
 
 //- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
-- (void)pushViewController:(UIViewController *)viewController flipStyle:(MPFlipStyle)style
+- (void)pushViewController:(UIViewController *)viewController flipStyle:(OLFlipStyle)style
 {
-	[MPFlipTransition transitionFromViewController:[self visibleViewController] 
+	[OLFlipTransition transitionFromViewController:[self visibleViewController] 
 								  toViewController:viewController 
-										  duration:[MPFlipTransition defaultDuration]  
+										  duration:[OLFlipTransition defaultDuration]  
 											 style:style 
 										completion:^(BOOL finished) {
 											[self pushViewController:viewController animated:NO];
@@ -934,13 +934,13 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 	 ];
 }
 
-- (UIViewController *)popViewControllerWithFlipStyle:(MPFlipStyle)style
+- (UIViewController *)popViewControllerWithFlipStyle:(OLFlipStyle)style
 {
 	UIViewController *toController = [[self viewControllers] objectAtIndex:[[self viewControllers] count] - 2];
 	
-	[MPFlipTransition transitionFromViewController:[self visibleViewController] 
+	[OLFlipTransition transitionFromViewController:[self visibleViewController] 
 								  toViewController:toController 
-										  duration:[MPFlipTransition defaultDuration] 
+										  duration:[OLFlipTransition defaultDuration] 
 											 style:style
 										completion:^(BOOL finished) {
 											[self popViewControllerAnimated:NO];

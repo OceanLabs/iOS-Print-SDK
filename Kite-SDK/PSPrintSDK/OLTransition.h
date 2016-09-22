@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MPTransitionEnumerations.h"
+#import "OLTransitionEnumerations.h"
 
 typedef void (^CompletionBlock)(BOOL);
 
 
-@interface MPTransition : NSObject
+@interface OLTransition : NSObject
 
 #pragma mark - Properties
 
@@ -20,7 +20,7 @@ typedef void (^CompletionBlock)(BOOL);
 @property (strong, nonatomic) UIView *destinationView;
 @property (assign, nonatomic) NSTimeInterval duration;
 @property (assign, nonatomic) CGRect rect;
-@property (assign, nonatomic) MPTransitionAction completionAction;
+@property (assign, nonatomic) OLTransitionAction completionAction;
 @property (assign, nonatomic) UIViewAnimationCurve timingCurve;
 // Perspective component of transformation (Advanced use only, generally don't need to adjust)
 @property (assign, nonatomic) float m34;
@@ -30,7 +30,7 @@ typedef void (^CompletionBlock)(BOOL);
 
 #pragma mark - init
 
-- (id)initWithSourceView:(UIView *)sourceView destinationView:(UIView *)destinationView duration:(NSTimeInterval)duration timingCurve:(UIViewAnimationCurve)timingCurve completionAction:(MPTransitionAction)action;
+- (id)initWithSourceView:(UIView *)sourceView destinationView:(UIView *)destinationView duration:(NSTimeInterval)duration timingCurve:(UIViewAnimationCurve)timingCurve completionAction:(OLTransitionAction)action;
 
 #pragma mark - Instance methods
 
@@ -49,7 +49,7 @@ typedef void (^CompletionBlock)(BOOL);
 
 #pragma mark - UIView extensions
 
-@interface UIView(MPAnimation)
+@interface UIView(OLAnimation)
 
 + (BOOL)subView:(UIView *)subView1 isAboveSubView:(UIView *)subView2;
 + (BOOL)subView:(UIView *)subView1 isBelowSubView:(UIView *)subView2;

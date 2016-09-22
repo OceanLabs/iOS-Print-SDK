@@ -8,9 +8,9 @@
 
 #define DEFAULT_DURATION 0.3
 
-#import "MPTransition.h"
+#import "OLTransition.h"
 #import <QuartzCore/QuartzCore.h>
-@implementation MPTransition
+@implementation OLTransition
 
 @synthesize sourceView = _sourceView;
 @synthesize destinationView = _destinationView;
@@ -21,7 +21,7 @@
 @synthesize dismissing = _dismissing;
 @synthesize m34 = _m34;
 
-- (id)initWithSourceView:(UIView *)sourceView destinationView:(UIView *)destinationView duration:(NSTimeInterval)duration timingCurve:(UIViewAnimationCurve)timingCurve completionAction:(MPTransitionAction)action {
+- (id)initWithSourceView:(UIView *)sourceView destinationView:(UIView *)destinationView duration:(NSTimeInterval)duration timingCurve:(UIViewAnimationCurve)timingCurve completionAction:(OLTransitionAction)action {
 	self = [super init];
 	if (self)
 	{
@@ -65,24 +65,24 @@
 
 - (void)perform:(void (^)(BOOL finished))completion
 {
-	[NSException raise:@"Incomplete Implementation" format:@"MPTransition must be subclassed and the perform: method implemented."];
+	[NSException raise:@"Incomplete Implementation" format:@"OLTransition must be subclassed and the perform: method implemented."];
 }
 
 - (void)transitionDidComplete
 {
 	switch (self.completionAction) {
-		case MPTransitionActionAddRemove:
+		case OLTransitionActionAddRemove:
 			[[self.sourceView superview] addSubview:self.destinationView];
 			[self.sourceView removeFromSuperview];
 			[self.sourceView setHidden:NO];
 			break;
 			
-		case MPTransitionActionShowHide:
+		case OLTransitionActionShowHide:
 			[self.destinationView setHidden:NO];
 			[self.sourceView setHidden:YES];
 			break;
 			
-		case MPTransitionActionNone:
+		case OLTransitionActionNone:
 			[self.sourceView setHidden:NO];
 			break;
 	}
@@ -114,7 +114,7 @@
 
 #pragma mark - UIView extensions
 
-@implementation UIView(MPAnimation)
+@implementation UIView(OLAnimation)
 
 + (BOOL)subView:(UIView *)subView1 isAboveSubView:(UIView *)subView2
 {

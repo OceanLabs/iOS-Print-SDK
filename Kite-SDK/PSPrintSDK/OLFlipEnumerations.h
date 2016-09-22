@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 Mark Pospesel. All rights reserved.
 //
 
-#ifndef MPFoldTransition_MPFlipEnumerations_h
-#define MPFoldTransition_MPFlipEnumerations_h
+#ifndef OLFoldTransition_OLFlipEnumerations_h
+#define OLFoldTransition_OLFlipEnumerations_h
 
 // Bit 0: Direction - Forward (unset) vs.Backward (set)
 // Forward = page flip from right to left (horizontal) or bottom to top (vertical)
@@ -25,22 +25,22 @@
 
 enum {
 	// current view folds away into center, next view slides in flat from top & bottom
-	MPFlipStyleDefault				= 0,
-	MPFlipStyleDirectionBackward	= 1 << 0,
-	MPFlipStyleOrientationVertical	= 1 << 1,
-	MPFlipStylePerspectiveReverse	= 1 << 2
+	OLFlipStyleDefault				= 0,
+	OLFlipStyleDirectionBackward	= 1 << 0,
+	OLFlipStyleOrientationVertical	= 1 << 1,
+	OLFlipStylePerspectiveReverse	= 1 << 2
 };
-typedef NSUInteger MPFlipStyle;
+typedef NSUInteger OLFlipStyle;
 
 enum {
-	MPFlipAnimationStage1 = 0,
-	MPFlipAnimationStage2 = 1
-} typedef MPFlipAnimationStage;
+	OLFlipAnimationStage1 = 0,
+	OLFlipAnimationStage2 = 1
+} typedef OLFlipAnimationStage;
 
-#define MPFlipStyleDirectionMask	MPFlipStyleDirectionBackward
-#define MPFlipStyleOrientationMask	MPFlipStyleOrientationVertical
-#define MPFlipStylePerspectiveMask	MPFlipStylePerspectiveReverse
+#define OLFlipStyleDirectionMask	OLFlipStyleDirectionBackward
+#define OLFlipStyleOrientationMask	OLFlipStyleOrientationVertical
+#define OLFlipStylePerspectiveMask	OLFlipStylePerspectiveReverse
 
-static inline MPFlipStyle MPFlipStyleFlipDirectionBit(MPFlipStyle style) { return (style & ~MPFlipStyleDirectionMask) | ((style & MPFlipStyleDirectionMask) == MPFlipStyleDirectionBackward? 0 : MPFlipStyleDirectionBackward); }
+static inline OLFlipStyle OLFlipStyleFlipDirectionBit(OLFlipStyle style) { return (style & ~OLFlipStyleDirectionMask) | ((style & OLFlipStyleDirectionMask) == OLFlipStyleDirectionBackward? 0 : OLFlipStyleDirectionBackward); }
 
 #endif

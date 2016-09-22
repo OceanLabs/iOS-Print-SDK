@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Mark Pospesel. All rights reserved.
 //
 
-#import "MPAnimation.h"
+#import "OLAnimation.h"
 #import <QuartzCore/QuartzCore.h>
 
-@implementation MPAnimation
+@implementation OLAnimation
 
 // Generates an image from the view (view must be opaque)
 + (UIImage *)renderImageFromView:(UIView *)view

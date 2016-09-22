@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MPAnimation : NSObject
+@interface OLAnimation : NSObject
 
 + (UIImage *)renderImageFromView:(UIView *)view;
 + (UIImage *)renderImageFromView:(UIView *)view withRect:(CGRect)frame;

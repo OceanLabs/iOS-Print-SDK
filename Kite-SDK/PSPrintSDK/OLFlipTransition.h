@@ -6,18 +6,18 @@
 //  Copyright (c) 2012 Mark Pospesel. All rights reserved.
 //
 
-#import "MPFlipEnumerations.h"
-#import "MPTransition.h"
+#import "OLFlipEnumerations.h"
+#import "OLTransition.h"
 
-@interface MPFlipTransition : MPTransition
+@interface OLFlipTransition : OLTransition
 
 #pragma mark - Properties
 
-@property (assign, nonatomic) MPFlipStyle style;
+@property (assign, nonatomic) OLFlipStyle style;
 @property (assign, nonatomic) CGFloat coveredPageShadowOpacity;
 @property (assign, nonatomic) CGFloat flippingPageShadowOpacity;
 @property (strong, nonatomic) UIColor *flipShadowColor;
-@property (readonly, nonatomic) MPFlipAnimationStage stage;
+@property (readonly, nonatomic) OLFlipAnimationStage stage;
 @property (assign, nonatomic) CGFloat rubberbandMaximumProgress; // how far up rubberband animation should pull
 
 // Whether all 4 halves of to and from views should be rendered as bitmap contexts, or 
@@ -29,7 +29,7 @@
 
 #pragma mark - init
 
-- (id)initWithSourceView:(UIView *)sourceView destinationView:(UIView *)destinationView duration:(NSTimeInterval)duration style:(MPFlipStyle)style completionAction:(MPTransitionAction)action;
+- (id)initWithSourceView:(UIView *)sourceView destinationView:(UIView *)destinationView duration:(NSTimeInterval)duration style:(OLFlipStyle)style completionAction:(OLTransitionAction)action;
 
 #pragma mark - Instance methods
 
@@ -43,7 +43,7 @@
 
 // set view to any position within either half of the animation
 // progress ranges from 0 (start) to 1 (complete) within each of 2 animation stages
-- (void)setStage:(MPFlipAnimationStage)stage progress:(CGFloat)progress;
+- (void)setStage:(OLFlipAnimationStage)stage progress:(CGFloat)progress;
 
 // moves layers into position for beginning of stage 2 (flip back page to vertical)
 - (void)prepareForStage2;
@@ -56,44 +56,44 @@
 + (void)transitionFromViewController:(UIViewController *)fromController 
 					toViewController:(UIViewController *)toController 
 							duration:(NSTimeInterval)duration
-							   style:(MPFlipStyle)style 
+							   style:(OLFlipStyle)style 
 						  completion:(void (^)(BOOL finished))completion;
 
 // For generic UIView transitions
-+ (void)transitionFromView:(UIView *)fromView toView:(UIView *)toView duration:(NSTimeInterval)duration style:(MPFlipStyle)style transitionAction:(MPTransitionAction)action completion:(void (^)(BOOL finished))completion;
++ (void)transitionFromView:(UIView *)fromView toView:(UIView *)toView duration:(NSTimeInterval)duration style:(OLFlipStyle)style transitionAction:(OLTransitionAction)action completion:(void (^)(BOOL finished))completion;
 
 // To present a view controller modally
-+ (void)presentViewController:(UIViewController *)viewControllerToPresent from:(UIViewController *)presentingController duration:(NSTimeInterval)duration style:(MPFlipStyle)style completion:(void (^)(BOOL finished))completion;
++ (void)presentViewController:(UIViewController *)viewControllerToPresent from:(UIViewController *)presentingController duration:(NSTimeInterval)duration style:(OLFlipStyle)style completion:(void (^)(BOOL finished))completion;
 
 // To dismiss a modal view controller
-+ (void)dismissViewControllerFromPresentingController:(UIViewController *)presentingController duration:(NSTimeInterval)duration style:(MPFlipStyle)style completion:(void (^)(BOOL finished))completion;
++ (void)dismissViewControllerFromPresentingController:(UIViewController *)presentingController duration:(NSTimeInterval)duration style:(OLFlipStyle)style completion:(void (^)(BOOL finished))completion;
 
 @end
 
 #pragma mark - UIViewController extensions
 
 // Convenience method extensions for UIViewController
-@interface UIViewController(MPFlipTransition)
+@interface UIViewController(OLFlipTransition)
 
 // present view controller modally with fold transition
 // use like presentViewController:animated:completion:
-- (void)presentViewController:(UIViewController *)viewControllerToPresent flipStyle:(MPFlipStyle)style completion:(void (^)(BOOL finished))completion;
+- (void)presentViewController:(UIViewController *)viewControllerToPresent flipStyle:(OLFlipStyle)style completion:(void (^)(BOOL finished))completion;
 
 // dismiss presented controller with fold transition
 // use like dismissViewControllerAnimated:completion:
-- (void)dismissViewControllerWithFlipStyle:(MPFlipStyle)style completion:(void (^)(BOOL finished))completion;
+- (void)dismissViewControllerWithFlipStyle:(OLFlipStyle)style completion:(void (^)(BOOL finished))completion;
 
 @end
 
 #pragma mark - UINavigationController extensions
 
 // Convenience method extensions for UINavigationController
-@interface UINavigationController(MPFlipTransition)
+@interface UINavigationController(OLFlipTransition)
 
 //- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
-- (void)pushViewController:(UIViewController *)viewController flipStyle:(MPFlipStyle)style;
+- (void)pushViewController:(UIViewController *)viewController flipStyle:(OLFlipStyle)style;
 
 //- (UIViewController *)popViewControllerAnimated:(BOOL)animated;
-- (UIViewController *)popViewControllerWithFlipStyle:(MPFlipStyle)style;
+- (UIViewController *)popViewControllerWithFlipStyle:(OLFlipStyle)style;
 
 @end

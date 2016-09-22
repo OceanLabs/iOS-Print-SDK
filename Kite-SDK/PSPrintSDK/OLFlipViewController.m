@@ -6,19 +6,19 @@
 //  Copyright (c) 2012 Mark Pospesel. All rights reserved.
 //
 
-#import "MPFlipViewController.h"
-#import	"MPFlipTransition.h"
+#import "OLFlipViewController.h"
+#import	"OLFlipTransition.h"
 
 #define MARGIN	44
 #define SWIPE_THRESHOLD	125.0f
 #define SWIPE_ESCAPE_VELOCITY 650.0f
 
 // Notifications
-NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospesel.MPFlipViewControllerDidFinishAnimatingNotification";
+NSString *OLFlipViewControllerDidFinishAnimatingNotification = @"com.markpospesel.OLFlipViewControllerDidFinishAnimatingNotification";
 
-@interface MPFlipViewController ()
+@interface OLFlipViewController ()
 
-@property (nonatomic, assign) MPFlipViewControllerOrientation orientation;
+@property (nonatomic, assign) OLFlipViewControllerOrientation orientation;
 @property (nonatomic, strong) UIViewController *childViewController;
 @property (nonatomic, strong) UIViewController *sourceController;
 @property (nonatomic, strong) UIViewController *destinationController;
@@ -28,15 +28,15 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 @property (nonatomic, assign, getter = isGestureDriven) BOOL gestureDriven;
 @property (nonatomic, assign, getter = isPanning) BOOL panning;
 @property (nonatomic, assign, getter = isRubberbanding) BOOL rubberbanding;
-@property (nonatomic, strong) MPFlipTransition *flipTransition;
+@property (nonatomic, strong) OLFlipTransition *flipTransition;
 @property (assign, nonatomic) CGPoint panStart;
 @property (assign, nonatomic) CGPoint lastPanPosition;
 @property (assign, nonatomic) BOOL animationDidStartAsPan;
-@property (nonatomic, assign) MPFlipViewControllerDirection direction;
+@property (nonatomic, assign) OLFlipViewControllerDirection direction;
 
 @end
 
-@implementation MPFlipViewController
+@implementation OLFlipViewController
 
 @synthesize delegate = _delegate;
 @synthesize dataSource = _dataSource;
@@ -56,13 +56,13 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 @synthesize sourceController = _sourceController;
 @synthesize destinationController = _destinationController;
 
-- (id)initWithOrientation:(MPFlipViewControllerOrientation)orientation
+- (id)initWithOrientation:(OLFlipViewControllerOrientation)orientation
 {
     self = [super init];
     if (self) {
         // Custom initialization
 		_orientation = orientation;
-		_direction = MPFlipViewControllerDirectionForward;
+		_direction = OLFlipViewControllerDirectionForward;
 		_gesturesAdded = NO;
 		_panning = NO;
 		_gestureDriven = NO;
@@ -114,7 +114,7 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 
 - (BOOL)isFlipFrontPage
 {
-	return [[self flipTransition] stage] == MPFlipAnimationStage1;
+	return [[self flipTransition] stage] == OLFlipAnimationStage1;
 }
 
 - (void)setPanning:(BOOL)panning
@@ -137,7 +137,7 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 		return;
 	
 	// Add our swipe gestures
-	BOOL isHorizontal = ([self orientation] == MPFlipViewControllerOrientationHorizontal);
+	BOOL isHorizontal = ([self orientation] == OLFlipViewControllerOrientationHorizontal);
 	UISwipeGestureRecognizer *left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeNext:)];
 	left.direction = isHorizontal? UISwipeGestureRecognizerDirectionLeft : UISwipeGestureRecognizerDirectionUp;
 	left.delegate = self;
@@ -163,11 +163,11 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 
 #pragma mark - public Instance methods
 
-- (void)setViewController:(UIViewController *)viewController direction:(MPFlipViewControllerDirection)direction animated:(BOOL)animated completion:(void (^)(BOOL finished))completion
+- (void)setViewController:(UIViewController *)viewController direction:(OLFlipViewControllerDirection)direction animated:(BOOL)animated completion:(void (^)(BOOL finished))completion
 {
 	UIViewController *previousController = [self viewController];
 	
-	BOOL isForward = (direction == MPFlipViewControllerDirectionForward);
+	BOOL isForward = (direction == OLFlipViewControllerDirectionForward);
 	[[viewController view] setFrame:[self.view bounds]];
 	[self addChildViewController:viewController]; // this calls [viewController willMoveToParentViewController:self] for us
 	[self setChildViewController:viewController];
@@ -177,7 +177,7 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	{
 		[self startFlipToViewController:viewController 
 					 fromViewController:previousController 
-						  withDirection:(isForward? MPFlipStyleDefault : MPFlipStyleDirectionBackward)];
+						  withDirection:(isForward? OLFlipStyleDefault : OLFlipStyleDirectionBackward)];
 		
 		[self.flipTransition perform:^(BOOL finished) {
 			[self endFlipAnimation:finished transitionCompleted:YES completion:completion];
@@ -202,7 +202,7 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 		return;
 	
 	CGPoint tapPoint = [gestureRecognizer locationInView:self.view];
-	BOOL isHorizontal = [self orientation] == MPFlipViewControllerOrientationHorizontal;
+	BOOL isHorizontal = [self orientation] == OLFlipViewControllerOrientationHorizontal;
 	CGFloat value = isHorizontal? tapPoint.x : tapPoint.y;
 	CGFloat dimension = isHorizontal? self.view.bounds.size.width : self.view.bounds.size.height;
 	NSLog(@"Tap to flip");
@@ -241,17 +241,17 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 			return;
 		
 		// See if touch started near one of the edges, in which case we'll pan a page turn
-		BOOL isHorizontal = [self orientation] == MPFlipViewControllerOrientationHorizontal;
+		BOOL isHorizontal = [self orientation] == OLFlipViewControllerOrientationHorizontal;
 		CGFloat value = isHorizontal? currentPosition.x : currentPosition.y;
 		CGFloat dimension = isHorizontal? self.view.bounds.size.width : self.view.bounds.size.height;
 		if (value <= MARGIN)
 		{
-			if (![self startFlipWithDirection:MPFlipViewControllerDirectionReverse])
+			if (![self startFlipWithDirection:OLFlipViewControllerDirectionReverse])
 				return;
 		}
 		else if (value >= dimension - MARGIN)
 		{
-			if (![self startFlipWithDirection:MPFlipViewControllerDirectionForward])
+			if (![self startFlipWithDirection:OLFlipViewControllerDirectionForward])
 				return;
 		}
 		else
@@ -270,8 +270,8 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 		CGFloat progress = [self progressFromPosition:currentPosition];
 		CGPoint vel = [gestureRecognizer velocityInView:gestureRecognizer.view];
 		//NSLog(@"Pan position changed, velocity = %@", NSStringFromCGPoint(vel));
-		CGFloat velocityComponent = (self.orientation == MPFlipViewControllerOrientationHorizontal)? vel.x : vel.y;
-		CGFloat velocityMinorComponent = (self.orientation == MPFlipViewControllerOrientationHorizontal)? vel.y : vel.x;
+		CGFloat velocityComponent = (self.orientation == OLFlipViewControllerOrientationHorizontal)? vel.x : vel.y;
+		CGFloat velocityMinorComponent = (self.orientation == OLFlipViewControllerOrientationHorizontal)? vel.y : vel.x;
 		// ignore the velocity if it's mostly in the off-axis direction (e.g. don't consider left velocity if swipe is mostly up or even diagonally up-left)
 		if (fabs(velocityMinorComponent) > fabs(velocityComponent))
 			velocityComponent = 0;
@@ -280,7 +280,7 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 		{
 			// Detected a swipe to the left
 			NSLog(@"Escape velocity reached.");
-			BOOL shouldFallBack = (velocityComponent < -SWIPE_ESCAPE_VELOCITY)? self.direction != MPFlipViewControllerDirectionForward : self.direction == MPFlipViewControllerDirectionForward;
+			BOOL shouldFallBack = (velocityComponent < -SWIPE_ESCAPE_VELOCITY)? self.direction != OLFlipViewControllerDirectionForward : self.direction == OLFlipViewControllerDirectionForward;
 			[self setPanning:NO];
 			
 			// finish the remaining animation, but from the last touch position
@@ -289,9 +289,9 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 		else
 		{
 			if (progress < 1)
-				[self.flipTransition setStage:MPFlipAnimationStage1 progress:progress];
+				[self.flipTransition setStage:OLFlipAnimationStage1 progress:progress];
 			else
-				[self.flipTransition setStage:MPFlipAnimationStage2 progress:progress - 1];
+				[self.flipTransition setStage:OLFlipAnimationStage2 progress:progress - 1];
 			[self setLastPanPosition:currentPosition];
 		}
 	}
@@ -299,8 +299,8 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	if (state == UIGestureRecognizerStateEnded || state == UIGestureRecognizerStateCancelled)
 	{
 		CGPoint vel = [gestureRecognizer velocityInView:gestureRecognizer.view];
-		CGFloat velocityComponent = (self.orientation == MPFlipViewControllerOrientationHorizontal)? vel.x : vel.y;
-		CGFloat velocityMinorComponent = (self.orientation == MPFlipViewControllerOrientationHorizontal)? vel.y : vel.x;
+		CGFloat velocityComponent = (self.orientation == OLFlipViewControllerOrientationHorizontal)? vel.x : vel.y;
+		CGFloat velocityMinorComponent = (self.orientation == OLFlipViewControllerOrientationHorizontal)? vel.y : vel.x;
 		// ignore the velocity if it's mostly in the off-axis direction (e.g. don't consider left velocity if swipe is mostly up or even diagonally up-left)
 		if (fabs(velocityMinorComponent) > fabs(velocityComponent))
 			velocityComponent = 0;
@@ -317,12 +317,12 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 			else if (velocityComponent < -SWIPE_THRESHOLD)
 			{
 				// Detected a swipe to the left/top
-				shouldFallBack = self.direction != MPFlipViewControllerDirectionForward;
+				shouldFallBack = self.direction != OLFlipViewControllerDirectionForward;
 			}
 			else if (velocityComponent > SWIPE_THRESHOLD)
 			{
 				// Detected a swipe to the right/bottom
-				shouldFallBack = self.direction == MPFlipViewControllerDirectionForward;
+				shouldFallBack = self.direction == OLFlipViewControllerDirectionForward;
 			}				
 			
 			// finish Animation
@@ -343,7 +343,7 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	{
 		// for taps and pans, only handle if started within margin, otherwise don't receive so that the content may handle it
 		CGPoint tapPoint = [touch locationInView:self.view];
-		BOOL isHorizontal = [self orientation] == MPFlipViewControllerOrientationHorizontal;
+		BOOL isHorizontal = [self orientation] == OLFlipViewControllerOrientationHorizontal;
 		CGFloat value = isHorizontal? tapPoint.x : tapPoint.y;
 		CGFloat dimension = isHorizontal? self.view.bounds.size.width : self.view.bounds.size.height;
 		return (value <= MARGIN || value >= dimension - MARGIN);
@@ -369,8 +369,8 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	// Determine where we are in our page turn animation
 	// 0 - 1 means flipping the front-side of the page
 	// 1 - 2 means flipping the back-side of the page
-	BOOL isForward = ([self direction] == MPFlipViewControllerDirectionForward);
-	BOOL isVertical = ([self orientation] == MPFlipViewControllerOrientationVertical);
+	BOOL isForward = ([self direction] == OLFlipViewControllerDirectionForward);
+	BOOL isVertical = ([self orientation] == OLFlipViewControllerOrientationVertical);
 	
 	CGFloat positionValue = isVertical? position.y : position.x;
 	CGFloat startValue = isVertical? self.panStart.y : self.panStart.x;
@@ -425,12 +425,12 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	}];
 }
 
-- (BOOL)startFlipWithDirection:(MPFlipViewControllerDirection)direction
+- (BOOL)startFlipWithDirection:(OLFlipViewControllerDirection)direction
 {
 	if (![self dataSource])
 		return NO;
 	
-	UIViewController *destinationController = (direction == MPFlipViewControllerDirectionForward)? 
+	UIViewController *destinationController = (direction == OLFlipViewControllerDirectionForward)? 
 	[[self dataSource] flipViewController:self viewControllerAfterViewController:[self viewController]] : 
 	[[self dataSource] flipViewController:self viewControllerBeforeViewController:[self viewController]];
 	
@@ -447,18 +447,18 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	return YES;
 }
 
-- (void)startFlipToViewController:(UIViewController *)destinationController fromViewController:(UIViewController *)sourceController withDirection:(MPFlipViewControllerDirection)direction
+- (void)startFlipToViewController:(UIViewController *)destinationController fromViewController:(UIViewController *)sourceController withDirection:(OLFlipViewControllerDirection)direction
 {
-	BOOL isForward = (direction == MPFlipViewControllerDirectionForward);
-	BOOL isVertical = ([self orientation] == MPFlipViewControllerOrientationVertical);
+	BOOL isForward = (direction == OLFlipViewControllerDirectionForward);
+	BOOL isVertical = ([self orientation] == OLFlipViewControllerOrientationVertical);
 	[self setSourceController:sourceController];
 	[self setDestinationController:destinationController];
 	[self setDirection:direction];
-	self.flipTransition = [[MPFlipTransition alloc] initWithSourceView:[sourceController view] 
+	self.flipTransition = [[OLFlipTransition alloc] initWithSourceView:[sourceController view] 
 													   destinationView:[destinationController view] 
 															  duration:0.5 
-																 style:((isForward? MPFlipStyleDefault : MPFlipStyleDirectionBackward) | (isVertical? MPFlipStyleOrientationVertical : MPFlipStyleDefault))
-													  completionAction:MPTransitionActionAddRemove];
+																 style:((isForward? OLFlipStyleDefault : OLFlipStyleDirectionBackward) | (isVertical? OLFlipStyleOrientationVertical : OLFlipStyleDefault))
+													  completionAction:OLTransitionActionAddRemove];
 	
 	[self.flipTransition buildLayers];
 	
@@ -509,8 +509,8 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 		NSDictionary *info = [NSDictionary dictionaryWithObjects:
 							  [NSArray arrayWithObjects:[NSNumber numberWithBool:animationFinished], [NSNumber numberWithBool:transitionCompleted], previousController, newController, nil]
 													  forKeys:
-							  [NSArray arrayWithObjects:MPAnimationFinishedKey, MPTransitionCompletedKey, MPPreviousControllerKey, MPNewControllerKey, nil]];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MPFlipViewControllerDidFinishAnimatingNotification
+							  [NSArray arrayWithObjects:OLAnimationFinishedKey, OLTransitionCompletedKey, OLPreviousControllerKey, OLNewControllerKey, nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:OLFlipViewControllerDidFinishAnimatingNotification
 															object:self
 														  userInfo:info];
 	}
@@ -531,7 +531,7 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	if (!previousController)
 	{
 		[self setRubberbanding:YES];
-		[self startFlipToViewController:nil fromViewController:self.childViewController withDirection:MPFlipViewControllerDirectionReverse];
+		[self startFlipToViewController:nil fromViewController:self.childViewController withDirection:OLFlipViewControllerDirectionReverse];
 		[self.flipTransition performRubberband:^(BOOL finished) {
 			[self endFlipAnimation:finished transitionCompleted:NO completion:nil];
 		}];
@@ -539,7 +539,7 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	}
 	
 	[self setGestureDriven:YES];
-	[self setViewController:previousController direction:MPFlipViewControllerDirectionReverse animated:YES completion:nil];
+	[self setViewController:previousController direction:OLFlipViewControllerDirectionReverse animated:YES completion:nil];
 }
 
 - (void)gotoNextPage
@@ -551,7 +551,7 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	if (!nextController)
 	{
 		[self setRubberbanding:YES];
-		[self startFlipToViewController:nil fromViewController:self.childViewController withDirection:MPFlipViewControllerDirectionForward];
+		[self startFlipToViewController:nil fromViewController:self.childViewController withDirection:OLFlipViewControllerDirectionForward];
 		[self.flipTransition performRubberband:^(BOOL finished) {
 			[self endFlipAnimation:finished transitionCompleted:NO completion:nil];
 		}];
@@ -559,7 +559,7 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	}
 	
 	[self setGestureDriven:YES];
-	[self setViewController:nextController direction:MPFlipViewControllerDirectionForward animated:YES completion:nil];	
+	[self setViewController:nextController direction:OLFlipViewControllerDirectionForward animated:YES completion:nil];	
 }
 
 @end

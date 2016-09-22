@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import "MPFlipTransition.h"
+#import "OLFlipTransition.h"
 #import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
@@ -79,7 +79,7 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)saveOrder;
 @end
 
-@interface MPFlipTransition (Private)
+@interface OLFlipTransition (Private)
 
 - (void)animateFlip1:(BOOL)isFallingBack fromProgress:(CGFloat)fromProgress toProgress:(CGFloat)toProgress withCompletion:(void (^)(BOOL finished))completion;
 - (void)animateFlip2:(BOOL)isFallingBack fromProgress:(CGFloat)fromProgress withCompletion:(void (^)(BOOL finished))completion;
@@ -474,8 +474,8 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     self.animating = YES;
-    MPFlipStyle style = MPFlipStyleDefault;
-    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:0.5 timingCurve:UIViewAnimationCurveEaseOut completionAction:MPTransitionActionNone];
+    OLFlipStyle style = OLFlipStyleDefault;
+    OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:0.5 timingCurve:UIViewAnimationCurveEaseOut completionAction:OLTransitionActionNone];
     flipTransition.style = style;
     
     [flipTransition buildLayers];
@@ -1313,8 +1313,8 @@ static const CGFloat kBookEdgePadding = 38;
             self.containerView.transform = CGAffineTransformIdentity;
         }
     }completion:^(BOOL completed){}];
-    MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
-    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
+    OLFlipStyle style = sender.view.tag == kTagRight ? OLFlipStyleDefault : OLFlipStyleDirectionBackward;
+    OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:OLTransitionActionNone];
     flipTransition.style = style;
     [flipTransition perform:^(BOOL finished){
         self.bookClosed = NO;
@@ -1396,9 +1396,9 @@ static const CGFloat kBookEdgePadding = 38;
         }];
     }
     
-    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
+    OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:OLTransitionActionShowHide];
     flipTransition.flippingPageShadowOpacity = 0;
-    flipTransition.style = MPFlipStyleDirectionBackward;
+    flipTransition.style = OLFlipStyleDirectionBackward;
     [flipTransition perform:^(BOOL finished){
         self.animating = NO;
         
@@ -1451,9 +1451,9 @@ static const CGFloat kBookEdgePadding = 38;
                      animations:^{
                          self.containerView.transform = CGAffineTransformIdentity;
                      } completion:^(BOOL finished){}];
-    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
+    OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:OLTransitionActionShowHide];
     flipTransition.flippingPageShadowOpacity = 0;
-    flipTransition.style = MPFlipStyleDefault;
+    flipTransition.style = OLFlipStyleDefault;
     [flipTransition perform:^(BOOL finished){
         self.animating = NO;
         [self.fakeShadowView makeRoundRectWithRadius:3];
