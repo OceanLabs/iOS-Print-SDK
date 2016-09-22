@@ -53,12 +53,9 @@ static const NSInteger kSectionPages = 2;
 @end
 
 @interface OLKitePrintSDK (InternalUtils)
-
-#ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
 + (NSString *) instagramClientID;
-#endif
 @end
 
 @interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate>

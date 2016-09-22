@@ -74,21 +74,13 @@
 #import "OLPayPalCard+OLCardIcon.h"
 #import "OLStripeCard+OLCardIcon.h"
 #import "OLImagePickerViewController.h"
+#import "OLStripeWrapper.h"
 
 #ifdef OL_KITE_OFFER_PAYPAL
 #ifdef COCOAPODS
 #import <PayPal-iOS-SDK/PayPalMobile.h>
 #else
 #import "PayPalMobile.h"
-#endif
-
-#endif
-
-#ifdef OL_KITE_OFFER_APPLE_PAY
-#ifdef COCOAPODS
-#import <Stripe/Stripe.h>
-#else
-#import "Stripe+ApplePay.h"
 #endif
 
 #endif
@@ -158,11 +150,9 @@ static BOOL haveLoadedAtLeastOnce = NO;
 + (NSString *_Nonnull)paypalClientId;
 #endif
 
-#ifdef OL_KITE_OFFER_APPLE_PAY
 + (NSString *_Nonnull)stripePublishableKey;
 + (NSString *_Nonnull)appleMerchantID;
 + (NSString *)applePayPayToString;
-#endif
 
 @end
 
@@ -186,9 +176,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 PayPalPaymentDelegate,
 #endif
 UITableViewDataSource, UITableViewDelegate,
-#ifdef OL_KITE_OFFER_APPLE_PAY
 PKPaymentAuthorizationViewControllerDelegate,
-#endif
 UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate, OLPaymentMethodsViewControllerDelegate>
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
@@ -280,11 +268,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (![CNContact class]){
         return NO;
     }
-#ifdef OL_KITE_OFFER_APPLE_PAY
     return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
-#else
-    return NO;
-#endif
 }
 
 -(BOOL)shouldShowApplePay{
@@ -319,7 +303,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.promoCodeTextField.text = self.printOrder.promoCode;
     
     NSString *applePayAvailableStr = @"N/A";
-#ifdef OL_KITE_OFFER_APPLE_PAY
     if ([self.class isApplePayAvailable] && [self shouldShowApplePay]){
         applePayAvailableStr = @"Yes";
     }
@@ -329,7 +312,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     else{
         applePayAvailableStr = @"No";
     }
-#endif
     
     if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
         self.title = NSLocalizedStringFromTableInBundle(@"Payment (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
@@ -515,9 +497,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [PayPalMobile preconnectWithEnvironment:[OLKitePrintSDK paypalEnvironment]];
 #endif
     
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    [Stripe setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
-#endif
+    [OLStripeWrapper setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
     
     if ([self.printOrder hasCachedCost] && !self.printOrder.costReq) {
         [self.tableView reloadData];
@@ -670,12 +650,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
         if (![OLKiteABTesting sharedInstance].theme.kioskRequirePromoCode && (result == NSOrderedAscending || result == NSOrderedSame)) {
-#ifdef OL_KITE_OFFER_PAYPAL
-            self.paymentButton1.hidden = YES;
-#endif
-#ifdef OL_KITE_OFFER_APPLE_PAY
-            self.paymentButton1.hidden = YES;
-#endif
             [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
             
             self.paymentMethodBottomCon.constant = 2 - self.addPaymentBox.frame.size.height;
@@ -686,12 +660,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             } completion:^(BOOL finished){}];
         }
         else {
-#ifdef OL_KITE_OFFER_PAYPAL
-            self.paymentButton1.hidden = NO;
-#endif
-#ifdef OL_KITE_OFFER_APPLE_PAY
-            self.paymentButton1.hidden = NO;
-#endif
             [self.paymentButton2 setTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [[cost totalCostInCurrency:self.printOrder.currencyCode] formatCostForCurrencyCode:self.printOrder.currencyCode]] forState:UIControlStateNormal];
             
             self.paymentMethodBottomCon.constant = 2;
@@ -818,9 +786,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.printOrder.proofOfPayment = proofOfPayment;
     
     NSString *applePayAvailableStr = @"N/A";
-#ifdef OL_KITE_OFFER_APPLE_PAY
     applePayAvailableStr = [self.class isApplePayAvailable] ? @"Yes" : @"No";
-#endif
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPaymentCompletedForOrder:self.printOrder paymentMethod:paymentMethod applePayIsAvailable:applePayAvailableStr];
@@ -1260,7 +1226,19 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 #endif
 
-#ifdef OL_KITE_OFFER_APPLE_PAY
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier {
+    if (![PKPaymentRequest class]) {
+        return nil;
+    }
+    PKPaymentRequest *paymentRequest = [PKPaymentRequest new];
+    [paymentRequest setMerchantIdentifier:merchantIdentifier];
+    [paymentRequest setSupportedNetworks:[OLPaymentViewController supportedPKPaymentNetworks]];
+    [paymentRequest setMerchantCapabilities:PKMerchantCapability3DS];
+    [paymentRequest setCountryCode:@"US"];
+    [paymentRequest setCurrencyCode:@"USD"];
+    return paymentRequest;
+}
+
 - (IBAction)onButtonPayWithApplePayClicked{
     if (self.printOrder.jobs.count == 0){
         return;
@@ -1269,7 +1247,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.applePayDismissOperation = [[NSBlockOperation alloc] init];
     
     self.printOrder.paymentMethod = @"APPLE_PAY";
-    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
+    PKPaymentRequest *paymentRequest = [OLPaymentViewController paymentRequestWithMerchantIdentifier:[OLKitePrintSDK appleMerchantID]];
     paymentRequest.currencyCode = self.printOrder.currencyCode;
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
         if (!cost){
@@ -1317,7 +1295,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self presentViewController:paymentController animated:YES completion:nil];
     }];
 }
-#endif
 
 - (IBAction)onButtonMinusClicked:(UIButton *)sender {
     CGPoint buttonPosition = [sender.superview convertPoint:CGPointZero toView:self.tableView];
@@ -1465,11 +1442,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 }
             }
         }
-#ifdef OL_KITE_OFFER_APPLE_PAY
         else if (selectedPaymentMethod == kOLPaymentMethodApplePay){
             [self onButtonPayWithApplePayClicked];
         }
-#endif
 #ifdef OL_KITE_OFFER_PAYPAL
         else if (selectedPaymentMethod == kOLPaymentMethodPayPal){
             [self onButtonPayWithPayPalClicked];
@@ -1533,7 +1508,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 #pragma mark - Apple Pay Delegate Methods
 
-#ifdef OL_KITE_OFFER_APPLE_PAY
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
@@ -1593,15 +1567,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         completion(PKPaymentAuthorizationStatusInvalidShippingContact);
         return;
     }
-    
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
-    
-    [client createTokenWithPayment:payment completion:^(STPToken *token, NSError *error) {
+    id client = [OLStripeWrapper initSTPAPIClientWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
+    [OLStripeWrapper client:client createTokenWithPayment:payment completion:^(id token, NSError *error) {
         if (error) {
             completion(PKPaymentAuthorizationStatusFailure);
             return;
         }
-        [self submitOrderForPrintingWithProofOfPayment:token.tokenId paymentMethod:@"Apple Pay" completion:completion];
+        [self submitOrderForPrintingWithProofOfPayment:[OLStripeWrapper tokenIdFromToken:token] paymentMethod:@"Apple Pay" completion:completion];
     }];
 }
 
@@ -1650,69 +1622,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
     }];
 }
-
-#ifndef __IPHONE_10_0
-- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingAddress:(ABRecordRef)address completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKShippingMethod *> *, NSArray <PKPaymentSummaryItem *>*))completion{
-    OLAddress *shippingAddress = [[OLAddress alloc] init];
-    CFTypeRef values = ABRecordCopyValue(address, kABPersonAddressProperty);
-    for (NSInteger i = 0; i < ABMultiValueGetCount(values); i++){
-        NSDictionary *dict = (__bridge NSDictionary *)ABMultiValueCopyValueAtIndex(values, i);
-        shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryKey]];
-        if (!shippingAddress.country){
-            shippingAddress.country = [OLCountry countryForName:[dict objectForKey:(id)kABPersonAddressCountryKey]];
-        }
-        if (!shippingAddress.country){
-            shippingAddress.country = [OLCountry countryForCode:[dict objectForKey:(id)kABPersonAddressCountryCodeKey]];
-        }
-        if (!shippingAddress.country){
-            completion(PKPaymentAuthorizationStatusFailure, nil, nil);
-        }
-    }
-    
-    self.printOrder.shippingAddress = shippingAddress;
-    for (id<OLPrintJob> printJob in self.printOrder.jobs){
-        if ([printJob respondsToSelector:@selector(setAddress:)]){
-            [printJob setAddress:nil];
-        }
-    }
-    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-        [self costCalculationCompletedWithError:error];
-        NSMutableArray *lineItems = [[NSMutableArray alloc] init];
-        for (OLPaymentLineItem *item in cost.lineItems){
-            [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
-        }
-        
-        // if a special discount exists, then add a Discount line item
-        if (cost.specialPromoDiscount){
-            NSDecimalNumber *currencyDiscount = cost.specialPromoDiscount[self.printOrder.currencyCode];
-            if ([currencyDiscount doubleValue] != 0) {
-                if ([currencyDiscount doubleValue] > 0) {
-                    currencyDiscount = [currencyDiscount decimalNumberByMultiplyingBy:(NSDecimalNumber *)[NSDecimalNumber numberWithInteger:-1]];
-                }
-                
-                for (PKPaymentSummaryItem *item in lineItems){
-                    if ([item.amount doubleValue] < 0){
-                        [lineItems removeObject:item];
-                    }
-                }
-                
-                [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedString(@"Promotional Discount", @"") amount:currencyDiscount]];
-            }
-        }
-        
-        [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
-        if (!error){
-            completion(PKPaymentAuthorizationStatusSuccess, nil, lineItems);
-        }
-        else{
-            self.printOrder.shippingAddress = nil;
-            completion(PKPaymentAuthorizationStatusFailure, nil, nil);
-        }
-    }];
-}
-#endif
-
-#endif
 
 #pragma mark - UITableViewDataSource methods
 

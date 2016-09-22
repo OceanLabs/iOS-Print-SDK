@@ -159,15 +159,11 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
-#ifdef OL_KITE_OFFER_APPLE_PAY
     applePayMerchantID = mID;
-#endif
 }
 
 + (void)setApplePayPayToString:(NSString *_Nonnull)name{
-#ifdef OL_KITE_OFFER_APPLE_PAY
     applePayPayToString = name;
-#endif
 }
 
 + (NSString *)applePayPayToString{

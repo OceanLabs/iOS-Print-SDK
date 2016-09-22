@@ -57,11 +57,9 @@
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     NSInteger sections = 1; //Credit Cards for everyone!
     
-#ifdef OL_KITE_OFFER_APPLE_PAY
     if ([OLPaymentViewController isApplePayAvailable]){
         sections++;
     }
-#endif
     
 #ifdef OL_KITE_OFFER_PAYPAL
     sections++;
@@ -102,7 +100,6 @@
         label.text = NSLocalizedStringFromTableInBundle(@"Add Credit/Debit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         [cell viewWithTag:30].hidden = YES;
     }
-#ifdef OL_KITE_OFFER_APPLE_PAY
     else if (method == kOLPaymentMethodApplePay){
         imageView.image = [UIImage imageNamed:@"apple-pay-method"];
         label.text = @"Apple Pay";
@@ -118,7 +115,6 @@
             [cell viewWithTag:30].hidden = YES;
         }
     }
-#endif
 #ifdef OL_KITE_OFFER_PAYPAL
     else if (method == kOLPaymentMethodPayPal){
         imageView.image = [UIImage imageNamed:@"paypal-method"];

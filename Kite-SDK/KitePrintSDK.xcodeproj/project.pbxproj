@@ -41,6 +41,10 @@
 		2E10F04E1D93CDE100014C19 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
 		2E10F04F1D93CDE100014C19 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
 		2E10F0501D93CDE100014C19 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
+		2E10F0551D93D71E00014C19 /* OLStripeWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */; };
+		2E10F0561D93D71E00014C19 /* OLStripeWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */; };
+		2E10F0571D93D71E00014C19 /* OLStripeWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */; };
+		2E10F0581D93D71E00014C19 /* OLStripeWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */; };
 		2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E18DC511D913DB1004752D2 /* OLPrintPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E18DC501D913DB1004752D2 /* OLPrintPhoto.m */; };
@@ -790,6 +794,8 @@
 		2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DALabeledCircularProgressView.m; sourceTree = "<group>"; };
 		2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLMarkdownParser.h; sourceTree = "<group>"; };
 		2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLMarkdownParser.m; sourceTree = "<group>"; };
+		2E10F0531D93D71D00014C19 /* OLStripeWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeWrapper.h; sourceTree = "<group>"; };
+		2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLStripeWrapper.m; sourceTree = "<group>"; };
 		2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePreviewViewController.h; sourceTree = "<group>"; };
 		2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePreviewViewController.m; sourceTree = "<group>"; };
 		2E18DC4F1D913DB1004752D2 /* OLPrintPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintPhoto.h; sourceTree = "<group>"; };
@@ -1445,6 +1451,30 @@
 			name = TSMarkdownParser;
 			sourceTree = "<group>";
 		};
+		2E10F0511D93D6F700014C19 /* 3rd Party */ = {
+			isa = PBXGroup;
+			children = (
+				2E10F0521D93D70300014C19 /* Stripe */,
+				2EB612F61D48AFDA00B48E29 /* Instagram */,
+				2E1E66D91D4795C8002524A4 /* Facebook */,
+				2E480AAB1D92D6D4006C0EE6 /* MPFlipViewController */,
+				2E10F03E1D93CC3600014C19 /* TSMarkdownParser */,
+				2E10F0311D93CBF100014C19 /* DACircularProgress */,
+				2E480AC61D92DB85006C0EE6 /* SVProgressHUD */,
+				2EB00A221D92C96B00668B29 /* NXOAuth2Client */,
+			);
+			name = "3rd Party";
+			sourceTree = "<group>";
+		};
+		2E10F0521D93D70300014C19 /* Stripe */ = {
+			isa = PBXGroup;
+			children = (
+				2E10F0531D93D71D00014C19 /* OLStripeWrapper.h */,
+				2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */,
+			);
+			name = Stripe;
+			sourceTree = "<group>";
+		};
 		2E1E66D91D4795C8002524A4 /* Facebook */ = {
 			isa = PBXGroup;
 			children = (
@@ -1638,13 +1668,7 @@
 				CD550BD61886BF6000782D75 /* Payment */,
 				CD7696A11868DE7A006D4A26 /* Print */,
 				3DE2B0C01A77D2290092D97F /* Util */,
-				2EB612F61D48AFDA00B48E29 /* Instagram */,
-				2E1E66D91D4795C8002524A4 /* Facebook */,
-				2E480AAB1D92D6D4006C0EE6 /* MPFlipViewController */,
-				2E10F03E1D93CC3600014C19 /* TSMarkdownParser */,
-				2E10F0311D93CBF100014C19 /* DACircularProgress */,
-				2E480AC61D92DB85006C0EE6 /* SVProgressHUD */,
-				2EB00A221D92C96B00668B29 /* NXOAuth2Client */,
+				2E10F0511D93D6F700014C19 /* 3rd Party */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -2823,6 +2847,7 @@
 				2EB613021D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2E898C9F1CC518180041CCD8 /* UITextField+Selection.m in Sources */,
 				2E898CA11CC518180041CCD8 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
+				2E10F0561D93D71E00014C19 /* OLStripeWrapper.m in Sources */,
 				2E898CA21CC518180041CCD8 /* OLImageCachingManager.m in Sources */,
 				2E898CA41CC518180041CCD8 /* UIView+RoundRect.m in Sources */,
 				2E898CA51CC518180041CCD8 /* OLCountry.m in Sources */,
@@ -2934,6 +2959,7 @@
 				2EB715DE1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m in Sources */,
 				2EB00AB41D92C9D400668B29 /* OLOAuth2Connection.m in Sources */,
 				2EA3D3801C9C04B500B99BCD /* OLSingleImageProductReviewViewController.m in Sources */,
+				2E10F0581D93D71E00014C19 /* OLStripeWrapper.m in Sources */,
 				2E96BAE41D2FC109002F5F74 /* qrspec.c in Sources */,
 				2EA3D3811C9C04B500B99BCD /* OLImagePreviewViewController.m in Sources */,
 				2EA3D3821C9C04B500B99BCD /* OLPosterViewController.m in Sources */,
@@ -3157,6 +3183,7 @@
 				2EA0087B1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
 				2EB613011D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2EADD8291BE79D6D0051CD31 /* UITextField+Selection.m in Sources */,
+				2E10F0551D93D71E00014C19 /* OLStripeWrapper.m in Sources */,
 				2EADD82B1BE79D6D0051CD31 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2EADD82D1BE79D6D0051CD31 /* OLImageCachingManager.m in Sources */,
 				2EADD82E1BE79D6D0051CD31 /* UIView+RoundRect.m in Sources */,
@@ -3292,6 +3319,7 @@
 				E29C85CB1BE3B5C50041D4CF /* OLAsset.m in Sources */,
 				2EBDA6DF1CEB1B0500397082 /* OLImageDownloader.m in Sources */,
 				2E1E66FD1D47A653002524A4 /* OLFacebookImagePickerConstants.m in Sources */,
+				2E10F0571D93D71E00014C19 /* OLStripeWrapper.m in Sources */,
 				E29C85CD1BE3B5C50041D4CF /* OLProductTemplate.m in Sources */,
 				2EB715D71CFDD12900618C7B /* OLLuhn.m in Sources */,
 				2E480AC01D92D768006C0EE6 /* MPFlipViewController.m in Sources */,
@@ -3471,10 +3499,6 @@
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					STRIPE_ENABLE_APPLEPAY,
-					OL_KITE_OFFER_APPLE_PAY,
-					OL_KITE_OFFER_INSTAGRAM,
-					OL_KITE_OFFER_FACEBOOK,
 					OL_KITE_OFFER_PAYPAL,
 					"OL_KITE_CI_DEPLOY=ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e",
 				);
@@ -3571,13 +3595,7 @@
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					OL_KITE_AT_LEAST_IOS8,
-					STRIPE_ENABLE_APPLEPAY,
-					OL_KITE_OFFER_APPLE_PAY,
-					OL_KITE_OFFER_INSTAGRAM,
-					OL_KITE_OFFER_FACEBOOK,
 					OL_KITE_OFFER_PAYPAL,
-					OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS,
 					"OL_KITE_CI_DEPLOY=ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e",
 				);
 				INFOPLIST_FILE = "PSPrintSDK/KiteCI-Info.plist";
@@ -3732,9 +3750,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					STRIPE_ENABLE_APPLEPAY,
-					OL_KITE_OFFER_APPLE_PAY,
-					OL_KITE_OFFER_INSTAGRAM,
-					OL_KITE_OFFER_FACEBOOK,
 					OL_KITE_OFFER_PAYPAL,
 					OL_KITE_VERBOSE,
 				);
@@ -3831,10 +3846,6 @@
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					STRIPE_ENABLE_APPLEPAY,
-					OL_KITE_OFFER_APPLE_PAY,
-					OL_KITE_OFFER_INSTAGRAM,
-					OL_KITE_OFFER_FACEBOOK,
 					OL_KITE_OFFER_PAYPAL,
 				);
 				INFOPLIST_FILE = "PSPrintSDK/KitePrintSDK-Info.plist";
