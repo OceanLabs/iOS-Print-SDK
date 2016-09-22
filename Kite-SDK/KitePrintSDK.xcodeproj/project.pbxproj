@@ -145,18 +145,18 @@
 		2E480AC31D92D768006C0EE6 /* MPTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AB41D92D768006C0EE6 /* MPTransition.m */; };
 		2E480AC41D92D768006C0EE6 /* MPTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AB41D92D768006C0EE6 /* MPTransition.m */; };
 		2E480AC51D92D768006C0EE6 /* MPTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AB41D92D768006C0EE6 /* MPTransition.m */; };
-		2E480ACE1D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AC81D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m */; };
-		2E480ACF1D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AC81D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m */; };
-		2E480AD01D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AC81D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m */; };
-		2E480AD11D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AC81D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m */; };
-		2E480AD21D92DB9B006C0EE6 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACB1D92DB9B006C0EE6 /* SVProgressHUD.m */; };
-		2E480AD31D92DB9B006C0EE6 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACB1D92DB9B006C0EE6 /* SVProgressHUD.m */; };
-		2E480AD41D92DB9B006C0EE6 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACB1D92DB9B006C0EE6 /* SVProgressHUD.m */; };
-		2E480AD51D92DB9B006C0EE6 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACB1D92DB9B006C0EE6 /* SVProgressHUD.m */; };
-		2E480AD61D92DB9B006C0EE6 /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACD1D92DB9B006C0EE6 /* SVRadialGradientLayer.m */; };
-		2E480AD71D92DB9B006C0EE6 /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACD1D92DB9B006C0EE6 /* SVRadialGradientLayer.m */; };
-		2E480AD81D92DB9B006C0EE6 /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACD1D92DB9B006C0EE6 /* SVRadialGradientLayer.m */; };
-		2E480AD91D92DB9B006C0EE6 /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACD1D92DB9B006C0EE6 /* SVRadialGradientLayer.m */; };
+		2E480ACE1D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AC81D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m */; };
+		2E480ACF1D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AC81D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m */; };
+		2E480AD01D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AC81D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m */; };
+		2E480AD11D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AC81D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m */; };
+		2E480AD21D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACB1D92DB9B006C0EE6 /* OLProgressHUD.m */; };
+		2E480AD31D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACB1D92DB9B006C0EE6 /* OLProgressHUD.m */; };
+		2E480AD41D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACB1D92DB9B006C0EE6 /* OLProgressHUD.m */; };
+		2E480AD51D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACB1D92DB9B006C0EE6 /* OLProgressHUD.m */; };
+		2E480AD61D92DB9B006C0EE6 /* OLRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACD1D92DB9B006C0EE6 /* OLRadialGradientLayer.m */; };
+		2E480AD71D92DB9B006C0EE6 /* OLRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACD1D92DB9B006C0EE6 /* OLRadialGradientLayer.m */; };
+		2E480AD81D92DB9B006C0EE6 /* OLRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACD1D92DB9B006C0EE6 /* OLRadialGradientLayer.m */; };
+		2E480AD91D92DB9B006C0EE6 /* OLRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACD1D92DB9B006C0EE6 /* OLRadialGradientLayer.m */; };
 		2E480ADE1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */; };
 		2E480ADF1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */; };
 		2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
@@ -901,13 +901,12 @@
 		2E480AB31D92D768006C0EE6 /* MPTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPTransition.h; sourceTree = "<group>"; };
 		2E480AB41D92D768006C0EE6 /* MPTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPTransition.m; sourceTree = "<group>"; };
 		2E480AB51D92D768006C0EE6 /* MPTransitionEnumerations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPTransitionEnumerations.h; sourceTree = "<group>"; };
-		2E480AC71D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVIndefiniteAnimatedView.h; sourceTree = "<group>"; };
-		2E480AC81D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVIndefiniteAnimatedView.m; sourceTree = "<group>"; };
-		2E480AC91D92DB9B006C0EE6 /* SVProgressHUD-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVProgressHUD-Prefix.pch"; sourceTree = "<group>"; };
-		2E480ACA1D92DB9B006C0EE6 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
-		2E480ACB1D92DB9B006C0EE6 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
-		2E480ACC1D92DB9B006C0EE6 /* SVRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVRadialGradientLayer.h; sourceTree = "<group>"; };
-		2E480ACD1D92DB9B006C0EE6 /* SVRadialGradientLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVRadialGradientLayer.m; sourceTree = "<group>"; };
+		2E480AC71D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLIndefiniteAnimatedView.h; sourceTree = "<group>"; };
+		2E480AC81D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLIndefiniteAnimatedView.m; sourceTree = "<group>"; };
+		2E480ACA1D92DB9B006C0EE6 /* OLProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProgressHUD.h; sourceTree = "<group>"; };
+		2E480ACB1D92DB9B006C0EE6 /* OLProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProgressHUD.m; sourceTree = "<group>"; };
+		2E480ACC1D92DB9B006C0EE6 /* OLRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLRadialGradientLayer.h; sourceTree = "<group>"; };
+		2E480ACD1D92DB9B006C0EE6 /* OLRadialGradientLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLRadialGradientLayer.m; sourceTree = "<group>"; };
 		2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = OLProgressHUD.bundle; sourceTree = "<group>"; };
 		2E482B771BEB4C7D007460EA /* OLStripeCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeCard.h; sourceTree = "<group>"; };
 		2E482B781BEB4C7D007460EA /* OLStripeCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLStripeCard.m; sourceTree = "<group>"; };
@@ -1573,13 +1572,12 @@
 		2E480AC61D92DB85006C0EE6 /* SVProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
-				2E480AC71D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.h */,
-				2E480AC81D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m */,
-				2E480AC91D92DB9B006C0EE6 /* SVProgressHUD-Prefix.pch */,
-				2E480ACA1D92DB9B006C0EE6 /* SVProgressHUD.h */,
-				2E480ACB1D92DB9B006C0EE6 /* SVProgressHUD.m */,
-				2E480ACC1D92DB9B006C0EE6 /* SVRadialGradientLayer.h */,
-				2E480ACD1D92DB9B006C0EE6 /* SVRadialGradientLayer.m */,
+				2E480AC71D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.h */,
+				2E480AC81D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m */,
+				2E480ACA1D92DB9B006C0EE6 /* OLProgressHUD.h */,
+				2E480ACB1D92DB9B006C0EE6 /* OLProgressHUD.m */,
+				2E480ACC1D92DB9B006C0EE6 /* OLRadialGradientLayer.h */,
+				2E480ACD1D92DB9B006C0EE6 /* OLRadialGradientLayer.m */,
 			);
 			name = SVProgressHUD;
 			sourceTree = "<group>";
@@ -2883,7 +2881,7 @@
 				2E898C631CC518180041CCD8 /* OLProduct.m in Sources */,
 				2E96BADE1D2FC109002F5F74 /* qrinput.c in Sources */,
 				2E96BAC01D2FC101002F5F74 /* UIImage+MDQRCode.m in Sources */,
-				2E480ACF1D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m in Sources */,
+				2E480ACF1D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m in Sources */,
 				2E898C651CC518180041CCD8 /* OLGreetingCardPrintJob.m in Sources */,
 				2EC43DDB1D65B3D000915DDE /* UIColor+OLHexString.m in Sources */,
 				2E67B9261D2671DE00914D56 /* OLPhotoTextField.m in Sources */,
@@ -2931,7 +2929,7 @@
 				2E898C841CC518180041CCD8 /* AppDelegate.m in Sources */,
 				2E898C851CC518180041CCD8 /* OLProductTemplate.m in Sources */,
 				2E898C861CC518180041CCD8 /* OLPaymentViewController.m in Sources */,
-				2E480AD71D92DB9B006C0EE6 /* SVRadialGradientLayer.m in Sources */,
+				2E480AD71D92DB9B006C0EE6 /* OLRadialGradientLayer.m in Sources */,
 				2E898C891CC518180041CCD8 /* OLKitePrintSDK.m in Sources */,
 				2E898C8A1CC518180041CCD8 /* OLQRCodeUploadedImagePoller.m in Sources */,
 				2E898C8B1CC518180041CCD8 /* NSString+Formatting.m in Sources */,
@@ -2992,7 +2990,7 @@
 				2E480AC31D92D768006C0EE6 /* MPTransition.m in Sources */,
 				2E898CB91CC518180041CCD8 /* OLAddressLookupViewController.m in Sources */,
 				2E37B17C1D227EDA003DAA84 /* OLPageLayout.m in Sources */,
-				2E480AD31D92DB9B006C0EE6 /* SVProgressHUD.m in Sources */,
+				2E480AD31D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */,
 				2E898CBA1CC518180041CCD8 /* OLKiteABTesting.m in Sources */,
 				2E898CBB1CC518180041CCD8 /* OLProductHomeViewController.m in Sources */,
 				2E898CBC1CC518180041CCD8 /* OLPhotoEdits.m in Sources */,
@@ -3068,7 +3066,7 @@
 				2EB00A1F1D92735300668B29 /* OLFacebookSDKWrapper.m in Sources */,
 				2EC43DDD1D65B3D200915DDE /* UIColor+OLHexString.m in Sources */,
 				2EB00A9C1D92C9D400668B29 /* NSString+OLOAuth2.m in Sources */,
-				2E480AD91D92DB9B006C0EE6 /* SVRadialGradientLayer.m in Sources */,
+				2E480AD91D92DB9B006C0EE6 /* OLRadialGradientLayer.m in Sources */,
 				2E480ABD1D92D768006C0EE6 /* MPFlipTransition.m in Sources */,
 				2EA3D37E1C9C04B500B99BCD /* OLPayPalCard.m in Sources */,
 				2EA3D37F1C9C04B500B99BCD /* OLProductPrintJob.m in Sources */,
@@ -3144,7 +3142,7 @@
 				2E1E66EB1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				2EA3D3B41C9C04B500B99BCD /* OLPostcardPrintJob.m in Sources */,
 				2EA3D3B51C9C04B500B99BCD /* NSObject+Utils.m in Sources */,
-				2E480AD51D92DB9B006C0EE6 /* SVProgressHUD.m in Sources */,
+				2E480AD51D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */,
 				2EB612F51D48AF9400B48E29 /* OLInstagramLoginWebViewController.m in Sources */,
 				2EA3D3B61C9C04B500B99BCD /* OLAnalytics.m in Sources */,
 				2E2BF44A1CCDFAF100725561 /* OLKiteTheme.m in Sources */,
@@ -3162,7 +3160,7 @@
 				2EB00AA41D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */,
 				2EA3D3BF1C9C04B500B99BCD /* OLViewController.m in Sources */,
 				2E37B1841D229162003DAA84 /* OLProductRepresentation.m in Sources */,
-				2E480AD11D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m in Sources */,
+				2E480AD11D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m in Sources */,
 				2E96BAD41D2FC109002F5F74 /* bitstream.c in Sources */,
 				2EA3D3C01C9C04B500B99BCD /* OLAddressSelectionViewController.m in Sources */,
 				2EA3D3C11C9C04B500B99BCD /* OLProductTemplateOption.m in Sources */,
@@ -3211,7 +3209,7 @@
 				2EADD7F41BE79D6D0051CD31 /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				2E1E66D51D478052002524A4 /* OLImagePickerLoginPageViewController.m in Sources */,
 				2E482B7A1BEB4C7D007460EA /* OLStripeCard.m in Sources */,
-				2E480ACE1D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m in Sources */,
+				2E480ACE1D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m in Sources */,
 				2EB919951D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m in Sources */,
 				2EADD7F61BE79D6D0051CD31 /* OLPackProductViewController.m in Sources */,
 				2EADD7F71BE79D6D0051CD31 /* OLProduct.m in Sources */,
@@ -3259,7 +3257,7 @@
 				2EADD8111BE79D6D0051CD31 /* OLPrintOrder+History.m in Sources */,
 				2EADD8121BE79D6D0051CD31 /* OLAsset.m in Sources */,
 				2EADD8131BE79D6D0051CD31 /* AppDelegate.m in Sources */,
-				2E480AD61D92DB9B006C0EE6 /* SVRadialGradientLayer.m in Sources */,
+				2E480AD61D92DB9B006C0EE6 /* OLRadialGradientLayer.m in Sources */,
 				2EB715D51CFDD12900618C7B /* OLLuhn.m in Sources */,
 				2EADD8141BE79D6D0051CD31 /* OLProductTemplate.m in Sources */,
 				2EADD8151BE79D6D0051CD31 /* OLPaymentViewController.m in Sources */,
@@ -3320,7 +3318,7 @@
 				2E480AC21D92D768006C0EE6 /* MPTransition.m in Sources */,
 				2EADD83D1BE79D6D0051CD31 /* OLCircleMaskCollectionViewCell.m in Sources */,
 				2EADD83E1BE79D6D0051CD31 /* OLCreditCardCaptureViewController.m in Sources */,
-				2E480AD21D92DB9B006C0EE6 /* SVProgressHUD.m in Sources */,
+				2E480AD21D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */,
 				2EADD8401BE79D6D0051CD31 /* OLAddressLookupViewController.m in Sources */,
 				2EADD8411BE79D6D0051CD31 /* OLKiteABTesting.m in Sources */,
 				2EADD8421BE79D6D0051CD31 /* OLProductHomeViewController.m in Sources */,
@@ -3477,7 +3475,7 @@
 				2EB00AAF1D92C9D400668B29 /* OLOAuth2Client.m in Sources */,
 				E29C85D41BE3B5C50041D4CF /* OLAddress.m in Sources */,
 				2EB00AA31D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */,
-				2E480AD01D92DB9B006C0EE6 /* SVIndefiniteAnimatedView.m in Sources */,
+				2E480AD01D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m in Sources */,
 				E29C85D61BE3B5C50041D4CF /* OLNavigationController.m in Sources */,
 				2E1E66E61D4795EE002524A4 /* OLFacebookAlbumRequest.m in Sources */,
 				2E8FD2711BF9E73B00F4FC5A /* OLPhotoEdits.m in Sources */,
@@ -3524,7 +3522,7 @@
 				2E28CDFF1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */,
 				E29C86021BE3B5C50041D4CF /* OLAnalytics.m in Sources */,
 				E29C86031BE3B5C50041D4CF /* OLCircleMaskCollectionViewCell.m in Sources */,
-				2E480AD41D92DB9B006C0EE6 /* SVProgressHUD.m in Sources */,
+				2E480AD41D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */,
 				2E480AC41D92D768006C0EE6 /* MPTransition.m in Sources */,
 				E29C86041BE3B5C50041D4CF /* OLCreditCardCaptureViewController.m in Sources */,
 				E29C86081BE3B5C50041D4CF /* OLAddressLookupViewController.m in Sources */,
@@ -3541,7 +3539,7 @@
 				E29C860A1BE3B5C50041D4CF /* OLProductHomeViewController.m in Sources */,
 				2E434AE21D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 				2E837D491C3C1FBB004DA682 /* OLViewController.m in Sources */,
-				2E480AD81D92DB9B006C0EE6 /* SVRadialGradientLayer.m in Sources */,
+				2E480AD81D92DB9B006C0EE6 /* OLRadialGradientLayer.m in Sources */,
 				2E2BF4491CCDFAF100725561 /* OLKiteTheme.m in Sources */,
 				E29C860E1BE3B5C50041D4CF /* OLAddressSelectionViewController.m in Sources */,
 				2E645B3A1BE7D1EF009B662B /* OLProductTemplateOption.m in Sources */,

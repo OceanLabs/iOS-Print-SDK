@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import "SVProgressHUD.h"
+#import "OLProgressHUD.h"
 #import "OLImageDownloader.h"
 #import "OLPaymentViewController.h"
 #import "OLReceiptViewController.h"
@@ -831,8 +831,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     __block BOOL handlerUsed = NO;
     
-    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
+    [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
@@ -845,12 +845,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         const float step = (1.0f / totalAssetsToUpload);
         NSUInteger totalURLAssets = self.printOrder.totalAssetsToUpload - totalAssetsToUpload;
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
-        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
+        [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
         if (progress < 1.0){
-            [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload]];
+            [OLProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload]];
         }
         else{
-            [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+            [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         }
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
@@ -861,7 +861,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [self.transitionBlockOperation addDependency:self.applePayDismissOperation];
         }
         
-        [SVProgressHUD dismiss];
+        [OLProgressHUD dismiss];
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         
         if (error) {
@@ -1030,12 +1030,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         if ([promoCode isEqualToString:self.printOrder.promoCode]){
             return;
         }
-        [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Checking Code", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Checking Code", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     } else {
         if (!self.printOrder.promoCode || [self.printOrder.promoCode isEqualToString:@""]){
             return;
         }
-        [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Clearing Code", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Clearing Code", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     }
     
     NSString *previousCode = self.printOrder.promoCode;
@@ -1045,7 +1045,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #ifndef OL_NO_ANALYTICS
             [OLAnalytics trackPaymentScreenUnsuccessfullyAppliedPromoCode:promoCode withError:error forOrder:self.printOrder];
 #endif
-            [SVProgressHUD dismiss];
+            [OLProgressHUD dismiss];
             [self costCalculationCompletedWithError:error];
         } else {
             if (cost.promoCodeInvalidReason) {
@@ -1054,7 +1054,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #endif
                 self.printOrder.promoCode = previousCode; // reset print order promo code as it was invalid
                 self.promoCodeTextField.text = previousCode;
-                [SVProgressHUD dismiss];
+                [OLProgressHUD dismiss];
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:cost.promoCodeInvalidReason preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
                 [self presentViewController:ac animated:YES completion:NULL];
@@ -1066,9 +1066,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                     [OLAnalytics trackPaymentScreenSuccessfullyAppliedPromoCode:self.printOrder.promoCode forOrder:self.printOrder];
 #endif
                     sleep(1);
-                    [SVProgressHUD showSuccessWithStatus:nil];
+                    [OLProgressHUD showSuccessWithStatus:nil];
                 } else {
-                    [SVProgressHUD dismiss];
+                    [OLProgressHUD dismiss];
                 }
             }
         }
@@ -1178,12 +1178,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)payWithExistingPayPalCard:(OLPayPalCard *)card {
-    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
+    [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         [card chargeCard:[cost totalCostInCurrency:self.printOrder.currencyCode] currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
             if (error) {
-                [SVProgressHUD dismiss];
+                [OLProgressHUD dismiss];
                     UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
                     [self presentViewController:ac animated:YES completion:NULL];
@@ -1197,12 +1197,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)payWithExistingStripeCard:(OLStripeCard *)card {
-    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
+    [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         [card chargeCard:[cost totalCostInCurrency:self.printOrder.currencyCode] currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
             if (error) {
-                [SVProgressHUD dismiss];
+                [OLProgressHUD dismiss];
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
                 [self presentViewController:ac animated:YES completion:NULL];

@@ -376,7 +376,7 @@ NSString *MPFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	CGFloat startValue = isVertical? self.panStart.y : self.panStart.x;
 	CGFloat dimensionValue = isVertical? self.view.frame.size.height : self.view.frame.size.width;
 	CGFloat difference = positionValue - startValue;
-	CGFloat halfWidth = fabsf(startValue - (dimensionValue / 2));
+	CGFloat halfWidth = fabs(startValue - (dimensionValue / 2));
 	CGFloat progress = difference / halfWidth * (isForward? - 1 : 1);
 	if ([self isRubberbanding])
 	{

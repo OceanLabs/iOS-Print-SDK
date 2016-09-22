@@ -1,21 +1,3 @@
-[submodule "Kite-SDK/vendor/MPFlipViewController"]
-	path = Kite-SDK/vendor/MPFlipViewController
-	url = https://github.com/mpospese/MPFlipViewController.git
-[submodule "Kite-SDK/vendor/DACircularProgress"]
-	path = Kite-SDK/vendor/DACircularProgress
-	url = https://github.com/danielamitay/DACircularProgress.git
-[submodule "Kite-SDK/vendor/TSMarkdownParser"]
-	path = Kite-SDK/vendor/TSMarkdownParser
-	url = https://github.com/laptobbe/TSMarkdownParser.git
-[submodule "Kite-SDK/vendor/SVProgressHUD"]
-	path = Kite-SDK/vendor/SVProgressHUD
-	url = https://github.com/TransitApp/SVProgressHUD.git
 [submodule "Kite-SDK/vendor/PayPal-iOS-SDK"]
 	path = Kite-SDK/vendor/PayPal-iOS-SDK
 	url = https://github.com/paypal/PayPal-iOS-SDK.git
-[submodule "Kite-SDK/vendor/CTAssetsPickerController"]
-	path = Kite-SDK/vendor/CTAssetsPickerController
-	url = http://github.com/chiunam/CTAssetsPickerController
-[submodule "Kite-SDK/vendor/PureLayout"]
-	path = Kite-SDK/vendor/PureLayout
-	url = https://github.com/smileyborg/PureLayout

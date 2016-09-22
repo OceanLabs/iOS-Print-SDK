@@ -5,17 +5,17 @@
 //  Copyright (c) 2014 Guillaume Campagna. All rights reserved.
 //
 
-#import "SVIndefiniteAnimatedView.h"
+#import "OLIndefiniteAnimatedView.h"
 
-#pragma mark SVIndefiniteAnimatedView
+#pragma mark OLIndefiniteAnimatedView
 
-@interface SVIndefiniteAnimatedView ()
+@interface OLIndefiniteAnimatedView ()
 
 @property (nonatomic, strong) CAShapeLayer *indefiniteAnimatedLayer;
 
 @end
 
-@implementation SVIndefiniteAnimatedView
+@implementation OLIndefiniteAnimatedView
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
     if (newSuperview) {
@@ -56,7 +56,7 @@
         CALayer *maskLayer = [CALayer layer];
         
         NSBundle *bundle = [NSBundle bundleForClass:self.class];
-        NSURL *url = [bundle URLForResource:@"SVProgressHUD" withExtension:@"bundle"];
+        NSURL *url = [bundle URLForResource:@"OLProgressHUD" withExtension:@"bundle"];
         NSBundle *imageBundle = [NSBundle bundleWithURL:url];
         NSString *path = [imageBundle pathForResource:@"angle-mask" ofType:@"png"];
         

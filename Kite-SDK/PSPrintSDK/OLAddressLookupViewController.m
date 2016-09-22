@@ -33,7 +33,7 @@
 #import "OLCountryPickerController.h"
 #import "OLAddressEditViewController.h"
 #import "OLConstants.h"
-#import "SVProgressHUD.h"
+#import "OLProgressHUD.h"
 #import "OLKiteViewController.h"
 #import "OLKiteUtils.h"
 #import "OLKiteABTesting.h"
@@ -214,8 +214,8 @@
     
     OLAddress *address = self.searchResults[indexPath.row];
     if (address.isSearchRequiredForFullDetails) {
-        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-        [SVProgressHUD showWithStatus:@"Fetching Address Details"];
+        [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
+        [OLProgressHUD showWithStatus:@"Fetching Address Details"];
         [self.inProgressRequest  cancelSearch];
         self.progressToEditViewControllerOnUniqueAddressResult = YES;
         OLAddressSearchRequest *req = [OLAddress searchForAddress:address delegate:self];
@@ -244,7 +244,7 @@
 #pragma mark - OLAddressSearchRequestDelegate methods
 
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didSuceedWithMultipleOptions:(NSArray *)options {
-    [SVProgressHUD dismiss];
+    [OLProgressHUD dismiss];
     self.progressToEditViewControllerOnUniqueAddressResult = NO;
     self.inProgressRequest = nil;
     if (self.errorAlertView.isVisible) {
@@ -259,7 +259,7 @@
 }
 
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didSuceedWithUniqueAddress:(OLAddress *)addr {
-    [SVProgressHUD dismiss];
+    [OLProgressHUD dismiss];
     self.inProgressRequest = nil;
     if (self.errorAlertView.isVisible) {
         return;
@@ -279,7 +279,7 @@
 }
 
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didFailWithError:(NSError *)error {
-    [SVProgressHUD dismiss];
+    [OLProgressHUD dismiss];
     self.progressToEditViewControllerOnUniqueAddressResult = NO;
     self.inProgressRequest = nil;
     if (self.errorAlertView.isVisible) {

@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import "SVProgressHUD.h"
+#import "OLProgressHUD.h"
 #import "OLCreditCardCaptureViewController.h"
 #import "OLConstants.h"
 #import "OLPayPalCard.h"
@@ -343,18 +343,18 @@ UITableViewDataSource, UITextFieldDelegate>
         card.cvv2 = [self cardCVV];
         
         if (self.printOrder){
-            [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-            [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+            [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
+            [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
             [card chargeCard:nil currencyCode:nil description:nil completionHandler:^(NSString *proofOfPayment, NSError *error) {
                 if (error) {
-                    [SVProgressHUD dismiss];
+                    [OLProgressHUD dismiss];
                     UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
                     [self presentViewController:ac animated:YES completion:NULL];
                     return;
                 }
                 
-                [SVProgressHUD dismiss];
+                [OLProgressHUD dismiss];
                 [self.delegate creditCardCaptureController:(OLCreditCardCaptureViewController *) self.navigationController didFinishWithProofOfPayment:proofOfPayment];
                 [card saveAsLastUsedCard];
             }];
@@ -383,19 +383,19 @@ UITableViewDataSource, UITextFieldDelegate>
 }
 
 - (void)storeAndChargeCard:(id)card{
-    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
+    [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     [card storeCardWithCompletionHandler:^(NSError *error) {
         // ignore error as I'd rather the user gets a nice checkout experience than we store the card in PayPal vault.
         [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
             [card chargeCard:[cost totalCostInCurrency:self.printOrder.currencyCode] currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
                 if (error) {
-                    [SVProgressHUD dismiss];
+                    [OLProgressHUD dismiss];
                     [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
                     return;
                 }
                 
-                [SVProgressHUD dismiss];
+                [OLProgressHUD dismiss];
                 [self.delegate creditCardCaptureController:(OLCreditCardCaptureViewController *) self.navigationController didFinishWithProofOfPayment:proofOfPayment];
                 [card saveAsLastUsedCard];
             }];

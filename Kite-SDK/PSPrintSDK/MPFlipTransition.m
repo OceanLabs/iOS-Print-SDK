@@ -513,7 +513,7 @@ static inline double mp_radians (double degrees) {return degrees * M_PI/180;}
 		fromProgress = 1 - fromProgress;
 	
 	// Figure out how many frames we want
-	CGFloat duration = (self.duration / 2) * fabsf(toProgress - fromProgress);
+	CGFloat duration = (self.duration / 2) * fabsf((float)(toProgress - fromProgress));
 	NSUInteger frameCount = ceilf(duration * 60); // Let's shoot for 60 FPS to ensure proper sine curve approximation
 	
 	NSString *rotationKey = vertical? @"transform.rotation.x" : @"transform.rotation.y";
