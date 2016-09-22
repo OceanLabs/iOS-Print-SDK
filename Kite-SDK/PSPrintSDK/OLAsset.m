@@ -285,9 +285,11 @@ static NSOperationQueue *imageOperationQueue;
 
 - (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler{
     [self backgroundImageWithSize:size applyEdits:applyEdits progress:^(float p){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            progress(p);
-        });
+        if (progress){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                progress(p);
+            });
+        }
     }completion:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
             handler(image, error);
