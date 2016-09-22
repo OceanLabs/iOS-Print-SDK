@@ -29,6 +29,18 @@
 		2E0FF2E41D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E0FF2E51D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E0FF2E61D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
+		2E10F0361D93CC0900014C19 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* DACircularProgressView.m */; };
+		2E10F0371D93CC0900014C19 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* DACircularProgressView.m */; };
+		2E10F0381D93CC0900014C19 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* DACircularProgressView.m */; };
+		2E10F0391D93CC0900014C19 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* DACircularProgressView.m */; };
+		2E10F03A1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */; };
+		2E10F03B1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */; };
+		2E10F03C1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */; };
+		2E10F03D1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */; };
+		2E10F04D1D93CDE100014C19 /* TSMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */; };
+		2E10F04E1D93CDE100014C19 /* TSMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */; };
+		2E10F04F1D93CDE100014C19 /* TSMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */; };
+		2E10F0501D93CDE100014C19 /* TSMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */; };
 		2E14D2D11C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */; };
 		2E18DC511D913DB1004752D2 /* OLPrintPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E18DC501D913DB1004752D2 /* OLPrintPhoto.m */; };
@@ -442,10 +454,6 @@
 		2EA3D3C81C9C04B500B99BCD /* OLPhotobookPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */; };
 		2EA3D3C91C9C04B500B99BCD /* OLPaymentLineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */; };
 		2EA3D3CA1C9C04B500B99BCD /* OLPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9CF4A4187592A900F067B6 /* OLPrintJob.m */; };
-		2EA3D3D11C9C04B500B99BCD /* libMPFlipViewController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */; };
-		2EA3D3D21C9C04B500B99BCD /* libDACircularProgress.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */; };
-		2EA3D3D31C9C04B500B99BCD /* libTSMarkdownParser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */; };
-		2EA3D3D41C9C04B500B99BCD /* libSVProgressHUD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */; };
 		2EA3D3D91C9C04B500B99BCD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		2EA3D3DA1C9C04B500B99BCD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		2EA3D3DB1C9C04B500B99BCD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6D186215790009DE03 /* CoreGraphics.framework */; };
@@ -649,20 +657,6 @@
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		CD73BF8D186215790009DE03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF96186215790009DE03 /* OLSDKModelTests.m */; };
-		E22058A51BF3F8E6009CFAF6 /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84141BE2877A0041D4CF /* SVIndefiniteAnimatedView.m */; };
-		E22058A61BF3F8E6009CFAF6 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84181BE2877A0041D4CF /* SVProgressHUD.m */; };
-		E22058A71BF3F8E6009CFAF6 /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C841A1BE2877A0041D4CF /* SVRadialGradientLayer.m */; };
-		E22058A81BF3F907009CFAF6 /* libSVProgressHUD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */; };
-		E22058B61BF3F95C009CFAF6 /* TSMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84101BE286C40041D4CF /* TSMarkdownParser.m */; };
-		E22058B71BF3F96F009CFAF6 /* libTSMarkdownParser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */; };
-		E22058C51BF3F9D3009CFAF6 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84091BE286280041D4CF /* DACircularProgressView.m */; };
-		E22058C61BF3F9D3009CFAF6 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C840B1BE286280041D4CF /* DALabeledCircularProgressView.m */; };
-		E22058C71BF3F9F7009CFAF6 /* libDACircularProgress.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */; };
-		E22058D51BF3FA43009CFAF6 /* MPAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83FA1BE2855F0041D4CF /* MPAnimation.m */; };
-		E22058D61BF3FA43009CFAF6 /* MPFlipTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83FD1BE2855F0041D4CF /* MPFlipTransition.m */; };
-		E22058D71BF3FA43009CFAF6 /* MPFlipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C83FF1BE2855F0041D4CF /* MPFlipViewController.m */; };
-		E22058D81BF3FA43009CFAF6 /* MPTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E29C84011BE2855F0041D4CF /* MPTransition.m */; };
-		E22058D91BF3FA8C009CFAF6 /* libMPFlipViewController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */; };
 		E237FA641D63035600A7912E /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
 		E29C858E1BE3B5C50041D4CF /* OLImageEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLImageEditViewController.m */; };
 		E29C858F1BE3B5C50041D4CF /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
@@ -768,42 +762,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E220589A1BF3F8C4009CFAF6 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058AB1BF3F946009CFAF6 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058BA1BF3F9BF009CFAF6 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058CA1BF3FA0C009CFAF6 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E29C856E1BE3B4290041D4CF /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -826,6 +784,12 @@
 		2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLButtonCollectionViewCell.m; sourceTree = "<group>"; };
 		2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+RoundRect.h"; path = "PSPrintSDK/Categories/UIView+RoundRect.h"; sourceTree = "<group>"; };
 		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
+		2E10F0321D93CC0900014C19 /* DACircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DACircularProgressView.h; sourceTree = "<group>"; };
+		2E10F0331D93CC0900014C19 /* DACircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DACircularProgressView.m; sourceTree = "<group>"; };
+		2E10F0341D93CC0900014C19 /* DALabeledCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DALabeledCircularProgressView.h; sourceTree = "<group>"; };
+		2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DALabeledCircularProgressView.m; sourceTree = "<group>"; };
+		2E10F04B1D93CDE100014C19 /* TSMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSMarkdownParser.h; sourceTree = "<group>"; };
+		2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMarkdownParser.m; sourceTree = "<group>"; };
 		2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePreviewViewController.h; sourceTree = "<group>"; };
 		2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePreviewViewController.m; sourceTree = "<group>"; };
 		2E18DC4F1D913DB1004752D2 /* OLPrintPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintPhoto.h; sourceTree = "<group>"; };
@@ -1199,10 +1163,6 @@
 		CDFFA781189D2DF40083BCE7 /* OLAsset+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLAsset+Private.h"; sourceTree = "<group>"; };
 		CFE5B84A94297F8524AE7764 /* libPods-KiteSDK-Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KiteSDK-Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC092E274FFB84DEA0FF98F2 /* Pods-KitePrintSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KitePrintSDKTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KitePrintSDKTests/Pods-KitePrintSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
-		E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSVProgressHUD.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTSMarkdownParser.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDACircularProgress.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMPFlipViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E22962EF1C43DC90002A90CA /* CTAssetCheckmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTAssetCheckmark.h; path = vendor/CTAssetsPickerController/CTAssetsPickerController/CTAssetCheckmark.h; sourceTree = "<group>"; };
 		E22962F01C43DC90002A90CA /* CTAssetCheckmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CTAssetCheckmark.m; path = vendor/CTAssetsPickerController/CTAssetsPickerController/CTAssetCheckmark.m; sourceTree = "<group>"; };
 		E22962F11C43DC90002A90CA /* CTAssetCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTAssetCollectionViewCell.h; path = vendor/CTAssetsPickerController/CTAssetsPickerController/CTAssetCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1363,10 +1323,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EA3D3D11C9C04B500B99BCD /* libMPFlipViewController.a in Frameworks */,
-				2EA3D3D21C9C04B500B99BCD /* libDACircularProgress.a in Frameworks */,
-				2EA3D3D31C9C04B500B99BCD /* libTSMarkdownParser.a in Frameworks */,
-				2EA3D3D41C9C04B500B99BCD /* libSVProgressHUD.a in Frameworks */,
 				2EA3D3D91C9C04B500B99BCD /* Foundation.framework in Frameworks */,
 				2EA3D3DA1C9C04B500B99BCD /* UIKit.framework in Frameworks */,
 				2EA3D3DB1C9C04B500B99BCD /* CoreGraphics.framework in Frameworks */,
@@ -1410,43 +1366,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E22058991BF3F8C4009CFAF6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058AA1BF3F946009CFAF6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058B91BF3F9BF009CFAF6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058C91BF3FA0C009CFAF6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E29C856D1BE3B4290041D4CF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				2E25C7071D460A8C00B5BD8C /* libPayPalMobile.a in Frameworks */,
-				E22058D91BF3FA8C009CFAF6 /* libMPFlipViewController.a in Frameworks */,
-				E22058C71BF3F9F7009CFAF6 /* libDACircularProgress.a in Frameworks */,
-				E22058B71BF3F96F009CFAF6 /* libTSMarkdownParser.a in Frameworks */,
-				E22058A81BF3F907009CFAF6 /* libSVProgressHUD.a in Frameworks */,
 				E29C86201BE3B8E70041D4CF /* Foundation.framework in Frameworks */,
 				E29C861D1BE3B70B0041D4CF /* UIKit.framework in Frameworks */,
 				E29C861C1BE3B7060041D4CF /* CoreGraphics.framework in Frameworks */,
@@ -1499,6 +1423,26 @@
 				2EF718331D589DB60036502D /* OLInfoBanner.m */,
 			);
 			name = View;
+			sourceTree = "<group>";
+		};
+		2E10F0311D93CBF100014C19 /* DACircularProgress */ = {
+			isa = PBXGroup;
+			children = (
+				2E10F0321D93CC0900014C19 /* DACircularProgressView.h */,
+				2E10F0331D93CC0900014C19 /* DACircularProgressView.m */,
+				2E10F0341D93CC0900014C19 /* DALabeledCircularProgressView.h */,
+				2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */,
+			);
+			name = DACircularProgress;
+			sourceTree = "<group>";
+		};
+		2E10F03E1D93CC3600014C19 /* TSMarkdownParser */ = {
+			isa = PBXGroup;
+			children = (
+				2E10F04B1D93CDE100014C19 /* TSMarkdownParser.h */,
+				2E10F04C1D93CDE100014C19 /* TSMarkdownParser.m */,
+			);
+			name = TSMarkdownParser;
 			sourceTree = "<group>";
 		};
 		2E1E66D91D4795C8002524A4 /* Facebook */ = {
@@ -1697,6 +1641,8 @@
 				2EB612F61D48AFDA00B48E29 /* Instagram */,
 				2E1E66D91D4795C8002524A4 /* Facebook */,
 				2E480AAB1D92D6D4006C0EE6 /* MPFlipViewController */,
+				2E10F03E1D93CC3600014C19 /* TSMarkdownParser */,
+				2E10F0311D93CBF100014C19 /* DACircularProgress */,
 				2E480AC61D92DB85006C0EE6 /* SVProgressHUD */,
 				2EB00A221D92C96B00668B29 /* NXOAuth2Client */,
 			);
@@ -1912,10 +1858,6 @@
 				CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */,
 				E29C85701BE3B4290041D4CF /* libKiteSDK.a */,
 				2EADD8651BE79D6D0051CD31 /* KiteSDK-Demo.app */,
-				E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */,
-				E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */,
-				E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */,
-				E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */,
 				2EA3D3E31C9C04B500B99BCD /* libKiteSDKMinimal.a */,
 				2E898CEA1CC518180041CCD8 /* Kite-CI-Deploy.app */,
 			);
@@ -2432,74 +2374,6 @@
 			productReference = CD73BF89186215790009DE03 /* KitePrintSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		E220589B1BF3F8C4009CFAF6 /* SVProgressHUD */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E22058A21BF3F8C4009CFAF6 /* Build configuration list for PBXNativeTarget "SVProgressHUD" */;
-			buildPhases = (
-				E22058981BF3F8C4009CFAF6 /* Sources */,
-				E22058991BF3F8C4009CFAF6 /* Frameworks */,
-				E220589A1BF3F8C4009CFAF6 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = SVProgressHUD;
-			productName = SVProgressHUD;
-			productReference = E220589C1BF3F8C4009CFAF6 /* libSVProgressHUD.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		E22058AC1BF3F946009CFAF6 /* TSMarkdownParser */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E22058B31BF3F946009CFAF6 /* Build configuration list for PBXNativeTarget "TSMarkdownParser" */;
-			buildPhases = (
-				E22058A91BF3F946009CFAF6 /* Sources */,
-				E22058AA1BF3F946009CFAF6 /* Frameworks */,
-				E22058AB1BF3F946009CFAF6 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = TSMarkdownParser;
-			productName = TSMarkdownParser;
-			productReference = E22058AD1BF3F946009CFAF6 /* libTSMarkdownParser.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		E22058BB1BF3F9BF009CFAF6 /* DACircularProgress */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E22058C21BF3F9BF009CFAF6 /* Build configuration list for PBXNativeTarget "DACircularProgress" */;
-			buildPhases = (
-				E22058B81BF3F9BF009CFAF6 /* Sources */,
-				E22058B91BF3F9BF009CFAF6 /* Frameworks */,
-				E22058BA1BF3F9BF009CFAF6 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = DACircularProgress;
-			productName = DACircularProgress;
-			productReference = E22058BC1BF3F9BF009CFAF6 /* libDACircularProgress.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		E22058CB1BF3FA0C009CFAF6 /* MPFlipViewController */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E22058D21BF3FA0C009CFAF6 /* Build configuration list for PBXNativeTarget "MPFlipViewController" */;
-			buildPhases = (
-				E22058C81BF3FA0C009CFAF6 /* Sources */,
-				E22058C91BF3FA0C009CFAF6 /* Frameworks */,
-				E22058CA1BF3FA0C009CFAF6 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = MPFlipViewController;
-			productName = MPFlipViewController;
-			productReference = E22058CC1BF3FA0C009CFAF6 /* libMPFlipViewController.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		E29C856F1BE3B4290041D4CF /* KiteSDK */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E29C85781BE3B4290041D4CF /* Build configuration list for PBXNativeTarget "KiteSDK" */;
@@ -2549,18 +2423,6 @@
 					CD73BF88186215790009DE03 = {
 						TestTargetID = 2E898C4C1CC518180041CCD8;
 					};
-					E220589B1BF3F8C4009CFAF6 = {
-						CreatedOnToolsVersion = 7.1;
-					};
-					E22058AC1BF3F946009CFAF6 = {
-						CreatedOnToolsVersion = 7.1;
-					};
-					E22058BB1BF3F9BF009CFAF6 = {
-						CreatedOnToolsVersion = 7.1;
-					};
-					E22058CB1BF3FA0C009CFAF6 = {
-						CreatedOnToolsVersion = 7.1;
-					};
 					E29C856F1BE3B4290041D4CF = {
 						CreatedOnToolsVersion = 7.1;
 					};
@@ -2584,10 +2446,6 @@
 				2E4CAF081BC25F0A0089FA26 /* Docs */,
 				E29C856F1BE3B4290041D4CF /* KiteSDK */,
 				2EA3D35A1C9C04B500B99BCD /* KiteSDKMinimal */,
-				E220589B1BF3F8C4009CFAF6 /* SVProgressHUD */,
-				E22058AC1BF3F946009CFAF6 /* TSMarkdownParser */,
-				E22058BB1BF3F9BF009CFAF6 /* DACircularProgress */,
-				E22058CB1BF3FA0C009CFAF6 /* MPFlipViewController */,
 			);
 		};
 /* End PBXProject section */
@@ -2856,6 +2714,7 @@
 				2E898C511CC518180041CCD8 /* OLImageEditViewController.m in Sources */,
 				2E898C521CC518180041CCD8 /* OLPrintOrderCostRequest.m in Sources */,
 				2E898C531CC518180041CCD8 /* OLInfoPageViewController.m in Sources */,
+				2E10F04E1D93CDE100014C19 /* TSMarkdownParser.m in Sources */,
 				2E898C541CC518180041CCD8 /* OLIntegratedCheckoutViewController.m in Sources */,
 				2E898C551CC518180041CCD8 /* OLProductGroup.m in Sources */,
 				2E898C561CC518180041CCD8 /* UIImage+OLUtils.m in Sources */,
@@ -2906,6 +2765,7 @@
 				2E898C761CC518180041CCD8 /* UIImageView+FadeIn.m in Sources */,
 				2E480AB71D92D768006C0EE6 /* MPAnimation.m in Sources */,
 				2E898C771CC518180041CCD8 /* OLAddressSearchRequest.m in Sources */,
+				2E10F03B1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */,
 				2E480ABF1D92D768006C0EE6 /* MPFlipViewController.m in Sources */,
 				2E898C781CC518180041CCD8 /* OLPayPalCard.m in Sources */,
 				2E84835F1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
@@ -2991,6 +2851,7 @@
 				2E898CB91CC518180041CCD8 /* OLAddressLookupViewController.m in Sources */,
 				2E37B17C1D227EDA003DAA84 /* OLPageLayout.m in Sources */,
 				2E480AD31D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */,
+				2E10F0371D93CC0900014C19 /* DACircularProgressView.m in Sources */,
 				2E898CBA1CC518180041CCD8 /* OLKiteABTesting.m in Sources */,
 				2E898CBB1CC518180041CCD8 /* OLProductHomeViewController.m in Sources */,
 				2E898CBC1CC518180041CCD8 /* OLPhotoEdits.m in Sources */,
@@ -3081,6 +2942,7 @@
 				2EA3D3841C9C04B500B99BCD /* OLPrintOrderCost.m in Sources */,
 				2EA3D3851C9C04B500B99BCD /* OLEditPhotobookViewController.m in Sources */,
 				2EA3D3861C9C04B500B99BCD /* UIView+RMUtils.m in Sources */,
+				2E10F0391D93CC0900014C19 /* DACircularProgressView.m in Sources */,
 				2EB613001D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
 				2EB00AAC1D92C9D400668B29 /* OLOAuth2AccountStore.m in Sources */,
 				2EB612EF1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
@@ -3123,6 +2985,7 @@
 				2EA3D3A71C9C04B500B99BCD /* OLImageCachingManager.m in Sources */,
 				2EA3D3A81C9C04B500B99BCD /* UIView+RoundRect.m in Sources */,
 				2EB715E41CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m in Sources */,
+				2E10F0501D93CDE100014C19 /* TSMarkdownParser.m in Sources */,
 				2E480A9A1D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */,
 				2EA3D3A91C9C04B500B99BCD /* OLCountry.m in Sources */,
 				2EA0087D1CB293A900C23DFA /* OLUpsellOffer.m in Sources */,
@@ -3158,6 +3021,7 @@
 				2EA3D3BC1C9C04B500B99BCD /* OLKiteABTesting.m in Sources */,
 				2EA3D3BD1C9C04B500B99BCD /* OLProductHomeViewController.m in Sources */,
 				2EB00AA41D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */,
+				2E10F03D1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */,
 				2EA3D3BF1C9C04B500B99BCD /* OLViewController.m in Sources */,
 				2E37B1841D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				2E480AD11D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m in Sources */,
@@ -3184,6 +3048,7 @@
 				2ED389911C917D2000DC2314 /* OLPhotoTextField.m in Sources */,
 				2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
 				2E84835E1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
+				2E10F04D1D93CDE100014C19 /* TSMarkdownParser.m in Sources */,
 				2EADD7E71BE79D6D0051CD31 /* OLImageEditViewController.m in Sources */,
 				2E67B92A1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,
 				2EADD7E81BE79D6D0051CD31 /* OLPrintOrderCostRequest.m in Sources */,
@@ -3234,6 +3099,7 @@
 				E237FA641D63035600A7912E /* UIColor+OLHexString.m in Sources */,
 				2E480AB61D92D768006C0EE6 /* MPAnimation.m in Sources */,
 				2EADD8071BE79D6D0051CD31 /* UIImageView+FadeIn.m in Sources */,
+				2E10F03A1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */,
 				2E480ABE1D92D768006C0EE6 /* MPFlipViewController.m in Sources */,
 				2EADD8081BE79D6D0051CD31 /* OLAddressSearchRequest.m in Sources */,
 				2E96BAE51D2FC109002F5F74 /* rscode.c in Sources */,
@@ -3319,6 +3185,7 @@
 				2EADD83D1BE79D6D0051CD31 /* OLCircleMaskCollectionViewCell.m in Sources */,
 				2EADD83E1BE79D6D0051CD31 /* OLCreditCardCaptureViewController.m in Sources */,
 				2E480AD21D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */,
+				2E10F0361D93CC0900014C19 /* DACircularProgressView.m in Sources */,
 				2EADD8401BE79D6D0051CD31 /* OLAddressLookupViewController.m in Sources */,
 				2EADD8411BE79D6D0051CD31 /* OLKiteABTesting.m in Sources */,
 				2EADD8421BE79D6D0051CD31 /* OLProductHomeViewController.m in Sources */,
@@ -3355,44 +3222,6 @@
 				CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */,
 				2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */,
 				2EAB0AF51CDCD58400625BD6 /* OLTestTapGestureRecognizer.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058981BF3F8C4009CFAF6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E22058A51BF3F8E6009CFAF6 /* SVIndefiniteAnimatedView.m in Sources */,
-				E22058A61BF3F8E6009CFAF6 /* SVProgressHUD.m in Sources */,
-				E22058A71BF3F8E6009CFAF6 /* SVRadialGradientLayer.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058A91BF3F946009CFAF6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E22058B61BF3F95C009CFAF6 /* TSMarkdownParser.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058B81BF3F9BF009CFAF6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E22058C51BF3F9D3009CFAF6 /* DACircularProgressView.m in Sources */,
-				E22058C61BF3F9D3009CFAF6 /* DALabeledCircularProgressView.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E22058C81BF3FA0C009CFAF6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E22058D51BF3FA43009CFAF6 /* MPAnimation.m in Sources */,
-				E22058D61BF3FA43009CFAF6 /* MPFlipTransition.m in Sources */,
-				E22058D71BF3FA43009CFAF6 /* MPFlipViewController.m in Sources */,
-				E22058D81BF3FA43009CFAF6 /* MPTransition.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3443,6 +3272,7 @@
 				E29C85C01BE3B5C50041D4CF /* OLSingleImageProductReviewViewController.m in Sources */,
 				2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */,
 				E29C85C41BE3B5C50041D4CF /* OLPosterViewController.m in Sources */,
+				2E10F03C1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */,
 				2EB715E31CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m in Sources */,
 				E29C85C51BE3B5C50041D4CF /* OLRemoteImageView.m in Sources */,
 				E29C85C61BE3B5C50041D4CF /* OLPrintOrderCost.m in Sources */,
@@ -3482,6 +3312,7 @@
 				2EB613031D48AFE800B48E29 /* OLInstagramImagePickerConstants.m in Sources */,
 				2E53E0CE1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
 				2E1E66F01D479617002524A4 /* OLFacebookImage.m in Sources */,
+				2E10F04F1D93CDE100014C19 /* TSMarkdownParser.m in Sources */,
 				E29C85D71BE3B5C50041D4CF /* NSDecimalNumber+CostFormatter.m in Sources */,
 				2E645B361BE7D170009B662B /* OLProductDetailsViewController.m in Sources */,
 				E29C85DA1BE3B5C50041D4CF /* OLProductOverviewViewController.m in Sources */,
@@ -3519,6 +3350,7 @@
 				E29C85FE1BE3B5C50041D4CF /* OLPostcardPrintJob.m in Sources */,
 				2E480A991D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */,
 				E29C86011BE3B5C50041D4CF /* NSObject+Utils.m in Sources */,
+				2E10F0381D93CC0900014C19 /* DACircularProgressView.m in Sources */,
 				2E28CDFF1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */,
 				E29C86021BE3B5C50041D4CF /* OLAnalytics.m in Sources */,
 				E29C86031BE3B5C50041D4CF /* OLCircleMaskCollectionViewCell.m in Sources */,
@@ -3654,12 +3486,10 @@
 					"$(inherited)",
 					"-ObjC",
 					"-l\"Bolts\"",
-					"-l\"DACircularProgress\"",
 					"-l\"FBSDKCoreKit\"",
 					"-l\"FBSDKLoginKit\"",
 					"-l\"PayPalMobile\"",
 					"-l\"Stripe\"",
-					"-l\"TSMarkdownParser\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -3758,12 +3588,10 @@
 					"$(inherited)",
 					"-ObjC",
 					"-l\"Bolts\"",
-					"-l\"DACircularProgress\"",
 					"-l\"FBSDKCoreKit\"",
 					"-l\"FBSDKLoginKit\"",
 					"-l\"PayPalMobile\"",
 					"-l\"Stripe\"",
-					"-l\"TSMarkdownParser\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -3918,12 +3746,10 @@
 					"$(inherited)",
 					"-ObjC",
 					"-l\"Bolts\"",
-					"-l\"DACircularProgress\"",
 					"-l\"FBSDKCoreKit\"",
 					"-l\"FBSDKLoginKit\"",
 					"-l\"PayPalMobile\"",
 					"-l\"Stripe\"",
-					"-l\"TSMarkdownParser\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -4019,12 +3845,10 @@
 					"$(inherited)",
 					"-ObjC",
 					"-l\"Bolts\"",
-					"-l\"DACircularProgress\"",
 					"-l\"FBSDKCoreKit\"",
 					"-l\"FBSDKLoginKit\"",
 					"-l\"PayPalMobile\"",
 					"-l\"Stripe\"",
-					"-l\"TSMarkdownParser\"",
 					"-l\"c++\"",
 					"-framework",
 					"\"AVFoundation\"",
@@ -4218,180 +4042,6 @@
 			};
 			name = Release;
 		};
-		E22058A31BF3F8C4009CFAF6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Debug;
-		};
-		E22058A41BF3F8C4009CFAF6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Release;
-		};
-		E22058B41BF3F946009CFAF6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Debug;
-		};
-		E22058B51BF3F946009CFAF6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Release;
-		};
-		E22058C31BF3F9BF009CFAF6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Debug;
-		};
-		E22058C41BF3F9BF009CFAF6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Release;
-		};
-		E22058D31BF3FA0C009CFAF6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Debug;
-		};
-		E22058D41BF3FA0C009CFAF6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wno-shorten-64-to-32",
-					"-Wno-absolute-value",
-				);
-			};
-			name = Release;
-		};
 		E29C85761BE3B4290041D4CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4507,42 +4157,6 @@
 			buildConfigurations = (
 				CD73BF9E186215790009DE03 /* Debug */,
 				CD73BF9F186215790009DE03 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E22058A21BF3F8C4009CFAF6 /* Build configuration list for PBXNativeTarget "SVProgressHUD" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E22058A31BF3F8C4009CFAF6 /* Debug */,
-				E22058A41BF3F8C4009CFAF6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E22058B31BF3F946009CFAF6 /* Build configuration list for PBXNativeTarget "TSMarkdownParser" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E22058B41BF3F946009CFAF6 /* Debug */,
-				E22058B51BF3F946009CFAF6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E22058C21BF3F9BF009CFAF6 /* Build configuration list for PBXNativeTarget "DACircularProgress" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E22058C31BF3F9BF009CFAF6 /* Debug */,
-				E22058C41BF3F9BF009CFAF6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E22058D21BF3FA0C009CFAF6 /* Build configuration list for PBXNativeTarget "MPFlipViewController" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E22058D31BF3FA0C009CFAF6 /* Debug */,
-				E22058D41BF3FA0C009CFAF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

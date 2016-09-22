@@ -27,12 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <DACircularProgress/DACircularProgressView.h>
-#else
-#import "DACircularProgressView.h"
-#endif
 
+#import "DACircularProgressView.h"
 #import "OLRemoteImageView.h"
 
 @interface OLRemoteImageView ()

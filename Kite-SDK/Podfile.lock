@@ -5,32 +5,26 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
-  - DACircularProgress (2.3.1)
   - FBSDKCoreKit (4.11.0):
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.11.0):
     - FBSDKCoreKit
   - PayPal-iOS-SDK/Core (2.12.9)
   - Stripe (8.0.6)
-  - TSMarkdownParser (2.1.1)
 
 DEPENDENCIES:
-  - DACircularProgress
   - FBSDKCoreKit (~> 4.11.0)
   - FBSDKLoginKit (~> 4.11.0)
   - PayPal-iOS-SDK/Core (~> 2.12.5)
   - Stripe (~> 8.0.6)
-  - TSMarkdownParser
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b
   FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
   PayPal-iOS-SDK: 98ab60b137b7fd35ab5a785d11f042f6858b4f11
   Stripe: 7b3f1406c6bbc2f872a5781259da824750a7ee9c
-  TSMarkdownParser: 64cb52fe5a518b4875a6167a650cb0ed4b18cea5
 
-PODFILE CHECKSUM: 0e0d139226cac73deb6dc3a1e22ea763b08fd8f5
+PODFILE CHECKSUM: 88d2c46d947e2de609c04eeedb0a648a398a3d2e
 
 COCOAPODS: 1.0.1

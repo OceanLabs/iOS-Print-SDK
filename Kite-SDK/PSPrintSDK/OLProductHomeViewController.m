@@ -27,12 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <TSMarkdownParser/TSMarkdownParser.h>
-#else
-#import "TSMarkdownParser.h"
-#endif
 
+#import "TSMarkdownParser.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLNavigationController.h"
