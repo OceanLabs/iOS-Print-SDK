@@ -1,3 +1,0 @@
-[submodule "Kite-SDK/vendor/PayPal-iOS-SDK"]
-	path = Kite-SDK/vendor/PayPal-iOS-SDK
-	url = https://github.com/paypal/PayPal-iOS-SDK.git
