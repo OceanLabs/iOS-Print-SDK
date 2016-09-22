@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DACircularProgressView : UIView
+@interface OLCircularProgressView : UIView
 
 @property(nonatomic, strong) UIColor *trackTintColor UI_APPEARANCE_SELECTOR;
 @property(nonatomic, strong) UIColor *progressTintColor UI_APPEARANCE_SELECTOR;

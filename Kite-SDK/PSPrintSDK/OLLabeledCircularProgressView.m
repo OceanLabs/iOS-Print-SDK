@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Shout Messenger. All rights reserved.
 //
 
-#import "DALabeledCircularProgressView.h"
+#import "OLLabeledCircularProgressView.h"
 
-@implementation DALabeledCircularProgressView
+@implementation OLLabeledCircularProgressView
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -33,7 +33,7 @@
 
 /**
  Creates and initializes
- -[DALabeledCircularProgressView progressLabel].
+ -[OLLabeledCircularProgressView progressLabel].
  */
 - (void)initializeLabel
 {

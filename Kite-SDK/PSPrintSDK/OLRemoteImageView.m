@@ -28,19 +28,19 @@
 //
 
 
-#import "DACircularProgressView.h"
+#import "OLCircularProgressView.h"
 #import "OLRemoteImageView.h"
 
 @interface OLRemoteImageView ()
 
-@property (strong, nonatomic) DACircularProgressView *loadingView;
+@property (strong, nonatomic) OLCircularProgressView *loadingView;
 
 @end
 
 @implementation OLRemoteImageView
 
 - (void)initializeViews{
-    self.loadingView = [[DACircularProgressView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    self.loadingView = [[OLCircularProgressView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     self.loadingView.innerTintColor = [UIColor lightGrayColor];
     self.loadingView.trackTintColor = [UIColor lightGrayColor];
     self.loadingView.progressTintColor = [UIColor whiteColor];

@@ -29,14 +29,14 @@
 		2E0FF2E41D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E0FF2E51D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E0FF2E61D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
-		2E10F0361D93CC0900014C19 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* DACircularProgressView.m */; };
-		2E10F0371D93CC0900014C19 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* DACircularProgressView.m */; };
-		2E10F0381D93CC0900014C19 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* DACircularProgressView.m */; };
-		2E10F0391D93CC0900014C19 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* DACircularProgressView.m */; };
-		2E10F03A1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */; };
-		2E10F03B1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */; };
-		2E10F03C1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */; };
-		2E10F03D1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */; };
+		2E10F0361D93CC0900014C19 /* OLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */; };
+		2E10F0371D93CC0900014C19 /* OLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */; };
+		2E10F0381D93CC0900014C19 /* OLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */; };
+		2E10F0391D93CC0900014C19 /* OLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */; };
+		2E10F03A1D93CC0900014C19 /* OLLabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */; };
+		2E10F03B1D93CC0900014C19 /* OLLabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */; };
+		2E10F03C1D93CC0900014C19 /* OLLabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */; };
+		2E10F03D1D93CC0900014C19 /* OLLabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */; };
 		2E10F04D1D93CDE100014C19 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
 		2E10F04E1D93CDE100014C19 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
 		2E10F04F1D93CDE100014C19 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
@@ -792,10 +792,10 @@
 		2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLButtonCollectionViewCell.m; sourceTree = "<group>"; };
 		2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+RoundRect.h"; path = "PSPrintSDK/Categories/UIView+RoundRect.h"; sourceTree = "<group>"; };
 		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
-		2E10F0321D93CC0900014C19 /* DACircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DACircularProgressView.h; sourceTree = "<group>"; };
-		2E10F0331D93CC0900014C19 /* DACircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DACircularProgressView.m; sourceTree = "<group>"; };
-		2E10F0341D93CC0900014C19 /* DALabeledCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DALabeledCircularProgressView.h; sourceTree = "<group>"; };
-		2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DALabeledCircularProgressView.m; sourceTree = "<group>"; };
+		2E10F0321D93CC0900014C19 /* OLCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCircularProgressView.h; sourceTree = "<group>"; };
+		2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCircularProgressView.m; sourceTree = "<group>"; };
+		2E10F0341D93CC0900014C19 /* OLLabeledCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLLabeledCircularProgressView.h; sourceTree = "<group>"; };
+		2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLLabeledCircularProgressView.m; sourceTree = "<group>"; };
 		2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLMarkdownParser.h; sourceTree = "<group>"; };
 		2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLMarkdownParser.m; sourceTree = "<group>"; };
 		2E10F0531D93D71D00014C19 /* OLStripeWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeWrapper.h; sourceTree = "<group>"; };
@@ -1440,10 +1440,10 @@
 		2E10F0311D93CBF100014C19 /* DACircularProgress */ = {
 			isa = PBXGroup;
 			children = (
-				2E10F0321D93CC0900014C19 /* DACircularProgressView.h */,
-				2E10F0331D93CC0900014C19 /* DACircularProgressView.m */,
-				2E10F0341D93CC0900014C19 /* DALabeledCircularProgressView.h */,
-				2E10F0351D93CC0900014C19 /* DALabeledCircularProgressView.m */,
+				2E10F0321D93CC0900014C19 /* OLCircularProgressView.h */,
+				2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */,
+				2E10F0341D93CC0900014C19 /* OLLabeledCircularProgressView.h */,
+				2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */,
 			);
 			name = DACircularProgress;
 			sourceTree = "<group>";
@@ -2805,7 +2805,7 @@
 				2E898C761CC518180041CCD8 /* UIImageView+FadeIn.m in Sources */,
 				2E480AB71D92D768006C0EE6 /* MPAnimation.m in Sources */,
 				2E898C771CC518180041CCD8 /* OLAddressSearchRequest.m in Sources */,
-				2E10F03B1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */,
+				2E10F03B1D93CC0900014C19 /* OLLabeledCircularProgressView.m in Sources */,
 				2E480ABF1D92D768006C0EE6 /* MPFlipViewController.m in Sources */,
 				2E898C781CC518180041CCD8 /* OLPayPalCard.m in Sources */,
 				2E84835F1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
@@ -2893,7 +2893,7 @@
 				2E898CB91CC518180041CCD8 /* OLAddressLookupViewController.m in Sources */,
 				2E37B17C1D227EDA003DAA84 /* OLPageLayout.m in Sources */,
 				2E480AD31D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */,
-				2E10F0371D93CC0900014C19 /* DACircularProgressView.m in Sources */,
+				2E10F0371D93CC0900014C19 /* OLCircularProgressView.m in Sources */,
 				2E898CBA1CC518180041CCD8 /* OLKiteABTesting.m in Sources */,
 				2E898CBB1CC518180041CCD8 /* OLProductHomeViewController.m in Sources */,
 				2E898CBC1CC518180041CCD8 /* OLPhotoEdits.m in Sources */,
@@ -2985,7 +2985,7 @@
 				2EA3D3841C9C04B500B99BCD /* OLPrintOrderCost.m in Sources */,
 				2EA3D3851C9C04B500B99BCD /* OLEditPhotobookViewController.m in Sources */,
 				2EA3D3861C9C04B500B99BCD /* UIView+RMUtils.m in Sources */,
-				2E10F0391D93CC0900014C19 /* DACircularProgressView.m in Sources */,
+				2E10F0391D93CC0900014C19 /* OLCircularProgressView.m in Sources */,
 				2EB613001D48AFE800B48E29 /* OLInstagramMediaRequest.m in Sources */,
 				2EB00AAC1D92C9D400668B29 /* OLOAuth2AccountStore.m in Sources */,
 				2EB612EF1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
@@ -3065,7 +3065,7 @@
 				2EA3D3BC1C9C04B500B99BCD /* OLKiteABTesting.m in Sources */,
 				2EA3D3BD1C9C04B500B99BCD /* OLProductHomeViewController.m in Sources */,
 				2EB00AA41D92C9D400668B29 /* OLOAuth2AccessToken.m in Sources */,
-				2E10F03D1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */,
+				2E10F03D1D93CC0900014C19 /* OLLabeledCircularProgressView.m in Sources */,
 				2EA3D3BF1C9C04B500B99BCD /* OLViewController.m in Sources */,
 				2E37B1841D229162003DAA84 /* OLProductRepresentation.m in Sources */,
 				2E480AD11D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m in Sources */,
@@ -3143,7 +3143,7 @@
 				E237FA641D63035600A7912E /* UIColor+OLHexString.m in Sources */,
 				2E480AB61D92D768006C0EE6 /* MPAnimation.m in Sources */,
 				2EADD8071BE79D6D0051CD31 /* UIImageView+FadeIn.m in Sources */,
-				2E10F03A1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */,
+				2E10F03A1D93CC0900014C19 /* OLLabeledCircularProgressView.m in Sources */,
 				2E480ABE1D92D768006C0EE6 /* MPFlipViewController.m in Sources */,
 				2EADD8081BE79D6D0051CD31 /* OLAddressSearchRequest.m in Sources */,
 				2E96BAE51D2FC109002F5F74 /* rscode.c in Sources */,
@@ -3231,7 +3231,7 @@
 				2EADD83D1BE79D6D0051CD31 /* OLCircleMaskCollectionViewCell.m in Sources */,
 				2EADD83E1BE79D6D0051CD31 /* OLCreditCardCaptureViewController.m in Sources */,
 				2E480AD21D92DB9B006C0EE6 /* OLProgressHUD.m in Sources */,
-				2E10F0361D93CC0900014C19 /* DACircularProgressView.m in Sources */,
+				2E10F0361D93CC0900014C19 /* OLCircularProgressView.m in Sources */,
 				2EADD8401BE79D6D0051CD31 /* OLAddressLookupViewController.m in Sources */,
 				2EADD8411BE79D6D0051CD31 /* OLKiteABTesting.m in Sources */,
 				2EADD8421BE79D6D0051CD31 /* OLProductHomeViewController.m in Sources */,
@@ -3318,7 +3318,7 @@
 				E29C85C01BE3B5C50041D4CF /* OLSingleImageProductReviewViewController.m in Sources */,
 				2E14D2D21C2AE9AD00F35403 /* OLImagePreviewViewController.m in Sources */,
 				E29C85C41BE3B5C50041D4CF /* OLPosterViewController.m in Sources */,
-				2E10F03C1D93CC0900014C19 /* DALabeledCircularProgressView.m in Sources */,
+				2E10F03C1D93CC0900014C19 /* OLLabeledCircularProgressView.m in Sources */,
 				2EB715E31CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m in Sources */,
 				E29C85C51BE3B5C50041D4CF /* OLRemoteImageView.m in Sources */,
 				E29C85C61BE3B5C50041D4CF /* OLPrintOrderCost.m in Sources */,
@@ -3397,7 +3397,7 @@
 				E29C85FE1BE3B5C50041D4CF /* OLPostcardPrintJob.m in Sources */,
 				2E480A991D92D060006C0EE6 /* OLOAuth2Constants.m in Sources */,
 				E29C86011BE3B5C50041D4CF /* NSObject+Utils.m in Sources */,
-				2E10F0381D93CC0900014C19 /* DACircularProgressView.m in Sources */,
+				2E10F0381D93CC0900014C19 /* OLCircularProgressView.m in Sources */,
 				2E28CDFF1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m in Sources */,
 				E29C86021BE3B5C50041D4CF /* OLAnalytics.m in Sources */,
 				E29C86031BE3B5C50041D4CF /* OLCircleMaskCollectionViewCell.m in Sources */,

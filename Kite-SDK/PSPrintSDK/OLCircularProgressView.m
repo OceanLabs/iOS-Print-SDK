@@ -6,11 +6,11 @@
 //  Copyright (c) 2012 Daniel Amitay. All rights reserved.
 //
 
-#import "DACircularProgressView.h"
+#import "OLCircularProgressView.h"
 
 #import <QuartzCore/QuartzCore.h>
 
-@interface DACircularProgressLayer : CALayer
+@interface OLCircularProgressLayer : CALayer
 
 @property(nonatomic, strong) UIColor *trackTintColor;
 @property(nonatomic, strong) UIColor *progressTintColor;
@@ -22,7 +22,7 @@
 
 @end
 
-@implementation DACircularProgressLayer
+@implementation OLCircularProgressLayer
 
 @dynamic trackTintColor;
 @dynamic progressTintColor;
@@ -123,16 +123,16 @@
 
 @end
 
-@interface DACircularProgressView ()
+@interface OLCircularProgressView ()
 
 @end
 
-@implementation DACircularProgressView
+@implementation OLCircularProgressView
 
 + (void) initialize
 {
-    if (self == [DACircularProgressView class]) {
-        DACircularProgressView *circularProgressViewAppearance = [DACircularProgressView appearance];
+    if (self == [OLCircularProgressView class]) {
+        OLCircularProgressView *circularProgressViewAppearance = [OLCircularProgressView appearance];
         [circularProgressViewAppearance setTrackTintColor:[[UIColor whiteColor] colorWithAlphaComponent:0.3f]];
         [circularProgressViewAppearance setProgressTintColor:[UIColor whiteColor]];
         [circularProgressViewAppearance setInnerTintColor:nil];
@@ -148,12 +148,12 @@
 
 + (Class)layerClass
 {
-    return [DACircularProgressLayer class];
+    return [OLCircularProgressLayer class];
 }
 
-- (DACircularProgressLayer *)circularProgressLayer
+- (OLCircularProgressLayer *)circularProgressLayer
 {
-    return (DACircularProgressLayer *)self.layer;
+    return (OLCircularProgressLayer *)self.layer;
 }
 
 - (id)init
