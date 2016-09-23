@@ -467,7 +467,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [OLPayPalWrapper preconnectWithEnvironment:[OLKitePrintSDK paypalEnvironment]];
     }
     
-    [OLStripeWrapper setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
+    if ([OLKiteUtils isApplePayAvailable]){
+        [OLStripeWrapper setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
+    }
     
     if ([self.printOrder hasCachedCost] && !self.printOrder.costReq) {
         [self.tableView reloadData];
@@ -1495,6 +1497,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
                                    completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    if (![OLKiteUtils isApplePayAvailable]){
+        return;
+    }
     OLAddress *shippingAddress = [[OLAddress alloc] init];
     NSString *email;
     NSString *phone;

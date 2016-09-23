@@ -118,6 +118,11 @@
 }
 
 +(BOOL)isApplePayAvailable{
+    Class StripeClass = NSClassFromString(@"Stripe");
+    if (![StripeClass class]){
+        return NO;
+    }
+    
     //Disable Apple Pay on iOS 8 because we need the Contacts framework. There's in issue in Xcode 8.0 that doesn't include some old symbols in PassKit that crashes iOS 9 apps built with frameworks on launch. Did Not test that they crash iOS 8, but disabled to be safe.
     if (![CNContact class]){
         return NO;
