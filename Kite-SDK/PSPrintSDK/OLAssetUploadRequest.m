@@ -109,7 +109,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     NSMutableArray *objects = [[NSMutableArray alloc] init];
     jsonBody[@"objects"] = objects;
     for (OLAsset *asset in imageURLAssets) {
-        if (asset.assetType == kOLAssetTypeRemoteImageURL) {
+        if (asset.assetType == kOLAssetTypeRemoteImageURL && ![asset isEdited]) {
             [objects addObject:@{@"url":asset.imageURL.absoluteString, @"client_asset":@"true", @"mime_type":asset.mimeType}];
             ++expectedRegisteredAssetCount;
         }
@@ -264,7 +264,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     NSMutableArray *assetsToUpload = [[NSMutableArray alloc] init];
     
     for (OLAsset *asset in assets) {
-        if (asset.assetType == kOLAssetTypeRemoteImageURL) {
+        if (asset.assetType == kOLAssetTypeRemoteImageURL && ![asset isEdited]) {
             [imageURLAssets addObject:asset];
         } else {
             [assetsToUpload addObject:asset];
