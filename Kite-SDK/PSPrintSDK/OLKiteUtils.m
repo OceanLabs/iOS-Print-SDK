@@ -37,6 +37,7 @@
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
 #import "OLPayPalWrapper.h"
+#import "OLStripeWrapper.h"
 
 @class OLCustomPhotoProvider;
 @import Contacts;
@@ -119,8 +120,7 @@
 }
 
 +(BOOL)isApplePayAvailable{
-    Class StripeClass = NSClassFromString(@"Stripe");
-    if (![StripeClass class]){
+    if (![OLStripeWrapper isStripeAvailable]){
         return NO;
     }
     

@@ -69,4 +69,26 @@
     func(StripeClass, aSelector, key);
 }
 
++ (BOOL)isStripeAvailable{
+    Class StripeClass = NSClassFromString(@"Stripe");
+    if (![StripeClass class]){
+        return NO;
+    }
+    
+    Class STPAPIClientClass = NSClassFromString(@"STPAPIClient");
+    if (![STPAPIClientClass class]){
+        NSLog(@"Warning: Stripe API version mismatch.");
+        return NO;
+    }
+    for (NSString *s in @[@"createTokenWithPayment:completion:", @"initWithPublishableKey:"]){
+        SEL aSelector = NSSelectorFromString(s);
+        if (![STPAPIClientClass instancesRespondToSelector:aSelector]){
+            NSLog(@"Warning: Stripe API version mismatch.");
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
 @end

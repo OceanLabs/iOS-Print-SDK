@@ -35,5 +35,6 @@
 + (void)client:(id)client createTokenWithPayment:payment completion:(void(^)(id token, NSError *error))handler;
 + (NSString *)tokenIdFromToken:(id)token;
 + (void)setDefaultPublishableKey:(NSString *)key;
++ (BOOL)isStripeAvailable;
 
 @end
