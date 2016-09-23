@@ -15,6 +15,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLPayPalCard+OLCardIcon.h"
 #import "OLStripeCard+OLCardIcon.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 @interface OLPaymentMethodsViewController () <UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLCreditCardCaptureDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -96,12 +97,12 @@
         }
     }
     else if (method == kOLPaymentMethodCreditCard){
-        imageView.image = [UIImage imageNamed:@"add-payment"];
+        imageView.image = [UIImage imageNamedInKiteBundle:@"add-payment"];
         label.text = NSLocalizedStringFromTableInBundle(@"Add Credit/Debit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         [cell viewWithTag:30].hidden = YES;
     }
     else if (method == kOLPaymentMethodApplePay){
-        imageView.image = [UIImage imageNamed:@"apple-pay-method"];
+        imageView.image = [UIImage imageNamedInKiteBundle:@"apple-pay-method"];
         label.text = @"Apple Pay";
         
         if (self.selectedPaymentMethod == kOLPaymentMethodNone){
@@ -116,7 +117,7 @@
         }
     }
     else if (method == kOLPaymentMethodPayPal){
-        imageView.image = [UIImage imageNamed:@"paypal-method"];
+        imageView.image = [UIImage imageNamedInKiteBundle:@"paypal-method"];
         label.text = @"PayPal";
         if (self.selectedPaymentMethod == kOLPaymentMethodPayPal){
             [cell viewWithTag:30].hidden = NO;
