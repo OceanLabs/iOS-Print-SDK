@@ -23,6 +23,8 @@
 
 // TODO: spine position (left, mid, right // top, mid, bottom)
 
+#import <Foundation/Foundation.h>
+
 enum {
 	// current view folds away into center, next view slides in flat from top & bottom
 	OLFlipStyleDefault				= 0,

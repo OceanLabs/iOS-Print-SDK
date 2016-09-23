@@ -31,6 +31,7 @@
 #import "OLFacebookImagePickerConstants.h"
 #import "OLFacebookAlbum.h"
 #import "OLFacebookSDKWrapper.h"
+@import UIKit;
 
 @interface OLFacebookAlbumRequest ()
 @property (nonatomic, assign) BOOL cancelled;

@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+@import UIKit;
 
 @interface OLFacebookImageURL : NSObject <NSCoding, NSCopying>
 - (id)initWithURL:(NSURL *)url size:(CGSize)size;

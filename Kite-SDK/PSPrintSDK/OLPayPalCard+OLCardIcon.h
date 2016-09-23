@@ -8,6 +8,8 @@
 
 #import "OLPayPalCard.h"
 
+@class UIImage;
+
 @interface OLPayPalCard (OLCardIcon)
 
 -(UIImage *)cardIcon;

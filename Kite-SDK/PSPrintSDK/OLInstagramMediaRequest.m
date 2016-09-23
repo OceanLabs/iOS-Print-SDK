@@ -31,6 +31,7 @@
 #import "OLInstagramImage.h"
 #import "OLInstagramImagePickerConstants.h"
 #import "OLOAuth2.h"
+@import UIKit;
 
 @interface OLInstagramMediaRequest ()
 @property (nonatomic, assign) BOOL cancelled;

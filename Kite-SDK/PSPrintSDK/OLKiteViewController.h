@@ -207,7 +207,7 @@
  *  (Needs the 'ImageProviders' subspec or this method won't do anything. See
  *  https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/custom_photo_sources.md for details)
  *
- *  @param vcs   Your view controller
+ *  @param vc   Your view controller
  *  @param name The name for the source
  *  @param icon An image to be used as an icon (where applicable)
  */

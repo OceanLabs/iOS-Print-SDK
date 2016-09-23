@@ -11,12 +11,7 @@
 //  the full licence.
 //
 
-#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
-#else
-#import <Cocoa/Cocoa.h>
-#endif
-
 
 #import "OLOAuth2Client.h"
 #import "OLOAuth2Connection.h"

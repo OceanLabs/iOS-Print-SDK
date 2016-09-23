@@ -40,16 +40,16 @@
 
 /**
  * Return maximum data code length (bytes) for the version.
- * @param version
- * @param level
+ * @param version The version
+ * @param level The level
  * @return maximum size (bytes)
  */
 extern int QRspec_getDataLength(int version, QRecLevel level);
 
 /**
  * Return maximum error correction code length (bytes) for the version.
- * @param version
- * @param level
+ * @param version The version
+ * @param level The level
  * @return ECC size (bytes)
  */
 extern int QRspec_getECCLength(int version, QRecLevel level);
@@ -57,21 +57,21 @@ extern int QRspec_getECCLength(int version, QRecLevel level);
 /**
  * Return a version number that satisfies the input code length.
  * @param size input code length (byte)
- * @param level
+ * @param level The level
  * @return version number
  */
 extern int QRspec_getMinimumVersion(int size, QRecLevel level);
 
 /**
  * Return the width of the symbol for the version.
- * @param version
+ * @param version The version
  * @return width
  */
 extern int QRspec_getWidth(int version);
 
 /**
  * Return the numer of remainder bits.
- * @param version
+ * @param version The version
  * @return number of remainder bits
  */
 extern int QRspec_getRemainder(int version);
@@ -82,16 +82,16 @@ extern int QRspec_getRemainder(int version);
 
 /**
  * Return the size of lenght indicator for the mode and version.
- * @param mode
- * @param version
+ * @param mode The mode
+ * @param version The version
  * @return the size of the appropriate length indicator (bits).
  */
 extern int QRspec_lengthIndicator(QRencodeMode mode, int version);
 
 /**
  * Return the maximum length for the mode and version.
- * @param mode
- * @param version
+ * @param mode The mode
+ * @param version The version
  * @return the maximum length (bytes)
  */
 extern int QRspec_maximumWords(QRencodeMode mode, int version);
@@ -102,8 +102,8 @@ extern int QRspec_maximumWords(QRencodeMode mode, int version);
 
 /**
  * Return an array of ECC specification.
- * @param version
- * @param level
+ * @param version The version
+ * @param level The level
  * @param spec an array of ECC specification contains as following:
  * {# of type1 blocks, # of data code, # of ecc code,
  *  # of type2 blocks, # of data code}
@@ -131,7 +131,7 @@ void QRspec_getEccSpec(int version, QRecLevel level, int spec[5]);
 /**
  * Return BCH encoded version information pattern that is used for the symbol
  * of version 7 or greater. Use lower 18 bits.
- * @param version
+ * @param version The version
  * @return BCH encoded version information pattern
  */
 extern unsigned int QRspec_getVersionPattern(int version);
@@ -142,8 +142,8 @@ extern unsigned int QRspec_getVersionPattern(int version);
 
 /**
  * Return BCH encoded format information pattern.
- * @param mask
- * @param level
+ * @param mask The mask
+ * @param level The level
  * @return BCH encoded format information pattern
  */
 extern unsigned int QRspec_getFormatInfo(int mask, QRecLevel level);
@@ -157,7 +157,7 @@ extern unsigned int QRspec_getFormatInfo(int mask, QRecLevel level);
  * When the same version is requested twice or more, a copy of cached frame
  * is returned.
  * WARNING: Thread unsafe!!!
- * @param version
+ * @param version The version
  * @return Array of unsigned char. You can free it by free().
  */
 extern unsigned char *QRspec_newFrame(int version);
