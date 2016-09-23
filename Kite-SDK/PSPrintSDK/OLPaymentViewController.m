@@ -462,8 +462,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [OLPayPalWrapper initializeWithClientIdsForEnvironments:@{[OLKitePrintSDK paypalEnvironment] : [OLKitePrintSDK paypalClientId]}];
-    [OLPayPalWrapper preconnectWithEnvironment:[OLKitePrintSDK paypalEnvironment]];
+    if ([OLKiteUtils isPayPalAvailable]){
+        [OLPayPalWrapper initializeWithClientIdsForEnvironments:@{[OLKitePrintSDK paypalEnvironment] : [OLKitePrintSDK paypalClientId]}];
+        [OLPayPalWrapper preconnectWithEnvironment:[OLKitePrintSDK paypalEnvironment]];
+    }
     
     [OLStripeWrapper setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
     
@@ -1150,6 +1152,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (IBAction)onButtonPayWithPayPalClicked {
+    if (![OLKiteUtils isPayPalAvailable]){
+        return;
+    }
     if (self.printOrder.jobs.count == 0){
         return;
     }
