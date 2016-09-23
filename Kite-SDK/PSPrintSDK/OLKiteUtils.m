@@ -38,6 +38,7 @@
 #import "OLUserSession.h"
 #import "OLPayPalWrapper.h"
 #import "OLStripeWrapper.h"
+#import "OLFacebookSDKWrapper.h"
 
 @class OLCustomPhotoProvider;
 @import Contacts;
@@ -87,14 +88,8 @@
     return [OLKitePrintSDK QRCodeUploadEnabled];
 }
 
-+ (BOOL)facebookEnabled{    
-    Class FBSDKLoginManagerClass = NSClassFromString (@"FBSDKLoginManager");
-    
-    if ([FBSDKLoginManagerClass class]){
-        return YES;
-    }
-    
-    return NO;
++ (BOOL)facebookEnabled{
+    return [OLFacebookSDKWrapper isFacebookAvailable];
 }
 
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc{

@@ -39,5 +39,6 @@
 + (id)loginManager;
 + (void)logout;
 + (void)clearAccessToken;
++ (BOOL)isFacebookAvailable;
 
 @end

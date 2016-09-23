@@ -28,6 +28,7 @@
 //
 
 #import "OLFacebookSDKWrapper.h"
+#import "OLUserSession.h"
 
 @implementation OLFacebookSDKWrapper
 
@@ -84,7 +85,7 @@
 
 + (void)logout{
     id loginManager = [OLFacebookSDKWrapper loginManager];
-    SEL aSelector = NSSelectorFromString(@"logout");
+    SEL aSelector = NSSelectorFromString(@"logOut");
     IMP imp = [loginManager methodForSelector:aSelector];
     id (*func)(id, SEL) = (void *)imp;
     
@@ -98,6 +99,50 @@
     id (*func)(id, SEL, id) = (void *)imp;
     
     func(FBSDKAccessTokenClass, aSelector, nil);
+}
+
++ (BOOL)isFacebookAvailable{
+    if ([OLUserSession currentSession].disableFacebook){
+        return NO;
+    }
+    Class FBSDKLoginManagerClass = NSClassFromString (@"FBSDKLoginManager");
+    if (![FBSDKLoginManagerClass class]){
+        return NO;
+    }
+    for (NSString *s in @[@"logOut", @"logInWithReadPermissions:fromViewController:handler:"]){
+        SEL aSelector = NSSelectorFromString(s);
+        if (![FBSDKLoginManagerClass instancesRespondToSelector:aSelector]){
+            NSLog(@"Warning: Facebook API version mismatch.");
+            return NO;
+        }
+    }
+    
+    Class FBSDKAccessTokenClass = NSClassFromString (@"FBSDKAccessToken");
+    if (![FBSDKAccessTokenClass class]){
+        return NO;
+    }
+    for (NSString *s in @[@"currentAccessToken", @"setCurrentAccessToken:"]){
+        SEL aSelector = NSSelectorFromString(s);
+        if (![FBSDKAccessTokenClass respondsToSelector:aSelector]){
+            NSLog(@"Warning: Facebook API version mismatch.");
+            return NO;
+        }
+    }
+    
+    Class FBSDKGraphRequestClass = NSClassFromString (@"FBSDKGraphRequest");
+    if (![FBSDKGraphRequestClass class]){
+        NSLog(@"Warning: Facebook API version mismatch.");
+        return NO;
+    }
+    
+    SEL aSelector = NSSelectorFromString(@"startWithCompletionHandler:");
+    if (![FBSDKGraphRequestClass instancesRespondToSelector:aSelector]){
+        NSLog(@"Warning: Facebook API version mismatch.");
+        return NO;
+    }
+    
+    return YES;
+    
 }
 
 @end
