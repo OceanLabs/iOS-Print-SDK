@@ -36,6 +36,7 @@
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
+#import "OLPayPalWrapper.h"
 
 @class OLCustomPhotoProvider;
 @import Contacts;
@@ -139,13 +140,7 @@
 }
 
 + (BOOL)isPayPalAvailable{
-    Class PayPalMobileClass = NSClassFromString(@"PayPalMobile");
-    if ([PayPalMobileClass class]){
-        return YES;
-    }
-    else{
-        return NO;
-    }
+    return [OLPayPalWrapper isPayPalAvailable];
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{

@@ -39,4 +39,5 @@
 + (NSDictionary *)confirmationWithPayment:(id)payment;
 + (void)preconnectWithEnvironment:(NSString *)env;
 + (void)initializeWithClientIdsForEnvironments:(NSDictionary *)dict;
++ (BOOL)isPayPalAvailable;
 @end

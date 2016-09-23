@@ -138,4 +138,61 @@
     func(PayPalMobileClass, aSelector, env);
 }
 
++ (BOOL)isPayPalAvailable{
+    Class PayPalMobileClass = NSClassFromString(@"PayPalMobile");
+    if (![PayPalMobileClass class]){
+        return NO;
+    }
+    
+    Class PayPalShippingAddressClass = NSClassFromString(@"PayPalShippingAddress");
+    if (![PayPalShippingAddressClass class]){
+        NSLog(@"Warning: PayPal API version mismatch.");
+        return NO;
+    }
+    SEL aSelector = NSSelectorFromString(@"shippingAddressWithRecipientName:withLine1:withLine2:withCity:withState:withPostalCode:withCountryCode:");
+    if (![PayPalShippingAddressClass respondsToSelector:aSelector]){
+        NSLog(@"Warning: PayPal API version mismatch.");
+        return NO;
+    }
+    
+    Class PayPalPaymentClass = NSClassFromString(@"PayPalPayment");
+    if (![PayPalPaymentClass class]){
+        NSLog(@"Warning: PayPal API version mismatch.");
+        return NO;
+    }
+    for (NSString *s in @[@"setAmount:", @"setCurrencyCode:", @"setShortDescription:", @"setIntent:", @"setShippingAddress:", @"processable"]){
+        aSelector = NSSelectorFromString(s);
+        if (![PayPalPaymentClass instancesRespondToSelector:aSelector]){
+            NSLog(@"Warning: PayPal API version mismatch.");
+            return NO;
+        }
+    }
+    
+    Class payPalConfigurationClass = NSClassFromString(@"PayPalConfiguration");
+    if (![payPalConfigurationClass class]){
+        NSLog(@"Warning: PayPal API version mismatch.");
+        return NO;
+    }
+    for (NSString *s in @[@"setAcceptCreditCards:", @"setPayPalShippingAddressOption:"]){
+        aSelector = NSSelectorFromString(s);
+        if (![payPalConfigurationClass instancesRespondToSelector:aSelector]){
+            NSLog(@"Warning: PayPal API version mismatch.");
+            return NO;
+        }
+    }
+    
+    Class payPalPaymentViewControllerClass = NSClassFromString(@"PayPalPaymentViewController");
+    if (![payPalPaymentViewControllerClass class]){
+        NSLog(@"Warning: PayPal API version mismatch.");
+        return NO;
+    }
+    aSelector = NSSelectorFromString(@"initWithPayment:configuration:delegate:");
+    if (![payPalPaymentViewControllerClass instancesRespondToSelector:aSelector]){
+        NSLog(@"Warning: PayPal API version mismatch.");
+        return NO;
+    }
+    
+    return YES;
+}
+
 @end
