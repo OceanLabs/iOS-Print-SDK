@@ -74,6 +74,11 @@
     if (![StripeClass class]){
         return NO;
     }
+    SEL aSelector = NSSelectorFromString(@"setDefaultPublishableKey:");
+    if (![StripeClass respondsToSelector:aSelector]){
+        NSLog(@"Warning: Stripe API version mismatch.");
+        return NO;
+    }
     
     Class STPAPIClientClass = NSClassFromString(@"STPAPIClient");
     if (![STPAPIClientClass class]){
