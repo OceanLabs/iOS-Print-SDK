@@ -17,10 +17,10 @@ Sample Code
 -----------
 1. Add the following lines to your CocoaPods Podfile and run `pod update`
 ```ruby
-pod "Kite-Print-SDK/Instagram" # only needed if you want Instagram
-pod "Kite-Print-SDK/Facebook" # only needed if you want Facebook
+pod 'FBSDKCoreKit', '~> 4.11.0' # only needed if you want Facebook
+pod 'FBSDKLoginKit', '~> 4.11.0' # only needed if you want Facebook
 ```
-2. If you've added an Instagram Podfile dependency then the next step is to enable Instagram functionality in code. Firstly navigate over to [https://instagram.com/developer/](https://instagram.com/developer/) and register your Instagram client app (if you don't already have one). You'll need the `Client ID`, `Client Secret` & `Redirect URI`. Next using these details enable Instagram for the Kite SDK:
+2. If you need Instagram integration then the next step is needed to enable Instagram functionality in code. Firstly navigate over to [https://instagram.com/developer/](https://instagram.com/developer/) and register your Instagram client app (if you don't already have one). You'll need the `Client ID`, `Client Secret` & `Redirect URI`. Next using these details enable Instagram for the Kite SDK:
 
     ```obj-c
     [OLKitePrintSDK setInstagramEnabledWithClientID:@"YOUR CLIENT ID" secret:@"YOUR CLIENT SECRET" redirectURI:@"YOUR REDIRECT URL"];
@@ -41,7 +41,7 @@ That's all there is to do -- an Instagram button should now appear on photo sele
 }
     ```
 
-4. Xcode 7 includes some new security features. In order to connect to the social services above you will need to add some more exceptions to your project's info plist file (in addition to the ones that Kite requires).
+4. iOS includes a security feature called App Transport Security. In order to connect to the social services above you will need to add some more exceptions to your project's info plist file (in addition to the ones that Kite requires).
 We need to add forward secrecy exceptions for Facebook's and Instagram's CDNs. The following is what you need to copy your app's info plist, which includes anything that is needed by Kite as well:
 ```
 <key>LSApplicationQueriesSchemes</key>

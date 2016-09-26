@@ -54,13 +54,11 @@ The recommended approach for installing is via the CocoaPods, however we also su
 
 ```ruby
 pod "Kite-Print-SDK"
-pod "Kite-Print-SDK/PayPal"
+pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
 
-#Uncomment this next line if you want Instagram photo picking support
-#pod "Kite-Print-SDK/Instagram"
-
-#Uncomment this	next line if you want Facebook photo picking support
-#pod "Kite-Print-SDK/Facebook"
+#Uncomment these lines if you want Facebook photo picking support
+#pod 'FBSDKCoreKit', '~> 4.11.0'
+#pod 'FBSDKLoginKit', '~> 4.11.0'
 ```
 
 The SDK includes lots of optional functionality enabled via CocoaPod Subspecs so that you can pick and choose your setup.
@@ -183,6 +181,10 @@ Depending on your use case you might want to launch to a specific product, or ev
 
 ## Print API
 We also have a [REST print API](https://www.kite.ly/docs/1.1/) for those who prefer to invent wheels :)
+
+## Migration from Kite SDK v5.x.x
+CocoaPods: All payment and social subspecs are deprecated.
+Git Submodule: KiteSDK's submodule dependencies have been removed. Please install the PayPal dependency separately (linking with KiteSDK is not needed). Replaced KiteSDK static library with a dynamic framework. This includes all assets so no need to have them to the Copy Resources build phase anymore. Please remove the static library and add Kite.framework to the embedded libraries section of the General tab of your target.
 
 ## License
 
