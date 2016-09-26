@@ -184,6 +184,10 @@ Depending on your use case you might want to launch to a specific product, or ev
 ## Print API
 We also have a [REST print API](https://www.kite.ly/docs/1.1/) for those who prefer to invent wheels :)
 
+## Migration from Kite SDK v5.x.x
+CocoaPods: All payment and social subspecs are deprecated.
+Git Submodule: KiteSDK's submodule dependencies have been removed. Please install the PayPal dependency separately (linking with KiteSDK is not needed). Replaced KiteSDK static library with a dynamic framework. This includes all assets so no need to have them to the Copy Resources build phase anymore. Please remove the static library and add Kite.framework to the embedded libraries section of the General tab of your target.
+
 ## License
 
 Kite iOS Print SDK is available under a modified MIT license. See the [LICENSE](Kite-SDK/LICENSE) file for more info.
