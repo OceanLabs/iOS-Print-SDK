@@ -36,7 +36,8 @@ typedef enum {
     OLImagePickerProviderTypePhotoLibrary,
     OLImagePickerProviderTypeFacebook,
     OLImagePickerProviderTypeInstagram,
-    OLImagePickerProviderTypeQRCode
+    OLImagePickerProviderTypeQRCode,
+    OLImagePickerProviderTypeViewController
 } OLImagePickerProviderType;
 
 @interface OLImagePickerProvider : NSObject
@@ -45,6 +46,7 @@ typedef enum {
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) UIImage *icon;
 @property (assign, nonatomic) OLImagePickerProviderType providerType;
+
 
 - (instancetype)initWithCollections:(NSArray<id<NSFastEnumeration>> *)collections name:(NSString *)name icon:(UIImage *)icon;
 

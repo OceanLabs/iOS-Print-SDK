@@ -748,6 +748,7 @@
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
 		2EEB53001D7062870066B802 /* OLProductTemplateOptionChoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EEB52FF1D7062870066B802 /* OLProductTemplateOptionChoice.m */; };
 		2EEB53011D7062870066B802 /* OLProductTemplateOptionChoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EEB52FF1D7062870066B802 /* OLProductTemplateOptionChoice.m */; };
+		2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */; };
 		2EF4392B1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
 		2EF718341D589DB60036502D /* OLInfoBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF718331D589DB60036502D /* OLInfoBanner.m */; };
 		2EF718351D589DB60036502D /* OLInfoBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF718331D589DB60036502D /* OLInfoBanner.m */; };
@@ -1053,6 +1054,7 @@
 		2EEB52FA1D6C8F4C0066B802 /* OLKiteViewController+Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OLKiteViewController+Theme.h"; sourceTree = "<group>"; };
 		2EEB52FE1D7062870066B802 /* OLProductTemplateOptionChoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOptionChoice.h; sourceTree = "<group>"; };
 		2EEB52FF1D7062870066B802 /* OLProductTemplateOptionChoice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOptionChoice.m; sourceTree = "<group>"; };
+		2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCustomImagePickerViewControllerDelegate.h; sourceTree = "<group>"; };
 		2EF439291BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderSubmitStatusRequest.h; sourceTree = "<group>"; };
 		2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintOrderSubmitStatusRequest.m; sourceTree = "<group>"; };
 		2EF53E391B55421A00BF936A /* UIImage+OLUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+OLUtils.h"; path = "PSPrintSDK/Categories/UIImage+OLUtils.h"; sourceTree = "<group>"; };
@@ -1387,6 +1389,9 @@
 				2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */,
 				2EB612F01D48AF9400B48E29 /* OLInstagramLoginWebViewController.h */,
 				2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */,
+				2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */,
+				E2AABA0F1C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.h */,
+				E2AABA101C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m */,
 			);
 			name = "Image Picker";
 			sourceTree = "<group>";
@@ -1535,8 +1540,6 @@
 				2E837D471C3C1FBB004DA682 /* OLViewController.m */,
 				2E837D4A1C3C221E004DA682 /* OLCollectionViewController.h */,
 				2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */,
-				E2AABA0F1C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.h */,
-				E2AABA101C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -2137,6 +2140,7 @@
 				2EB8FE061D95685100E26BDF /* OLLuhn.h in Headers */,
 				2EB8FDD21D95685100E26BDF /* OLAddress.h in Headers */,
 				2EB8FDFE1D95685100E26BDF /* OLPrintPhoto.h in Headers */,
+				2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */,
 				2EB8FE001D95685100E26BDF /* OLKiteABTesting.h in Headers */,
 				2EB8FE3C1D95685100E26BDF /* OLProductTypeSelectionViewController.h in Headers */,
 				2EB8FE5F1D95685100E26BDF /* UIImage+MDQRCode.h in Headers */,

@@ -149,6 +149,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     BOOL shouldOfferAPIChange = YES;
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     
+    [OLKitePrintSDK setQRCodeUploadEnabled:YES];
+    
     if (!([pasteboard containsPasteboardTypes: [NSArray arrayWithObject:@"public.utf8-plain-text"]] && pasteboard.string.length == 40)) {
         shouldOfferAPIChange = NO;
     }

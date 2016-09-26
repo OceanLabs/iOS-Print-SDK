@@ -27,11 +27,33 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-#import "OLCustomImagePickerViewControllerDelegate.h"
-
 @class OLAsset;
+@import UIKit;
 
-@interface OLQRCodeUploadViewController : UIViewController
-@property (nonatomic, weak) id<OLCustomImagePickerViewControllerDelegate> delegate;
+/**
+ *
+ *  The picked assets are OLAsset objects.
+ */
+@protocol OLCustomImagePickerViewControllerDelegate <NSObject>
+
+/**
+ *  Tells the delegate that the user finish picking photos or videos.
+ *
+ *  @param picker The controller object managing the assets picker interface.
+ *  @param assets An array containing picked asset objects.
+ *
+ */
+- (void)assetsPickerController:(UIViewController *)picker didFinishPickingAssets:(NSArray<OLAsset *> *)assets;
+
+/**
+ *  Tells the delegate that the user cancelled the pick operation.
+ *
+ *  @param picker The controller object managing the assets picker interface.
+ *
+ */
+- (void)assetsPickerControllerDidCancel:(UIViewController *)picker;
+
+
+
+
 @end

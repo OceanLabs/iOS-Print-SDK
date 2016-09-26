@@ -98,4 +98,8 @@
     return [self.array indexOfObject:obj];
 }
 
+- (void)addAssets:(NSArray<OLAsset *> *)assets{
+    [self.array addObjectsFromArray:assets];
+}
+
 @end

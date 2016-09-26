@@ -157,7 +157,18 @@ CGFloat OLImagePickerMargin = 1.5;
     }];
 }
 
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    if (collectionView.tag == 10 && self.provider.providerType == OLImagePickerProviderTypeQRCode){
+        return 2;
+    }
+    return 1;
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (section == 1){
+        return 1;
+    }
+    
     if (collectionView.tag == 10){
         if (self.provider.collections.count > self.showingCollectionIndex){
             return [self.provider.collections[self.showingCollectionIndex] count];
@@ -172,6 +183,10 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 1){
+        return [collectionView dequeueReusableCellWithReuseIdentifier:@"addCell" forIndexPath:indexPath];
+    }
+    
     UICollectionViewCell *cell;
     if (collectionView.tag == 10){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
@@ -417,6 +432,11 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section > 0){
+        [self.imagePicker presentExternalViewControllerForProvider:self.provider];
+        return;
+    }
+    
     if (collectionView.tag == 10){
         OLAsset *printPhoto = [self assetForIndexPath:indexPath];
         

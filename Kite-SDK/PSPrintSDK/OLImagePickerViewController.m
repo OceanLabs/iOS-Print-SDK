@@ -31,7 +31,6 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"
 #import "OLCustomPhotoProvider.h"
-#import "OLImagePickerPhotosPageViewController.h"
 #import <Photos/Photos.h>
 #import "OLUpsellViewController.h"
 #import "NSObject+Utils.h"
@@ -48,6 +47,8 @@
 #import "UIViewController+OLMethods.h"
 #import "OLPaymentViewController.h"
 #import "OLFacebookSDKWrapper.h"
+#import "OLQRCodeUploadViewController.h"
+#import "OLImagePickerPhotosPageViewController.h"
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
@@ -59,7 +60,7 @@
 + (NSString *)instagramClientID;
 @end
 
-@interface OLImagePickerViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDelegate, UIPageViewControllerDataSource, OLUpsellViewControllerDelegate>
+@interface OLImagePickerViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDelegate, UIPageViewControllerDataSource, OLUpsellViewControllerDelegate, OLCustomImagePickerViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *sourcesCollectionView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -379,12 +380,22 @@
     }
 }
 
+- (void)setupQRCodeProvider{
+    if ([OLKiteUtils qrCodeUploadEnabled]){
+        OLImagePickerProviderCollection *emptyCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[] name:@"QR Code Upload"];
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[emptyCollection] name:NSLocalizedStringFromTableInBundle(@"Your Phone", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"case-options"]];
+        provider.providerType = OLImagePickerProviderTypeQRCode;
+        [self.providers addObject:provider];
+    }
+}
+
 - (void)setupProviders{
     [self setupAppAssetProvider];
     [self setupLibraryProviderAtIndex:self.providers.count];
     [self setupFacebookProvider];
     [self setupInstagramProvider];
     [self setupCustomProviders];
+    [self setupQRCodeProvider];
 }
 
 - (void)updateTopConForVc:(UIViewController *)vc{
@@ -517,6 +528,34 @@
     [self updateTopConForVc:vc];
     
     return vc;
+}
+
+- (void)presentExternalViewControllerForProvider:(OLImagePickerProvider *)provider{
+    if (provider.providerType == OLImagePickerProviderTypeQRCode){
+        OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
+        vc.modalPresentationStyle = UIModalPresentationFormSheet;
+        vc.delegate = self;
+        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(assetsPickerControllerDidCancel:)];
+        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+        [self presentViewController:nvc animated:YES completion:nil];
+        
+        self.providerForPresentedVc = provider;
+    }
+}
+
+- (void)assetsPickerControllerDidCancel:(UIViewController *)picker{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)assetsPickerController:(UIViewController *)picker didFinishPickingAssets:(NSArray<OLAsset *> *)assets{
+    [self.providerForPresentedVc.collections.firstObject addAssets:assets];
+    for (OLAsset *asset in assets){
+        if(self.maximumPhotos == 0 || self.selectedAssets.count < self.maximumPhotos){
+            [self.selectedAssets addObject:asset];
+        }
+    }
+    [self reloadPageController];
+    [picker dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
