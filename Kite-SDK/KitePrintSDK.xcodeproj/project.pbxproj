@@ -1512,6 +1512,9 @@
 		2E10F0511D93D6F700014C19 /* 3rd Party */ = {
 			isa = PBXGroup;
 			children = (
+				2E96BA3B1D2FA9CF002F5F74 /* QREncoder */,
+				2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */,
+				3D8122E21A759E41004E7297 /* RMImageCropper */,
 				2E10F0591D93E5E200014C19 /* PayPal */,
 				2E10F0521D93D70300014C19 /* Stripe */,
 				2EB612F61D48AFDA00B48E29 /* Instagram */,
@@ -1714,9 +1717,6 @@
 		2E4CAF131BC2941E0089FA26 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				2E96BA3B1D2FA9CF002F5F74 /* QREncoder */,
-				2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */,
-				3D8122E21A759E41004E7297 /* RMImageCropper */,
 				2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */,
 				2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */,
 				2EEB52FA1D6C8F4C0066B802 /* OLKiteViewController+Theme.h */,
