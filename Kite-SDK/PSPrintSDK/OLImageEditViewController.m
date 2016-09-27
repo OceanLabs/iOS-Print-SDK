@@ -39,6 +39,7 @@
 #import "OLNavigationController.h"
 #import "OLProductTemplateOption.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLKiteABTesting.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -868,6 +869,10 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Buttons
 
 - (void)setupButtons{
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.editingTools setColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    
     [self.editingTools.ctaButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"add-image-icon"] forState:UIControlStateNormal];

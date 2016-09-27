@@ -37,6 +37,7 @@
 #import "UIView+RoundRect.h"
 #import "OLAsset+Private.h"
 #import "OLKiteUtils.h"
+#import "OLKiteABTesting.h"
 
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
@@ -184,7 +185,11 @@ CGFloat OLImagePickerMargin = 1.5;
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == 1){
-        return [collectionView dequeueReusableCellWithReuseIdentifier:@"addCell" forIndexPath:indexPath];
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"addCell" forIndexPath:indexPath];
+        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+            [(UILabel *)[cell viewWithTag:10] setTextColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+        }
+        return cell;
     }
     
     UICollectionViewCell *cell;
@@ -274,6 +279,9 @@ CGFloat OLImagePickerMargin = 1.5;
         
         UILabel *label = [[cell viewWithTag:20] viewWithTag:30];
         label.text = self.provider.collections[indexPath.item].name;
+        if ([OLKiteABTesting sharedInstance].lightThemeColor2){
+            label.superview.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor2;
+        }
     }
     
     return cell;

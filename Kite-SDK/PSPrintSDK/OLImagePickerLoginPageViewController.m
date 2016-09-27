@@ -36,6 +36,7 @@
 #import "OLNavigationController.h"
 #import "OLKiteUtils.h"
 #import "OLFacebookSDKWrapper.h"
+#import "OLKiteABTesting.h"
 
 @interface OLImagePickerLoginPageViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
@@ -65,6 +66,9 @@
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
     [self.loginButton makeRoundRectWithRadius:self.loginButton.frame.size.height / 2.0];
+    if ([OLKiteABTesting sharedInstance].lightThemeColor2){
+        self.loginButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor2;
+    }
 }
 
 - (IBAction)onButtonLoginTapped:(UIButton *)sender {

@@ -50,6 +50,7 @@
 #import "OLQRCodeUploadViewController.h"
 #import "OLImagePickerPhotosPageViewController.h"
 #import "OLCustomPickerController.h"
+#import "OLKiteABTesting.h"
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomViewControllerPhotoProvider *> *customImageProviders;
@@ -128,6 +129,10 @@
                                                                                  style:UIBarButtonItemStylePlain
                                                                                 target:nil
                                                                                 action:nil];
+    }
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        self.nextButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
     }
     
     NSMutableArray<OLImagePickerProvider *> *providers = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
