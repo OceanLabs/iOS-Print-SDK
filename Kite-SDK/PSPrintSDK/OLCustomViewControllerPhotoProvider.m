@@ -28,18 +28,18 @@
 //
 
 
-#import <Foundation/Foundation.h>
-#import "OLImagePickerProvider.h"
+#import "OLCustomViewControllerPhotoProvider.h"
 
-@protocol KITAssetCollectionDataSource;
-@protocol KITCustomAssetPickerController;
+@implementation OLCustomViewControllerPhotoProvider
 
-@interface OLCustomPhotoProvider : OLImagePickerProvider
-
-@property (strong, nonatomic) UIViewController<KITCustomAssetPickerController> *vc;
-
-- (instancetype)initWithController:(UIViewController<KITCustomAssetPickerController> *)controller name:(NSString *)name icon:(UIImage *)icon;
-
+- (instancetype)initWithController:(UIViewController<OLCustomPickerController> *)controller name:(NSString *)name icon:(UIImage *)icon{
+    if (self = [super init]){
+        self.vc = controller;
+        self.icon = icon;
+        self.name = name;
+    }
+    return self;
+}
 
 @end
 

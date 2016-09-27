@@ -44,7 +44,7 @@
 #import "UIImage+OLUtils.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
-#import "OLCustomPhotoProvider.h"
+#import "OLCustomViewControllerPhotoProvider.h"
 #import "OLAsset+Private.h"
 #import "OLImageDownloader.h"
 
@@ -79,8 +79,7 @@ static CGFloat fadeTime = 0.3;
 
 @end
 
-@class KITCustomAssetPickerController;
-@class KITAssetCollectionDataSource;
+@protocol OLCustomPickerController;
 
 @implementation OLKiteViewController
 
@@ -195,11 +194,11 @@ static CGFloat fadeTime = 0.3;
     [self.customImageProviders addObject:[[OLImagePickerProvider alloc] initWithCollections:(NSArray <id<NSFastEnumeration>> *)collections name:name icon:image]];
 }
 
-- (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon{
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon{
     if (!self.customImageProviders){
         self.customImageProviders = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
     }
-    [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithController:vc name:name icon:icon]];
+    [self.customImageProviders addObject:[[OLCustomViewControllerPhotoProvider alloc] initWithController:vc name:name icon:icon]];
 }
 
 - (void)setFontNamesForImageEditing:(NSArray<NSString *> *_Nullable)fontNames{

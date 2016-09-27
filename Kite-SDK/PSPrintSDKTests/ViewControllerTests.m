@@ -29,7 +29,7 @@
 #import "PrintOrderHistoryViewController.h"
 #import "OLAddressEditViewController.h"
 #import "OLTestTapGestureRecognizer.h"
-#import "OLCustomPhotoProvider.h"
+#import "OLCustomViewControllerPhotoProvider.h"
 #import "CatsAssetCollectionDataSource.h"
 #import "DogsAssetCollectionDataSource.h"
 #import "OLUpsellViewController.h"

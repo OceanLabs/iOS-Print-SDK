@@ -55,7 +55,6 @@
 #import "OLKiteABTesting.h"
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
-#import "OLCustomPhotoProvider.h"
 #import "OLImagePickerViewController.h"
 #import "OLNavigationController.h"
 

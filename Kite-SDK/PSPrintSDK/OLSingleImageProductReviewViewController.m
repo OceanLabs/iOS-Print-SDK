@@ -34,7 +34,6 @@
 #import "OLAsset+Private.h"
 #import "OLProductPrintJob.h"
 #import "OLAsset+Private.h"
-#import "OLCustomPhotoProvider.h"
 #import "OLImageCachingManager.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"

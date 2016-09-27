@@ -40,7 +40,6 @@
 #import "OLStripeWrapper.h"
 #import "OLFacebookSDKWrapper.h"
 
-@class OLCustomPhotoProvider;
 @import Contacts;
 @import PassKit;
 
@@ -57,7 +56,7 @@
 @end
 
 @interface OLKiteViewController (Private)
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+@property (strong, nonatomic) NSMutableArray *customImageProviders;
 @end
 
 @implementation OLKiteUtils

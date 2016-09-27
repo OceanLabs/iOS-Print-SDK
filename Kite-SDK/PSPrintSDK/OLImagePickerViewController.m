@@ -30,7 +30,7 @@
 #import "OLImagePickerViewController.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"
-#import "OLCustomPhotoProvider.h"
+#import "OLCustomViewControllerPhotoProvider.h"
 #import <Photos/Photos.h>
 #import "OLUpsellViewController.h"
 #import "NSObject+Utils.h"
@@ -49,9 +49,10 @@
 #import "OLFacebookSDKWrapper.h"
 #import "OLQRCodeUploadViewController.h"
 #import "OLImagePickerPhotosPageViewController.h"
+#import "OLCustomPickerController.h"
 
 @interface OLKiteViewController ()
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+@property (strong, nonatomic) NSMutableArray <OLCustomViewControllerPhotoProvider *> *customImageProviders;
 @end
 
 @interface OLKitePrintSDK ()
@@ -365,18 +366,24 @@
 
 - (void)setupCustomProviders{
     for (OLImagePickerProvider *customProvider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
-        NSMutableArray *collections = [[NSMutableArray alloc] init];
-        for (OLImagePickerProviderCollection *collection in customProvider.collections){
-            NSMutableArray *assets = [[NSMutableArray alloc] init];
-            for (OLAsset *asset in collection){
-                [assets addObject:asset];
-            }
-            
-            [collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:assets name:collection.name]];
+        if ([customProvider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+            customProvider.providerType = OLImagePickerProviderTypeViewController;
+            [self.providers addObject:customProvider];
         }
-        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:collections name:customProvider.name icon:customProvider.icon];
-        provider.providerType = OLImagePickerProviderTypeCustom;
-        [self.providers addObject:provider];
+        else{
+            NSMutableArray *collections = [[NSMutableArray alloc] init];
+            for (OLImagePickerProviderCollection *collection in customProvider.collections){
+                NSMutableArray *assets = [[NSMutableArray alloc] init];
+                for (OLAsset *asset in collection){
+                    [assets addObject:asset];
+                }
+                
+                [collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:assets name:collection.name]];
+            }
+            OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:collections name:customProvider.name icon:customProvider.icon];
+            provider.providerType = OLImagePickerProviderTypeCustom;
+            [self.providers addObject:provider];
+        }
     }
 }
 
@@ -541,6 +548,12 @@
         
         self.providerForPresentedVc = provider;
     }
+    else if (provider.providerType == OLImagePickerProviderTypeViewController && [provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+        UIViewController *vc = [(OLCustomViewControllerPhotoProvider *)provider vc];
+        ((id<OLCustomPickerController>)vc).delegate = self;
+        [self presentViewController:vc animated:YES completion:nil];
+        self.providerForPresentedVc = provider;
+    }
 }
 
 - (void)assetsPickerControllerDidCancel:(UIViewController *)picker{
@@ -548,8 +561,16 @@
 }
 
 - (void)assetsPickerController:(UIViewController *)picker didFinishPickingAssets:(NSArray<OLAsset *> *)assets{
-    [self.providerForPresentedVc.collections.firstObject addAssets:assets];
-    for (OLAsset *asset in assets){
+    //Check that the objects are OLAssets
+    NSMutableArray *validAssets = [[NSMutableArray alloc] initWithArray:assets];
+    for (id obj in assets){
+        if (![obj isKindOfClass:[OLAsset class]]){
+            [validAssets removeObjectIdenticalTo:obj];
+        }
+    }
+    
+    [self.providerForPresentedVc.collections.firstObject addAssets:validAssets];
+    for (OLAsset *asset in validAssets){
         if(self.maximumPhotos == 0 || self.selectedAssets.count < self.maximumPhotos){
             [self.selectedAssets addObject:asset];
         }
