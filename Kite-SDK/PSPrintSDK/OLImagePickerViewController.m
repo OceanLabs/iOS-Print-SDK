@@ -645,7 +645,13 @@
 - (void)positionSelectedProviderIndicator{
     UICollectionViewCell *cell = [self.sourcesCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0]];
     
-    self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation([self.sourcesCollectionView convertRect:cell.frame toView:self.view].origin.x, 0);
+    if (cell){
+        self.selectedProviderIndicator.alpha = 1;
+        self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation([self.sourcesCollectionView convertRect:cell.frame toView:self.view].origin.x, 0);
+    }
+    else{
+        self.selectedProviderIndicator.alpha = 0;
+    }
 }
 
 #pragma mark Navigation
