@@ -272,7 +272,7 @@ sendingProgressHandler:(OLOAuth2ConnectionSendingProgressHandler)aSendingProgres
             return NO;
         }
         
-        // TODO: The result might also be kSecTrustResultConfirm
+        // The result might also be kSecTrustResultConfirm
         // But to be safe we ignore this for now
         // if it is kSecTrustResultConfirm, there could be another delegate
         // method that allows to show a delegate UI
@@ -415,8 +415,7 @@ sendingProgressHandler:(OLOAuth2ConnectionSendingProgressHandler)aSendingProgres
             }
         }
     }
-    if (/*self.statusCode == 401 // TODO: check for status code once the bug returning 500 is fixed
-         &&*/ client.accessToken.refreshToken != nil
+    if (client.accessToken.refreshToken != nil
         && authenticateHeader
         && [authenticateHeader rangeOfString:@"expired_token"].location != NSNotFound) {
         [self cancel];

@@ -49,7 +49,6 @@ static NSMutableArray *printOrders;
 }
 
 - (void)saveToHistory {
-    // TODO: this seems totally wrong on reflection. StorageIdentifier is not even persisted. Need to make it part of PrintOrder.
     if (self.storageIdentifier == NSNotFound) {
         // Get a new unique storage identifier
         NSInteger maxStorageIdentifier = -1;

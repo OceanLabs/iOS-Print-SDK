@@ -128,12 +128,8 @@
             [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
         }
         
-//        if ([self isMemberOfClass:[OLPaymentViewController class]]){
-//            [(UIViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"menu_button_orders"] style:UIBarButtonItemStylePlain target:vc action:@selector(onBarButtonOrdersClicked)];
-//        }
-        
         OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-        nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];
     }];
 }

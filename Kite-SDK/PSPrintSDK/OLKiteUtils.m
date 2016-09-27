@@ -66,12 +66,12 @@
 }
 
 + (NSString *)userEmail:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
+    OLKiteViewController *kiteVC = [OLUserSession currentSession].kiteVc;
     return kiteVC.userEmail;
 }
 
 + (NSString *)userPhone:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
+    OLKiteViewController *kiteVC = [OLUserSession currentSession].kiteVc;
     return kiteVC.userPhone;
 }
 
@@ -92,10 +92,9 @@
 }
 
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:topVc];
-    id<OLKiteDelegate> delegate = [OLUserSession currentSession].kiteDelegate;
+    OLKiteViewController *kiteVc = [OLUserSession currentSession].kiteVc;
     
-    if ([delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] && ![delegate kiteControllerShouldAllowUserToAddMorePhotos:kiteVc]){
+    if ([kiteVc.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] && ![kiteVc.delegate kiteControllerShouldAllowUserToAddMorePhotos:kiteVc]){
         return NO;
     }
     
@@ -103,10 +102,9 @@
 }
 
 + (BOOL)cameraRollEnabled:(UIViewController *)topVc{
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:topVc];
-    id<OLKiteDelegate> delegate = kiteVc.delegate;
+    OLKiteViewController *kiteVc = [OLUserSession currentSession].kiteVc;
     
-    if ([delegate respondsToSelector:@selector(kiteControllerShouldDisableCameraRoll:)] && [delegate kiteControllerShouldDisableCameraRoll:kiteVc]){
+    if ([kiteVc.delegate respondsToSelector:@selector(kiteControllerShouldDisableCameraRoll:)] && [kiteVc.delegate kiteControllerShouldDisableCameraRoll:kiteVc]){
         return NO;
     }
     
@@ -194,41 +192,6 @@
     else{
         return @"OrderReviewViewController";
     }
-}
-
-+ (OLKiteViewController *)kiteVcForViewController:(UIViewController *)theVc{
-    if ([theVc isKindOfClass:[OLKiteViewController class]]){
-        return (OLKiteViewController *)theVc;
-    }
-    
-    UIViewController *vc = theVc.parentViewController;
-    while (vc) {
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            return (OLKiteViewController *)vc;
-            break;
-        }
-        else{
-            vc = vc.parentViewController;
-        }
-    }
-    vc = theVc.presentingViewController;
-    while (vc) {
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            return (OLKiteViewController *)vc;
-            break;
-        }
-        else{
-            vc = vc.presentingViewController;
-        }
-    }
-    
-    for (UIViewController *vc in theVc.navigationController.viewControllers){
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            return (OLKiteViewController *)vc;
-        }
-    }
-    
-    return [self kiteVcForViewController:theVc.presentingViewController];
 }
 
 + (BOOL)assetArrayContainsPDF:(NSArray *)array{

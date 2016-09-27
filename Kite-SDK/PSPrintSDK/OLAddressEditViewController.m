@@ -39,6 +39,7 @@
 #import "OLKiteABTesting.h"
 #import "OLAnalytics.h"
 #import "OLImageDownloader.h"
+#import "OLUserSession.h"
 
 static const NSUInteger kTagTextField = 99;
 
@@ -364,7 +365,7 @@ static const NSUInteger kTagTextField = 99;
         controller.delegate = self;
         OLCountry *selectedCountry = self.address.country;
         controller.selected = @[selectedCountry ? selectedCountry : [OLCountry countryForCode:@"GBR"]];
-        controller.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        controller.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:controller animated:YES completion:nil];
     }
 }

@@ -914,7 +914,7 @@ static const CGFloat kBookEdgePadding = 38;
         [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             [cropVc setFullImage:image];
             cropVc.edits = self.croppingPrintPhoto.edits;
-//            cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:cropVc animated:NO completion:NULL];
         }];
     }

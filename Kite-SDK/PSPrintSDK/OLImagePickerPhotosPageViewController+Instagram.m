@@ -32,6 +32,7 @@
 #import "OLOAuth2AccountStore.h"
 #import "OLInstagramImage.h"
 #import "OLImagePickerProviderCollection.h"
+#import "OLKiteUtils.h"
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
@@ -72,7 +73,9 @@
                 
                 [welf.imagePicker reloadPageController];
             } else {
-                //TODO handle error
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleDefault handler:NULL]];
+                [self.imagePicker presentViewController:ac animated:YES completion:NULL];
             }
             
             return;

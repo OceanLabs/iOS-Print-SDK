@@ -16,6 +16,7 @@
 #import "OLPayPalCard+OLCardIcon.h"
 #import "OLStripeCard+OLCardIcon.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLUserSession.h"
 
 @interface OLPaymentMethodsViewController () <UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLCreditCardCaptureDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -187,7 +188,7 @@
 - (void)addNewCard {
     OLCreditCardCaptureViewController *ccCaptureController = [[OLCreditCardCaptureViewController alloc] initWithPrintOrder:nil];
     ccCaptureController.delegate = self;
-    ccCaptureController.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    ccCaptureController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:ccCaptureController animated:YES completion:nil];
 }
 

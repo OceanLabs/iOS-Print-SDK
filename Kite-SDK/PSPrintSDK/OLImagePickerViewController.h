@@ -37,8 +37,10 @@
 
 @protocol OLImagePickerViewControllerDelegate <NSObject>
 
-- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc;
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets;
+
+@optional
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc;
 
 @end
 

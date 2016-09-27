@@ -139,7 +139,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self];
-    navController.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    navController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [presentingViewController presentViewController:navController animated:animated completion:completion];
 }
 
@@ -333,7 +333,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         self.printOrder.shippingAddress = nil;
     }
         
-    if (![[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
+    if (![[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [[OLUserSession currentSession].kiteVc.delegate shouldStoreDeliveryAddresses]){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:email forKey:kKeyEmailAddress];
         [defaults setObject:phone forKey:kKeyPhone];
@@ -410,7 +410,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)populateDefaultEmailAndPhone {
-    if ([[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
+    if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteVc.delegate shouldStoreDeliveryAddresses]){
         self.textFieldEmail.text = self.printOrder.email;
         self.textFieldPhone.text = self.printOrder.phone;
         return;
@@ -445,7 +445,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)userEmail {
     if (self.textFieldEmail == nil) {
-        if ([[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
+        if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteVc.delegate shouldStoreDeliveryAddresses]){
             return @"";
         }
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -458,7 +458,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)userPhone {
     if (self.textFieldPhone == nil) {
-        if ([[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
+        if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteVc.delegate shouldStoreDeliveryAddresses]){
             return @"";
         }
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -475,8 +475,8 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (BOOL)showPhoneEntryField {
-    if ([[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
-        return [[OLUserSession currentSession].kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
+    if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
+        return [[OLUserSession currentSession].kiteVc.delegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
     }
     
     return [OLKiteABTesting sharedInstance].requirePhoneNumber;
@@ -532,7 +532,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (section == kSectionPhoneNumber){
         return 44;
     }
-    if (![[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![[OLUserSession currentSession].kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
+    if (![[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![[OLUserSession currentSession].kiteVc.delegate shouldShowOptOutOfEmailsCheckbox]){
         return 28;
     }
     return 44;
@@ -542,7 +542,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (section != kSectionEmailAddress){
         return nil;
     }
-    if (![[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![[OLUserSession currentSession].kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
+    if (![[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![[OLUserSession currentSession].kiteVc.delegate shouldShowOptOutOfEmailsCheckbox]){
         return nil;
     }
     
@@ -701,13 +701,13 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
                 addressPicker.allowsAddressSearch = [OLKiteABTesting sharedInstance].offerAddressSearch;
                 addressPicker.allowsMultipleSelection = NO;
                 addressPicker.selected = self.shippingAddresses;
-                addressPicker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+                addressPicker.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
                 [self presentViewController:addressPicker animated:YES completion:nil];
         } else {
             OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];
             editVc.delegate = self;
             UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:editVc];
-            nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:nvc animated:YES completion:nil];
         }
     }

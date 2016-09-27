@@ -40,10 +40,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLImageCachingManager.h"
+#import "OLImagePickerViewController.h"
 
 @import Photos;
 
-@interface ViewController () <UINavigationControllerDelegate, OLKiteDelegate>
+@interface ViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
@@ -78,16 +79,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
     
-    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
-        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
-            if (status == PHAuthorizationStatusAuthorized){
-                //TODO system image picker
-            }
-        }];
-    }
-    else{
-        //TODO system image picker
-    }
+    OLImagePickerViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.delegate = self;
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 
 - (NSString *)apiKey {
@@ -169,6 +163,12 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]]] name:@"Dogs"];
     OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]] name:@"Cats"];
     [kvc addCustomPhotoProviderWithCollections:@[catsCollection, dogsCollection] name:@"Animals" icon:[UIImage imageNamed:@"dog"]];
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    [vc dismissViewControllerAnimated:YES completion:^{
+        [self printWithAssets:assets];
+    }];
 }
 
 #pragma mark - OLKiteDelete

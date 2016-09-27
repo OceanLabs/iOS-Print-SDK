@@ -370,7 +370,7 @@
 }
 
 - (void)setupCustomProviders{
-    for (OLImagePickerProvider *customProvider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
+    for (OLImagePickerProvider *customProvider in [OLUserSession currentSession].kiteVc.customImageProviders){
         if ([customProvider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
             customProvider.providerType = OLImagePickerProviderTypeViewController;
             [self.providers addObject:customProvider];
@@ -726,7 +726,7 @@
     NSMutableArray *addedAssets = [[NSMutableArray alloc] initWithArray:self.selectedAssets];
     [addedAssets removeObjectsInArray:self.originalSelectedAssets];
     
-    if ([self.delegate respondsToSelector:@selector(imagePickerDidCancel:)]){
+    if ([self.delegate respondsToSelector:@selector(imagePicker:didFinishPickingAssets:added:removed:)]){
         [self.delegate imagePicker:self didFinishPickingAssets:self.selectedAssets added:addedAssets removed:removedAssets];
     }
     else{
@@ -781,7 +781,6 @@
         }
         else if ([self.product.templateId isEqualToString:vc.offer.offerTemplate]){
             self.product.redeemedOffer = vc.offer;
-            //TODO update qty here
         }
         else{
             id<OLPrintJob> job = [self addItemToBasketWithTemplateId:self.product.templateId];

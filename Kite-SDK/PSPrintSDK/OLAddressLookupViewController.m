@@ -37,6 +37,7 @@
 #import "OLKiteViewController.h"
 #import "OLKiteUtils.h"
 #import "OLKiteABTesting.h"
+#import "OLUserSession.h"
 
 //static const NSUInteger kMaxInFlightRequests = 5;
 
@@ -145,7 +146,7 @@
     OLCountryPickerController *controller = [[OLCountryPickerController alloc] init];
     controller.delegate = self;
     controller.selected = @[self.country];
-    controller.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    controller.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:controller animated:YES completion:nil];
 }
 

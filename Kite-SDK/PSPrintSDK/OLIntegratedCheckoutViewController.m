@@ -180,7 +180,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (void)populateDefaultDeliveryAddress {
-    if (![[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
+    if (![[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [[OLUserSession currentSession].kiteVc.delegate shouldStoreDeliveryAddresses]){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *firstName = [defaults stringForKey:kKeyRecipientFirstName];
         NSString *lastName = [defaults stringForKey:kKeyRecipientName];
@@ -245,7 +245,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.delegate = self.delegate;
     
-    if (![[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
+    if (![[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [[OLUserSession currentSession].kiteVc.delegate shouldStoreDeliveryAddresses]){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:email forKey:kKeyEmailAddress];
         [defaults setObject:phone forKey:kKeyPhone];
@@ -256,7 +256,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (void)saveAddress{
-    if ([[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteDelegate shouldStoreDeliveryAddresses]){
+    if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteVc.delegate shouldStoreDeliveryAddresses]){
         return;
     }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -436,7 +436,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
                 self.shippingAddress.country = [OLCountry countryForCode:@"GBR"];
                 controller.selected = @[self.shippingAddress.country];
             }
-            controller.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            controller.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:controller animated:YES completion:nil];
         }
         

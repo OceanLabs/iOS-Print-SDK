@@ -102,7 +102,6 @@
                            }
                            
                            if (httpResponse.statusCode != 200) {
-                               // TODO: real error handling here based on response json error message!!!!
                                 NSError *error = [NSError errorWithDomain:kOLInstagramImagePickerErrorDomain code:kOLInstagramImagePickerErrorCodeBadResponse userInfo:@{NSLocalizedDescriptionKey: @"Failed to reach Instagram. Please check your internet connectivity and try again."}];
                                if (completionHandler) completionHandler(error, nil, nil);
                            } else {

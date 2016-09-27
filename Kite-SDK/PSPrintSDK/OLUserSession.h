@@ -42,6 +42,7 @@ enum {
 typedef NSUInteger OLUserSessionCleanupOption;
 
 @protocol OLKiteDelegate;
+@class OLKiteViewController;
 
 @interface OLUserSession : NSObject
 
@@ -49,7 +50,7 @@ typedef NSUInteger OLUserSessionCleanupOption;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSArray<OLAsset *> *appAssets;
 @property (assign, nonatomic) CGFloat screenScale;
-@property (weak, nonatomic) id<OLKiteDelegate>kiteDelegate;
+@property (weak, nonatomic) OLKiteViewController *kiteVc;
 @property (assign, nonatomic) BOOL disableFacebook;
 + (instancetype)currentSession;
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions;

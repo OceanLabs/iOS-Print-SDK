@@ -21,8 +21,6 @@
 // Normal = page flips towards viewer
 // Reverse = page flips away from viewer
 
-// TODO: spine position (left, mid, right // top, mid, bottom)
-
 #import <Foundation/Foundation.h>
 
 enum {

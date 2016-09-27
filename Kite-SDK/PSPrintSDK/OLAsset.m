@@ -48,6 +48,8 @@ static NSString *const kKeyDataSource = @"co.oceanlabs.pssdk.kKeyDataSource";
 static NSString *const kKeyImageURL = @"co.oceanlabs.pssdk.kKeyImageURL";
 static NSString *const kKeyPHAssetLocalId = @"co.oceanlabs.pssdk.kKeyPHAssetLocalId";
 static NSString *const kKeyImageEdits = @"co.oceanlabs.pssdk.kKeyImageEdits";
+static NSString *const kKeyKiteAssetId = @"co.oceanlabs.pssdk.kKeyKiteAssetId";
+static NSString *const kKeyKitePreviewURL = @"co.oceanlabs.pssdk.kKeyKitePreviewURL";
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
@@ -580,7 +582,8 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeObject:self.imageURL forKey:kKeyImageURL];
     [aCoder encodeObject:[self.phAsset localIdentifier] forKey:kKeyPHAssetLocalId];
     [aCoder encodeObject:self.edits forKey:kKeyImageEdits];
-    // TODO: encode uploaded including asset id & preview url?!
+    [aCoder encodeObject:self.previewURL forKey:kKeyKitePreviewURL];
+    [aCoder encodeObject:[NSNumber numberWithLongLong:self.assetId] forKey:kKeyKiteAssetId];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -600,6 +603,8 @@ static NSOperationQueue *imageOperationQueue;
         self.dataSource = [aDecoder decodeObjectForKey:kKeyDataSource];
         self.imageURL = [aDecoder decodeObjectForKey:kKeyImageURL];
         self.edits = [aDecoder decodeObjectForKey:kKeyImageEdits];
+        self.assetId = [[aDecoder decodeObjectForKey:kKeyKiteAssetId] longLongValue];
+        self.previewURL = [aDecoder decodeObjectForKey:kKeyKitePreviewURL];
         
         NSString *localId = [aDecoder decodeObjectForKey:kKeyPHAssetLocalId];
         if (localId){

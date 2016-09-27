@@ -168,7 +168,9 @@
                 errorDescription = [errorDescription stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             }
             
-            //TODO show error
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:errorReason message:errorDescription preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleDefault handler:NULL]];
+            [self.imagePicker presentViewController:ac animated:YES completion:NULL];
             [self dismissViewControllerAnimated:YES completion:NULL];
         }
         

@@ -283,7 +283,7 @@ static NSString *nonNilStr(NSString *str) {
                                    job:(id<OLPrintJob>)job
                             printOrder:(OLPrintOrder *)order
                              extraInfo:(NSDictionary *)info{
-    if ([[OLUserSession currentSession].kiteDelegate respondsToSelector:@selector(logKiteAnalyticsEventWithInfo:)]){
+    if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(logKiteAnalyticsEventWithInfo:)]){
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
         dict[kOLAnalyticsEventName] = nonNilStr(eventName);
         if (job){
@@ -306,11 +306,11 @@ static NSString *nonNilStr(NSString *str) {
                 dict[kOLAnalyticsOrderCost] = [cost totalCostInCurrency:order.currencyCode];
                 dict[kOLAnalyticsOrderShippingCost] = [cost shippingCostInCurrency:order.currencyCode];
                 
-                [[OLUserSession currentSession].kiteDelegate logKiteAnalyticsEventWithInfo:dict];
+                [[OLUserSession currentSession].kiteVc.delegate logKiteAnalyticsEventWithInfo:dict];
             }];
         }
         else{
-            [[OLUserSession currentSession].kiteDelegate logKiteAnalyticsEventWithInfo:dict];
+            [[OLUserSession currentSession].kiteVc.delegate logKiteAnalyticsEventWithInfo:dict];
         }
     }
 }

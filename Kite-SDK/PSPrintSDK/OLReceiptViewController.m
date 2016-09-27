@@ -46,6 +46,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLNavigationController.h"
 #import "OLKiteUtils.h"
+#import "OLUserSession.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -178,7 +179,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 }
 
 - (void)onButtonDoneClicked {
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+    OLKiteViewController *kiteVc = [OLUserSession currentSession].kiteVc;
     if  (!kiteVc){
         [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
     }
@@ -236,7 +237,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
             vc.delegate = self;
             OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-            nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:nvc animated:YES completion:NULL];
         }]];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];

@@ -29,7 +29,6 @@ extern NSString * const OLOAuth2ClientConnectionContextTokenRefresh;
  * - not thread save
  */
 
-//TODO: Link to documentation
 
 @interface OLOAuth2Client : NSObject <OLOAuth2ConnectionDelegate> {
 @protected

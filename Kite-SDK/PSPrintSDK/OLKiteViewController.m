@@ -60,7 +60,7 @@ static CGFloat fadeTime = 0.3;
 @property (strong, nonatomic) NSArray *fontNames;
 
 
-//@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
+//@property (assign, nonatomic) BOOL useDarkTheme; //Delete this when exposed in header
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -110,14 +110,6 @@ static CGFloat fadeTime = 0.3;
     }
     
     return _customNavigationItem;
-}
-
-- (void)setDelegate:(id<OLKiteDelegate>)delegate{
-    [OLUserSession currentSession].kiteDelegate = delegate;
-}
-
-- (id<OLKiteDelegate>)delegate{
-    return [OLUserSession currentSession].kiteDelegate;
 }
 
 - (OLPrintOrder *)basketOrder{
@@ -276,6 +268,11 @@ static CGFloat fadeTime = 0.3;
     [self transitionToNextScreen];
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [OLUserSession currentSession].kiteVc = self;
+}
+
 -(IBAction) dismiss{
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackKiteDismissed];
@@ -320,7 +317,6 @@ static CGFloat fadeTime = 0.3;
                 [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
                     [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
                     [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
-                    [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
                     if (welf.navigationController.viewControllers.count <= 1){
                         UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                         
@@ -347,7 +343,6 @@ static CGFloat fadeTime = 0.3;
             UIViewController *vc = [welf.storyboard instantiateViewControllerWithIdentifier:identifier];
             [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
             [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
-            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
             [vc safePerformSelector:@selector(setProduct:) withObject:product];
             if (welf.navigationController.viewControllers.count <= 1){
                 UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
@@ -498,7 +493,6 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)dealloc{
-    [OLUserSession currentSession].kiteDelegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

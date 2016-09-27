@@ -306,7 +306,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.shippingDetailsBox.alpha = 1;
     }
     
-    id<OLKiteDelegate> kiteDelegate = [OLUserSession currentSession].kiteDelegate;
+    id<OLKiteDelegate> kiteDelegate = [OLUserSession currentSession].kiteVc.delegate;
     if (([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && ![kiteDelegate shouldShowContinueShoppingButton]) || [OLKiteABTesting sharedInstance].launchedWithPrintOrder || self.navigationController.viewControllers.firstObject == self){
         [self.paymentButton1 removeFromSuperview];
     }
@@ -900,25 +900,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
-//- (void)onBarButtonOrdersClicked{
-//#ifndef OL_NO_ANALYTICS
-//    [OLAnalytics trackOrderHistoryScreenViewed];
-//#endif
-//    
-//    OLOrdersViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLOrdersViewController"];
-//    
-//    [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
-//    
-//    NSString *supportEmail = [OLKiteABTesting sharedInstance].supportEmail;
-//    if (supportEmail && ![supportEmail isEqualToString:@""]){
-//        vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"support"] style:UIBarButtonItemStyleDone target:vc action:@selector(emailButtonPushed:)];
-//    }
-//    
-//    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-//    nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
-//    [self presentViewController:nvc animated:YES completion:NULL];
-//}
-
 - (UINavigationController *)navViewControllerWithControllers:(NSArray *)vcs{
     OLNavigationController *navController = [[OLNavigationController alloc] init];
     
@@ -1111,7 +1092,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)payWithNewCard {
     OLCreditCardCaptureViewController *ccCaptureController = [[OLCreditCardCaptureViewController alloc] initWithPrintOrder:self.printOrder];
     ccCaptureController.delegate = self;
-    ccCaptureController.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    ccCaptureController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:ccCaptureController animated:YES completion:nil];
 }
 
@@ -1180,7 +1161,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         id payPalConfiguration = [OLPayPalWrapper payPalConfigurationWithShippingAddressOption:1/*PayPalShippingAddressOptionProvided*/ acceptCreditCards:NO];
         id paymentViewController = [OLPayPalWrapper payPalPaymentViewControllerWithPayment:payment configuration:payPalConfiguration delegate:self];
-        ((UIViewController *)paymentViewController).modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        ((UIViewController *)paymentViewController).modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:paymentViewController animated:YES completion:nil];
     }];
 }
@@ -1326,7 +1307,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (void)editJobAtIndexPath:(NSIndexPath *)indexPath{
     UIViewController *vc = [self viewControllerForItemAtIndexPath:indexPath];
-    vc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    vc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:vc animated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
@@ -1440,7 +1421,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [[(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName : font} forState:UIControlStateNormal];
         }
         
-        nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];
     }];
 }
@@ -1747,7 +1728,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    viewControllerToCommit.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    viewControllerToCommit.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:viewControllerToCommit animated:YES completion:NULL];
 }
 

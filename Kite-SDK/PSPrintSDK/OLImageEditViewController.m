@@ -91,7 +91,7 @@ const NSInteger kOLEditTagCrop = 40;
 
 -(NSArray<NSString *> *) fonts{
     if (!_fonts){
-        OLKiteViewController *kvc = [OLKiteUtils kiteVcForViewController:self];
+        OLKiteViewController *kvc = [OLUserSession currentSession].kiteVc;
         _fonts = [kvc fontNames];
     }
     if (!_fonts){
@@ -1290,7 +1290,6 @@ const NSInteger kOLEditTagCrop = 40;
         else if(collectionView.tag == OLProductTemplateOptionTypeColor1){
             [cell setSelected:[self.edits.borderColor isEqual:self.availableColors[indexPath.item]]];
         }
-        //TODO color2,color3
         
         [cell setNeedsDisplay];
     }

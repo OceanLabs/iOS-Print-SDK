@@ -205,7 +205,6 @@
 		2E451E421D9555D30080F1C1 /* OLImageEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLImageEditViewController.m */; };
 		2E451E431D9555D30080F1C1 /* OLSingleImageProductReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */; };
 		2E451E441D9555D30080F1C1 /* OLCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E20BD851AD4229700FB2446 /* OLCaseViewController.m */; };
-		2E451E451D9555D30080F1C1 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
 		2E451E461D9555D30080F1C1 /* OLPackProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB51A484FCB008A9248 /* OLPackProductViewController.m */; };
 		2E451E471D9555D30080F1C1 /* OLFrameOrderReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA8BEB71A484FCB008A9248 /* OLFrameOrderReviewViewController.m */; };
 		2E451E481D9555D30080F1C1 /* OLPosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E74A9D01B6B7827001AE97B /* OLPosterViewController.m */; };
@@ -299,8 +298,6 @@
 		2E7F516D1BF5FBB100A78718 /* OLGreetingCardPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */; };
 		2E837D481C3C1FBB004DA682 /* OLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D471C3C1FBB004DA682 /* OLViewController.m */; };
 		2E837D4C1C3C221E004DA682 /* OLCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */; };
-		2E84835E1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
-		2E84835F1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */; };
 		2E884F461D37B566007CA45A /* OLImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E884F451D37B566007CA45A /* OLImagePickerViewController.m */; };
 		2E884F471D37B566007CA45A /* OLImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E884F451D37B566007CA45A /* OLImagePickerViewController.m */; };
 		2E898C4F1CC518180041CCD8 /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
@@ -674,7 +671,6 @@
 		2EB8FE481D95685100E26BDF /* OLImageEditViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0A72641A6FB07000BC5AE7 /* OLImageEditViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE491D95685100E26BDF /* OLSingleImageProductReviewViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE4A1D95685100E26BDF /* OLCaseViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E20BD841AD4229700FB2446 /* OLCaseViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2EB8FE4B1D95685100E26BDF /* OLTShirtReviewViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E84835C1D13E461003F4056 /* OLTShirtReviewViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE4C1D95685100E26BDF /* OLPackProductViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EA8BEB41A484FCB008A9248 /* OLPackProductViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE4D1D95685100E26BDF /* OLFrameOrderReviewViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE4E1D95685100E26BDF /* OLPosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E74A9CF1B6B7827001AE97B /* OLPosterViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -927,8 +923,6 @@
 		2E837D471C3C1FBB004DA682 /* OLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLViewController.m; sourceTree = "<group>"; };
 		2E837D4A1C3C221E004DA682 /* OLCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCollectionViewController.h; sourceTree = "<group>"; };
 		2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCollectionViewController.m; sourceTree = "<group>"; };
-		2E84835C1D13E461003F4056 /* OLTShirtReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTShirtReviewViewController.h; sourceTree = "<group>"; };
-		2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTShirtReviewViewController.m; sourceTree = "<group>"; };
 		2E884F441D37B566007CA45A /* OLImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerViewController.h; sourceTree = "<group>"; };
 		2E884F451D37B566007CA45A /* OLImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerViewController.m; sourceTree = "<group>"; };
 		2E898CEA1CC518180041CCD8 /* Kite-CI-Deploy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kite-CI-Deploy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1477,8 +1471,6 @@
 				2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */,
 				2E20BD841AD4229700FB2446 /* OLCaseViewController.h */,
 				2E20BD851AD4229700FB2446 /* OLCaseViewController.m */,
-				2E84835C1D13E461003F4056 /* OLTShirtReviewViewController.h */,
-				2E84835D1D13E461003F4056 /* OLTShirtReviewViewController.m */,
 				2EA8BEB41A484FCB008A9248 /* OLPackProductViewController.h */,
 				2EA8BEB51A484FCB008A9248 /* OLPackProductViewController.m */,
 				2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */,
@@ -1858,7 +1850,6 @@
 		CD73BFA01862FA210009DE03 /* Sample App */ = {
 			isa = PBXGroup;
 			children = (
-				2E23EB971D50917D00E2BF42 /* Private */,
 				CD73BF7A186215790009DE03 /* AppDelegate.h */,
 				CD73BF7B186215790009DE03 /* AppDelegate.m */,
 				CD73BF7D186215790009DE03 /* Main.storyboard */,
@@ -1867,6 +1858,7 @@
 				CD97569318E083E3007CA090 /* PrintOrderHistoryViewController.h */,
 				CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */,
 				CD73BF83186215790009DE03 /* Images.xcassets */,
+				2E23EB971D50917D00E2BF42 /* Private */,
 				CD73BF72186215790009DE03 /* Supporting Files */,
 			);
 			name = "Sample App";
@@ -2078,7 +2070,6 @@
 				2EB8FE071D95685100E26BDF /* OLPayPalWrapper.h in Headers */,
 				2EB8FE031D95685100E26BDF /* OLImageDownloader.h in Headers */,
 				2EB8FE5E1D95685100E26BDF /* OLCountryPickerController.h in Headers */,
-				2EB8FE4B1D95685100E26BDF /* OLTShirtReviewViewController.h in Headers */,
 				2EB8FE781D95685100E26BDF /* UIImageView+FadeIn.h in Headers */,
 				2EB8FE351D95685100E26BDF /* OLRemoteImageCropper.h in Headers */,
 				2EB8FE5A1D95685100E26BDF /* OLAddressPickerController.h in Headers */,
@@ -2611,7 +2602,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E451E031D9555620080F1C1 /* OLKeyChainStore.m in Sources */,
-				2E451E451D9555D30080F1C1 /* OLTShirtReviewViewController.m in Sources */,
 				2E451DE91D95555C0080F1C1 /* OLUserSession.m in Sources */,
 				2E451E0E1D9555870080F1C1 /* OLFacebookImagePickerConstants.m in Sources */,
 				2E451E211D9555870080F1C1 /* OLOAuth2Connection.m in Sources */,
@@ -2838,7 +2828,6 @@
 				2E451D8F1D9428BB0080F1C1 /* NSData+OLOAuth2.m in Sources */,
 				2E480ABF1D92D768006C0EE6 /* OLFlipViewController.m in Sources */,
 				2E898C781CC518180041CCD8 /* OLPayPalCard.m in Sources */,
-				2E84835F1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
 				2E898C791CC518180041CCD8 /* OLProductPrintJob.m in Sources */,
 				2E898C7A1CC518180041CCD8 /* OLSingleImageProductReviewViewController.m in Sources */,
 				2E898C7B1CC518180041CCD8 /* OLPosterViewController.m in Sources */,
@@ -2957,7 +2946,6 @@
 				2E434AE01D36583700D1BD06 /* OLEditingToolsView.m in Sources */,
 				2ED389911C917D2000DC2314 /* OLPhotoTextField.m in Sources */,
 				2E53E0CD1C1AEAAD00BF7887 /* UIViewController+OLMethods.m in Sources */,
-				2E84835E1D13E461003F4056 /* OLTShirtReviewViewController.m in Sources */,
 				2E10F04D1D93CDE100014C19 /* OLMarkdownParser.m in Sources */,
 				2EADD7E71BE79D6D0051CD31 /* OLImageEditViewController.m in Sources */,
 				2E67B92A1D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m in Sources */,

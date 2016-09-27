@@ -510,7 +510,9 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    //TODO: ignore albums collectionview scrolling
+    if (scrollView.tag != 10){
+        return;
+    }
     
     if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
         if (self.inProgressMediaRequest == nil && scrollView.contentOffset.y >= self.collectionView.contentSize.height - self.collectionView.frame.size.height) {

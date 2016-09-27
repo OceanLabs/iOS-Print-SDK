@@ -101,7 +101,7 @@
 /**
  *  Clear all customer data.
  */
-+ (void)endCustomerSession; //TODO: Deprecate
++ (void)endCustomerSession;
 
 /**
  *  Enable ability to upload a photo from another device through the use of a QR code. Useful for kiosk apps. Default value is NO.

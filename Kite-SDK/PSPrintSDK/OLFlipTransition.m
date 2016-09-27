@@ -565,7 +565,6 @@ static inline double ol_radians (double degrees) {return degrees * M_PI/180;}
 	if (!inward && !isRubberbanding)
 	{
 		// lighten the page that is revealed by front page flipping up (along a cosine curve)
-		// TODO: consider FROM value
 		NSMutableArray* arrayOpacity = [NSMutableArray arrayWithCapacity:frameCount + 1];
 		CGFloat progress;
 		CGFloat cosOpacity;
