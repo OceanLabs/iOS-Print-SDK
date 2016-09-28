@@ -481,9 +481,6 @@
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
     CGFloat height = 233;
-//    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-//        height = 200;
-//    }
     
     if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) {
         if (numberOfCells == 2){
@@ -691,10 +688,6 @@
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
         productTypeLabel.backgroundColor = [product labelColor];
     }
-//    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-//        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
-//        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
-//    }
     else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"MinimalWhite"]){
         UILabel *priceLabel = [cell.contentView viewWithTag:301];
         UILabel *detailsLabel = [cell.contentView viewWithTag:302];

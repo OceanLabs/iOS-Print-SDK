@@ -59,9 +59,6 @@ static CGFloat fadeTime = 0.3;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @property (strong, nonatomic) NSArray *fontNames;
 
-
-//@property (assign, nonatomic) BOOL useDarkTheme; //Delete this when exposed in header
-
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
@@ -120,30 +117,6 @@ static CGFloat fadeTime = 0.3;
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];
 }
 
-//- (void)setUseDarkTheme:(BOOL)useDarkTheme{
-//    _useDarkTheme = useDarkTheme;
-//    [OLKiteABTesting sharedInstance].darkTheme = useDarkTheme;
-//}
-
-//- (BOOL)prefersStatusBarHidden {
-//    BOOL hidden = self.useDarkTheme;
-//    
-//    if ([self respondsToSelector:@selector(traitCollection)]){
-//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-//            hidden |= YES;
-//        }
-//    }
-//    
-//    return hidden;
-//}
-
-//- (UIStatusBarStyle)preferredStatusBarStyle{
-//    if (self.childViewControllers.count == 0){
-//        return self.useDarkTheme ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
-//    }
-//    return [[self.childViewControllers firstObject] preferredStatusBarStyle];
-//}
-
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets{
     NSAssert(![OLKiteUtils assetArrayContainsPDF:assets], @"If you want to use a pre-rendered PDF, please use initWithPrintOrder");
     
@@ -199,12 +172,6 @@ static CGFloat fadeTime = 0.3;
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    
-//    if (self.useDarkTheme){
-//        self.navigationBar.barTintColor = [UIColor blackColor];
-//        self.navigationBar.tintColor = [UIColor grayColor];
-//        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-//    }
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;

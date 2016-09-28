@@ -362,15 +362,6 @@
             detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
         }
     }
-    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
-        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
-        
-        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
-        if (font){
-            [button.titleLabel setFont:font];
-        }
-    }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
         button.layer.shadowColor = [[UIColor blackColor] CGColor];
@@ -421,9 +412,6 @@
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
     CGFloat height = 233;
-//    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-//        height = 200;
-//    }
     
     if (indexPath.item >= self.products.count && self.products.count % 2 == 0){
         return CGSizeMake(size.width, halfScreenHeight);

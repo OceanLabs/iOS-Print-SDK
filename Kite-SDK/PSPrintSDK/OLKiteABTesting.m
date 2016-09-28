@@ -161,19 +161,6 @@ static dispatch_once_t srand48OnceToken;
     [defaults synchronize];
 }
 
-//- (UIColor *)darkThemeColor1{
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    UIColor *color;
-//    NSString *hex = [defaults objectForKey:@"ly.kite.theme.dark.color1"];
-//    if (hex){
-//        color = [UIColor colorWithHexString:hex];
-//    }
-//    else{
-//        color = [UIColor colorWithHexString:@"6867E8"];
-//    }
-//    return color;
-//}
-
 - (void)prefetchRemoteImages{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg, kOLKiteThemeCancelButtonIcon]){

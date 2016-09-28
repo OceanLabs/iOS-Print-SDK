@@ -83,12 +83,10 @@ static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 @property (strong, nonatomic) NSDictionary *userConfig;
 @property (strong, nonatomic) OLKiteTheme *theme;
 @property (strong, nonatomic) NSArray *paypalSupportedCurrencies;
-//@property (assign, nonatomic) BOOL darkTheme;
 
 + (instancetype)sharedInstance;
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
 - (void)prefetchRemoteImages;
-//- (UIColor *)darkThemeColor1;
 - (void)setupABTestVariants;
 - (void)setupCoverPhotoTestWithExperimentDict:(NSDictionary *)experimentDict;
 @end

@@ -34,8 +34,7 @@
 @class OLPrintOrder;
 @class OLKiteViewController;
 @class OLAsset;
-
-@protocol KITCustomAssetPickerController;
+@protocol OLCustomPickerController;
 
 /**
  *  The delegate object if available will be asked for information
@@ -162,9 +161,8 @@
 
 /**
  *  Clear all the orders that have been saved in the shopping basket.
- *  Deprecated: Use `[[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];` instead
  */
-- (void)clearBasket __deprecated_msg("Use cleanupUserSession: on singleton object OLUserSession with the OLUserSessionCleanupOptionBasket object");
+- (void)clearBasket;
 
 
 /**
@@ -196,7 +194,7 @@
  *  @param name The name for the source
  *  @param icon An image to be used as an icon (where applicable)
  */
-- (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon;
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon;
 
 
 /**
