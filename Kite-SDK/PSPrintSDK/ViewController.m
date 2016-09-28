@@ -171,24 +171,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     }];
 }
 
-#pragma mark - OLKiteDelete
-
-- (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController *)controller {
-    return YES;
-}
-
-//- (BOOL)shouldShowOptOutOfEmailsCheckbox{
-//    return YES;
-//}
-
-//- (BOOL)shouldShowPhoneEntryOnCheckoutScreen{
-//    return YES;
-//}
-
-- (BOOL)shouldShowContinueShoppingButton{
-    return YES;
-}
-
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
 #ifdef OL_KITE_VERBOSE
     NSLog(@"%@", info);

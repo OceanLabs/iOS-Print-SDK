@@ -135,8 +135,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     }];
 }
 
-#pragma mark - OLKiteDelete
-
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
 #ifdef OL_KITE_VERBOSE
     NSLog(@"%@", info);
