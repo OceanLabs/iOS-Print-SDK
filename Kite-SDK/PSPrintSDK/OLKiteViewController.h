@@ -44,53 +44,6 @@
 
 @optional
 /**
- *  Asks the delegate if the user should be allowed to add more photos to their products (other than the ones provided by the host app). Default value is YES.
- *
- *  @param controller The active OLKiteViewController
- *
- *  @return A boolean value of whether or not we should allow the user to add more photos
- */
-- (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController * _Nullable)controller;
-
-/**
- *  Disallow access to camera roll photos. The default value is NO.
- *
- *  @param controller The active OLKiteViewController
- *
- *  @return A boolean value of whether or not we should allow the user to add more photos from the camera roll.
- */
-- (BOOL)kiteControllerShouldDisableCameraRoll:(OLKiteViewController * _Nullable)controller;
-
-/**
- *  Asks the delegate if we should ask the user for their phone number at checkout. If this is not specified, the behavior is random.
- *
- *  @return A boolean value of whether or not we should ask the user for their phone number at checkout.
- */
-- (BOOL)shouldShowPhoneEntryOnCheckoutScreen;
-
-/**
- *  Asks the delegate if we should show a Continue Shopping button on the payment screen. The default value is YES.
- *
- *  @return Boolean value for showing the Continue Shooping button or not.
- */
-- (BOOL)shouldShowContinueShoppingButton;
-
-/**
- *  Asks the delegate whether or not to store the user's delivery address for future use. The default value is YES
- *
- *  @return Boolean value for whether or not to store the user's delivery address.
- */
-- (BOOL)shouldStoreDeliveryAddresses;
-
-/**
- *  Asks the delegate whether or not to show a checkbox that allows the user to opt out of emails
- *
- *  @return Boolean value for showing the checkbox
- */
-- (BOOL)shouldShowOptOutOfEmailsCheckbox;
-
-
-/**
  *  Notifies the delegate that KiteViewController has finished and should be dismissed as the delegate sees fit. If this method is not implemented, then KiteViewController dismisses itself.
  *
  *  @param controller The KiteViewController
@@ -105,6 +58,13 @@
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *_Nonnull)info;
 
 
+- (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disallowUserToAddMorePhotos.");
+- (BOOL)kiteControllerShouldDisableCameraRoll:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disableCameraRoll.");
+- (BOOL)shouldShowPhoneEntryOnCheckoutScreen __deprecated_msg("This method will no longer work. Use the OLKiteViewController property hidePhoneEntryOnCheckoutScreen.");
+- (BOOL)shouldShowContinueShoppingButton __deprecated_msg("This method will no longer work. Use the OLKiteViewController property hideContinueShoppingButton.");
+- (BOOL)shouldStoreDeliveryAddresses __deprecated_msg("This method will no longer work. Use the OLKiteViewController property discardDeliveryAddresses.");
+- (BOOL)shouldShowOptOutOfEmailsCheckbox __deprecated_msg("This method will no longer work. Use the OLKiteViewController property showOptOutOfEmailsCheckbox.");
+
 @end
 
 /**
@@ -113,7 +73,37 @@
 @interface OLKiteViewController : OLViewController
 
 /**
- *  The delegate object that will be asked for information in certain scenarios.
+ *  Set to disallow the user  to add more photos to their products (other than the ones provided by the host app). Defaults to NO.
+ */
+@property (assign, nonatomic) BOOL disallowUserToAddMorePhotos;
+
+/**
+ *  Set to disallow access to camera roll photos. The default value is NO.
+ */
+@property (assign, nonatomic) BOOL disableCameraRoll;
+
+/**
+ *  Set to hide the phone entry field at checkout.
+ */
+@property (assign, nonatomic) BOOL hidePhoneEntryOnCheckoutScreen;
+
+/**
+ *  Set to hide the Continue Shopping button on the payment screen. The default value is NO.
+ */
+@property (assign, nonatomic) BOOL hideContinueShoppingButton;
+
+/**
+ *  Set to discard delivery addresses after the order is placed. The default value is NO.
+ */
+@property (assign, nonatomic) BOOL discardDeliveryAddresses;
+
+/**
+ *  Set to show a checkbox that allows the user to opt out of emails. The default value is NO.
+ */
+@property (assign, nonatomic) BOOL showOptOutOfEmailsCheckbox;
+
+/**
+ *  The delegate object that will be notified about certain events
  */
 @property (weak, nonatomic) id<OLKiteDelegate> _Nullable delegate;
 
@@ -131,11 +121,6 @@
  *  A set of product template_id strings which if present will restrict which products ultimate show up in the product selection journey
  */
 @property (copy, nonatomic, nullable) NSArray<NSString *> *filterProducts;
-
-/**
- *  Use a dark visual theme.
- */
-//@property (assign, nonatomic) BOOL useDarkTheme;
 
 /**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with

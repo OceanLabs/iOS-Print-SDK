@@ -47,7 +47,7 @@
 + (BOOL)assetArrayContainsPDF:(NSArray *)array;
 
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc;
-+ (BOOL)cameraRollEnabled:(UIViewController *)topVc;
++ (BOOL)cameraRollEnabled;
 + (BOOL)facebookEnabled;
 + (BOOL)instagramEnabled;
 + (BOOL)qrCodeUploadEnabled;

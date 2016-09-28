@@ -333,7 +333,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         self.printOrder.shippingAddress = nil;
     }
         
-    if (![[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [[OLUserSession currentSession].kiteVc.delegate shouldStoreDeliveryAddresses]){
+    if (![OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:email forKey:kKeyEmailAddress];
         [defaults setObject:phone forKey:kKeyPhone];
@@ -410,7 +410,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)populateDefaultEmailAndPhone {
-    if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteVc.delegate shouldStoreDeliveryAddresses]){
+    if (![OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
         self.textFieldEmail.text = self.printOrder.email;
         self.textFieldPhone.text = self.printOrder.phone;
         return;
@@ -445,7 +445,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)userEmail {
     if (self.textFieldEmail == nil) {
-        if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteVc.delegate shouldStoreDeliveryAddresses]){
+        if ([OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
             return @"";
         }
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -458,7 +458,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)userPhone {
     if (self.textFieldPhone == nil) {
-        if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![[OLUserSession currentSession].kiteVc.delegate shouldStoreDeliveryAddresses]){
+        if ([OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
             return @"";
         }
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -476,7 +476,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (BOOL)showPhoneEntryField {
     if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
-        return [[OLUserSession currentSession].kiteVc.delegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
+        return (![OLUserSession currentSession].kiteVc.hidePhoneEntryOnCheckoutScreen);
     }
     
     return [OLKiteABTesting sharedInstance].requirePhoneNumber;
@@ -532,7 +532,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (section == kSectionPhoneNumber){
         return 44;
     }
-    if (![[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![[OLUserSession currentSession].kiteVc.delegate shouldShowOptOutOfEmailsCheckbox]){
+    if (![OLUserSession currentSession].kiteVc.showOptOutOfEmailsCheckbox){
         return 28;
     }
     return 44;
@@ -542,7 +542,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (section != kSectionEmailAddress){
         return nil;
     }
-    if (![[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![[OLUserSession currentSession].kiteVc.delegate shouldShowOptOutOfEmailsCheckbox]){
+    if (![OLUserSession currentSession].kiteVc.showOptOutOfEmailsCheckbox){
         return nil;
     }
     

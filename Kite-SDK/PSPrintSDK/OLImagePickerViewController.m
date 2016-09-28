@@ -244,7 +244,7 @@
 }
 
 - (void)setupLibraryProviderAtIndex:(NSInteger)index{
-    if (![OLKiteUtils cameraRollEnabled:self]){
+    if (![OLKiteUtils cameraRollEnabled]){
         return;
     }
     

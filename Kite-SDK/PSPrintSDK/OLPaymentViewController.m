@@ -306,8 +306,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         self.shippingDetailsBox.alpha = 1;
     }
     
-    id<OLKiteDelegate> kiteDelegate = [OLUserSession currentSession].kiteVc.delegate;
-    if (([kiteDelegate respondsToSelector:@selector(shouldShowContinueShoppingButton)] && ![kiteDelegate shouldShowContinueShoppingButton]) || [OLKiteABTesting sharedInstance].launchedWithPrintOrder || self.navigationController.viewControllers.firstObject == self){
+    if ([OLUserSession currentSession].kiteVc.hideContinueShoppingButton || [OLKiteABTesting sharedInstance].launchedWithPrintOrder || self.navigationController.viewControllers.firstObject == self){
         [self.paymentButton1 removeFromSuperview];
     }
     
@@ -369,7 +368,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [[OLUserSession currentSession] clearUserSelectedPhotos];
     }
     
-    if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+    if ([OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
         [OLAddress clearAddressBook];
     }
     
@@ -996,7 +995,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 - (BOOL)showPhoneEntryField {
     if ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
-        return [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
+        return (![OLUserSession currentSession].kiteVc.hidePhoneEntryOnCheckoutScreen);
     }
     
     return [OLKiteABTesting sharedInstance].requirePhoneNumber;

@@ -94,17 +94,15 @@
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
     OLKiteViewController *kiteVc = [OLUserSession currentSession].kiteVc;
     
-    if ([kiteVc.delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] && ![kiteVc.delegate kiteControllerShouldAllowUserToAddMorePhotos:kiteVc]){
+    if ([OLUserSession currentSession].kiteVc.disallowUserToAddMorePhotos){
         return NO;
     }
     
-    return [OLKiteUtils cameraRollEnabled:topVc] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || kiteVc.customImageProviders.count > 0;
+    return [OLKiteUtils cameraRollEnabled] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || kiteVc.customImageProviders.count > 0;
 }
 
-+ (BOOL)cameraRollEnabled:(UIViewController *)topVc{
-    OLKiteViewController *kiteVc = [OLUserSession currentSession].kiteVc;
-    
-    if ([kiteVc.delegate respondsToSelector:@selector(kiteControllerShouldDisableCameraRoll:)] && [kiteVc.delegate kiteControllerShouldDisableCameraRoll:kiteVc]){
++ (BOOL)cameraRollEnabled{
+    if ([OLUserSession currentSession].kiteVc.disableCameraRoll){
         return NO;
     }
     
