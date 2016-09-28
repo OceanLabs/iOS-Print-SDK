@@ -493,6 +493,7 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)dealloc{
+    [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionPhotos];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

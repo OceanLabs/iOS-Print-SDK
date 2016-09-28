@@ -64,6 +64,13 @@
     return _userSelectedPhotos;
 }
 
+-(NSMutableArray *) recentPhotos{
+    if (!_recentPhotos){
+        _recentPhotos = [[NSMutableArray alloc] init];
+    }
+    return _recentPhotos;
+}
+
 -(OLPrintOrder *) printOrder{
     if (!_printOrder){
         _printOrder = [OLPrintOrder loadOrder];
@@ -86,11 +93,21 @@
     }
     
     [self.userSelectedPhotos removeAllObjects];
+    
+    for (OLAsset *asset in self.recentPhotos){
+        [asset unloadImage];
+    }
+    [self.recentPhotos removeAllObjects];
 }
 
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions{
     if ((cleanupOptions & OLUserSessionCleanupOptionPhotos) == OLUserSessionCleanupOptionPhotos){
-        self.userSelectedPhotos = nil;
+        [self clearUserSelectedPhotos];
+        for (OLAsset *asset in self.appAssets){
+            [asset unloadImage];
+        }
+        
+        self.appAssets = nil;
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionBasket) == OLUserSessionCleanupOptionBasket){
         self.printOrder = [[OLPrintOrder alloc] init];

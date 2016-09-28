@@ -32,7 +32,7 @@
 
 typedef enum {
     OLImagePickerProviderTypeCustom,
-    OLImagePickerProviderTypeApp,
+    OLImagePickerProviderTypeRecents,
     OLImagePickerProviderTypePhotoLibrary,
     OLImagePickerProviderTypeFacebook,
     OLImagePickerProviderTypeInstagram,

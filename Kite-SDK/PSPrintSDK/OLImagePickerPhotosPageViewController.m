@@ -132,7 +132,7 @@ CGFloat OLImagePickerMargin = 1.5;
         [self startImageLoading];
     }
     
-    if (self.provider.providerType == OLImagePickerProviderTypeApp || self.provider.providerType == OLImagePickerProviderTypeInstagram || self.provider.providerType == OLImagePickerProviderTypeQRCode || self.provider.providerType == OLImagePickerProviderTypeViewController || (self.provider.providerType == OLImagePickerProviderTypeCustom && self.provider.collections.count <= 1)){
+    if (self.provider.providerType == OLImagePickerProviderTypeRecents || self.provider.providerType == OLImagePickerProviderTypeInstagram || self.provider.providerType == OLImagePickerProviderTypeQRCode || self.provider.providerType == OLImagePickerProviderTypeViewController || (self.provider.providerType == OLImagePickerProviderTypeCustom && self.provider.collections.count <= 1)){
         [self.albumLabelContainer removeFromSuperview];
         self.albumLabelContainer = nil;
         [self.albumsContainerView removeFromSuperview];

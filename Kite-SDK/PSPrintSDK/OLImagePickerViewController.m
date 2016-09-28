@@ -138,6 +138,7 @@
     NSMutableArray<OLImagePickerProvider *> *providers = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
     self.providers = providers;
     [self setupProviders];
+    [self updateRecentsWith:[OLUserSession currentSession].recentPhotos];
     
     self.automaticallyAdjustsScrollViewInsets = NO;
         
@@ -329,25 +330,15 @@
     }
 }
 
-- (void)setupAppAssetProvider{
-    if ([OLUserSession currentSession].appAssets.count == 0){
+- (void)setupRecentsProvider{
+    if ([OLUserSession currentSession].appAssets.count == 0 && [OLUserSession currentSession].recentPhotos.count == 0){
         return;
     }
     
     OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[OLUserSession currentSession].appAssets name:NSLocalizedString(@"All Photos", @"")];
     
-    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-    NSString *bundleName = nil;
-    if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
-        bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
-    } else {
-        bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
-    }
-    
-    UIImage *appIcon = [UIImage imageNamed: [[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIcons"] objectForKey:@"CFBundlePrimaryIcon"] objectForKey:@"CFBundleIconFiles"]  objectAtIndex:0]];
-    
-    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:bundleName icon:appIcon];
-    provider.providerType = OLImagePickerProviderTypeApp;
+    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:NSLocalizedStringFromTableInBundle(@"Recents", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"bookmark"]];
+    provider.providerType = OLImagePickerProviderTypeRecents;
     [self.providers addObject:provider];
 }
 
@@ -402,7 +393,7 @@
 }
 
 - (void)setupProviders{
-    [self setupAppAssetProvider];
+    [self setupRecentsProvider];
     [self setupLibraryProviderAtIndex:self.providers.count];
     [self setupFacebookProvider];
     [self setupInstagramProvider];
@@ -574,7 +565,7 @@
         }
     }
     
-    [self.providerForPresentedVc.collections.firstObject addAssets:validAssets];
+    [self.providerForPresentedVc.collections.firstObject addAssets:validAssets unique:YES];
     for (OLAsset *asset in validAssets){
         if(self.maximumPhotos == 0 || self.selectedAssets.count < self.maximumPhotos){
             [self.selectedAssets addObject:asset];
@@ -672,8 +663,23 @@
     return YES;
 }
 
+- (void)updateRecentsWith:(NSArray *)assets{
+    for (OLAsset *asset in assets){
+        if (![[OLUserSession currentSession].recentPhotos containsObject:asset]){
+            [[OLUserSession currentSession].recentPhotos addObject:asset];
+        }
+    }
+    
+    for (OLImagePickerProvider *provider in self.providers){
+        if (provider.providerType == OLImagePickerProviderTypeRecents){
+            [provider.collections.firstObject addAssets:[OLUserSession currentSession].recentPhotos unique:YES];
+        }
+    }
+}
+
 - (IBAction)onButtonNextClicked:(UIButton *)sender {
     if ([self shouldGoToOrderPreview]) {
+        [self updateRecentsWith:[OLUserSession currentSession].userSelectedPhotos];
         
         OLUpsellOffer *offer = [self upsellOfferToShow];
         BOOL shouldShowOffer = offer != nil;
@@ -726,6 +732,8 @@
     NSMutableArray *addedAssets = [[NSMutableArray alloc] initWithArray:self.selectedAssets];
     [addedAssets removeObjectsInArray:self.originalSelectedAssets];
     
+    [self updateRecentsWith:addedAssets];
+    
     if ([self.delegate respondsToSelector:@selector(imagePicker:didFinishPickingAssets:added:removed:)]){
         [self.delegate imagePicker:self didFinishPickingAssets:self.selectedAssets added:addedAssets removed:removedAssets];
     }
@@ -737,6 +745,9 @@
 #pragma mark Upsells
 
 - (OLUpsellOffer *)upsellOfferToShow{
+    if (/* DISABLES CODE */ (YES)){
+        return nil;// Need to test first
+    }
     NSArray *upsells = self.product.productTemplate.upsellOffers;
     if (upsells.count == 0){
         return nil;

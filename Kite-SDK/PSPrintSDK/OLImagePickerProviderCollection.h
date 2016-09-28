@@ -39,7 +39,7 @@
 - (NSUInteger)indexOfObject:(id)obj;
 - (id)objectAtIndex:(NSUInteger)index;
 - (NSUInteger)count;
-- (void)addAssets:(NSArray<OLAsset *> *)assets;
+- (void)addAssets:(NSArray<OLAsset *> *)assets unique:(BOOL)unique;
 
 @property (strong, nonatomic, readonly) NSString *name;
 @property (strong, nonatomic) OLAsset *coverAsset;
