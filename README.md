@@ -5,9 +5,10 @@
 [![Circle CI](https://circleci.com/gh/OceanLabs/iOS-Print-SDK/tree/master.svg?style=shield)](https://circleci.com/gh/OceanLabs/iOS-Print-SDK/tree/master)
 ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey.svg)
 ![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Kite-Print-SDK.svg)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Twitter](https://img.shields.io/badge/twitter-@kite_ly-yellow.svg?style=flat)](http://twitter.com/kite_ly)
 
-The Kite Print SDK makes it easy to add print on demand functionality to your app.
+The Kite SDK makes it easy to add print on demand functionality to your app.
 
 Harness our worldwide print and distribution network. We'll take care of all the tricky printing and postage stuff for you!
 
@@ -46,11 +47,11 @@ Use our SDK to unlock hidden revenue streams and add value for your users. *In u
 
 ## Installation
 
-The recommended approach for installing is via the CocoaPods, however we also support adding the SDK via git submodules.
+The recommended approach for installing is via the CocoaPods, however we also support Carthage and adding the SDK via git submodules.
 
 ### CocoaPods
 
-[CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like the Kite Print SDK in your projects. If you're using it just add the following to your Podfile:
+[CocoaPods](http://cocoapods.org) is a dependency manager for iOS, which automates and simplifies the process of using 3rd-party libraries like the Kite SDK in your projects. If you're using it just add the following to your Podfile:
 
 ```ruby
 pod "Kite-Print-SDK"
@@ -59,15 +60,26 @@ pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
 #Uncomment these lines if you want Facebook photo picking support
 #pod 'FBSDKCoreKit', '~> 4.11.0'
 #pod 'FBSDKLoginKit', '~> 4.11.0'
-```
 
-The SDK includes lots of optional functionality enabled via CocoaPod Subspecs so that you can pick and choose your setup.
+#Uncomment the following line if you want Apple Pay support
+#pod 'Stripe', '~> 8.0.6'
+```
 
 If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above and follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite-SDK/docs/social_photo_sources.md).
 
 You can also provide your own photo source (for example from within your app or a custom back end). Please read the documentation [here](Kite-SDK/docs/custom_photo_sources.md).
 
 PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
+
+### Carthage
+[Carthage](https://github.com/Carthage/Carthage) is another dependency manager for iOS, which automates and simplifies the process of using 3rd-party libraries like the Kite SDK in your projects. If you're using it just add the following to your Cartfile:
+```ruby
+github "OceanLabs/iOS-Print-SDK"
+github "paypal/PayPal-iOS-SDK"
+
+#Uncomment the following line if you want Apple Pay support
+#github "stripe/stripe-ios" ~> 8.0.6
+```
 
 ### Git submodules
 
@@ -127,7 +139,7 @@ The Print SDK supports two primary use cases: **Kite Print Shop Experience**, an
 
 ![Kite](Kite-SDK/docs/print-shop1.jpg)
 
-The Kite Print SDK includes a robust product selection, photo editing and payment experience that's proven to convert well with users. It can take care of everything for you, no need to spend time building any user interfaces.
+The Kite SDK includes a robust product selection, photo editing and payment experience that's proven to convert well with users. It can take care of everything for you, no need to spend time building any user interfaces.
 
 This is the quickest approach to integration and perfect if you don't want to spend a great deal of time building a custom experience. You can be up & running within minutes!
 
