@@ -62,7 +62,6 @@
 #import "OLPhotobookViewController.h"
 #import "NSObject+Utils.h"
 #import "OLProductOverviewViewController.h"
-#import "OLOrdersViewController.h"
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLPosterViewController.h"
 #import "OLFrameOrderReviewViewController.h"
@@ -112,13 +111,6 @@ static BOOL haveLoadedAtLeastOnce = NO;
 
 @property (strong, nonatomic) id<OLAssetDataSource> dataSource;
 @property (assign, nonatomic) BOOL corrupt;
-
-@end
-
-@interface OLOrdersViewController (Private)
-
-- (void)dismiss;
-- (IBAction)emailButtonPushed:(id)sender;
 
 @end
 
