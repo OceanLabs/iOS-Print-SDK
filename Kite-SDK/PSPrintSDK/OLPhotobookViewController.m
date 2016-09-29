@@ -910,6 +910,7 @@ static const CGFloat kBookEdgePadding = 38;
         cropVc.providesPresentationContextTransitionStyle = true;
         cropVc.definesPresentationContext = true;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        cropVc.product = self.product;
         
         [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             [cropVc setFullImage:image];
@@ -978,6 +979,8 @@ static const CGFloat kBookEdgePadding = 38;
             cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
             [cropVc setFullImage:image];
             cropVc.edits = self.croppingPrintPhoto.edits;
+            cropVc.product = self.product;
+            
             [self presentViewController:cropVc animated:NO completion:NULL];
             
 #ifndef OL_NO_ANALYTICS

@@ -393,6 +393,8 @@ UIViewControllerPreviewingDelegate>
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
+    cropVc.product = self.product;
+    
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image, NSError *error){
@@ -528,6 +530,7 @@ UIViewControllerPreviewingDelegate>
         cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
         cropVc.delegate = self;
         cropVc.aspectRatio = [self productAspectRatio];
+        cropVc.product = self.product;
         
         cropVc.previewView = [printView snapshotViewAfterScreenUpdates:YES];
         cropVc.previewView.frame = [printView.superview convertRect:printView.frame toView:nil];

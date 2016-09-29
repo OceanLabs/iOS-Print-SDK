@@ -101,6 +101,7 @@ CGFloat margin = 2;
     OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
+    cropVc.product = self.product;
     
     cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
     cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
@@ -182,6 +183,8 @@ CGFloat margin = 2;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
+    cropVc.product = self.product;
+    
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image, NSError *error){

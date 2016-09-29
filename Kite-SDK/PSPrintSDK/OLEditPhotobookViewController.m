@@ -427,6 +427,7 @@ static const NSInteger kSectionPages = 2;
     OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
+    cropVc.product = self.product;
     
     cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
     cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];

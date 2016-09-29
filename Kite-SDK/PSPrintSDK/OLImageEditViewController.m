@@ -1755,6 +1755,7 @@ const NSInteger kOLEditTagCrop = 40;
     vc.delegate = self;
     vc.selectedAssets = [[NSMutableArray alloc] init];
     vc.maximumPhotos = 1;
+    vc.product = self.product;
     [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 
