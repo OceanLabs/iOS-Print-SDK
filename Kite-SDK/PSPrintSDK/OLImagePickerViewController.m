@@ -228,13 +228,7 @@
     
     self.viewWillDisappear = NO;
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
-        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-            [self addBasketIconToTopRight];
-        }
-    }
-    else{
+    if (self.navigationController.viewControllers.firstObject != self){
         [self addBasketIconToTopRight];
     }
     
