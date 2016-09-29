@@ -691,7 +691,6 @@
 		2EB8FE5D1D95685100E26BDF /* OLAddressEditViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB3C187882A300316492 /* OLAddressEditViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE5E1D95685100E26BDF /* OLCountryPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB431878DFA300316492 /* OLCountryPickerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE5F1D95685100E26BDF /* UIImage+MDQRCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BABD1D2FC101002F5F74 /* UIImage+MDQRCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2EB8FE601D95685100E26BDF /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC41D2FC109002F5F74 /* bitstream.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE611D95685100E26BDF /* mask.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC61D2FC109002F5F74 /* mask.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE621D95685100E26BDF /* qrencode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC81D2FC109002F5F74 /* qrencode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE631D95685100E26BDF /* qrinput.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BACA1D2FC109002F5F74 /* qrinput.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -741,6 +740,7 @@
 		2ED36B3A1C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */; };
 		2ED389911C917D2000DC2314 /* OLPhotoTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED389901C917D2000DC2314 /* OLPhotoTextField.m */; };
 		2ED389951C918DC100DC2314 /* OLTextOnPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED389941C918DC100DC2314 /* OLTextOnPhoto.m */; };
+		2ED42EC11D9D79E3003B9AD0 /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC41D2FC109002F5F74 /* bitstream.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
 		2EEB53001D7062870066B802 /* OLProductTemplateOptionChoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EEB52FF1D7062870066B802 /* OLProductTemplateOptionChoice.m */; };
 		2EEB53011D7062870066B802 /* OLProductTemplateOptionChoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EEB52FF1D7062870066B802 /* OLProductTemplateOptionChoice.m */; };
@@ -2145,6 +2145,7 @@
 				2EB8FDE51D95685100E26BDF /* OLCustomViewControllerPhotoProvider.h in Headers */,
 				2EB8FE121D95685100E26BDF /* OLAnimation.h in Headers */,
 				2EB8FE111D95685100E26BDF /* OLFacebookSDKWrapper.h in Headers */,
+				2ED42EC11D9D79E3003B9AD0 /* bitstream.h in Headers */,
 				2EB8FDD11D95671400E26BDF /* OLConstants.h in Headers */,
 				2EB8FE7B1D95685100E26BDF /* UIView+RoundRect.h in Headers */,
 				2EB8FE521D95685100E26BDF /* OLPhotobookPageBlankContentViewController.h in Headers */,
@@ -2167,7 +2168,6 @@
 				2EB8FDFD1D95685100E26BDF /* OLProductRepresentation.h in Headers */,
 				2EB8FE531D95685100E26BDF /* OLPaymentViewController.h in Headers */,
 				2EB8FE2F1D95685100E26BDF /* OLOAuth2TrustDelegate.h in Headers */,
-				2EB8FE601D95685100E26BDF /* bitstream.h in Headers */,
 				2EB8FDF51D95685100E26BDF /* OLPrintOrder+History.h in Headers */,
 				2EB8FE621D95685100E26BDF /* qrencode.h in Headers */,
 				2EB8FE041D95685100E26BDF /* OLImageDownloadDelegate.h in Headers */,
