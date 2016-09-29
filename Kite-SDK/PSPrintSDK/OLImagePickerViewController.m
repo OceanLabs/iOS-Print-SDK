@@ -115,6 +115,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+#endif
+    
     if (!self.navigationController){
         [self.nextButton removeFromSuperview];
     }
@@ -239,6 +243,12 @@
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
+    }
+#endif
     
     self.viewWillDisappear = YES;
 }
