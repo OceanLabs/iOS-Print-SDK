@@ -398,7 +398,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)populateDefaultEmailAndPhone {
-    if (![OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
+    if ([OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
         self.textFieldEmail.text = self.printOrder.email;
         self.textFieldPhone.text = self.printOrder.phone;
         return;

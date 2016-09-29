@@ -2322,10 +2322,10 @@
 			projectRoot = "";
 			targets = (
 				2EADD7E31BE79D6D0051CD31 /* KiteSDK-Demo */,
+				2E451DC71D9554B40080F1C1 /* Kite */,
 				2E898C4C1CC518180041CCD8 /* Kite-CI-Deploy */,
 				CD73BF88186215790009DE03 /* KitePrintSDKTests */,
 				2E4CAF081BC25F0A0089FA26 /* Docs */,
-				2E451DC71D9554B40080F1C1 /* Kite */,
 			);
 		};
 /* End PBXProject section */
