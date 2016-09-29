@@ -71,10 +71,12 @@
     func = (void *)imp;
     func(payment, aSelector, shippingAddress);
     
+#ifdef DEBUG
     aSelector = NSSelectorFromString(@"processable");
     imp = [payment methodForSelector:aSelector];
     BOOL (*func2)(id, SEL) = (void *)imp;
     NSAssert(func2(payment, aSelector), @"oops, payment not processable");
+#endif
     
     return payment;
 }
