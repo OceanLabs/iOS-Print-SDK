@@ -30,7 +30,7 @@
 #import <Foundation/Foundation.h>
 #import "OLImagePickerProviderCollection.h"
 
-typedef enum {
+typedef NS_ENUM(NSInteger, OLImagePickerProviderType) {
     OLImagePickerProviderTypeCustom,
     OLImagePickerProviderTypeRecents,
     OLImagePickerProviderTypePhotoLibrary,
@@ -38,7 +38,7 @@ typedef enum {
     OLImagePickerProviderTypeInstagram,
     OLImagePickerProviderTypeQRCode,
     OLImagePickerProviderTypeViewController
-} OLImagePickerProviderType;
+};
 
 @interface OLImagePickerProvider : NSObject
 
