@@ -182,10 +182,10 @@
                 if ([objects isKindOfClass:[NSArray class]]) {
                     for (id productTemplate in objects) {
                         if ([productTemplate isKindOfClass:[NSDictionary class]]) {
-                            if (![productTemplate[@"active"] boolValue] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
+                            if (![productTemplate[@"active"] boolValue] && [OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
                                 continue;
                             }
-                            else if (![productTemplate[@"sandbox_active"] boolValue] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+                            else if (![productTemplate[@"sandbox_active"] boolValue] && [OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox){
                                 continue;
                             }
                             id name = productTemplate[@"name"];

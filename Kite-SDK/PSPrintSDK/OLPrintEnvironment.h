@@ -27,9 +27,9 @@
 //  THE SOFTWARE.
 //
 
-typedef enum {
-    kOLKitePrintSDKEnvironmentLive,
-    kOLKitePrintSDKEnvironmentSandbox,
-    // _kOLKitePrintSDKEnvironmentStaging # private environment for only us :P
-} OLKitePrintSDKEnvironment;
-
+typedef NS_ENUM(NSInteger, OLKitePrintSDKEnvironment) {
+    OLKitePrintSDKEnvironmentLive,
+    OLKitePrintSDKEnvironmentSandbox,
+    kOLKitePrintSDKEnvironmentLive __deprecated_enum_msg("Use OLKitePrintSDKEnvironmentLive") = OLKitePrintSDKEnvironmentLive,
+    kOLKitePrintSDKEnvironmentSandbox __deprecated_enum_msg("Use OLKitePrintSDKEnvironmentSandbox") = OLKitePrintSDKEnvironmentSandbox,
+};

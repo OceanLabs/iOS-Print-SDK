@@ -152,14 +152,14 @@ UITableViewDataSource, UITextFieldDelegate>
         self.printOrder = printOrder;
         
         if (printOrder){
-            if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
+            if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox) {
                 self.title = NSLocalizedStringFromTableInBundle(@"Pay with Credit Card (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             } else {
                 self.title = NSLocalizedStringFromTableInBundle(NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             }
         }
         else{
-            if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
+            if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox) {
                 self.title = NSLocalizedStringFromTableInBundle(@"Add Credit Card (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             } else {
                 self.title = NSLocalizedStringFromTableInBundle(@"Add Credit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");

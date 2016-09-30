@@ -194,7 +194,7 @@ static CGFloat fadeTime = 0.3;
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     [self.remotePlistFetchOperation addDependency:self.templateSyncOperation];
     
-    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
+    if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
     }
     

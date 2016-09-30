@@ -210,7 +210,7 @@ static NSString *nonNilStr(NSString *str) {
 
 + (NSDictionary *)defaultDictionaryForEventName:(NSString *)eventName{
     NSString *environment = @"Live";
-    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
+    if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox) {
         environment = @"Sandbox";
     }
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];

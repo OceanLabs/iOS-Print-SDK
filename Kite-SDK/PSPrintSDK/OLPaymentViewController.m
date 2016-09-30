@@ -263,7 +263,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         applePayAvailableStr = @"No";
     }
     
-    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+    if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox){
         self.title = NSLocalizedStringFromTableInBundle(@"Payment (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     else{
@@ -353,7 +353,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     if ([self isPushed]){
-        if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+        if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox){
             self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Payment (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         }
         else{
@@ -1481,7 +1481,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.printOrder.email = email;
     self.printOrder.phone = phone;
     
-    if (![OLCheckoutViewController validateEmail:email] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
+    if (![OLCheckoutViewController validateEmail:email] && [OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
         completion(PKPaymentAuthorizationStatusInvalidShippingContact);
         return;
     }

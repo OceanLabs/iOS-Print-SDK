@@ -342,7 +342,7 @@ static dispatch_once_t srand48OnceToken;
         // and when we want to reset things just bump the experiment version.
         // Always resets in sanbox mode
         for (NSString *key in defaults) {
-            if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+            if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox){
                 [OLKiteABTesting resetTestNamed:key];
                 continue;
             }
@@ -367,7 +367,7 @@ static dispatch_once_t srand48OnceToken;
 - (void)setupCoverPhotoTestWithExperimentDict:(NSDictionary *)experimentDict{
     self.coverPhotoId = nil;
     
-    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+    if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox){
         [OLKiteABTesting resetTestNamed:kOLKiteABTestCoverPhotoVariants];
     }
     

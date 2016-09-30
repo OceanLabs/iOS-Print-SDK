@@ -104,7 +104,7 @@ static NSString *instagramRedirectURI = nil;
     apiKey = _apiKey;
     environment = _environment;
     [OLStripeCard setClientId:[self stripePublishableKey]];
-    if (environment == kOLKitePrintSDKEnvironmentLive) {
+    if (environment == OLKitePrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
     } else {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
@@ -122,14 +122,14 @@ static NSString *instagramRedirectURI = nil;
 + (NSString *)apiEndpoint {
     if (useStaging){
         switch (environment) {
-            case kOLKitePrintSDKEnvironmentLive: return kOLStagingEndpointLive;
-            case kOLKitePrintSDKEnvironmentSandbox: return kOLStagingEndpointSandbox;
+            case OLKitePrintSDKEnvironmentLive: return kOLStagingEndpointLive;
+            case OLKitePrintSDKEnvironmentSandbox: return kOLStagingEndpointSandbox;
         }
     }
     else{
         switch (environment) {
-            case kOLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
-            case kOLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
+            case OLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
+            case OLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
         }
     }
 }
@@ -144,8 +144,8 @@ static NSString *instagramRedirectURI = nil;
 
 + (NSString *_Nonnull)paypalEnvironment {
     switch (environment) {
-        case kOLKitePrintSDKEnvironmentLive: return @"live";/*PayPalEnvironmentProduction*/;
-        case kOLKitePrintSDKEnvironmentSandbox: return @"sandbox";/*PayPalEnvironmentSandbox*/;
+        case OLKitePrintSDKEnvironmentLive: return @"live";/*PayPalEnvironmentProduction*/;
+        case OLKitePrintSDKEnvironmentSandbox: return @"sandbox";/*PayPalEnvironmentSandbox*/;
     }
 }
 
@@ -246,7 +246,7 @@ static NSString *instagramRedirectURI = nil;
 + (void)setPayPalPublicKey:(NSString *)publicKey{
     paypalPublicKey = publicKey;
     
-    if (environment == kOLKitePrintSDKEnvironmentLive) {
+    if (environment == OLKitePrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
     } else {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];

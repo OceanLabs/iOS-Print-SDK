@@ -85,7 +85,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (NSString *)apiKey {
-    if ([self environment] == kOLKitePrintSDKEnvironmentSandbox) {
+    if ([self environment] == OLKitePrintSDKEnvironmentSandbox) {
         return kAPIKeySandbox;
     } else {
         return kAPIKeyLive;
@@ -106,9 +106,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 - (OLKitePrintSDKEnvironment)environment {
     if (self.environmentPicker.selectedSegmentIndex == 0) {
-        return kOLKitePrintSDKEnvironmentSandbox;
+        return OLKitePrintSDKEnvironmentSandbox;
     } else {
-        return kOLKitePrintSDKEnvironmentLive;
+        return OLKitePrintSDKEnvironmentLive;
     }
 }
 
@@ -159,7 +159,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
 #define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
-            [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+            [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
             
             [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
             
@@ -209,7 +209,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
 #define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
-        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
         
         [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
         
