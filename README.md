@@ -87,7 +87,7 @@ See our [Git submodule installation guide](Kite-SDK/docs/submodules.md)
 
 ### Quick Integration
 We really mean it when we say integration can be done in minutes.
-* **Step 1:** Import the SDK
+1. Import the SDK
  - Objective-C:
 ```obj-c
 #import <OLKitePrintSDK.h>
@@ -96,7 +96,7 @@ We really mean it when we say integration can be done in minutes.
 ```swift
 import KiteSDK
 ```
-* **Step 2:** Set the API key and the environment:
+2. Set the API key and the environment:
  - Objective-C:
 ```obj-c
 [OLKitePrintSDK setAPIKey:@"YOUR_API_KEY" withEnvironment:kOLKitePrintSDKEnvironmentLive]; //Or kOLKitePrintSDKEnvironmentSandbox for testing
@@ -105,7 +105,7 @@ import KiteSDK
 ```swift
 OLKitePrintSDK.setAPIKey("a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4", with: .live) //Or .sandbox for testing
 ```
-* **Step 3:** Create and present Kite:
+3. Create and present Kite:
  - Objective-c
 ```obj-c
 OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]]]];
@@ -116,7 +116,7 @@ OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAss
 let kiteViewController = OLKiteViewController.init(assets: [OLAsset(url: URL(string: "http://psps.s3.amazonaws.com/sdk_static/4.jpg"))])
 present(kiteViewController!, animated: true, completion: nil)
 ```
-* **Step 4:**: 🎉Profit🎉
+4. 🎉Profit🎉
  - 💰💵💶💷💴
 
 ### iOS Security (ATS)
