@@ -17,8 +17,8 @@ Sample Code
 -----------
 1. Add the following lines to your CocoaPods Podfile and run `pod update`
 ```ruby
-pod 'FBSDKCoreKit', '~> 4.11.0' # only needed if you want Facebook
-pod 'FBSDKLoginKit', '~> 4.11.0' # only needed if you want Facebook
+pod 'FBSDKCoreKit', '~> 4.16.0' # only needed if you want Facebook
+pod 'FBSDKLoginKit', '~> 4.16.0' # only needed if you want Facebook
 ```
 2. If you need Instagram integration then the next step is needed to enable Instagram functionality in code. Firstly navigate over to [https://instagram.com/developer/](https://instagram.com/developer/) and register your Instagram client app (if you don't already have one). You'll need the `Client ID`, `Client Secret` & `Redirect URI`. Next using these details enable Instagram for the Kite SDK:
 

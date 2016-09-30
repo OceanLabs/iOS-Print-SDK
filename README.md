@@ -58,8 +58,8 @@ pod "Kite-Print-SDK"
 pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
 
 #Uncomment these lines if you want Facebook photo picking support
-#pod 'FBSDKCoreKit', '~> 4.11.0'
-#pod 'FBSDKLoginKit', '~> 4.11.0'
+#pod 'FBSDKCoreKit', '~> 4.16.0'
+#pod 'FBSDKLoginKit', '~> 4.16.0'
 
 #Uncomment the following line if you want Apple Pay support
 #pod 'Stripe', '~> 8.0.6'
