@@ -44,7 +44,7 @@
 #import "UIImage+OLUtils.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
-#import "OLCustomPhotoProvider.h"
+#import "OLCustomViewControllerPhotoProvider.h"
 #import "OLAsset+Private.h"
 #import "OLImageDownloader.h"
 
@@ -57,9 +57,7 @@ static CGFloat fadeTime = 0.3;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
-
-
-//@property (assign, nonatomic) BOOL useDarkTheme; //XXX: Delete this when exposed in header
+@property (strong, nonatomic) NSArray *fontNames;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -78,8 +76,7 @@ static CGFloat fadeTime = 0.3;
 
 @end
 
-@class KITCustomAssetPickerController;
-@class KITAssetCollectionDataSource;
+@protocol OLCustomPickerController;
 
 @implementation OLKiteViewController
 
@@ -112,33 +109,13 @@ static CGFloat fadeTime = 0.3;
     return _customNavigationItem;
 }
 
+- (OLPrintOrder *)basketOrder{
+    return [OLUserSession currentSession].printOrder;
+}
+
 - (void)clearBasket{
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];
 }
-
-//- (void)setUseDarkTheme:(BOOL)useDarkTheme{
-//    _useDarkTheme = useDarkTheme;
-//    [OLKiteABTesting sharedInstance].darkTheme = useDarkTheme;
-//}
-
-//- (BOOL)prefersStatusBarHidden {
-//    BOOL hidden = self.useDarkTheme;
-//    
-//    if ([self respondsToSelector:@selector(traitCollection)]){
-//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-//            hidden |= YES;
-//        }
-//    }
-//    
-//    return hidden;
-//}
-
-//- (UIStatusBarStyle)preferredStatusBarStyle{
-//    if (self.childViewControllers.count == 0){
-//        return self.useDarkTheme ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
-//    }
-//    return [[self.childViewControllers firstObject] preferredStatusBarStyle];
-//}
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets{
     NSAssert(![OLKiteUtils assetArrayContainsPDF:assets], @"If you want to use a pre-rendered PDF, please use initWithPrintOrder");
@@ -182,21 +159,19 @@ static CGFloat fadeTime = 0.3;
     [self.customImageProviders addObject:[[OLImagePickerProvider alloc] initWithCollections:(NSArray <id<NSFastEnumeration>> *)collections name:name icon:image]];
 }
 
-- (void)addCustomPhotoProviderWithViewController:(UIViewController<KITCustomAssetPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon{
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon{
     if (!self.customImageProviders){
         self.customImageProviders = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
     }
-    [self.customImageProviders addObject:[[OLCustomPhotoProvider alloc] initWithController:vc name:name icon:icon]];
+    [self.customImageProviders addObject:[[OLCustomViewControllerPhotoProvider alloc] initWithController:vc name:name icon:icon]];
+}
+
+- (void)setFontNamesForImageEditing:(NSArray<NSString *> *_Nullable)fontNames{
+    self.fontNames = fontNames;
 }
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    
-//    if (self.useDarkTheme){
-//        self.navigationBar.barTintColor = [UIColor blackColor];
-//        self.navigationBar.tintColor = [UIColor grayColor];
-//        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-//    }
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
@@ -209,8 +184,6 @@ static CGFloat fadeTime = 0.3;
     
     [[OLUserSession currentSession] calcScreenScaleForTraitCollection:self.traitCollection];
     
-    [OLAnalytics setKiteDelegate:self.delegate];
-    
     self.operationQueue = [NSOperationQueue mainQueue];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
@@ -221,7 +194,7 @@ static CGFloat fadeTime = 0.3;
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     [self.remotePlistFetchOperation addDependency:self.templateSyncOperation];
     
-    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
+    if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
     }
     
@@ -260,6 +233,11 @@ static CGFloat fadeTime = 0.3;
     }
     
     [self transitionToNextScreen];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [OLUserSession currentSession].kiteVc = self;
 }
 
 -(IBAction) dismiss{
@@ -306,8 +284,7 @@ static CGFloat fadeTime = 0.3;
                 [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
                     [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
                     [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
-                    [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
-                    if (self.navigationController.viewControllers.count <= 1){
+                    if (welf.navigationController.viewControllers.count <= 1){
                         UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                         
                         NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
@@ -333,9 +310,8 @@ static CGFloat fadeTime = 0.3;
             UIViewController *vc = [welf.storyboard instantiateViewControllerWithIdentifier:identifier];
             [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
             [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
-            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:welf.delegate];
             [vc safePerformSelector:@selector(setProduct:) withObject:product];
-            if (self.navigationController.viewControllers.count <= 1){
+            if (welf.navigationController.viewControllers.count <= 1){
                 UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                 NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
                 if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
@@ -370,7 +346,7 @@ static CGFloat fadeTime = 0.3;
         [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
         [vc safePerformSelector:@selector(setFilterProducts:) withObject:welf.filterProducts];
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
-        if (self.navigationController.viewControllers.count <= 1){
+        if (welf.navigationController.viewControllers.count <= 1){
             UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
             NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
             if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
@@ -391,9 +367,7 @@ static CGFloat fadeTime = 0.3;
         //Prefetch themed-SDK images
         [[OLKiteABTesting sharedInstance] prefetchRemoteImages];
     }];
-    
-    [OLAnalytics setKiteDelegate:self.delegate];
-    
+        
     [self.operationQueue addOperation:self.transitionOperation];
 }
 
@@ -486,6 +460,7 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)dealloc{
+    [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionPhotos];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

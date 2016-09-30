@@ -38,6 +38,7 @@ static NSString *const kKeyFlipHorizontal = @"co.oceanlabs.psprintstudio.kKeyFli
 static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipVertical";
 static NSString *const kKeyTextsOnPhoto = @"co.oceanlabs.psprintstudio.kKeyTextsOnPhoto";
 static NSString *const kKeyBorderColor = @"co.oceanlabs.psprintstudio.kKeyBorderColor";
+static NSString *const kKeyBottomBorderText = @"co.oceanlabs.psprintstudio.kKeyBottomBorderText";
 
 @implementation OLPhotoEdits
 
@@ -66,6 +67,7 @@ static NSString *const kKeyBorderColor = @"co.oceanlabs.psprintstudio.kKeyBorder
         _flipVertical = [aDecoder decodeBoolForKey:kKeyFlipVertical];
         _textsOnPhoto = [aDecoder decodeObjectForKey:kKeyTextsOnPhoto];
         _borderColor = [aDecoder decodeObjectForKey:kKeyBorderColor];
+        _bottomBorderText = [aDecoder decodeObjectForKey:kKeyBottomBorderText];
     }
     return self;
 }
@@ -80,6 +82,7 @@ static NSString *const kKeyBorderColor = @"co.oceanlabs.psprintstudio.kKeyBorder
     [aCoder encodeBool:self.flipVertical forKey:kKeyFlipVertical];
     [aCoder encodeObject:self.textsOnPhoto forKey:kKeyTextsOnPhoto];
     [aCoder encodeObject:self.borderColor forKey:kKeyBorderColor];
+    [aCoder encodeObject:self.bottomBorderText forKey:kKeyBottomBorderText];
 }
 
 - (void)performHorizontalFlipEditFromOrientation:(UIImageOrientation)orientation{
@@ -227,7 +230,8 @@ static NSString *const kKeyBorderColor = @"co.oceanlabs.psprintstudio.kKeyBorder
     copy.flipHorizontal = self.flipHorizontal;
     copy.flipVertical = self.flipVertical;
     copy.textsOnPhoto = [[NSMutableArray alloc] initWithArray:self.textsOnPhoto copyItems:YES];
-    copy.borderColor = self.borderColor;
+    copy.borderColor = [self.borderColor copyWithZone:zone];
+    copy.bottomBorderText = [self.bottomBorderText copyWithZone:zone];
 
     return copy;
 }
@@ -245,6 +249,7 @@ static NSString *const kKeyBorderColor = @"co.oceanlabs.psprintstudio.kKeyBorder
         retVal &= self.flipVertical == other.flipVertical;
         retVal &= [self.textsOnPhoto isEqualToArray:other.textsOnPhoto];
         retVal &= [self.borderColor isEqual:other.borderColor];
+        retVal &= [self.bottomBorderText isEqual:other.bottomBorderText];
     }
     
     return retVal;

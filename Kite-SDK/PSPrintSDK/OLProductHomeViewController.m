@@ -27,12 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <TSMarkdownParser/TSMarkdownParser.h>
-#else
-#import "TSMarkdownParser.h"
-#endif
 
+#import "OLMarkdownParser.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLNavigationController.h"
@@ -70,6 +66,12 @@
 - (void)dismiss;
 
 @end
+
+@interface OLProductTypeSelectionViewController ()
+-(NSMutableArray *) products;
+@property (strong, nonatomic) NSMutableDictionary *collections;
+@end
+
 
 @interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
 @property (nonatomic, strong) NSArray *productGroups;
@@ -112,7 +114,7 @@
         }
     }
     
-    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+    if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
     
@@ -326,7 +328,7 @@
     
     s = [self promoBannerParaText];
     if (s){
-        NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
+        NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
         
         [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
         
@@ -337,7 +339,7 @@
     
     s = [self promoBannerHeaderText];
     if (s){
-        NSMutableAttributedString *headerString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
+        NSMutableAttributedString *headerString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:s] mutableCopy];
         
         [headerString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, headerString.length)];
         UILabel *label = (UILabel *)[self.bannerView viewWithTag:20];
@@ -376,10 +378,6 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
-    if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients){
-        [self addBasketIconToTopRight];
-    }
     
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (url && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
@@ -483,9 +481,6 @@
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
     CGFloat height = 233;
-//    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-//        height = 200;
-//    }
     
     if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) {
         if (numberOfCells == 2){
@@ -559,11 +554,46 @@
     NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
     
     id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
+    [vc safePerformSelector:@selector(setProduct:) withObject:product];
+    
+    if ([vc isKindOfClass:[OLProductTypeSelectionViewController class]] && product.productTemplate.collectionName && product.productTemplate.collectionId){
+        [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
+        [vc products];
+        NSMutableArray *options = [[NSMutableArray alloc] init];
+        for (NSString *templateId in ((OLProductTypeSelectionViewController *)vc).collections[[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]]){
+            OLProductTemplate *template = [OLProductTemplate templateWithId:templateId];
+            if (!template){
+                continue;
+            }
+            OLProduct *otherProduct = [[OLProduct alloc] initWithTemplate:template];
+            [options addObject:@{
+                                 @"code" : otherProduct.productTemplate.identifier,
+                                 @"name" : [NSString stringWithFormat:@"%@\n%@", [otherProduct dimensions], [otherProduct unitCost]],
+                                 }];
+        }
+        
+        OLProductTemplateOption *collectionOption =
+        [[OLProductTemplateOption alloc] initWithDictionary:@{
+                                                              @"code" : product.productTemplate.collectionId,
+                                                              @"name" : product.productTemplate.collectionName,
+                                                              @"options" : options
+                                                              }];
+        collectionOption.iconImageName = @"tool-size";
+        for (OLProductTemplateOption *option in product.productTemplate.options){
+            if ([option.code isEqualToString:collectionOption.code]){
+                [(NSMutableArray *)product.productTemplate.options removeObjectIdenticalTo:option];
+            }
+        }
+        [(NSMutableArray *)product.productTemplate.options addObject:collectionOption];
+        
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+        [vc safePerformSelector:@selector(setProduct:) withObject:product];
+    }
+    
     [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
-    [vc safePerformSelector:@selector(setProduct:) withObject:product];
     
     return vc;
 }
@@ -658,25 +688,18 @@
     if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
         productTypeLabel.backgroundColor = [product labelColor];
     }
-//    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-//        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
-//        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
-//    }
     else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"MinimalWhite"]){
         UILabel *priceLabel = [cell.contentView viewWithTag:301];
         UILabel *detailsLabel = [cell.contentView viewWithTag:302];
         
-        priceLabel.text = [product unitCost];
-        
-        productTypeLabel.text = product.productTemplate.templateType;
+        priceLabel.text = @"";
         
         UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
         if (font){
-            priceLabel.font = font;
             detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
         }
         
-        NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:product.productTemplate.productDescription] mutableCopy];
+        NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:product.productTemplate.productDescription] mutableCopy];
         detailsLabel.text = attributedString.string;
         
         if (![OLKiteABTesting sharedInstance].skipProductOverview){

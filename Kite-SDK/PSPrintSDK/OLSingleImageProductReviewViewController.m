@@ -34,7 +34,6 @@
 #import "OLAsset+Private.h"
 #import "OLProductPrintJob.h"
 #import "OLAsset+Private.h"
-#import "OLCustomPhotoProvider.h"
 #import "OLImageCachingManager.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
@@ -137,9 +136,6 @@
     
     self.ctaButton.enabled = YES;
     
-    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
-        [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
-    }
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
     if (font){
         [self.ctaButton.titleLabel setFont:font];
@@ -235,7 +231,10 @@
     if (self.product.productTemplate.collectionName && self.product.productTemplate.collectionId){
         NSString *templateId = self.product.selectedOptions[self.product.productTemplate.collectionId];
         if (templateId){
-            self.product = [OLProduct productWithTemplateId:templateId];
+            OLProduct *product = [OLProduct productWithTemplateId:templateId];
+            product.selectedOptions = self.product.selectedOptions;
+            product.uuid = self.product.uuid;
+            self.product = product;
         }
     }
     
@@ -350,7 +349,6 @@
             [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
                 [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
                 [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-                [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
                 
                 [self.navigationController pushViewController:vc animated:YES];
             }];

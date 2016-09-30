@@ -30,18 +30,18 @@
 #import "OLKiteUtils.h"
 #import "OLKitePrintSDK.h"
 #import "OLProductHomeViewController.h"
-#ifdef OL_KITE_OFFER_APPLE_PAY
-#import <Stripe/Stripe+ApplePay.h>
-#endif
 #import "OLPaymentViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLCheckoutViewController.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
-#import "FBSDKLoginManager.h"
+#import "OLPayPalWrapper.h"
+#import "OLStripeWrapper.h"
+#import "OLFacebookSDKWrapper.h"
 
-@class OLCustomPhotoProvider;
+@import Contacts;
+@import PassKit;
 
 @interface OLKitePrintSDK (Private)
 
@@ -56,7 +56,7 @@
 @end
 
 @interface OLKiteViewController (Private)
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+@property (strong, nonatomic) NSMutableArray *customImageProviders;
 @end
 
 @implementation OLKiteUtils
@@ -66,12 +66,12 @@
 }
 
 + (NSString *)userEmail:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
+    OLKiteViewController *kiteVC = [OLUserSession currentSession].kiteVc;
     return kiteVC.userEmail;
 }
 
 + (NSString *)userPhone:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
+    OLKiteViewController *kiteVC = [OLUserSession currentSession].kiteVc;
     return kiteVC.userPhone;
 }
 
@@ -88,39 +88,49 @@
 }
 
 + (BOOL)facebookEnabled{
-    //TODO check that it is actually set up
-    if ([FBSDKLoginManager class]){
-        return YES;
-    }
-    
-    return NO;
+    return [OLFacebookSDKWrapper isFacebookAvailable];
 }
 
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:topVc];
-    id<OLKiteDelegate> delegate = kiteVc.delegate;
+    OLKiteViewController *kiteVc = [OLUserSession currentSession].kiteVc;
     
-    if ([delegate respondsToSelector:@selector(kiteControllerShouldAllowUserToAddMorePhotos:)] && ![delegate kiteControllerShouldAllowUserToAddMorePhotos:kiteVc]){
+    if ([OLUserSession currentSession].kiteVc.disallowUserToAddMorePhotos){
         return NO;
     }
     
-    return [OLKiteUtils cameraRollEnabled:topVc] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || kiteVc.customImageProviders.count > 0;
+    return [OLKiteUtils cameraRollEnabled] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || kiteVc.customImageProviders.count > 0;
 }
 
-+ (BOOL)cameraRollEnabled:(UIViewController *)topVc{
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:topVc];
-    id<OLKiteDelegate> delegate = kiteVc.delegate;
-    
-    if ([delegate respondsToSelector:@selector(kiteControllerShouldDisableCameraRoll:)] && [delegate kiteControllerShouldDisableCameraRoll:kiteVc]){
++ (BOOL)cameraRollEnabled{
+    if ([OLUserSession currentSession].kiteVc.disableCameraRoll){
         return NO;
     }
     
     return YES;
 }
 
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [self kiteVcForViewController:topVC];
-    return kiteVC.delegate;
++(BOOL)isApplePayAvailable{
+    if (![OLStripeWrapper isStripeAvailable]){
+        return NO;
+    }
+    
+    //Disable Apple Pay on iOS 8 because we need the Contacts framework. There's in issue in Xcode 8.0 that doesn't include some old symbols in PassKit that crashes iOS 9 apps built with frameworks on launch. Did Not test that they crash iOS 8, but disabled to be safe.
+    if (![CNContact class]){
+        return NO;
+    }
+    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
+}
+
++ (NSArray<NSString *> *)supportedPKPaymentNetworks {
+    NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
+    if ((&PKPaymentNetworkDiscover) != NULL) {
+        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
+    }
+    return supportedNetworks;
+}
+
++ (BOOL)isPayPalAvailable{
+    return [OLPayPalWrapper isPayPalAvailable];
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
@@ -180,41 +190,6 @@
     else{
         return @"OrderReviewViewController";
     }
-}
-
-+ (OLKiteViewController *)kiteVcForViewController:(UIViewController *)theVc{
-    if ([theVc isKindOfClass:[OLKiteViewController class]]){
-        return (OLKiteViewController *)theVc;
-    }
-    
-    UIViewController *vc = theVc.parentViewController;
-    while (vc) {
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            return (OLKiteViewController *)vc;
-            break;
-        }
-        else{
-            vc = vc.parentViewController;
-        }
-    }
-    vc = theVc.presentingViewController;
-    while (vc) {
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            return (OLKiteViewController *)vc;
-            break;
-        }
-        else{
-            vc = vc.presentingViewController;
-        }
-    }
-    
-    for (UIViewController *vc in theVc.navigationController.viewControllers){
-        if ([vc isKindOfClass:[OLKiteViewController class]]){
-            return (OLKiteViewController *)vc;
-        }
-    }
-    
-    return nil;
 }
 
 + (BOOL)assetArrayContainsPDF:(NSArray *)array{

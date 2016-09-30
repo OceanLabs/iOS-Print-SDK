@@ -27,12 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <MPFlipViewController/MPFlipTransition.h>
-#else
-#import "MPFlipTransition.h"
-#endif
-
+#import "OLFlipTransition.h"
 #import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
@@ -60,7 +55,6 @@
 #import "OLKiteABTesting.h"
 #import "OLPaymentViewController.h"
 #import "UIViewController+OLMethods.h"
-#import "OLCustomPhotoProvider.h"
 #import "OLImagePickerViewController.h"
 #import "OLNavigationController.h"
 
@@ -84,7 +78,7 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)saveOrder;
 @end
 
-@interface MPFlipTransition (Private)
+@interface OLFlipTransition (Private)
 
 - (void)animateFlip1:(BOOL)isFallingBack fromProgress:(CGFloat)fromProgress toProgress:(CGFloat)toProgress withCompletion:(void (^)(BOOL finished))completion;
 - (void)animateFlip2:(BOOL)isFallingBack fromProgress:(CGFloat)fromProgress withCompletion:(void (^)(BOOL finished))completion;
@@ -479,8 +473,8 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     self.animating = YES;
-    MPFlipStyle style = MPFlipStyleDefault;
-    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:0.5 timingCurve:UIViewAnimationCurveEaseOut completionAction:MPTransitionActionNone];
+    OLFlipStyle style = OLFlipStyleDefault;
+    OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:0.5 timingCurve:UIViewAnimationCurveEaseOut completionAction:OLTransitionActionNone];
     flipTransition.style = style;
     
     [flipTransition buildLayers];
@@ -566,7 +560,7 @@ static const CGFloat kBookEdgePadding = 38;
     if (self.coverImageView){
         [self.coverPhoto imageWithSize:self.coverImageView.frame.size applyEdits:YES progress:^(float progress){
             [welf.coverImageView setProgress:progress];
-        }completion:^(UIImage *image){
+        }completion:^(UIImage *image, NSError *error){
             dispatch_async(dispatch_get_main_queue(), ^{
                 welf.coverImageView.image = image;
             });
@@ -894,7 +888,6 @@ static const CGFloat kBookEdgePadding = 38;
     [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
         [self.navigationController pushViewController:vc animated:YES];
     }];
 }
@@ -917,11 +910,12 @@ static const CGFloat kBookEdgePadding = 38;
         cropVc.providesPresentationContextTransitionStyle = true;
         cropVc.definesPresentationContext = true;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        cropVc.product = self.product;
         
-        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             [cropVc setFullImage:image];
             cropVc.edits = self.croppingPrintPhoto.edits;
-//            cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:cropVc animated:NO completion:NULL];
         }];
     }
@@ -972,7 +966,7 @@ static const CGFloat kBookEdgePadding = 38;
     else{
         UIImageView *imageView = [page imageView];
         self.croppingPrintPhoto = self.photobookPhotos[index];
-        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
             cropVc.delegate = self;
             cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
@@ -985,6 +979,8 @@ static const CGFloat kBookEdgePadding = 38;
             cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
             [cropVc setFullImage:image];
             cropVc.edits = self.croppingPrintPhoto.edits;
+            cropVc.product = self.product;
+            
             [self presentViewController:cropVc animated:NO completion:NULL];
             
 #ifndef OL_NO_ANALYTICS
@@ -1319,8 +1315,8 @@ static const CGFloat kBookEdgePadding = 38;
             self.containerView.transform = CGAffineTransformIdentity;
         }
     }completion:^(BOOL completed){}];
-    MPFlipStyle style = sender.view.tag == kTagRight ? MPFlipStyleDefault : MPFlipStyleDirectionBackward;
-    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionNone];
+    OLFlipStyle style = sender.view.tag == kTagRight ? OLFlipStyleDefault : OLFlipStyleDirectionBackward;
+    OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:self.bookCover destinationView:self.openbookView duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:OLTransitionActionNone];
     flipTransition.style = style;
     [flipTransition perform:^(BOOL finished){
         self.bookClosed = NO;
@@ -1402,9 +1398,9 @@ static const CGFloat kBookEdgePadding = 38;
         }];
     }
     
-    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
+    OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:OLTransitionActionShowHide];
     flipTransition.flippingPageShadowOpacity = 0;
-    flipTransition.style = MPFlipStyleDirectionBackward;
+    flipTransition.style = OLFlipStyleDirectionBackward;
     [flipTransition perform:^(BOOL finished){
         self.animating = NO;
         
@@ -1457,9 +1453,9 @@ static const CGFloat kBookEdgePadding = 38;
                      animations:^{
                          self.containerView.transform = CGAffineTransformIdentity;
                      } completion:^(BOOL finished){}];
-    MPFlipTransition *flipTransition = [[MPFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:MPTransitionActionShowHide];
+    OLFlipTransition *flipTransition = [[OLFlipTransition alloc] initWithSourceView:self.openbookView destinationView:self.bookCover duration:kBookAnimationTime timingCurve:UIViewAnimationCurveEaseInOut completionAction:OLTransitionActionShowHide];
     flipTransition.flippingPageShadowOpacity = 0;
-    flipTransition.style = MPFlipStyleDefault;
+    flipTransition.style = OLFlipStyleDefault;
     [flipTransition perform:^(BOOL finished){
         self.animating = NO;
         [self.fakeShadowView makeRoundRectWithRadius:3];

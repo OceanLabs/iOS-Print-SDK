@@ -98,4 +98,14 @@
     return [self.array indexOfObject:obj];
 }
 
+- (void)addAssets:(NSArray<OLAsset *> *)assets unique:(BOOL)unique{
+    if (unique){
+        for (OLAsset *asset in assets){
+            [self.array removeObject:asset];
+        }
+    }
+    
+    [self.array addObjectsFromArray:assets];
+}
+
 @end

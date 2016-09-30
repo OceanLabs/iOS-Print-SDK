@@ -36,18 +36,26 @@ enum {
     OLUserSessionCleanupOptionBasket           = 1 << 1,
     OLUserSessionCleanupOptionPayment          = 1 << 2,
     OLUserSessionCleanupOptionSocial           = 1 << 3,
-    OLUserSessionCleanupOptionAll              = 1 << 4,
+    OLUserSessionCleanupOptionPersonal         = 1 << 4,
+    OLUserSessionCleanupOptionAll              = 1 << 5,
 };
 typedef NSUInteger OLUserSessionCleanupOption;
+
+@protocol OLKiteDelegate;
+@class OLKiteViewController;
 
 @interface OLUserSession : NSObject
 
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *userSelectedPhotos;
+@property (strong, nonatomic) NSMutableArray<OLAsset *> *recentPhotos;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSArray<OLAsset *> *appAssets;
 @property (assign, nonatomic) CGFloat screenScale;
+@property (weak, nonatomic) OLKiteViewController *kiteVc;
+@property (assign, nonatomic) BOOL disableFacebook;
 + (instancetype)currentSession;
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions;
 - (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;
 - (void)resetUserSelectedPhotos;
+- (void)clearUserSelectedPhotos;
 @end

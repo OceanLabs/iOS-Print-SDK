@@ -281,8 +281,8 @@ QRinput *QRinput_dup(QRinput *input)
 
 /**
  * Check the input data.
- * @param size
- * @param data
+ * @param size The size
+ * @param data The data
  * @return result
  */
 static int QRinput_checkModeNum(int size, const char *data)
@@ -299,7 +299,7 @@ static int QRinput_checkModeNum(int size, const char *data)
 
 /**
  * Estimates the length of the encoded bit stream of numeric data.
- * @param size
+ * @param size The size
  * @return number of bits
  */
 int QRinput_estimateBitsModeNum(int size)
@@ -392,8 +392,8 @@ const signed char QRinput_anTable[128] = {
 
 /**
  * Check the input data.
- * @param size
- * @param data
+ * @param size The size
+ * @param data The data
  * @return result
  */
 static int QRinput_checkModeAn(int size, const char *data)
@@ -410,7 +410,7 @@ static int QRinput_checkModeAn(int size, const char *data)
 
 /**
  * Estimates the length of the encoded bit stream of alphabet-numeric data.
- * @param size
+ * @param size The size
  * @return number of bits
  */
 int QRinput_estimateBitsModeAn(int size)
@@ -480,7 +480,7 @@ ABORT:
 
 /**
  * Estimates the length of the encoded bit stream of 8 bit data.
- * @param size
+ * @param size The size
  * @return number of bits
  */
 int QRinput_estimateBitsMode8(int size)
@@ -531,7 +531,7 @@ ABORT:
 
 /**
  * Estimates the length of the encoded bit stream of kanji data.
- * @param size
+ * @param size The size
  * @return number of bits
  */
 int QRinput_estimateBitsModeKanji(int size)
@@ -541,8 +541,8 @@ int QRinput_estimateBitsModeKanji(int size)
 
 /**
  * Check the input data.
- * @param size
- * @param data
+ * @param size The size
+ * @param data The data
  * @return result
  */
 static int QRinput_checkModeKanji(int size, const unsigned char *data)
@@ -680,7 +680,7 @@ int QRinput_check(QRencodeMode mode, int size, const unsigned char *data)
 
 /**
  * Estimates the length of the encoded bit stream on the current version.
- * @param entry
+ * @param entry The entry
  * @param version version of the symbol
  * @return number of bits
  */
@@ -766,9 +766,9 @@ static int QRinput_estimateVersion(QRinput *input)
 
 /**
  * Returns required length in bytes for specified mode, version and bits.
- * @param mode
- * @param version
- * @param bits
+ * @param mode The mode
+ * @param version The version
+ * @param bits The bits
  * @return required length of code words in bytes.
  */
 //__STATIC
@@ -820,7 +820,7 @@ static int QRinput_lengthOfCode(QRencodeMode mode, int version, int bits)
 
 /**
  * Convert the input data in the data chunk to a bit stream.
- * @param entry
+ * @param entry The entry
  * @return number of bits (>0) or -1 for failure.
  */
 static int QRinput_encodeBitStream(QRinput_List *entry, int version)

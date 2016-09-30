@@ -39,6 +39,7 @@
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLUserSession.h"
 
 static const NSUInteger kSectionDeliveryDetails = 0;
 static const NSUInteger kSectionEmail = 1;
@@ -65,7 +66,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 - (BOOL)showPhoneEntryField;
 - (NSString *)userEmail;
 - (NSString *)userPhone;
-- (void)recalculateOrderCostIfNewSelectedCountryDiffers:(OLCountry *)selectedCountry;
 - (void)onButtonCheckboxClicked:(UIButton *)sender;
 
 @end
@@ -180,7 +180,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (void)populateDefaultDeliveryAddress {
-    if (![self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [self.kiteDelegate shouldStoreDeliveryAddresses]){
+    if (![OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *firstName = [defaults stringForKey:kKeyRecipientFirstName];
         NSString *lastName = [defaults stringForKey:kKeyRecipientName];
@@ -245,7 +245,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.delegate = self.delegate;
     
-    if (![self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [self.kiteDelegate shouldStoreDeliveryAddresses]){
+    if (![OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:email forKey:kKeyEmailAddress];
         [defaults setObject:phone forKey:kKeyPhone];
@@ -256,7 +256,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 - (void)saveAddress{
-    if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+    if ([OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
         return;
     }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -436,7 +436,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
                 self.shippingAddress.country = [OLCountry countryForCode:@"GBR"];
                 controller.selected = @[self.shippingAddress.country];
             }
-            controller.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            controller.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:controller animated:YES completion:nil];
         }
         
@@ -503,8 +503,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 }
 
 -(void) countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray *)countries{
-    [super recalculateOrderCostIfNewSelectedCountryDiffers:countries.lastObject];
-    
     [self dismissViewControllerAnimated:YES completion:nil];
     self.shippingAddress.country = countries.lastObject;
     self.textFieldCountry.text = self.shippingAddress.country.name;

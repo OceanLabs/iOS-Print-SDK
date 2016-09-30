@@ -132,7 +132,7 @@
             
             [printPhoto imageWithSize:self.imageView.frame.size applyEdits:YES progress:^(float progress){
                 [self.imageView setProgress:progress];
-            }completion:^(UIImage *image){
+            }completion:^(UIImage *image, NSError *error){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (blockIndex == imageIndex){
                         self.imageView.image = image;

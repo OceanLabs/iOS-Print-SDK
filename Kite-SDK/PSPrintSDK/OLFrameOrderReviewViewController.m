@@ -38,8 +38,9 @@
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
 #import "OLUserSession.h"
+#import "UIImageView+FadeIn.h"
 
-@interface OLOrderReviewViewController (Private)
+@interface OLPackProductViewController (Private)
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (BOOL) shouldGoToCheckout;
@@ -100,6 +101,7 @@ CGFloat margin = 2;
     OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
+    cropVc.product = self.product;
     
     cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
     cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
@@ -108,10 +110,10 @@ CGFloat margin = 2;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-//        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
     }];
 }
@@ -165,10 +167,11 @@ CGFloat margin = 2;
     
     self.editingPrintPhoto = printPhoto;
     
-    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
-        previewVc.image = image;
-    }];
+    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
+    __weak OLImagePreviewViewController *weakVc = previewVc;
+    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingPrintPhoto size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+        [weakVc.imageView setProgress:progress];
+    }completionHandler:NULL];
     previewVc.providesPresentationContextTransitionStyle = true;
     previewVc.definesPresentationContext = true;
     previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
@@ -180,12 +183,14 @@ CGFloat margin = 2;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
+    cropVc.product = self.product;
+    
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image){
+    }completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:YES completion:NULL];
     }];
     
@@ -285,7 +290,7 @@ CGFloat margin = 2;
         OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
         [printPhoto imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
             [cellImage setProgress:progress];
-        }completion:^(UIImage *image){
+        }completion:^(UIImage *image, NSError *error){
             dispatch_async(dispatch_get_main_queue(), ^{
                 cellImage.image = image;
             });

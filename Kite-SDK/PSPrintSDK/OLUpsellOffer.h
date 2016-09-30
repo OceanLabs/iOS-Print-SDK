@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
+typedef NS_ENUM(NSInteger, OLUpsellOfferType) {
     OLUpsellOfferTypeItemNA,
     OLUpsellOfferTypeItemAdd
-}OLUpsellOfferType;
+};
 
 @interface OLUpsellOffer : NSObject <NSCopying, NSCoding>
 

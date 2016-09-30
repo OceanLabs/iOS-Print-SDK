@@ -1,15 +1,37 @@
 //
-//  InstagramMediaRequest.m
-//  Ps
+//  Modified MIT License
 //
-//  Created by Deon Botha on 09/12/2013.
-//  Copyright (c) 2013 dbotha. All rights reserved.
+//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
+//  to be used with any competitor platforms. This means the software MAY NOT be modified
+//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  Kite Tech Ltd platform servers.
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 //
 
 #import "OLInstagramMediaRequest.h"
 #import "OLInstagramImage.h"
 #import "OLInstagramImagePickerConstants.h"
-#import <NXOAuth2Client/NXOAuth2.h>
+#import "OLOAuth2.h"
+@import UIKit;
 
 @interface OLInstagramMediaRequest ()
 @property (nonatomic, assign) BOOL cancelled;
@@ -35,11 +57,11 @@
 }
 
 - (void)fetchMediaWithCompletionHandler:(InstagramMediaRequestCompletionHandler)completionHandler {
-    NXOAuth2Account *account = [[[NXOAuth2AccountStore sharedStore] accounts] lastObject];
+    OLOAuth2Account *account = [[[OLOAuth2AccountStore sharedStore] accounts] lastObject];
     [self fetchMediaForAccount:account completionHandler:completionHandler];
 }
 
-- (void)fetchMediaForAccount:(NXOAuth2Account *)account completionHandler:(InstagramMediaRequestCompletionHandler)completionHandler {
+- (void)fetchMediaForAccount:(OLOAuth2Account *)account completionHandler:(InstagramMediaRequestCompletionHandler)completionHandler {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     if ([self.baseURL rangeOfString:@"access_token"].location == NSNotFound) {
@@ -48,7 +70,7 @@
     
     NSURL *url = [NSURL URLWithString:[self.baseURL stringByAppendingString:@"&count=100"]];
 
-    [NXOAuth2Request performMethod:@"GET"
+    [OLOAuth2Request performMethod:@"GET"
                         onResource:url
                    usingParameters:nil
                        withAccount:account
@@ -64,9 +86,9 @@
                        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
                        if (httpResponse.statusCode == 400 || httpResponse.statusCode == 401) {
                            // Kill all accounts and force the user to login again.
-                           NSArray *accounts = [[NXOAuth2AccountStore sharedStore] accounts];
-                           for (NXOAuth2Account *account in accounts) {
-                               [[NXOAuth2AccountStore sharedStore] removeAccount:account];
+                           NSArray *accounts = [[OLOAuth2AccountStore sharedStore] accounts];
+                           for (OLOAuth2Account *account in accounts) {
+                               [[OLOAuth2AccountStore sharedStore] removeAccount:account];
                            }
                            
                            NSError *error = [NSError errorWithDomain:kOLInstagramImagePickerErrorDomain code:kOLInstagramImagePickerErrorCodeOAuthTokenInvalid userInfo:@{NSLocalizedDescriptionKey: @"Instagram authorization token has expired. You'll need to log in again."}];
@@ -80,7 +102,6 @@
                            }
                            
                            if (httpResponse.statusCode != 200) {
-                               // TODO: real error handling here based on response json error message!!!!
                                 NSError *error = [NSError errorWithDomain:kOLInstagramImagePickerErrorDomain code:kOLInstagramImagePickerErrorCodeBadResponse userInfo:@{NSLocalizedDescriptionKey: @"Failed to reach Instagram. Please check your internet connectivity and try again."}];
                                if (completionHandler) completionHandler(error, nil, nil);
                            } else {

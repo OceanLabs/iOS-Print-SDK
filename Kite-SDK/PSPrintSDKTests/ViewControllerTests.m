@@ -29,7 +29,7 @@
 #import "PrintOrderHistoryViewController.h"
 #import "OLAddressEditViewController.h"
 #import "OLTestTapGestureRecognizer.h"
-#import "OLCustomPhotoProvider.h"
+#import "OLCustomViewControllerPhotoProvider.h"
 #import "CatsAssetCollectionDataSource.h"
 #import "DogsAssetCollectionDataSource.h"
 #import "OLUpsellViewController.h"
@@ -488,7 +488,7 @@
     }];
     
     [self performUIAction:^{
-        [caseVc showPickerForProvider:[OLKiteUtils kiteVcForViewController:caseVc].customImageProviders.firstObject];
+        [caseVc showPickerForProvider:[OLUserSession currentSession].kiteVc.customImageProviders.firstObject];
     }];
     
     [self performUIAction:^{
@@ -496,7 +496,7 @@
     }];
     
     [self performUIAction:^{
-        [caseVc showPickerForProvider:[OLKiteUtils kiteVcForViewController:caseVc].customImageProviders.lastObject];
+        [caseVc showPickerForProvider:[OLUserSession currentSession].kiteVc.customImageProviders.lastObject];
     }];
     
     [self performUIAction:^{
@@ -779,7 +779,7 @@
         [productHomeVc.navigationController popViewControllerAnimated:YES];
     }];
     
-    [[OLKiteUtils kiteVcForViewController:productHomeVc] dismiss];
+    [[OLUserSession currentSession].kiteVc dismiss];
 }
 
 - (void)testIntegratedCheckoutViewController{

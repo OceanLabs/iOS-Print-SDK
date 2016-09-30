@@ -123,6 +123,37 @@
     };
     
     NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];
+    
+    // iOS 8 doesn't call the delegate properly, handle here
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 9){
+        downloadTask = [session downloadTaskWithRequest:request completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error){
+            NSData *data = [NSData dataWithContentsOfURL:location];
+            if (error){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (handler){
+                        handler(nil, error);
+                    }
+                });
+            }
+            else if (data && [(NSHTTPURLResponse *)response statusCode] >= 200 && [(NSHTTPURLResponse *)response statusCode] <= 299){
+                NSCachedURLResponse *cachedResponse = [[NSCachedURLResponse alloc] initWithResponse:response data:data userInfo:nil storagePolicy:NSURLCacheStorageAllowed];
+                [configuration.URLCache storeCachedResponse:cachedResponse forRequest:request];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (handler){
+                        handler([UIImage imageWithData:data], nil);
+                    }
+                });
+            }
+            else{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (handler){
+                        handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:[(NSHTTPURLResponse *)response statusCode] userInfo:nil]);
+                    }
+                });
+            }
+        }];
+    }
+    
     downloadTask.priority = priority;
     [downloadTask resume];
     [session finishTasksAndInvalidate];

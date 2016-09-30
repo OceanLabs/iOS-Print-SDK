@@ -28,6 +28,7 @@
 //
 
 #import "OLImagePickerPhotosPageViewController+Facebook.h"
+#import "OLKiteUtils.h"
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
@@ -65,27 +66,20 @@
                 welf.loadingIndicator.hidden = NO;
                 welf.getAlbumError = error; // delay notification so that delegate can dismiss view controller safely if desired.
             } else {
-                //TODO error
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleDefault handler:NULL]];
+                [self.imagePicker presentViewController:ac animated:YES completion:NULL];
             }
             return;
         }
         
-//        NSMutableArray *paths = [[NSMutableArray alloc] init];
-//        for (NSUInteger i = 0; i < albums.count; ++i) {
-//            [paths addObject:[NSIndexPath indexPathForRow:welf.albums.count + i inSection:0]];
-//        }
         
         [welf.albums addObjectsFromArray:albums];
-//        if (welf.albums.count == albums.count) {
-//            // first insert request
-//            [welf.collectionView reloadData];
-//        } else {
-//            [welf.collectionView insertItemsAtIndexPaths:paths];
-//        }
         
         if (nextPageRequest) {
-            //            welf.tableView.tableFooterView = welf.loadingFooter;
-        } else {
+            
+        }
+        else {
             welf.albumLabel.text = welf.albums.firstObject.name;
             for (OLFacebookAlbum *album in welf.albums){
                 OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[[NSMutableArray alloc] init] name:album.name];
@@ -100,7 +94,6 @@
             
             welf.nextPageRequest = [[OLFacebookPhotosForAlbumRequest alloc] initWithAlbum:welf.albums.firstObject];
             [welf loadNextFacebookPage];
-            //            welf.tableView.tableFooterView = nil;
         }
         
     }];
@@ -119,7 +112,9 @@
         welf.loadingIndicator.hidden = YES;
         
         if (error) {
-            //TODO error
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleDefault handler:NULL]];
+            [self.imagePicker presentViewController:ac animated:YES completion:NULL];
             return;
         }
         

@@ -39,18 +39,6 @@
 
 @dynamic delegate;
 
-//- (BOOL)prefersStatusBarHidden {
-//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-//    
-//    if ([self respondsToSelector:@selector(traitCollection)]){
-//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-//            hidden |= YES;
-//        }
-//    }
-//    
-//    return hidden;
-//}
-
 - (id)init {
     OLAddressSelectionViewController *vc = [[OLAddressSelectionViewController alloc] init];
     if (self = [super initWithRootViewController:vc]) {
@@ -88,7 +76,7 @@
 
 #pragma mark - OLAddressSelectionViewControllerDelegate methods
 
-- (void)addressSelectionController:(OLAddressSelectionViewController *)vc didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses {
+- (void)addressSelectionController:(OLAddressSelectionViewController *)vc didFinishPickingAddresses:(NSArray<OLAddress *> *)addresses {
     if (addresses.count > 0) {
         [self.delegate addressPicker:self didFinishPickingAddresses:addresses];
     } else {

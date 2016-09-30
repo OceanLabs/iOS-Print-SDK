@@ -15,6 +15,8 @@
 #import "OLKitePrintSDK.h"
 #import "OLPayPalCard+OLCardIcon.h"
 #import "OLStripeCard+OLCardIcon.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLUserSession.h"
 
 @interface OLPaymentMethodsViewController () <UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLCreditCardCaptureDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -57,15 +59,13 @@
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     NSInteger sections = 1; //Credit Cards for everyone!
     
-#ifdef OL_KITE_OFFER_APPLE_PAY
-    if ([OLPaymentViewController isApplePayAvailable]){
+    if ([OLKiteUtils isApplePayAvailable]){
         sections++;
     }
-#endif
     
-#ifdef OL_KITE_OFFER_PAYPAL
-    sections++;
-#endif
+    if ([OLKiteUtils isPayPalAvailable]){
+        sections++;
+    }
     
     return sections;
 }
@@ -98,13 +98,12 @@
         }
     }
     else if (method == kOLPaymentMethodCreditCard){
-        imageView.image = [UIImage imageNamed:@"add-payment"];
+        imageView.image = [UIImage imageNamedInKiteBundle:@"add-payment"];
         label.text = NSLocalizedStringFromTableInBundle(@"Add Credit/Debit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         [cell viewWithTag:30].hidden = YES;
     }
-#ifdef OL_KITE_OFFER_APPLE_PAY
     else if (method == kOLPaymentMethodApplePay){
-        imageView.image = [UIImage imageNamed:@"apple-pay-method"];
+        imageView.image = [UIImage imageNamedInKiteBundle:@"apple-pay-method"];
         label.text = @"Apple Pay";
         
         if (self.selectedPaymentMethod == kOLPaymentMethodNone){
@@ -118,10 +117,8 @@
             [cell viewWithTag:30].hidden = YES;
         }
     }
-#endif
-#ifdef OL_KITE_OFFER_PAYPAL
     else if (method == kOLPaymentMethodPayPal){
-        imageView.image = [UIImage imageNamed:@"paypal-method"];
+        imageView.image = [UIImage imageNamedInKiteBundle:@"paypal-method"];
         label.text = @"PayPal";
         if (self.selectedPaymentMethod == kOLPaymentMethodPayPal){
             [cell viewWithTag:30].hidden = NO;
@@ -130,7 +127,6 @@
             [cell viewWithTag:30].hidden = YES;
         }
     }
-#endif
     else{
         NSAssert(NO, @"Too many cells?");
     }
@@ -169,25 +165,17 @@
     if (section == 0){
         return kOLPaymentMethodCreditCard;
     }
-    else if (section == 1 && [OLPaymentViewController isApplePayAvailable]){
+    else if (section == 1 && [OLKiteUtils isApplePayAvailable]){
         return kOLPaymentMethodApplePay;
     }
-    else if (section == 1 && [self isPayPalAvailable]){
+    else if (section == 1 && [OLKiteUtils isPayPalAvailable]){
         return kOLPaymentMethodPayPal;
     }
-    else if (section == 2 && [self isPayPalAvailable]){
+    else if (section == 2 && [OLKiteUtils isPayPalAvailable]){
         return kOLPaymentMethodPayPal;
     }
     NSAssert(NO, @"Should not reach here");
     return kOLPaymentMethodNone;
-}
-
-- (BOOL)isPayPalAvailable{
-#ifdef OL_KITE_OFFER_PAYPAL
-    return YES;
-#else
-    return NO;
-#endif
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
@@ -200,7 +188,7 @@
 - (void)addNewCard {
     OLCreditCardCaptureViewController *ccCaptureController = [[OLCreditCardCaptureViewController alloc] initWithPrintOrder:nil];
     ccCaptureController.delegate = self;
-    ccCaptureController.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    ccCaptureController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:ccCaptureController animated:YES completion:nil];
 }
 

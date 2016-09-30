@@ -30,13 +30,13 @@
 #import <Foundation/Foundation.h>
 #import "OLProductTemplateOptionChoice.h"
 
-typedef enum {
+typedef NS_ENUM(NSInteger, OLProductTemplateOptionType) {
     OLProductTemplateOptionTypeGeneric,
     OLProductTemplateOptionTypeColor1,
     OLProductTemplateOptionTypeColor2,
     OLProductTemplateOptionTypeColor3,
 //    OLProductTemplateOptionTypeBorderOverride
-} OLProductTemplateOptionType;
+};
 
 @interface OLProductTemplateOption : NSObject
 

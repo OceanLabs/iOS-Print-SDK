@@ -2,17 +2,10 @@ platform :ios, '8.0'
 inhibit_all_warnings!
 
 def shared_pods
-    pod 'SVProgressHUD', '1.1.3'
     pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
-    pod 'Stripe', '~> 5.1.4'
-    pod 'Stripe/ApplePay'
-    pod 'DACircularProgress'
-    pod 'CSStickyHeaderFlowLayout'
-    pod 'MPFlipViewController'
-    pod 'TSMarkdownParser'
-    pod 'NXOAuth2Client'
-    pod 'FBSDKCoreKit', '~> 4.8.0'
-    pod 'FBSDKLoginKit', '~> 4.8.0'
+    pod 'Stripe', '~> 8.0.6'
+    pod 'FBSDKCoreKit', '~> 4.16.0'
+    pod 'FBSDKLoginKit', '~> 4.16.0'
 end
 
 target 'KiteSDK-Demo' do

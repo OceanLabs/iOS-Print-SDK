@@ -27,12 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <SVProgressHUD/SVProgressHUD.h>
-#else
-#import "SVProgressHUD.h"
-#endif
-
+#import "OLProgressHUD.h"
 #import "OLImageDownloader.h"
 #import "OLReceiptViewController.h"
 #import "OLPaymentViewController.h"
@@ -44,13 +39,14 @@
 #import "OLConstants.h"
 #import "OLPaymentLineItem.h"
 #import "OLPrintOrderCost.h"
-#import "OLOrderReviewViewController.h"
+#import "OLPackProductViewController.h"
 #import "OLKiteViewController.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+OLUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLNavigationController.h"
 #import "OLKiteUtils.h"
+#import "OLUserSession.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
@@ -65,25 +61,13 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)validateOrderSubmissionWithCompletionHandler:(void(^)(NSString *orderIdReceipt, NSError *error))handler;
 @end
 
-@interface OLOrderReviewViewController (Private)
+@interface OLPackProductViewController (Private)
 
 - (UIView *)footerViewForReceiptViewController:(UIViewController *)receiptVc;
 
 @end
 
 @implementation OLReceiptViewController
-
-//- (BOOL)prefersStatusBarHidden {
-//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-//    
-//    if ([self respondsToSelector:@selector(traitCollection)]){
-//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-//            hidden |= YES;
-//        }
-//    }
-//    
-//    return hidden;
-//}
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
@@ -155,7 +139,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     }
     
     if ([self.delegate respondsToSelector:@selector(footerViewForReceiptViewController:)]){
-        self.tableView.tableFooterView = [(OLOrderReviewViewController *)self.delegate footerViewForReceiptViewController:self];
+        self.tableView.tableFooterView = [(OLPackProductViewController *)self.delegate footerViewForReceiptViewController:self];
     }
 }
 
@@ -183,7 +167,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 }
 
 - (void)onButtonDoneClicked {
-    OLKiteViewController *kiteVc = [OLKiteUtils kiteVcForViewController:self];
+    OLKiteViewController *kiteVc = [OLUserSession currentSession].kiteVc;
     if  (!kiteVc){
         [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
     }
@@ -241,7 +225,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
             vc.delegate = self;
             OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-            nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:nvc animated:YES completion:NULL];
         }]];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];
@@ -249,10 +233,10 @@ static const NSUInteger kSectionErrorRetry = 2;
         return;
     }
     else if (self.printOrder.submitStatus == OLPrintOrderSubmitStatusAccepted || self.printOrder.submitStatus == OLPrintOrderSubmitStatusReceived){
-        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-        [SVProgressHUD showWithStatus:@"Processing"];
+        [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
+        [OLProgressHUD showWithStatus:@"Processing"];
         [self.printOrder validateOrderSubmissionWithCompletionHandler:^(NSString *orderReceipt, NSError *error){
-            [SVProgressHUD dismiss];
+            [OLProgressHUD dismiss];
             if (error){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
@@ -272,18 +256,18 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (void)retrySubmittingOrderForPrinting {
     [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
-    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-    [SVProgressHUD showWithStatus:@"Processing"];
+    [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
+    [OLProgressHUD showWithStatus:@"Processing"];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
         const float step = (1.0f / totalAssetsToUpload);
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
-        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-        [SVProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload]];
+        [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
+        [OLProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload]];
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
-        [SVProgressHUD dismiss];
+        [OLProgressHUD dismiss];
         
         if (error) {
             [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];

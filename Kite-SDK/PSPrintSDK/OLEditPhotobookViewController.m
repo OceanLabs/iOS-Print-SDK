@@ -53,12 +53,9 @@ static const NSInteger kSectionPages = 2;
 @end
 
 @interface OLKitePrintSDK (InternalUtils)
-
-#ifdef OL_KITE_OFFER_INSTAGRAM
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
 + (NSString *) instagramClientID;
-#endif
 @end
 
 @interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate>
@@ -246,7 +243,6 @@ static const NSInteger kSectionPages = 2;
     photobook.userSelectedPhotos = [OLUserSession currentSession].userSelectedPhotos;
     photobook.photobookPhotos = self.photobookPhotos;
     photobook.product = self.product;
-    photobook.delegate = self.delegate;
     
     [self.navigationController pushViewController:photobook animated:YES];
 }
@@ -431,6 +427,7 @@ static const NSInteger kSectionPages = 2;
     OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
+    cropVc.product = self.product;
     
     cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
     cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
@@ -438,10 +435,10 @@ static const NSInteger kSectionPages = 2;
     cropVc.providesPresentationContextTransitionStyle = true;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    [cropPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+    [cropPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = cropPhoto.edits;
-        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
     }];
     
@@ -753,7 +750,6 @@ static const NSInteger kSectionPages = 2;
         }
         
         photobook.product = self.product;
-        photobook.delegate = self.delegate;
         photobook.editMode = YES;
         [self addChildViewController:photobook];
         photobook.view.alpha = 0;

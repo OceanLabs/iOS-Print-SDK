@@ -27,10 +27,10 @@
 //  THE SOFTWARE.
 //
 
-#import "OLOrderReviewViewController.h"
+#import "OLPackProductViewController.h"
 #import "LXReorderableCollectionViewFlowLayout.h"
 
-@interface OLFrameOrderReviewViewController : OLOrderReviewViewController <LXReorderableCollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface OLFrameOrderReviewViewController : OLPackProductViewController <LXReorderableCollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 +(void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
 

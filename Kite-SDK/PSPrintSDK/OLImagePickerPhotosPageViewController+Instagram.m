@@ -29,9 +29,10 @@
 
 #import "OLImagePickerPhotosPageViewController+Instagram.h"
 #import "OLInstagramImagePickerConstants.h"
-#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#import "OLOAuth2AccountStore.h"
 #import "OLInstagramImage.h"
 #import "OLImagePickerProviderCollection.h"
+#import "OLKiteUtils.h"
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
@@ -65,14 +66,16 @@
             // clear all accounts and redo login...
             if (error.domain == kOLInstagramImagePickerErrorDomain && error.code == kOLInstagramImagePickerErrorCodeOAuthTokenInvalid) {
                 // need to renew auth token, start by clearing any accounts. A new one will be created as part of the login process.
-                NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-                for (NXOAuth2Account *account in instagramAccounts) {
-                    [[NXOAuth2AccountStore sharedStore] removeAccount:account];
+                NSArray *instagramAccounts = [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
+                for (OLOAuth2Account *account in instagramAccounts) {
+                    [[OLOAuth2AccountStore sharedStore] removeAccount:account];
                 }
                 
                 [welf.imagePicker reloadPageController];
             } else {
-                //TODO handle error
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleDefault handler:NULL]];
+                [self.imagePicker presentViewController:ac animated:YES completion:NULL];
             }
             
             return;

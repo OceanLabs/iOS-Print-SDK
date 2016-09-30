@@ -40,10 +40,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLKitePrintSDK.h"
 #import "OLImageCachingManager.h"
 #import "OLUserSession.h"
+#import "OLImagePickerViewController.h"
 
 @import Photos;
 
-@interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate>
+@interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
@@ -61,14 +62,10 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-#ifdef OL_KITE_OFFER_INSTAGRAM
     [OLKitePrintSDK setInstagramEnabledWithClientID:@"1af4c208cbdc4d09bbe251704990638f" secret:@"c8a5b1b1806f4586afad2f277cee1d5c" redirectURI:@"kitely://instagram-callback"];
-#endif
     
-#ifdef OL_KITE_OFFER_APPLE_PAY
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-#endif
 }
 
 - (BOOL)shouldAutorotate {
@@ -82,20 +79,13 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
     
-    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
-        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
-            if (status == PHAuthorizationStatusAuthorized){
-                //TODO system image picker
-            }
-        }];
-    }
-    else{
-        //TODO system image picker
-    }
+    OLImagePickerViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.delegate = self;
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 
 - (NSString *)apiKey {
-    if ([self environment] == kOLKitePrintSDKEnvironmentSandbox) {
+    if ([self environment] == OLKitePrintSDKEnvironmentSandbox) {
         return kAPIKeySandbox;
     } else {
         return kAPIKeyLive;
@@ -116,9 +106,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 - (OLKitePrintSDKEnvironment)environment {
     if (self.environmentPicker.selectedSegmentIndex == 0) {
-        return kOLKitePrintSDKEnvironmentSandbox;
+        return OLKitePrintSDKEnvironmentSandbox;
     } else {
-        return kOLKitePrintSDKEnvironmentLive;
+        return OLKitePrintSDKEnvironmentLive;
     }
 }
 
@@ -139,7 +129,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [kvc addCustomPhotoProviderWithCollections:@[catsCollection, dogsCollection] name:@"Animals" icon:[UIImage imageNamed:@"dog"]];
 }
 
-#pragma mark - OLKiteDelete
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    [vc dismissViewControllerAnimated:YES completion:^{
+        [self printWithAssets:assets];
+    }];
+}
 
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
 #ifdef OL_KITE_VERBOSE
@@ -153,6 +147,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     BOOL shouldOfferAPIChange = YES;
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     
+    [OLKitePrintSDK setQRCodeUploadEnabled:YES];
+    
     if (!([pasteboard containsPasteboardTypes: [NSArray arrayWithObject:@"public.utf8-plain-text"]] && pasteboard.string.length == 40)) {
         shouldOfferAPIChange = NO;
     }
@@ -163,11 +159,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
 #define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
-            [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+            [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
             
-#ifdef OL_KITE_OFFER_APPLE_PAY
             [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-#endif
             
             OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets info:@{}];
             vc.userEmail = @"";
@@ -181,10 +175,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDefault handler:^(id action){
             [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
             
-#ifdef OL_KITE_OFFER_APPLE_PAY
             [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
             [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-#endif
             
             OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
             vc.userEmail = @"";
@@ -199,10 +191,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             [OLKitePrintSDK setUseStaging:YES];
             [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
             
-#ifdef OL_KITE_OFFER_APPLE_PAY
             [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
             [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-#endif
             
             OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
             vc.userEmail = @"";
@@ -219,11 +209,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
 #define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
-        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
         
-#ifdef OL_KITE_OFFER_APPLE_PAY
         [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-#endif
         
         OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
         vc.userEmail = @"";

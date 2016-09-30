@@ -25,7 +25,7 @@
 
 - (void)setUp {
     [super setUp];
-    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKiteSDKEnvironmentSandbox];
     [OLKitePrintSDK setIsUnitTesting];
 }
 

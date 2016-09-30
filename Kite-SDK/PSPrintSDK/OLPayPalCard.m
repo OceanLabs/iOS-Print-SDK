@@ -91,7 +91,6 @@ static NSString *typeToString(OLPayPalCardType type) {
 }
 
 - (void)saveAsLastUsedCard {
-    // TODO: store securely
     lastUsedCard = self;
     [NSKeyedArchiver archiveRootObject:lastUsedCard toFile:[OLPayPalCard lastUsedCardFilePath]];
 }
@@ -149,7 +148,6 @@ static NSString *typeToString(OLPayPalCardType type) {
                 if ([accessToken isKindOfClass:[NSString class]] && !JSONError) {
                     handler(accessToken, nil);
                 } else {
-                    // TODO: real response here :)
                     NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to validate card details, please try again.", @"")}];
                     handler(nil, error);
                 }

@@ -35,7 +35,7 @@
 
 @interface OLCountryListController : UITableViewController
 @property (strong, nonatomic) NSMutableArray *selected;
-@property (strong, nonatomic) NSMutableArray/*<NSArray<NSArray<OLCountry> > >*/ *sections;
+@property (strong, nonatomic) NSMutableArray<NSArray<OLCountry *> *> *sections;
 @end
 
 @interface OLCountryPickerController ()
@@ -43,18 +43,6 @@
 @end
 
 @implementation OLCountryListController
-
-//- (BOOL)prefersStatusBarHidden {
-//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-//    
-//    if ([self respondsToSelector:@selector(traitCollection)]){
-//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-//            hidden |= YES;
-//        }
-//    }
-//    
-//    return hidden;
-//}
 
 - (id)initWithStyle:(UITableViewStyle)style {
     if (self = [super initWithStyle:style]) {

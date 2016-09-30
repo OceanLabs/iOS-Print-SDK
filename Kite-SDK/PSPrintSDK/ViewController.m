@@ -40,10 +40,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "ViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLImageCachingManager.h"
+#import "OLImagePickerViewController.h"
 
 @import Photos;
 
-@interface ViewController () <UINavigationControllerDelegate, OLKiteDelegate>
+@interface ViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
@@ -61,14 +62,10 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-#ifdef OL_KITE_OFFER_INSTAGRAM
     [OLKitePrintSDK setInstagramEnabledWithClientID:@"1af4c208cbdc4d09bbe251704990638f" secret:@"c8a5b1b1806f4586afad2f277cee1d5c" redirectURI:@"kitely://instagram-callback"];
-#endif
     
-#ifdef OL_KITE_OFFER_APPLE_PAY
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-#endif
 }
 
 - (BOOL)shouldAutorotate {
@@ -82,16 +79,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
     
-    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
-        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
-            if (status == PHAuthorizationStatusAuthorized){
-                //TODO system image picker
-            }
-        }];
-    }
-    else{
-        //TODO system image picker
-    }
+    OLImagePickerViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.delegate = self;
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 
 - (NSString *)apiKey {
@@ -175,22 +165,10 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [kvc addCustomPhotoProviderWithCollections:@[catsCollection, dogsCollection] name:@"Animals" icon:[UIImage imageNamed:@"dog"]];
 }
 
-#pragma mark - OLKiteDelete
-
-- (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController *)controller {
-    return YES;
-}
-
-//- (BOOL)shouldShowOptOutOfEmailsCheckbox{
-//    return YES;
-//}
-
-//- (BOOL)shouldShowPhoneEntryOnCheckoutScreen{
-//    return YES;
-//}
-
-- (BOOL)shouldShowContinueShoppingButton{
-    return YES;
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    [vc dismissViewControllerAnimated:YES completion:^{
+        [self printWithAssets:assets];
+    }];
 }
 
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{

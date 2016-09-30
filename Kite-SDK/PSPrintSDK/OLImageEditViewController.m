@@ -39,6 +39,7 @@
 #import "OLNavigationController.h"
 #import "OLProductTemplateOption.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLKiteABTesting.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -47,6 +48,10 @@ const NSInteger kOLEditTagImageTools = 30;
 /**/const NSInteger kOLEditTagTextColors = 32;
 /**/const NSInteger kOLEditTagFonts = 33;
 const NSInteger kOLEditTagCrop = 40;
+
+@interface OLKiteViewController ()
+@property (strong, nonatomic) NSArray *fontNames;
+@end
 
 @interface OLImageEditViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate, OLImagePickerViewControllerDelegate>
 @property (assign, nonatomic) NSInteger initialOrientation;
@@ -85,6 +90,10 @@ const NSInteger kOLEditTagCrop = 40;
 @implementation OLImageEditViewController
 
 -(NSArray<NSString *> *) fonts{
+    if (!_fonts){
+        OLKiteViewController *kvc = [OLUserSession currentSession].kiteVc;
+        _fonts = [kvc fontNames];
+    }
     if (!_fonts){
         NSMutableArray<NSString *> *fonts = [[NSMutableArray<NSString *> alloc] init];
         for (NSString *familyName in [UIFont familyNames]){
@@ -168,9 +177,10 @@ const NSInteger kOLEditTagCrop = 40;
     }
     self.activeTextField = nil;
     
-    if (self.editingTools.collectionView.tag != kOLEditTagCrop){
-    [self dismissDrawerWithCompletionHandler:NULL];
+    if (self.editingTools.collectionView.tag == kOLEditTagCrop){
+        [self exitCropMode];
     }
+    [self dismissDrawerWithCompletionHandler:NULL];
 }
 
 - (void)viewDidLoad {
@@ -450,9 +460,19 @@ const NSInteger kOLEditTagCrop = 40;
 - (UIEdgeInsets)imageInsetsOnContainer{
     UIEdgeInsets b = self.borderInsets;
     
-    CGFloat width = self.printContainerView.frame.size.width;
-    CGFloat height = (width * (1.0 - b.left - b.right)) * self.aspectRatio;
-    height = height / (1 - b.top - b.bottom);
+    CGFloat width = 0;
+    CGFloat height = 0;
+    if (self.view.frame.size.height > self.view.frame.size.width){
+        width = self.printContainerView.frame.size.width;
+        height = (width * (1.0 - b.left - b.right)) * self.aspectRatio;
+        height = height / (1 - b.top - b.bottom);
+    }
+    else{
+        height = self.printContainerView.frame.size.height;
+        width = (height * (1.0 - b.top - b.bottom)) / self.aspectRatio;
+        width = width / (1 - b.left - b.right);
+
+    }
     
     return UIEdgeInsetsMake(b.top * height, b.left * width, b.bottom * height, b.right * width);
 }
@@ -463,6 +483,11 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    [self setupBottomBorderTextField];
+    if (self.edits.bottomBorderText.text){
+        self.borderTextField.text = self.edits.bottomBorderText.text;
+    }
     
     if (self.previewView && !self.skipPresentAnimation){
         [UIView animateWithDuration:0.10 animations:^{
@@ -479,6 +504,7 @@ const NSInteger kOLEditTagCrop = 40;
                     }
                 } completion:^(BOOL finished){
                     [self.previewView removeFromSuperview];
+                    self.previewSourceView.hidden = NO;
                 }];
             }];
         }];
@@ -554,6 +580,8 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)setupBottomBorderTextField{
     if (self.borderInsets.bottom / self.borderInsets.top >= 1.1 && !self.borderTextField){
+        CGFloat heightFactor = self.cropView.frame.size.height / 212.0;
+        
         UITextField *tf = [[UITextField alloc] init];
         tf.delegate = self;
         tf.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -561,8 +589,8 @@ const NSInteger kOLEditTagCrop = 40;
         tf.textAlignment = NSTextAlignmentCenter;
         tf.adjustsFontSizeToFitWidth = YES;
         tf.minimumFontSize = 1;
-        tf.placeholder = @"Tap to Add Text";
-        tf.font = [UIFont fontWithName:@"HelveticaNeue" size:35];
+        tf.placeholder = @"Add Text";
+        tf.font = [UIFont fontWithName:@"HelveticaNeue" size:35 * heightFactor];
         tf.textColor = [UIColor blackColor];
         self.borderTextField = tf;
         
@@ -576,7 +604,7 @@ const NSInteger kOLEditTagCrop = 40;
         UIEdgeInsets insets = [self imageInsetsOnContainer];
         
         NSArray *visuals = @[[NSString stringWithFormat:@"H:|-%f-[tf]-%f-|", insets.left - 5, insets.right - 5],
-                             @"V:[cropView]-10-[tf(40)]"];
+                             [NSString stringWithFormat:@"V:[cropView]-%f-[tf(%f)]", 8.0 * heightFactor, 40.0 * heightFactor]];
         
         
         for (NSString *visual in visuals) {
@@ -605,6 +633,7 @@ const NSInteger kOLEditTagCrop = 40;
         
         self.previewView.frame = self.printContainerView.frame;
         [self.view addSubview:self.previewView];
+        self.previewSourceView.hidden = YES;
         [UIView animateWithDuration:0.25 animations:^{
             self.view.backgroundColor = [UIColor clearColor];
             for (UIView *view in self.allViews){
@@ -689,6 +718,7 @@ const NSInteger kOLEditTagCrop = 40;
     static CGFloat originalAngle;
     
     if (gesture.state == UIGestureRecognizerStateBegan){
+        [self.cropView setGesturesEnabled:NO];
         original = gesture.view.transform;
         originalFrame = gesture.view.frame;
         CGPoint gesturePoint = [gesture locationInView:self.cropView];
@@ -776,6 +806,7 @@ const NSInteger kOLEditTagCrop = 40;
         }
     }
     else if (gesture.state == UIGestureRecognizerStateEnded){
+        [self.cropView setGesturesEnabled:YES];
         self.resizingTextField = NO;
         self.rotatingTextField = NO;
     }
@@ -838,6 +869,10 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Buttons
 
 - (void)setupButtons{
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        [self.editingTools setColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+    }
+    
     [self.editingTools.ctaButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"add-image-icon"] forState:UIControlStateNormal];
@@ -884,13 +919,15 @@ const NSInteger kOLEditTagCrop = 40;
         [self.edits.textsOnPhoto addObject:textOnPhoto];
     }
     
+    if (self.borderTextField.text){
+        self.edits.bottomBorderText = [[OLTextOnPhoto alloc] init];
+        self.edits.bottomBorderText.text = self.borderTextField.text;
+    }
+
     if (asset){
         asset.edits = self.edits;
     }
     
-    if (self.borderTextField.text){
-        self.product.selectedOptions[@"polaroid_text"] = self.borderTextField.text;
-    }
 }
 
 - (void)onButtonDoneTapped:(id)sender {
@@ -1253,7 +1290,6 @@ const NSInteger kOLEditTagCrop = 40;
         else if(collectionView.tag == OLProductTemplateOptionTypeColor1){
             [cell setSelected:[self.edits.borderColor isEqual:self.availableColors[indexPath.item]]];
         }
-        //TODO color2,color3
         
         [cell setNeedsDisplay];
     }
@@ -1625,6 +1661,11 @@ const NSInteger kOLEditTagCrop = 40;
     self.ctaButton.enabled = YES;
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    self.ctaButton.enabled = YES;
+    return YES;
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
     return NO;
@@ -1714,6 +1755,7 @@ const NSInteger kOLEditTagCrop = 40;
     vc.delegate = self;
     vc.selectedAssets = [[NSMutableArray alloc] init];
     vc.maximumPhotos = 1;
+    vc.product = self.product;
     [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 
@@ -1752,7 +1794,7 @@ const NSInteger kOLEditTagCrop = 40;
         dispatch_async(dispatch_get_main_queue(), ^{
             [welf.cropView setProgress:progress];
         });
-    } completion:^(UIImage *image){
+    } completion:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
             welf.fullImage = image;
             

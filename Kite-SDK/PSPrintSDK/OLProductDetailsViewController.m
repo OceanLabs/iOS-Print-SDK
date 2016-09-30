@@ -28,13 +28,13 @@
 //
 
 #import "OLProductDetailsViewController.h"
-#import "TSMarkdownParser.h"
+#import "OLMarkdownParser.h"
 #import "OLAnalytics.h"
 #import "OLKiteABTesting.h"
 
-@interface TSMarkdownParser ()
+@interface OLMarkDownParser ()
 
-- (void)addParsingRuleWithRegularExpression:(NSRegularExpression *)regularExpression block:(TSMarkdownParserMatchBlock)block;
+- (void)addParsingRuleWithRegularExpression:(NSRegularExpression *)regularExpression block:(OLMarkDownParserMatchBlock)block;
 
 @end
 
@@ -67,21 +67,13 @@
         [self.detailsLabel setFont:font];
     }
     
-//    if ([OLKiteABTesting sharedInstance].darkTheme){
-//        self.detailsLabel.textColor = [UIColor whiteColor];
-//        self.optionLabel.textColor = [UIColor whiteColor];
-//        self.selectedOptionLabel.textColor = [UIColor whiteColor];
-//        self.priceLabel.textColor = [UIColor whiteColor];
-//    }
+    NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
-    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
-    
-    //    if ([OLKiteABTesting sharedInstance].darkTheme){
-    //        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
-    //    }
-    //    else{
     [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
-    //    }
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.alignment = NSTextAlignmentNatural;
+    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedString.length)];
     
     NSRange strikeThroughRange = [[attributedString string] rangeOfString:@"\\~.*\\~" options:NSRegularExpressionSearch];
     if (strikeThroughRange.location != NSNotFound){

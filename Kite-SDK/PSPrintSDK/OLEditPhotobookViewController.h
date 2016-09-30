@@ -33,6 +33,5 @@
 @interface OLEditPhotobookViewController : UICollectionViewController
 
 @property (strong, nonatomic) OLProduct *product;
-@property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
 @end

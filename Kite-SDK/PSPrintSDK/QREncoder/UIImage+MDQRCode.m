@@ -35,7 +35,6 @@
 	int totalWidth = width + margin * 2;
 	int imageSize = (int)floorf(size);
 	
-	// @todo - review float->int stuff
 	int pixelSize = imageSize / totalWidth;
 	if (imageSize % totalWidth) {
 		pixelSize = imageSize / width;

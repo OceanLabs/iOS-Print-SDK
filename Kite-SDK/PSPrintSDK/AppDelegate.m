@@ -30,19 +30,14 @@
 #import "AppDelegate.h"
 #import "OLKitePrintSDK.h"
 
-#ifdef OL_KITE_OFFER_FACEBOOK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#endif
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-#ifdef OL_KITE_OFFER_FACEBOOK
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                     didFinishLaunchingWithOptions:launchOptions];
-#else
-    return YES;
-#endif
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -76,7 +71,6 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-#ifdef OL_KITE_OFFER_FACEBOOK
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
     BOOL wasHandled = [[FBSDKApplicationDelegate sharedInstance] application:application
                                                                      openURL:url
@@ -84,6 +78,5 @@
                                                                   annotation:annotation];
     return wasHandled;
 }
-#endif
 
 @end

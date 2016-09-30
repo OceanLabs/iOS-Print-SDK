@@ -29,9 +29,13 @@
 
 #import "OLUserSession.h"
 #import "OLKiteUtils.h"
-#import <NXOAuth2Client/NXOAuth2AccountStore.h>
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
+#import "OLOAuth2AccountStore.h"
+#import "OLAsset+Private.h"
+#import "OLPayPalCard.h"
+#import "OLStripeCard.h"
+#import "OLKiteABTesting.h"
+#import "OLAddress+AddressBook.h"
+#import "OLFacebookSDKWrapper.h"
 
 @interface OLPrintOrder (Private)
 
@@ -60,6 +64,13 @@
     return _userSelectedPhotos;
 }
 
+-(NSMutableArray *) recentPhotos{
+    if (!_recentPhotos){
+        _recentPhotos = [[NSMutableArray alloc] init];
+    }
+    return _recentPhotos;
+}
+
 -(OLPrintOrder *) printOrder{
     if (!_printOrder){
         _printOrder = [OLPrintOrder loadOrder];
@@ -72,20 +83,39 @@
 }
 
 - (void)resetUserSelectedPhotos{
-    [self.userSelectedPhotos removeAllObjects];
+    [self clearUserSelectedPhotos];
     [self.userSelectedPhotos addObjectsFromArray:self.appAssets];
+}
+
+- (void)clearUserSelectedPhotos{
+    for (OLAsset *asset in self.userSelectedPhotos){
+        [asset unloadImage];
+    }
+    
+    [self.userSelectedPhotos removeAllObjects];
+    
+    for (OLAsset *asset in self.recentPhotos){
+        [asset unloadImage];
+    }
+    [self.recentPhotos removeAllObjects];
 }
 
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions{
     if ((cleanupOptions & OLUserSessionCleanupOptionPhotos) == OLUserSessionCleanupOptionPhotos){
-        self.userSelectedPhotos = nil;
+        [self clearUserSelectedPhotos];
+        for (OLAsset *asset in self.appAssets){
+            [asset unloadImage];
+        }
+        
+        self.appAssets = nil;
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionBasket) == OLUserSessionCleanupOptionBasket){
         self.printOrder = [[OLPrintOrder alloc] init];
         [self.printOrder saveOrder];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionPayment) == OLUserSessionCleanupOptionPayment){
-        //TODO
+        [OLPayPalCard clearLastUsedCard];
+        [OLStripeCard clearLastUsedCard];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionSocial) == OLUserSessionCleanupOptionSocial){
         NSHTTPCookie *cookie;
@@ -97,18 +127,35 @@
             }
         }
         
-        NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-        for (NXOAuth2Account *account in instagramAccounts) {
-            [[NXOAuth2AccountStore sharedStore] removeAccount:account];
+        NSArray *instagramAccounts = [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
+        for (OLOAuth2Account *account in instagramAccounts) {
+            [[OLOAuth2AccountStore sharedStore] removeAccount:account];
         }
         
-        FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-        [loginManager logOut];
-        [FBSDKAccessToken setCurrentAccessToken:nil];
+        [OLFacebookSDKWrapper logout];
+        [OLFacebookSDKWrapper clearAccessToken];
+    }
+    if ((cleanupOptions & OLUserSessionCleanupOptionPersonal) == OLUserSessionCleanupOptionPersonal){
+        [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientLastName = nil;
+        [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientFirstName = nil;
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyEmailAddress"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyPhone"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyRecipientName"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyRecipientFirstName"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyLine1"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyLine2"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCity"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCounty"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyPostCode"];
+        [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCountry"];
+        [defaults synchronize];
+        
+        [OLAddress clearAddressBook];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionAll) == OLUserSessionCleanupOptionAll){
-        self.userSelectedPhotos = nil;
-        //TODO
+        [self cleanupUserSession:OLUserSessionCleanupOptionPhotos | OLUserSessionCleanupOptionBasket | OLUserSessionCleanupOptionSocial | OLUserSessionCleanupOptionPersonal];
     }
     
 }

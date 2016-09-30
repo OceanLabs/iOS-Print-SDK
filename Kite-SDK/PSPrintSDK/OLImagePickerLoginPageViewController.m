@@ -29,13 +29,14 @@
 
 #import "OLImagePickerLoginPageViewController.h"
 #import "UIView+RoundRect.h"
-#import "FBSDKLoginManager.h"
 #import "OLImagePickerViewController.h"
-#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#import "OLOAuth2AccountStore.h"
 #import "OLKitePrintSDK.h"
 #import "OLInstagramLoginWebViewController.h"
 #import "OLNavigationController.h"
 #import "OLKiteUtils.h"
+#import "OLFacebookSDKWrapper.h"
+#import "OLKiteABTesting.h"
 
 @interface OLImagePickerLoginPageViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
@@ -62,8 +63,12 @@
     }
     self.label.text = [NSString stringWithFormat:@"We need access to your %@ photos", providerName];
     
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
     [self.loginButton makeRoundRectWithRadius:self.loginButton.frame.size.height / 2.0];
-
+    if ([OLKiteABTesting sharedInstance].lightThemeColor2){
+        self.loginButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor2;
+    }
 }
 
 - (IBAction)onButtonLoginTapped:(UIButton *)sender {
@@ -75,12 +80,13 @@
         [self presentViewController:nvc animated:YES completion:NULL];
     }
     else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
-        FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-        [login logInWithReadPermissions:@[@"public_profile", @"user_photos"] fromViewController:self handler:^(id result, NSError *error) {
+        [OLFacebookSDKWrapper login:[OLFacebookSDKWrapper loginManager] withReadPermissions:@[@"public_profile", @"user_photos"] fromViewController:self handler:^(id result, NSError *error) {
             if (error) {
-                //TODO show error?
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleDefault handler:NULL]];
+                [self.imagePicker presentViewController:ac animated:YES completion:NULL];
             } else if ([result isCancelled]) {
-                
+                //Do nothing
             } else {
                 [self.imagePicker reloadPageController];
             }

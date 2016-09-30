@@ -52,7 +52,7 @@
 @implementation SignedS3RequestUploadDetails
 @end
 
-typedef void (^SignedS3UploadRequestCompletionHandler)(NSArray/*<SignedS3RequestUploadDetails>*/ *signedS3RequestUploadDetails, NSError *error);
+typedef void (^SignedS3UploadRequestCompletionHandler)(NSArray<SignedS3RequestUploadDetails *> *signedS3RequestUploadDetails, NSError *error);
 typedef void (^UploadToS3ProgressHandler)(long long bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite);
 typedef void (^UploadToS3CompletionHandler)(NSError *error);
 
@@ -100,7 +100,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     return [NSError errorWithDomain:kOLKiteSDKErrorDomain code:errorCode userInfo:@{NSLocalizedDescriptionKey:errorMessage}];
 }
 
-- (void)registerImageURLAssets:(NSArray/*<OLAsset>*/ *)imageURLAssets completionHandler:(RegisterImageURLAssetsCompletionHandler)handler {
+- (void)registerImageURLAssets:(NSArray<OLAsset *> *)imageURLAssets completionHandler:(RegisterImageURLAssetsCompletionHandler)handler {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/asset/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
     NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
     
@@ -109,7 +109,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     NSMutableArray *objects = [[NSMutableArray alloc] init];
     jsonBody[@"objects"] = objects;
     for (OLAsset *asset in imageURLAssets) {
-        if (asset.assetType == kOLAssetTypeRemoteImageURL) {
+        if (asset.assetType == kOLAssetTypeRemoteImageURL && ![asset isEdited]) {
             [objects addObject:@{@"url":asset.imageURL.absoluteString, @"client_asset":@"true", @"mime_type":asset.mimeType}];
             ++expectedRegisteredAssetCount;
         }
@@ -155,7 +155,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     }];
 }
 
-- (void)getSignedS3UploadRequestURLsWithAssets:(NSArray/*<OLAsset>*/ *)assets completionHandler:(SignedS3UploadRequestCompletionHandler)handler {
+- (void)getSignedS3UploadRequestURLsWithAssets:(NSArray<OLAsset *> *)assets completionHandler:(SignedS3UploadRequestCompletionHandler)handler {
     NSMutableString *mimeTypes = [[NSMutableString alloc] init];
     for (OLAsset *asset in assets) {
         if (mimeTypes.length > 0) {
@@ -217,8 +217,13 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
                                                      delegateQueue:nil];
     
     self.s3UploadTask  = [session uploadTaskWithRequest:request fromData:data completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-        //TODO: Check HTTP codes
         if (zelf.cancelled) return;
+        NSInteger httpStatusCode = [(NSHTTPURLResponse *)response statusCode];
+        if ((httpStatusCode < 200 || httpStatusCode > 299) && httpStatusCode != 0) {
+            NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Image upload failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) httpStatusCode]);
+            
+            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
+        }
         if (error){
             dispatch_async(dispatch_get_main_queue(), ^{
                 completionHandler(error);
@@ -259,7 +264,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     NSMutableArray *assetsToUpload = [[NSMutableArray alloc] init];
     
     for (OLAsset *asset in assets) {
-        if (asset.assetType == kOLAssetTypeRemoteImageURL) {
+        if (asset.assetType == kOLAssetTypeRemoteImageURL && ![asset isEdited]) {
             [imageURLAssets addObject:asset];
         } else {
             [assetsToUpload addObject:asset];
@@ -298,7 +303,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     if (assetsToUpload.count > 0) {
         ++outstandingAsyncOperationsCount;
         __weak OLAssetUploadRequest *zelf = self;
-        [self getSignedS3UploadRequestURLsWithAssets:assetsToUpload completionHandler:^(NSArray/*<SignedS3RequestUploadDetails>*/ *signedS3RequestUploadDetails, NSError *error) {
+        [self getSignedS3UploadRequestURLsWithAssets:assetsToUpload completionHandler:^(NSArray<SignedS3RequestUploadDetails *> *signedS3RequestUploadDetails, NSError *error) {
             if (zelf.cancelled) return;
             NSAssert([NSThread isMainThread], @"Oops we should be calling back on the main thread");
             if (error && !notifiedDelegateOfSomeOutcome) {

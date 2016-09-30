@@ -48,6 +48,8 @@ static NSString *const kKeyDataSource = @"co.oceanlabs.pssdk.kKeyDataSource";
 static NSString *const kKeyImageURL = @"co.oceanlabs.pssdk.kKeyImageURL";
 static NSString *const kKeyPHAssetLocalId = @"co.oceanlabs.pssdk.kKeyPHAssetLocalId";
 static NSString *const kKeyImageEdits = @"co.oceanlabs.pssdk.kKeyImageEdits";
+static NSString *const kKeyKiteAssetId = @"co.oceanlabs.pssdk.kKeyKiteAssetId";
+static NSString *const kKeyKitePreviewURL = @"co.oceanlabs.pssdk.kKeyKitePreviewURL";
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
@@ -267,17 +269,37 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
-    [self imageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image){
-        if (image){ //&& !error
-            handler(UIImageJPEGRepresentation(image, 0.7), nil);
+    [self backgroundImageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+        if (image && !error){
+            NSData *data = UIImageJPEGRepresentation(image, 0.7);
+            dispatch_async(dispatch_get_main_queue(), ^{
+               handler(data, error);
+            });
+            
         }
         else{
-            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+            });
         }
     }];
 }
 
-- (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image))handler{
+- (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler{
+    [self backgroundImageWithSize:size applyEdits:applyEdits progress:^(float p){
+        if (progress){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                progress(p);
+            });
+        }
+    }completion:^(UIImage *image, NSError *error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            handler(image, error);
+        });
+    }];
+}
+
+- (void)backgroundImageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler{
     if (!handler){
         //Nothing to do really
         return;
@@ -290,7 +312,7 @@ static NSOperationQueue *imageOperationQueue;
     
     if (self.cachedEditedImage) {
         if (size.height * [OLUserSession currentSession].screenScale <= self.cachedEditedImage.size.height || size.width * [OLUserSession currentSession].screenScale <= self.cachedEditedImage.size.width){
-            handler(self.cachedEditedImage);
+            handler(self.cachedEditedImage, nil);
             return;
         }
     }
@@ -300,15 +322,13 @@ static NSOperationQueue *imageOperationQueue;
         if (self.assetType == kOLAssetTypePHAsset) {
             PHImageManager *imageManager = [PHImageManager defaultManager];
             PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-            options.synchronous = NO;
+            options.synchronous = YES;
             options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
             options.resizeMode = PHImageRequestOptionsResizeModeFast;
             options.networkAccessAllowed = YES;
             options.progressHandler = ^(double progressAmount, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
                 if (progress){
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        progress(progressAmount);
-                    });
+                    progress(progressAmount);
                 }
             };
             
@@ -318,81 +338,75 @@ static NSOperationQueue *imageOperationQueue;
                 if (image){
                     if (applyEdits){
                         [self resizeImage:image size:size applyEdits:YES completion:^(UIImage *image){
-                            dispatch_async(dispatch_get_main_queue(), ^{
+                            if (!fullResolution){
                                 self.cachedEditedImage = image;
-                                handler(image);
-                            });
+                            }
+                            handler(image, nil);
                         }];
                     }
                     else{ //Image is already resized, no need to do it again
-                        dispatch_async(dispatch_get_main_queue(), ^{
+                        if (!fullResolution){
                             self.cachedEditedImage = image;
-                            handler(image);
-                        });
+                        }
+                        handler(image, nil);
                     }
                 }
                 else{
                     self.corrupt = YES;
                     NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        handler([UIImage imageWithData:data]);
-                    });
+                    handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
                 }
             }];
         }
         else if (self.assetType == kOLAssetTypeImageData){
             [self resizeImage:[UIImage imageWithData:self.imageData] size:size applyEdits:YES completion:^(UIImage *image){
-                dispatch_async(dispatch_get_main_queue(), ^{
+                if (!fullResolution){
                     self.cachedEditedImage = image;
-                    handler(image);
-                });
+                }
+                handler(image, nil);
             }];
         }
         else if (self.assetType == kOLAssetTypeImageFilePath){
             NSData *imageData = [NSData dataWithContentsOfFile:self.imageFilePath options:0 error:nil];
             [self resizeImage:[UIImage imageWithData:imageData] size:size applyEdits:YES completion:^(UIImage *image){
-                dispatch_async(dispatch_get_main_queue(), ^{
+                if (!fullResolution){
                     self.cachedEditedImage = image;
-                    handler(image);
-                });
+                }
+                handler(image, nil);
             }];
         }
         else if (/*self.assetType == kOLAssetTypeFacebookPhoto || self.assetType == kOLAssetTypeInstagramPhoto || */self.assetType == kOLAssetTypeRemoteImageURL) {
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.imageURL progress:^(NSInteger currentProgress, NSInteger total){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (progress) {
-                        progress(MAX(0.05f, (float)currentProgress / (float) total));
-                    }
-                });
+                if (progress) {
+                    progress(MAX(0.05f, (float)currentProgress / (float) total));
+                }
             }withCompletionHandler:^(UIImage *image, NSError *error){
                 [self resizeImage:image size:size applyEdits:YES completion:^(UIImage *image){
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (!error) {
+                    if (!error) {
+                        if (!fullResolution){
                             self.cachedEditedImage = image;
-                            if (progress){
-                                progress(1);
-                            }
-                            handler(image);
                         }
-                    });
+                        if (progress){
+                            progress(1);
+                        }
+                        handler(image, nil);
+                    }
                 }];
             }];
         }
         else if (self.assetType == kOLAssetTypeDataSource){
             [self.dataSource dataWithCompletionHandler:^(NSData *data, NSError *error){
                 [self resizeImage:[UIImage imageWithData:data] size:size applyEdits:YES completion:^(UIImage *image){
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    if (!fullResolution){
                         self.cachedEditedImage = image;
-                        handler(image);
-                    });
+                    }
+                    handler(image, nil);
                 }];
             }];
         }
         else if (self.assetType == kOLAssetTypeCorrupt){
             NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                handler([UIImage imageWithData:data]);
-            });
+            handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
         }
         
     }];
@@ -568,7 +582,8 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeObject:self.imageURL forKey:kKeyImageURL];
     [aCoder encodeObject:[self.phAsset localIdentifier] forKey:kKeyPHAssetLocalId];
     [aCoder encodeObject:self.edits forKey:kKeyImageEdits];
-    // TODO: encode uploaded including asset id & preview url?!
+    [aCoder encodeObject:self.previewURL forKey:kKeyKitePreviewURL];
+    [aCoder encodeObject:[NSNumber numberWithLongLong:self.assetId] forKey:kKeyKiteAssetId];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -588,6 +603,8 @@ static NSOperationQueue *imageOperationQueue;
         self.dataSource = [aDecoder decodeObjectForKey:kKeyDataSource];
         self.imageURL = [aDecoder decodeObjectForKey:kKeyImageURL];
         self.edits = [aDecoder decodeObjectForKey:kKeyImageEdits];
+        self.assetId = [[aDecoder decodeObjectForKey:kKeyKiteAssetId] longLongValue];
+        self.previewURL = [aDecoder decodeObjectForKey:kKeyKitePreviewURL];
         
         NSString *localId = [aDecoder decodeObjectForKey:kKeyPHAssetLocalId];
         if (localId){

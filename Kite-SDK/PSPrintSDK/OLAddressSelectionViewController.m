@@ -41,7 +41,6 @@
 static const NSInteger kSectionAddressList = 0;
 static const NSInteger kSectionAddAddress = 1;
 
-//static const NSInteger kRowAddAddressFromContacts = 0;
 static const NSInteger kRowAddAddressSearch = 1;
 static const NSInteger kRowAddAddressManually = 0;
 
@@ -51,18 +50,6 @@ static const NSInteger kRowAddAddressManually = 0;
 @end
 
 @implementation OLAddressSelectionViewController
-
-//- (BOOL)prefersStatusBarHidden {
-//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-//    
-//    if ([self respondsToSelector:@selector(traitCollection)]){
-//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-//            hidden |= YES;
-//        }
-//    }
-//    
-//    return hidden;
-//}
 
 - (id)init {
     return [self initWithStyle:UITableViewStyleGrouped];

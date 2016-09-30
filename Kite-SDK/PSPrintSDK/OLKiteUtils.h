@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+@import UIKit;
 
 @protocol OLKiteDelegate;
 @class OLProductHomeViewController;
@@ -44,17 +44,17 @@
 
 + (NSString *)userPhone:(UIViewController *)topVC;
 
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-
-+ (OLKiteViewController *)kiteVcForViewController:(UIViewController *)vc;
-
 + (BOOL)assetArrayContainsPDF:(NSArray *)array;
 
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc;
-+ (BOOL)cameraRollEnabled:(UIViewController *)topVc;
++ (BOOL)cameraRollEnabled;
 + (BOOL)facebookEnabled;
 + (BOOL)instagramEnabled;
 + (BOOL)qrCodeUploadEnabled;
++ (NSArray<NSString *> *)supportedPKPaymentNetworks;
++ (BOOL)isApplePayAvailable;
++ (BOOL)isPayPalAvailable;
+
 
 + (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size;
 

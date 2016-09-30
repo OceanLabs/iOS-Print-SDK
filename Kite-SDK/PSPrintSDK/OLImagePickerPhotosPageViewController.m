@@ -37,6 +37,7 @@
 #import "UIView+RoundRect.h"
 #import "OLAsset+Private.h"
 #import "OLKiteUtils.h"
+#import "OLKiteABTesting.h"
 
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
@@ -131,11 +132,14 @@ CGFloat OLImagePickerMargin = 1.5;
         [self startImageLoading];
     }
     
-    if (self.provider.providerType == OLImagePickerProviderTypeApp || self.provider.providerType == OLImagePickerProviderTypeInstagram || self.provider.providerType == OLImagePickerProviderTypeQRCode || (self.provider.providerType == OLImagePickerProviderTypeCustom && self.provider.collections.count <= 1)){
+    if (self.provider.providerType == OLImagePickerProviderTypeRecents || self.provider.providerType == OLImagePickerProviderTypeInstagram || self.provider.providerType == OLImagePickerProviderTypeQRCode || self.provider.providerType == OLImagePickerProviderTypeViewController || (self.provider.providerType == OLImagePickerProviderTypeCustom && self.provider.collections.count <= 1)){
         [self.albumLabelContainer removeFromSuperview];
         self.albumLabelContainer = nil;
         [self.albumsContainerView removeFromSuperview];
     }
+    
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -154,7 +158,18 @@ CGFloat OLImagePickerMargin = 1.5;
     }];
 }
 
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    if (collectionView.tag == 10 && (self.provider.providerType == OLImagePickerProviderTypeQRCode || self.provider.providerType == OLImagePickerProviderTypeViewController)){
+        return 2;
+    }
+    return 1;
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (section == 1){
+        return 1;
+    }
+    
     if (collectionView.tag == 10){
         if (self.provider.collections.count > self.showingCollectionIndex){
             return [self.provider.collections[self.showingCollectionIndex] count];
@@ -169,6 +184,14 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 1){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"addCell" forIndexPath:indexPath];
+        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+            [(UILabel *)[cell viewWithTag:10] setTextColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+        }
+        return cell;
+    }
+    
     UICollectionViewCell *cell;
     if (collectionView.tag == 10){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
@@ -256,6 +279,9 @@ CGFloat OLImagePickerMargin = 1.5;
         
         UILabel *label = [[cell viewWithTag:20] viewWithTag:30];
         label.text = self.provider.collections[indexPath.item].name;
+        if ([OLKiteABTesting sharedInstance].lightThemeColor2){
+            label.superview.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor2;
+        }
     }
     
     return cell;
@@ -414,6 +440,11 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section > 0){
+        [self.imagePicker presentExternalViewControllerForProvider:self.provider];
+        return;
+    }
+    
     if (collectionView.tag == 10){
         OLAsset *printPhoto = [self assetForIndexPath:indexPath];
         
@@ -479,7 +510,9 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    //TODO: ignore albums collectionview scrolling
+    if (scrollView.tag != 10){
+        return;
+    }
     
     if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
         if (self.inProgressMediaRequest == nil && scrollView.contentOffset.y >= self.collectionView.contentSize.height - self.collectionView.frame.size.height) {

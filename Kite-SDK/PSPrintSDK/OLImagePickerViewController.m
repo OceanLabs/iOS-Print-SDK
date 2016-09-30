@@ -30,8 +30,7 @@
 #import "OLImagePickerViewController.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"
-#import "OLCustomPhotoProvider.h"
-#import "OLImagePickerPhotosPageViewController.h"
+#import "OLCustomViewControllerPhotoProvider.h"
 #import <Photos/Photos.h>
 #import "OLUpsellViewController.h"
 #import "NSObject+Utils.h"
@@ -43,14 +42,18 @@
 #import "OLImagePickerProviderCollection.h"
 #import "OLImagePickerProvider.h"
 #import "OLImagePickerLoginPageViewController.h"
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
-#import <NXOAuth2Client/NXOAuth2AccountStore.h>
+#import "OLOAuth2AccountStore.h"
 #import "OLKitePrintSDK.h"
 #import "UIViewController+OLMethods.h"
 #import "OLPaymentViewController.h"
+#import "OLFacebookSDKWrapper.h"
+#import "OLQRCodeUploadViewController.h"
+#import "OLImagePickerPhotosPageViewController.h"
+#import "OLCustomPickerController.h"
+#import "OLKiteABTesting.h"
 
 @interface OLKiteViewController ()
-@property (strong, nonatomic) NSMutableArray <OLCustomPhotoProvider *> *customImageProviders;
+@property (strong, nonatomic) NSMutableArray <OLCustomViewControllerPhotoProvider *> *customImageProviders;
 @end
 
 @interface OLKitePrintSDK ()
@@ -59,7 +62,7 @@
 + (NSString *)instagramClientID;
 @end
 
-@interface OLImagePickerViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDelegate, UIPageViewControllerDataSource, OLUpsellViewControllerDelegate>
+@interface OLImagePickerViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDelegate, UIPageViewControllerDataSource, OLUpsellViewControllerDelegate, OLCustomImagePickerViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *sourcesCollectionView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) UIPageViewController *pageController;
@@ -112,6 +115,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+#endif
+    
     if (!self.navigationController){
         [self.nextButton removeFromSuperview];
     }
@@ -128,9 +135,14 @@
                                                                                 action:nil];
     }
     
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        self.nextButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+    }
+    
     NSMutableArray<OLImagePickerProvider *> *providers = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
     self.providers = providers;
     [self setupProviders];
+    [self updateRecentsWith:[OLUserSession currentSession].recentPhotos];
     
     self.automaticallyAdjustsScrollViewInsets = NO;
         
@@ -216,13 +228,7 @@
     
     self.viewWillDisappear = NO;
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
-        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-            [self addBasketIconToTopRight];
-        }
-    }
-    else{
+    if (self.navigationController.viewControllers.firstObject != self){
         [self addBasketIconToTopRight];
     }
     
@@ -232,11 +238,17 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
+    }
+#endif
+    
     self.viewWillDisappear = YES;
 }
 
 - (void)setupLibraryProviderAtIndex:(NSInteger)index{
-    if (![OLKiteUtils cameraRollEnabled:self]){
+    if (![OLKiteUtils cameraRollEnabled]){
         return;
     }
     
@@ -322,25 +334,15 @@
     }
 }
 
-- (void)setupAppAssetProvider{
-    if ([OLUserSession currentSession].appAssets.count == 0){
+- (void)setupRecentsProvider{
+    if ([OLUserSession currentSession].appAssets.count == 0 && [OLUserSession currentSession].recentPhotos.count == 0){
         return;
     }
     
     OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[OLUserSession currentSession].appAssets name:NSLocalizedString(@"All Photos", @"")];
     
-    NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-    NSString *bundleName = nil;
-    if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
-        bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
-    } else {
-        bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
-    }
-    
-    UIImage *appIcon = [UIImage imageNamed: [[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIcons"] objectForKey:@"CFBundlePrimaryIcon"] objectForKey:@"CFBundleIconFiles"]  objectAtIndex:0]];
-    
-    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:bundleName icon:appIcon];
-    provider.providerType = OLImagePickerProviderTypeApp;
+    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:NSLocalizedStringFromTableInBundle(@"Recents", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"bookmark"]];
+    provider.providerType = OLImagePickerProviderTypeRecents;
     [self.providers addObject:provider];
 }
 
@@ -363,28 +365,44 @@
 }
 
 - (void)setupCustomProviders{
-    for (OLImagePickerProvider *customProvider in [OLKiteUtils kiteVcForViewController:self].customImageProviders){
-        NSMutableArray *collections = [[NSMutableArray alloc] init];
-        for (OLImagePickerProviderCollection *collection in customProvider.collections){
-            NSMutableArray *assets = [[NSMutableArray alloc] init];
-            for (OLAsset *asset in collection){
-                [assets addObject:asset];
-            }
-            
-            [collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:assets name:collection.name]];
+    for (OLImagePickerProvider *customProvider in [OLUserSession currentSession].kiteVc.customImageProviders){
+        if ([customProvider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+            customProvider.providerType = OLImagePickerProviderTypeViewController;
+            [self.providers addObject:customProvider];
         }
-        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:collections name:customProvider.name icon:customProvider.icon];
-        provider.providerType = OLImagePickerProviderTypeCustom;
+        else{
+            NSMutableArray *collections = [[NSMutableArray alloc] init];
+            for (OLImagePickerProviderCollection *collection in customProvider.collections){
+                NSMutableArray *assets = [[NSMutableArray alloc] init];
+                for (OLAsset *asset in collection){
+                    [assets addObject:asset];
+                }
+                
+                [collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:assets name:collection.name]];
+            }
+            OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:collections name:customProvider.name icon:customProvider.icon];
+            provider.providerType = OLImagePickerProviderTypeCustom;
+            [self.providers addObject:provider];
+        }
+    }
+}
+
+- (void)setupQRCodeProvider{
+    if ([OLKiteUtils qrCodeUploadEnabled]){
+        OLImagePickerProviderCollection *emptyCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[] name:@"QR Code Upload"];
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[emptyCollection] name:NSLocalizedStringFromTableInBundle(@"Your Phone", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"case-options"]];
+        provider.providerType = OLImagePickerProviderTypeQRCode;
         [self.providers addObject:provider];
     }
 }
 
 - (void)setupProviders{
-    [self setupAppAssetProvider];
+    [self setupRecentsProvider];
     [self setupLibraryProviderAtIndex:self.providers.count];
     [self setupFacebookProvider];
     [self setupInstagramProvider];
     [self setupCustomProviders];
+    [self setupQRCodeProvider];
 }
 
 - (void)updateTopConForVc:(UIViewController *)vc{
@@ -393,7 +411,10 @@
             return;
         }
         ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainerTopCon.constant = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height;
-        ((OLImagePickerPhotosPageViewController *)vc).collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height + ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainer.frame.size.height, 0, 70, 0);
+        
+        CGFloat offset = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height + ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainer.frame.size.height;
+        ((OLImagePickerPhotosPageViewController *)vc).collectionView.contentInset = UIEdgeInsetsMake(offset, 0, 70, 0);
+        ((OLImagePickerPhotosPageViewController *)vc).collectionView.contentOffset = CGPointMake(0, -offset);
         ((OLImagePickerPhotosPageViewController *)vc).albumsContainerHeight.constant = self.view.frame.size.height;
     }
     else{
@@ -481,7 +502,7 @@
     }
     
     if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram){
-        [[NXOAuth2AccountStore sharedStore] setClientID:[OLKitePrintSDK instagramClientID]
+        [[OLOAuth2AccountStore sharedStore] setClientID:[OLKitePrintSDK instagramClientID]
                                                  secret:[OLKitePrintSDK instagramSecret]
                                        authorizationURL:[NSURL URLWithString:@"https://api.instagram.com/oauth/authorize"]
                                                tokenURL:[NSURL URLWithString:@"https://api.instagram.com/oauth/access_token/"]
@@ -491,11 +512,11 @@
     
     OLImagePickerPageViewController *vc;
     
-    if (self.providers[index].providerType == OLImagePickerProviderTypeFacebook && ![FBSDKAccessToken currentAccessToken]){
+    if (self.providers[index].providerType == OLImagePickerProviderTypeFacebook && ![OLFacebookSDKWrapper currentAccessToken]){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
         vc.pageIndex = index;
     }
-    else if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram && [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"].count == 0){
+    else if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram && [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"].count == 0){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
         vc.pageIndex = index;
     }
@@ -514,6 +535,48 @@
     [self updateTopConForVc:vc];
     
     return vc;
+}
+
+- (void)presentExternalViewControllerForProvider:(OLImagePickerProvider *)provider{
+    if (provider.providerType == OLImagePickerProviderTypeQRCode){
+        OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
+        vc.modalPresentationStyle = UIModalPresentationFormSheet;
+        vc.delegate = self;
+        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(assetsPickerControllerDidCancel:)];
+        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+        [self presentViewController:nvc animated:YES completion:nil];
+        
+        self.providerForPresentedVc = provider;
+    }
+    else if (provider.providerType == OLImagePickerProviderTypeViewController && [provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+        UIViewController *vc = [(OLCustomViewControllerPhotoProvider *)provider vc];
+        ((id<OLCustomPickerController>)vc).delegate = self;
+        [self presentViewController:vc animated:YES completion:nil];
+        self.providerForPresentedVc = provider;
+    }
+}
+
+- (void)assetsPickerControllerDidCancel:(UIViewController *)picker{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)assetsPickerController:(UIViewController *)picker didFinishPickingAssets:(NSArray<OLAsset *> *)assets{
+    //Check that the objects are OLAssets
+    NSMutableArray *validAssets = [[NSMutableArray alloc] initWithArray:assets];
+    for (id obj in assets){
+        if (![obj isKindOfClass:[OLAsset class]]){
+            [validAssets removeObjectIdenticalTo:obj];
+        }
+    }
+    
+    [self.providerForPresentedVc.collections.firstObject addAssets:validAssets unique:YES];
+    for (OLAsset *asset in validAssets){
+        if(self.maximumPhotos == 0 || self.selectedAssets.count < self.maximumPhotos){
+            [self.selectedAssets addObject:asset];
+        }
+    }
+    [self reloadPageController];
+    [picker dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
@@ -582,7 +645,13 @@
 - (void)positionSelectedProviderIndicator{
     UICollectionViewCell *cell = [self.sourcesCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0]];
     
-    self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation([self.sourcesCollectionView convertRect:cell.frame toView:self.view].origin.x, 0);
+    if (cell){
+        self.selectedProviderIndicator.alpha = 1;
+        self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation([self.sourcesCollectionView convertRect:cell.frame toView:self.view].origin.x, 0);
+    }
+    else{
+        self.selectedProviderIndicator.alpha = 0;
+    }
 }
 
 #pragma mark Navigation
@@ -598,8 +667,23 @@
     return YES;
 }
 
+- (void)updateRecentsWith:(NSArray *)assets{
+    for (OLAsset *asset in assets){
+        if (![[OLUserSession currentSession].recentPhotos containsObject:asset]){
+            [[OLUserSession currentSession].recentPhotos addObject:asset];
+        }
+    }
+    
+    for (OLImagePickerProvider *provider in self.providers){
+        if (provider.providerType == OLImagePickerProviderTypeRecents){
+            [provider.collections.firstObject addAssets:[OLUserSession currentSession].recentPhotos unique:YES];
+        }
+    }
+}
+
 - (IBAction)onButtonNextClicked:(UIButton *)sender {
     if ([self shouldGoToOrderPreview]) {
+        [self updateRecentsWith:[OLUserSession currentSession].userSelectedPhotos];
         
         OLUpsellOffer *offer = [self upsellOfferToShow];
         BOOL shouldShowOffer = offer != nil;
@@ -652,7 +736,9 @@
     NSMutableArray *addedAssets = [[NSMutableArray alloc] initWithArray:self.selectedAssets];
     [addedAssets removeObjectsInArray:self.originalSelectedAssets];
     
-    if ([self.delegate respondsToSelector:@selector(imagePickerDidCancel:)]){
+    [self updateRecentsWith:addedAssets];
+    
+    if ([self.delegate respondsToSelector:@selector(imagePicker:didFinishPickingAssets:added:removed:)]){
         [self.delegate imagePicker:self didFinishPickingAssets:self.selectedAssets added:addedAssets removed:removedAssets];
     }
     else{
@@ -663,6 +749,9 @@
 #pragma mark Upsells
 
 - (OLUpsellOffer *)upsellOfferToShow{
+    if (/* DISABLES CODE */ (YES)){
+        return nil;// Need to test first
+    }
     NSArray *upsells = self.product.productTemplate.upsellOffers;
     if (upsells.count == 0){
         return nil;
@@ -707,7 +796,6 @@
         }
         else if ([self.product.templateId isEqualToString:vc.offer.offerTemplate]){
             self.product.redeemedOffer = vc.offer;
-            //TODO update qty here
         }
         else{
             id<OLPrintJob> job = [self addItemToBasketWithTemplateId:self.product.templateId];

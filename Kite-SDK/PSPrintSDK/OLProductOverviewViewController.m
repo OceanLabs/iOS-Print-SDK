@@ -30,7 +30,7 @@
 #import "OLProductOverviewViewController.h"
 #import "OLProductOverviewPageContentViewController.h"
 #import "OLProduct.h"
-#import "OLOrderReviewViewController.h"
+#import "OLPackProductViewController.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
 #import "OLProductTypeSelectionViewController.h"
@@ -187,13 +187,6 @@
         [self.callToActionButton.titleLabel setFont:font];
     }
     
-//    if ([OLKiteABTesting sharedInstance].darkTheme && [OLKiteABTesting sharedInstance].darkThemeColor1){
-//        self.callToActionButton.backgroundColor = [OLKiteABTesting sharedInstance].darkThemeColor1;
-//        [self.callToActionButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//        
-//        self.detailsSeparator.backgroundColor = [OLKiteABTesting sharedInstance].darkThemeColor1;
-//    }
-    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
@@ -292,12 +285,7 @@
     nvc.navigationBarHidden = YES;
     
     UIVisualEffect *blurEffect;
-    //        if (![OLKiteABTesting sharedInstance].darkTheme){
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-    //        }
-    //        else{
-    //            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-    //        }
     
     UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     UIView *view = visualEffectView;
@@ -498,7 +486,6 @@
         [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
             [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
             [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
             
             [self.navigationController pushViewController:vc animated:YES];
         }];

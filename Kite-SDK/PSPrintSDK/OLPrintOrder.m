@@ -42,6 +42,7 @@
 #import "OLProductPrintJob.h"
 #import "OLPrintOrderSubmitStatusRequest.h"
 #import "OLPaymentViewController.h"
+#import "OLKiteUtils.h"
 
 static NSString *const kKeyProofOfPayment = @"co.oceanlabs.pssdk.kKeyProofOfPayment";
 static NSString *const kKeyVoucherCode = @"co.oceanlabs.pssdk.kKeyVoucherCode";
@@ -559,62 +560,13 @@ static NSBlockOperation *templateSyncOperation;
     hash = 31 * hash + [self.promoCode hash];
     hash = 31 * hash + (self.shipToStore ? 39 : 0);
     hash = 31 * hash + (self.payInStore ? 73 : 0);
-    hash = 31 * hash + ([OLPaymentViewController isApplePayAvailable] ? 47 : 0);
+    hash = 31 * hash + ([OLKiteUtils isApplePayAvailable] ? 47 : 0);
     for (id<OLPrintJob> job in self.jobs){
         if (job.address.country){
             hash = 32 * hash + [job.address.country.codeAlpha3 hash];
         }
     }
     return hash;
-}
-
-- (void)discardDuplicateJobs{
-    NSMutableSet *uniqJobIds = [[NSMutableSet alloc] init];
-    NSMutableArray *jobsToRemove = [[NSMutableArray alloc] init];
-    for (id<OLPrintJob> job in self.jobs){
-        if ([uniqJobIds containsObject:job.uuid]){
-            [jobsToRemove addObject:job];
-        }
-        else if (job.extraCopies != -1){
-            [uniqJobIds addObject:job.uuid];
-        }
-    }
-    
-    for (id<OLPrintJob> job in jobsToRemove) {
-        [(NSMutableArray *)self.jobs removeObjectIdenticalTo:job];
-    }
-    for (id<OLPrintJob> job in self.jobs){
-        job.address = nil;
-    }
-}
-
-- (void)duplicateJobsForAddresses:(NSArray *)addresses{
-    if (addresses.count == 1){
-        return;
-    }
-    NSMutableArray *jobs = [[[NSArray alloc] initWithArray:self.jobs copyItems:YES] mutableCopy];
-    NSMutableArray *jobsToAdd = [[NSMutableArray alloc] init];
-    for (id<OLPrintJob> job in self.jobs){
-        job.address = [addresses firstObject];
-        [jobsToAdd addObject:job];
-    }
-    [(NSMutableArray *)self.jobs removeAllObjects];
-    
-    
-    for (OLAddress *address in addresses){
-        if (address == [addresses firstObject]){
-            continue;
-        }
-        for (id<OLPrintJob> job in jobs){
-            id<OLPrintJob> jobCopy = [(NSObject *)job copy];
-            jobCopy.address = address;
-            [jobsToAdd addObject:jobCopy];
-        }
-    }
-    
-    for (id<OLPrintJob> job in jobsToAdd){
-        [self addPrintJob:job];
-    }
 }
 
 - (NSArray <OLAddress *>*)shippingAddressesOfJobs{

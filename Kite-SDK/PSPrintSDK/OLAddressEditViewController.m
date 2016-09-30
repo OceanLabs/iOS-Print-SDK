@@ -39,6 +39,7 @@
 #import "OLKiteABTesting.h"
 #import "OLAnalytics.h"
 #import "OLImageDownloader.h"
+#import "OLUserSession.h"
 
 static const NSUInteger kTagTextField = 99;
 
@@ -55,18 +56,6 @@ static const NSUInteger kTagTextField = 99;
 @end
 
 @implementation OLAddressEditViewController
-
-//- (BOOL)prefersStatusBarHidden {
-//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-//    
-//    if ([self respondsToSelector:@selector(traitCollection)]){
-//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-//            hidden |= YES;
-//        }
-//    }
-//    
-//    return hidden;
-//}
 
 - (id)init {
     return [self initWithAddress:nil];
@@ -364,14 +353,14 @@ static const NSUInteger kTagTextField = 99;
         controller.delegate = self;
         OLCountry *selectedCountry = self.address.country;
         controller.selected = @[selectedCountry ? selectedCountry : [OLCountry countryForCode:@"GBR"]];
-        controller.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        controller.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:controller animated:YES completion:nil];
     }
 }
 
 #pragma mark - OLCountryPickerControllerDelegate methods 
 
-- (void)countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray/*<OLCountry>*/ *)countries {
+- (void)countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray<OLCountry *> *)countries {
     [self dismissViewControllerAnimated:YES completion:nil];
     self.address.country = countries.lastObject;
     self.textFieldCountry.text = self.address.country.name;

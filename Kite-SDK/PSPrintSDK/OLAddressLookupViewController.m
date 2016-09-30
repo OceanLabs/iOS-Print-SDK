@@ -33,14 +33,11 @@
 #import "OLCountryPickerController.h"
 #import "OLAddressEditViewController.h"
 #import "OLConstants.h"
-#ifdef COCOAPODS
-#import <SVProgressHUD/SVProgressHUD.h>
-#else
-#import "SVProgressHUD.h"
-#endif
+#import "OLProgressHUD.h"
 #import "OLKiteViewController.h"
 #import "OLKiteUtils.h"
 #import "OLKiteABTesting.h"
+#import "OLUserSession.h"
 
 //static const NSUInteger kMaxInFlightRequests = 5;
 
@@ -50,7 +47,7 @@
 @property (nonatomic, strong) UILabel *labelCountry;
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (nonatomic, strong) UISearchBar *searchBar;
-@property (nonatomic, strong) NSArray/*<OLAddress>*/ *searchResults;
+@property (nonatomic, strong) NSArray<OLAddress *> *searchResults;
 
 @property (nonatomic, strong) UIAlertView *errorAlertView;
 
@@ -64,18 +61,6 @@
 @end
 
 @implementation OLAddressLookupViewController
-
-//- (BOOL)prefersStatusBarHidden {
-//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-//    
-//    if ([self respondsToSelector:@selector(traitCollection)]){
-//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-//            hidden |= YES;
-//        }
-//    }
-//    
-//    return hidden;
-//}
 
 - (id)init {
     if (self = [super initWithStyle:UITableViewStylePlain]) {
@@ -149,7 +134,7 @@
     OLCountryPickerController *controller = [[OLCountryPickerController alloc] init];
     controller.delegate = self;
     controller.selected = @[self.country];
-    controller.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    controller.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:controller animated:YES completion:nil];
 }
 
@@ -218,8 +203,8 @@
     
     OLAddress *address = self.searchResults[indexPath.row];
     if (address.isSearchRequiredForFullDetails) {
-        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-        [SVProgressHUD showWithStatus:@"Fetching Address Details"];
+        [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
+        [OLProgressHUD showWithStatus:@"Fetching Address Details"];
         [self.inProgressRequest  cancelSearch];
         self.progressToEditViewControllerOnUniqueAddressResult = YES;
         OLAddressSearchRequest *req = [OLAddress searchForAddress:address delegate:self];
@@ -231,7 +216,7 @@
 
 #pragma mark - OLCountryControllerPicker methods
 
-- (void)countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray/*<OLCountry>*/ *)countries {
+- (void)countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray<OLCountry *> *)countries {
     [self dismissViewControllerAnimated:YES completion:nil];
     if (self.country != countries.lastObject) {
         self.searchResults = @[]; // country has changed, clear the results as they're no longer applicable
@@ -248,7 +233,7 @@
 #pragma mark - OLAddressSearchRequestDelegate methods
 
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didSuceedWithMultipleOptions:(NSArray *)options {
-    [SVProgressHUD dismiss];
+    [OLProgressHUD dismiss];
     self.progressToEditViewControllerOnUniqueAddressResult = NO;
     self.inProgressRequest = nil;
     if (self.errorAlertView.isVisible) {
@@ -263,7 +248,7 @@
 }
 
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didSuceedWithUniqueAddress:(OLAddress *)addr {
-    [SVProgressHUD dismiss];
+    [OLProgressHUD dismiss];
     self.inProgressRequest = nil;
     if (self.errorAlertView.isVisible) {
         return;
@@ -283,7 +268,7 @@
 }
 
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didFailWithError:(NSError *)error {
-    [SVProgressHUD dismiss];
+    [OLProgressHUD dismiss];
     self.progressToEditViewControllerOnUniqueAddressResult = NO;
     self.inProgressRequest = nil;
     if (self.errorAlertView.isVisible) {

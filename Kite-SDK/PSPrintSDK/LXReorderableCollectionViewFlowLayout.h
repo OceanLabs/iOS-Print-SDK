@@ -6,14 +6,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#ifdef COCOAPODS
-#import <CSStickyHeaderFlowLayout/CSStickyHeaderFlowLayout.h>
-#else
-#import "CSStickyHeaderFlowLayout.h"
-#endif
 
-
-@interface LXReorderableCollectionViewFlowLayout : CSStickyHeaderFlowLayout <UIGestureRecognizerDelegate>
+@interface LXReorderableCollectionViewFlowLayout : UICollectionViewFlowLayout <UIGestureRecognizerDelegate>
 
 @property (assign, nonatomic) CGFloat scrollingSpeed;
 @property (assign, nonatomic) UIEdgeInsets scrollingTriggerEdgeInsets;

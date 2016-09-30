@@ -43,6 +43,7 @@
 #import "OLImagePreviewViewController.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
+#import "UIImageView+FadeIn.h"
 
 CGFloat posterMargin = 2;
 
@@ -66,7 +67,7 @@ CGFloat posterMargin = 2;
 - (void)dismiss;
 @end
 
-@interface OLOrderReviewViewController (Private) <UICollectionViewDelegateFlowLayout>
+@interface OLPackProductViewController (Private) <UICollectionViewDelegateFlowLayout>
 
 - (BOOL) shouldGoToCheckout;
 - (void) doCheckout;
@@ -192,7 +193,7 @@ CGFloat posterMargin = 2;
     
     [printPhoto imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
         [imageView setProgress:progress];
-    } completion:^(UIImage *image){
+    } completion:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
             imageView.image = image;
             [activity stopAnimating];
@@ -321,6 +322,7 @@ CGFloat posterMargin = 2;
     OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
+    cropVc.product = self.product;
     
     cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
     cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
@@ -329,10 +331,10 @@ CGFloat posterMargin = 2;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
     }];
 }
@@ -357,10 +359,11 @@ CGFloat posterMargin = 2;
     
     self.editingPrintPhoto = printPhoto;
     
-    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image){
-        previewVc.image = image;
-    }];
+    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
+    __weak OLImagePreviewViewController *weakVc = previewVc;
+    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingPrintPhoto size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+        [weakVc.imageView setProgress:progress];
+    }completionHandler:NULL];
     previewVc.providesPresentationContextTransitionStyle = true;
     previewVc.definesPresentationContext = true;
     previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
@@ -372,12 +375,14 @@ CGFloat posterMargin = 2;
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
+    cropVc.product = self.product;
+    
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image){
+    }completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:YES completion:NULL];        
     }];
     

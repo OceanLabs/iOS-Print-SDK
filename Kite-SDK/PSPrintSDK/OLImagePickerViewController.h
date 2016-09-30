@@ -33,11 +33,14 @@
 #import "OLAsset.h"
 
 @class OLImagePickerViewController;
+@class OLImagePickerProvider;
 
 @protocol OLImagePickerViewControllerDelegate <NSObject>
 
-- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc;
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets;
+
+@optional
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc;
 
 @end
 
@@ -50,9 +53,11 @@
 @property (assign, nonatomic) NSInteger maximumPhotos;
 @property (assign, nonatomic) NSInteger minimumPhotos;
 @property (assign, nonatomic) BOOL overrideImagePickerMode;
+@property (weak, nonatomic) OLImagePickerProvider *providerForPresentedVc;
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (void)reloadPageController;
 - (void)onButtonNextClicked:(UIButton *)sender;
+- (void)presentExternalViewControllerForProvider:(OLImagePickerProvider *)provider;
 
 
 @end
