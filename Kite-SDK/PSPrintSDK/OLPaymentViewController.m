@@ -75,6 +75,7 @@
 #import "OLImagePickerViewController.h"
 #import "OLStripeWrapper.h"
 #import "OLPayPalWrapper.h"
+#import "OLPhotobookPrintJob.h"
 
 @import PassKit;
 @import Contacts;

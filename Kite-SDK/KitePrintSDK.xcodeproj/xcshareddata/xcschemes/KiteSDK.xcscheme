@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2E451DC71D9554B40080F1C1"
-               BuildableName = "Kite.framework"
-               BlueprintName = "Kite"
+               BuildableName = "KiteSDK.framework"
+               BlueprintName = "KiteSDK"
                ReferencedContainer = "container:KitePrintSDK.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,8 +46,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2E451DC71D9554B40080F1C1"
-            BuildableName = "Kite.framework"
-            BlueprintName = "Kite"
+            BuildableName = "KiteSDK.framework"
+            BlueprintName = "KiteSDK"
             ReferencedContainer = "container:KitePrintSDK.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -64,8 +64,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2E451DC71D9554B40080F1C1"
-            BuildableName = "Kite.framework"
-            BlueprintName = "Kite"
+            BuildableName = "KiteSDK.framework"
+            BlueprintName = "KiteSDK"
             ReferencedContainer = "container:KitePrintSDK.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

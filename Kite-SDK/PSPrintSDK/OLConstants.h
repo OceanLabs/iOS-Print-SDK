@@ -29,8 +29,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <Foundation/Foundation.h>
-
 #import "OLCheckoutViewController.h"
 #import "OLPrintEnvironment.h"
 #import "OLAddressPickerController.h"
@@ -51,8 +49,6 @@
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 #import "OLProductPrintJob.h"
-#import "OLPhotobookPrintJob.h"
-#import "OLPostcardPrintJob.h"
 #import "OLPrintOrderCost.h"
 #import "OLAssetUploadRequest.h"
 #import "OLAnalytics.h"

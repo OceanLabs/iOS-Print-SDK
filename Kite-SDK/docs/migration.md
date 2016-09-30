@@ -14,8 +14,8 @@
  ```
  * Facebook:
  ```
- pod 'FBSDKCoreKit', '~> 4.11.0'
- pod 'FBSDKLoginKit', '~> 4.11.0'
+ pod 'FBSDKCoreKit', '~> 4.16.0'
+ pod 'FBSDKLoginKit', '~> 4.16.0'
  ```
  * Instagram:
  Nothing to install, just setting up the Instagram keys will do the trick. See the [documentation](Kite-SDK/docs/social_photo_sources.md) for details.
@@ -24,7 +24,7 @@
  Nothing to install, but please see the API changes section below or the [documentation](Kite-SDK/docs/custom_photo_sources.md) for details.
 
  #### Git Submodule
- * We have removed the static KiteSDK.a library with a dynamic Kite.framework. This includes all assets so no need to have them in the Copy Resources build phase anymore. Please remove the static library and add Kite.framework to the embedded libraries section of the General tab of your target.
+ * We have removed the static KiteSDK.a library with a dynamic KiteSDK.framework. This includes all assets so no need to have them in the Copy Resources build phase anymore. Please remove the static library and add KiteSDK.framework to the embedded libraries section of the General tab of your target.
  * All submodule dependencies have been removed. Please install the PayPal dependency separately (linking with the Kite SDK is not needed).
 
  ## API Changes
