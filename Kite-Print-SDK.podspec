@@ -18,20 +18,19 @@ Pod::Spec.new do |spec|
   end
 
   spec.subspec 'PayPal' do |paypal|
-    paypal.dependency 'PayPal-iOS-SDK/Core', '~> 2.12.6'
+    paypal.source_files     = ['Kite-SDK/PSPrintSDK/OL*.{h,m}']
     #deprecated Please install separately: pod 'PayPal-iOS-SDK/Core', '~> 2.12.6'
   end
 
   spec.subspec 'ApplePay' do |apple|
-    apple.dependency    'Stripe', '8.0.6'
+    apple.source_files     = ['Kite-SDK/PSPrintSDK/OL*.{h,m}']
     #deprecated Please install separately: pod 'Stripe', '8.0.6'
   end
 
   spec.subspec 'Facebook' do |facebook|
-    facebook.dependency 'FBSDKCoreKit', '~> 4.11.0'
-    facebook.dependency 'FBSDKLoginKit', '~> 4.11.0'
-    #deprecated Please install separately: pod 'FBSDKCoreKit', '~> 4.11.0' 
-    #and:                                  pod 'FBSDKLoginKit', '~> 4.11.0'
+    facebook.source_files     = ['Kite-SDK/PSPrintSDK/OL*.{h,m}']
+    #deprecated Please install separately: pod 'FBSDKCoreKit', '~> 4.16.0' 
+    #and:                                  pod 'FBSDKLoginKit', '~> 4.16.0'
   end
 
   spec.subspec 'Instagram' do |instagram|
