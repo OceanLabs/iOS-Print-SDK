@@ -15,10 +15,10 @@ Overview
 
 Sample Code
 -----------
-1. Add the following lines to your CocoaPods Podfile and run `pod update`
+1. If you want Facebook integration add the following lines to your CocoaPods Podfile and run `pod update`
 ```ruby
-pod 'FBSDKCoreKit', '~> 4.16.0' # only needed if you want Facebook
-pod 'FBSDKLoginKit', '~> 4.16.0' # only needed if you want Facebook
+pod 'FBSDKCoreKit', '~> 4.16.0'
+pod 'FBSDKLoginKit', '~> 4.16.0'
 ```
 2. If you need Instagram integration then the next step is needed to enable Instagram functionality in code. Firstly navigate over to [https://instagram.com/developer/](https://instagram.com/developer/) and register your Instagram client app (if you don't already have one). You'll need the `Client ID`, `Client Secret` & `Redirect URI`. Next using these details enable Instagram for the Kite SDK:
 
@@ -32,7 +32,7 @@ That's all there is to do -- an Instagram button should now appear on photo sele
     2. Configuring your iOS Apps `.plist`
     3. Handle Facebook responses in `application:openURL:sourceApplication:annotation:` and `application:didFinishLaunchingWithOptions:launchOptions`
     For example:
-    ```
+    ```obj-c
     - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     return [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
     }

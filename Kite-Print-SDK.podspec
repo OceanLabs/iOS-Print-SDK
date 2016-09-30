@@ -11,6 +11,7 @@ Pod::Spec.new do |spec|
   spec.requires_arc = true
   spec.platform   = :ios, '8.0'
   spec.social_media_url = 'https://twitter.com/dbotha'
+  spec.module_name  = 'KiteSDK'
 
   spec.subspec 'Lite' do |lite|
     lite.source_files     = ['Kite-SDK/PSPrintSDK/OL*.{h,m}']
