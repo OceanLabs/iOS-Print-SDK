@@ -195,6 +195,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self registerCollectionViewCells];
     self.editingTools.collectionView.dataSource = self;
     self.editingTools.collectionView.delegate = self;
+    [self.editingTools.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     
     [self setupCropGuides];
     
