@@ -24,6 +24,7 @@
 		027DBA136956798E0DAE5FDF /* libPods-Kite-CI-Deploy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4FFD591B0B737D3A6DDA1E /* libPods-Kite-CI-Deploy.a */; };
 		0965B1E0A734EFED98957ABF /* libPods-KitePrintSDKTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D5311AEC977293456E67B5B /* libPods-KitePrintSDKTests.a */; };
 		2E0804B81C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0804B71C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.m */; };
+		2E0EB0EC1D9EB43F001A6CC9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF81186215790009DE03 /* ViewController.m */; };
 		2E0FF2E31D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E0FF2E41D2A9003007093C0 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E10F0361D93CC0900014C19 /* OLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */; };
@@ -3118,6 +3119,7 @@
 			files = (
 				2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */,
 				2E924BE21BC6A0C80038938A /* OLKiteRequestTests.m in Sources */,
+				2E0EB0EC1D9EB43F001A6CC9 /* ViewController.m in Sources */,
 				2E924BE51BC6A3A00038938A /* OLKiteTestHelper.m in Sources */,
 				2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */,
 				CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */,
