@@ -1,8 +1,8 @@
-# From version 5.x.x
+# From versions 5.x.x or earlier
 
 ## Installation
 
-#### CocoaPods
+### CocoaPods
  All payment and social subspecs are deprecated. If you need any of the following please install them separately.
  * PayPal:
  ```ruby
@@ -29,7 +29,7 @@
 import KiteSDK
 ```
 
- #### Git Submodule
+ ### Git Submodule
  * We have removed the static KiteSDK.a library with a dynamic KiteSDK.framework. This includes all assets so no need to have them in the Copy Resources build phase anymore. Please remove the static library and add KiteSDK.framework to the embedded libraries section of the General tab of your target.
  * All submodule dependencies have been removed. Please install the PayPal dependency separately (linking with the Kite SDK is not needed).
 
