@@ -4,32 +4,33 @@
 
 ### CocoaPods
  All payment and social subspecs are deprecated. If you need any of the following please install them separately.
- * PayPal:
+#### PayPal:
  ```ruby
  pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
  ```
- * Apple Pay:
+#### Apple Pay:
  ```ruby
  pod 'Stripe', '~> 8.0.6'
  ```
- * Facebook:
+#### Facebook:
  ```ruby
  pod 'FBSDKCoreKit', '~> 4.16.0'
  pod 'FBSDKLoginKit', '~> 4.16.0'
  ```
- * Instagram:
+
+#### Instagram:
  Nothing to install, just setting up the Instagram keys will do the trick. See the [documentation](Kite-SDK/docs/social_photo_sources.md) for details.
 
- * Custom Image Source
+#### Custom Image Source
  Nothing to install, but please see the API changes section below or the [documentation](Kite-SDK/docs/custom_photo_sources.md) for details.
 
- * Swift module name
+#### Swift module name
  Change your import statement to:
 ```swift
 import KiteSDK
 ```
 
- ### Git Submodule
+### Git Submodule
  * We have removed the static KiteSDK.a library with a dynamic KiteSDK.framework. This includes all assets so no need to have them in the Copy Resources build phase anymore. Please remove the static library and add KiteSDK.framework to the embedded libraries section of the General tab of your target.
  * All submodule dependencies have been removed. Please install the PayPal dependency separately (linking with the Kite SDK is not needed).
 
