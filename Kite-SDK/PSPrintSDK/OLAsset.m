@@ -105,18 +105,6 @@ static NSOperationQueue *imageOperationQueue;
     return imageOperationQueue;
 }
 
-- (NSURL *)imageURL{
-//    if (self.instagramImage){
-//        return [self.instagramImage fullURL];
-//    }
-//    else if (self.facebookImage){
-//        return [self.facebookImage fullURL];
-//    }
-//    else{
-        return _imageURL;
-//    }
-}
-
 - (instancetype)initWithImageData:(NSData *)data mimeType:(NSString *)mimeType {
     if (self = [super init]) {
         NSAssert(data != nil, @"image data must be non nil");
