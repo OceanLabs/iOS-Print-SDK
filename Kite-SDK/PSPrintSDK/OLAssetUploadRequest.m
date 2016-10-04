@@ -136,7 +136,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
                             }
                             
                             for (OLAsset *asset in imageURLAssets) {
-                                if (asset.assetType == kOLAssetTypeRemoteImageURL && [asset.imageURL.absoluteString isEqualToString:url]) {
+                                if (asset.assetType == kOLAssetTypeRemoteImageURL  && ![asset isEdited] && [asset.imageURL.absoluteString isEqualToString:url]) {
                                     [asset setUploadedWithAssetId:[assetId unsignedIntegerValue] previewURL:url];
                                     ++registeredAssetCount;
                                 }
@@ -260,8 +260,8 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
 }
 
 - (void)uploadOLAssets:(NSArray<OLAsset *> *)assets {
-    NSMutableArray *imageURLAssets = [[NSMutableArray alloc] init];
-    NSMutableArray *assetsToUpload = [[NSMutableArray alloc] init];
+    NSMutableArray<OLAsset *> *imageURLAssets = [[NSMutableArray<OLAsset *> alloc] init];
+    NSMutableArray<OLAsset *> *assetsToUpload = [[NSMutableArray<OLAsset *> alloc] init];
     
     for (OLAsset *asset in assets) {
         if (asset.assetType == kOLAssetTypeRemoteImageURL && ![asset isEdited]) {
