@@ -114,26 +114,35 @@
 }
 
 - (void)testOLKitePrintSDK{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for template sync"];
     //Live
     [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentLive];
     XCTAssert([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive, @"Environment fail");
     XCTAssert([[OLKitePrintSDK paypalEnvironment] isEqualToString:@"live"], @"PayPal environment fail");
-    XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""],@"No PayPal client ID");
-    XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""],@"Stripe key fail");
+    [OLProductTemplate syncWithCompletionHandler:^(id t, id e){
+        XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""],@"No PayPal client ID");
+        XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""],@"Stripe key fail");
+        
+        
+        //Sandbox
+        [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+        XCTAssert([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox, @"Environment fail");
+        XCTAssert([[OLKitePrintSDK paypalEnvironment] isEqualToString:@"sandbox"], @"PayPal environment fail");
+        [OLProductTemplate syncWithCompletionHandler:^(id t, id e){
+            XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""], @"No PayPal client ID");
+            XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""], @"Stripe key fail");
+            [expectation fulfill];
+        }];
+    }];
     
-    //Sandbox
-    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
-    XCTAssert([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox, @"Environment fail");
-    XCTAssert([[OLKitePrintSDK paypalEnvironment] isEqualToString:@"sandbox"], @"PayPal environment fail");
-    XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""], @"No PayPal client ID");
-    XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""], @"Stripe key fail");
+    [self waitForExpectationsWithTimeout:120 handler:nil];
     
     [OLKitePrintSDK setCacheTemplates:NO];
     XCTAssert(![OLKitePrintSDK cacheTemplates], @"Cache templates fail");
     
     [OLKitePrintSDK setApplePayMerchantID:@"merchant"];
     XCTAssert([[OLKitePrintSDK appleMerchantID] isEqualToString:@"merchant"], @"Merchant fail");
-    XCTAssert([[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite.ly (via Kite.ly)"], @"Pay to test fail");
+    XCTAssert([[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite.ly"], @"Pay to test fail");
     
     [OLKitePrintSDK setApplePayPayToString:@"Kite Test"];
     XCTAssert([[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite Test"], @"Pay to test fail");

@@ -242,17 +242,6 @@
     [self submitJobs:@[job]];
 }
 
-- (void)testSquaresOrderWithPHAssetPrintPhotosDataSource{
-    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-    
-    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-    
-    OLAsset *printPhoto = [OLAsset assetWithPHAsset:asset];    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" dataSources:@[printPhoto]];
-    [self submitJobs:@[job]];
-}
-
 - (void)testPhotobookOrderWithURLOLAssets{
     OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:[OLKiteTestHelper urlAssets] frontCoverOLAsset:[OLKiteTestHelper urlAssets].firstObject backCoverOLAsset:[OLKiteTestHelper urlAssets].lastObject];
     [self submitJobs:@[job]];
