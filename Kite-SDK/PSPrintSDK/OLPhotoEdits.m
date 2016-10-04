@@ -248,8 +248,8 @@ static NSString *const kKeyBottomBorderText = @"co.oceanlabs.psprintstudio.kKeyB
         retVal &= self.flipHorizontal == other.flipHorizontal;
         retVal &= self.flipVertical == other.flipVertical;
         retVal &= [self.textsOnPhoto isEqualToArray:other.textsOnPhoto];
-        retVal &= [self.borderColor isEqual:other.borderColor];
-        retVal &= [self.bottomBorderText isEqual:other.bottomBorderText];
+        retVal &= [self.borderColor isEqual:other.borderColor] || (!self.borderColor && !other.borderColor);
+        retVal &= [self.bottomBorderText isEqual:other.bottomBorderText] || (!self.bottomBorderText && !other.bottomBorderText);
     }
     
     return retVal;
