@@ -257,6 +257,13 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
+    if (self.assetType == kOLAssetTypeImageData && self.mimeType == kOLMimeTypePDF){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            handler(self.imageData, nil);
+        });
+        return;
+    }
+    
     [self backgroundImageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
         if (image && !error){
             NSData *data = UIImageJPEGRepresentation(image, 0.7);
