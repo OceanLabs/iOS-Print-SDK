@@ -85,7 +85,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (NSString *)apiKey {
-    if ([self environment] == kOLKitePrintSDKEnvironmentSandbox) {
+    if ([self environment] == OLKitePrintSDKEnvironmentSandbox) {
         return kAPIKeySandbox;
     } else {
         return kAPIKeyLive;
@@ -110,7 +110,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         }
     }
     else{
-        [OLKitePrintSDK setAPIKey:[[NSProcessInfo processInfo]environment][@"TEST_API_KEY"] withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+        [OLKitePrintSDK setAPIKey:[[NSProcessInfo processInfo]environment][@"TEST_API_KEY"] withEnvironment:OLKitePrintSDKEnvironmentSandbox];
     }
     
     return YES;
@@ -118,9 +118,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 - (OLKitePrintSDKEnvironment)environment {
     if (self.environmentPicker.selectedSegmentIndex == 0) {
-        return kOLKitePrintSDKEnvironmentSandbox;
+        return OLKitePrintSDKEnvironmentSandbox;
     } else {
-        return kOLKitePrintSDKEnvironmentLive;
+        return OLKitePrintSDKEnvironmentLive;
     }
 }
 
