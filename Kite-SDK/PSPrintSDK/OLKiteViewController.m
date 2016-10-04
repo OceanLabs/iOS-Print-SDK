@@ -47,6 +47,7 @@
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "OLAsset+Private.h"
 #import "OLImageDownloader.h"
+#import "OLImagePickerViewController.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -144,10 +145,11 @@ static CGFloat fadeTime = 0.3;
     [OLAnalytics setExtraInfo:info];
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
     if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
+        [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printOrder != nil;
+        [OLUserSession currentSession].appAssets = [[printOrder.jobs firstObject] assetsForUploading];
+        [[OLUserSession currentSession] resetUserSelectedPhotos];
         [OLUserSession currentSession].printOrder = printOrder;
         [OLUserSession currentSession].printOrder.userData = info;
-        [OLUserSession currentSession].appAssets = [[printOrder.jobs firstObject] assetsForUploading];
-        [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printOrder != nil;
     }
     return self;
 }
@@ -311,6 +313,10 @@ static CGFloat fadeTime = 0.3;
             [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
             [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
             [vc safePerformSelector:@selector(setProduct:) withObject:product];
+            if ([vc isKindOfClass:[OLImagePickerViewController class]]){
+                [(OLImagePickerViewController *)vc setOverrideImagePickerMode:YES];
+            }
+            
             if (welf.navigationController.viewControllers.count <= 1){
                 UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
                 NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
@@ -461,6 +467,7 @@ static CGFloat fadeTime = 0.3;
 
 - (void)dealloc{
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionPhotos];
+    [OLUserSession currentSession].userSelectedPhotos = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

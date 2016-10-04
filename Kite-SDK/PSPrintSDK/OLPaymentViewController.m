@@ -1250,7 +1250,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     else{
         printJob.extraCopies--;
         
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        if (indexPath){
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        }
         [self.printOrder saveOrder];
         [self updateViewsBasedOnCostUpdate];
         
