@@ -43,6 +43,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLImageCachingManager.h"
 #import "CatsAssetCollectionDataSource.h"
 #import "DogsAssetCollectionDataSource.h"
+#import "MP.h"
 
 #ifdef OL_KITE_AT_LEAST_IOS8
 #import <CTAssetsPickerController/CTAssetsPickerController.h>
@@ -51,7 +52,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import <AssetsLibrary/AssetsLibrary.h>
 @import Photos;
 
-@interface ViewController () <OLAssetsPickerControllerDelegate,
+@interface ViewController () <OLAssetsPickerControllerDelegate,MPPrintDelegate,
 #ifdef OL_KITE_AT_LEAST_IOS8
 CTAssetsPickerControllerDelegate,
 #endif
@@ -419,6 +420,13 @@ UINavigationControllerDelegate, OLKiteDelegate>
         [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
         [self presentViewController:vc animated:YES completion:NULL];
     }
+}
+
+- (void)didCancelPrintFlow:(UIViewController *)printViewController{
+    [printViewController dismissViewControllerAnimated:YES completion:NULL];
+}
+- (void)didFinishPrintFlow:(UIViewController *)printViewController{
+    [printViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
 @end

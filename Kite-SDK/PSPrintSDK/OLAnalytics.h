@@ -121,5 +121,6 @@ static NSString *const kOLAnalyticsError = @"Error";
 + (void)setExtraInfo:(NSDictionary *)info;
 + (NSString *)userDistinctId;
 + (void)setKiteDelegate:(id<OLKiteDelegate>)kd;
++ (NSDictionary *)extraInfo;
 
 @end

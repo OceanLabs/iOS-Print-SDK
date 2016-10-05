@@ -819,4 +819,8 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     extraInfo = info;
 }
 
++ (NSDictionary *)extraInfo{
+    return extraInfo;
+}
+
 @end
