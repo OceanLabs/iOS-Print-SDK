@@ -465,16 +465,45 @@
     }];
 }
 
+#pragma mark Banner Section
+
+- (BOOL)includeBannerSection{
+    return ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"];
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView bannerSectionCellForIndexPath:(NSIndexPath *)indexPath{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
+    UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
+    imageView.image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
+    imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView sizeForBannerSectionCellForIndexPath:(NSIndexPath *)indexPath{
+    CGSize size = self.view.frame.size;
+    CGFloat height = 110;
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width){
+        height = (self.view.frame.size.width * height) / 375.0;
+    }
+    return CGSizeMake(self.view.frame.size.width, height);
+}
+
+- (void)collectionView:(UICollectionView *)collectionView actionForBannerSectionForIndexPath:(NSIndexPath *)indexPath{
+    OLInfoPageViewController *vc = (OLInfoPageViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
+    vc.imageName = @"quality";
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInBannerSection:(NSInteger)section{
+    return 1;
+}
+
 #pragma mark - UICollectionViewDelegate Methods
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     CGSize size = self.view.frame.size;
-    if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
-        CGFloat height = 110;
-        if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width){
-            height = (self.view.frame.size.width * height) / 375.0;
-        }
-        return CGSizeMake(self.view.frame.size.width, height);
+    if (indexPath.section == 0 && [self includeBannerSection]){
+        return [self collectionView:collectionView sizeForBannerSectionCellForIndexPath:indexPath];
     }
     
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
@@ -518,6 +547,11 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0 && [self includeBannerSection]){
+        [self collectionView:collectionView actionForBannerSectionForIndexPath:indexPath];
+        return;
+    }
+    
     UIViewController *vc = [self viewControllerForItemAtIndexPath:indexPath];
     if (vc){
         [self.navigationController pushViewController:vc animated:YES];
@@ -536,10 +570,7 @@
 }
 
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
-        OLInfoPageViewController *vc = (OLInfoPageViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
-        vc.imageName = @"quality";
-        [self.navigationController pushViewController:vc animated:YES];
+    if (indexPath.section == 0 && [self includeBannerSection]){
         return nil;
     }
     if (indexPath.item >= self.productGroups.count){
@@ -604,12 +635,12 @@
     if (self.isOffScreen){
         return 0;
     }
-    return [[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"] ? 1 : 2;
+    return [self includeBannerSection] ? 2 : 1;
 }
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"]){
-        return 1;
+    if (section == 0 && [self includeBannerSection]){
+        return [self collectionView:collectionView numberOfItemsInBannerSection:section];
     }
     NSInteger extras = 0;
     NSInteger numberOfProducts = [self.productGroups count];
@@ -623,12 +654,8 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == 0 && ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"] ){
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
-        UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
-        imageView.image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
-        imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
-        return cell;
+    if (indexPath.section == 0 && [self includeBannerSection]){
+        return [self collectionView:collectionView bannerSectionCellForIndexPath:indexPath];
     }
     
     if (indexPath.item >= self.productGroups.count){
