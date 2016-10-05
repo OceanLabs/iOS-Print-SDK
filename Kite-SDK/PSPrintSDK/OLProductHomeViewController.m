@@ -494,6 +494,7 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView actionForBannerSectionForIndexPath:(NSIndexPath *)indexPath{
+    [OLAnalytics trackPrintAtHomeTapped];
     OLAsset *asset = [OLKiteUtils kiteVcForViewController:self].assets.firstObject;
     OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
     printPhoto.asset = asset;
