@@ -477,7 +477,7 @@
 
 - (BOOL)includeBannerSection{
     Class MPPrintItemFactoryClass = NSClassFromString (@"MPPrintItemFactory");
-    return [MPPrintItemFactoryClass class];
+    return [MPPrintItemFactoryClass class] && [OLKiteUtils kiteVcForViewController:self].showPrintAtHome;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView bannerSectionCellForIndexPath:(NSIndexPath *)indexPath{

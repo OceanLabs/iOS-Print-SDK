@@ -124,6 +124,8 @@
  */
 @interface OLKiteViewController : OLViewController
 
+@property (assign, nonatomic) BOOL showPrintAtHome;
+
 /**
  *  The delegate object that will be asked for information in certain scenarios.
  */

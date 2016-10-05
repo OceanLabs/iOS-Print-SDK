@@ -411,6 +411,7 @@ UINavigationControllerDelegate, OLKiteDelegate>
 #endif
         
         OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+        vc.showPrintAtHome = YES;
         vc.userEmail = @"";
         vc.userPhone = @"";
         vc.delegate = self;
