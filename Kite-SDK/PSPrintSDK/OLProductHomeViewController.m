@@ -43,6 +43,8 @@
 #import "OLKiteViewController.h"
 #import "OLProduct.h"
 #import "OLProductGroup.h"
+#import "OLHPSDKWrapper.h"
+#import "OLAsset+Private.h"
 #import "OLProductHomeViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "OLProductTemplate.h"
@@ -70,6 +72,7 @@
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 - (void)dismiss;
+@property (strong, nonatomic) NSArray *assets;
 
 @end
 
@@ -473,20 +476,17 @@
 #pragma mark Banner Section
 
 - (BOOL)includeBannerSection{
-    return ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"];
+    Class MPPrintItemFactoryClass = NSClassFromString (@"MPPrintItemFactory");
+    return [MPPrintItemFactoryClass class];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView bannerSectionCellForIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
-    UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
-    imageView.image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
-    imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
-    return cell;
+    return [collectionView dequeueReusableCellWithReuseIdentifier:@"PrintAtHomeCell" forIndexPath:indexPath];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView sizeForBannerSectionCellForIndexPath:(NSIndexPath *)indexPath{
     CGSize size = self.view.frame.size;
-    CGFloat height = 110;
+    CGFloat height = 233;
     if ([self isHorizontalSizeClassCompact] && size.height > size.width){
         height = (self.view.frame.size.width * height) / 375.0;
     }
@@ -494,9 +494,16 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView actionForBannerSectionForIndexPath:(NSIndexPath *)indexPath{
-    OLInfoPageViewController *vc = (OLInfoPageViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
-    vc.imageName = @"quality";
-    [self.navigationController pushViewController:vc animated:YES];
+    OLAsset *asset = [OLKiteUtils kiteVcForViewController:self].assets.firstObject;
+    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
+    printPhoto.asset = asset;
+    [printPhoto dataWithCompletionHandler:^(NSData *data, NSError *error){
+        id printItem = [OLHPSDKWrapper printItemWithAsset:[UIImage imageWithData:data scale:1]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIViewController *vc = [OLHPSDKWrapper printViewControllerWithDelegate:[OLKiteUtils kiteVcForViewController:self].delegate dataSource:[OLKiteUtils kiteVcForViewController:self].delegate printItem:printItem fromQueue:NO settingsOnly:NO];
+            [self.navigationController presentViewController:vc animated:YES completion:NULL];
+        });
+    }];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInBannerSection:(NSInteger)section{
