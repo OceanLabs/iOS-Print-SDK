@@ -425,3 +425,13 @@
 "You can add %d more for the same price." = "Du kan tilføje %d mere til samme pris.";
 "Add more" = "Tilføj mere / flere";
 "Print these" = "Udskriv (disse)";
+
+"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Kvalitetsgaranti**\nVores produkter er af højeste kvalitet og vi er sikre på du vil elske dem. Hvis ikke, så tilbyder vi dig dine penge tilbage.";
+"**Shipping**\nFREE\n\n" = "**Forsendelse**\nFREE\n\n"";
+"**Shipping**\n%\n\n" = "**Forsendelse**\n%\n\n";
+"**Shipping**\n~%~ %\n\n" = "**Forsendelse**\n~%~ %\n\n";
+"**Price**\n%\n\n" = "**Pris**\n%\n\n";
+"**Quantity**\n%lu\n\n" = "**Antal**\n%lu\n\n";
+"**Size**\n%\n\n" = "**Størrelse**\n%\n\n";
+"**Description**\n%\n\n" = "**Beskrivelse**\n%\n\n";
+
