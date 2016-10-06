@@ -1181,19 +1181,19 @@ UIActionSheetDelegate, OLUpsellViewControllerDelegate>
     NSString *title;
     OLTemplateUI templateUI = [OLProductTemplate templateWithId:self.product.templateId].templateUI;
     if (templateUI == kOLTemplateUIFrame){
-        title = [[NSString alloc]initWithFormat:@"#%ld Frame", (long)indexPath.section + 1];
+        title = [[NSString alloc]initWithFormat:NSLocalizedStringFromTableInBundle(@"#%ld Frame", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)indexPath.section + 1];
     }
     else if (templateUI == kOLTemplateUIPhotobook){
         title = [[NSString alloc]initWithFormat:@"#%ld Photobook", (long)indexPath.section + 1];
     }
     else if (templateUI == kOLTemplateUIPoster){
-        title = [[NSString alloc]initWithFormat:@"#%ld Poster", (long)indexPath.section + 1];
+        title = [[NSString alloc]initWithFormat:NSLocalizedStringFromTableInBundle(@"#%ld Poster", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)indexPath.section + 1];
     }
     else if (templateUI == kOLTemplateUIPostcard){
         title = [[NSString alloc]initWithFormat:@"#%ld Postcard", (long)indexPath.section + 1];
     }
     else{
-        title = [[NSString alloc]initWithFormat:@"#%ld Pack of %lu %@", (long)indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+        title = [[NSString alloc]initWithFormat:NSLocalizedStringFromTableInBundle(@"#%ld Pack of %lu %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)indexPath.section + 1, (unsigned long)self.product.quantityToFulfillOrder, self.product.productTemplate.name];
     }
     label.text = title;
     
