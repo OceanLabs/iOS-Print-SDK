@@ -246,7 +246,8 @@
     
     order.shippingAddress = a;
     
-    OLStripeCard *card = [[OLStripeCard alloc] init];
+    OLPayPalCard *card = [[OLPayPalCard alloc] init];
+    card.type = kOLPayPalCardTypeVisa;
     card.number = @"4121212121212127";
     card.expireMonth = 12;
     card.expireYear = 2020;
