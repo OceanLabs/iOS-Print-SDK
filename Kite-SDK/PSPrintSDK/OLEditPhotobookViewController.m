@@ -156,7 +156,7 @@ UINavigationControllerDelegate>
     [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
 #endif
     
-    self.title = NSLocalizedString(@"Move Pages", @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Move Pages", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
