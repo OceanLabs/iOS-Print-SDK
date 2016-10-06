@@ -436,4 +436,4 @@
 "**Description**\n%@\n\n" = "**Beskrivelse**\n%@\n\n";
 "Pack of" = "";
 "#%ld Pack of %lu %@" = "#%ld %lu pak %@";
-
+"#%ld Photobook" = "#%ld Fotobog";
