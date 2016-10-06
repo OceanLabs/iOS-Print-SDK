@@ -471,11 +471,11 @@ UIViewControllerPreviewingDelegate>
     NSInteger extraCopies = [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies];
     if (extraCopies == 0){
         if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Remove?", @"") message:NSLocalizedString(@"Do you want to remove this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, remove it", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Remove?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Do you want to remove this photo?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes, remove it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
                 [self deletePhotoAtIndex:indexPath.item];
             }]];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, keep it", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No, keep it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{

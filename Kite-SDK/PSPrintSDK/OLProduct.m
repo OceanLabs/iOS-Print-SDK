@@ -289,7 +289,7 @@ typedef enum {
     if (self.productTemplate.templateUI == kOLTemplateUIFrame || self.productTemplate.templateUI == kOLTemplateUIPoster || self.productTemplate.templateUI == kOLTemplateUIPostcard || self.productTemplate.templateUI == kOLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
         return @"";
     }
-    NSString* packOfString = NSLocalizedString(@"Pack of", @"Example pack of 22");
+    NSString* packOfString = NSLocalizedStringFromTableInBundle(NSLocalizedStringFromTableInBundle(@"Pack of", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     return [packOfString stringByAppendingFormat:@" %lu\n", (unsigned long)self.quantityToFulfillOrder];
 }
 
@@ -307,14 +307,14 @@ typedef enum {
     switch (sizeUnits) {
         case kSizeUnitsCentimetres:
             dimensions = [self dimensionsInCentimetres];
-            unitsName = NSLocalizedString(@"cm", @"");
+            unitsName =  NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             break;
         case kSizeUnitsInches:
             dimensions = [self dimensionsInInches];
-            unitsName = NSLocalizedString(@"inches", "");
+            unitsName =  NSLocalizedStringFromTableInBundle(@"inches", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             if (dimensions.width < 0.1 && dimensions.height < 0.1){
                 dimensions = [self dimensionsInCentimetres];
-                unitsName = NSLocalizedString(@"cm", @"");
+                unitsName = NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             }
             break;
         default:
