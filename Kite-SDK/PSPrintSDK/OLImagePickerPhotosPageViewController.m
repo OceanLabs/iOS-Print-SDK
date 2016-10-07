@@ -85,6 +85,15 @@ CGFloat OLImagePickerMargin = 1.5;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    if ([OLUserSession currentSession].kiteVc.defaultPhotoAlbumName){
+        for (OLImagePickerProviderCollection *collection in self.provider.collections){
+            if ([collection.name isEqualToString:[OLUserSession currentSession].kiteVc.defaultPhotoAlbumName]){
+                self.showingCollectionIndex = [self.provider.collections indexOfObjectIdenticalTo:collection];
+                break;
+            }
+        }
+    }
+    
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.albumsCollectionView.dataSource = self;
@@ -94,7 +103,12 @@ CGFloat OLImagePickerMargin = 1.5;
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    self.albumLabel.text = self.provider.collections.firstObject.name;
+    if (self.provider.collections.count > self.showingCollectionIndex){
+        self.albumLabel.text = self.provider.collections[self.showingCollectionIndex].name;
+    }
+    else{
+        self.albumLabel.text = @"";
+    }
     self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
     
     self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
