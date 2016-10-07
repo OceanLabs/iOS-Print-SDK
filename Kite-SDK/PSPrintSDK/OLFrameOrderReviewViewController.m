@@ -39,6 +39,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLUserSession.h"
 #import "UIImageView+FadeIn.h"
+#import "OLImagePickerViewController.h"
 
 @interface OLPackProductViewController (Private)
 
@@ -47,6 +48,7 @@
 - (void) doCheckout;
 - (void)preparePhotosForCheckout;
 -(NSUInteger) totalNumberOfExtras;
+- (void)replacePhoto:(id)sender;
 
 @end
 
@@ -72,7 +74,7 @@ CGFloat margin = 2;
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [self.framePhotos addObject:[OLUserSession currentSession].userSelectedPhotos[i % userSelectedAssetCount]];
+        [self.framePhotos addObject:[[OLUserSession currentSession].userSelectedPhotos[i % userSelectedAssetCount] copy]];
     }
 #ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
@@ -97,6 +99,11 @@ CGFloat margin = 2;
     }
     
     self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
+    
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        [self replacePhoto:nil];
+        return;
+    }
     
     OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
@@ -148,6 +155,10 @@ CGFloat margin = 2;
 }
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        return nil;
+    }
+    
     NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
     UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
     
@@ -397,6 +408,47 @@ CGFloat margin = 2;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
 #endif
+}
+
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
+    if (index != NSNotFound){
+        [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
+    }
+    index = [self.framePhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
+    [self.framePhotos replaceObjectAtIndex:index withObject:asset];
+    self.editingPrintPhoto = asset;
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    OLAsset *asset = addedAssets.lastObject;
+    if (asset){
+        [self scrollCropViewController:nil didReplaceAssetWithAsset:asset];
+        
+        //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
+        for (NSInteger i = 0; i < self.framePhotos.count; i++){
+            if (self.framePhotos[i] == self.editingPrintPhoto){
+                NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
+                
+                if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
+                    continue;
+                }
+                
+                NSInteger innerIndex = i - outerIndex * self.product.quantityToFulfillOrder;
+                
+                UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
+                UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
+                
+                NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
+                
+                if (innerIndexPath){
+                    [innerCollectionView reloadItemsAtIndexPaths:@[innerIndexPath]];
+                }
+            }
+        }
+        
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
 }
 
 @end

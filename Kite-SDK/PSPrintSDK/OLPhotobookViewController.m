@@ -899,6 +899,9 @@ static const CGFloat kBookEdgePadding = 38;
         [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:-1];
     }
     else if (self.coverPhoto){
+        if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+            return;
+        }
         self.croppingPrintPhoto = self.coverPhoto;
         UIImageView *imageView = self.coverImageView;
         OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
@@ -964,6 +967,9 @@ static const CGFloat kBookEdgePadding = 38;
         [self addMorePhotosFromView:sender.view];
     }
     else{
+        if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+            return;
+        }
         UIImageView *imageView = [page imageView];
         self.croppingPrintPhoto = self.photobookPhotos[index];
         [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){

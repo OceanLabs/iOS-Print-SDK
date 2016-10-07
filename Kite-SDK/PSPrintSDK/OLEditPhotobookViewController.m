@@ -413,7 +413,7 @@ static const NSInteger kSectionPages = 2;
     [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
 }
 
-- (void)cropImage{
+- (void)editImage{
     OLAsset *cropPhoto;
     UIImageView *imageView;
     if (self.longPressImageIndex == -1){
@@ -686,13 +686,21 @@ static const NSInteger kSectionPages = 2;
         return;
     }
     [view becomeFirstResponder];
+    NSMutableArray *items = [[NSMutableArray alloc] init];
     UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
-    UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Edit", @"") action:@selector(cropImage)];
+    [items addObject:deleteItem];
+    
+    if (![OLUserSession currentSession].kiteVc.disableEditingTools){
+        UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Edit", @"") action:@selector(editImage)];
+        [items addObject:cropImageItem];
+    }
+    
     UIMenuItem *replaceImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Replace Photo", @"") action:@selector(replaceImage)];
-    //    UIMenuItem *addPageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Add Page", @"") action:@selector(addPage)];
+    [items addObject:replaceImageItem];
+    
     
     UIMenuController *mc = [UIMenuController sharedMenuController];
-    [mc setMenuItems:@[cropImageItem, replaceImageItem, deleteItem]];
+    [mc setMenuItems:items];
     [mc setTargetRect:view.frame inView:view];
     [mc setMenuVisible:YES animated:YES];
 }
@@ -870,6 +878,7 @@ static const NSInteger kSectionPages = 2;
     vc.selectedAssets = [OLUserSession currentSession].userSelectedPhotos;
     vc.delegate = self;
     vc.maximumPhotos = self.product.quantityToFulfillOrder;
+    vc.product = self.product;
     
     [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }

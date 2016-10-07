@@ -51,6 +51,7 @@
 #import "OLAsset+Private.h"
 #import "UIImageView+FadeIn.h"
 #import "OLInfoBanner.h"
+#import "OLImagePickerViewController.h"
 
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
@@ -83,7 +84,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @end
 
 @interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout,
-UIViewControllerPreviewingDelegate>
+UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate>
 
 @property (weak, nonatomic) OLAsset *editingPrintPhoto;
 @property (strong, nonatomic) UIView *addMorePhotosView;
@@ -130,7 +131,12 @@ UIViewControllerPreviewingDelegate>
     
     static dispatch_once_t predicate;
     dispatch_once(&predicate, ^{
-        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+            self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Change", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        }
+        else{
+            self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        }
     });
 }
 
@@ -366,6 +372,9 @@ UIViewControllerPreviewingDelegate>
 }
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        return nil;
+    }
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
     OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     
@@ -499,7 +508,16 @@ UIViewControllerPreviewingDelegate>
 #endif
 }
 
-- (IBAction)onButtonEnhanceClicked:(id)sender {
+- (void)replacePhoto:(id)sender{
+    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.delegate = self;
+    vc.selectedAssets = [[NSMutableArray alloc] init];
+    vc.maximumPhotos = 1;
+    vc.product = self.product;
+    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+}
+
+- (void)editPhoto:(id)sender {
     UIView *cellContentView;
     if ([sender isKindOfClass: [UIButton class]]){
         cellContentView = [(UIButton *)sender superview];
@@ -516,6 +534,11 @@ UIViewControllerPreviewingDelegate>
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
     self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
+    
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        [self replacePhoto:sender];
+        return;
+    }
     
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
@@ -558,7 +581,7 @@ UIViewControllerPreviewingDelegate>
 }
 
 - (IBAction)onButtonImageClicked:(UIButton *)sender {
-    [self onButtonEnhanceClicked:sender];
+    [self editPhoto:sender];
 }
 
 - (void)preparePhotosForCheckout{
@@ -603,11 +626,11 @@ UIViewControllerPreviewingDelegate>
     
     cell.imageView.userInteractionEnabled = YES;
     if (cell.imageView.gestureRecognizers.count == 0){
-        [cell.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
+        [cell.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editPhoto:)]];
     }
     
     UIButton *enhanceButton = (UIButton *)[cell.contentView viewWithTag:11];
-    [enhanceButton addTarget:self action:@selector(onButtonEnhanceClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [enhanceButton addTarget:self action:@selector(editPhoto:) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor2){
         [enhanceButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
     }
@@ -768,6 +791,39 @@ UIViewControllerPreviewingDelegate>
     NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
     [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
     self.editingPrintPhoto = asset;
+}
+
+#pragma mark Image Picker Delegate
+
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
+    [vc dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    OLAsset *asset = addedAssets.lastObject;
+    if (asset){
+        [self scrollCropViewController:nil didReplaceAssetWithAsset:asset];
+        
+        //Find the new previewSourceView for the dismiss animation
+        for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++){
+            if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingPrintPhoto){
+                NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
+                if (indexPath){
+                    [UIView animateWithDuration:0 animations:^{
+                        [self.collectionView performBatchUpdates:^{
+                            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                        } completion:nil];
+                    }];
+                    OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+                    if (!cell){
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+    
+    [vc dismissViewControllerAnimated:YES completion:NULL];
 }
 
 @end

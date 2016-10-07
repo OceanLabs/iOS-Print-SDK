@@ -421,7 +421,7 @@ CGFloat OLImagePickerMargin = 1.5;
     OLAsset *printPhoto;
     if ([asset isKindOfClass:[PHAsset class]]){
         printPhoto = [OLAsset assetWithPHAsset:asset];
-        if ([[OLUserSession currentSession].userSelectedPhotos containsObject:printPhoto]){
+        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
             printPhoto = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:printPhoto]];
         }
     }
