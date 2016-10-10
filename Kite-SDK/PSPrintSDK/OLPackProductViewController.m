@@ -84,7 +84,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @end
 
 @interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout,
-UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate>
+UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoBannerDelegate>
 
 @property (weak, nonatomic) OLAsset *editingPrintPhoto;
 @property (strong, nonatomic) UIView *addMorePhotosView;
@@ -137,7 +137,13 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate>
         else{
             self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         }
+        self.infoBanner.delegate = self;
+        self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 50, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
     });
+}
+
+- (void)infoBannerWillDismiss{
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
 }
 
 - (void)setupCtaButton{
@@ -545,6 +551,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate>
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 0;
             self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
+            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
         } completion:^(BOOL finished){
             [self.infoBanner removeFromSuperview];
         }];
@@ -606,7 +613,16 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate>
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    OLCircleMaskCollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewPhotoCell" forIndexPath:indexPath];
+    OLCircleMaskCollectionViewCell *cell;
+    if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doubleSidedCell" forIndexPath:indexPath];
+        UILabel *label = (UILabel *)[cell viewWithTag:10];
+        label.text = indexPath.item == 0 ? NSLocalizedStringFromTableInBundle(@"FRONT", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") : NSLocalizedStringFromTableInBundle(@"BACK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        
+    }
+    else{
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewPhotoCell" forIndexPath:indexPath];
+    }
     UIView *view = cell.contentView;
     view.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *views = NSDictionaryOfVariableBindings(view);
@@ -687,6 +703,9 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate>
 }
 
 - (CGFloat)heightForButtons{
+    if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+        return 30;
+    }
     return 51;
 }
 

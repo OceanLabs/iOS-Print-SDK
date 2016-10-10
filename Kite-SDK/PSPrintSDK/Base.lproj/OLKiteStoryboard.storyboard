@@ -1745,13 +1745,13 @@ an image!</string>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="EUs-aQ-4xE">
                             <size key="itemSize" width="50" height="50"/>
-                            <size key="headerReferenceSize" width="50" height="50"/>
-                            <size key="footerReferenceSize" width="0.0" height="20"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="reviewPhotoCell" id="miU-dY-0if" customClass="OLCircleMaskCollectionViewCell">
-                                <rect key="frame" x="27.5" y="50" width="320" height="351"/>
+                                <rect key="frame" x="28" y="0.0" width="320" height="351"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="351"/>
@@ -1839,26 +1839,58 @@ an image!</string>
                                     <outlet property="printContainerView" destination="6rZ-As-Bvm" id="P51-ra-nlN"/>
                                 </connections>
                             </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="doubleSidedCell" id="fNu-ug-MXq" customClass="OLCircleMaskCollectionViewCell">
+                                <rect key="frame" x="28" y="361" width="320" height="350"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="350"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view tag="399" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fq4-5y-seF">
+                                            <subviews>
+                                                <activityIndicatorView opaque="NO" tag="278" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="WLn-fg-42D"/>
+                                                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0xl-Dm-9lX" customClass="OLRemoteImageView">
+                                                    <gestureRecognizers/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstItem="WLn-fg-42D" firstAttribute="centerY" secondItem="fq4-5y-seF" secondAttribute="centerY" id="2Eh-pL-Bop"/>
+                                                <constraint firstAttribute="bottom" secondItem="0xl-Dm-9lX" secondAttribute="bottom" id="LUA-cO-EcU"/>
+                                                <constraint firstItem="0xl-Dm-9lX" firstAttribute="top" secondItem="fq4-5y-seF" secondAttribute="top" id="PYm-PY-Cey"/>
+                                                <constraint firstItem="WLn-fg-42D" firstAttribute="centerX" secondItem="fq4-5y-seF" secondAttribute="centerX" id="XN5-JI-LBf"/>
+                                                <constraint firstItem="0xl-Dm-9lX" firstAttribute="leading" secondItem="fq4-5y-seF" secondAttribute="leading" id="irM-ge-IMq"/>
+                                                <constraint firstAttribute="trailing" secondItem="0xl-Dm-9lX" secondAttribute="trailing" id="pWa-DJ-G2n"/>
+                                            </constraints>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem Ipsum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TYc-hY-GWJ">
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </view>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="fq4-5y-seF" secondAttribute="bottom" id="0fw-Tz-cvv"/>
+                                    <constraint firstAttribute="trailing" secondItem="fq4-5y-seF" secondAttribute="trailing" id="32U-3m-AIV"/>
+                                    <constraint firstItem="TYc-hY-GWJ" firstAttribute="centerX" secondItem="fNu-ug-MXq" secondAttribute="centerX" id="4A9-F9-87r"/>
+                                    <constraint firstItem="fq4-5y-seF" firstAttribute="leading" secondItem="fNu-ug-MXq" secondAttribute="leading" id="8tR-fa-0ne"/>
+                                    <constraint firstItem="fq4-5y-seF" firstAttribute="top" secondItem="fNu-ug-MXq" secondAttribute="top" constant="30" id="dLL-wp-CTT"/>
+                                    <constraint firstItem="TYc-hY-GWJ" firstAttribute="top" secondItem="fNu-ug-MXq" secondAttribute="top" id="iQZ-k1-FuN"/>
+                                </constraints>
+                                <size key="customSize" width="320" height="350"/>
+                                <connections>
+                                    <outlet property="activityView" destination="WLn-fg-42D" id="Mwo-45-RGE"/>
+                                    <outlet property="imageView" destination="0xl-Dm-9lX" id="Ld2-ns-bOd"/>
+                                    <outlet property="imageViewBottomCon" destination="LUA-cO-EcU" id="bnu-0N-eiI"/>
+                                    <outlet property="imageViewLeftCon" destination="irM-ge-IMq" id="K1p-C5-7DY"/>
+                                    <outlet property="imageViewRightCon" destination="pWa-DJ-G2n" id="2Ys-8x-sKU"/>
+                                    <outlet property="imageViewTopCon" destination="PYm-PY-Cey" id="Evl-va-6Oc"/>
+                                    <outlet property="printContainerView" destination="fq4-5y-seF" id="zuN-wb-BwK"/>
+                                </connections>
+                            </collectionViewCell>
                         </cells>
-                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="doublesidedHeaderCell" id="jvf-Ye-7eB">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem Ipsum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CVr-Ou-C9v">
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <constraints>
-                                <constraint firstItem="CVr-Ou-C9v" firstAttribute="centerY" secondItem="jvf-Ye-7eB" secondAttribute="centerY" id="8p3-cj-Zjy"/>
-                                <constraint firstItem="CVr-Ou-C9v" firstAttribute="centerX" secondItem="jvf-Ye-7eB" secondAttribute="centerX" id="Ki4-yO-BN1"/>
-                            </constraints>
-                        </collectionReusableView>
-                        <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="footer" id="Nkd-GU-DXj">
-                            <rect key="frame" x="0.0" y="401" width="375" height="20"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </collectionReusableView>
                         <connections>
                             <outlet property="dataSource" destination="7wc-Kp-jtQ" id="0P2-6n-eD9"/>
                             <outlet property="delegate" destination="7wc-Kp-jtQ" id="AyB-K0-UtG"/>

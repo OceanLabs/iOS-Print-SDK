@@ -92,6 +92,9 @@
 - (void)dismiss{
     [UIView animateWithDuration:0.25 animations:^{
         self.transform = CGAffineTransformMakeTranslation(0, -self.frame.origin.y);
+        if ([self.delegate respondsToSelector:@selector(infoBannerWillDismiss)]){
+            [self.delegate infoBannerWillDismiss];
+        }
     } completion:^(BOOL finished){
         [self removeFromSuperview];
     }];

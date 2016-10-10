@@ -372,6 +372,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"NONCUSTOMIZABLE"]){
         return OLTemplateUINonCustomizable;
     }
+    else if ([identifier isEqualToString:@"DOUBLESIDED"]){
+        return OLTemplateUIDoubleSided;
+    }
     return OLTemplateUINA;
 }
 

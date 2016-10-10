@@ -30,8 +30,15 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol OLInfoBannerDelegate <NSObject>
+@optional
+-(void)infoBannerWillDismiss;
+
+@end
+
 @interface OLInfoBanner : UIView
 
+@property (strong, nonatomic) id<OLInfoBannerDelegate> delegate;
 + (OLInfoBanner *)showInfoBannerOnViewController:(UIViewController *)vc withTitle:(NSString *)title;
 - (void)dismiss;
 
