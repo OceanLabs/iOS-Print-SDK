@@ -97,7 +97,7 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (BOOL)isUnitTesting{
-    return NO;
+    return isUnitTesting;
 }
 
 + (void)setAPIKey:(NSString *_Nonnull)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {

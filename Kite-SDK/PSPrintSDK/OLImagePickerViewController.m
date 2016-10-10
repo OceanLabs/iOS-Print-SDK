@@ -227,7 +227,7 @@
         }
     }
     
-    if ([OLUserSession currentSession].userSelectedPhotos.count > self.maximumPhotos){
+    if ([OLUserSession currentSession].userSelectedPhotos.count > self.maximumPhotos && self.maximumPhotos != 0){
         NSArray *maxSelected = [[OLUserSession currentSession].userSelectedPhotos subarrayWithRange:NSMakeRange(0, self.maximumPhotos)];
         [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
         [[OLUserSession currentSession].userSelectedPhotos addObjectsFromArray:maxSelected];
