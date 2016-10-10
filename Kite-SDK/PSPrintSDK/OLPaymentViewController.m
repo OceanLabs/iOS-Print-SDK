@@ -684,7 +684,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];
         
         float numberOfPhotos = [job assetsForUploading].count;
-        if (template.templateUI == kOLTemplateUIPhotobook){
+        if (template.templateUI == OLTemplateUIPhotobook){
             // Front cover photo should count towards total photos
             if ([(OLPhotobookPrintJob *)job frontCover]){
                 numberOfPhotos--;
@@ -1588,7 +1588,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
         
-        if (product.productTemplate.templateUI == kOLTemplateUINA || product.productTemplate.templateUI == kOLTemplateUINonCustomizable || [OLKiteUtils assetArrayContainsPDF:[job assetsForUploading]]){
+        if (product.productTemplate.templateUI == OLTemplateUINA || product.productTemplate.templateUI == OLTemplateUINonCustomizable || [OLKiteUtils assetArrayContainsPDF:[job assetsForUploading]]){
             editButton.hidden = YES;
             largeEditButton.hidden = YES;
         }
@@ -1732,7 +1732,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     NSMutableArray<OLAsset *> *jobAssets = [[printJob assetsForUploading] mutableCopy];
     
     //Special handling of products
-    if (product.productTemplate.templateUI == kOLTemplateUIPhotobook && [(OLPhotobookPrintJob *)printJob frontCover]){
+    if (product.productTemplate.templateUI == OLTemplateUIPhotobook && [(OLPhotobookPrintJob *)printJob frontCover]){
         //Make sure we don't add the cover photo asset in the book photos
         OLAsset *asset = [(OLPhotobookPrintJob *)printJob frontCover];
         OLAsset *printPhoto = asset;
@@ -1744,10 +1744,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [addedAssetsUUIDs addObject:printPhoto.uuid];
         }
     }
-    else if (product.productTemplate.templateUI == kOLTemplateUIPoster){
+    else if (product.productTemplate.templateUI == OLTemplateUIPoster){
         [OLPosterViewController changeOrderOfPhotosInArray:jobAssets forProduct:product];
     }
-    else if (product.productTemplate.templateUI == kOLTemplateUIFrame){
+    else if (product.productTemplate.templateUI == OLTemplateUIFrame){
         [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:jobAssets forProduct:product];
     }
     
@@ -1770,7 +1770,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     [OLUserSession currentSession].userSelectedPhotos = userSelectedPhotos;
     
-    if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != kOLTemplateUICase && product.productTemplate.templateUI != kOLTemplateUIPhotobook && product.productTemplate.templateUI != kOLTemplateUIPostcard && !(product.productTemplate.templateUI == kOLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){
+    if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != OLTemplateUICase && product.productTemplate.templateUI != OLTemplateUIPhotobook && product.productTemplate.templateUI != OLTemplateUIPostcard && !(product.productTemplate.templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){
         OLImagePickerViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
         photoVc.product = product;
         photoVc.overrideImagePickerMode = YES;

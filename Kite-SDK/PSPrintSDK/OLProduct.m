@@ -117,7 +117,7 @@ typedef enum {
 }
 
 -(NSUInteger)quantityToFulfillOrder{
-    if (self.productTemplate.templateUI == kOLTemplateUIPhotobook){
+    if (self.productTemplate.templateUI == OLTemplateUIPhotobook){
         return self.productTemplate.productRepresentation.numberOfPhotos;
     }
     return MAX(self.productTemplate.quantityPerSheet, 1);
@@ -286,7 +286,7 @@ typedef enum {
 }
 
 - (NSString *) packInfo{
-    if (self.productTemplate.templateUI == kOLTemplateUIFrame || self.productTemplate.templateUI == kOLTemplateUIPoster || self.productTemplate.templateUI == kOLTemplateUIPostcard || self.productTemplate.templateUI == kOLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
+    if (self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUIPoster || self.productTemplate.templateUI == OLTemplateUIPostcard || self.productTemplate.templateUI == OLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
         return @"";
     }
     NSString* packOfString = NSLocalizedStringFromTableInBundle(NSLocalizedStringFromTableInBundle(@"Pack of", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
@@ -364,7 +364,7 @@ typedef enum {
     
     //Add size info
     OLTemplateUI templateClass = self.productTemplate.templateUI;
-    if (templateClass != kOLTemplateUICase){
+    if (templateClass != OLTemplateUICase){
         s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Size**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.dimensions]];
     }
     
@@ -403,7 +403,7 @@ typedef enum {
 }
 
 - (BOOL)isValidProductForUI{
-    return self.labelColor && self.productTemplate.templateUI != kOLTemplateUINA;
+    return self.labelColor && self.productTemplate.templateUI != OLTemplateUINA;
 }
 
 

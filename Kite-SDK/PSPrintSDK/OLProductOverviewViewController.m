@@ -166,7 +166,7 @@
             vc = vc.parentViewController;
         }
     }
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != OLTemplateUINonCustomizable){
         if (![[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
             [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Checkout", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         }
@@ -174,7 +174,7 @@
             [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         }
     }
-    else if (self.product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+    else if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
         [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     }
     
@@ -409,7 +409,7 @@
 }
 
 - (IBAction)onButtonStartClicked:(id)sender {
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != OLTemplateUINonCustomizable){
         UIViewController *vc;
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
             vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
@@ -434,7 +434,7 @@
         [self.navigationController pushViewController:vc animated:YES];
         return;
     }
-    else if (self.product.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+    else if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
         if ([self shouldGoToCheckout]){
             [self doCheckout];
         }
@@ -557,7 +557,7 @@
 - (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
     OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
     NSMutableArray *assets = [[NSMutableArray alloc] init];
-    if (offerProduct.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+    if (offerProduct.productTemplate.templateUI == OLTemplateUINonCustomizable){
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
@@ -570,7 +570,7 @@
     }
     
     id<OLPrintJob> job;
-    if ([OLProductTemplate templateWithId:templateId].templateUI == kOLTemplateUIPhotobook){
+    if ([OLProductTemplate templateWithId:templateId].templateUI == OLTemplateUIPhotobook){
         job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
     }
     else{

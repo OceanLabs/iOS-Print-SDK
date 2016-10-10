@@ -471,7 +471,7 @@
 }
 
 -(NSUInteger) totalNumberOfExtras{
-    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame || self.product.productTemplate.templateUI == kOLTemplateUIPoster || self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+    if (self.product.productTemplate.templateUI == OLTemplateUIFrame || self.product.productTemplate.templateUI == OLTemplateUIPoster || self.product.productTemplate.templateUI == OLTemplateUIPhotobook){
         return 0;
     }
     
@@ -815,7 +815,7 @@
 - (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
     OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
     NSMutableArray *assets = [[NSMutableArray alloc] init];
-    if (offerProduct.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+    if (offerProduct.productTemplate.templateUI == OLTemplateUINonCustomizable){
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
@@ -828,7 +828,7 @@
     }
     
     id<OLPrintJob> job;
-    if ([OLProductTemplate templateWithId:templateId].templateUI == kOLTemplateUIPhotobook){
+    if ([OLProductTemplate templateWithId:templateId].templateUI == OLTemplateUIPhotobook){
         job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
     }
     else{

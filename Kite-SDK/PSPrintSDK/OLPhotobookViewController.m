@@ -611,7 +611,7 @@ static const CGFloat kBookEdgePadding = 38;
 - (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
     OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
     NSMutableArray *assets = [[NSMutableArray alloc] init];
-    if (offerProduct.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+    if (offerProduct.productTemplate.templateUI == OLTemplateUINonCustomizable){
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
@@ -624,7 +624,7 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     id<OLPrintJob> job;
-    if ([OLProductTemplate templateWithId:templateId].templateUI == kOLTemplateUIPhotobook){
+    if ([OLProductTemplate templateWithId:templateId].templateUI == OLTemplateUIPhotobook){
         job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
     }
     else{
