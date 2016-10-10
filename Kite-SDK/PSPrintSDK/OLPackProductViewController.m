@@ -51,6 +51,7 @@
 #import "OLAsset+Private.h"
 #import "UIImageView+FadeIn.h"
 #import "OLInfoBanner.h"
+#import "OLImagePickerViewController.h"
 
 static const NSUInteger kTagAlertViewDeletePhoto = 98;
 
@@ -83,7 +84,7 @@ static const NSUInteger kTagAlertViewDeletePhoto = 98;
 @end
 
 @interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout,
-UIViewControllerPreviewingDelegate>
+UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoBannerDelegate>
 
 @property (weak, nonatomic) OLAsset *editingPrintPhoto;
 @property (strong, nonatomic) UIView *addMorePhotosView;
@@ -130,8 +131,19 @@ UIViewControllerPreviewingDelegate>
     
     static dispatch_once_t predicate;
     dispatch_once(&predicate, ^{
-        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+            self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Change", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        }
+        else{
+            self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        }
+        self.infoBanner.delegate = self;
+        self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 50, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
     });
+}
+
+- (void)infoBannerWillDismiss{
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
 }
 
 - (void)setupCtaButton{
@@ -366,6 +378,9 @@ UIViewControllerPreviewingDelegate>
 }
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        return nil;
+    }
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
     OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     
@@ -390,7 +405,7 @@ UIViewControllerPreviewingDelegate>
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
     OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
-    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
     cropVc.product = self.product;
@@ -471,11 +486,11 @@ UIViewControllerPreviewingDelegate>
     NSInteger extraCopies = [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies];
     if (extraCopies == 0){
         if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Remove?", @"") message:NSLocalizedString(@"Do you want to remove this photo?", @"") preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, remove it", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Remove?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Do you want to remove this photo?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes, remove it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
                 [self deletePhotoAtIndex:indexPath.item];
             }]];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, keep it", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No, keep it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
@@ -499,7 +514,16 @@ UIViewControllerPreviewingDelegate>
 #endif
 }
 
-- (IBAction)onButtonEnhanceClicked:(id)sender {
+- (void)replacePhoto:(id)sender{
+    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.delegate = self;
+    vc.selectedAssets = [[NSMutableArray alloc] init];
+    vc.maximumPhotos = 1;
+    vc.product = self.product;
+    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+}
+
+- (void)editPhoto:(id)sender {
     UIView *cellContentView;
     if ([sender isKindOfClass: [UIButton class]]){
         cellContentView = [(UIButton *)sender superview];
@@ -517,17 +541,23 @@ UIViewControllerPreviewingDelegate>
     
     self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
     
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        [self replacePhoto:sender];
+        return;
+    }
+    
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 0;
             self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
+            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
         } completion:^(BOOL finished){
             [self.infoBanner removeFromSuperview];
         }];
         OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
-        cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+        cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
         cropVc.delegate = self;
         cropVc.aspectRatio = [self productAspectRatio];
         cropVc.product = self.product;
@@ -558,7 +588,7 @@ UIViewControllerPreviewingDelegate>
 }
 
 - (IBAction)onButtonImageClicked:(UIButton *)sender {
-    [self onButtonEnhanceClicked:sender];
+    [self editPhoto:sender];
 }
 
 - (void)preparePhotosForCheckout{
@@ -583,7 +613,16 @@ UIViewControllerPreviewingDelegate>
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    OLCircleMaskCollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewPhotoCell" forIndexPath:indexPath];
+    OLCircleMaskCollectionViewCell *cell;
+    if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doubleSidedCell" forIndexPath:indexPath];
+        UILabel *label = (UILabel *)[cell viewWithTag:10];
+        label.text = indexPath.item == 0 ? NSLocalizedStringFromTableInBundle(@"FRONT", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") : NSLocalizedStringFromTableInBundle(@"BACK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        
+    }
+    else{
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewPhotoCell" forIndexPath:indexPath];
+    }
     UIView *view = cell.contentView;
     view.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *views = NSDictionaryOfVariableBindings(view);
@@ -603,11 +642,11 @@ UIViewControllerPreviewingDelegate>
     
     cell.imageView.userInteractionEnabled = YES;
     if (cell.imageView.gestureRecognizers.count == 0){
-        [cell.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
+        [cell.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editPhoto:)]];
     }
     
     UIButton *enhanceButton = (UIButton *)[cell.contentView viewWithTag:11];
-    [enhanceButton addTarget:self action:@selector(onButtonEnhanceClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [enhanceButton addTarget:self action:@selector(editPhoto:) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor2){
         [enhanceButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
     }
@@ -647,7 +686,7 @@ UIViewControllerPreviewingDelegate>
         });
     }];
     
-    if (self.product.productTemplate.templateUI == kOLTemplateUICircle){
+    if (self.product.productTemplate.templateUI == OLTemplateUICircle){
         cell.enableMask = YES;
         [cell setNeedsDisplay];
     }
@@ -664,6 +703,9 @@ UIViewControllerPreviewingDelegate>
 }
 
 - (CGFloat)heightForButtons{
+    if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+        return 30;
+    }
     return 51;
 }
 
@@ -768,6 +810,39 @@ UIViewControllerPreviewingDelegate>
     NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
     [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
     self.editingPrintPhoto = asset;
+}
+
+#pragma mark Image Picker Delegate
+
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
+    [vc dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    OLAsset *asset = addedAssets.lastObject;
+    if (asset){
+        [self scrollCropViewController:nil didReplaceAssetWithAsset:asset];
+        
+        //Find the new previewSourceView for the dismiss animation
+        for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++){
+            if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingPrintPhoto){
+                NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
+                if (indexPath){
+                    [UIView animateWithDuration:0 animations:^{
+                        [self.collectionView performBatchUpdates:^{
+                            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                        } completion:nil];
+                    }];
+                    OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+                    if (!cell){
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+    
+    [vc dismissViewControllerAnimated:YES completion:NULL];
 }
 
 @end

@@ -48,7 +48,7 @@
 }
 
 - (void)testImageUpload{
-    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKiteSDKEnvironmentSandbox];
+    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
     self.expectation = [self expectationWithDescription:@"Upload photo Completed"];
     
     OLAssetUploadRequest *req = [[OLAssetUploadRequest alloc] init];
@@ -59,7 +59,7 @@
 }
 
 - (void)testOLAssetsUpload{
-    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKiteSDKEnvironmentSandbox];
+    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
     self.expectation = [self expectationWithDescription:@"Upload OLAssets Completed"];
     
     OLAssetUploadRequest *req = [[OLAssetUploadRequest alloc] init];
@@ -81,7 +81,7 @@
 }
 
 - (void)testCancelAssetUpload{
-    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKiteSDKEnvironmentSandbox];
+    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
     OLAssetUploadRequest *req = [[OLAssetUploadRequest alloc] init];
     req.delegate = self;
     [req uploadOLAssets:[OLKiteTestHelper imageAssets]];

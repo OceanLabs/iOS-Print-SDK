@@ -37,18 +37,19 @@ typedef void (^TemplateSyncHandler)(NSError *_Nullable error);
 extern NSString *_Nonnull const kNotificationTemplateSyncComplete;
 extern NSString *_Nonnull const kNotificationKeyTemplateSyncError;
 
-typedef enum {
-    kOLTemplateUINA,
-    kOLTemplateUIRectagle,
-    kOLTemplateUICircle,
-    kOLTemplateUIFrame,
-    kOLTemplateUIPoster,
-    kOLTemplateUICase,
-    kOLTemplateUIPostcard,
-    kOLTemplateUIPhotobook,
-    kOLTemplateUINonCustomizable,
-    kOLTemplateUIApparel
-}OLTemplateUI;
+typedef NS_ENUM(NSInteger, OLTemplateUI) {
+    OLTemplateUINA,
+    OLTemplateUIRectagle,
+    OLTemplateUICircle,
+    OLTemplateUIFrame,
+    OLTemplateUIPoster,
+    OLTemplateUICase,
+    OLTemplateUIPostcard,
+    OLTemplateUIPhotobook,
+    OLTemplateUINonCustomizable,
+    OLTemplateUIApparel,
+    OLTemplateUIDoubleSided,
+};
 
 @class OLProductTemplateSyncRequest;
 @class OLCountry;

@@ -220,6 +220,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         vc.userEmail = @"";
         vc.userPhone = @"";
         vc.delegate = self;
+        vc.disableEditingTools = YES;
+        vc.defaultPhotoAlbumName = @"Test";
        
         [self addCatsAndDogsImagePickersToKite:vc];
         

@@ -105,18 +105,6 @@ static NSOperationQueue *imageOperationQueue;
     return imageOperationQueue;
 }
 
-- (NSURL *)imageURL{
-//    if (self.instagramImage){
-//        return [self.instagramImage fullURL];
-//    }
-//    else if (self.facebookImage){
-//        return [self.facebookImage fullURL];
-//    }
-//    else{
-        return _imageURL;
-//    }
-}
-
 - (instancetype)initWithImageData:(NSData *)data mimeType:(NSString *)mimeType {
     if (self = [super init]) {
         NSAssert(data != nil, @"image data must be non nil");
@@ -269,6 +257,13 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
+    if (self.assetType == kOLAssetTypeImageData && self.mimeType == kOLMimeTypePDF){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            handler(self.imageData, nil);
+        });
+        return;
+    }
+    
     [self backgroundImageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
         if (image && !error){
             NSData *data = UIImageJPEGRepresentation(image, 0.7);

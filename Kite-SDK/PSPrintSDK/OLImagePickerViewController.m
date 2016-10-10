@@ -220,6 +220,19 @@
     
     [view.superview addConstraints:con];
     
+    if (self.maximumPhotos == 0 && self.minimumPhotos == 0){
+        if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+            self.maximumPhotos = 2;
+            self.minimumPhotos = 2;
+        }
+    }
+    
+    if ([OLUserSession currentSession].userSelectedPhotos.count > self.maximumPhotos){
+        NSArray *maxSelected = [[OLUserSession currentSession].userSelectedPhotos subarrayWithRange:NSMakeRange(0, self.maximumPhotos)];
+        [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
+        [[OLUserSession currentSession].userSelectedPhotos addObjectsFromArray:maxSelected];
+    }
+    
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
@@ -471,7 +484,7 @@
 }
 
 -(NSUInteger) totalNumberOfExtras{
-    if (self.product.productTemplate.templateUI == kOLTemplateUIFrame || self.product.productTemplate.templateUI == kOLTemplateUIPoster || self.product.productTemplate.templateUI == kOLTemplateUIPhotobook){
+    if (self.product.productTemplate.templateUI == OLTemplateUIFrame || self.product.productTemplate.templateUI == OLTemplateUIPoster || self.product.productTemplate.templateUI == OLTemplateUIPhotobook){
         return 0;
     }
     
@@ -657,8 +670,15 @@
 #pragma mark Navigation
 
 - (BOOL)shouldGoToOrderPreview {
-    if (self.selectedAssets.count == 0) {
-        UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:NSLocalizedString(@"Please select some images to print first.", @"") preferredStyle:UIAlertControllerStyleAlert];
+    NSString *errorMessage;
+    if (self.selectedAssets.count == 0){
+        errorMessage = NSLocalizedString(@"Please select some images.", @"");
+    }
+    else if (self.selectedAssets.count < self.minimumPhotos){
+        errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Please select at least %d images.", @""), self.minimumPhotos];
+    }
+    if (errorMessage) {
+        UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
         [av addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
         [self presentViewController:av animated:YES completion:NULL];
         return NO;
@@ -815,7 +835,7 @@
 - (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
     OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
     NSMutableArray *assets = [[NSMutableArray alloc] init];
-    if (offerProduct.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+    if (offerProduct.productTemplate.templateUI == OLTemplateUINonCustomizable){
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
@@ -828,7 +848,7 @@
     }
     
     id<OLPrintJob> job;
-    if ([OLProductTemplate templateWithId:templateId].templateUI == kOLTemplateUIPhotobook){
+    if ([OLProductTemplate templateWithId:templateId].templateUI == OLTemplateUIPhotobook){
         job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
     }
     else{

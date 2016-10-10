@@ -69,10 +69,10 @@
         self.collections = [[NSMutableDictionary alloc] init];
         NSArray *allProducts = [OLProduct productsWithFilters:self.filterProducts];
         for (OLProduct *product in allProducts){
-            if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){
+            if (!product.labelColor || product.productTemplate.templateUI == OLTemplateUINA){
                 continue;
             }
-            if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
+            if (product.productTemplate.templateUI == OLTemplateUIPoster && !self.subtypeSelection){
                 BOOL sameGridTemplate = NO;
                 for (OLProduct *otherProduct in _products){
                     if (otherProduct.productTemplate.gridCountX == product.productTemplate.gridCountX && otherProduct.productTemplate.gridCountY == product.productTemplate.gridCountY){
@@ -99,7 +99,7 @@
             }
         }
     }
-    if (_products.count == 1 && !self.subtypeSelection && [_products.firstObject productTemplate].templateUI == kOLTemplateUIPoster && self.allPosterProducts.count > 1){
+    if (_products.count == 1 && !self.subtypeSelection && [_products.firstObject productTemplate].templateUI == OLTemplateUIPoster && self.allPosterProducts.count > 1){
         _products = nil;
         self.subtypeSelection = YES;
         return [self products];
@@ -214,7 +214,7 @@
     
     NSString *identifier;
     NSMutableArray *posters = [[NSMutableArray alloc] init];
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
+    if (product.productTemplate.templateUI == OLTemplateUIPoster && !self.subtypeSelection){
         for (OLProduct *poster in self.allPosterProducts){
             if (poster.productTemplate.gridCountX == product.productTemplate.gridCountX && poster.productTemplate.gridCountY == product.productTemplate.gridCountY){
                 [posters addObject:poster];
@@ -224,7 +224,7 @@
             identifier = @"OLTypeSelectionViewController";
         }
     }
-    else if ([OLKiteABTesting sharedInstance].skipProductOverview && ![OLKiteABTesting sharedInstance].launchedWithPrintOrder && product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
+    else if ([OLKiteABTesting sharedInstance].skipProductOverview && ![OLKiteABTesting sharedInstance].launchedWithPrintOrder && product.productTemplate.templateUI != OLTemplateUINonCustomizable){
         identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]];
     }
     
@@ -331,7 +331,7 @@
         }
     }
     
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
+    if (product.productTemplate.templateUI == OLTemplateUIPoster && !self.subtypeSelection){
         if (product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
             textView.text = NSLocalizedString(@"Single Photo Poster", @"");
         }

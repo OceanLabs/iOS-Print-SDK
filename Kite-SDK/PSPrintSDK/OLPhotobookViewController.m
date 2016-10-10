@@ -611,7 +611,7 @@ static const CGFloat kBookEdgePadding = 38;
 - (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
     OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
     NSMutableArray *assets = [[NSMutableArray alloc] init];
-    if (offerProduct.productTemplate.templateUI == kOLTemplateUINonCustomizable){
+    if (offerProduct.productTemplate.templateUI == OLTemplateUINonCustomizable){
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
@@ -624,7 +624,7 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     id<OLPrintJob> job;
-    if ([OLProductTemplate templateWithId:templateId].templateUI == kOLTemplateUIPhotobook){
+    if ([OLProductTemplate templateWithId:templateId].templateUI == OLTemplateUIPhotobook){
         job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
     }
     else{
@@ -801,9 +801,9 @@ static const CGFloat kBookEdgePadding = 38;
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
     if (selectedCount < quantityToFulfilOrder) {
         NSUInteger canSelectExtraCount = quantityToFulfilOrder - selectedCount;
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedString(@"You've selected %d photos.", @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Add more", @"") style:UIAlertActionStyleCancel handler:NULL]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Print these", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedString(@"You can add %d more for the same price.", @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Add more", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print these", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
             [self doCheckout];
         }]];
         [self presentViewController:ac animated:YES completion:NULL];
@@ -899,6 +899,9 @@ static const CGFloat kBookEdgePadding = 38;
         [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:-1];
     }
     else if (self.coverPhoto){
+        if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+            return;
+        }
         self.croppingPrintPhoto = self.coverPhoto;
         UIImageView *imageView = self.coverImageView;
         OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
@@ -964,6 +967,9 @@ static const CGFloat kBookEdgePadding = 38;
         [self addMorePhotosFromView:sender.view];
     }
     else{
+        if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+            return;
+        }
         UIImageView *imageView = [page imageView];
         self.croppingPrintPhoto = self.photobookPhotos[index];
         [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){

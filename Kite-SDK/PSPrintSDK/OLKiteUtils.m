@@ -160,31 +160,31 @@
 
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
     OLTemplateUI templateUI = product.productTemplate.templateUI;
-    if (templateUI == kOLTemplateUICase){
+    if (templateUI == OLTemplateUICase){
         return @"OLCaseViewController";
     }
-    else if (templateUI == kOLTemplateUIApparel){
+    else if (templateUI == OLTemplateUIApparel){
         return @"OLTShirtReviewViewController";
     }
-    else if (templateUI == kOLTemplateUIPostcard){
+    else if (templateUI == OLTemplateUIPostcard){
         return @"OLPostcardViewController";
     }
-    else if (templateUI == kOLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
+    else if (templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
         return @"OLSingleImageProductReviewViewController";
     }
-    else if (templateUI == kOLTemplateUIPhotobook){
+    else if (templateUI == OLTemplateUIPhotobook){
         return @"OLEditPhotobookViewController";
     }
-    else if (templateUI == kOLTemplateUINonCustomizable){
+    else if (templateUI == OLTemplateUINonCustomizable){
         return @"OLPaymentViewController";
     }
     else if (photoSelectionScreen){
         return @"OLImagePickerViewController";
     }
-    else if (templateUI == kOLTemplateUIPoster){
+    else if (templateUI == OLTemplateUIPoster){
         return @"OLPosterViewController";
     }
-    else if (templateUI == kOLTemplateUIFrame){
+    else if (templateUI == OLTemplateUIFrame){
         return @"FrameOrderReviewViewController";
     }
     else{

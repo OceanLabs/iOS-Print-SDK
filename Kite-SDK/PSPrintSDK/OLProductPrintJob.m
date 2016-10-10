@@ -149,7 +149,7 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (NSUInteger)quantity {
-    if ([OLProductTemplate templateWithId:self.templateId].templateUI == kOLTemplateUINonCustomizable){
+    if ([OLProductTemplate templateWithId:self.templateId].templateUI == OLTemplateUINonCustomizable){
         return 1;
     }
     return self.assets.count;
@@ -157,7 +157,7 @@ static id stringOrEmptyString(NSString *str) {
 
 - (NSDecimalNumber *)numberOfItemsInJob{
     OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
-    if (template.templateUI == kOLTemplateUINonCustomizable){
+    if (template.templateUI == OLTemplateUINonCustomizable){
         return [NSDecimalNumber decimalNumberWithString:@"1"];
     }
     

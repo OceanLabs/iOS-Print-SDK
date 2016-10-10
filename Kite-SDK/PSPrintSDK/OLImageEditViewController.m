@@ -195,6 +195,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self registerCollectionViewCells];
     self.editingTools.collectionView.dataSource = self;
     self.editingTools.collectionView.delegate = self;
+    [self.editingTools.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     
     [self setupCropGuides];
     
@@ -890,13 +891,24 @@ const NSInteger kOLEditTagCrop = 40;
         [self.editingTools.button2 removeFromSuperview];
     }
     
-    [self.editingTools.button3 setImage:[UIImage imageNamedInKiteBundle:@"tools-icon"] forState:UIControlStateNormal];
-    self.editingTools.button3.tag = kOLEditTagImageTools;
-    [self.editingTools.button3 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        [self.editingTools.button3 removeFromSuperview];
+    }
+    else{
+        [self.editingTools.button3 setImage:[UIImage imageNamedInKiteBundle:@"tools-icon"] forState:UIControlStateNormal];
+        self.editingTools.button3.tag = kOLEditTagImageTools;
+        [self.editingTools.button3 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    }
     
-    [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
-    self.editingTools.button4.tag = kOLEditTagCrop;
-     [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        [self.editingTools.button4 removeFromSuperview];
+        [self.cropView setGesturesEnabled:NO];
+    }
+    else{
+        [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
+        self.editingTools.button4.tag = kOLEditTagCrop;
+        [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    }
 }
 
 - (void)saveEditsToAsset:(OLAsset *)asset{

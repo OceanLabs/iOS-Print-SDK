@@ -151,7 +151,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 }
 
 - (NSUInteger)quantityPerSheet{
-    if (self.templateUI == kOLTemplateUIPhotobook){
+    if (self.templateUI == OLTemplateUIPhotobook){
         return _quantityPerSheet % 2 == 0 ? _quantityPerSheet : _quantityPerSheet + 1;
     }
     return _quantityPerSheet;
@@ -346,19 +346,19 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 +(OLTemplateUI)templateUIWithIdentifier:(NSString *)identifier{
     if ([identifier isEqualToString:@"RECTANGLE"]){
-        return kOLTemplateUIRectagle;
+        return OLTemplateUIRectagle;
     }
     else if ([identifier isEqualToString:@"FRAME"]){
-        return kOLTemplateUIFrame;
+        return OLTemplateUIFrame;
     }
     else if ([identifier isEqualToString:@"POSTER"]){
-        return kOLTemplateUIPoster;
+        return OLTemplateUIPoster;
     }
     else if ([identifier isEqualToString:@"CIRCLE"]){
-        return kOLTemplateUICircle;
+        return OLTemplateUICircle;
     }
     else if ([identifier isEqualToString:@"PHONE_CASE"]){
-        return kOLTemplateUICase;
+        return OLTemplateUICase;
     }
 //    else if ([identifier isEqualToString:@"APPAREL"]){
 //        return kOLTemplateUIApparel;
@@ -367,12 +367,15 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 //        return kOLTemplateUIPostcard;
 //    }
     else if ([identifier isEqualToString:@"PHOTOBOOK"]){
-        return kOLTemplateUIPhotobook;
+        return OLTemplateUIPhotobook;
     }
     else if ([identifier isEqualToString:@"NONCUSTOMIZABLE"]){
-        return kOLTemplateUINonCustomizable;
+        return OLTemplateUINonCustomizable;
     }
-    return kOLTemplateUINA;
+    else if ([identifier isEqualToString:@"DOUBLESIDED"]){
+        return OLTemplateUIDoubleSided;
+    }
+    return OLTemplateUINA;
 }
 
 #pragma mark - NSCoding protocol methods

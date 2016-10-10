@@ -60,6 +60,10 @@
 -(NSMutableArray *) userSelectedPhotos{
     if (!_userSelectedPhotos){
         _userSelectedPhotos = [[NSMutableArray alloc] init];
+        
+        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+            [_userSelectedPhotos addObjectsFromArray:self.appAssets];
+        }
     }
     return _userSelectedPhotos;
 }

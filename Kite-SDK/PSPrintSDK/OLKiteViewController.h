@@ -121,6 +121,18 @@
  */
 @property (copy, nonatomic, nullable) NSArray<NSString *> *filterProducts;
 
+
+/**
+ *  Set to disable the ability to edit images.
+ */
+@property (assign, nonatomic) BOOL disableEditingTools;
+
+
+/**
+ *  Set an album name to show when the user first sees the photo library section of the image picker. If not set, the image picker will show the "All Photos" album.
+ */
+@property (strong, nonatomic) NSString *_Nullable defaultPhotoAlbumName;
+
 /**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with
  *

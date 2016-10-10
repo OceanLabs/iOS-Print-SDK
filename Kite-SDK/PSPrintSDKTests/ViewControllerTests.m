@@ -9,13 +9,12 @@
 #import <XCTest/XCTest.h>
 #import "OLKitePrintSDK.h"
 #import "OLProductHomeViewController.h"
-#import "OLPhotoSelectionViewController.h"
 #import "OLNavigationController.h"
 #import "OLKiteTestHelper.h"
 #import "OLProductGroup.h"
 #import "OLProductTypeSelectionViewController.h"
 #import "NSObject+Utils.h"
-#import "OLOrderReviewViewController.h"
+#import "OLPackProductViewController.h"
 #import "OLPhotobookViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "OLCaseViewController.h"
@@ -26,18 +25,17 @@
 #import "OLEditPhotobookViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLIntegratedCheckoutViewController.h"
-#import "PrintOrderHistoryViewController.h"
 #import "OLAddressEditViewController.h"
 #import "OLTestTapGestureRecognizer.h"
 #import "OLCustomViewControllerPhotoProvider.h"
-#import "CatsAssetCollectionDataSource.h"
-#import "DogsAssetCollectionDataSource.h"
 #import "OLUpsellViewController.h"
 #import "OLPrintOrder+History.h"
 #import "OLFrameOrderReviewViewController.h"
 #import "OLInfoPageViewController.h"
 #import "OLImagePreviewViewController.h"
 #import "OLUserSession.h"
+#import "OLPhotoEdits.h"
+#import "OLImagePickerViewController.h"
 
 @import Photos;
 
@@ -54,20 +52,6 @@
 + (BOOL)setUseStripeForCreditCards:(BOOL)use;
 + (void)setUseStaging:(BOOL)staging;
 + (void)setCacheTemplates:(BOOL)cache;
-
-@end
-
-@interface OLPhotoSelectionViewController (Private)
-
--(void)onButtonNextClicked;
-@property (nonatomic, weak) IBOutlet UIButton *buttonNext;
-- (IBAction)onButtonAddPhotosClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UIButton *addPhotosButton;
-- (IBAction)cameraRollSelected:(id)sender;
-- (void)showPickerForProvider:(OLCustomPhotoProvider *)provider;
-- (IBAction)instagramSelected:(id)sender;
-- (void)showQRCodeImagePicker;
-- (IBAction)facebookSelected:(id)sender;
 
 @end
 
@@ -90,7 +74,7 @@
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView;
 @end
 
-@interface OLOrderReviewViewController ()
+@interface OLPackProductViewController ()
 @property (strong, nonatomic) UIButton *nextButton;
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location;
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit;
@@ -112,16 +96,6 @@
 @property (assign, nonatomic) BOOL downloadedMask;
 @end
 
-@interface OLSingleImageProductReviewViewController () <UICollectionViewDelegate>
-@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
-- (void)showCameraRollImagePicker;
-- (void)showFacebookImagePicker;
-- (void)showInstagramImagePicker;
-- (void)showQRCodeImagePicker;
-- (void)showPickerForProvider:(OLCustomPhotoProvider *)provider;
-@property (weak, nonatomic) IBOutlet UICollectionView *imagesCollectionView;
-@end
-
 @interface OLPaymentViewController () <UITableViewDataSource>
 - (IBAction)onButtonPayWithCreditCardClicked;
 - (IBAction)onButtonMoreOptionsClicked:(id)sender;
@@ -135,11 +109,6 @@
 - (IBAction)onButtonPayWithApplePayClicked;
 @end
 
-@interface OLScrollCropViewController ()
-
-- (IBAction)onButtonHorizontalFlipClicked:(id)sender;
-- (IBAction)onButtonRotateClicked:(id)sender;
-@end
 
 @interface OLKiteABTesting ()
 @property (strong, nonatomic, readwrite) NSString *qualityBannerType;
@@ -176,7 +145,7 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
     [OLKitePrintSDK setIsKiosk:NO];
     [OLKitePrintSDK setUseStripeForCreditCards:YES];
     [OLKitePrintSDK setUseStaging:NO];
@@ -193,6 +162,10 @@
         [[OLKiteABTesting sharedInstance] removeObserver:self forKeyPath:self.kvoValueToObserve];
         self.kvoValueToObserve = nil;
     }
+    
+    [self performUIAction:^{
+        [[[UIApplication sharedApplication].delegate window].rootViewController dismissViewControllerAnimated:NO completion:NULL];
+    }];
     
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
@@ -237,9 +210,11 @@
     
     __block OLProductHomeViewController *resultVc;
     
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLKiteTestHelper aPrintPhoto]]];
-    [vc addCustomPhotoProviderWithCollections:@[[[CatsAssetCollectionDataSource alloc] init]] name:@"Cats" icon:[UIImage imageNamed:@"cat"]];
-    [vc addCustomPhotoProviderWithCollections:@[[[DogsAssetCollectionDataSource alloc] init]] name:@"Dogs" icon:[UIImage imageNamed:@"dog"]];
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLKiteTestHelper imageAssets].firstObject]];
+    
+    OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]]] name:@"Dogs"];
+    OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]] name:@"Cats"];
+    [vc addCustomPhotoProviderWithCollections:@[catsCollection, dogsCollection] name:@"Pets" icon:[UIImage imageNamed:@"dog"]];
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     
@@ -296,9 +271,6 @@
         button = (UIButton *)[vc safePerformSelectorWithReturn:@selector(ctaButton) withObject:nil];
     }
     if (!button){
-        button = (UIButton *)[vc safePerformSelectorWithReturn:@selector(buttonNext) withObject:nil];
-    }
-    if (!button){
         button = (UIButton *)[vc safePerformSelectorWithReturn:@selector(callToActionButton) withObject:nil];
     }
     [button sendActionsForControlEvents:UIControlEventTouchUpInside];
@@ -337,7 +309,7 @@
     }
 }
 
-- (void)DISABLED_testCompletePhotobookJourney{
+- (void)testCompletePhotobookJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     
     [self chooseClass:@"Photo Books" onOLProductHomeViewController:productHomeVc];
@@ -423,7 +395,7 @@
     [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
-- (void)DISABLED_testCompleteCaseJourney{
+- (void)testCompleteCaseJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     [self chooseClass:@"Snap Cases" onOLProductHomeViewController:productHomeVc];
     
@@ -440,68 +412,12 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for case mask to download"];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        while (!caseVc.imageCropView.image || !caseVc.downloadedMask){
+        while (!caseVc.cropView.image || !caseVc.downloadedMask){
             sleep(3);
         }
         [expectation fulfill];
     });
     [self waitForExpectationsWithTimeout:120 handler:NULL];
-    
-    [self performUIAction:^{
-        [caseVc collectionView:caseVc.imagesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    }];
-    
-    [self performUIAction:^{
-        [caseVc dismissViewControllerAnimated:YES completion:NULL];
-    }];
-    
-    [self performUIAction:^{
-        [caseVc showCameraRollImagePicker];
-    }];
-    
-    [self performUIAction:^{
-        [caseVc dismissViewControllerAnimated:YES completion:NULL];
-    }];
-    
-//    [self performUIAction:^{
-//        [caseVc showInstagramImagePicker];
-//    }];
-//    
-//    [self performUIAction:^{
-//        [caseVc dismissViewControllerAnimated:YES completion:NULL];
-//    }];
-    
-    [self performUIAction:^{
-        [caseVc showFacebookImagePicker];
-    }];
-    
-    [self performUIAction:^{
-        [caseVc dismissViewControllerAnimated:YES completion:NULL];
-    }];
-    
-    [self performUIAction:^{
-        [caseVc showQRCodeImagePicker];
-    }];
-    
-    [self performUIAction:^{
-        [caseVc dismissViewControllerAnimated:YES completion:NULL];
-    }];
-    
-    [self performUIAction:^{
-        [caseVc showPickerForProvider:[OLUserSession currentSession].kiteVc.customImageProviders.firstObject];
-    }];
-    
-    [self performUIAction:^{
-        [caseVc dismissViewControllerAnimated:YES completion:NULL];
-    }];
-    
-    [self performUIAction:^{
-        [caseVc showPickerForProvider:[OLUserSession currentSession].kiteVc.customImageProviders.lastObject];
-    }];
-    
-    [self performUIAction:^{
-        [caseVc dismissViewControllerAnimated:YES completion:NULL];
-    }];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
@@ -550,7 +466,7 @@
 - (void)testProductDescriptionDrawer{
     OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
     
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
     XCTAssert(sb);
     
     OLProductOverviewViewController *vc = [sb instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
@@ -575,129 +491,8 @@
     }];
 }
 
-- (void)testPhotoSelectionScreen{
-    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
-    NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
-    
-    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-    PHAsset *phAsset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-    
-    NSArray *olAssets = @[
-                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
-                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
-                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
-                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
-                          [OLAsset assetWithDataAsJPEG:data1],
-                          [OLAsset assetWithDataAsPNG:data2],
-                          [OLAsset assetWithPHAsset:phAsset]
-                          ];
-    
-    NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
-    for (OLAsset *asset in olAssets){
-        OLAsset *photo = [[OLAsset alloc] init];
-        photo.asset = asset;
-        [printPhotos addObject:photo];
-    }
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
-    [self templateSyncWithSuccessHandler:^{
-        [expectation fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
-    
-    OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
-    
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
-    XCTAssert(sb);
-    
-    OLPhotoSelectionViewController *vc = [sb instantiateViewControllerWithIdentifier:@"PhotoSelectionViewController"];
-    XCTAssert(vc);
-    
-    vc.product = product;
-    vc.userSelectedPhotos = printPhotos;
-    
-    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-    
-    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-    
-    [self performUIAction:^{
-        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
-    }];
-    
-    [self performUIAction:^{
-        [vc.addPhotosButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }];
-    
-    [self performUIAction:^{
-        [vc dismissViewControllerAnimated:YES completion:NULL];
-    }];
-    
-    [self performUIAction:^{
-        [vc cameraRollSelected:nil];
-    }];
-    
-    [self performUIAction:^{
-        [vc dismissViewControllerAnimated:YES completion:NULL];
-    }];
-    
-//    [self performUIAction:^{
-//        [vc instagramSelected:nil];
-//    }];
-//    
-//    [self performUIAction:^{
-//        [vc dismissViewControllerAnimated:YES completion:NULL];
-//    }];
-    
-    [self performUIAction:^{
-        [vc facebookSelected:nil];
-    }];
-    
-    [self performUIAction:^{
-        [vc dismissViewControllerAnimated:YES completion:NULL];
-    }];
-    
-    [self performUIAction:^{
-        [vc showQRCodeImagePicker];
-    }];
-
-    [self performUIAction:^{
-        [vc dismissViewControllerAnimated:YES completion:NULL];
-    }];
-    
-    OLUpsellOffer *offer = [[OLUpsellOffer alloc] init];
-    offer.active = YES;
-    offer.discountPercentage = [NSNumber numberWithInteger:50];
-    offer.offerTemplate = @"squares";
-    offer.identifier = 1;
-    offer.type = OLUpsellOfferTypeItemAdd;
-    offer.prepopulatePhotos = NO;
-    offer.priority = 1;
-    offer.headerText = @"Deal!";
-    offer.text = @"Pray that I don't alter the deal";
-    
-    for (OLProductTemplate *template in [OLProductTemplate templates]){
-        if ([template.identifier isEqualToString:@"squares"]){
-            template.upsellOffers = @[offer];
-        }
-    }
-    
-    [self performUIAction:^{
-        [vc onButtonNextClicked];
-    }];
-    
-    OLUpsellViewController *offerVc = (OLUpsellViewController *)vc.presentedViewController;
-    XCTAssert([offerVc isKindOfClass:[OLUpsellViewController class]], @"No upsell offer shown");
-    
-    [self performUIAction:^{
-        [offerVc.declineButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }];
-    
-    
-}
-
 - (void)testScrollCropViewController{
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
     XCTAssert(sb);
     
     OLImageEditViewController *cropVc = [sb instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
@@ -712,54 +507,6 @@
     
     [self performUIAction:^{
         [rootVc.topViewController presentViewController:cropVc animated:YES completion:NULL];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonHorizontalFlipClicked:nil];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonHorizontalFlipClicked:nil];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonRotateClicked:nil];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonHorizontalFlipClicked:nil];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonHorizontalFlipClicked:nil];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonRotateClicked:nil];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonHorizontalFlipClicked:nil];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonHorizontalFlipClicked:nil];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonRotateClicked:nil];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonHorizontalFlipClicked:nil];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonHorizontalFlipClicked:nil];
-    }];
-    
-    [self performUIAction:^{
-        [cropVc onButtonRotateClicked:nil];
     }];
 }
 
@@ -801,50 +548,6 @@
     }];
 }
 
-//- (void)testBuiltInALAssetImagePickerViewController{
-//    OLAssetsPickerController *picker = [[OLAssetsPickerController alloc] init];
-//    [(OLAssetsPickerController *)picker setAssetsFilter:[ALAssetsFilter allPhotos]];
-//    
-//    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-//    XCTestExpectation *expectation = [self expectationWithDescription:@"Animations"];
-//    
-//    [rootVc.topViewController presentViewController:picker animated:YES completion:^{
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-//            UINavigationController *nav = picker.childViewControllers.firstObject;
-//            UITableViewController *tableViewVc = (UITableViewController *)nav.topViewController;
-//            [tableViewVc tableView:tableViewVc.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-//            
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-//                
-//                
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-//                    [expectation fulfill];
-//                });
-//            });
-//        });
-//    }];
-//    
-//    [self waitForExpectationsWithTimeout:60 handler:NULL];
-//}
-
-- (void)testPrintOrderHistory{
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
-    XCTAssert(sb);
-    
-    PrintOrderHistoryViewController *vc = [sb instantiateViewControllerWithIdentifier:@"PrintOrderHistoryViewController"];
-    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-    
-    [self performUIAction:^{
-        [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
-    }];
-    
-    if ([OLPrintOrder printOrderHistory].count > 0){
-        [self performUIAction:^{
-            [vc tableView:vc.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-        }];
-    }
-}
-
 - (void)testAddressEditViewController{
     OLAddressEditViewController *vc = [[OLAddressEditViewController alloc] initWithAddress:[OLAddress kiteTeamAddress]];
     
@@ -855,7 +558,7 @@
     
 }
 
-- (void)DISABLED_testPaymentViewController{
+- (void)testPaymentViewController{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
     [self templateSyncWithSuccessHandler:^{
         [expectation fulfill];
@@ -871,7 +574,7 @@
     
     XCTAssert([printOrder.shippingAddress.description isEqualToString:@"Kite Team, Eastcastle House, 27-28 Eastcastle St, London, W1W 8DH, United Kingdom"]);
     
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLPhotoSelectionViewController class]]];
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
     XCTAssert(sb);
     
     OLPaymentViewController *vc = [sb instantiateViewControllerWithIdentifier:@"OLPaymentViewController"];
@@ -882,13 +585,6 @@
     OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
     [self performUIAction:^{
         [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
-    }];
-    [self performUIAction:^{
-        [vc onButtonMoreOptionsClicked:[[UIView alloc] init]];
-    }];
-    
-    [self performUIAction:^{
-        [vc onButtonBackToApplePayClicked:nil];
     }];
     
     [self performUIAction:^{
@@ -935,7 +631,7 @@
         [vc.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
     }];
     
-    UITableViewCell *cell =  [vc tableView:vc.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    UITableViewCell *cell =  [vc.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     
     [self performUIAction:^{
         UIButton *plusButton = [cell.contentView viewWithTag:40];
@@ -959,7 +655,7 @@
     [self tapNextOnViewController:presentedNav.topViewController];
 }
 
-- (void)DISABLED_testCompletePrintsJourney{
+- (void)testCompletePrintsJourney{
     NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
     NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
     
@@ -982,14 +678,11 @@
                           [OLAsset assetWithPHAsset:phAsset]
                           ];
     
-    NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
-    for (OLAsset *asset in olAssets){
-        OLAsset *photo = [[OLAsset alloc] init];
-        photo.asset = asset;
-        [printPhotos addObject:photo];
-    }
-    
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    
+    [OLUserSession currentSession].appAssets = [olAssets mutableCopy];
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
+    
     [self chooseClass:@"Prints" onOLProductHomeViewController:productHomeVc];
     
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
@@ -999,17 +692,15 @@
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
-    OLPhotoSelectionViewController *photoVc = (OLPhotoSelectionViewController *)productHomeVc.navigationController.topViewController;
-    XCTAssert([photoVc isKindOfClass:[OLPhotoSelectionViewController class]]);
-    
-    photoVc.userSelectedPhotos = printPhotos;
+    OLImagePickerViewController *photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]]);
     
     [self tapNextOnViewController:photoVc];
     
-    OLOrderReviewViewController *reviewVc = (OLOrderReviewViewController *)productHomeVc.navigationController.topViewController;
-    XCTAssert([reviewVc isKindOfClass:[OLOrderReviewViewController class]]);
+    OLPackProductViewController *reviewVc = (OLPackProductViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([reviewVc isKindOfClass:[OLPackProductViewController class]]);
     
-    UICollectionViewCell *cell = [reviewVc collectionView:reviewVc.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    UICollectionViewCell *cell = [reviewVc.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     UIButton *button = [cell viewWithTag:12];
     
     [self performUIAction:^{
@@ -1041,21 +732,21 @@
         [button sendActionsForControlEvents:UIControlEventTouchUpInside];
     }];
     
-    XCTAssert([reviewVc.presentedViewController isKindOfClass:[OLScrollCropViewController class]], @"Did not show crop screen");
+    XCTAssert([reviewVc.presentedViewController isKindOfClass:[OLImageEditViewController class]], @"Did not show crop screen");
     
     [self performUIAction:^{
-        [(OLScrollCropViewController *)reviewVc.presentedViewController onBarButtonDoneTapped:nil];
+        [reviewVc dismissViewControllerAnimated:YES completion:NULL];
     }];
     
-    UIViewController *scrollVc = [reviewVc previewingContext:nil viewControllerForLocation:[cell convertPoint:CGPointMake(100, 100) toView:reviewVc.collectionView]];
-    XCTAssert([scrollVc isKindOfClass:[OLImagePreviewViewController class]]);
-    [reviewVc previewingContext:nil commitViewController:scrollVc];
-    
-    XCTAssert([reviewVc.presentedViewController isKindOfClass:[OLScrollCropViewController class]], @"Did not show crop screen");
-    
-    [self performUIAction:^{
-        [(OLScrollCropViewController *)reviewVc.presentedViewController onBarButtonCancelTapped:nil];
-    }];
+//    UIViewController *scrollVc = [reviewVc previewingContext:nil viewControllerForLocation:[cell convertPoint:CGPointMake(100, 100) toView:reviewVc.collectionView]];
+//    XCTAssert([scrollVc isKindOfClass:[OLImagePreviewViewController class]]);
+//    [reviewVc previewingContext:nil commitViewController:scrollVc];
+//    
+//    XCTAssert([reviewVc.presentedViewController isKindOfClass:[OLImageEditViewController class]], @"Did not show crop screen");
+//    
+//    [self performUIAction:^{
+//        [reviewVc dismissViewControllerAnimated:YES completion:NULL];
+//    }];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
@@ -1200,10 +891,10 @@
     XCTAssert([nav.topViewController isKindOfClass:[OLProductOverviewViewController class]], @"Not showing Overview vc");
     
     [self tapNextOnViewController:nav.topViewController];
-    XCTAssert([nav.topViewController isKindOfClass:[OLPhotoSelectionViewController class]], @"Not showing Review vc");
+    XCTAssert([nav.topViewController isKindOfClass:[OLImagePickerViewController class]], @"Not showing Review vc");
     
     [self tapNextOnViewController:nav.topViewController];
-    XCTAssert([nav.topViewController isKindOfClass:[OLOrderReviewViewController class]], @"Not showing Review vc");
+    XCTAssert([nav.topViewController isKindOfClass:[OLPackProductViewController class]], @"Not showing Review vc");
     
     [self tapNextOnViewController:nav.topViewController];
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
@@ -1269,10 +960,10 @@
     [self waitForExpectationsWithTimeout:60 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
-    XCTAssert([nav.topViewController isKindOfClass:[OLPhotoSelectionViewController class]], @"Not showing Review vc");
+    XCTAssert([nav.topViewController isKindOfClass:[OLImagePickerViewController class]], @"Not showing Review vc");
     
     [self tapNextOnViewController:nav.topViewController];
-    XCTAssert([nav.topViewController isKindOfClass:[OLOrderReviewViewController class]], @"Not showing Review vc");
+    XCTAssert([nav.topViewController isKindOfClass:[OLPackProductViewController class]], @"Not showing Review vc");
     
     [self tapNextOnViewController:nav.topViewController];
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
@@ -1404,10 +1095,10 @@
     [self waitForExpectationsWithTimeout:60 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
-    XCTAssert([nav.topViewController isKindOfClass:[OLPhotoSelectionViewController class]], @"Not showing Review vc");
+    XCTAssert([nav.topViewController isKindOfClass:[OLImagePickerViewController class]], @"Not showing Review vc");
     
     [self tapNextOnViewController:nav.topViewController];
-    XCTAssert([nav.topViewController isKindOfClass:[OLOrderReviewViewController class]], @"Not showing Review vc");
+    XCTAssert([nav.topViewController isKindOfClass:[OLPackProductViewController class]], @"Not showing Review vc");
     
     [self tapNextOnViewController:nav.topViewController];
     
@@ -1417,7 +1108,7 @@
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
 }
 
-- (void)DISABLED_testCompleteFramesJourney{
+- (void)testCompleteFramesJourney{
     NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
     NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
     
@@ -1440,14 +1131,11 @@
                           [OLAsset assetWithPHAsset:phAsset]
                           ];
     
-    NSMutableArray *printPhotos = [[NSMutableArray alloc] initWithCapacity:700];
-    for (OLAsset *asset in olAssets){
-        OLAsset *photo = [[OLAsset alloc] init];
-        photo.asset = asset;
-        [printPhotos addObject:photo];
-    }
-    
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    
+    [OLUserSession currentSession].appAssets = [olAssets mutableCopy];
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
+    
     [self chooseClass:@"Frames" onOLProductHomeViewController:productHomeVc];
     
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
@@ -1457,10 +1145,8 @@
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
-    OLPhotoSelectionViewController *photoVc = (OLPhotoSelectionViewController *)productHomeVc.navigationController.topViewController;
-    XCTAssert([photoVc isKindOfClass:[OLPhotoSelectionViewController class]]);
-    
-    photoVc.userSelectedPhotos = printPhotos;
+    OLImagePickerViewController *photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]]);
     
     [self tapNextOnViewController:photoVc];
     
