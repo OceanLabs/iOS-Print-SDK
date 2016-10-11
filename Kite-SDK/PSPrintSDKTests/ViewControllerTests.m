@@ -36,6 +36,7 @@
 #import "OLUserSession.h"
 #import "OLPhotoEdits.h"
 #import "OLImagePickerViewController.h"
+#import "OLPaymentMethodsViewController.h"
 
 @import Photos;
 
@@ -107,6 +108,7 @@
 - (IBAction)onButtonEditClicked:(UIButton *)sender;
 - (IBAction)onShippingDetailsGestureRecognized:(id)sender;
 - (IBAction)onButtonPayWithApplePayClicked;
+- (IBAction)onButtonAddPaymentMethodClicked:(id)sender;
 @end
 
 
@@ -138,6 +140,10 @@
 @interface OLImageEditViewController ()
 - (IBAction)onButtonDoneTapped:(UIBarButtonItem *)sender;
 - (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender;
+@end
+
+@interface OLPaymentMethodsViewController ()
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @end
 
 @implementation ViewControllerTests
@@ -275,7 +281,7 @@
     }
     [button sendActionsForControlEvents:UIControlEventTouchUpInside];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [expectation fulfill];
     });
     
@@ -287,7 +293,7 @@
     
     action();
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [expectation fulfill];
     });
     
@@ -653,6 +659,26 @@
     UINavigationController *presentedNav = (UINavigationController *)vc.presentedViewController;
     [self tapNextOnViewController:presentedNav.topViewController];
     [self tapNextOnViewController:presentedNav.topViewController];
+    
+    [self performUIAction:^{
+        [vc onButtonAddPaymentMethodClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)vc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:2]];
+    }];
+    
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)vc.navigationController topViewController];
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:1]];
+        
+        [paymentMethodsVc.navigationController popViewControllerAnimated:YES];
+    }];
+    
+    XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLPaymentViewController class]]);
 }
 
 - (void)testCompletePrintsJourney{
