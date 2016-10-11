@@ -1998,7 +1998,7 @@
 					2E451DC71D9554B40080F1C1 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = L78L4U72YJ;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					2E4CAF081BC25F0A0089FA26 = {
 						CreatedOnToolsVersion = 7.0.1;
