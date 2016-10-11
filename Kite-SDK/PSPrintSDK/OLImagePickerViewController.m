@@ -227,10 +227,10 @@
         }
     }
     
-    if ([OLUserSession currentSession].userSelectedPhotos.count > self.maximumPhotos && self.maximumPhotos != 0){
-        NSArray *maxSelected = [[OLUserSession currentSession].userSelectedPhotos subarrayWithRange:NSMakeRange(0, self.maximumPhotos)];
-        [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
-        [[OLUserSession currentSession].userSelectedPhotos addObjectsFromArray:maxSelected];
+    if (self.selectedAssets.count > self.maximumPhotos && self.maximumPhotos != 0){
+        NSArray *maxSelected = [self.selectedAssets subarrayWithRange:NSMakeRange(0, self.maximumPhotos)];
+        [self.selectedAssets removeAllObjects];
+        [self.selectedAssets addObjectsFromArray:maxSelected];
     }
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
