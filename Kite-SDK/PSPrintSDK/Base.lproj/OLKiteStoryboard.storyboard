@@ -525,11 +525,11 @@ to rearrange the photos</string>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="47" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4n1-p7-6FT">
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="jobCell" rowHeight="60" id="ICy-ec-QXu">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="60"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="jobCell" rowHeight="60" id="ICy-ec-QXu">
+                                        <rect key="frame" x="0.0" y="28" width="1000" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ICy-ec-QXu" id="KRh-SE-wkM">
-                                            <frame key="frameInset" width="375" height="60"/>
+                                            <frame key="frameInset" width="1000" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r1q-4l-S9u">
@@ -653,11 +653,11 @@ to rearrange the photos</string>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="emptyCell" rowHeight="40" id="1VB-MF-1ox">
-                                        <rect key="frame" x="0.0" y="88" width="375" height="40"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="emptyCell" rowHeight="40" id="1VB-MF-1ox">
+                                        <rect key="frame" x="0.0" y="88" width="1000" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1VB-MF-1ox" id="QdV-Q6-bK0">
-                                            <frame key="frameInset" width="375" height="40"/>
+                                            <frame key="frameInset" width="1000" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Basket is empty" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rd6-BO-03Y">
@@ -674,11 +674,11 @@ to rearrange the photos</string>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="loadingCell" rowHeight="40" id="NXM-Zd-Sga">
-                                        <rect key="frame" x="0.0" y="128" width="375" height="40"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="loadingCell" rowHeight="40" id="NXM-Zd-Sga">
+                                        <rect key="frame" x="0.0" y="128" width="1000" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NXM-Zd-Sga" id="8F8-20-u3O">
-                                            <frame key="frameInset" width="375" height="40"/>
+                                            <frame key="frameInset" width="1000" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <activityIndicatorView opaque="NO" tag="10" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="crR-1K-KTu"/>
@@ -1751,7 +1751,7 @@ an image!</string>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="reviewPhotoCell" id="miU-dY-0if" customClass="OLCircleMaskCollectionViewCell">
-                                <rect key="frame" x="28" y="0.0" width="320" height="351"/>
+                                <rect key="frame" x="27.5" y="0.0" width="320" height="351"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="351"/>
@@ -1840,7 +1840,7 @@ an image!</string>
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="doubleSidedCell" id="fNu-ug-MXq" customClass="OLCircleMaskCollectionViewCell">
-                                <rect key="frame" x="28" y="361" width="320" height="350"/>
+                                <rect key="frame" x="27.5" y="361" width="320" height="350"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="350"/>
@@ -1890,6 +1890,54 @@ an image!</string>
                                     <outlet property="printContainerView" destination="fq4-5y-seF" id="zuN-wb-BwK"/>
                                 </connections>
                             </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="calendarCell" id="q80-DG-uFC" customClass="OLCircleMaskCollectionViewCell">
+                                <rect key="frame" x="27.5" y="721" width="320" height="500"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="500"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view tag="399" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vKx-y0-Vcj">
+                                            <subviews>
+                                                <activityIndicatorView opaque="NO" tag="278" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="I6n-sw-k0m"/>
+                                                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XR8-lY-ZH6" customClass="OLRemoteImageView">
+                                                    <gestureRecognizers/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YgF-Fb-ol8"/>
+                                            </subviews>
+                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="YgF-Fb-ol8" secondAttribute="bottom" id="28K-Ja-3sp"/>
+                                                <constraint firstItem="XR8-lY-ZH6" firstAttribute="top" secondItem="vKx-y0-Vcj" secondAttribute="top" id="7oI-hK-9pS"/>
+                                                <constraint firstItem="YgF-Fb-ol8" firstAttribute="top" secondItem="XR8-lY-ZH6" secondAttribute="bottom" constant="30" id="Dah-H6-ST4"/>
+                                                <constraint firstItem="I6n-sw-k0m" firstAttribute="centerY" secondItem="XR8-lY-ZH6" secondAttribute="centerY" id="J9w-mf-dGI"/>
+                                                <constraint firstItem="YgF-Fb-ol8" firstAttribute="height" secondItem="XR8-lY-ZH6" secondAttribute="height" id="iFF-tc-PF2"/>
+                                                <constraint firstAttribute="trailing" secondItem="YgF-Fb-ol8" secondAttribute="trailing" id="kGc-iF-jTw"/>
+                                                <constraint firstAttribute="trailing" secondItem="XR8-lY-ZH6" secondAttribute="trailing" id="otg-93-mkL"/>
+                                                <constraint firstItem="YgF-Fb-ol8" firstAttribute="leading" secondItem="vKx-y0-Vcj" secondAttribute="leading" id="pTX-dj-Rq7"/>
+                                                <constraint firstItem="XR8-lY-ZH6" firstAttribute="leading" secondItem="vKx-y0-Vcj" secondAttribute="leading" id="tdB-zg-ioT"/>
+                                                <constraint firstItem="I6n-sw-k0m" firstAttribute="centerX" secondItem="XR8-lY-ZH6" secondAttribute="centerX" id="yTd-V7-fwt"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                </view>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="vKx-y0-Vcj" secondAttribute="trailing" id="1mm-Nc-OQ8"/>
+                                    <constraint firstAttribute="bottom" secondItem="vKx-y0-Vcj" secondAttribute="bottom" id="Tqg-gj-lUo"/>
+                                    <constraint firstItem="vKx-y0-Vcj" firstAttribute="top" secondItem="q80-DG-uFC" secondAttribute="top" id="YvF-k1-Vaj"/>
+                                    <constraint firstItem="vKx-y0-Vcj" firstAttribute="leading" secondItem="q80-DG-uFC" secondAttribute="leading" id="gYP-9N-Dzr"/>
+                                </constraints>
+                                <size key="customSize" width="320" height="500"/>
+                                <connections>
+                                    <outlet property="activityView" destination="I6n-sw-k0m" id="azE-7E-Iz8"/>
+                                    <outlet property="imageView" destination="XR8-lY-ZH6" id="aTQ-Us-Q1Z"/>
+                                    <outlet property="imageViewLeftCon" destination="tdB-zg-ioT" id="ijF-dw-xKA"/>
+                                    <outlet property="imageViewRightCon" destination="otg-93-mkL" id="gXg-lr-FXP"/>
+                                    <outlet property="imageViewTopCon" destination="7oI-hK-9pS" id="gXu-B4-uNo"/>
+                                    <outlet property="printContainerView" destination="vKx-y0-Vcj" id="gJi-d4-1Qt"/>
+                                </connections>
+                            </collectionViewCell>
                         </cells>
                         <connections>
                             <outlet property="dataSource" destination="7wc-Kp-jtQ" id="0P2-6n-eD9"/>
@@ -1899,7 +1947,7 @@ an image!</string>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BnY-BO-vim" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2189" y="-580"/>
+            <point key="canvasLocation" x="2188" y="-580.65967016491754"/>
         </scene>
         <!--Product Type Selection View Controller-->
         <scene sceneID="VME-6Y-RI6">
@@ -2488,11 +2536,11 @@ an image!</string>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="380" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="1b7-VK-dRV">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="imageCell" rowHeight="380" id="hbJ-Kj-T6r">
-                                        <rect key="frame" x="0.0" y="22" width="375" height="380"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="imageCell" rowHeight="380" id="hbJ-Kj-T6r">
+                                        <rect key="frame" x="0.0" y="22" width="1000" height="380"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hbJ-Kj-T6r" id="R1j-3j-X8t">
-                                            <frame key="frameInset" width="375" height="380"/>
+                                            <frame key="frameInset" width="1000" height="380"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hdM-b0-kDg"/>
@@ -2969,7 +3017,7 @@ only £9.99 £8.99</string>
                                         </constraints>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="addCell" id="Ing-fi-eFM">
-                                        <rect key="frame" x="223" y="0.0" width="152" height="142"/>
+                                        <rect key="frame" x="169.5" y="0.0" width="152" height="142"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="152" height="142"/>

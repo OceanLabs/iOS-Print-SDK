@@ -345,36 +345,33 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 }
 
 +(OLTemplateUI)templateUIWithIdentifier:(NSString *)identifier{
-    if ([identifier isEqualToString:@"RECTANGLE"]){
-        return OLTemplateUIRectagle;
-    }
-    else if ([identifier isEqualToString:@"FRAME"]){
-        return OLTemplateUIFrame;
-    }
-    else if ([identifier isEqualToString:@"POSTER"]){
-        return OLTemplateUIPoster;
-    }
-    else if ([identifier isEqualToString:@"CIRCLE"]){
-        return OLTemplateUICircle;
-    }
-    else if ([identifier isEqualToString:@"PHONE_CASE"]){
-        return OLTemplateUICase;
-    }
-//    else if ([identifier isEqualToString:@"APPAREL"]){
-//        return kOLTemplateUIApparel;
+//    if ([identifier isEqualToString:@"RECTANGLE"]){
+//        return OLTemplateUIRectagle;
 //    }
-//    else if ([identifier isEqualToString:@"POSTCARD"]){
-//        return kOLTemplateUIPostcard;
+//    else if ([identifier isEqualToString:@"FRAME"]){
+//        return OLTemplateUIFrame;
 //    }
-    else if ([identifier isEqualToString:@"PHOTOBOOK"]){
-        return OLTemplateUIPhotobook;
-    }
-    else if ([identifier isEqualToString:@"NONCUSTOMIZABLE"]){
-        return OLTemplateUINonCustomizable;
-    }
-    else if ([identifier isEqualToString:@"DOUBLESIDED"]){
-        return OLTemplateUIDoubleSided;
-    }
+//    else if ([identifier isEqualToString:@"POSTER"]){
+//        return OLTemplateUIPoster;
+//    }
+//    else if ([identifier isEqualToString:@"CIRCLE"]){
+//        return OLTemplateUICircle;
+//    }
+//    else if ([identifier isEqualToString:@"PHONE_CASE"]){
+//        return OLTemplateUICase;
+//    }
+//    else if ([identifier isEqualToString:@"PHOTOBOOK"]){
+//        return OLTemplateUIPhotobook;
+//    }
+//    else if ([identifier isEqualToString:@"NONCUSTOMIZABLE"]){
+//        return OLTemplateUINonCustomizable;
+//    }
+//    else if ([identifier isEqualToString:@"DOUBLESIDED"]){
+//        return OLTemplateUIDoubleSided;
+//    }
+//    else if ([identifier isEqualToString:@"CALENDAR"]){
+        return OLTemplateUICalendar;
+//    }
     return OLTemplateUINA;
 }
 

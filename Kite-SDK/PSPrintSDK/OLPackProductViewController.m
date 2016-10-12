@@ -620,6 +620,11 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         label.text = indexPath.item == 0 ? NSLocalizedStringFromTableInBundle(@"FRONT", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") : NSLocalizedStringFromTableInBundle(@"BACK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         
     }
+    else if (self.product.productTemplate.templateUI == OLTemplateUICalendar){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"calendarCell" forIndexPath:indexPath];
+        UIImageView *calendarView = (UIImageView *)[cell viewWithTag:10];
+        //TODO set calendar here
+    }
     else{
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewPhotoCell" forIndexPath:indexPath];
     }
@@ -705,6 +710,9 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 - (CGFloat)heightForButtons{
     if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
         return 30;
+    }
+    else if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+        return 320; //TODO calculate height
     }
     return 51;
 }

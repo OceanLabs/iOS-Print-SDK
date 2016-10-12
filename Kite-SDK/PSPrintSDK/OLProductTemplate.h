@@ -49,6 +49,7 @@ typedef NS_ENUM(NSInteger, OLTemplateUI) {
     OLTemplateUINonCustomizable,
     OLTemplateUIApparel,
     OLTemplateUIDoubleSided,
+    OLTemplateUICalendar,
 };
 
 @class OLProductTemplateSyncRequest;
