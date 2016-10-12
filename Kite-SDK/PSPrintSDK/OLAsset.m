@@ -306,6 +306,12 @@ static NSOperationQueue *imageOperationQueue;
     NSMutableString *s = [[NSString stringWithFormat:@"https://image.kite.ly/render/?image=%@", self.imageURL] mutableCopy];
     [s appendString:[NSString stringWithFormat:@"&variant=%@", options.variant]];
     [s appendString:[NSString stringWithFormat:@"&product_id=%@", options.productId]];
+    
+    CGFloat alpha;
+    [options.background getWhite:nil alpha:&alpha];
+    if (alpha != 1){
+        [s appendString:@"&format=png"];
+    }
     return [NSURL URLWithString:s];
 }
 
