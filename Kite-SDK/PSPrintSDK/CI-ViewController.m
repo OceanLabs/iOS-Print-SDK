@@ -144,8 +144,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #endif
 }
 
-#pragma mark Internal
-
 - (void)setupCIDeploymentWithAssets:(NSArray *)assets{
     BOOL shouldOfferAPIChange = YES;
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];

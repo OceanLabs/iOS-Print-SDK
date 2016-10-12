@@ -37,8 +37,7 @@
 #import "UIImage+OLUtils.h"
 #import "RMImageCropper.h"
 #import "OLImageDownloader.h"
-//#import "OLInstagramImage.h"
-//#import "OLFacebookImage.h"
+#import "OLImageRenderOptions.h"
 
 static NSString *const kKeyMimeType = @"co.oceanlabs.pssdk.kKeyMimeType";
 static NSString *const kKeyImageData = @"co.oceanlabs.pssdk.kKeyImageData";
@@ -64,8 +63,6 @@ static NSOperationQueue *imageOperationQueue;
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSData *imageData;
 @property (strong, nonatomic) PHAsset *phAsset;
-//@property (strong, nonatomic) OLFacebookImage *facebookImage;
-//@property (strong, nonatomic) OLInstagramImage *instagramImage;
 @property (nonatomic, strong) id<OLAssetDataSource> dataSource;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (assign, nonatomic) BOOL corrupt;
@@ -79,6 +76,7 @@ static NSOperationQueue *imageOperationQueue;
 @property (nonatomic, readwrite) NSString *mimeType;
 @property (nonatomic, readwrite) long long assetId;
 @property (nonatomic, readwrite) NSURL *previewURL;
+@property (strong, nonatomic) NSURLSession *kiteImageUploadURLSession;
 @end
 
 @implementation OLAsset
@@ -168,12 +166,6 @@ static NSOperationQueue *imageOperationQueue;
     if (self.imageData) {
         return kOLAssetTypeImageData;
     }
-//    else if (self.instagramImage){
-//        return kOLAssetTypeInstagramPhoto;
-//    }
-//    else if (self.facebookImage){
-//        return kOLAssetTypeFacebookPhoto;
-//    }
     else if (self.imageURL) {
         return kOLAssetTypeRemoteImageURL;
     }
@@ -242,6 +234,79 @@ static NSOperationQueue *imageOperationQueue;
     }
 
     return nil;
+}
+
+- (void)uploadToKiteWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSError *error))handler{
+    if (!handler){
+        return;
+    }
+    
+    [self dataWithCompletionHandler:^(NSData *imageData, NSError *error){
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://image.kite.ly/upload/"]];
+        
+        [request setValue:@"multipart/form-data; charset=utf-8; boundary=__X_KITE_BOUNDARY__" forHTTPHeaderField:@"Content-Type"];
+        
+        [request setHTTPMethod:@"POST"];
+        
+        // Build the request body
+        NSString *boundary = @"__X_KITE_BOUNDARY__";
+        NSMutableData *body = [NSMutableData data];
+        // Body part for the attachament. This is an image.
+        if (imageData) {
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", @"file"] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:imageData];
+            [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+        if (self.kiteImageUploadURLSession){
+            [self.kiteImageUploadURLSession invalidateAndCancel];
+        }
+        self.kiteImageUploadURLSession = [NSURLSession sessionWithConfiguration:sessionConfig
+                                                              delegate:nil
+                                                         delegateQueue:nil];
+        if (error){
+            handler(error);
+        }
+        
+        [request setHTTPBody:body];
+        [[self.kiteImageUploadURLSession uploadTaskWithRequest:request fromData:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            NSInteger httpStatusCode = [(NSHTTPURLResponse *)response statusCode];
+            if ((httpStatusCode < 200 || httpStatusCode > 299) && httpStatusCode != 0) {
+                NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Image upload failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) httpStatusCode]);
+                
+                error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
+            }
+            if (error){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    handler(error);
+                });
+            }
+            NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+            if (jsonDict[@"full"]){
+                self.imageURL = [NSURL URLWithString:jsonDict[@"full"]];
+            }
+            if (jsonDict[@"preview"]){
+                self.previewURL = [NSURL URLWithString:jsonDict[@"preview"]];
+            }
+            
+            handler(nil);
+            
+        }] resume];
+    }];
+}
+
+- (NSURL *)imageRenderURLWithOptions:(OLImageRenderOptions *)options{
+    if (!self.imageURL || !options.productId || !options.variant){
+        return nil;
+    }
+    NSMutableString *s = [[NSString stringWithFormat:@"https://image.kite.ly/render/?image=%@", self.imageURL] mutableCopy];
+    [s appendString:[NSString stringWithFormat:@"&variant=%@", options.variant]];
+    [s appendString:[NSString stringWithFormat:@"&product_id=%@", options.productId]];
+    return [NSURL URLWithString:s];
 }
 
 - (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL {
