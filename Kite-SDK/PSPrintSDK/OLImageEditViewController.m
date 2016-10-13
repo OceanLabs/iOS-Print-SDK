@@ -1186,6 +1186,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     sender.selected = YES;
     [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *textField in self.textFields){
+            textField.alpha = 0;
+        }
         for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 1;
             [view.superview bringSubviewToFront:view];
@@ -1205,6 +1208,9 @@ const NSInteger kOLEditTagCrop = 40;
         [self.printContainerView bringSubviewToFront:view];
     }
     [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *textField in self.textFields){
+            textField.alpha = 1;
+        }
         for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 0;
         }
