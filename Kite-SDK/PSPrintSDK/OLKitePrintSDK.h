@@ -108,7 +108,7 @@
  *
  *  @param enabled BOOL values
  */
-+ (void)setQRCodeUploadEnabled:(BOOL)enabled;
++ (void)setQRCodeUploadEnabled:(BOOL)enabled __deprecated_msg("This method will no longer work. Use the OLKiteViewController property qrCodeUploadEnabled.");;
 
 /**
  *  Indicate that the app will be used in a kiosk environment

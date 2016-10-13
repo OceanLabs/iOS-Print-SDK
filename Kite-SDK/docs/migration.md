@@ -37,7 +37,7 @@ import KiteSDK
  ## API Changes
 
  * OLKiteDelegate
- Many of the delegate calls that were essentially options were moved to `OLKiteViewController` properties. Please not that some of these properties are the reverse that their delegate predecessors were, for example a shouldShowX delegate method might have changed to a hideX property.
+ Many of the delegate calls that were essentially options were moved to `OLKiteViewController` properties. Please note that some of these properties are the reverse of what their delegate predecessors were. For example, a shouldShowX delegate method might have changed to a hideX property.
 
  * OLPrintPhoto
  Removed, use `OLAsset`

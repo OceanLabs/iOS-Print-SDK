@@ -50,7 +50,6 @@ static BOOL useStripeForCreditCards = YES;
 static BOOL cacheTemplates = NO;
 static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
-static BOOL QRCodeUploadEnabled = NO;
 static BOOL isKiosk = NO;
 static BOOL allowImageZooming = YES;
 
@@ -199,11 +198,6 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (void)setQRCodeUploadEnabled:(BOOL)enabled{
-    QRCodeUploadEnabled = enabled;
-}
-
-+ (BOOL)QRCodeUploadEnabled{
-    return QRCodeUploadEnabled;
 }
 
 + (void)endCustomerSession{

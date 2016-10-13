@@ -42,10 +42,9 @@
 //static const NSUInteger kMaxInFlightRequests = 5;
 
 @interface OLAddressLookupViewController () <UITextFieldDelegate, OLCountryPickerControllerDelegate,
-    UINavigationControllerDelegate, OLAddressSearchRequestDelegate, UISearchDisplayDelegate, UIGestureRecognizerDelegate, UISearchBarDelegate>
+    UINavigationControllerDelegate, OLAddressSearchRequestDelegate, UISearchResultsUpdating, UIGestureRecognizerDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) OLCountry *country;
 @property (nonatomic, strong) UILabel *labelCountry;
-@property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) NSArray<OLAddress *> *searchResults;
 
@@ -57,6 +56,8 @@
 @property (nonatomic, strong) OLAddressSearchRequest *inProgressRequest;
 @property (nonatomic, strong) NSString *queuedSearchQuery;
 @property (nonatomic, strong) OLCountry *queuedSearchCountry;
+
+@property (strong, nonatomic) UISearchController *searchController;
 
 @end
 
@@ -77,10 +78,16 @@
     self.searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, 320, 44)];
     self.searchBar.delegate = self;
     self.tableView.tableHeaderView = self.searchBar;
-    self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
-    self.searchController.searchResultsDataSource = self;
-    self.searchController.searchResultsDelegate = self;
-    self.searchController.delegate = self;
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    [self.searchController.searchBar sizeToFit];
+    
+    self.searchController.searchBar.delegate = self;
+    
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.definesPresentationContext = YES;
+
     
     // create the country picker
     // create the country picker button
@@ -242,7 +249,6 @@
     
     self.searchResults = options;
     [self.tableView reloadData];
-    [self.searchController.searchResultsTableView reloadData];
     
     [self performQueuedAddressLookup];
 }
@@ -262,7 +268,6 @@
     
     self.searchResults = @[addr];
     [self.tableView reloadData];
-    [self.searchController.searchResultsTableView reloadData];
     
     [self performQueuedAddressLookup];
 }
@@ -281,32 +286,18 @@
 
 #pragma mark - UISearchBarDelegate methods
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    if (self.errorAlertView.isVisible) {
-        return;
-    }
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
+{
+    NSString *searchString = searchController.searchBar.text;
     
-    if (searchText.length == 0) {
+    if (searchString.length == 0) {
         self.searchResults = @[];
         [self.tableView reloadData];
-        [self.searchController.searchResultsTableView reloadData];
         return;
     }
-    
-    self.queuedSearchQuery = searchText;
+    self.queuedSearchQuery = searchString;
     self.queuedSearchCountry = self.country;
     [self performQueuedAddressLookup];
-}
-
-#pragma mark - UISearchDisplayControllerDelegate methods
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller willShowSearchResultsTableView:(UITableView *)tableView {
-    self.showSectionHeader = NO;
-}
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView {
-    self.showSectionHeader = YES;
-    [self.tableView reloadData]; // ensure section header is reloaded appropriately
 }
 
 @end
