@@ -437,3 +437,4 @@
 "Pack of" = "";
 "#%ld Pack of %lu %@" = "#%ld %lu pak %@";
 "#%ld Photobook" = "#%ld Fotobog";
+"Move Pages" = "Skift side";
