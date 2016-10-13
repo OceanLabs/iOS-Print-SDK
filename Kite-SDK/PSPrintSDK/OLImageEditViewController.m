@@ -82,8 +82,8 @@ const NSInteger kOLEditTagCrop = 40;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 
 @property (weak, nonatomic) OLProductTemplateOption *selectedOption;
-
 @property (strong, nonatomic) UITextField *borderTextField;
+@property (assign, nonatomic) BOOL animating;
 
 @end
 
@@ -1082,10 +1082,11 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Actions
 
 - (IBAction)onButtonHorizontalFlipClicked:(id)sender {
-    if (self.cropView.isCorrecting){
+    if (self.cropView.isCorrecting || self.animating){
         return;
     }
     
+    self.animating = YES;
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
         [self.activeTextField hideButtons];
@@ -1098,16 +1099,19 @@ const NSInteger kOLEditTagCrop = 40;
         
         [self.cropView setImage:[UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]]];
         
-    }completion:NULL];
+    }completion:^(BOOL finished){
+        self.animating = NO;
+    }];
     
     self.ctaButton.enabled = YES;
 }
 
 - (IBAction)onButtonRotateClicked:(id)sender {
-    if (self.cropView.isCorrecting){
+    if (self.cropView.isCorrecting || self.animating){
         return;
     }
     
+    self.animating = YES;
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
         [self.activeTextField hideButtons];
@@ -1168,6 +1172,8 @@ const NSInteger kOLEditTagCrop = 40;
         
         [(UIBarButtonItem *)sender setEnabled:YES];
         self.ctaButton.enabled = YES;
+        
+        self.animating = NO;
     }];
 }
 
