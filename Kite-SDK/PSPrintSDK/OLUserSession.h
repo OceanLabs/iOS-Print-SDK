@@ -52,7 +52,6 @@ typedef NSUInteger OLUserSessionCleanupOption;
 @property (strong, nonatomic) NSArray<OLAsset *> *appAssets;
 @property (assign, nonatomic) CGFloat screenScale;
 @property (weak, nonatomic) OLKiteViewController *kiteVc;
-@property (assign, nonatomic) BOOL disableFacebook;
 + (instancetype)currentSession;
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions;
 - (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;

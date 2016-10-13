@@ -29,6 +29,7 @@
 
 #import "OLFacebookSDKWrapper.h"
 #import "OLUserSession.h"
+#import "OLKiteViewController.h"
 
 @implementation OLFacebookSDKWrapper
 
@@ -102,7 +103,7 @@
 }
 
 + (BOOL)isFacebookAvailable{
-    if ([OLUserSession currentSession].disableFacebook){
+    if ([OLUserSession currentSession].kiteVc.disableFacebook){
         return NO;
     }
     Class FBSDKLoginManagerClass = NSClassFromString (@"FBSDKLoginManager");

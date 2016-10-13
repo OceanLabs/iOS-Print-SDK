@@ -157,7 +157,6 @@
     [OLKitePrintSDK setUseStaging:NO];
     [OLKitePrintSDK setCacheTemplates:NO];
     [OLKitePrintSDK setApplePayPayToString:@"JABBA"];
-    [OLKitePrintSDK setQRCodeUploadEnabled:YES];
     [OLStripeCard clearLastUsedCard];
 }
 
