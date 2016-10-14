@@ -69,8 +69,6 @@
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (assign, nonatomic) CGSize rotationSize;
 
-@property (strong, nonatomic) NSMutableArray<OLImagePickerProvider *> *providers;
-
 @property (strong, nonatomic) NSArray<OLAsset *> *originalSelectedAssets;
 @property (strong, nonatomic) UIView *selectedProviderIndicator;
 

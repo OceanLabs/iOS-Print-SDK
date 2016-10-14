@@ -599,7 +599,7 @@ CGFloat OLImagePickerMargin = 1.5;
             self.nextButton.hidden = percentComplete <= 0.5;
             self.imagePicker.nextButton.hidden = percentComplete > 0.5;
             
-            self.albumsCollectionViewContainerView.alpha = MIN(percentComplete * 10, 1);
+            self.albumsCollectionViewContainerView.alpha = MIN(percentComplete * 15, 1);
             
         }
         else if (sender.state == UIGestureRecognizerStateEnded ||

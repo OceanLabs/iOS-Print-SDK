@@ -28,6 +28,7 @@
 //
 
 #import "OLImagePickerProvider.h"
+#import "OLImagePickerProviderCollection.h"
 
 @implementation OLImagePickerProvider
 
@@ -38,6 +39,15 @@
         self.name = name;
     }
     return self;
+}
+
+- (NSMutableArray<OLImagePickerProviderCollection *> *)collections{
+    if (!_collections){
+        _collections = [[NSMutableArray alloc] init];
+        [_collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:@[] name:@""]];
+    }
+    
+    return _collections;
 }
 
 @end
