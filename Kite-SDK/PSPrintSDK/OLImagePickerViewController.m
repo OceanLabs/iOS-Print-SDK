@@ -582,7 +582,7 @@
         }
     }
     [self reloadPageController];
-    if ([picker.presentingViewController isKindOfClass:[self class]]){
+    if ([[self.nextButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].firstObject isEqualToString:@"onButtonNextClicked:"]){
         [picker dismissViewControllerAnimated:YES completion:NULL];
     }
     else{
