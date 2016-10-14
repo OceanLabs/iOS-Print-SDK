@@ -582,7 +582,12 @@
         }
     }
     [self reloadPageController];
-    [picker dismissViewControllerAnimated:YES completion:NULL];
+    if ([picker.presentingViewController isKindOfClass:[self class]]){
+        [picker dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [self onButtonDoneTapped:nil];
+    }
 }
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{

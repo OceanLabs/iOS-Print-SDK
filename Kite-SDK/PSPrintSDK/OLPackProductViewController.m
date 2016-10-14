@@ -548,14 +548,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
-        [UIView animateWithDuration:0.25 animations:^{
-            self.nextButton.alpha = 0;
-            self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
-            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
-        } completion:^(BOOL finished){
-            [self.infoBanner removeFromSuperview];
-            self.infoBanner = nil;
-        }];
         OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
         cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
@@ -572,6 +564,15 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
         [self presentViewController:cropVc animated:NO completion:NULL];
+        
+        [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
+            self.nextButton.alpha = 0;
+            self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
+            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+        } completion:^(BOOL finished){
+            [self.infoBanner removeFromSuperview];
+            self.infoBanner = nil;
+        }];
         
 #ifndef OL_NO_ANALYTICS
         [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
@@ -740,7 +741,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     NSInteger numberOfCellsPerRow = collectionView.frame.size.width / cellSize.width;
     CGFloat margin = MAX((collectionView.frame.size.width - (cellSize.width * numberOfCellsPerRow))/(numberOfCellsPerRow+1), 5);
     
-    return UIEdgeInsetsMake(10, margin, 0, margin);
+    return UIEdgeInsetsMake(10, margin, 10, margin);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section

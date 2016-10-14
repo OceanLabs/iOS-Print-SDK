@@ -88,6 +88,7 @@ const NSInteger kOLEditTagCrop = 40;
 @property (assign, nonatomic) BOOL animating;
 
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
+@property (strong, nonatomic) UIViewController *presentedVc;
 
 @end
 
@@ -1786,13 +1787,14 @@ const NSInteger kOLEditTagCrop = 40;
     vc.product = self.product;
     
     [vc.view class]; //Force viewDidLoad
-    if (vc.providers.count == 1 && vc.providers.firstObject.providerType == OLImagePickerProviderTypeViewController){
+    if (vc.providers.count == 2 && vc.providers.lastObject.providerType == OLImagePickerProviderTypeViewController){
         //Skip the image picker and only show the custom vc
         self.vcDelegateForCustomVc = vc; //Keep strong reference
-        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)vc.providers.firstObject vc];
+        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)vc.providers.lastObject vc];
         [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         
         [self presentViewController:customVc animated:YES completion:NULL];
+        self.presentedVc = customVc;
         return;
     }
     else{
@@ -1801,9 +1803,15 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
-    [self dismissViewControllerAnimated:YES completion:NULL];
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
     
     self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
@@ -1828,9 +1836,15 @@ const NSInteger kOLEditTagCrop = 40;
         [self loadImageFromAsset];
     }
     
-    [self dismissViewControllerAnimated:YES completion:NULL];
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
     
     self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
 }
 
 - (void)loadImageFromAsset{
