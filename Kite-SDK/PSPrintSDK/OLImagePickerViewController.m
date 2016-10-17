@@ -488,7 +488,7 @@
 }
 
 -(NSUInteger) totalNumberOfExtras{
-    if (self.product.productTemplate.templateUI == OLTemplateUIFrame || self.product.productTemplate.templateUI == OLTemplateUIPoster || self.product.productTemplate.templateUI == OLTemplateUIPhotobook){
+    if (self.product.productTemplate.templateUI == OLTemplateUIFrame || self.product.productTemplate.templateUI == OLTemplateUICalendar || self.product.productTemplate.templateUI == OLTemplateUIPoster || self.product.productTemplate.templateUI == OLTemplateUIPhotobook){
         return 0;
     }
     
@@ -676,14 +676,17 @@
 - (BOOL)shouldGoToOrderPreview {
     NSString *errorMessage;
     if (self.selectedAssets.count == 0){
-        errorMessage = NSLocalizedString(@"Please select some images.", @"");
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please select some images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    }
+    else if (self.selectedAssets.count < self.minimumPhotos && self.minimumPhotos == self.maximumPhotos){
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.minimumPhotos];
     }
     else if (self.selectedAssets.count < self.minimumPhotos){
-        errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Please select at least %d images.", @""), self.minimumPhotos];
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select at least %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.minimumPhotos];
     }
     if (errorMessage) {
-        UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
-        [av addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
+        UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
+        [av addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
         [self presentViewController:av animated:YES completion:NULL];
         return NO;
     }

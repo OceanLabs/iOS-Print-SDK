@@ -184,7 +184,7 @@
     else if (templateUI == OLTemplateUIPoster){
         return @"OLPosterViewController";
     }
-    else if (templateUI == OLTemplateUIFrame){
+    else if (templateUI == OLTemplateUIFrame || templateUI == OLTemplateUICalendar){
         return @"FrameOrderReviewViewController";
     }
     else{

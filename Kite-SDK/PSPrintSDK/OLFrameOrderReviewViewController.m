@@ -145,6 +145,10 @@ CGFloat margin = 2;
 }
 
 - (void)preparePhotosForCheckout{
+    if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
+        self.checkoutPhotos = self.framePhotos;
+        return;
+    }
     NSMutableArray *reversePhotos = [self.framePhotos mutableCopy];
     [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:reversePhotos forProduct:self.product];
     self.checkoutPhotos = reversePhotos;
@@ -230,7 +234,8 @@ CGFloat margin = 2;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (collectionView.tag == 10){
-        int incompleteFrame = ([self.framePhotos count] % self.product.quantityToFulfillOrder) != 0 ? 1 : 0;
+        NSInteger numberOfPhotosPerFrame = self.product.productTemplate.templateUI == OLTemplateUIFrame ? self.product.quantityToFulfillOrder : (self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY != 0 ? self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY : 4);
+        int incompleteFrame = ([self.framePhotos count] % numberOfPhotosPerFrame) != 0 ? 1 : 0;
         return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
     }
     else{
@@ -240,7 +245,8 @@ CGFloat margin = 2;
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewCell" forIndexPath:indexPath];
+        NSString *cellId = self.product.productTemplate.templateUI == OLTemplateUIFrame ? @"reviewCell" : @"calendarCell";
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
         
         UIView *view = cell.contentView;
         view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -262,26 +268,31 @@ CGFloat margin = 2;
         innerCollectionView.dataSource = self;
         innerCollectionView.delegate = self;
         
-        view = innerCollectionView;
-        
-        CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
-        float scaleFactorH = size.width / 320.0;
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        views = NSDictionaryOfVariableBindings(view);
-        con = [[NSMutableArray alloc] init];
-        
-        visuals = @[[NSString stringWithFormat:@"H:|-%f-[view]-%f-|", 25 * scaleFactorH, 25 * scaleFactorH],
-                             [NSString stringWithFormat:@"V:|-%f-[view]", 53 * scaleFactorH]];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+            view = innerCollectionView;
+            
+            CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
+            float scaleFactorH = size.width / 320.0;
+            
+            view.translatesAutoresizingMaskIntoConstraints = NO;
+            views = NSDictionaryOfVariableBindings(view);
+            con = [[NSMutableArray alloc] init];
+            
+            visuals = @[[NSString stringWithFormat:@"H:|-%f-[view]-%f-|", 25 * scaleFactorH, 25 * scaleFactorH],
+                        [NSString stringWithFormat:@"V:|-%f-[view]", 53 * scaleFactorH]];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [view.superview addConstraints:con];
         }
-        
-        [view.superview addConstraints:con];
-
-        
+        else{
+            UIImageView *imageView = [cell.contentView viewWithTag:1010];
+            [imageView setAndFadeInImageWithURL:[NSURL URLWithString:@"http://www.free-printable-calendar.com/printable-calendar-images/november-2016-calendar.gif"]];
+        }
+    
         return cell;
     }
     else{
@@ -298,7 +309,9 @@ CGFloat margin = 2;
         cellImage.userInteractionEnabled = YES;
         cellImage.image = nil;
         
-        OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
+        NSInteger numberOfPhotosPerFrame = self.product.productTemplate.templateUI == OLTemplateUIFrame ? self.product.quantityToFulfillOrder : (self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY != 0 ? self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY : 4);
+        
+        OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * numberOfPhotosPerFrame];
         [printPhoto imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
             [cellImage setProgress:progress];
         }completion:^(UIImage *image, NSError *error){
@@ -317,11 +330,12 @@ CGFloat margin = 2;
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
         CGSize size = self.view.frame.size;
+        CGFloat height = self.product.productTemplate.templateUI == OLTemplateUIFrame ? 351 : 500;
         if (MIN(size.height, size.width) == 320){
             float scaleFactorH = (MIN(self.view.frame.size.width, self.view.frame.size.height)-20) / 320.0;
-            return CGSizeMake(320 * scaleFactorH, 351 * scaleFactorH);
+            return CGSizeMake(320 * scaleFactorH, height * scaleFactorH);
         }
-        return CGSizeMake(320, 351);
+        return CGSizeMake(320, height);
     }
     else{
         CGFloat photosPerRow = sqrt(self.product.quantityToFulfillOrder);
