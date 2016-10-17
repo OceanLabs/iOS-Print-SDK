@@ -35,6 +35,7 @@
 #import "UIImage+OLUtils.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 static char tasksKey;
 
@@ -114,6 +115,12 @@ static char tasksKey;
         }
     }
     
+    if ([asset isEqual:[NSNull null]]){
+        self.image = [UIImage imageNamedInKiteBundle:@"plus"];
+        self.contentMode = UIViewContentModeCenter;
+        return;
+    }
+    
     if (size.height == 0 || size.width == 0){
         size = CGSizeMake(self.frame.size.width * [UIScreen mainScreen].scale, self.frame.size.height * [UIScreen mainScreen].scale);
     }
@@ -127,6 +134,7 @@ static char tasksKey;
         [self.tasks removeObjectForKey:asset.uuid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.contentMode = UIViewContentModeScaleAspectFill;
             self.image = image;
             [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                 self.alpha = 1;

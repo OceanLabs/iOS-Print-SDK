@@ -218,10 +218,6 @@
             self.maximumPhotos = 2;
             self.minimumPhotos = 2;
         }
-        if (self.product.productTemplate.templateUI == OLTemplateUICalendar){
-            self.maximumPhotos = 12;
-            self.minimumPhotos = 12;
-        }
     }
     
     if (self.selectedAssets.count > self.maximumPhotos && self.maximumPhotos != 0){

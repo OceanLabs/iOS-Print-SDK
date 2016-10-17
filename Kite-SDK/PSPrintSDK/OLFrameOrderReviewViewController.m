@@ -67,14 +67,14 @@ CGFloat margin = 2;
 {
     [super viewDidLoad];
     
-    // ensure order is maxed out by adding duplicates as necessary
+    // add placeholder photos
     self.framePhotos = [[NSMutableArray alloc] init];
     [self.framePhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedPhotos];
     NSUInteger userSelectedAssetCount = [self.framePhotos count];
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [self.framePhotos addObject:[[OLUserSession currentSession].userSelectedPhotos[i % userSelectedAssetCount] copy]];
+        [self.framePhotos addObject:[NSNull null]];
     }
 #ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
@@ -100,7 +100,7 @@ CGFloat margin = 2;
     
     self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
     
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools || [self.editingPrintPhoto isEqual:[NSNull null]]){
         [self replacePhoto:nil];
         return;
     }
@@ -156,6 +156,27 @@ CGFloat margin = 2;
 
 -(NSUInteger) totalNumberOfExtras{
     return 0;
+}
+
+-(BOOL) shouldGoToCheckout{
+    NSInteger nullCount = 0;
+    for (OLAsset *asset in self.framePhotos){
+        if ([asset isEqual:[NSNull null]]){
+            nullCount++;
+        }
+    }
+    
+    if (nullCount > 0){
+        NSInteger selected = self.framePhotos.count - nullCount;
+        NSString *title = selected == 1 ? [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photo.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), selected] : [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), selected];
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please add %d more.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), nullCount] preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+        [self presentViewController:ac animated:YES completion:NULL];
+        return NO;
+
+    }
+    
+    return [super shouldGoToCheckout];
 }
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
@@ -305,20 +326,16 @@ CGFloat margin = 2;
         
         NSIndexPath* outerCollectionViewIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
         
-        OLRemoteImageView* cellImage = (OLRemoteImageView*)[cell.contentView viewWithTag:110];
+        __weak OLRemoteImageView* cellImage = (OLRemoteImageView*)[cell.contentView viewWithTag:110];
         cellImage.userInteractionEnabled = YES;
         cellImage.image = nil;
         
         NSInteger numberOfPhotosPerFrame = self.product.productTemplate.templateUI == OLTemplateUIFrame ? self.product.quantityToFulfillOrder : (self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY != 0 ? self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY : 4);
         
         OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * numberOfPhotosPerFrame];
-        [printPhoto imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
-            [cellImage setProgress:progress];
-        }completion:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                cellImage.image = image;
-            });
-        }];
+        [cellImage setAndFadeInImageWithOLAsset:printPhoto size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES placeholder:nil progress:^(float progress){
+                        [cellImage setProgress:progress];
+        } completionHandler:NULL];
         
         UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
         [cellImage addGestureRecognizer:doubleTap];
@@ -330,7 +347,7 @@ CGFloat margin = 2;
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
         CGSize size = self.view.frame.size;
-        CGFloat height = self.product.productTemplate.templateUI == OLTemplateUIFrame ? 351 : 500;
+        CGFloat height = self.product.productTemplate.templateUI == OLTemplateUIFrame ? 351 : 427;
         if (MIN(size.height, size.width) == 320){
             float scaleFactorH = (MIN(self.view.frame.size.width, self.view.frame.size.height)-20) / 320.0;
             return CGSizeMake(320 * scaleFactorH, height * scaleFactorH);
@@ -428,6 +445,9 @@ CGFloat margin = 2;
     NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
     if (index != NSNotFound){
         [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
+    }
+    else if ([self.editingPrintPhoto isEqual:[NSNull null]]){
+        [[OLUserSession currentSession].userSelectedPhotos addObject:asset];
     }
     index = [self.framePhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
     [self.framePhotos replaceObjectAtIndex:index withObject:asset];
