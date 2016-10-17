@@ -345,6 +345,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 }
 
 +(OLTemplateUI)templateUIWithIdentifier:(NSString *)identifier{
+    return OLTemplateUICalendar;
+    
     if ([identifier isEqualToString:@"RECTANGLE"]){
         return OLTemplateUIRectagle;
     }

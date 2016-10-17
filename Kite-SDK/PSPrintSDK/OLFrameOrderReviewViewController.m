@@ -40,8 +40,9 @@
 #import "OLUserSession.h"
 #import "UIImageView+FadeIn.h"
 #import "OLImagePickerViewController.h"
+#import "OLInfoBanner.h"
 
-@interface OLPackProductViewController (Private)
+@interface OLPackProductViewController (Private) <OLInfoBannerDelegate>
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (BOOL) shouldGoToCheckout;
@@ -49,6 +50,7 @@
 - (void)preparePhotosForCheckout;
 -(NSUInteger) totalNumberOfExtras;
 - (void)replacePhoto:(id)sender;
+@property (strong, nonatomic) OLInfoBanner *infoBanner;
 
 @end
 
@@ -248,11 +250,6 @@ CGFloat margin = 2;
 
 #pragma mark UICollectionView data source and delegate methods
 
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-    UICollectionReusableView * cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"reviewHeaderCell" forIndexPath:indexPath];
-    return cell;
-}
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (collectionView.tag == 10){
         NSInteger numberOfPhotosPerFrame = self.product.productTemplate.templateUI == OLTemplateUIFrame ? self.product.quantityToFulfillOrder : (self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY != 0 ? self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY : 4);
@@ -289,31 +286,48 @@ CGFloat margin = 2;
         innerCollectionView.dataSource = self;
         innerCollectionView.delegate = self;
         
+        CGFloat innerCollectionViewHorizontalMargin = 20;
+        CGFloat innerCollectionViewTopMargin = 20;
         if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
-            view = innerCollectionView;
-            
-            CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
-            float scaleFactorH = size.width / 320.0;
-            
-            view.translatesAutoresizingMaskIntoConstraints = NO;
-            views = NSDictionaryOfVariableBindings(view);
-            con = [[NSMutableArray alloc] init];
-            
-            visuals = @[[NSString stringWithFormat:@"H:|-%f-[view]-%f-|", 25 * scaleFactorH, 25 * scaleFactorH],
-                        [NSString stringWithFormat:@"V:|-%f-[view]", 53 * scaleFactorH]];
-            
-            
-            for (NSString *visual in visuals) {
-                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-            }
-            
-            [view.superview addConstraints:con];
+            innerCollectionViewHorizontalMargin = 25;
+            innerCollectionViewTopMargin = 53;
         }
-        else{
+        
+        view = innerCollectionView;
+        
+        CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
+        float scaleFactorH = size.width / 320.0;
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        views = NSDictionaryOfVariableBindings(view);
+        con = [[NSMutableArray alloc] init];
+        
+        visuals = @[[NSString stringWithFormat:@"H:|-%f-[view]-%f-|", innerCollectionViewHorizontalMargin * scaleFactorH, innerCollectionViewHorizontalMargin * scaleFactorH],
+                    [NSString stringWithFormat:@"V:|-%f-[view]", innerCollectionViewTopMargin * scaleFactorH]];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+        if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
+            cell.contentView.backgroundColor = [UIColor whiteColor];
+            
             UIImageView *imageView = [cell.contentView viewWithTag:1010];
-            [imageView setAndFadeInImageWithURL:[NSURL URLWithString:@"http://www.free-printable-calendar.com/printable-calendar-images/november-2016-calendar.gif"]];
+            [imageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://dl.dropboxusercontent.com/u/3007013/calendar_test.png"]];
+            
+            for (NSLayoutConstraint *con in imageView.constraints){
+                if ([con.identifier isEqualToString:@"calendarHeightCon"]){
+                    con.constant = 125 * scaleFactorH;
+                }
+                if ([con.identifier isEqualToString:@"imageTopCon"]){
+                    con.constant = 10 * scaleFactorH;
+                }
+            }
         }
-    
+        
         return cell;
     }
     else{
@@ -342,6 +356,20 @@ CGFloat margin = 2;
         
         return cell;
     }
+}
+
+- (void)addInfoBanner{
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+            self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Change ", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        }
+        else{
+            self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit or Hold to Rearrange", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        }
+        self.infoBanner.delegate = self;
+        self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 50, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+    });
 }
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{

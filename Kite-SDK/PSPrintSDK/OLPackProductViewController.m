@@ -128,7 +128,10 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
-    
+    [self addInfoBanner];
+}
+
+- (void)addInfoBanner{
     static dispatch_once_t predicate;
     dispatch_once(&predicate, ^{
         if ([OLUserSession currentSession].kiteVc.disableEditingTools){
