@@ -157,7 +157,6 @@
     [OLKitePrintSDK setUseStaging:NO];
     [OLKitePrintSDK setCacheTemplates:NO];
     [OLKitePrintSDK setApplePayPayToString:@"JABBA"];
-    [OLKitePrintSDK setQRCodeUploadEnabled:YES];
     [OLStripeCard clearLastUsedCard];
 }
 
@@ -288,16 +287,20 @@
     [self waitForExpectationsWithTimeout:10 handler:NULL];
 }
 
-- (void)performUIAction:(void(^)())action{
+- (void)performUIActionWithDelay:(double)delay action:(void(^)())action{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for animations"];
     
     action();
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [expectation fulfill];
     });
     
     [self waitForExpectationsWithTimeout:10 handler:NULL];
+}
+
+- (void)performUIAction:(void(^)())action{
+    [self performUIActionWithDelay:1.5 action:action];
 }
 
 - (void)kvoObserveObject:(id)object forValue:(NSString *)value andExecuteBlock:(void(^)())block{
@@ -629,7 +632,7 @@
         [(OLCheckoutViewController *)[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] onButtonDoneClicked];
     }];
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:5 action:^{
         [vc onButtonPayWithApplePayClicked];
     }];
     

@@ -82,6 +82,16 @@
 @property (assign, nonatomic) BOOL disableCameraRoll;
 
 /**
+ *  Set to disallow Facebook if available. The default value is NO.
+ */
+@property (assign, nonatomic) BOOL disableFacebook;
+
+/**
+ *  Set to enable uploading from other devices via QR code scan. The default value is NO.
+ */
+@property (assign, nonatomic) BOOL qrCodeUploadEnabled;
+
+/**
  *  Set to hide the phone entry field at checkout.
  */
 @property (assign, nonatomic) BOOL hidePhoneEntryOnCheckoutScreen;

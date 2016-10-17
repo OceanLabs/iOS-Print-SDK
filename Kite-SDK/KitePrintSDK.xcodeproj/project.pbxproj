@@ -201,6 +201,7 @@
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
 		2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7483521BCD11F800360550 /* ViewControllerTests.m */; };
 		2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */; };
+		2E88A21C1DB0EED600732F4B /* CustomImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */; };
 		2E898CCB1CC518180041CCD8 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
 		2E898CCC1CC518180041CCD8 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */; };
 		2E898CCE1CC518180041CCD8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0151C7B2237009C1E42 /* QuartzCore.framework */; };
@@ -644,6 +645,8 @@
 		2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCollectionViewController.m; sourceTree = "<group>"; };
 		2E884F441D37B566007CA45A /* OLImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerViewController.h; sourceTree = "<group>"; };
 		2E884F451D37B566007CA45A /* OLImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerViewController.m; sourceTree = "<group>"; };
+		2E88A21A1DB0EED600732F4B /* CustomImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomImagePickerViewController.h; sourceTree = "<group>"; };
+		2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomImagePickerViewController.m; sourceTree = "<group>"; };
 		2E898CEA1CC518180041CCD8 /* Kite-CI-Deploy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kite-CI-Deploy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E898F851BE37F9B00739F5A /* OLProductTemplateOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOption.h; sourceTree = "<group>"; };
 		2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOption.m; sourceTree = "<group>"; };
@@ -1115,6 +1118,8 @@
 				2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */,
 				2E23EB991D5091FC00E2BF42 /* CI-ViewController.h */,
 				2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */,
+				2E88A21A1DB0EED600732F4B /* CustomImagePickerViewController.h */,
+				2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */,
 				2E5E2D5C1D8ADC2F00D9B1B2 /* KiteCI-Info.plist */,
 			);
 			name = Private;
@@ -2429,6 +2434,7 @@
 				2E9A77361DA683FE00A50C4D /* PrintOrderHistoryViewController.m in Sources */,
 				2E9A77371DA683FE00A50C4D /* CI-ViewController.m in Sources */,
 				2E9A77391DA684FB00A50C4D /* main.m in Sources */,
+				2E88A21C1DB0EED600732F4B /* CustomImagePickerViewController.m in Sources */,
 				2E9A77351DA683FE00A50C4D /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2522,7 +2528,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = 6.0.0;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
@@ -2553,7 +2559,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 6.0.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";

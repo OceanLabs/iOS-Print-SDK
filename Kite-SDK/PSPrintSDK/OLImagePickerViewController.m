@@ -69,8 +69,6 @@
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (assign, nonatomic) CGSize rotationSize;
 
-@property (strong, nonatomic) NSMutableArray<OLImagePickerProvider *> *providers;
-
 @property (strong, nonatomic) NSArray<OLAsset *> *originalSelectedAssets;
 @property (strong, nonatomic) UIView *selectedProviderIndicator;
 
@@ -176,7 +174,8 @@
     
     self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     view = self.visualEffectView;
-    [self.sourcesCollectionView.superview insertSubview:view belowSubview:self.sourcesCollectionView];
+    [self.sourcesCollectionView.superview addSubview:view];
+    [self.sourcesCollectionView.superview sendSubviewToBack:view];
     
     view.translatesAutoresizingMaskIntoConstraints = NO;
     views = NSDictionaryOfVariableBindings(view);
@@ -191,12 +190,6 @@
     }
     
     [view.superview addConstraints:con];
-    
-    view.clipsToBounds = NO;
-    view.layer.shadowColor = [[UIColor blackColor] CGColor];
-    view.layer.shadowOpacity = .3;
-    view.layer.shadowOffset = CGSizeMake(0, 1);
-    view.layer.shadowRadius = 2;
     
     self.selectedProviderIndicator = [[UIView alloc] init];
     self.selectedProviderIndicator.backgroundColor = self.sourcesCollectionView.tintColor;
@@ -593,7 +586,12 @@
         }
     }
     [self reloadPageController];
-    [picker dismissViewControllerAnimated:YES completion:NULL];
+    if ([[self.nextButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].firstObject isEqualToString:@"onButtonNextClicked:"]){
+        [picker dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [self onButtonDoneTapped:nil];
+    }
 }
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{

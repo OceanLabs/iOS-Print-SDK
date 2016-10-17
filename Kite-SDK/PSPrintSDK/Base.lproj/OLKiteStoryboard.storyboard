@@ -206,7 +206,7 @@
         <scene sceneID="6Dd-YI-JlP">
             <objects>
                 <collectionViewController storyboardIdentifier="FrameOrderReviewViewController" id="Vt9-y8-Spq" customClass="OLFrameOrderReviewViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="J2q-v3-sGg">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="J2q-v3-sGg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3065,7 +3065,7 @@ only £9.99 £8.99</string>
                                         </constraints>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="addCell" id="Ing-fi-eFM">
-                                        <rect key="frame" x="223" y="0.0" width="152" height="142"/>
+                                        <rect key="frame" x="169.5" y="0.0" width="152" height="142"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="152" height="142"/>
@@ -3073,7 +3073,7 @@ only £9.99 £8.99</string>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bLj-dr-QU5">
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="60"/>
-                                                    <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="textColor" red="0.12549019610000001" green="0.49803921569999998" blue="0.65490196079999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -3261,6 +3261,7 @@ only £9.99 £8.99</string>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MRf-TX-G0C">
                                 <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dropshadow" translatesAutoresizingMaskIntoConstraints="NO" id="V0X-aM-Lmt"/>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Caf-8g-q37">
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3316,8 +3317,11 @@ only £9.99 £8.99</string>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="Caf-8g-q37" secondAttribute="bottom" id="2b8-UJ-k46"/>
                                     <constraint firstAttribute="trailing" secondItem="Caf-8g-q37" secondAttribute="trailing" id="8HT-iR-zvt"/>
+                                    <constraint firstAttribute="bottom" secondItem="V0X-aM-Lmt" secondAttribute="bottom" constant="-3.5" id="SpG-hz-8dJ"/>
+                                    <constraint firstAttribute="trailing" secondItem="V0X-aM-Lmt" secondAttribute="trailing" id="WEs-Y6-VYa"/>
                                     <constraint firstAttribute="height" constant="60" id="Yu9-ak-ohk"/>
                                     <constraint firstItem="Caf-8g-q37" firstAttribute="leading" secondItem="MRf-TX-G0C" secondAttribute="leading" id="jfU-Dg-cug"/>
+                                    <constraint firstItem="V0X-aM-Lmt" firstAttribute="leading" secondItem="MRf-TX-G0C" secondAttribute="leading" id="vpP-9U-avK"/>
                                     <constraint firstItem="Caf-8g-q37" firstAttribute="top" secondItem="MRf-TX-G0C" secondAttribute="top" id="xk9-VH-UFz"/>
                                     <constraint firstAttribute="width" constant="50" id="zBR-S1-Ua6"/>
                                 </constraints>
@@ -3481,7 +3485,7 @@ only £9.99 £8.99</string>
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1371" y="133"/>
+            <point key="canvasLocation" x="1364" y="161"/>
         </scene>
     </scenes>
     <resources>
@@ -3495,6 +3499,7 @@ only £9.99 £8.99</string>
         <image name="card" width="16" height="11"/>
         <image name="checkmark" width="31" height="31"/>
         <image name="details-arrow" width="8" height="5"/>
+        <image name="dropshadow" width="375" height="3"/>
         <image name="envelope" width="14" height="9"/>
         <image name="frame_border" width="290" height="313"/>
         <image name="grey-chevron" width="7" height="11"/>
