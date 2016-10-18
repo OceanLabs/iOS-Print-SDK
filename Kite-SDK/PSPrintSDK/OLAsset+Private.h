@@ -29,6 +29,7 @@
 
 #import "OLAsset.h"
 #import "OLPhotoEdits.h"
+#import "OLPlaceholderAsset.h"
 
 typedef enum {
     kOLAssetTypeCorrupt,

@@ -510,7 +510,12 @@ CGFloat OLImagePickerMargin = 1.5;
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
             
             if (self.imagePicker.maximumPhotos == 1){
-                [self.imagePicker.nextButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+                if (self.imagePicker.nextButton){
+                    [self.imagePicker.nextButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+                }
+                else{
+                    [self.imagePicker onButtonDoneTapped:nil];
+                }
             }
         }
         

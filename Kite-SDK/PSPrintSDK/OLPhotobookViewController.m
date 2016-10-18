@@ -591,7 +591,7 @@ static const CGFloat kBookEdgePadding = 38;
 - (NSInteger)photobookPhotosCount{
     NSInteger count = 0;
     for (id object in self.photobookPhotos){
-        if (object != [NSNull null]){
+        if (![object isKindOfClass:[OLPlaceholderAsset class]]){
             count++;
         }
     }
@@ -786,7 +786,7 @@ static const CGFloat kBookEdgePadding = 38;
     
     NSUInteger selectedCount = 0;
     for (id object in self.photobookPhotos){
-        if (object != [NSNull null]){
+        if (![object isKindOfClass:[OLPlaceholderAsset class]]){
             selectedCount++;
         }
     }
@@ -816,11 +816,14 @@ static const CGFloat kBookEdgePadding = 38;
     NSInteger i = 0;
     NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
     NSMutableArray *photobookPhotosClean = [[NSMutableArray alloc] init];
-    [photobookPhotosClean addObjectsFromArray:self.photobookPhotos];
-    [photobookPhotosClean removeObjectIdenticalTo:[NSNull null]];
+    for (id asset in self.photobookPhotos){
+        if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
+            [photobookPhotosClean addObject:asset];
+        }
+    }
     
     for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
-        if (self.photobookPhotos[object] == [NSNull null]){
+        if ([self.photobookPhotos[object] isKindOfClass:[OLPlaceholderAsset class]]){
             [bookPhotos addObject:photobookPhotosClean[i % photobookPhotosClean.count]];
             i++;
         }
@@ -962,7 +965,7 @@ static const CGFloat kBookEdgePadding = 38;
         
         return;
     }
-    else if ([self.photobookPhotos objectAtIndex:index] == (id)[NSNull null]){
+    else if ([[self.photobookPhotos objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
         self.addNewPhotosAtIndex = index;
         [self addMorePhotosFromView:sender.view];
     }
@@ -1544,11 +1547,11 @@ static const CGFloat kBookEdgePadding = 38;
             self.coverPhoto = [OLUserSession currentSession].userSelectedPhotos.firstObject;
             start++;
         }
-        else if (self.coverPhoto == (id)[NSNull null]){
+        else if ([self.coverPhoto isKindOfClass:[OLPlaceholderAsset class]]){
             self.coverPhoto = nil;
         }
         for (NSInteger i = start; i < self.product.quantityToFulfillOrder + start; i++){
-            [self.photobookPhotos addObject:i < [OLUserSession currentSession].userSelectedPhotos.count ? [OLUserSession currentSession].userSelectedPhotos[i] : [NSNull null]];
+            [self.photobookPhotos addObject:i < [OLUserSession currentSession].userSelectedPhotos.count ? [OLUserSession currentSession].userSelectedPhotos[i] : [OLPlaceholderAsset asset]];
         }
     }
     else{
@@ -1557,13 +1560,13 @@ static const CGFloat kBookEdgePadding = 38;
         for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
             BOOL foundSpot = NO;
             for (NSInteger bookPhoto = self.addNewPhotosAtIndex; bookPhoto < self.photobookPhotos.count && !foundSpot; bookPhoto++){
-                if (self.photobookPhotos[bookPhoto] == [NSNull null]){
+                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
                     self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
                     foundSpot = YES;
                 }
             }
             for (NSInteger bookPhoto = 0; bookPhoto < self.addNewPhotosAtIndex && !foundSpot; bookPhoto++){
-                if (self.photobookPhotos[bookPhoto] == [NSNull null]){
+                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
                     self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
                     foundSpot = YES;
                 }

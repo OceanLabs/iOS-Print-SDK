@@ -256,11 +256,11 @@ static const NSInteger kSectionPages = 2;
             self.coverPhoto = [OLUserSession currentSession].userSelectedPhotos.firstObject;
             start++;
         }
-        else if (self.coverPhoto == (id)[NSNull null]){
+        else if ([self.coverPhoto isKindOfClass:[OLPlaceholderAsset class]]){
             self.coverPhoto = nil;
         }
         for (NSInteger i = start; i < self.product.quantityToFulfillOrder + start; i++){
-            [self.photobookPhotos addObject:i < [OLUserSession currentSession].userSelectedPhotos.count ? [OLUserSession currentSession].userSelectedPhotos[i] : [NSNull null]];
+            [self.photobookPhotos addObject:i < [OLUserSession currentSession].userSelectedPhotos.count ? [OLUserSession currentSession].userSelectedPhotos[i] : [OLPlaceholderAsset asset]];
         }
     }
     else{
@@ -269,13 +269,13 @@ static const NSInteger kSectionPages = 2;
         for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
             BOOL foundSpot = NO;
             for (NSInteger bookPhoto = self.addNewPhotosAtIndex; bookPhoto < self.photobookPhotos.count && !foundSpot; bookPhoto++){
-                if (self.photobookPhotos[bookPhoto] == [NSNull null]){
+                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
                     self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
                     foundSpot = YES;
                 }
             }
             for (NSInteger bookPhoto = 0; bookPhoto < self.addNewPhotosAtIndex && !foundSpot; bookPhoto++){
-                if (self.photobookPhotos[bookPhoto] == [NSNull null]){
+                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
                     self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
                     foundSpot = YES;
                 }
@@ -377,7 +377,7 @@ static const NSInteger kSectionPages = 2;
 - (NSInteger)photobookPhotosCount{
     NSInteger count = 0;
     for (id object in self.photobookPhotos){
-        if (object != [NSNull null]){
+        if (![object isKindOfClass:[OLPlaceholderAsset class]]){
             count++;
         }
     }
@@ -407,7 +407,7 @@ static const NSInteger kSectionPages = 2;
         [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         self.selectedIndexNumber = nil;
     }
-    self.photobookPhotos[self.longPressImageIndex] = [NSNull null];
+    self.photobookPhotos[self.longPressImageIndex] = [OLPlaceholderAsset asset];
     [self updateUserSelectedPhotos];
     self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
     [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
@@ -543,7 +543,7 @@ static const NSInteger kSectionPages = 2;
             [self.view addSubview:selectedPageCopy];
             
             CGRect tempFrame = pageCopy.frame;
-            if (printPhoto == (id)[NSNull null]){
+            if ([printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
                 [pageCopy removeFromSuperview];
             }
             [UIView animateWithDuration:0.05 animations:^{
@@ -553,7 +553,7 @@ static const NSInteger kSectionPages = 2;
             [UIView animateWithDuration:0.5 animations:^{
                 [self setPageShadowAlpha:selectedPageCopy forIndex:page.pageIndex];
                 
-                if (printPhoto != (id)[NSNull null]){
+                if (![printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
                     [self setPageShadowAlpha:pageCopy forIndex:selectedPage.pageIndex];
                     pageCopy.frame = selectedPageCopy.frame;
                 }
@@ -579,7 +579,7 @@ static const NSInteger kSectionPages = 2;
         }
         else{ //Previously selected image is not in view. Only pretend to swap.
             [self.view addSubview:pageCopy];
-            if (self.photobookPhotos[tappedImageIndex] == (id)[NSNull null]){
+            if ([self.photobookPhotos[tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
                 [pageCopy viewWithTag:12].alpha = 0;
                 [pageCopy viewWithTag:22].alpha = 0;
             }
@@ -621,7 +621,7 @@ static const NSInteger kSectionPages = 2;
                 [UIView animateWithDuration:0.5 animations:^{
                     [self setPageShadowAlpha:selectedPageCopy forIndex:page.pageIndex];
                     
-                    if (printPhoto != (id)[NSNull null]){
+                    if (![printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
                         pageCopy.transform = selectedPageCopy.transform;
                     }
                     selectedPageCopy.transform = CGAffineTransformIdentity;
@@ -632,7 +632,7 @@ static const NSInteger kSectionPages = 2;
                     [pageCopy removeFromSuperview];
                     self.selectedIndexNumber = nil;
                     
-                    if (self.photobookPhotos[tappedImageIndex] != (id)[NSNull null]){
+                    if (![self.photobookPhotos[tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
                         if (tappedImageIndex % 2 == 0){
                             page.pageShadowLeft2.hidden = NO;
                             page.pageShadowLeft2.alpha = 1;
@@ -651,7 +651,7 @@ static const NSInteger kSectionPages = 2;
         
         
     }
-    else if ([self.photobookPhotos objectAtIndex:tappedImageIndex] == (id)[NSNull null]){ //pick new images
+    else if ([[self.photobookPhotos objectAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){ //pick new images
         self.addNewPhotosAtIndex = tappedImageIndex;
         [self addMorePhotosFromView:page.view];
         self.animating = NO;
@@ -670,7 +670,7 @@ static const NSInteger kSectionPages = 2;
         view = (OLPopupOptionsImageView *)sender.view;
     }
     else{
-        if (self.photobookPhotos[index] == (id)[NSNull null]){
+        if ([self.photobookPhotos[index] isKindOfClass:[OLPlaceholderAsset class]]){
             return;
         }
         view = (OLPopupOptionsImageView *)[[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:index]] imageView];
@@ -895,7 +895,7 @@ static const NSInteger kSectionPages = 2;
             self.addNewPhotosAtIndex = -1;
         }
         else{
-            self.photobookPhotos[[self.replacingImageNumber integerValue]] = [NSNull null];
+            self.photobookPhotos[[self.replacingImageNumber integerValue]] = [OLPlaceholderAsset asset];
         }
         self.replacingImageNumber = nil;
     }
