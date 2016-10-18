@@ -106,7 +106,7 @@ CGFloat innerMargin = 3;
         return;
     }
     
-    self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
+    self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section] + indexPath.row];
     
     if ([OLUserSession currentSession].kiteVc.disableEditingTools || [self.editingPrintPhoto isEqual:[NSNull null]]){
         [self replacePhoto:nil];
@@ -256,26 +256,34 @@ CGFloat innerMargin = 3;
 
 #pragma mark UICollectionView data source and delegate methods
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (collectionView.tag == 10){
-        if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
-            NSInteger numberOfPhotosPerFrame =  self.product.quantityToFulfillOrder;
-            int incompleteFrame = ([self.framePhotos count] % numberOfPhotosPerFrame) != 0 ? 1 : 0;
-            return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
-        }
-        else{
-            NSInteger numberOfPhotosPerFrame = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
-            return self.product.quantityToFulfillOrder / numberOfPhotosPerFrame;
-            
-        }
+- (NSInteger)numberOfFrames{
+    if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+        NSInteger numberOfPhotosPerFrame =  self.product.quantityToFulfillOrder;
+        int incompleteFrame = ([self.framePhotos count] % numberOfPhotosPerFrame) != 0 ? 1 : 0;
+        return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
     }
     else{
-        if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
-            return self.product.quantityToFulfillOrder;
-        }
-        else{
-            return self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
-        }
+        NSInteger numberOfPhotosPerFrame = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
+        return self.product.quantityToFulfillOrder / numberOfPhotosPerFrame;
+        
+    }
+}
+
+- (NSInteger)numberOfPhotosPerFrame{
+    if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+        return self.product.quantityToFulfillOrder;
+    }
+    else{
+        return self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
+    }
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (collectionView.tag == 10){
+        return [self numberOfFrames];
+    }
+    else{
+        return [self numberOfPhotosPerFrame];
     }
 }
 
@@ -524,22 +532,21 @@ CGFloat innerMargin = 3;
     if (asset){
         [self scrollCropViewController:nil didReplaceAssetWithAsset:asset];
         
+        NSInteger frameQty = [self numberOfPhotosPerFrame];
         //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
         for (NSInteger i = 0; i < self.framePhotos.count; i++){
             if (self.framePhotos[i] == self.editingPrintPhoto){
-                NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
+                NSInteger outerIndex = i / frameQty;
                 
                 if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
                     continue;
                 }
                 
-                NSInteger innerIndex = i - outerIndex * self.product.quantityToFulfillOrder;
-                
                 UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
                 UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
                 
+                NSInteger innerIndex = i - outerIndex * frameQty;
                 NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
-                
                 if (innerIndexPath){
                     [innerCollectionView reloadItemsAtIndexPaths:@[innerIndexPath]];
                 }
