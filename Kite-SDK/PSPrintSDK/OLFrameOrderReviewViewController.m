@@ -63,11 +63,17 @@
 
 @implementation OLFrameOrderReviewViewController
 
-CGFloat margin = 2;
+CGFloat margin = 10;
+CGFloat innerMargin = 3;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+        margin = 2;
+        innerMargin = 2;
+    }
     
     // add placeholder photos
     self.framePhotos = [[NSMutableArray alloc] init];
@@ -386,18 +392,28 @@ CGFloat margin = 2;
         CGFloat photosPerRow = sqrt(self.product.quantityToFulfillOrder);
 
         return CGSizeMake(
-                          (collectionView.frame.size.width - margin * (photosPerRow-1.0)) / photosPerRow,
-                          (collectionView.frame.size.width - margin * (photosPerRow-1.0)) / photosPerRow
+                          (collectionView.frame.size.width - innerMargin * (photosPerRow-1.0)) / photosPerRow,
+                          (collectionView.frame.size.width - innerMargin * (photosPerRow-1.0)) / photosPerRow
                           );
     }
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
-    return margin;
+    if (collectionView.tag == 20){
+        return innerMargin;
+    }
+    else{
+        return margin;
+    }
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
-    return margin;
+    if (collectionView.tag == 20){
+        return innerMargin;
+    }
+    else{
+        return margin;
+    }
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
@@ -405,7 +421,7 @@ CGFloat margin = 2;
         return UIEdgeInsetsZero;
     }
     else{
-        return UIEdgeInsetsMake(0, 10, 0, 10);
+        return UIEdgeInsetsMake(margin,margin,margin,margin);
     }
 }
 
