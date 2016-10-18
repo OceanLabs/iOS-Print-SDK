@@ -212,7 +212,7 @@ CGFloat OLImagePickerMargin = 1.5;
         OLRemoteImageView *imageView = [cell viewWithTag:10];
         [self setAssetOfCollection:self.provider.collections[self.showingCollectionIndex] withIndex:indexPath.item toImageView:imageView forCollectionView:collectionView];
         
-        UIImageView *checkmark = [cell viewWithTag:20];
+        UIView *checkmark = [cell viewWithTag:20];
         id asset = [self assetForIndexPath:indexPath];
         OLAsset *printPhoto;
         if ([asset isKindOfClass:[PHAsset class]]){
@@ -225,6 +225,10 @@ CGFloat OLImagePickerMargin = 1.5;
         }
         else if ([asset isKindOfClass:[OLAsset class]]){
             printPhoto = asset;
+        }
+        
+        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+            checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
         }
         
         if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
@@ -478,9 +482,16 @@ CGFloat OLImagePickerMargin = 1.5;
             }
         }
         else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){
+            NSString *message;
+            if (self.imagePicker.maximumPhotos != self.imagePicker.minimumPhotos && self.imagePicker.maximumPhotos != 1){
+                message = [NSString stringWithFormat:self.imagePicker.maximumPhotos == 1 ? NSLocalizedStringFromTableInBundle(@"Please select only %ld photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") : NSLocalizedStringFromTableInBundle(@"Please select up to %ld photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)self.imagePicker.maximumPhotos];
+            }
+            else{
+                message = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select %ld photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)self.imagePicker.maximumPhotos];
+            }
             UIAlertController *alert =
             [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Maximum Photos Reached", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
-                                                message:[NSString stringWithFormat:self.imagePicker.maximumPhotos == 1 ? NSLocalizedStringFromTableInBundle(@"Please select only %ld photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") : NSLocalizedStringFromTableInBundle(@"Please select up to %ld photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)self.imagePicker.maximumPhotos]
+                                                message:message
                                          preferredStyle:UIAlertControllerStyleAlert];
             
             UIAlertAction *action =

@@ -120,6 +120,9 @@ typedef enum {
     if (self.productTemplate.templateUI == OLTemplateUIPhotobook){
         return self.productTemplate.productRepresentation.numberOfPhotos;
     }
+    if (self.productTemplate.templateUI == OLTemplateUICalendar){
+        return self.productTemplate.gridCountX * self.productTemplate.gridCountY * 12;
+    }
     return MAX(self.productTemplate.quantityPerSheet, 1);
 }
 
@@ -286,7 +289,7 @@ typedef enum {
 }
 
 - (NSString *) packInfo{
-    if (self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUIPoster || self.productTemplate.templateUI == OLTemplateUIPostcard || self.productTemplate.templateUI == OLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
+    if (self.productTemplate.templateUI == OLTemplateUICalendar || self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUIPoster || self.productTemplate.templateUI == OLTemplateUIPostcard || self.productTemplate.templateUI == OLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
         return @"";
     }
     NSString* packOfString = NSLocalizedStringFromTableInBundle(NSLocalizedStringFromTableInBundle(@"Pack of", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
