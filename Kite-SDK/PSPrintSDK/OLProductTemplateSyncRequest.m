@@ -209,6 +209,22 @@
                             NSNumber *gridCountX = [productTemplate[@"grid_count_x"] isKindOfClass:[NSNumber class]] ? productTemplate[@"grid_count_x"] : nil;
                             NSNumber *gridCountY = [productTemplate[@"grid_count_y"] isKindOfClass:[NSNumber class]] ? productTemplate[@"grid_count_y"] : nil;
                             
+                            NSMutableArray<NSURL *> *representationAssets;
+                            if ([productTemplate[@"ios_calendar_assets"] isKindOfClass:[NSArray class]]){
+                                representationAssets = [[NSMutableArray alloc] init];
+                                for (id assetURL in productTemplate[@"ios_calendar_assets"]){
+                                    NSURL *url = [NSURL URLWithString:assetURL];
+                                    if (url){
+                                        [representationAssets addObject:url];
+                                    }
+                                }
+                            }
+                            
+                            NSURL *logo;
+                            if ([productTemplate[@"ios_calendar_logo"] isKindOfClass:[NSString class]]){
+                                logo = [NSURL URLWithString:productTemplate[@"ios_calendar_logo"]];
+                            }
+                            
                             if ([name isKindOfClass:[NSString class]]
                                 && [identifier isKindOfClass:[NSString class]]
                                 && [costs isKindOfClass:[NSArray class]]
@@ -426,6 +442,8 @@
                                     
                                     t.collectionId = collectionId;
                                     t.collectionName = collectionName;
+                                    t.logo = logo;
+                                    t.representationAssets = representationAssets;
                                     
                                     NSMutableArray <OLUpsellOffer *>*upsellOffersClean = [[NSMutableArray alloc] init];
                                     for (NSDictionary *offerDict in upsellOffers){

@@ -40,6 +40,8 @@
 #import "OLProductTemplateOption.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteABTesting.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "NSObject+Utils.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -84,6 +86,9 @@ const NSInteger kOLEditTagCrop = 40;
 @property (weak, nonatomic) OLProductTemplateOption *selectedOption;
 @property (strong, nonatomic) UITextField *borderTextField;
 @property (assign, nonatomic) BOOL animating;
+
+@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
+@property (strong, nonatomic) UIViewController *presentedVc;
 
 @end
 
@@ -1780,11 +1785,33 @@ const NSInteger kOLEditTagCrop = 40;
     vc.selectedAssets = [[NSMutableArray alloc] init];
     vc.maximumPhotos = 1;
     vc.product = self.product;
-    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+    
+    [vc.view class]; //Force viewDidLoad
+    if (vc.providers.count == 2 && vc.providers.lastObject.providerType == OLImagePickerProviderTypeViewController){
+        //Skip the image picker and only show the custom vc
+        self.vcDelegateForCustomVc = vc; //Keep strong reference
+        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)vc.providers.lastObject vc];
+        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+        
+        [self presentViewController:customVc animated:YES completion:NULL];
+        self.presentedVc = customVc;
+        return;
+    }
+    else{
+        [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+    }
 }
 
 - (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
-    [vc dismissViewControllerAnimated:YES completion:NULL];
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
@@ -1809,7 +1836,15 @@ const NSInteger kOLEditTagCrop = 40;
         [self loadImageFromAsset];
     }
     
-    [vc dismissViewControllerAnimated:YES completion:NULL];
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
 }
 
 - (void)loadImageFromAsset{

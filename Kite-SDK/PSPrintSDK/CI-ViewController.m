@@ -41,6 +41,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLImageCachingManager.h"
 #import "OLUserSession.h"
 #import "OLImagePickerViewController.h"
+#import "CustomImagePickerViewController.h"
 
 @import Photos;
 
@@ -224,6 +225,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         vc.qrCodeUploadEnabled = YES;
        
         [self addCatsAndDogsImagePickersToKite:vc];
+        
+        [vc addCustomPhotoProviderWithViewController:[[CustomImagePickerViewController alloc] init] name:@"Custom" icon:[UIImage imageNamed:@"cat"]];
         
         [self presentViewController:vc animated:YES completion:NULL];
     }

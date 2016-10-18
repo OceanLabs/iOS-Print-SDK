@@ -53,6 +53,7 @@
 @property (assign, nonatomic) NSInteger maximumPhotos;
 @property (assign, nonatomic) NSInteger minimumPhotos;
 @property (assign, nonatomic) BOOL overrideImagePickerMode;
+@property (strong, nonatomic) NSMutableArray<OLImagePickerProvider *> *providers;
 @property (weak, nonatomic) OLImagePickerProvider *providerForPresentedVc;
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (void)reloadPageController;

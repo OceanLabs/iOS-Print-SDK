@@ -40,8 +40,9 @@
 #import "OLUserSession.h"
 #import "UIImageView+FadeIn.h"
 #import "OLImagePickerViewController.h"
+#import "OLInfoBanner.h"
 
-@interface OLPackProductViewController (Private)
+@interface OLPackProductViewController (Private) <OLInfoBannerDelegate>
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (BOOL) shouldGoToCheckout;
@@ -49,6 +50,7 @@
 - (void)preparePhotosForCheckout;
 -(NSUInteger) totalNumberOfExtras;
 - (void)replacePhoto:(id)sender;
+@property (strong, nonatomic) OLInfoBanner *infoBanner;
 
 @end
 
@@ -61,20 +63,26 @@
 
 @implementation OLFrameOrderReviewViewController
 
-CGFloat margin = 2;
+CGFloat margin = 25;
+CGFloat innerMargin = 3;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    // ensure order is maxed out by adding duplicates as necessary
+    if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+        margin = 2;
+        innerMargin = 2;
+    }
+    
+    // add placeholder photos
     self.framePhotos = [[NSMutableArray alloc] init];
     [self.framePhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedPhotos];
     NSUInteger userSelectedAssetCount = [self.framePhotos count];
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [self.framePhotos addObject:[[OLUserSession currentSession].userSelectedPhotos[i % userSelectedAssetCount] copy]];
+        [self.framePhotos addObject:[NSNull null]];
     }
 #ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
@@ -100,7 +108,7 @@ CGFloat margin = 2;
     
     self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
     
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools || [self.editingPrintPhoto isEqual:[NSNull null]]){
         [self replacePhoto:nil];
         return;
     }
@@ -145,6 +153,10 @@ CGFloat margin = 2;
 }
 
 - (void)preparePhotosForCheckout{
+    if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
+        self.checkoutPhotos = self.framePhotos;
+        return;
+    }
     NSMutableArray *reversePhotos = [self.framePhotos mutableCopy];
     [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:reversePhotos forProduct:self.product];
     self.checkoutPhotos = reversePhotos;
@@ -152,6 +164,27 @@ CGFloat margin = 2;
 
 -(NSUInteger) totalNumberOfExtras{
     return 0;
+}
+
+-(BOOL) shouldGoToCheckout{
+    NSInteger nullCount = 0;
+    for (OLAsset *asset in self.framePhotos){
+        if ([asset isEqual:[NSNull null]]){
+            nullCount++;
+        }
+    }
+    
+    if (nullCount > 0){
+        NSInteger selected = self.framePhotos.count - nullCount;
+        NSString *title = selected == 1 ? [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photo.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), selected] : [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), selected];
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please add %d more.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), nullCount] preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+        [self presentViewController:ac animated:YES completion:NULL];
+        return NO;
+
+    }
+    
+    return [super shouldGoToCheckout];
 }
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
@@ -223,24 +256,33 @@ CGFloat margin = 2;
 
 #pragma mark UICollectionView data source and delegate methods
 
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-    UICollectionReusableView * cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"reviewHeaderCell" forIndexPath:indexPath];
-    return cell;
-}
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (collectionView.tag == 10){
-        int incompleteFrame = ([self.framePhotos count] % self.product.quantityToFulfillOrder) != 0 ? 1 : 0;
-        return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
+        if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+            NSInteger numberOfPhotosPerFrame =  self.product.quantityToFulfillOrder;
+            int incompleteFrame = ([self.framePhotos count] % numberOfPhotosPerFrame) != 0 ? 1 : 0;
+            return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
+        }
+        else{
+            NSInteger numberOfPhotosPerFrame = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
+            return self.product.quantityToFulfillOrder / numberOfPhotosPerFrame;
+            
+        }
     }
     else{
-        return self.product.quantityToFulfillOrder;
+        if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+            return self.product.quantityToFulfillOrder;
+        }
+        else{
+            return self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
+        }
     }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewCell" forIndexPath:indexPath];
+        NSString *cellId = self.product.productTemplate.templateUI == OLTemplateUIFrame ? @"reviewCell" : @"calendarCell";
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:indexPath];
         
         UIView *view = cell.contentView;
         view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -262,17 +304,24 @@ CGFloat margin = 2;
         innerCollectionView.dataSource = self;
         innerCollectionView.delegate = self;
         
+        CGFloat innerCollectionViewHorizontalMargin = 20;
+        CGFloat innerCollectionViewTopMargin = 20;
+        if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+            innerCollectionViewHorizontalMargin = 25;
+            innerCollectionViewTopMargin = 53;
+        }
+        
         view = innerCollectionView;
         
         CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
-        float scaleFactorH = size.width / 320.0;
+        float scaleFactor = size.width / 320.0;
         
         view.translatesAutoresizingMaskIntoConstraints = NO;
         views = NSDictionaryOfVariableBindings(view);
         con = [[NSMutableArray alloc] init];
         
-        visuals = @[[NSString stringWithFormat:@"H:|-%f-[view]-%f-|", 25 * scaleFactorH, 25 * scaleFactorH],
-                             [NSString stringWithFormat:@"V:|-%f-[view]", 53 * scaleFactorH]];
+        visuals = @[[NSString stringWithFormat:@"H:|-%f-[view]-%f-|", innerCollectionViewHorizontalMargin * scaleFactor, innerCollectionViewHorizontalMargin * scaleFactor],
+                    [NSString stringWithFormat:@"V:|-%f-[view]", innerCollectionViewTopMargin * scaleFactor]];
         
         
         for (NSString *visual in visuals) {
@@ -280,7 +329,30 @@ CGFloat margin = 2;
         }
         
         [view.superview addConstraints:con];
-
+        
+        if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
+            cell.contentView.backgroundColor = [UIColor whiteColor];
+            
+            UIImageView *imageView = [cell.contentView viewWithTag:1010];
+            if (indexPath.item < self.product.productTemplate.representationAssets.count){
+                [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item]];
+            }
+            if (self.product.productTemplate.logo){
+                __weak UIImageView *imageView = [cell.contentView viewWithTag:1011];
+                [imageView setAndFadeInImageWithURL:self.product.productTemplate.logo];
+                [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:37.5 * scaleFactor]];
+                [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:75 * scaleFactor]];
+            }
+            
+            for (NSLayoutConstraint *con in imageView.constraints){
+                if ([con.identifier isEqualToString:@"calendarHeightCon"]){
+                    con.constant = 125 * scaleFactor;
+                }
+                if ([con.identifier isEqualToString:@"imageTopCon"]){
+                    con.constant = 10 * scaleFactor;
+                }
+            }
+        }
         
         return cell;
     }
@@ -294,18 +366,16 @@ CGFloat margin = 2;
         
         NSIndexPath* outerCollectionViewIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
         
-        OLRemoteImageView* cellImage = (OLRemoteImageView*)[cell.contentView viewWithTag:110];
+        __weak OLRemoteImageView* cellImage = (OLRemoteImageView*)[cell.contentView viewWithTag:110];
         cellImage.userInteractionEnabled = YES;
         cellImage.image = nil;
         
-        OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
-        [printPhoto imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
-            [cellImage setProgress:progress];
-        }completion:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                cellImage.image = image;
-            });
-        }];
+        NSInteger numberOfPhotosPerFrame = self.product.productTemplate.templateUI == OLTemplateUIFrame ? self.product.quantityToFulfillOrder : (self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY != 0 ? self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY : 4);
+        
+        OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * numberOfPhotosPerFrame];
+        [cellImage setAndFadeInImageWithOLAsset:printPhoto size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES placeholder:nil progress:^(float progress){
+                        [cellImage setProgress:progress];
+        } completionHandler:NULL];
         
         UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)];
         [cellImage addGestureRecognizer:doubleTap];
@@ -314,31 +384,53 @@ CGFloat margin = 2;
     }
 }
 
+- (void)addInfoBanner{
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Change ", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    }
+    else{
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit or Hold to Rearrange", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    }
+    self.infoBanner.delegate = self;
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 50, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+}
+
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
         CGSize size = self.view.frame.size;
+        CGFloat height = self.product.productTemplate.templateUI == OLTemplateUIFrame ? 351 : 435;
         if (MIN(size.height, size.width) == 320){
             float scaleFactorH = (MIN(self.view.frame.size.width, self.view.frame.size.height)-20) / 320.0;
-            return CGSizeMake(320 * scaleFactorH, 351 * scaleFactorH);
+            return CGSizeMake(320 * scaleFactorH, height * scaleFactorH);
         }
-        return CGSizeMake(320, 351);
+        return CGSizeMake(320, height);
     }
     else{
-        CGFloat photosPerRow = sqrt(self.product.quantityToFulfillOrder);
+        CGFloat photosPerRow = self.product.productTemplate.templateUI == OLTemplateUIFrame ? sqrt(self.product.quantityToFulfillOrder) : self.product.productTemplate.gridCountX;
 
         return CGSizeMake(
-                          (collectionView.frame.size.width - margin * (photosPerRow-1.0)) / photosPerRow,
-                          (collectionView.frame.size.width - margin * (photosPerRow-1.0)) / photosPerRow
+                          (collectionView.frame.size.width - innerMargin * (photosPerRow-1.0)) / photosPerRow,
+                          (collectionView.frame.size.width - innerMargin * (photosPerRow-1.0)) / photosPerRow
                           );
     }
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
-    return margin;
+    if (collectionView.tag == 20){
+        return innerMargin;
+    }
+    else{
+        return margin;
+    }
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
-    return margin;
+    if (collectionView.tag == 20){
+        return innerMargin;
+    }
+    else{
+        return margin;
+    }
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
@@ -346,7 +438,11 @@ CGFloat margin = 2;
         return UIEdgeInsetsZero;
     }
     else{
-        return UIEdgeInsetsMake(0, 10, 0, 10);
+        CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
+        
+        NSInteger numberOfCellsPerRow = collectionView.frame.size.width / cellSize.width;
+        CGFloat sideMargin = (collectionView.frame.size.width - (cellSize.width * numberOfCellsPerRow) - margin * (numberOfCellsPerRow - 1))/(numberOfCellsPerRow+1);
+        return UIEdgeInsetsMake(margin,sideMargin,margin,sideMargin);
     }
 }
 
@@ -414,6 +510,9 @@ CGFloat margin = 2;
     NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
     if (index != NSNotFound){
         [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
+    }
+    else if ([self.editingPrintPhoto isEqual:[NSNull null]]){
+        [[OLUserSession currentSession].userSelectedPhotos addObject:asset];
     }
     index = [self.framePhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
     [self.framePhotos replaceObjectAtIndex:index withObject:asset];
