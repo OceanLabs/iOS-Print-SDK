@@ -284,6 +284,12 @@
                                                 <constraint firstAttribute="height" constant="125" identifier="calendarHeightCon" id="phi-1s-4B8"/>
                                             </constraints>
                                         </imageView>
+                                        <imageView userInteractionEnabled="NO" tag="1011" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dV2-qR-5nM">
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="56" placeholder="YES" id="BSD-GD-eum"/>
+                                                <constraint firstAttribute="width" constant="122" placeholder="YES" id="fIQ-6Q-HLw"/>
+                                            </constraints>
+                                        </imageView>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="20" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="eaS-Eb-MBu">
                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                             <collectionViewLayout key="collectionViewLayout" id="9dm-Gi-hzk" customClass="LXReorderableCollectionViewFlowLayout"/>
@@ -311,12 +317,14 @@
                                 </view>
                                 <constraints>
                                     <constraint firstItem="eaS-Eb-MBu" firstAttribute="leading" secondItem="gx7-0Z-9Be" secondAttribute="leading" placeholder="YES" id="9XA-PI-zGx"/>
+                                    <constraint firstItem="dV2-qR-5nM" firstAttribute="bottom" secondItem="Y79-ma-yBT" secondAttribute="bottom" constant="-5" id="A6b-IM-rt0"/>
+                                    <constraint firstItem="Y79-ma-yBT" firstAttribute="trailing" secondItem="eaS-Eb-MBu" secondAttribute="trailing" id="BVv-Gt-433"/>
+                                    <constraint firstItem="dV2-qR-5nM" firstAttribute="leading" secondItem="Y79-ma-yBT" secondAttribute="leading" id="HYd-g3-Kyk"/>
                                     <constraint firstItem="eaS-Eb-MBu" firstAttribute="top" secondItem="gx7-0Z-9Be" secondAttribute="top" placeholder="YES" id="ceS-N5-hPR"/>
-                                    <constraint firstItem="Y79-ma-yBT" firstAttribute="leading" secondItem="gx7-0Z-9Be" secondAttribute="leading" id="dQI-h8-Bky"/>
-                                    <constraint firstAttribute="trailing" secondItem="Y79-ma-yBT" secondAttribute="trailing" id="df4-ty-iNb"/>
                                     <constraint firstItem="Y79-ma-yBT" firstAttribute="top" secondItem="eaS-Eb-MBu" secondAttribute="bottom" constant="10" identifier="imageTopCon" id="eGc-69-spx"/>
                                     <constraint firstAttribute="bottom" secondItem="Y79-ma-yBT" secondAttribute="bottom" id="fer-rS-ZH8"/>
                                     <constraint firstAttribute="trailing" secondItem="eaS-Eb-MBu" secondAttribute="trailing" placeholder="YES" id="sXl-Sg-IfG"/>
+                                    <constraint firstItem="Y79-ma-yBT" firstAttribute="leading" secondItem="eaS-Eb-MBu" secondAttribute="leading" id="yrW-rz-ENr"/>
                                 </constraints>
                                 <size key="customSize" width="320" height="351"/>
                             </collectionViewCell>

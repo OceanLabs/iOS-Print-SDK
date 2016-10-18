@@ -314,14 +314,14 @@ CGFloat innerMargin = 3;
         view = innerCollectionView;
         
         CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
-        float scaleFactorH = size.width / 320.0;
+        float scaleFactor = size.width / 320.0;
         
         view.translatesAutoresizingMaskIntoConstraints = NO;
         views = NSDictionaryOfVariableBindings(view);
         con = [[NSMutableArray alloc] init];
         
-        visuals = @[[NSString stringWithFormat:@"H:|-%f-[view]-%f-|", innerCollectionViewHorizontalMargin * scaleFactorH, innerCollectionViewHorizontalMargin * scaleFactorH],
-                    [NSString stringWithFormat:@"V:|-%f-[view]", innerCollectionViewTopMargin * scaleFactorH]];
+        visuals = @[[NSString stringWithFormat:@"H:|-%f-[view]-%f-|", innerCollectionViewHorizontalMargin * scaleFactor, innerCollectionViewHorizontalMargin * scaleFactor],
+                    [NSString stringWithFormat:@"V:|-%f-[view]", innerCollectionViewTopMargin * scaleFactor]];
         
         
         for (NSString *visual in visuals) {
@@ -334,14 +334,22 @@ CGFloat innerMargin = 3;
             cell.contentView.backgroundColor = [UIColor whiteColor];
             
             UIImageView *imageView = [cell.contentView viewWithTag:1010];
-            [imageView setAndFadeInImageWithURL:[NSURL URLWithString:@"https://dl.dropboxusercontent.com/u/3007013/calendar_test.png"]];
+            if (indexPath.item < self.product.productTemplate.representationAssets.count){
+                [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item]];
+            }
+            if (self.product.productTemplate.logo){
+                __weak UIImageView *imageView = [cell.contentView viewWithTag:1011];
+                [imageView setAndFadeInImageWithURL:self.product.productTemplate.logo];
+                [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:37.5 * scaleFactor]];
+                [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:75 * scaleFactor]];
+            }
             
             for (NSLayoutConstraint *con in imageView.constraints){
                 if ([con.identifier isEqualToString:@"calendarHeightCon"]){
-                    con.constant = 125 * scaleFactorH;
+                    con.constant = 125 * scaleFactor;
                 }
                 if ([con.identifier isEqualToString:@"imageTopCon"]){
-                    con.constant = 10 * scaleFactorH;
+                    con.constant = 10 * scaleFactor;
                 }
             }
         }
@@ -430,7 +438,11 @@ CGFloat innerMargin = 3;
         return UIEdgeInsetsZero;
     }
     else{
-        return UIEdgeInsetsMake(margin,margin,margin,margin);
+        CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
+        
+        NSInteger numberOfCellsPerRow = collectionView.frame.size.width / cellSize.width;
+        CGFloat sideMargin = (collectionView.frame.size.width - (cellSize.width * numberOfCellsPerRow) - margin * (numberOfCellsPerRow - 1))/(numberOfCellsPerRow+1);
+        return UIEdgeInsetsMake(margin,sideMargin,margin,sideMargin);
     }
 }
 

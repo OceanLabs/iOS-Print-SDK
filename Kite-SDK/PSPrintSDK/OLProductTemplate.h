@@ -91,6 +91,8 @@ typedef NS_ENUM(NSInteger, OLTemplateUI) {
 @property (assign, nonatomic) BOOL printInStore;
 @property (strong, nonatomic) NSString *_Nullable collectionId;
 @property (strong, nonatomic) NSString *_Nullable collectionName;
+@property (strong, nonatomic) NSArray <NSURL *>*_Nullable representationAssets;
+@property (strong, nonatomic) NSURL *_Nullable logo;
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *_Nullable)costPerSheetInCurrencyCode:(NSString *_Nonnull)currencyCode;
