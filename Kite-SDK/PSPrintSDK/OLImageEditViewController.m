@@ -1848,6 +1848,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)loadImageFromAsset{
+    self.cropView.imageView.image = nil;
     __weak OLImageEditViewController *welf = self;
     [self.asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
         dispatch_async(dispatch_get_main_queue(), ^{

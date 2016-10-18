@@ -26,40 +26,12 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+#import "OLPlaceholderAsset.h"
 
-#import <UIKit/UIKit.h>
-#import "OLProduct.h"
-#import "OLKiteViewController.h"
-#import "OLAsset.h"
+@implementation OLPlaceholderAsset
 
-@class OLImagePickerViewController;
-@class OLImagePickerProvider;
-
-@protocol OLImagePickerViewControllerDelegate <NSObject>
-
-- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets;
-
-@optional
-- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc;
-
-@end
-
-@interface OLImagePickerViewController : UIViewController
-
-@property (strong, nonatomic) OLProduct *product;
-@property (weak, nonatomic) IBOutlet UIButton *nextButton;
-@property (weak, nonatomic) id<OLImagePickerViewControllerDelegate> delegate;
-@property (strong, nonatomic) NSMutableArray<OLAsset *> *selectedAssets;
-@property (assign, nonatomic) NSInteger maximumPhotos;
-@property (assign, nonatomic) NSInteger minimumPhotos;
-@property (assign, nonatomic) BOOL overrideImagePickerMode;
-@property (strong, nonatomic) NSMutableArray<OLImagePickerProvider *> *providers;
-@property (weak, nonatomic) OLImagePickerProvider *providerForPresentedVc;
-- (void)updateTitleBasedOnSelectedPhotoQuanitity;
-- (void)reloadPageController;
-- (void)onButtonNextClicked:(UIButton *)sender;
-- (void)onButtonDoneTapped:(UIButton *)sender;
-- (void)presentExternalViewControllerForProvider:(OLImagePickerProvider *)provider;
-
++ (instancetype)asset{
+    return [[OLPlaceholderAsset alloc] init];
+}
 
 @end

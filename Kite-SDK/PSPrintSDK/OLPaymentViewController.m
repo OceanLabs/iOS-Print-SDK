@@ -1783,7 +1783,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:coverPhoto];
         }
         else{
-            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:[NSNull null]];
+            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:[OLPlaceholderAsset asset]];
         }
         
         [orvc safePerformSelector:@selector(setProduct:) withObject:product];

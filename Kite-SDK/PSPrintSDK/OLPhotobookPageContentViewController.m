@@ -125,7 +125,7 @@
         return;
     }
     OLAsset *printPhoto = [self.userSelectedPhotos objectAtIndex:imageIndex];
-    if (printPhoto != (id)[NSNull null]){
+    if (![printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
         self.imageView.image = nil;
         dispatch_async(dispatch_get_main_queue(), ^{
             NSInteger blockIndex = imageIndex;

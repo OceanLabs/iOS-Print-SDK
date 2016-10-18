@@ -50,6 +50,7 @@
 - (void)preparePhotosForCheckout;
 -(NSUInteger) totalNumberOfExtras;
 - (void)replacePhoto:(id)sender;
+@property (strong, nonatomic) UIButton *nextButton;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
 
 @end
@@ -82,7 +83,7 @@ CGFloat innerMargin = 3;
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [self.framePhotos addObject:[NSNull null]];
+        [self.framePhotos addObject:[OLPlaceholderAsset asset]];
     }
 #ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
@@ -106,30 +107,44 @@ CGFloat innerMargin = 3;
         return;
     }
     
-    self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
+    self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section] + indexPath.row];
     
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools || [self.editingPrintPhoto isEqual:[NSNull null]]){
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools || [self.editingPrintPhoto isKindOfClass:[OLPlaceholderAsset class]]){
         [self replacePhoto:nil];
         return;
     }
     
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
-    cropVc.delegate = self;
-    cropVc.aspectRatio = 1;
-    cropVc.product = self.product;
-    
-    cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
-    cropVc.previewView.frame = [cell convertRect:imageView.frame toView:nil];
-    cropVc.previewSourceView = imageView;
-    cropVc.providesPresentationContextTransitionStyle = true;
-    cropVc.definesPresentationContext = true;
-    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+        
+        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        cropVc.borderInsets = self.product.productTemplate.imageBorder;
+        cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
+        cropVc.delegate = self;
+        cropVc.aspectRatio = 1.0;
+        cropVc.product = self.product;
+        
+        cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
+        cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
+        cropVc.previewSourceView = imageView;
+        cropVc.providesPresentationContextTransitionStyle = true;
+        cropVc.definesPresentationContext = true;
+        cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
+        
+        [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
+            self.nextButton.alpha = 0;
+            self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
+            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+        } completion:^(BOOL finished){
+            [self.infoBanner removeFromSuperview];
+            self.infoBanner = nil;
+        }];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+#endif
     }];
 }
 
@@ -169,7 +184,7 @@ CGFloat innerMargin = 3;
 -(BOOL) shouldGoToCheckout{
     NSInteger nullCount = 0;
     for (OLAsset *asset in self.framePhotos){
-        if ([asset isEqual:[NSNull null]]){
+        if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
             nullCount++;
         }
     }
@@ -256,26 +271,34 @@ CGFloat innerMargin = 3;
 
 #pragma mark UICollectionView data source and delegate methods
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (collectionView.tag == 10){
-        if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
-            NSInteger numberOfPhotosPerFrame =  self.product.quantityToFulfillOrder;
-            int incompleteFrame = ([self.framePhotos count] % numberOfPhotosPerFrame) != 0 ? 1 : 0;
-            return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
-        }
-        else{
-            NSInteger numberOfPhotosPerFrame = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
-            return self.product.quantityToFulfillOrder / numberOfPhotosPerFrame;
-            
-        }
+- (NSInteger)numberOfFrames{
+    if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+        NSInteger numberOfPhotosPerFrame =  self.product.quantityToFulfillOrder;
+        int incompleteFrame = ([self.framePhotos count] % numberOfPhotosPerFrame) != 0 ? 1 : 0;
+        return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
     }
     else{
-        if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
-            return self.product.quantityToFulfillOrder;
-        }
-        else{
-            return self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
-        }
+        NSInteger numberOfPhotosPerFrame = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
+        return self.product.quantityToFulfillOrder / numberOfPhotosPerFrame;
+        
+    }
+}
+
+- (NSInteger)numberOfPhotosPerFrame{
+    if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+        return self.product.quantityToFulfillOrder;
+    }
+    else{
+        return self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
+    }
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (collectionView.tag == 10){
+        return [self numberOfFrames];
+    }
+    else{
+        return [self numberOfPhotosPerFrame];
     }
 }
 
@@ -476,16 +499,17 @@ CGFloat innerMargin = 3;
     
     self.editingPrintPhoto.edits = cropper.edits;
     
+    NSInteger frameQty = [self numberOfPhotosPerFrame];
     //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
     for (NSInteger i = 0; i < self.framePhotos.count; i++){
         if (self.framePhotos[i] == self.editingPrintPhoto){
-            NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
+            NSInteger outerIndex = i / frameQty;
             
             if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
                 continue;
             }
             
-            NSInteger innerIndex = i - outerIndex * self.product.quantityToFulfillOrder;
+            NSInteger innerIndex = i - outerIndex * frameQty;
             
             UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
             UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
@@ -511,7 +535,7 @@ CGFloat innerMargin = 3;
     if (index != NSNotFound){
         [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
     }
-    else if ([self.editingPrintPhoto isEqual:[NSNull null]]){
+    else if ([self.editingPrintPhoto isKindOfClass:[OLPlaceholderAsset class]]){
         [[OLUserSession currentSession].userSelectedPhotos addObject:asset];
     }
     index = [self.framePhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
@@ -524,22 +548,21 @@ CGFloat innerMargin = 3;
     if (asset){
         [self scrollCropViewController:nil didReplaceAssetWithAsset:asset];
         
+        NSInteger frameQty = [self numberOfPhotosPerFrame];
         //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
         for (NSInteger i = 0; i < self.framePhotos.count; i++){
             if (self.framePhotos[i] == self.editingPrintPhoto){
-                NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
+                NSInteger outerIndex = i / frameQty;
                 
                 if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
                     continue;
                 }
                 
-                NSInteger innerIndex = i - outerIndex * self.product.quantityToFulfillOrder;
-                
                 UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
                 UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
                 
+                NSInteger innerIndex = i - outerIndex * frameQty;
                 NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
-                
                 if (innerIndexPath){
                     [innerCollectionView reloadItemsAtIndexPaths:@[innerIndexPath]];
                 }

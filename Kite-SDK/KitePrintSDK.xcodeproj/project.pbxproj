@@ -429,6 +429,8 @@
 		2EB8FE861D95692000E26BDF /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2EB8FE881D95692000E26BDF /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
+		2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */; };
+		2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
 		2ED42EC11D9D79E3003B9AD0 /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC41D2FC109002F5F74 /* bitstream.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
@@ -754,6 +756,8 @@
 		2EB919941D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPageBlankContentViewController.m; sourceTree = "<group>"; };
 		2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloader.h; sourceTree = "<group>"; };
 		2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloader.m; sourceTree = "<group>"; };
+		2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPlaceholderAsset.h; sourceTree = "<group>"; };
+		2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPlaceholderAsset.m; sourceTree = "<group>"; };
 		2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLDocsObjcExampleCodeTests.m; sourceTree = "<group>"; };
 		2ED36B381C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+RequestParameterData.h"; path = "PSPrintSDK/Categories/NSDictionary+RequestParameterData.h"; sourceTree = "<group>"; };
 		2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+RequestParameterData.m"; path = "PSPrintSDK/Categories/NSDictionary+RequestParameterData.m"; sourceTree = "<group>"; };
@@ -1702,6 +1706,8 @@
 				2E36A1E11D420CDA00EA2F0F /* OLImagePickerProviderCollection.m */,
 				2E0804B61C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.h */,
 				2E0804B71C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.m */,
+				2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */,
+				2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */,
 			);
 			name = Asset;
 			sourceTree = "<group>";
@@ -1825,6 +1831,7 @@
 				2EB8FDD51D95685100E26BDF /* OLBaseRequest.h in Headers */,
 				2EB8FE391D95685100E26BDF /* OLEditingToolsView.h in Headers */,
 				2EB8FE4D1D95685100E26BDF /* OLFrameOrderReviewViewController.h in Headers */,
+				2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */,
 				2EB8FDEB1D95685100E26BDF /* OLUserSession.h in Headers */,
 				2EB8FE0A1D95685100E26BDF /* OLInstagramImagePickerConstants.h in Headers */,
 				2EB8FE751D95685100E26BDF /* NSArray+QueryingExtras.h in Headers */,
@@ -2306,6 +2313,7 @@
 				2E451E391D9555870080F1C1 /* OLImagePickerPageViewController.m in Sources */,
 				2E451E0A1D9555860080F1C1 /* OLFacebookImage.m in Sources */,
 				2E451E291D9555870080F1C1 /* OLCircleMaskCollectionViewCell.m in Sources */,
+				2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */,
 				2E451E691D955B1F0080F1C1 /* qrspec.c in Sources */,
 				2E451DD91D9555540080F1C1 /* OLAddressSearchRequest.m in Sources */,
 				2E451E461D9555D30080F1C1 /* OLPackProductViewController.m in Sources */,
