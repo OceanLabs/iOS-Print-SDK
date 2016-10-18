@@ -29,14 +29,13 @@
 
 
 #import "OLInfoBanner.h"
+#import "OLKiteABTesting.h"
 
 @implementation OLInfoBanner
 
 + (OLInfoBanner *)showInfoBannerOnViewController:(UIViewController *)vc withTitle:(NSString *)title{
     OLInfoBanner *banner = [[OLInfoBanner alloc] init];
     [vc.view addSubview:banner];
-    
-    banner.backgroundColor = [UIColor colorWithRed:1.000 green:0.776 blue:0.043 alpha:0.900];
     
     UILabel *label = [[UILabel alloc] init];
     label.text = title;
@@ -47,6 +46,18 @@
     
     UIImageView *x = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"x"]];
     [banner addSubview:x];
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeColor4){
+        banner.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor4;
+        label.textColor = [UIColor whiteColor];
+        x.tintColor = [UIColor whiteColor];
+    }
+    else{
+        banner.backgroundColor = [UIColor colorWithRed:1.000 green:0.776 blue:0.043 alpha:0.900];
+        label.textColor = [UIColor blackColor];
+        x.tintColor = [UIColor blackColor];
+    }
+    
     
     banner.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *views = NSDictionaryOfVariableBindings(banner);
