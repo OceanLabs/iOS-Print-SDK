@@ -212,7 +212,7 @@ CGFloat OLImagePickerMargin = 1.5;
         OLRemoteImageView *imageView = [cell viewWithTag:10];
         [self setAssetOfCollection:self.provider.collections[self.showingCollectionIndex] withIndex:indexPath.item toImageView:imageView forCollectionView:collectionView];
         
-        UIImageView *checkmark = [cell viewWithTag:20];
+        UIView *checkmark = [cell viewWithTag:20];
         id asset = [self assetForIndexPath:indexPath];
         OLAsset *printPhoto;
         if ([asset isKindOfClass:[PHAsset class]]){
@@ -225,6 +225,10 @@ CGFloat OLImagePickerMargin = 1.5;
         }
         else if ([asset isKindOfClass:[OLAsset class]]){
             printPhoto = asset;
+        }
+        
+        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+            checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
         }
         
         if ([self.imagePicker.selectedAssets containsObject:printPhoto]){

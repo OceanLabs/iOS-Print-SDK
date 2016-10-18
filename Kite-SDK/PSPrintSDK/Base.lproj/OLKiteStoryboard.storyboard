@@ -218,7 +218,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="reviewCell" id="eUq-Fo-Fq9">
-                                <rect key="frame" x="28" y="0.0" width="320" height="351"/>
+                                <rect key="frame" x="27.5" y="0.0" width="320" height="351"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="351"/>
@@ -273,7 +273,7 @@
                                 <size key="customSize" width="320" height="351"/>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="calendarCell" id="gx7-0Z-9Be">
-                                <rect key="frame" x="28" y="361" width="320" height="351"/>
+                                <rect key="frame" x="27.5" y="361" width="320" height="351"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="351"/>
@@ -909,7 +909,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="paymentMethodCell" id="gW4-CV-EdQ">
-                                        <rect key="frame" x="-56" y="20" width="486" height="50"/>
+                                        <rect key="frame" x="-55.5" y="20" width="486" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="486" height="50"/>
@@ -1780,7 +1780,7 @@ an image!</string>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="reviewPhotoCell" id="miU-dY-0if" customClass="OLCircleMaskCollectionViewCell">
-                                <rect key="frame" x="28" y="0.0" width="320" height="351"/>
+                                <rect key="frame" x="27.5" y="0.0" width="320" height="351"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="351"/>
@@ -1869,7 +1869,7 @@ an image!</string>
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="doubleSidedCell" id="fNu-ug-MXq" customClass="OLCircleMaskCollectionViewCell">
-                                <rect key="frame" x="28" y="361" width="320" height="350"/>
+                                <rect key="frame" x="27.5" y="361" width="320" height="350"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="350"/>
@@ -1920,7 +1920,7 @@ an image!</string>
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="calendarCell" id="q80-DG-uFC" customClass="OLCircleMaskCollectionViewCell">
-                                <rect key="frame" x="28" y="721" width="320" height="500"/>
+                                <rect key="frame" x="27.5" y="721" width="320" height="500"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="500"/>
@@ -1982,7 +1982,7 @@ an image!</string>
         <scene sceneID="VME-6Y-RI6">
             <objects>
                 <collectionViewController storyboardIdentifier="OLTypeSelectionViewController" id="IOx-76-Eqt" customClass="OLProductTypeSelectionViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="w1o-j0-lQ5">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="w1o-j0-lQ5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2566,10 +2566,10 @@ an image!</string>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="imageCell" rowHeight="380" id="hbJ-Kj-T6r">
-                                        <rect key="frame" x="0.0" y="22" width="375" height="380"/>
+                                        <rect key="frame" x="0.0" y="22" width="1000" height="380"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hbJ-Kj-T6r" id="R1j-3j-X8t">
-                                            <frame key="frameInset" width="375" height="380"/>
+                                            <frame key="frameInset" width="1000" height="380"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hdM-b0-kDg"/>
@@ -2605,7 +2605,7 @@ an image!</string>
         <scene sceneID="kFc-fy-yh6">
             <objects>
                 <collectionViewController storyboardIdentifier="OLPosterViewController" id="AaA-7l-tb4" customClass="OLPosterViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" dataMode="prototypes" id="LuI-LA-fpj">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="LuI-LA-fpj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3014,14 +3014,31 @@ only £9.99 £8.99</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lKK-jW-goJ" customClass="OLRemoteImageView"/>
-                                                <imageView hidden="YES" userInteractionEnabled="NO" tag="20" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="ODa-xv-TgQ"/>
+                                                <view tag="20" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ive-Yt-wHF">
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OLCheckmarkBg" translatesAutoresizingMaskIntoConstraints="NO" id="ODa-xv-TgQ"/>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OLCheckmark" translatesAutoresizingMaskIntoConstraints="NO" id="sBl-6c-JhD"/>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <color key="tintColor" red="0.0" green="0.58431372550000005" blue="0.83529411760000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="sBl-6c-JhD" secondAttribute="trailing" id="4Ga-i5-Zzs"/>
+                                                        <constraint firstAttribute="bottom" secondItem="ODa-xv-TgQ" secondAttribute="bottom" id="F4S-ct-E8W"/>
+                                                        <constraint firstAttribute="trailing" secondItem="ODa-xv-TgQ" secondAttribute="trailing" id="JnC-rS-oeS"/>
+                                                        <constraint firstItem="sBl-6c-JhD" firstAttribute="top" secondItem="ive-Yt-wHF" secondAttribute="top" id="KpS-wt-DiX"/>
+                                                        <constraint firstItem="sBl-6c-JhD" firstAttribute="leading" secondItem="ive-Yt-wHF" secondAttribute="leading" id="LjO-Ak-ehW"/>
+                                                        <constraint firstItem="ODa-xv-TgQ" firstAttribute="top" secondItem="ive-Yt-wHF" secondAttribute="top" id="Tc8-Px-LBa"/>
+                                                        <constraint firstAttribute="bottom" secondItem="sBl-6c-JhD" secondAttribute="bottom" id="evC-E1-U3O"/>
+                                                        <constraint firstItem="ODa-xv-TgQ" firstAttribute="leading" secondItem="ive-Yt-wHF" secondAttribute="leading" id="rxY-dA-Ag0"/>
+                                                    </constraints>
+                                                </view>
                                             </subviews>
                                         </view>
                                         <constraints>
                                             <constraint firstItem="lKK-jW-goJ" firstAttribute="top" secondItem="30V-eL-baD" secondAttribute="top" id="HsV-tJ-5iL"/>
-                                            <constraint firstItem="ODa-xv-TgQ" firstAttribute="trailing" secondItem="lKK-jW-goJ" secondAttribute="trailing" constant="-5" id="Qip-ND-scX"/>
+                                            <constraint firstAttribute="trailing" secondItem="ive-Yt-wHF" secondAttribute="trailing" constant="5" id="Xle-yj-0cD"/>
+                                            <constraint firstAttribute="bottom" secondItem="ive-Yt-wHF" secondAttribute="bottom" constant="5" id="c5H-5O-PUS"/>
                                             <constraint firstAttribute="trailing" secondItem="lKK-jW-goJ" secondAttribute="trailing" id="h9H-kQ-eEi"/>
-                                            <constraint firstItem="ODa-xv-TgQ" firstAttribute="bottom" secondItem="lKK-jW-goJ" secondAttribute="bottom" constant="-5" id="jSF-El-b1Y"/>
                                             <constraint firstItem="lKK-jW-goJ" firstAttribute="leading" secondItem="30V-eL-baD" secondAttribute="leading" id="tjC-Zg-Sku"/>
                                             <constraint firstAttribute="bottom" secondItem="lKK-jW-goJ" secondAttribute="bottom" id="zey-3P-SVp"/>
                                         </constraints>
@@ -3452,6 +3469,8 @@ only £9.99 £8.99</string>
     </scenes>
     <resources>
         <image name="OL-tick" width="12" height="9"/>
+        <image name="OLCheckmark" width="31" height="31"/>
+        <image name="OLCheckmarkBg" width="31" height="31"/>
         <image name="airplane" width="17" height="12"/>
         <image name="apple-pay-method" width="45" height="29"/>
         <image name="basket-button-pressed" width="22" height="41"/>
@@ -3459,7 +3478,6 @@ only £9.99 £8.99</string>
         <image name="button_arrow_down" width="45" height="45"/>
         <image name="button_arrow_up" width="45" height="45"/>
         <image name="card" width="16" height="11"/>
-        <image name="checkmark" width="31" height="31"/>
         <image name="details-arrow" width="8" height="5"/>
         <image name="dropshadow" width="375" height="3"/>
         <image name="envelope" width="14" height="9"/>
