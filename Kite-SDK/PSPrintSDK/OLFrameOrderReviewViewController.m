@@ -258,12 +258,24 @@ CGFloat innerMargin = 3;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (collectionView.tag == 10){
-        NSInteger numberOfPhotosPerFrame = self.product.productTemplate.templateUI == OLTemplateUIFrame ? self.product.quantityToFulfillOrder : (self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY != 0 ? self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY : 4);
-        int incompleteFrame = ([self.framePhotos count] % numberOfPhotosPerFrame) != 0 ? 1 : 0;
-        return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
+        if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+            NSInteger numberOfPhotosPerFrame =  self.product.quantityToFulfillOrder;
+            int incompleteFrame = ([self.framePhotos count] % numberOfPhotosPerFrame) != 0 ? 1 : 0;
+            return [self.framePhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
+        }
+        else{
+            NSInteger numberOfPhotosPerFrame = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
+            return self.product.quantityToFulfillOrder / numberOfPhotosPerFrame;
+            
+        }
     }
     else{
-        return self.product.quantityToFulfillOrder;
+        if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
+            return self.product.quantityToFulfillOrder;
+        }
+        else{
+            return self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
+        }
     }
 }
 
@@ -378,7 +390,7 @@ CGFloat innerMargin = 3;
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
         CGSize size = self.view.frame.size;
-        CGFloat height = self.product.productTemplate.templateUI == OLTemplateUIFrame ? 351 : 427;
+        CGFloat height = self.product.productTemplate.templateUI == OLTemplateUIFrame ? 351 : 435;
         if (MIN(size.height, size.width) == 320){
             float scaleFactorH = (MIN(self.view.frame.size.width, self.view.frame.size.height)-20) / 320.0;
             return CGSizeMake(320 * scaleFactorH, height * scaleFactorH);
@@ -386,7 +398,7 @@ CGFloat innerMargin = 3;
         return CGSizeMake(320, height);
     }
     else{
-        CGFloat photosPerRow = sqrt(self.product.quantityToFulfillOrder);
+        CGFloat photosPerRow = self.product.productTemplate.templateUI == OLTemplateUIFrame ? sqrt(self.product.quantityToFulfillOrder) : self.product.productTemplate.gridCountX;
 
         return CGSizeMake(
                           (collectionView.frame.size.width - innerMargin * (photosPerRow-1.0)) / photosPerRow,

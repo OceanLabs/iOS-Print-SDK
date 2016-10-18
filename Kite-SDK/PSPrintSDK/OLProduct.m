@@ -120,6 +120,9 @@ typedef enum {
     if (self.productTemplate.templateUI == OLTemplateUIPhotobook){
         return self.productTemplate.productRepresentation.numberOfPhotos;
     }
+    if (self.productTemplate.templateUI == OLTemplateUICalendar){
+        return self.productTemplate.gridCountX * self.productTemplate.gridCountY * 12;
+    }
     return MAX(self.productTemplate.quantityPerSheet, 1);
 }
 
