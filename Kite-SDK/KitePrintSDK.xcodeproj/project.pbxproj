@@ -203,6 +203,7 @@
 		2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */; };
 		2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */; };
 		2E7D39731DAE39820046D255 /* OLImageRenderOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */; };
+		2E88A21C1DB0EED600732F4B /* CustomImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */; };
 		2E898CCB1CC518180041CCD8 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
 		2E898CCC1CC518180041CCD8 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */; };
 		2E898CCE1CC518180041CCD8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0151C7B2237009C1E42 /* QuartzCore.framework */; };
@@ -432,6 +433,8 @@
 		2EB8FE861D95692000E26BDF /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2EB8FE881D95692000E26BDF /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
+		2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */; };
+		2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
 		2ED42EC11D9D79E3003B9AD0 /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC41D2FC109002F5F74 /* bitstream.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
@@ -650,6 +653,8 @@
 		2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCollectionViewController.m; sourceTree = "<group>"; };
 		2E884F441D37B566007CA45A /* OLImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerViewController.h; sourceTree = "<group>"; };
 		2E884F451D37B566007CA45A /* OLImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerViewController.m; sourceTree = "<group>"; };
+		2E88A21A1DB0EED600732F4B /* CustomImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomImagePickerViewController.h; sourceTree = "<group>"; };
+		2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomImagePickerViewController.m; sourceTree = "<group>"; };
 		2E898CEA1CC518180041CCD8 /* Kite-CI-Deploy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kite-CI-Deploy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E898F851BE37F9B00739F5A /* OLProductTemplateOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOption.h; sourceTree = "<group>"; };
 		2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOption.m; sourceTree = "<group>"; };
@@ -759,6 +764,8 @@
 		2EB919941D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPageBlankContentViewController.m; sourceTree = "<group>"; };
 		2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloader.h; sourceTree = "<group>"; };
 		2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloader.m; sourceTree = "<group>"; };
+		2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPlaceholderAsset.h; sourceTree = "<group>"; };
+		2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPlaceholderAsset.m; sourceTree = "<group>"; };
 		2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLDocsObjcExampleCodeTests.m; sourceTree = "<group>"; };
 		2ED36B381C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+RequestParameterData.h"; path = "PSPrintSDK/Categories/NSDictionary+RequestParameterData.h"; sourceTree = "<group>"; };
 		2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+RequestParameterData.m"; path = "PSPrintSDK/Categories/NSDictionary+RequestParameterData.m"; sourceTree = "<group>"; };
@@ -1127,6 +1134,8 @@
 				2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */,
 				2E23EB991D5091FC00E2BF42 /* CI-ViewController.h */,
 				2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */,
+				2E88A21A1DB0EED600732F4B /* CustomImagePickerViewController.h */,
+				2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */,
 				2E5E2D5C1D8ADC2F00D9B1B2 /* KiteCI-Info.plist */,
 			);
 			name = Private;
@@ -1709,6 +1718,8 @@
 				2E36A1E11D420CDA00EA2F0F /* OLImagePickerProviderCollection.m */,
 				2E0804B61C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.h */,
 				2E0804B71C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.m */,
+				2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */,
+				2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */,
 			);
 			name = Asset;
 			sourceTree = "<group>";
@@ -1833,6 +1844,7 @@
 				2EB8FDD51D95685100E26BDF /* OLBaseRequest.h in Headers */,
 				2EB8FE391D95685100E26BDF /* OLEditingToolsView.h in Headers */,
 				2EB8FE4D1D95685100E26BDF /* OLFrameOrderReviewViewController.h in Headers */,
+				2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */,
 				2EB8FDEB1D95685100E26BDF /* OLUserSession.h in Headers */,
 				2EB8FE0A1D95685100E26BDF /* OLInstagramImagePickerConstants.h in Headers */,
 				2EB8FE751D95685100E26BDF /* NSArray+QueryingExtras.h in Headers */,
@@ -2317,6 +2329,7 @@
 				2E451E391D9555870080F1C1 /* OLImagePickerPageViewController.m in Sources */,
 				2E451E0A1D9555860080F1C1 /* OLFacebookImage.m in Sources */,
 				2E451E291D9555870080F1C1 /* OLCircleMaskCollectionViewCell.m in Sources */,
+				2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */,
 				2E451E691D955B1F0080F1C1 /* qrspec.c in Sources */,
 				2E451DD91D9555540080F1C1 /* OLAddressSearchRequest.m in Sources */,
 				2E451E461D9555D30080F1C1 /* OLPackProductViewController.m in Sources */,
@@ -2445,6 +2458,7 @@
 				2E9A77361DA683FE00A50C4D /* PrintOrderHistoryViewController.m in Sources */,
 				2E9A77371DA683FE00A50C4D /* CI-ViewController.m in Sources */,
 				2E9A77391DA684FB00A50C4D /* main.m in Sources */,
+				2E88A21C1DB0EED600732F4B /* CustomImagePickerViewController.m in Sources */,
 				2E9A77351DA683FE00A50C4D /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2538,7 +2552,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = 6.0.0;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
@@ -2569,7 +2583,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 6.0.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";

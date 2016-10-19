@@ -403,7 +403,7 @@ static NSOperationQueue *imageOperationQueue;
             [imageManager requestImageForAsset:self.phAsset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
                 if (image){
                     if (applyEdits){
-                        [self resizeImage:image size:size applyEdits:YES completion:^(UIImage *image){
+                        [self resizeImage:image size:size applyEdits:applyEdits completion:^(UIImage *image){
                             if (!fullResolution){
                                 self.cachedEditedImage = image;
                             }
@@ -425,7 +425,7 @@ static NSOperationQueue *imageOperationQueue;
             }];
         }
         else if (self.assetType == kOLAssetTypeImageData){
-            [self resizeImage:[UIImage imageWithData:self.imageData] size:size applyEdits:YES completion:^(UIImage *image){
+            [self resizeImage:[UIImage imageWithData:self.imageData] size:size applyEdits:applyEdits completion:^(UIImage *image){
                 if (!fullResolution){
                     self.cachedEditedImage = image;
                 }
@@ -434,7 +434,7 @@ static NSOperationQueue *imageOperationQueue;
         }
         else if (self.assetType == kOLAssetTypeImageFilePath){
             NSData *imageData = [NSData dataWithContentsOfFile:self.imageFilePath options:0 error:nil];
-            [self resizeImage:[UIImage imageWithData:imageData] size:size applyEdits:YES completion:^(UIImage *image){
+            [self resizeImage:[UIImage imageWithData:imageData] size:size applyEdits:applyEdits completion:^(UIImage *image){
                 if (!fullResolution){
                     self.cachedEditedImage = image;
                 }
@@ -447,7 +447,7 @@ static NSOperationQueue *imageOperationQueue;
                     progress(MAX(0.05f, (float)currentProgress / (float) total));
                 }
             }withCompletionHandler:^(UIImage *image, NSError *error){
-                [self resizeImage:image size:size applyEdits:YES completion:^(UIImage *image){
+                [self resizeImage:image size:size applyEdits:applyEdits completion:^(UIImage *image){
                     if (!error) {
                         if (!fullResolution){
                             self.cachedEditedImage = image;
@@ -462,7 +462,7 @@ static NSOperationQueue *imageOperationQueue;
         }
         else if (self.assetType == kOLAssetTypeDataSource){
             [self.dataSource dataWithCompletionHandler:^(NSData *data, NSError *error){
-                [self resizeImage:[UIImage imageWithData:data] size:size applyEdits:YES completion:^(UIImage *image){
+                [self resizeImage:[UIImage imageWithData:data] size:size applyEdits:applyEdits completion:^(UIImage *image){
                     if (!fullResolution){
                         self.cachedEditedImage = image;
                     }

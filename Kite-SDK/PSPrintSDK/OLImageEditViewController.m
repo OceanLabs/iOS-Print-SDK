@@ -40,6 +40,8 @@
 #import "OLProductTemplateOption.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteABTesting.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "NSObject+Utils.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -82,8 +84,11 @@ const NSInteger kOLEditTagCrop = 40;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 
 @property (weak, nonatomic) OLProductTemplateOption *selectedOption;
-
 @property (strong, nonatomic) UITextField *borderTextField;
+@property (assign, nonatomic) BOOL animating;
+
+@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
+@property (strong, nonatomic) UIViewController *presentedVc;
 
 @end
 
@@ -1082,10 +1087,11 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Actions
 
 - (IBAction)onButtonHorizontalFlipClicked:(id)sender {
-    if (self.cropView.isCorrecting){
+    if (self.cropView.isCorrecting || self.animating){
         return;
     }
     
+    self.animating = YES;
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
         [self.activeTextField hideButtons];
@@ -1098,16 +1104,19 @@ const NSInteger kOLEditTagCrop = 40;
         
         [self.cropView setImage:[UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]]];
         
-    }completion:NULL];
+    }completion:^(BOOL finished){
+        self.animating = NO;
+    }];
     
     self.ctaButton.enabled = YES;
 }
 
 - (IBAction)onButtonRotateClicked:(id)sender {
-    if (self.cropView.isCorrecting){
+    if (self.cropView.isCorrecting || self.animating){
         return;
     }
     
+    self.animating = YES;
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
         [self.activeTextField hideButtons];
@@ -1168,6 +1177,8 @@ const NSInteger kOLEditTagCrop = 40;
         
         [(UIBarButtonItem *)sender setEnabled:YES];
         self.ctaButton.enabled = YES;
+        
+        self.animating = NO;
     }];
 }
 
@@ -1186,6 +1197,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     sender.selected = YES;
     [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *textField in self.textFields){
+            textField.alpha = 0;
+        }
         for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 1;
             [view.superview bringSubviewToFront:view];
@@ -1205,6 +1219,9 @@ const NSInteger kOLEditTagCrop = 40;
         [self.printContainerView bringSubviewToFront:view];
     }
     [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *textField in self.textFields){
+            textField.alpha = 1;
+        }
         for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 0;
         }
@@ -1768,11 +1785,33 @@ const NSInteger kOLEditTagCrop = 40;
     vc.selectedAssets = [[NSMutableArray alloc] init];
     vc.maximumPhotos = 1;
     vc.product = self.product;
-    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+    
+    [vc.view class]; //Force viewDidLoad
+    if (vc.providers.count == 2 && vc.providers.lastObject.providerType == OLImagePickerProviderTypeViewController){
+        //Skip the image picker and only show the custom vc
+        self.vcDelegateForCustomVc = vc; //Keep strong reference
+        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)vc.providers.lastObject vc];
+        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+        
+        [self presentViewController:customVc animated:YES completion:NULL];
+        self.presentedVc = customVc;
+        return;
+    }
+    else{
+        [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+    }
 }
 
 - (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
-    [vc dismissViewControllerAnimated:YES completion:NULL];
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
@@ -1797,10 +1836,19 @@ const NSInteger kOLEditTagCrop = 40;
         [self loadImageFromAsset];
     }
     
-    [vc dismissViewControllerAnimated:YES completion:NULL];
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
 }
 
 - (void)loadImageFromAsset{
+    self.cropView.imageView.image = nil;
     __weak OLImageEditViewController *welf = self;
     [self.asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
         dispatch_async(dispatch_get_main_queue(), ^{

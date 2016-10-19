@@ -44,15 +44,10 @@
 @import PassKit;
 
 @interface OLKitePrintSDK (Private)
-
-+(NSString *)appleMerchantID;
-
++ (NSString *)appleMerchantID;
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
 + (NSString *) instagramClientID;
-
-+ (BOOL)QRCodeUploadEnabled;
-
 @end
 
 @interface OLKiteViewController (Private)
@@ -84,7 +79,7 @@
 }
 
 + (BOOL)qrCodeUploadEnabled {
-    return [OLKitePrintSDK QRCodeUploadEnabled];
+    return [OLUserSession currentSession].kiteVc.qrCodeUploadEnabled;
 }
 
 + (BOOL)facebookEnabled{
@@ -184,7 +179,7 @@
     else if (templateUI == OLTemplateUIPoster){
         return @"OLPosterViewController";
     }
-    else if (templateUI == OLTemplateUIFrame){
+    else if (templateUI == OLTemplateUIFrame || templateUI == OLTemplateUICalendar){
         return @"FrameOrderReviewViewController";
     }
     else{

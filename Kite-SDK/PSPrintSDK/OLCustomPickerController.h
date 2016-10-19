@@ -25,6 +25,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "OLCustomImagePickerViewControllerDelegate.h"
 
 
 @protocol OLCustomPickerController

@@ -64,6 +64,8 @@ static NSString *const kKeyUpsellOffers = @"co.oceanlabs.pssdk.kKeyUpsellOffers"
 static NSString *const kKeyShortDescription = @"co.oceanlabs.pssdk.kKeyShortDescription";
 static NSString *const kKeyCollectionName = @"co.oceanlabs.pssdk.kKeyCollectionName";
 static NSString *const kKeyCollectionId = @"co.oceanlabs.pssdk.kKeyCollectionId";
+static NSString *const kKeyRepresentationAssets = @"co.oceanlabs.pssdk.kKeyRepresentationAssets";
+static NSString *const kKeyLogo = @"co.oceanlabs.pssdk.kKeyLogo";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -360,12 +362,6 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"PHONE_CASE"]){
         return OLTemplateUICase;
     }
-//    else if ([identifier isEqualToString:@"APPAREL"]){
-//        return kOLTemplateUIApparel;
-//    }
-//    else if ([identifier isEqualToString:@"POSTCARD"]){
-//        return kOLTemplateUIPostcard;
-//    }
     else if ([identifier isEqualToString:@"PHOTOBOOK"]){
         return OLTemplateUIPhotobook;
     }
@@ -374,6 +370,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     }
     else if ([identifier isEqualToString:@"DOUBLESIDED"]){
         return OLTemplateUIDoubleSided;
+    }
+    else if ([identifier isEqualToString:@"CALENDAR"]){
+        return OLTemplateUICalendar;
     }
     return OLTemplateUINA;
 }
@@ -411,6 +410,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeObject:self.shortDescription forKey:kKeyShortDescription];
     [aCoder encodeObject:self.collectionId forKey:kKeyCollectionId];
     [aCoder encodeObject:self.collectionName forKey:kKeyCollectionName];
+    [aCoder encodeObject:self.representationAssets forKey:kKeyRepresentationAssets];
+    [aCoder encodeObject:self.logo forKey:kKeyLogo];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -446,6 +447,8 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         self.shortDescription = [aDecoder decodeObjectForKey:kKeyShortDescription];
         self.collectionName = [aDecoder decodeObjectForKey:kKeyCollectionName];
         self.collectionId = [aDecoder decodeObjectForKey:kKeyCollectionId];
+        self.representationAssets = [aDecoder decodeObjectForKey:kKeyRepresentationAssets];
+        self.logo = [aDecoder decodeObjectForKey:kKeyLogo];
     }
     
     return self;

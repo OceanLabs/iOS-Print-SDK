@@ -40,7 +40,7 @@
 @implementation OLRemoteImageView
 
 - (void)initializeViews{
-    self.loadingView = [[OLCircularProgressView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    self.loadingView = [[OLCircularProgressView alloc] initWithFrame:CGRectMake(10, 10, 20, 20)];
     self.loadingView.innerTintColor = [UIColor lightGrayColor];
     self.loadingView.trackTintColor = [UIColor lightGrayColor];
     self.loadingView.progressTintColor = [UIColor whiteColor];

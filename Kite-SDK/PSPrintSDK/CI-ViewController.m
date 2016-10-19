@@ -41,6 +41,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLImageCachingManager.h"
 #import "OLUserSession.h"
 #import "OLImagePickerViewController.h"
+#import "CustomImagePickerViewController.h"
 
 @import Photos;
 
@@ -148,8 +149,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     BOOL shouldOfferAPIChange = YES;
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     
-    [OLKitePrintSDK setQRCodeUploadEnabled:YES];
-    
     if (!([pasteboard containsPasteboardTypes: [NSArray arrayWithObject:@"public.utf8-plain-text"]] && pasteboard.string.length == 40)) {
         shouldOfferAPIChange = NO;
     }
@@ -167,6 +166,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets info:@{}];
             vc.userEmail = @"";
             vc.userPhone = @"";
+            vc.qrCodeUploadEnabled = YES;
             vc.delegate = self;
             
             [self addCatsAndDogsImagePickersToKite:vc];
@@ -182,6 +182,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
             vc.userEmail = @"";
             vc.userPhone = @"";
+            vc.qrCodeUploadEnabled = YES;
             vc.delegate = self;
             
             [self addCatsAndDogsImagePickersToKite:vc];
@@ -198,6 +199,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
             vc.userEmail = @"";
             vc.userPhone = @"";
+            vc.qrCodeUploadEnabled = YES;
             vc.delegate = self;
             
             [self addCatsAndDogsImagePickersToKite:vc];
@@ -218,8 +220,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         vc.userEmail = @"";
         vc.userPhone = @"";
         vc.delegate = self;
+        vc.qrCodeUploadEnabled = YES;
        
         [self addCatsAndDogsImagePickersToKite:vc];
+        
+        [vc addCustomPhotoProviderWithViewController:[[CustomImagePickerViewController alloc] init] name:@"Custom" icon:[UIImage imageNamed:@"cat"]];
         
         [self presentViewController:vc animated:YES completion:NULL];
     }

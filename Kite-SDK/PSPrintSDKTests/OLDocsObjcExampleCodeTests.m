@@ -89,7 +89,7 @@
         }];
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
 /**
@@ -150,7 +150,7 @@
         }];
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
 /**
@@ -211,7 +211,7 @@
         }];
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
 /**
@@ -273,7 +273,7 @@
         }];
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
 /**
@@ -333,7 +333,7 @@
         }];
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
 - (void)testSiteExamplePostcard{
@@ -387,7 +387,7 @@
         }];
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
 #pragma mark Address Search Tests

@@ -69,8 +69,6 @@
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (assign, nonatomic) CGSize rotationSize;
 
-@property (strong, nonatomic) NSMutableArray<OLImagePickerProvider *> *providers;
-
 @property (strong, nonatomic) NSArray<OLAsset *> *originalSelectedAssets;
 @property (strong, nonatomic) UIView *selectedProviderIndicator;
 
@@ -176,7 +174,8 @@
     
     self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     view = self.visualEffectView;
-    [self.sourcesCollectionView.superview insertSubview:view belowSubview:self.sourcesCollectionView];
+    [self.sourcesCollectionView.superview addSubview:view];
+    [self.sourcesCollectionView.superview sendSubviewToBack:view];
     
     view.translatesAutoresizingMaskIntoConstraints = NO;
     views = NSDictionaryOfVariableBindings(view);
@@ -191,12 +190,6 @@
     }
     
     [view.superview addConstraints:con];
-    
-    view.clipsToBounds = NO;
-    view.layer.shadowColor = [[UIColor blackColor] CGColor];
-    view.layer.shadowOpacity = .3;
-    view.layer.shadowOffset = CGSizeMake(0, 1);
-    view.layer.shadowRadius = 2;
     
     self.selectedProviderIndicator = [[UIView alloc] init];
     self.selectedProviderIndicator.backgroundColor = self.sourcesCollectionView.tintColor;
@@ -484,7 +477,7 @@
 }
 
 -(NSUInteger) totalNumberOfExtras{
-    if (self.product.productTemplate.templateUI == OLTemplateUIFrame || self.product.productTemplate.templateUI == OLTemplateUIPoster || self.product.productTemplate.templateUI == OLTemplateUIPhotobook){
+    if (self.product.productTemplate.templateUI == OLTemplateUIFrame || self.product.productTemplate.templateUI == OLTemplateUICalendar || self.product.productTemplate.templateUI == OLTemplateUIPoster || self.product.productTemplate.templateUI == OLTemplateUIPhotobook){
         return 0;
     }
     
@@ -589,7 +582,12 @@
         }
     }
     [self reloadPageController];
-    [picker dismissViewControllerAnimated:YES completion:NULL];
+    if ([[self.nextButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].firstObject isEqualToString:@"onButtonNextClicked:"]){
+        [picker dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [self onButtonDoneTapped:nil];
+    }
 }
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
@@ -672,14 +670,17 @@
 - (BOOL)shouldGoToOrderPreview {
     NSString *errorMessage;
     if (self.selectedAssets.count == 0){
-        errorMessage = NSLocalizedString(@"Please select some images.", @"");
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please select some images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    }
+    else if (self.selectedAssets.count < self.minimumPhotos && self.minimumPhotos == self.maximumPhotos){
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.minimumPhotos];
     }
     else if (self.selectedAssets.count < self.minimumPhotos){
-        errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Please select at least %d images.", @""), self.minimumPhotos];
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select at least %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.minimumPhotos];
     }
     if (errorMessage) {
-        UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Oops!", @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
-        [av addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
+        UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
+        [av addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
         [self presentViewController:av animated:YES completion:NULL];
         return NO;
     }
