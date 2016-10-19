@@ -60,7 +60,7 @@ static char tasksKey;
     }
     
     if (size.height == 0 || size.width == 0){
-        size = CGSizeMake(self.frame.size.width * [UIScreen mainScreen].scale, self.frame.size.height * [UIScreen mainScreen].scale);
+        size = [UIScreen mainScreen].bounds.size;
     }
     
     self.alpha = 0;
@@ -81,7 +81,7 @@ static char tasksKey;
             [self.tasks removeObjectForKey:url];
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                UIImage *resizedImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+                UIImage *resizedImage = [image shrinkToSize:size forScreenScale:[OLUserSession currentSession].screenScale aspectFit:self.contentMode == UIViewContentModeScaleAspectFit];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.image = resizedImage;
                     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{

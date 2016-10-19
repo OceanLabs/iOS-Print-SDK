@@ -76,7 +76,17 @@
 }
 
 - (UIImage *)shrinkToSize:(CGSize)size forScreenScale:(CGFloat)screenScale{
-    CGFloat scaleFactor = (MAX(size.width, size.height) * screenScale) / MIN(self.size.height, self.size.width);
+    return [self shrinkToSize:size forScreenScale:screenScale aspectFit:NO];
+}
+
+- (UIImage *)shrinkToSize:(CGSize)size forScreenScale:(CGFloat)screenScale aspectFit:(BOOL)aspectFit{
+    CGFloat scaleFactor;
+    if(aspectFit){
+        scaleFactor = (MAX(size.width, size.height) * screenScale) / MAX(self.size.height, self.size.width);
+    }
+    else{
+        scaleFactor = (MAX(size.width, size.height) * screenScale) / MIN(self.size.height, self.size.width);
+    }
     
     if (scaleFactor >= 1){
         return self;

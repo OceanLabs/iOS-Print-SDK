@@ -33,5 +33,5 @@
 
 - (UIColor *)colorAtPixel:(CGPoint)point;
 - (UIImage *)shrinkToSize:(CGSize)size forScreenScale:(CGFloat)screenScale;
-
+- (UIImage *)shrinkToSize:(CGSize)size forScreenScale:(CGFloat)screenScale aspectFit:(BOOL)aspectFit;
 @end
