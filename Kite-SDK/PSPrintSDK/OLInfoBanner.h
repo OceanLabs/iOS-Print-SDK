@@ -38,7 +38,7 @@
 
 @interface OLInfoBanner : UIView
 
-@property (strong, nonatomic) id<OLInfoBannerDelegate> delegate;
+@property (weak, nonatomic) id<OLInfoBannerDelegate> delegate;
 + (OLInfoBanner *)showInfoBannerOnViewController:(UIViewController *)vc withTitle:(NSString *)title;
 - (void)dismiss;
 
