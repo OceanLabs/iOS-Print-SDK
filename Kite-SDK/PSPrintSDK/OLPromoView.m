@@ -30,12 +30,47 @@
 #import "OLPromoView.h"
 #import "OLAsset.h"
 #import "OLKiteUtils.h"
+#import "OLImageRenderOptions.h"
+#import "UIImageView+FadeIn.h"
 
 @interface OLPromoView ()
 @property (strong, nonatomic) NSArray <OLAsset *>*assets;
+@property (strong, nonatomic) NSArray <NSString *>*templates;
+
+@property (strong, nonatomic) UIImageView *imageView;
+@end
+
+@interface OLAsset ()
+- (void)uploadToKiteWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSError *error))handler;
+- (NSURL *)imageRenderURLWithOptions:(OLImageRenderOptions *)options;
 @end
 
 @implementation OLPromoView
+
+- (instancetype)init{
+    if (self = [super init]){
+        UIImageView *imageView = [[UIImageView alloc] init];
+        self.imageView = imageView;
+        [self addSubview:self.imageView];
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
+                             @"V:|-0-[imageView]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [imageView.superview addConstraints:con];
+
+    }
+    
+    return self;
+}
 
 - (NSString *)tagline{
     if (!_tagline){
@@ -45,14 +80,36 @@
     return _tagline;
 }
 
-+ (void)requestPromoViewWithAssets:(NSArray <OLAsset *>*_Nullable)assets completionHandler:(void(^)(UIView *promoView))handler{
-    if (!handler){
+- (void)prepareRendersWithCompletionHandler:(void(^)(NSError *error))handler{
+    if (self.assets.count == 0 || self.templates.count == 0){
         return;
     }
+    
+    [self.assets.firstObject uploadToKiteWithProgress:NULL completionHandler:^(NSError *error){
+        if (error){
+            handler(error);
+        }
+        
+        OLImageRenderOptions *options = [[OLImageRenderOptions alloc] init];
+        options.productId = self.templates.firstObject;
+        options.variant = @"cover";
+        NSURL *url = [self.assets.firstObject imageRenderURLWithOptions:options];
+        [self.imageView setAndFadeInImageWithURL:url size:CGSizeMake(320, 100) placeholder:nil progress:NULL completionHandler:^{
+            if (handler){
+                handler(nil);
+            }
+        }];
+    }];
+}
+
++ (void)requestPromoViewWithAssets:(NSArray <OLAsset *>*_Nonnull)assets templates:(NSArray <NSString *>*_Nullable)templates completionHandler:(void(^ _Nonnull)(UIView *_Nullable promoView, NSError *_Nullable error))handler{
     OLPromoView *promoView = [[OLPromoView alloc] init];
     promoView.assets = assets;
+    promoView.templates = templates;
     
-    handler(promoView);
+    [promoView prepareRendersWithCompletionHandler:^(NSError *error){
+        handler(promoView, error);
+    }];
 }
 
 @end
