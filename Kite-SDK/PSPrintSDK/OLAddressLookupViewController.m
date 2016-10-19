@@ -33,24 +33,20 @@
 #import "OLCountryPickerController.h"
 #import "OLAddressEditViewController.h"
 #import "OLConstants.h"
-#ifdef COCOAPODS
-#import <SVProgressHUD/SVProgressHUD.h>
-#else
-#import "SVProgressHUD.h"
-#endif
+#import "OLProgressHUD.h"
 #import "OLKiteViewController.h"
 #import "OLKiteUtils.h"
 #import "OLKiteABTesting.h"
+#import "OLUserSession.h"
 
 //static const NSUInteger kMaxInFlightRequests = 5;
 
 @interface OLAddressLookupViewController () <UITextFieldDelegate, OLCountryPickerControllerDelegate,
-    UINavigationControllerDelegate, OLAddressSearchRequestDelegate, UISearchDisplayDelegate, UIGestureRecognizerDelegate, UISearchBarDelegate>
+    UINavigationControllerDelegate, OLAddressSearchRequestDelegate, UISearchResultsUpdating, UIGestureRecognizerDelegate, UISearchBarDelegate>
 @property (nonatomic, strong) OLCountry *country;
 @property (nonatomic, strong) UILabel *labelCountry;
-@property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (nonatomic, strong) UISearchBar *searchBar;
-@property (nonatomic, strong) NSArray/*<OLAddress>*/ *searchResults;
+@property (nonatomic, strong) NSArray<OLAddress *> *searchResults;
 
 @property (nonatomic, strong) UIAlertView *errorAlertView;
 
@@ -61,21 +57,11 @@
 @property (nonatomic, strong) NSString *queuedSearchQuery;
 @property (nonatomic, strong) OLCountry *queuedSearchCountry;
 
+@property (strong, nonatomic) UISearchController *searchController;
+
 @end
 
 @implementation OLAddressLookupViewController
-
-//- (BOOL)prefersStatusBarHidden {
-//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-//    
-//    if ([self respondsToSelector:@selector(traitCollection)]){
-//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-//            hidden |= YES;
-//        }
-//    }
-//    
-//    return hidden;
-//}
 
 - (id)init {
     if (self = [super initWithStyle:UITableViewStylePlain]) {
@@ -92,10 +78,16 @@
     self.searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, 320, 44)];
     self.searchBar.delegate = self;
     self.tableView.tableHeaderView = self.searchBar;
-    self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
-    self.searchController.searchResultsDataSource = self;
-    self.searchController.searchResultsDelegate = self;
-    self.searchController.delegate = self;
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    [self.searchController.searchBar sizeToFit];
+    
+    self.searchController.searchBar.delegate = self;
+    
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.definesPresentationContext = YES;
+
     
     // create the country picker
     // create the country picker button
@@ -149,7 +141,7 @@
     OLCountryPickerController *controller = [[OLCountryPickerController alloc] init];
     controller.delegate = self;
     controller.selected = @[self.country];
-    controller.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    controller.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:controller animated:YES completion:nil];
 }
 
@@ -218,8 +210,8 @@
     
     OLAddress *address = self.searchResults[indexPath.row];
     if (address.isSearchRequiredForFullDetails) {
-        [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
-        [SVProgressHUD showWithStatus:@"Fetching Address Details"];
+        [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
+        [OLProgressHUD showWithStatus:@"Fetching Address Details"];
         [self.inProgressRequest  cancelSearch];
         self.progressToEditViewControllerOnUniqueAddressResult = YES;
         OLAddressSearchRequest *req = [OLAddress searchForAddress:address delegate:self];
@@ -231,7 +223,7 @@
 
 #pragma mark - OLCountryControllerPicker methods
 
-- (void)countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray/*<OLCountry>*/ *)countries {
+- (void)countryPicker:(OLCountryPickerController *)picker didSucceedWithCountries:(NSArray<OLCountry *> *)countries {
     [self dismissViewControllerAnimated:YES completion:nil];
     if (self.country != countries.lastObject) {
         self.searchResults = @[]; // country has changed, clear the results as they're no longer applicable
@@ -248,7 +240,7 @@
 #pragma mark - OLAddressSearchRequestDelegate methods
 
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didSuceedWithMultipleOptions:(NSArray *)options {
-    [SVProgressHUD dismiss];
+    [OLProgressHUD dismiss];
     self.progressToEditViewControllerOnUniqueAddressResult = NO;
     self.inProgressRequest = nil;
     if (self.errorAlertView.isVisible) {
@@ -257,13 +249,12 @@
     
     self.searchResults = options;
     [self.tableView reloadData];
-    [self.searchController.searchResultsTableView reloadData];
     
     [self performQueuedAddressLookup];
 }
 
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didSuceedWithUniqueAddress:(OLAddress *)addr {
-    [SVProgressHUD dismiss];
+    [OLProgressHUD dismiss];
     self.inProgressRequest = nil;
     if (self.errorAlertView.isVisible) {
         return;
@@ -277,13 +268,12 @@
     
     self.searchResults = @[addr];
     [self.tableView reloadData];
-    [self.searchController.searchResultsTableView reloadData];
     
     [self performQueuedAddressLookup];
 }
 
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didFailWithError:(NSError *)error {
-    [SVProgressHUD dismiss];
+    [OLProgressHUD dismiss];
     self.progressToEditViewControllerOnUniqueAddressResult = NO;
     self.inProgressRequest = nil;
     if (self.errorAlertView.isVisible) {
@@ -296,55 +286,18 @@
 
 #pragma mark - UISearchBarDelegate methods
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    if (self.errorAlertView.isVisible) {
-        return;
-    }
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
+{
+    NSString *searchString = searchController.searchBar.text;
     
-    if (searchText.length == 0) {
+    if (searchString.length == 0) {
         self.searchResults = @[];
         [self.tableView reloadData];
-        [self.searchController.searchResultsTableView reloadData];
         return;
     }
-    
-    self.queuedSearchQuery = searchText;
+    self.queuedSearchQuery = searchString;
     self.queuedSearchCountry = self.country;
     [self performQueuedAddressLookup];
 }
-
-#pragma mark - UISearchDisplayControllerDelegate methods
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller willShowSearchResultsTableView:(UITableView *)tableView {
-    self.showSectionHeader = NO;
-}
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView {
-    self.showSectionHeader = YES;
-    [self.tableView reloadData]; // ensure section header is reloaded appropriately
-}
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 @end

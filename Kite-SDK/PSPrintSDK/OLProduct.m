@@ -105,8 +105,8 @@ typedef enum {
         _selectedOptions = [[NSMutableDictionary alloc] init];
         
         OLProductTemplateOption *firstOption = [self.productTemplate.options firstObject];
-        if (firstOption.selections.count > 0){
-            _selectedOptions[firstOption.code] = firstOption.selections.firstObject;
+        if (firstOption.choices.count > 0){
+            _selectedOptions[firstOption.code] = firstOption.choices.firstObject.code;
         }
     }
     return _selectedOptions;
@@ -117,8 +117,11 @@ typedef enum {
 }
 
 -(NSUInteger)quantityToFulfillOrder{
-    if (self.productTemplate.templateUI == kOLTemplateUIPhotobook){
+    if (self.productTemplate.templateUI == OLTemplateUIPhotobook){
         return self.productTemplate.productRepresentation.numberOfPhotos;
+    }
+    if (self.productTemplate.templateUI == OLTemplateUICalendar){
+        return self.productTemplate.gridCountX * self.productTemplate.gridCountY * 12;
     }
     return MAX(self.productTemplate.quantityPerSheet, 1);
 }
@@ -286,7 +289,7 @@ typedef enum {
 }
 
 - (NSString *) packInfo{
-    if (self.productTemplate.templateUI == kOLTemplateUIFrame || self.productTemplate.templateUI == kOLTemplateUIPoster || self.productTemplate.templateUI == kOLTemplateUIPostcard || self.productTemplate.templateUI == kOLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
+    if (self.productTemplate.templateUI == OLTemplateUICalendar || self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUIPoster || self.productTemplate.templateUI == OLTemplateUIPostcard || self.productTemplate.templateUI == OLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
         return @"";
     }
     NSString* packOfString = NSLocalizedStringFromTableInBundle(NSLocalizedStringFromTableInBundle(@"Pack of", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
@@ -364,7 +367,7 @@ typedef enum {
     
     //Add size info
     OLTemplateUI templateClass = self.productTemplate.templateUI;
-    if (templateClass != kOLTemplateUICase){
+    if (templateClass != OLTemplateUICase){
         s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Size**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.dimensions]];
     }
     
@@ -403,7 +406,7 @@ typedef enum {
 }
 
 - (BOOL)isValidProductForUI{
-    return self.labelColor && self.productTemplate.templateUI != kOLTemplateUINA;
+    return self.labelColor && self.productTemplate.templateUI != OLTemplateUINA;
 }
 
 

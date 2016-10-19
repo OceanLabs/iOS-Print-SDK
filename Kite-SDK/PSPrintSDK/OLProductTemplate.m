@@ -62,6 +62,10 @@ static NSString *const kKeyGridCountY = @"co.oceanlabs.pssdk.kKeyGridCountY";
 static NSString *const kKeySupportedOptions = @"co.oceanlabs.pssdk.kKeySupportedOptions";
 static NSString *const kKeyUpsellOffers = @"co.oceanlabs.pssdk.kKeyUpsellOffers";
 static NSString *const kKeyShortDescription = @"co.oceanlabs.pssdk.kKeyShortDescription";
+static NSString *const kKeyCollectionName = @"co.oceanlabs.pssdk.kKeyCollectionName";
+static NSString *const kKeyCollectionId = @"co.oceanlabs.pssdk.kKeyCollectionId";
+static NSString *const kKeyRepresentationAssets = @"co.oceanlabs.pssdk.kKeyRepresentationAssets";
+static NSString *const kKeyLogo = @"co.oceanlabs.pssdk.kKeyLogo";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -86,6 +90,16 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 @end
 
 @implementation OLProductTemplate
+
+- (UIEdgeInsets)imageBorder{
+    //If these numbers are > 1 then they represent points based on a 320 point width.
+    if (_imageBorder.top >= 1 && _imageBorder.left >= 1 && _imageBorder.bottom >= 1 && _imageBorder.right >= 1){
+        return UIEdgeInsetsMake(_imageBorder.top/320.0, _imageBorder.left/320.0, _imageBorder.bottom/320.0, _imageBorder.right/320.0);
+    }
+    else{
+        return _imageBorder;
+    }
+}
 
 - (NSURL *)coverPhotoURL{
     NSString *testResult = [OLKiteABTesting sharedInstance].coverPhotoId;
@@ -139,7 +153,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 }
 
 - (NSUInteger)quantityPerSheet{
-    if (self.templateUI == kOLTemplateUIPhotobook){
+    if (self.templateUI == OLTemplateUIPhotobook){
         return _quantityPerSheet % 2 == 0 ? _quantityPerSheet : _quantityPerSheet + 1;
     }
     return _quantityPerSheet;
@@ -283,7 +297,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
                 && [sheetQuantity isKindOfClass:[NSNumber class]] && [enabled isKindOfClass:[NSNumber class]]
                 && [sheetCosts isKindOfClass:[NSDictionary class]]) {
                 
-                NSMutableDictionary/*<String, NSDecimalNumber>*/ *costs = [[NSMutableDictionary alloc] init];
+                NSMutableDictionary<NSString *, NSDecimalNumber *> *costs = [[NSMutableDictionary alloc] init];
                 for (id key in sheetCosts) {
                     id val = sheetCosts[key];
                     if ([key isKindOfClass:[NSString class]] && [val isKindOfClass:[NSString class]]) {
@@ -334,33 +348,33 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 +(OLTemplateUI)templateUIWithIdentifier:(NSString *)identifier{
     if ([identifier isEqualToString:@"RECTANGLE"]){
-        return kOLTemplateUIRectagle;
+        return OLTemplateUIRectagle;
     }
     else if ([identifier isEqualToString:@"FRAME"]){
-        return kOLTemplateUIFrame;
+        return OLTemplateUIFrame;
     }
     else if ([identifier isEqualToString:@"POSTER"]){
-        return kOLTemplateUIPoster;
+        return OLTemplateUIPoster;
     }
     else if ([identifier isEqualToString:@"CIRCLE"]){
-        return kOLTemplateUICircle;
+        return OLTemplateUICircle;
     }
     else if ([identifier isEqualToString:@"PHONE_CASE"]){
-        return kOLTemplateUICase;
+        return OLTemplateUICase;
     }
-//    else if ([identifier isEqualToString:@"APPAREL"]){
-//        return kOLTemplateUIApparel;
-//    }
-//    else if ([identifier isEqualToString:@"POSTCARD"]){
-//        return kOLTemplateUIPostcard;
-//    }
     else if ([identifier isEqualToString:@"PHOTOBOOK"]){
-        return kOLTemplateUIPhotobook;
+        return OLTemplateUIPhotobook;
     }
     else if ([identifier isEqualToString:@"NONCUSTOMIZABLE"]){
-        return kOLTemplateUINonCustomizable;
+        return OLTemplateUINonCustomizable;
     }
-    return kOLTemplateUINA;
+    else if ([identifier isEqualToString:@"DOUBLESIDED"]){
+        return OLTemplateUIDoubleSided;
+    }
+    else if ([identifier isEqualToString:@"CALENDAR"]){
+        return OLTemplateUICalendar;
+    }
+    return OLTemplateUINA;
 }
 
 #pragma mark - NSCoding protocol methods
@@ -394,6 +408,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeObject:self.supportedOptions forKey:kKeySupportedOptions];
     [aCoder encodeObject:self.upsellOffers forKey:kKeyUpsellOffers];
     [aCoder encodeObject:self.shortDescription forKey:kKeyShortDescription];
+    [aCoder encodeObject:self.collectionId forKey:kKeyCollectionId];
+    [aCoder encodeObject:self.collectionName forKey:kKeyCollectionName];
+    [aCoder encodeObject:self.representationAssets forKey:kKeyRepresentationAssets];
+    [aCoder encodeObject:self.logo forKey:kKeyLogo];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -427,6 +445,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         self.supportedOptions = [aDecoder decodeObjectForKey:kKeySupportedOptions];
         self.upsellOffers = [aDecoder decodeObjectForKey:kKeyUpsellOffers];
         self.shortDescription = [aDecoder decodeObjectForKey:kKeyShortDescription];
+        self.collectionName = [aDecoder decodeObjectForKey:kKeyCollectionName];
+        self.collectionId = [aDecoder decodeObjectForKey:kKeyCollectionId];
+        self.representationAssets = [aDecoder decodeObjectForKey:kKeyRepresentationAssets];
+        self.logo = [aDecoder decodeObjectForKey:kKeyLogo];
     }
     
     return self;

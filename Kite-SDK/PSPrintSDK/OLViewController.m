@@ -19,9 +19,7 @@
 }
 
 - (void)setupTheme{
-//    if ([OLKiteABTesting sharedInstance].darkTheme){
-//        self.view.backgroundColor = [UIColor grayColor];
-//    }
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated{

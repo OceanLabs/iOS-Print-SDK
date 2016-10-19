@@ -39,11 +39,8 @@
 #import "OLNavigationController.h"
 #import "OLKiteABTesting.h"
 #import "UIView+RoundRect.h"
+#import "OLUserSession.h"
 #import "OLImageDownloader.h"
-
-@interface OLKiteViewController (Private)
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-@end
 
 @interface OLPaymentViewController ()
 - (void)onBarButtonOrdersClicked;
@@ -58,7 +55,7 @@
         return;
     }
     
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     UIButton *basketButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(6, 3, 44, 44)];
     imageView.contentMode = UIViewContentModeRight;
@@ -105,7 +102,7 @@
 }
 
 - (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {
-    OLPrintOrder *printOrder = [OLKiteUtils kiteVcForViewController:self].printOrder;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
 #ifndef OL_NO_ANALYTICS
     NSUInteger count = printOrder.jobs.count;
@@ -118,7 +115,6 @@
     [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:[OLKiteUtils kiteDelegate:self]];
         [(OLPaymentViewController *)vc setPresentedModally:YES];
         
         NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
@@ -132,12 +128,8 @@
             [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(dismiss)];
         }
         
-//        if ([self isMemberOfClass:[OLPaymentViewController class]]){
-//            [(UIViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"menu_button_orders"] style:UIBarButtonItemStylePlain target:vc action:@selector(onBarButtonOrdersClicked)];
-//        }
-        
         OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-        nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:nvc animated:YES completion:NULL];
     }];
 }

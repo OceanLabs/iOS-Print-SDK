@@ -33,14 +33,14 @@
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "OLAnalytics.h"
-#import "UIViewController+TraitCollectionCompatibility.h"
 #import "UIImageView+FadeIn.h"
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
 #import "UIViewController+OLMethods.h"
 #import "NSObject+Utils.h"
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 #import "OLImageDownloader.h"
+#import "OLUserSession.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -51,16 +51,11 @@
 
 @end
 
-@interface OLKiteViewController (Private)
-
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
-
-@end
-
 @interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
 
 @property (strong, nonatomic) NSMutableArray *products;
 @property (strong, nonatomic) NSMutableArray *allPosterProducts;
+@property (strong, nonatomic) NSMutableDictionary *collections;
 @property (assign, nonatomic) BOOL fromRotation;
 
 @end
@@ -71,12 +66,13 @@
     if (!_products){
         _products = [[NSMutableArray alloc] init];
         self.allPosterProducts = [[NSMutableArray alloc] init];
+        self.collections = [[NSMutableDictionary alloc] init];
         NSArray *allProducts = [OLProduct productsWithFilters:self.filterProducts];
         for (OLProduct *product in allProducts){
-            if (!product.labelColor || product.productTemplate.templateUI == kOLTemplateUINA){
+            if (!product.labelColor || product.productTemplate.templateUI == OLTemplateUINA){
                 continue;
             }
-            if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
+            if (product.productTemplate.templateUI == OLTemplateUIPoster && !self.subtypeSelection){
                 BOOL sameGridTemplate = NO;
                 for (OLProduct *otherProduct in _products){
                     if (otherProduct.productTemplate.gridCountX == product.productTemplate.gridCountX && otherProduct.productTemplate.gridCountY == product.productTemplate.gridCountY){
@@ -90,12 +86,20 @@
                 }
             }
             if ([product.productTemplate.templateClass isEqualToString:self.templateClass]){
-                [_products addObject:product];
-                [self.allPosterProducts addObject:product];
+                if (!product.productTemplate.collectionId || !product.productTemplate.collectionName || ![self.collections.allKeys containsObject:[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]]){
+                    [_products addObject:product];
+                    [self.allPosterProducts addObject:product];
+                }
+                if (product.productTemplate.collectionId && product.productTemplate.collectionName){
+                    if (!self.collections[[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]]){
+                        self.collections[[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]] = [[NSMutableArray alloc] init];
+                    }
+                    [self.collections[[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]] addObject:product.productTemplate.identifier];
+                }
             }
         }
     }
-    if (_products.count == 1 && !self.subtypeSelection && [_products.firstObject productTemplate].templateUI == kOLTemplateUIPoster && self.allPosterProducts.count > 1){
+    if (_products.count == 1 && !self.subtypeSelection && [_products.firstObject productTemplate].templateUI == OLTemplateUIPoster && self.allPosterProducts.count > 1){
         _products = nil;
         self.subtypeSelection = YES;
         return [self products];
@@ -137,7 +141,7 @@
                                                                             target:nil
                                                                             action:nil];
     
-    if ([UITraitCollection class] && [self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+    if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
     
@@ -154,14 +158,6 @@
         [OLAnalytics trackProductTypeSelectionScreenHitBackTemplateClass:self.templateClass];
     }
 #endif
-}
-
-- (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    
-    if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && self.filterProducts){
-        [self addBasketIconToTopRight];
-    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -214,12 +210,11 @@
     
     OLProduct *product = self.products[indexPath.row];
     product.uuid = nil;
-    [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos = nil;
-    self.userSelectedPhotos = [OLKiteUtils kiteVcForViewController:self].userSelectedPhotos;
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
     
     NSString *identifier;
     NSMutableArray *posters = [[NSMutableArray alloc] init];
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
+    if (product.productTemplate.templateUI == OLTemplateUIPoster && !self.subtypeSelection){
         for (OLProduct *poster in self.allPosterProducts){
             if (poster.productTemplate.gridCountX == product.productTemplate.gridCountX && poster.productTemplate.gridCountY == product.productTemplate.gridCountY){
                 [posters addObject:poster];
@@ -229,7 +224,7 @@
             identifier = @"OLTypeSelectionViewController";
         }
     }
-    else if ([OLKiteABTesting sharedInstance].skipProductOverview && ![OLKiteABTesting sharedInstance].launchedWithPrintOrder && product.productTemplate.templateUI != kOLTemplateUINonCustomizable){
+    else if ([OLKiteABTesting sharedInstance].skipProductOverview && ![OLKiteABTesting sharedInstance].launchedWithPrintOrder && product.productTemplate.templateUI != OLTemplateUINonCustomizable){
         identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]];
     }
     
@@ -238,7 +233,36 @@
     }
     OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
     vc.delegate = self.delegate;
-    vc.userSelectedPhotos = self.userSelectedPhotos;
+    
+    if (product.productTemplate.collectionName && product.productTemplate.collectionId){
+        NSMutableArray *options = [[NSMutableArray alloc] init];
+        for (NSString *templateId in self.collections[[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]]){
+            OLProductTemplate *template = [OLProductTemplate templateWithId:templateId];
+            if (!template){
+                continue;
+            }
+            OLProduct *otherProduct = [[OLProduct alloc] initWithTemplate:template];
+            [options addObject:@{
+                                 @"code" : otherProduct.productTemplate.identifier,
+                                 @"name" : [NSString stringWithFormat:@"%@\n%@", [otherProduct dimensions], [otherProduct unitCost]],
+                                 }];
+        }
+        
+        OLProductTemplateOption *collectionOption =
+        [[OLProductTemplateOption alloc] initWithDictionary:@{
+                                                              @"code" : product.productTemplate.collectionId,
+                                                              @"name" : product.productTemplate.collectionName,
+                                                              @"options" : options
+                                                              }];
+        collectionOption.iconImageName = @"tool-size";
+        for (OLProductTemplateOption *option in product.productTemplate.options){
+            if ([option.code isEqualToString:collectionOption.code]){
+                [(NSMutableArray *)product.productTemplate.options removeObjectIdenticalTo:option];
+            }
+        }
+        [(NSMutableArray *)product.productTemplate.options addObject:collectionOption];
+    }
+    
     [vc safePerformSelector:@selector(setProduct:) withObject:product];
     
     if ([vc isKindOfClass:[OLProductTypeSelectionViewController class]]){
@@ -250,18 +274,9 @@
     return vc;
 }
 
-- (void)fixCellFrameOnIOS7:(UICollectionViewCell *)cell {
-    // Ugly hack to fix cell frame on iOS 7 iPad. For whatever reason the frame size is not as per collectionView:layout:sizeForItemAtIndexPath:, others also experiencing this issue http://stackoverflow.com/questions/25804588/auto-layout-in-uicollectionviewcell-not-working
-    if (SYSTEM_VERSION_LESS_THAN(@"8")) {
-        [[cell contentView] setFrame:[cell bounds]];
-        [[cell contentView] setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-    }
-}
-
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.item >= self.products.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
-        [self fixCellFrameOnIOS7:cell];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
             cellImageView.image = image;
@@ -279,7 +294,6 @@
     
     NSString *identifier = [NSString stringWithFormat:@"ProductCell%@", [OLKiteABTesting sharedInstance].productTileStyle];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    [self fixCellFrameOnIOS7:cell];
     
     UIView *view = cell.contentView;
     view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -310,13 +324,23 @@
         textView.font = font;
     }
     
-    if (product.productTemplate.templateUI == kOLTemplateUIPoster && !self.subtypeSelection){
+    BOOL inSizeCollectionFlag = NO;
+    for (NSString *s in self.collections){
+        if ([s isEqualToString:[product.productTemplate.collectionId stringByAppendingString:product.productTemplate.collectionName]]){
+            inSizeCollectionFlag = YES;
+        }
+    }
+    
+    if (product.productTemplate.templateUI == OLTemplateUIPoster && !self.subtypeSelection){
         if (product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
             textView.text = NSLocalizedString(@"Single Photo Poster", @"");
         }
         else{
             textView.text = [NSString stringWithFormat:@"%ldx%ld Collage", (long)product.productTemplate.gridCountX, (long)product.productTemplate.gridCountY];
         }
+    }
+    else if (inSizeCollectionFlag){
+        textView.text = [[[[product.productTemplate.templateType stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Small", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") withString:@""] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Medium", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") withString:@""] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Large", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") withString:@""] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
     }
     else{
         textView.text = product.productTemplate.templateType;
@@ -336,15 +360,6 @@
         if (font){
             priceLabel.font = font;
             detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
-        }
-    }
-    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
-        button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
-        
-        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
-        if (font){
-            [button.titleLabel setFont:font];
         }
     }
     else{
@@ -380,7 +395,7 @@
     NSInteger numberOfProducts = [self.products count];
     
     CGSize size = self.view.frame.size;
-    if (!(numberOfProducts % 2 == 0) && (!([self isHorizontalSizeClassCompact]) || size.height < size.width)){
+    if (!(numberOfProducts % 2 == 0) && (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact || size.height < size.width)){
         extras = 1;
     }
     if (numberOfProducts == 2){
@@ -397,15 +412,12 @@
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
     CGFloat height = 233;
-//    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Dark"]){
-//        height = 200;
-//    }
     
     if (indexPath.item >= self.products.count && self.products.count % 2 == 0){
         return CGSizeMake(size.width, halfScreenHeight);
     }
     
-    if ([self isHorizontalSizeClassCompact] && size.height > size.width) {
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) {
         if (numberOfCells == 2){
             return CGSizeMake(size.width, halfScreenHeight);
         }
@@ -439,40 +451,5 @@
         return CGSizeMake(size.width/2 - 1, height);
     }
 }
-
-#pragma mark - Tear down and restore
-
-//- (void)tearDownLargeObjectsFromMemory{
-//    [super tearDownLargeObjectsFromMemory];
-//    [self.collectionView reloadData];
-//}
-//
-//- (void)recreateTornDownLargeObjectsToMemory{
-//    [super recreateTornDownLargeObjectsToMemory];
-//    [self.collectionView reloadData];
-//}
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 @end

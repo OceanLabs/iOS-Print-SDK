@@ -33,7 +33,6 @@
 
 @interface OLProductTypeSelectionViewController : OLCollectionViewController
 
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 @property (assign, nonatomic) NSString *templateClass;
 @property (assign, nonatomic) BOOL subtypeSelection;

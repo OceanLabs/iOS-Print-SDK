@@ -40,6 +40,8 @@
 @property (assign, nonatomic) BOOL flipHorizontal;
 @property (assign, nonatomic) BOOL flipVertical;
 @property (strong, nonatomic) NSMutableArray<OLTextOnPhoto *> *textsOnPhoto;
+@property (strong, nonatomic) UIColor *borderColor;
+@property (strong, nonatomic) OLTextOnPhoto *bottomBorderText;
 
 - (void)performHorizontalFlipEditFromOrientation:(UIImageOrientation)orientation;
 

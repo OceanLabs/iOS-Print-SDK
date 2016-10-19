@@ -28,14 +28,13 @@
 //
 
 #import "OLProductDetailsViewController.h"
-#import "OLProductOptionsViewController.h"
-#import "TSMarkdownParser.h"
+#import "OLMarkdownParser.h"
 #import "OLAnalytics.h"
 #import "OLKiteABTesting.h"
 
-@interface TSMarkdownParser ()
+@interface OLMarkDownParser ()
 
-- (void)addParsingRuleWithRegularExpression:(NSRegularExpression *)regularExpression block:(TSMarkdownParserMatchBlock)block;
+- (void)addParsingRuleWithRegularExpression:(NSRegularExpression *)regularExpression block:(OLMarkDownParserMatchBlock)block;
 
 @end
 
@@ -68,21 +67,13 @@
         [self.detailsLabel setFont:font];
     }
     
-//    if ([OLKiteABTesting sharedInstance].darkTheme){
-//        self.detailsLabel.textColor = [UIColor whiteColor];
-//        self.optionLabel.textColor = [UIColor whiteColor];
-//        self.selectedOptionLabel.textColor = [UIColor whiteColor];
-//        self.priceLabel.textColor = [UIColor whiteColor];
-//    }
+    NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
-    NSMutableAttributedString *attributedString = [[[TSMarkdownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
-    
-    //    if ([OLKiteABTesting sharedInstance].darkTheme){
-    //        [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
-    //    }
-    //    else{
     [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
-    //    }
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.alignment = NSTextAlignmentNatural;
+    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedString.length)];
     
     NSRange strikeThroughRange = [[attributedString string] rangeOfString:@"\\~.*\\~" options:NSRegularExpressionSearch];
     if (strikeThroughRange.location != NSNotFound){
@@ -101,44 +92,12 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    
-    if (self.product.productTemplate.options.count == 1){
-        OLProductTemplateOption *option = self.product.productTemplate.options.firstObject;
-        self.optionLabel.text = option.name;
-        self.selectedOptionLabel.text = [option nameForSelection:self.product.selectedOptions[[option code]]];
-        
-        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
-        if (font){
-            [self.optionLabel setFont:font];
-            [self.selectedOptionLabel setFont:font];
-        }
-    }
-}
-
 - (CGFloat)recommendedDetailsBoxHeight{
     if ([self respondsToSelector:@selector(traitCollection)]){
         return self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact ? 340 : 450;
     }
     else{
         return 340;
-    }
-}
-
-- (IBAction)onOptionsClicked:(UIButton *)sender {
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackDetailsViewProductOptionsTappedForProductName:self.product.productTemplate.name];
-#endif
-    
-    OLProductOptionsViewController *options = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOptionsViewController"];
-    options.product = self.product;
-    [UIView animateWithDuration:0.25 animations:^{
-        [self.navigationController pushViewController:options animated:YES];
-    }];
-    
-    if ([self.delegate respondsToSelector:@selector(optionsButtonClicked)]){
-        [self.delegate optionsButtonClicked];
     }
 }
 

@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, RMImageCropperMode) {
 - (CGSize)croppedImageSize;
 - (BOOL)isCorrecting;
 + (UIImage *)editedImageFromImage:(UIImage *)image andFrame:(CGRect)frameRect andImageRect:(CGRect)imageRect andImageViewWidth:(CGFloat)width andImageViewHeight:(CGFloat)height;
+- (void)setGesturesEnabled:(BOOL)enabled;
 
 @end
 

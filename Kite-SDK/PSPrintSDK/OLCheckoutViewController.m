@@ -38,10 +38,11 @@
 #import "OLAddressEditViewController.h"
 #import "OLProductPrintJob.h"
 #import "OLKiteABTesting.h"
-#import "UIImage+ColorAtPixel.h"
+#import "UIImage+OLUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"
 #import "OLImageDownloader.h"
+#import "OLUserSession.h"
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
@@ -81,18 +82,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 @end
 
 @implementation OLCheckoutViewController
-
-//- (BOOL)prefersStatusBarHidden {
-//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-//    
-//    if ([self respondsToSelector:@selector(traitCollection)]){
-//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-//            hidden |= YES;
-//        }
-//    }
-//    
-//    return hidden;
-//}
 
 -(NSMutableArray *) shippingAddresses{
     if (!_shippingAddresses){
@@ -138,7 +127,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self];
-    navController.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+    navController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [presentingViewController presentViewController:navController animated:animated completion:completion];
 }
 
@@ -331,11 +320,8 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     else{
         self.printOrder.shippingAddress = nil;
     }
-    
-    [self.printOrder discardDuplicateJobs];
-    [self.printOrder duplicateJobsForAddresses:self.selectedShippingAddresses];
-    
-    if (![self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] || [self.kiteDelegate shouldStoreDeliveryAddresses]){
+        
+    if (![OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:email forKey:kKeyEmailAddress];
         [defaults setObject:phone forKey:kKeyPhone];
@@ -354,7 +340,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
     vc.presentedModally = self.presentedModally;
     vc.delegate = self.delegate;
-    vc.kiteDelegate = self.kiteDelegate;
     vc.showOtherOptions = self.showOtherOptions;
     
     [self.navigationController pushViewController:vc animated:YES];
@@ -413,7 +398,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)populateDefaultEmailAndPhone {
-    if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+    if ([OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
         self.textFieldEmail.text = self.printOrder.email;
         self.textFieldPhone.text = self.printOrder.phone;
         return;
@@ -448,7 +433,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)userEmail {
     if (self.textFieldEmail == nil) {
-        if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+        if ([OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
             return @"";
         }
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -461,7 +446,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (NSString *)userPhone {
     if (self.textFieldPhone == nil) {
-        if ([self.kiteDelegate respondsToSelector:@selector(shouldStoreDeliveryAddresses)] && ![self.kiteDelegate shouldStoreDeliveryAddresses]){
+        if ([OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
             return @"";
         }
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -478,8 +463,8 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (BOOL)showPhoneEntryField {
-    if ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
-        return [self.kiteDelegate shouldShowPhoneEntryOnCheckoutScreen]; // delegate overrides whatever the A/B test might say.
+    if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
+        return (![OLUserSession currentSession].kiteVc.hidePhoneEntryOnCheckoutScreen);
     }
     
     return [OLKiteABTesting sharedInstance].requirePhoneNumber;
@@ -532,7 +517,10 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (section == kSectionDeliveryDetails){
         return 0;
     }
-    if (section == kSectionEmailAddress && ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || ![self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![self.kiteDelegate shouldShowOptOutOfEmailsCheckbox])){
+    if (section == kSectionPhoneNumber){
+        return 44;
+    }
+    if (![OLUserSession currentSession].kiteVc.showOptOutOfEmailsCheckbox){
         return 28;
     }
     return 44;
@@ -542,7 +530,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (section != kSectionEmailAddress){
         return nil;
     }
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8 || ![self.kiteDelegate respondsToSelector:@selector(shouldShowOptOutOfEmailsCheckbox)] || ![self.kiteDelegate shouldShowOptOutOfEmailsCheckbox]){
+    if (![OLUserSession currentSession].kiteVc.showOptOutOfEmailsCheckbox){
         return nil;
     }
     
@@ -560,32 +548,30 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     
     [cell addSubview:titleLabel];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-        UIButton *checkbox = [[UIButton alloc] init];
-        [checkbox setImage:self.printOrder.optOutOfEmail ? [UIImage imageNamedInKiteBundle:@"checkbox_off"] : [UIImage imageNamedInKiteBundle:@"checkbox_on"] forState:UIControlStateNormal];
-        [checkbox addTarget:self action:@selector(onButtonCheckboxClicked:) forControlEvents:UIControlEventTouchUpInside];
-        checkbox.translatesAutoresizingMaskIntoConstraints = NO;
-        [titleLabel.superview addSubview:checkbox];
-        
-        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(titleLabel, checkbox);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[[NSString stringWithFormat:@"H:|-20-[titleLabel]-5-[checkbox(%f)]-20-|", checkbox.imageView.image.size.width],
-                             @"V:[titleLabel(43)]",
-                             @"V:[checkbox(43)]"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        NSLayoutConstraint *textFieldCenterY = [NSLayoutConstraint constraintWithItem:titleLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:titleLabel.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-        NSLayoutConstraint *checkboxCenterY = [NSLayoutConstraint constraintWithItem:checkbox attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:checkbox.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-        [con addObjectsFromArray:@[textFieldCenterY, checkboxCenterY]];
-        
-        [titleLabel.superview addConstraints:con];
+    UIButton *checkbox = [[UIButton alloc] init];
+    [checkbox setImage:self.printOrder.optOutOfEmail ? [UIImage imageNamedInKiteBundle:@"checkbox_off"] : [UIImage imageNamedInKiteBundle:@"checkbox_on"] forState:UIControlStateNormal];
+    [checkbox addTarget:self action:@selector(onButtonCheckboxClicked:) forControlEvents:UIControlEventTouchUpInside];
+    checkbox.translatesAutoresizingMaskIntoConstraints = NO;
+    [titleLabel.superview addSubview:checkbox];
+    
+    titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(titleLabel, checkbox);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[[NSString stringWithFormat:@"H:|-20-[titleLabel]-5-[checkbox(%f)]-20-|", checkbox.imageView.image.size.width],
+                         @"V:[titleLabel(43)]",
+                         @"V:[checkbox(43)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
+    
+    NSLayoutConstraint *textFieldCenterY = [NSLayoutConstraint constraintWithItem:titleLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:titleLabel.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+    NSLayoutConstraint *checkboxCenterY = [NSLayoutConstraint constraintWithItem:checkbox attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:checkbox.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+    [con addObjectsFromArray:@[textFieldCenterY, checkboxCenterY]];
+    
+    [titleLabel.superview addConstraints:con];
     return cell;
 }
 
@@ -614,12 +600,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
                 cell.textLabel.textColor = kColourLightBlue;
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-            if (self.shippingAddresses.count > 0 && [OLKiteABTesting sharedInstance].allowsMultipleRecipients){
-                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Add Another Recipient", @"KitePrintSDK",[OLKiteUtils kiteBundle], @"");
-            }
-            else{
-                cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
-            }
+            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Choose Delivery Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         }
     } else if (indexPath.section == kSectionEmailAddress) {
         static NSString *const TextFieldCell = @"EmailFieldCell";
@@ -661,24 +642,22 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     [cell addSubview:titleLabel];
     [cell addSubview:inputField];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8){
-        UIView *view = inputField;
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(view);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-86-[view]-0-|", @"V:[view(43)]"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-        [con addObject:centerY];
-        
-        [view.superview addConstraints:con];
+    UIView *view = inputField;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-86-[view]-0-|", @"V:[view(43)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
+    
+    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+    [con addObject:centerY];
+    
+    [view.superview addConstraints:con];
     
     
     return cell;
@@ -704,34 +683,19 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
-        if ([OLKiteABTesting sharedInstance].offerAddressSearch || [OLAddress addressBook].count > 0 || [OLKiteABTesting sharedInstance].allowsMultipleRecipients) {
-            if ([OLKiteABTesting sharedInstance].allowsMultipleRecipients && self.shippingAddresses.count > indexPath.row){
-                OLAddress *address = self.shippingAddresses[indexPath.row];
-                BOOL selected = YES;
-                if ([self.selectedShippingAddresses containsObject:address]) {
-                    selected = NO;
-                    [self.selectedShippingAddresses removeObject:address];
-                } else {
-                    [self.selectedShippingAddresses addObject:address];
-                }
-                
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.imageView.image = selected ? [UIImage imageNamedInKiteBundle:@"checkmark_on"] : [UIImage imageNamedInKiteBundle:@"checkmark_off"];
-            }
-            else{
+        if ([OLKiteABTesting sharedInstance].offerAddressSearch || [OLAddress addressBook].count > 0) {
                 OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
                 addressPicker.delegate = self;
                 addressPicker.allowsAddressSearch = [OLKiteABTesting sharedInstance].offerAddressSearch;
-                addressPicker.allowsMultipleSelection = [OLKiteABTesting sharedInstance].allowsMultipleRecipients;
+                addressPicker.allowsMultipleSelection = NO;
                 addressPicker.selected = self.shippingAddresses;
-                addressPicker.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+                addressPicker.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
                 [self presentViewController:addressPicker animated:YES completion:nil];
-            }
         } else {
             OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];
             editVc.delegate = self;
             UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:editVc];
-            nvc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+            nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:nvc animated:YES completion:nil];
         }
     }
@@ -754,26 +718,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     self.activeTextView = textField;
 }
 
-- (void)recalculateOrderCostIfNewSelectedCountryDiffers:(NSArray *)selectedCountries {
-    //    if (self.printOrder.shippingAddress == nil) {
-    //        // just populate with a blank address for now with default local country -- this will get replaced on filling out address and proceeding to the next screen
-    //        self.printOrder.shippingAddress = [[OLAddress alloc] init];
-    //        self.printOrder.shippingAddress.country = self.shippingAddress ? self.shippingAddress.country : [OLCountry countryForCurrentLocale];
-    //    }
-    //
-    //    NSMutableArray *countries = [[NSMutableArray alloc] init];
-    //    for (OLAddress *address in self.printOrder.shippingAddress){
-    //        [countries addObject:address.country];
-    //    }
-    //    if (![countries isEqualToArray:selectedCountries]) {
-    //        // changing destination address voids internal printOrder cached costs, recalc early to speed things up before we hit the Payment screen
-    //        [self.printOrder costWithCompletionHandler:nil]; // ignore outcome, internally printOrder caches the result and this will speed up things when we hit the PaymentScreen
-    //    }
-}
-
 #pragma mark - OLAddressPickerController delegate
 
-- (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses {
+- (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray<OLAddress *> *)addresses {
     [self.shippingAddresses removeAllObjects];
     [self.selectedShippingAddresses removeAllObjects];
     for (OLAddress *address in addresses){
@@ -786,7 +733,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     for (OLAddress *address in addresses){
         [countries addObject:address.country];
     }
-    [self recalculateOrderCostIfNewSelectedCountryDiffers:addresses];
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:kSectionDeliveryDetails] withRowAnimation:UITableViewRowAnimationFade];
 }
@@ -794,29 +740,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (void)addressPickerDidCancelPicking:(OLAddressPickerController *)picker {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 // Called when the UIKeyboardDidShowNotification is sent.
 - (void)keyboardWasShown:(NSNotification*)aNotification

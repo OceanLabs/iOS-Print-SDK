@@ -2,17 +2,10 @@ platform :ios, '8.0'
 inhibit_all_warnings!
 
 def shared_pods
-    pod 'SVProgressHUD', '1.1.3'
     pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
     pod 'Stripe', '~> 8.0.6'
-    pod 'CTAssetsPickerController'
-    pod 'InstagramImagePicker'
-    pod 'DACircularProgress'
-    pod 'FacebookImagePicker'
-    pod 'CSStickyHeaderFlowLayout'
-    pod 'MPFlipViewController'
-    pod 'TSMarkdownParser'
-    pod 'KITAssetsPickerController'
+    pod 'FBSDKCoreKit', '~> 4.16.0'
+    pod 'FBSDKLoginKit', '~> 4.16.0'
 end
 
 target 'KiteSDK-Demo' do
@@ -22,8 +15,3 @@ end
 target 'Kite-CI-Deploy' do
     shared_pods
 end
-
-target 'KitePrintSDKTests' do
-    shared_pods
-end
-
