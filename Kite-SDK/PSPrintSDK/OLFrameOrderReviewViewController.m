@@ -356,13 +356,16 @@ CGFloat innerMargin = 3;
         if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
             cell.contentView.backgroundColor = [UIColor whiteColor];
             
+            CGFloat imageViewWidth = size.width - 2 * innerCollectionViewHorizontalMargin * scaleFactor;
+            CGFloat imageViewHeight = size.width - 2 * innerCollectionViewHorizontalMargin * scaleFactor;
+            
             UIImageView *imageView = [cell.contentView viewWithTag:1010];
             if (indexPath.item < self.product.productTemplate.representationAssets.count){
-                [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item]];
+                [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item] size:CGSizeMake(imageViewWidth, imageViewHeight)];
             }
             if (self.product.productTemplate.logo){
                 __weak UIImageView *imageView = [cell.contentView viewWithTag:1011];
-                [imageView setAndFadeInImageWithURL:self.product.productTemplate.logo];
+                [imageView setAndFadeInImageWithURL:self.product.productTemplate.logo size:CGSizeMake(122 * scaleFactor, 56 * scaleFactor)];
                 [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:37.5 * scaleFactor]];
                 [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:75 * scaleFactor]];
             }
