@@ -27,63 +27,13 @@
 //  THE SOFTWARE.
 //
 
-#ifdef OL_KITE_OFFER_FACEBOOK
-#ifdef COCOAPODS
-#import <NXOAuth2Client/NXOAuth2AccountStore.h>
-#else
-#import "NXOAuth2AccountStore.h"
-#endif
-#endif
-
-#ifdef OL_KITE_OFFER_INSTAGRAM
-#ifdef COCOAPODS
-#import <NXOAuth2Client/NXOAuth2AccountStore.h>
-#else
-#import "NXOAuth2AccountStore.h"
-#endif
-#endif
-
 #import "OLKitePrintSDK.h"
 #import "OLPayPalCard.h"
 #import "OLProductTemplate.h"
 #import "OLStripeCard.h"
-#ifdef OL_KITE_OFFER_PAYPAL
-#ifdef COCOAPODS
-#import <PayPal-iOS-SDK/PayPalMobile.h>
-#else
-#import "PayPalMobile.h"
-#endif
-
-#endif
-
-#ifdef OL_OFFER_JUDOPAY
-#import "OLJudoPayCard.h"
-#endif
-#import "OLProductHomeViewController.h"
-#import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteABTesting.h"
-#import "OLAddressEditViewController.h"
-#ifdef OL_KITE_OFFER_APPLE_PAY
-#ifdef COCOAPODS
-#import <Stripe/Stripe.h>
-#else
-#import "Stripe.h"
-#endif
-
-#ifdef OL_KITE_OFFER_FACEBOOK
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
-#endif
-
-#endif
-#import "OLPaymentViewController.h"
 #import "OLKiteUtils.h"
-
-static NSString *const kJudoClientId      = @"100170-877";
-static NSString *const kJudoSandboxToken     = @"oLMiwCPBeLs0iVX4";
-static NSString *const kJudoSandboxSecret  = @"3bf983df93ceb422bc81fd0289c3eb95ea1d39d990ba27306679ed069826805c";
-static NSString *const kJudoLiveToken     = @"JjOZ49Z9XCYy2FAc";
-static NSString *const kJudoLiveSecret  = @"b8d5950ec68e27e7dfdb314dbd7160e7421c3bddd4d883d9aef5e94788def934";
+#import "OLUserSession.h"
 
 static NSString *apiKey = nil;
 static NSString *applePayMerchantID = nil;
@@ -96,14 +46,10 @@ static NSString *const kOLStagingEndpointLive = @"https://staging.kite.ly";
 static NSString *const kOLStagingEndpointSandbox = @"https://staging.kite.ly";
 static NSString *const kOLAPIEndpointVersion = @"v3.0";
 
-#ifdef OL_OFFER_JUDOPAY
-static BOOL useJudoPayForGBP = NO;
-#endif
 static BOOL useStripeForCreditCards = YES;
 static BOOL cacheTemplates = NO;
 static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
-static BOOL QRCodeUploadEnabled = NO;
 static BOOL isKiosk = NO;
 static BOOL allowImageZooming = YES;
 
@@ -116,26 +62,11 @@ static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
 static NSString *instagramRedirectURI = nil;
 
-#ifdef OL_KITE_OFFER_ADOBE
-static NSString* creativeSDKClientId = nil;
-static NSString* creativeSDKClientSecret = nil;
-#endif
-
 @interface OLPrintOrder ()
 - (void)saveOrder;
 @end
 
 @implementation OLKitePrintSDK
-
-#ifdef OL_OFFER_JUDOPAY
-+ (BOOL)useJudoPayForGBP {
-    return useJudoPayForGBP;
-}
-
-+ (void)setUseJudoPayForGBP:(BOOL)use {
-    useJudoPayForGBP = use;
-}
-#endif
 
 + (BOOL)useStripeForCreditCards {
     return useStripeForCreditCards;
@@ -165,23 +96,17 @@ static NSString* creativeSDKClientSecret = nil;
 }
 
 + (BOOL)isUnitTesting{
-    return NO;
+    return isUnitTesting;
 }
 
 + (void)setAPIKey:(NSString *_Nonnull)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
     apiKey = _apiKey;
     environment = _environment;
     [OLStripeCard setClientId:[self stripePublishableKey]];
-    if (environment == kOLKitePrintSDKEnvironmentLive) {
+    if (environment == OLKitePrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
-#ifdef OL_OFFER_JUDOPAY
-        [OLJudoPayCard setClientId:kJudoClientId token:kJudoLiveToken secret:kJudoLiveSecret withEnvironment:kOLJudoPayEnvironmentLive];
-#endif
     } else {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
-#ifdef OL_OFFER_JUDOPAY
-        [OLJudoPayCard setClientId:kJudoClientId token:kJudoSandboxToken secret:kJudoSandboxSecret withEnvironment:kOLJudoPayEnvironmentSandbox];
-#endif
     }
 }
 
@@ -196,14 +121,14 @@ static NSString* creativeSDKClientSecret = nil;
 + (NSString *)apiEndpoint {
     if (useStaging){
         switch (environment) {
-            case kOLKitePrintSDKEnvironmentLive: return kOLStagingEndpointLive;
-            case kOLKitePrintSDKEnvironmentSandbox: return kOLStagingEndpointSandbox;
+            case OLKitePrintSDKEnvironmentLive: return kOLStagingEndpointLive;
+            case OLKitePrintSDKEnvironmentSandbox: return kOLStagingEndpointSandbox;
         }
     }
     else{
         switch (environment) {
-            case kOLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
-            case kOLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
+            case OLKitePrintSDKEnvironmentLive: return kOLAPIEndpointLive;
+            case OLKitePrintSDKEnvironmentSandbox: return kOLAPIEndpointSandbox;
         }
     }
 }
@@ -216,29 +141,23 @@ static NSString* creativeSDKClientSecret = nil;
     [OLAnalytics addPushDeviceToken:deviceToken];
 }
 
-#ifdef OL_KITE_OFFER_PAYPAL
 + (NSString *_Nonnull)paypalEnvironment {
     switch (environment) {
-        case kOLKitePrintSDKEnvironmentLive: return PayPalEnvironmentProduction;
-        case kOLKitePrintSDKEnvironmentSandbox: return PayPalEnvironmentSandbox;
+        case OLKitePrintSDKEnvironmentLive: return @"live";/*PayPalEnvironmentProduction*/;
+        case OLKitePrintSDKEnvironmentSandbox: return @"sandbox";/*PayPalEnvironmentSandbox*/;
     }
 }
-#endif
 
 + (NSString *_Nonnull)paypalClientId {
     return paypalPublicKey;
 }
 
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
-#ifdef OL_KITE_OFFER_APPLE_PAY
     applePayMerchantID = mID;
-#endif
 }
 
 + (void)setApplePayPayToString:(NSString *_Nonnull)name{
-#ifdef OL_KITE_OFFER_APPLE_PAY
     applePayPayToString = name;
-#endif
 }
 
 + (NSString *)applePayPayToString{
@@ -267,23 +186,8 @@ static NSString* creativeSDKClientSecret = nil;
 }
 
 + (NSString *)qualityGuaranteeString{
-    return NSLocalizedString(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"");
+    return NSLocalizedStringFromTableInBundle(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
 }
-
-#ifdef OL_KITE_OFFER_ADOBE
-+ (void)setAdobeCreativeSDKEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret{
-    creativeSDKClientSecret = secret;
-    creativeSDKClientId = clientID;
-}
-
-+ (NSString *)adobeCreativeSDKClientSecret{
-    return creativeSDKClientSecret;
-}
-
-+ (NSString *)adobeCreativeSDKClientID{
-    return creativeSDKClientId;
-}
-#endif
 
 + (void)setIsKiosk:(BOOL)enabled{
     isKiosk = enabled;
@@ -294,57 +198,10 @@ static NSString* creativeSDKClientSecret = nil;
 }
 
 + (void)setQRCodeUploadEnabled:(BOOL)enabled{
-    QRCodeUploadEnabled = enabled;
-}
-
-+ (BOOL)QRCodeUploadEnabled{
-    return QRCodeUploadEnabled;
 }
 
 + (void)endCustomerSession{
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    [printOrder saveOrder];
-    
-#ifdef OL_KITE_OFFER_INSTAGRAM
-    NSHTTPCookie *cookie;
-    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    NSArray *cookies = [NSArray arrayWithArray:[storage cookies]];
-    for (cookie in cookies) {
-        if ([cookie.domain containsString:@"instagram.com"]) {
-            [storage deleteCookie:cookie];
-        }
-    }
-
-    NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-    for (NXOAuth2Account *account in instagramAccounts) {
-        [[NXOAuth2AccountStore sharedStore] removeAccount:account];
-    }
-#endif
-    
-#ifdef OL_KITE_OFFER_FACEBOOK
-    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-    [loginManager logOut];
-    [FBSDKAccessToken setCurrentAccessToken:nil];
-#endif
-    
-    [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientLastName = nil;
-    [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientFirstName = nil;
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyEmailAddress"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyPhone"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyRecipientName"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyRecipientFirstName"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyLine1"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyLine2"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCity"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCounty"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyPostCode"];
-    [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCountry"];
-    [defaults synchronize];
-    
-    [OLPayPalCard clearLastUsedCard];
-    [OLStripeCard clearLastUsedCard];
+    [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionAll];
 }
 
 + (void)setAllowsImageZooming:(BOOL)allowZoom{
@@ -359,35 +216,21 @@ static NSString* creativeSDKClientSecret = nil;
 
 
 + (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
-#ifdef OL_KITE_OFFER_INSTAGRAM
     instagramSecret = secret;
     instagramClientID = clientID;
     instagramRedirectURI = redirectURI;
-#endif
 }
 
 + (NSString *)instagramRedirectURI {
-#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramRedirectURI;
-#else
-    return nil;
-#endif
 }
 
 + (NSString *)instagramSecret{
-#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramSecret;
-#else
-    return nil;
-#endif
 }
 
 + (NSString *)instagramClientID{
-#ifdef OL_KITE_OFFER_INSTAGRAM
     return instagramClientID;
-#else
-    return nil;
-#endif
 }
 
 + (void)setPayPalAccountId:(NSString *)accountId{
@@ -397,7 +240,7 @@ static NSString* creativeSDKClientSecret = nil;
 + (void)setPayPalPublicKey:(NSString *)publicKey{
     paypalPublicKey = publicKey;
     
-    if (environment == kOLKitePrintSDKEnvironmentLive) {
+    if (environment == OLKitePrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
     } else {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];

@@ -32,6 +32,7 @@
 #import "OLAddress.h"
 #import "OLCountry.h"
 #import "OLProductTemplate.h"
+#import "OLAsset+Private.h"
 
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
 static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
@@ -148,7 +149,7 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (NSUInteger)quantity {
-    if ([OLProductTemplate templateWithId:self.templateId].templateUI == kOLTemplateUINonCustomizable){
+    if ([OLProductTemplate templateWithId:self.templateId].templateUI == OLTemplateUINonCustomizable){
         return 1;
     }
     return self.assets.count;
@@ -156,7 +157,7 @@ static id stringOrEmptyString(NSString *str) {
 
 - (NSDecimalNumber *)numberOfItemsInJob{
     OLProductTemplate *template = [OLProductTemplate templateWithId:self.templateId];
-    if (template.templateUI == kOLTemplateUINonCustomizable){
+    if (template.templateUI == OLTemplateUINonCustomizable){
         return [NSDecimalNumber decimalNumberWithString:@"1"];
     }
     
@@ -179,6 +180,7 @@ static id stringOrEmptyString(NSString *str) {
 - (NSDictionary *)jsonRepresentation {
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     NSMutableArray *pdfs = [[NSMutableArray alloc] init];
+    NSMutableArray *borderTextArray = [[NSMutableArray alloc] init];
     
     for (OLAsset *asset in self.assets) {
         if (asset.mimeType == kOLMimeTypePDF){
@@ -186,6 +188,10 @@ static id stringOrEmptyString(NSString *str) {
         }
         else{
             [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
+            
+            NSString *borderText = asset.edits.bottomBorderText.text;
+            [borderTextArray addObject:stringOrEmptyString(borderText)];
+            
         }
     }
     
@@ -204,6 +210,7 @@ static id stringOrEmptyString(NSString *str) {
         json[@"redeemed_upsell"] = [NSNumber numberWithUnsignedInteger:self.redeemedOffer.identifier];
     }
     
+    self.options[@"polaroid_text"] = borderTextArray;
     json[@"options"] = self.options;
     
     if (self.address) {

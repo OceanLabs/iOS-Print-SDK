@@ -90,7 +90,7 @@
                 
                 self.downloadProgressView.progress = receivedSize / (float) expectedSize;
             } onImageDownloadedHandler:^(OLAsset *asset) {
-                [self.delegate qrCodeUpload:self didFinishPickingAsset:asset];
+                [self.delegate assetsPickerController:self didFinishPickingAssets:@[asset]];
             }];
         }
     }];

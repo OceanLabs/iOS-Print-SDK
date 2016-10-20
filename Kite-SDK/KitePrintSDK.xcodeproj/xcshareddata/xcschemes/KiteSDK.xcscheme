@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0720"
+   LastUpgradeVersion = "0800"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E29C856F1BE3B4290041D4CF"
-               BuildableName = "libKiteSDK.a"
+               BlueprintIdentifier = "2E451DC71D9554B40080F1C1"
+               BuildableName = "KiteSDK.framework"
                BlueprintName = "KiteSDK"
                ReferencedContainer = "container:KitePrintSDK.xcodeproj">
             </BuildableReference>
@@ -45,8 +45,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E29C856F1BE3B4290041D4CF"
-            BuildableName = "libKiteSDK.a"
+            BlueprintIdentifier = "2E451DC71D9554B40080F1C1"
+            BuildableName = "KiteSDK.framework"
             BlueprintName = "KiteSDK"
             ReferencedContainer = "container:KitePrintSDK.xcodeproj">
          </BuildableReference>
@@ -63,8 +63,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E29C856F1BE3B4290041D4CF"
-            BuildableName = "libKiteSDK.a"
+            BlueprintIdentifier = "2E451DC71D9554B40080F1C1"
+            BuildableName = "KiteSDK.framework"
             BlueprintName = "KiteSDK"
             ReferencedContainer = "container:KitePrintSDK.xcodeproj">
          </BuildableReference>

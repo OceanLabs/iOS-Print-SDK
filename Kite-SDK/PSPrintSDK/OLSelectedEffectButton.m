@@ -20,7 +20,7 @@
     if (!self.selected && selected){
         if (!self.selectedView){
             self.selectedView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height, self.frame.size.width, 3.5)];
-            self.selectedView.backgroundColor = [UIColor colorWithRed:0.349 green:0.757 blue:0.890 alpha:1.000];
+            self.selectedView.backgroundColor = self.effectColor ? self.effectColor : [UIColor colorWithRed:0.349 green:0.757 blue:0.890 alpha:1.000];
             [self addSubview:self.selectedView];
         }
         

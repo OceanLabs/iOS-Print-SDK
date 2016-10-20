@@ -375,7 +375,7 @@ extern void QRcode_free(QRcode *qrcode);
 /**
  * Create structured symbols from the input data.
  * @warning This function is THREAD UNSAFE.
- * @param s
+ * @param s The parameter
  * @return a singly-linked list of QRcode.
  */
 extern QRcode_List *QRcode_encodeInputStructured(QRinput_Struct *s);

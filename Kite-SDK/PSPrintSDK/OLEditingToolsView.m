@@ -32,6 +32,14 @@
 
 @implementation OLEditingToolsView
 
+- (void)setColor:(UIColor *)color{
+    self.button1.effectColor = color;
+    self.button2.effectColor = color;
+    self.button3.effectColor = color;
+    self.button4.effectColor = color;
+    [self.ctaButton setBackgroundColor:color];
+}
+
 -(id)initWithCoder:(NSCoder *)aDecoder{
     if ((self = [super initWithCoder:aDecoder])){
         UIView *view = [[[NSBundle bundleForClass:self.class] loadNibNamed:@"OLEditingToolsView"
@@ -40,8 +48,14 @@
         view.frame = self.bounds;
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:view];
+        
+        [self.collectionView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizer:)]];
     }
     return self;
+}
+
+- (void)tapGestureRecognizer:(id)sender{
+    //Do nothing for now
 }
 
 -  (id)initWithFrame:(CGRect)aRect
@@ -60,6 +74,24 @@
     }
     
     return self;
+}
+
+- (NSArray *)buttons{
+    NSMutableArray *buttons = [[NSMutableArray alloc] init];
+    if (self.button1){
+        [buttons addObject:self.button1];
+    }
+    if (self.button2){
+        [buttons addObject:self.button2];
+    }
+    if (self.button3){
+        [buttons addObject:self.button3];
+    }
+    if (self.button4){
+        [buttons addObject:self.button4];
+    }
+    
+    return buttons;
 }
 
 @end

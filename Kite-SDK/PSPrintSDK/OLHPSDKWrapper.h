@@ -6,7 +6,7 @@
 //  Copyright © 2016 Kite.ly. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface OLHPSDKWrapper : NSObject
 

@@ -238,19 +238,6 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
 @property (strong, nonatomic, readonly) NSString *submitStatusErrorMessage;
 
 /**
- *  If duplicate jobs are found, discard
- */
-- (void)discardDuplicateJobs;
-
-/**
- *  Duplicate jobs for different user addresses. This is useful for when a user wants to send the same order to multiple addresses.
- *  @warning This will multiply the number of jobs by the number of addresses provided. If you want to send specific jobs to multiple addresses, do that manually.
- *
- *  @param addresses The addresses to send copies of the whole order to.
- */
-- (void)duplicateJobsForAddresses:(NSArray *)addresses;
-
-/**
  *  Request the cost of the print order from Kite
  *
  *  @param handler Block to call when we have the cost ready.

@@ -9,9 +9,9 @@
 #import <XCTest/XCTest.h>
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
-#import "OLPrintPhoto.h"
 #import "OLKiteTestHelper.h"
-#import <AssetsLibrary/AssetsLibrary.h>
+#import "OLPhotobookPrintJob.h"
+
 
 @import Photos;
 
@@ -37,7 +37,7 @@
 - (void)setUp {
     [super setUp];
     
-    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
+    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
     [OLKitePrintSDK setIsUnitTesting];
     
 }
@@ -205,52 +205,18 @@
     [self submitJobs:@[job]];
 }
 
-- (void)testSquaresOrderWithALAssetOLAssets{
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Get ALAsset"];
-    
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    __block ALAsset *asset;
-    [library enumerateGroupsWithTypes: ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop){
-        [group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:0] options:0 usingBlock:^(ALAsset *result, NSUInteger index, BOOL *groupStop){
-            if (!*stop && !*groupStop){
-                asset = result;
-                [expectation fulfill];
-            }
-            *stop = YES;
-            *groupStop = YES;
-        }];
-    }failureBlock:NULL];
-    
-    [self waitForExpectationsWithTimeout:15 handler:NULL];
-    
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPrintPhoto:printPhoto]]];
-    [self submitJobs:@[job]];
-}
-
 - (void)testSquaresOrderWithURLOLAssetPrintPhotos{
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = [OLKiteTestHelper urlAssets].firstObject;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].firstObject]];
     [self submitJobs:@[job]];
 }
 
 - (void)testSquaresOrderWithImageOLAssetPrintPhotos{
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = [OLKiteTestHelper imageAssets].firstObject;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper imageAssets].firstObject]];
     [self submitJobs:@[job]];
 }
 
 - (void)testSquaresOrderWithImageOLAssetPrintPhotoOLAsset{
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = [OLKiteTestHelper imageAssets].firstObject;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPrintPhoto:printPhoto]]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper imageAssets].firstObject]];
     [self submitJobs:@[job]];
 }
 
@@ -260,42 +226,7 @@
     
     PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
     
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithDataSource:printPhoto]]];
-    [self submitJobs:@[job]];
-}
-
-- (void)testSquaresOrderWithPHAssetPrintPhotoOLAsset{
-    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-    
-    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-    
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
-    
-    OLAsset *olAsset = [OLAsset assetWithPrintPhoto:printPhoto];
-    
-    PHAsset *loadedAsset = [olAsset loadPHAsset];
-    
-    XCTAssert([[loadedAsset localIdentifier] isEqualToString:[asset localIdentifier]], @"Local IDs should match");
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[olAsset]];
-    [self submitJobs:@[job]];
-}
-
-- (void)testSquaresOrderWithPHAssetPrintPhotosDataSource{
-    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-    
-    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-    
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset;
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" dataSources:@[printPhoto]];
+    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPHAsset:asset]]];
     [self submitJobs:@[job]];
 }
 
@@ -319,48 +250,6 @@
     
     OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:@[[OLAsset assetWithDataAsPDF:data1]] frontCoverOLAsset:nil backCoverOLAsset:nil];
     [self submitJobs:@[job]];
-}
-
-- (void)testMultipleAddressesManual{
-    OLProductPrintJob *job1 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].firstObject]];
-    OLProductPrintJob *job2 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].lastObject]];
-    [self submitJobs:@[job1, job2]];
-}
-
-- (void)testMultipleAddresses{
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].firstObject]];
-    
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    [printOrder addPrintJob:job];
-    printOrder.email = @"ios_unit_test@kite.ly";
-    
-    OLAddress *address1 = [OLAddress kiteTeamAddress];
-    OLAddress *a = [[OLAddress alloc] init];
-    a.recipientFirstName = @"Deon";
-    a.recipientLastName = @"Botha";
-    a.line1         = @"27-28 Eastcastle House";
-    a.line2         = @"Eastcastle Street";
-    a.city          = @"London";
-    a.stateOrCounty = @"Greater London";
-    a.zipOrPostcode = @"W1W 8DH";
-    a.country       = [OLCountry countryForCode:@"GBR"];
-    
-    [printOrder duplicateJobsForAddresses:@[address1, a]];
-    XCTAssert(printOrder.jobs.count == 2, @"Should have 2 jobs, one for each address");
-    [printOrder discardDuplicateJobs];
-    XCTAssert(printOrder.jobs.count == 1, @"Should have only 1 job");
-    [printOrder duplicateJobsForAddresses:@[address1, a]];
-    XCTAssert(printOrder.jobs.count == 2, @"Should have 2 jobs, one for each address");
-    
-    XCTAssert(printOrder.shippingAddressesOfJobs.count == 2, @"Should have 2 addresses");
-    XCTAssert(([printOrder.shippingAddressesOfJobs.firstObject isEqual:address1] && [printOrder.shippingAddressesOfJobs.lastObject isEqual:a]) || ([printOrder.shippingAddressesOfJobs.firstObject isEqual:a] && [printOrder.shippingAddressesOfJobs.lastObject isEqual:address1]), @"Addresses should be equal to the above");
-    
-    [self submitOrder:printOrder WithSuccessHandler:NULL];
-    
-    [self waitForExpectationsWithTimeout:120 handler:nil];
-    
-    XCTAssert(printOrder.printed, @"Order not printed");
-    XCTAssert([printOrder.receipt hasPrefix:@"PS"], @"Order does not have valid receipt");
 }
 
 

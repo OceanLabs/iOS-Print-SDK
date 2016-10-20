@@ -28,34 +28,9 @@
 //
 #import <Foundation/Foundation.h>
 
-#import "OLAsset.h"
-#import "OLPhotoEdits.h"
+__deprecated_msg("Use OLAsset")
 
-typedef void (^OLImageEditorImageGetImageCompletionHandler)(UIImage *image);
-typedef void (^OLImageEditorImageGetImageProgressHandler)(float progress);
+@interface OLPrintPhoto : NSObject
 
-typedef enum {
-    kPrintPhotoAssetTypeALAsset,
-    kPrintPhotoAssetTypePHAsset,
-    kPrintPhotoAssetTypeOLAsset,
-    kPrintPhotoAssetTypeInstagramPhoto,
-    kPrintPhotoAssetTypeFacebookPhoto,
-    kPrintPhotoAssetTypeCorrupt
-} PrintPhotoAssetType;
-
-@interface OLPrintPhoto : NSObject <OLAssetDataSource, NSCopying, NSCoding>
-
-- (void)setImageSize:(CGSize)destSize cropped:(BOOL)cropped progress:(OLImageEditorImageGetImageProgressHandler)progressHandler completionHandler:(void(^)(UIImage *image))handler;
-- (void)getImageWithProgress:(OLImageEditorImageGetImageProgressHandler)progressHandler completion:(OLImageEditorImageGetImageCompletionHandler)completionHandler;
-- (void)unloadImage;
-+ (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;
-+ (UIImage*)imageWithImage:(UIImage*) sourceImage scaledToSize:(CGSize) i_size;
-- (BOOL)isEdited;
-
-@property (nonatomic, assign, readonly) PrintPhotoAssetType type;
-@property (nonatomic, strong) id asset;
-@property (assign, nonatomic) NSInteger extraCopies;
-@property (strong, nonatomic) OLPhotoEdits *edits;
-@property (strong, nonatomic) NSString *uuid;
 
 @end

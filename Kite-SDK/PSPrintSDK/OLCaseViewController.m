@@ -31,23 +31,25 @@
 #import "OLCaseViewController.h"
 #import "OLRemoteImageCropper.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIImage+OLUtils.h"
+#import "OLUserSession.h"
+#import "OLAsset+Private.h"
 
-@interface OLSingleImageProductReviewViewController (Private)
+@interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
 
-@property (weak, nonatomic) IBOutlet UIView *containerView;
-@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *imageCropView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *maskAspectRatio;
 -(void) doCheckout;
-
+@property (weak, nonatomic) IBOutlet UIView *printContainerView;
+@property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
+- (UIEdgeInsets)imageInsetsOnContainer;
+@property (strong, nonatomic) UITextField *borderTextField;
 @end
 
 @interface OLCaseViewController ()
 
 @property (assign, nonatomic) BOOL downloadedMask;
-@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
+@property (strong, nonatomic) IBOutlet UIVisualEffectView *caseVisualEffectView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 @property (strong, nonatomic) UIImage *maskImage;
-@property (strong, nonatomic) OLPrintPhoto *imageDisplayed;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
@@ -56,6 +58,14 @@
 @end
 
 @implementation OLCaseViewController
+
+- (CGFloat)aspectRatio{
+    if (CGSizeEqualToSize(self.product.productTemplate.sizePx, CGSizeZero)){
+        return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
+    }
+    
+    return self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width;
+}
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -71,6 +81,10 @@
             [[NSOperationQueue mainQueue] addOperation:op1];
         }];
     }
+    else{
+        [self.caseVisualEffectView removeFromSuperview];
+        [self.maskActivityIndicator removeFromSuperview];
+    }
     if (self.product.productTemplate.productHighlightsImageURL){
         NSOperation *op2 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op2];
@@ -79,6 +93,9 @@
             [[NSOperationQueue mainQueue] addOperation:op2];
         }];
     }
+    else{
+        [self.highlightsView removeFromSuperview];
+    }
     if (self.product.productTemplate.productBackgroundImageURL){
         NSOperation *op3 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op3];
@@ -86,6 +103,9 @@
         [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL withCompletionHandler:^(UIImage *image, NSError *error){
             [[NSOperationQueue mainQueue] addOperation:op3];
         }];
+    }
+    else{
+        [self.deviceView removeFromSuperview];
     }
     
     [[NSOperationQueue mainQueue] addOperation:self.downloadImagesOperation];
@@ -98,60 +118,49 @@
     
     self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
     
-    if (self.downloadedMask){
-        return;
-    }
-    
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
-        if (!self.visualEffectView){
-            UIVisualEffect *blurEffect;
-            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-            
-            self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-            UIView *view = self.visualEffectView;
-            [view.layer setMasksToBounds:YES];
-            [self.containerView insertSubview:view belowSubview:self.maskActivityIndicator];
-            
-            view.translatesAutoresizingMaskIntoConstraints = NO;
-            NSDictionary *views = NSDictionaryOfVariableBindings(view);
-            NSMutableArray *con = [[NSMutableArray alloc] init];
-            
-            NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                                 @"V:|-0-[view]-0-|"];
-            
-            
-            for (NSString *visual in visuals) {
-                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-            }
-            
-            [view.superview addConstraints:con];
-        }
-    }
-    else{
+    if (!self.downloadedMask && self.product.productTemplate.maskImageURL){
+        UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
+        [self.cropView removeConstraint:self.aspectRatioConstraint];
+        NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
+        [self.cropView addConstraints:@[con]];
+        self.aspectRatioConstraint = con;
         
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+        
+        [self maskWithImage:tempMask targetView:self.cropView];
+        
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     }
-    
-    UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
-    [self.containerView removeConstraint:self.maskAspectRatio];
-    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
-    [self.containerView addConstraints:@[con]];
-    self.maskAspectRatio = con;
-    
-    [self.view setNeedsLayout];
-    [self.view layoutIfNeeded];
-    
-    [self maskWithImage:tempMask targetView:self.imageCropView];
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
-- (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
-        [self applyDownloadedMask];
-    }];
-    [block addDependency:self.downloadImagesOperation];
-    [[NSOperationQueue mainQueue] addOperation:block];
+- (UIColor *)containerBackgroundColor{
+    return self.product.productTemplate.maskImageURL ? [UIColor clearColor] : [UIColor whiteColor];
+}
+
+- (void)orderViews{
+    [self.view bringSubviewToFront:self.deviceView];
+    [self.view bringSubviewToFront:self.printContainerView];
+    [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.highlightsView];
+    [self.view bringSubviewToFront:self.editingTools.drawerView];
+    [self.view bringSubviewToFront:self.editingTools];
+    [self.view bringSubviewToFront:self.hintView];
+}
+
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    
+    if (self.product.productTemplate.maskImageURL){
+        NSBlockOperation *block = [NSBlockOperation blockOperationWithBlock:^{
+            [self applyDownloadedMask];
+        }];
+        [block addDependency:self.downloadImagesOperation];
+        [[NSOperationQueue mainQueue] addOperation:block];
+    }
+    else{
+        [self applyProductImageLayers];
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -160,7 +169,7 @@
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
         self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
         [self.view layoutIfNeeded];
-        [self maskWithImage:self.maskImage targetView:self.imageCropView];
+        [self maskWithImage:self.maskImage targetView:self.cropView];
     }completion:^(id <UIViewControllerTransitionCoordinatorContext> context){}];
 }
 
@@ -168,6 +177,7 @@
     if (self.downloadedMask){
         return;
     }
+    
     [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.maskImageURL priority:1 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (error) {
@@ -175,38 +185,61 @@
             av.tag = 99;
             [av show];
         } else {
-            [self.containerView removeConstraint:self.maskAspectRatio];
-            NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeWidth multiplier:self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width constant:0];
-            [self.containerView addConstraints:@[con]];
+            [self.cropView removeConstraint:self.aspectRatioConstraint];
+            NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:[self aspectRatio] constant:0];
+            [self.cropView addConstraints:@[con]];
             
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
             
-            self.maskImage = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
-            [self maskWithImage:self.maskImage targetView:self.imageCropView];
+            self.maskImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            [self maskWithImage:self.maskImage targetView:self.cropView];
             
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-                self.deviceView.image = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
-            }];
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-                self.highlightsView.image = [OLPrintPhoto imageWithImage:image scaledToSize:[UIScreen mainScreen].bounds.size];
-             }];
+            [self applyProductImageLayers];
             
-            self.visualEffectView.hidden = YES;
+            self.caseVisualEffectView.hidden = YES;
             self.downloadedMask = YES;
             [self.maskActivityIndicator removeFromSuperview];
-            self.maskActivityIndicator = nil;
-            
-            self.imageCropView.imageView.transform = self.imageDisplayed.edits.cropTransform;
         }
     }];
 }
 
+- (void)applyProductImageLayers{
+    if (!self.deviceView.image){
+        self.deviceView.alpha = 0;
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+            self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            [UIView animateWithDuration:0.1 animations:^{
+                self.deviceView.alpha = 1;
+            }];
+        }];
+    }
+    if (!self.highlightsView.image){
+        self.highlightsView.alpha = 0;
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+            self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            [UIView animateWithDuration:0.1 animations:^{
+                self.highlightsView.alpha = 1;
+            }];
+        }];
+    }
+}
+
 -(void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
+    if (!maskImage){
+        [targetView.layer.mask removeFromSuperlayer];
+        targetView.layer.mask = nil;
+        return;
+    }
+    
     CALayer *_maskingLayer = [CALayer layer];
     CGRect f = targetView.bounds;
     UIEdgeInsets imageBleed = self.product.productTemplate.imageBleed;
     CGSize size = self.product.productTemplate.sizePx;
+    
+    if (CGSizeEqualToSize(size, CGSizeZero)){
+        size = self.product.productTemplate.sizeCm;
+    }
     
     UIEdgeInsets adjustedBleed = UIEdgeInsetsMake(f.size.height * imageBleed.top / size.height,
                                                   f.size.width * imageBleed.left / size.width,
@@ -221,46 +254,46 @@
     [targetView.layer setMask:_maskingLayer];
 }
 
+- (void)onButtonCropClicked:(UIButton *)sender{
+    for (UIView *view in self.cropFrameGuideViews){
+        [self.printContainerView bringSubviewToFront:view];
+    }
+    sender.selected = YES;
+    [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *view in self.cropFrameGuideViews){
+            view.alpha = 1;
+            [view.superview bringSubviewToFront:view];
+            self.highlightsView.alpha = 0;
+        }
+        [self.view bringSubviewToFront:self.editingTools];
+    } completion:^(BOOL finished){
+        self.cropView.clipsToBounds = NO;
+        [self maskWithImage:nil targetView:self.cropView];
+        [self.view sendSubviewToBack:self.cropView];
+    }];
+}
+
+- (void)exitCropMode{
+    self.cropView.clipsToBounds = YES;
+    [self maskWithImage:self.maskImage targetView:self.cropView];
+    [self orderViews];
+    for (UIView *view in self.cropFrameGuideViews){
+        [self.printContainerView bringSubviewToFront:view];
+    }
+    [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *view in self.cropFrameGuideViews){
+            view.alpha = 0;
+            self.highlightsView.alpha = 1;
+        }
+    } completion:^(BOOL finished){
+    }];
+}
+
 -(void) doCheckout{
-    if (!self.imageCropView.image || !self.downloadedMask) {
+    if (!self.downloadedMask && self.product.productTemplate.maskImageURL) {
         return;
     }
     [super doCheckout];
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - UIAlertViewDelegate methods
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == 99) {
-        if (buttonIndex == 0) {
-            [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            [self applyDownloadedMask];
-        }
-    }
-}
-
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 @end

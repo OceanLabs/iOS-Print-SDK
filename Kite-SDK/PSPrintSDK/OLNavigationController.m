@@ -48,43 +48,7 @@
         [attributes setObject:titleColor1 forKey:NSForegroundColorAttributeName];
         self.navigationBar.titleTextAttributes = attributes;
     }
-    
-//    if ([OLKiteABTesting sharedInstance].darkTheme){
-//        self.navigationBar.barTintColor = [UIColor blackColor];
-//        self.navigationBar.tintColor = [UIColor grayColor];
-//        self.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-//        
-//        NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-//        [attributes setObject:[UIColor grayColor] forKey:NSForegroundColorAttributeName];
-//        self.navigationBar.titleTextAttributes = attributes;
-//    }
 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-- (BOOL)shouldAutorotate {
-    UIViewController *vc;
-    if (self.presentedViewController) vc = self.presentedViewController;
-    else vc = [self topViewController];
-    if (![vc isKindOfClass:[UIAlertController class]]){
-        return [vc shouldAutorotate];
-    }
-    else{
-        return NO;
-    }
-    
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
-    UIViewController *vc;
-    if (self.presentedViewController && ![self.presentedViewController isKindOfClass:[UIAlertController class]]) vc = self.presentedViewController;
-    else vc = [self topViewController];
-    if (![vc isKindOfClass:[UIAlertController class]]){
-        return [vc supportedInterfaceOrientations];
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 @end

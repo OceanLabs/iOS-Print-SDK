@@ -182,10 +182,10 @@
                 if ([objects isKindOfClass:[NSArray class]]) {
                     for (id productTemplate in objects) {
                         if ([productTemplate isKindOfClass:[NSDictionary class]]) {
-                            if (![productTemplate[@"active"] boolValue] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive){
+                            if (![productTemplate[@"active"] boolValue] && [OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
                                 continue;
                             }
-                            else if (![productTemplate[@"sandbox_active"] boolValue] && [OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox){
+                            else if (![productTemplate[@"sandbox_active"] boolValue] && [OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox){
                                 continue;
                             }
                             id name = productTemplate[@"name"];
@@ -208,6 +208,22 @@
                             
                             NSNumber *gridCountX = [productTemplate[@"grid_count_x"] isKindOfClass:[NSNumber class]] ? productTemplate[@"grid_count_x"] : nil;
                             NSNumber *gridCountY = [productTemplate[@"grid_count_y"] isKindOfClass:[NSNumber class]] ? productTemplate[@"grid_count_y"] : nil;
+                            
+                            NSMutableArray<NSURL *> *representationAssets;
+                            if ([productTemplate[@"ios_calendar_assets"] isKindOfClass:[NSArray class]]){
+                                representationAssets = [[NSMutableArray alloc] init];
+                                for (id assetURL in productTemplate[@"ios_calendar_assets"]){
+                                    NSURL *url = [NSURL URLWithString:assetURL];
+                                    if (url){
+                                        [representationAssets addObject:url];
+                                    }
+                                }
+                            }
+                            
+                            NSURL *logo;
+                            if ([productTemplate[@"ios_calendar_logo"] isKindOfClass:[NSString class]]){
+                                logo = [NSURL URLWithString:productTemplate[@"ios_calendar_logo"]];
+                            }
                             
                             if ([name isKindOfClass:[NSString class]]
                                 && [identifier isKindOfClass:[NSString class]]
@@ -233,6 +249,8 @@
                                 CGSize sizePx = CGSizeZero;
                                 NSString *classPhoto;
                                 NSArray *supportedOptions;
+                                NSString *collectionId;
+                                NSString *collectionName;
                                 OLProductRepresentation *productRepresentation;
                                 if (product){
                                     NSArray *coverPhotoDicts = product[@"cover_photo_variants"];
@@ -245,6 +263,9 @@
                                             }
                                         }
                                     }
+                                    
+                                    collectionId = [product[@"collection_id"] isKindOfClass:[NSString class]] ? product[@"collection_id"] : nil;
+                                    collectionName = [product[@"collection_name"] isKindOfClass:[NSString class]] ? product[@"collection_name"] : nil;
                                     
                                     maskImageURL = [product[@"mask_url"] isKindOfClass:[NSString class]] ? product[@"mask_url"] : nil;
                                     productBackgroundImageURL = [product[@"product_background_image_url"] isKindOfClass:[NSString class]] ? product[@"product_background_image_url"] : nil;
@@ -418,6 +439,11 @@
                                     t.supportedOptions = supportedOptions;
                                     t.productRepresentation = productRepresentation;
                                     t.printInStore = printInStore;
+                                    
+                                    t.collectionId = collectionId;
+                                    t.collectionName = collectionName;
+                                    t.logo = logo;
+                                    t.representationAssets = representationAssets;
                                     
                                     NSMutableArray <OLUpsellOffer *>*upsellOffersClean = [[NSMutableArray alloc] init];
                                     for (NSDictionary *offerDict in upsellOffers){

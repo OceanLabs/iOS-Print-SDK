@@ -30,10 +30,11 @@
 #import <UIKit/UIKit.h>
 #import "OLNavigationController.h"
 
+@class OLAddress;
 @class OLAddressPickerController;
 
 @protocol OLAddressPickerControllerDelegate <NSObject>
-- (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses;
+- (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray<OLAddress *> *)addresses;
 - (void)addressPickerDidCancelPicking:(OLAddressPickerController *)picker;
 @end
 
@@ -42,6 +43,6 @@
 @property (weak, nonatomic) id<UINavigationControllerDelegate, OLAddressPickerControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL allowsMultipleSelection;
 @property (assign, nonatomic) BOOL allowsAddressSearch;
-@property (strong, nonatomic) NSArray/*<OLAddress>*/ *selected;
+@property (strong, nonatomic) NSArray<OLAddress *> *selected;
 
 @end

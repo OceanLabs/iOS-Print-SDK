@@ -27,30 +27,31 @@
 //  THE SOFTWARE.
 //
 
-#ifdef COCOAPODS
-#import <DACircularProgress/DACircularProgressView.h>
-#else
-#import "DACircularProgressView.h"
-#endif
 
+#import "OLCircularProgressView.h"
 #import "OLRemoteImageView.h"
 
 @interface OLRemoteImageView ()
 
-@property (strong, nonatomic) DACircularProgressView *loadingView;
+@property (strong, nonatomic) OLCircularProgressView *loadingView;
 
 @end
 
 @implementation OLRemoteImageView
 
 - (void)initializeViews{
-    self.loadingView = [[DACircularProgressView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    self.loadingView = [[OLCircularProgressView alloc] initWithFrame:CGRectMake(10, 10, 20, 20)];
     self.loadingView.innerTintColor = [UIColor lightGrayColor];
     self.loadingView.trackTintColor = [UIColor lightGrayColor];
     self.loadingView.progressTintColor = [UIColor whiteColor];
     self.loadingView.thicknessRatio = 1;
     self.loadingView.hidden = YES;
     
+    self.loadingView.clipsToBounds = NO;
+    self.loadingView.layer.shadowColor = [[UIColor blackColor] CGColor];
+    self.loadingView.layer.shadowOpacity = .4;
+    self.loadingView.layer.shadowRadius = 5;
+        
     [self addSubview:self.loadingView];
 }
 

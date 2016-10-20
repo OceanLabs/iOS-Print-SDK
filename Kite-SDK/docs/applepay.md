@@ -8,9 +8,9 @@ To submit an app with Apple Pay to the App Store, you need to register a merchan
 Prerequisites
 --------
 
-To begin, you'll need a newer iOS device (iPhone 6 or 6+, iPad Air 2, or iPad mini 3) running iOS 8.1 or later, as well as a Mac with Xcode 6.1 or newer installed. You can install or upgrade Xcode in the Mac App Store.
+To begin, you'll need a newer iOS device (iPhone 6 or 6+, iPad Air 2, or iPad mini 3) running iOS 8.1 or later, as well as a Mac with Xcode 8.0 or newer installed. You can install or upgrade Xcode in the Mac App Store.
 
-You'll also need an Apple Developer Account, as well as a membership in the iOS Developer Program. If you need to become a member, you can do so [here](httpx://developer.apple.com).
+You'll also need an Apple Developer Account, as well as a membership in the iOS Developer Program. If you need to become a member, you can do so [here](https://developer.apple.com).
 
 Registering for an Apple Merchant ID
 --------
@@ -41,10 +41,8 @@ SDK Integration
 Finally
 
 ```obj-c
-#ifdef OL_KITE_OFFER_APPLE_PAY
     [OLKitePrintSDK setApplePayMerchantID:@"REPLACE WITH THE MERCHANT ID YOU USED ABOVE"];
     [OLKitePrintSDK setApplePayPayToString:@"REPLACE WITH YOUR APP NAME"];
-#endif
 ```
 
 Finally ensure ApplePay is enabled in the Capabilities tab of your app build target.
@@ -52,7 +50,5 @@ Finally ensure ApplePay is enabled in the Capabilities tab of your app build tar
 If you are using CocoaPods please make sure to include the ApplePay subspec by adding the following line to your podfile:
 
 ```ruby
-pod 'Kite-Print-SDK/ApplePay'
+pod 'Stripe', '~> 8.0.6'
 ```
-
-Note that if you integrated the SDK by any means other than CocoaPods you'll need to define the `OL_KITE_OFFER_APPLE_PAY=1` preprocessor macro in the build settings of your application.

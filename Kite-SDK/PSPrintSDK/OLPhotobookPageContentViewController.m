@@ -28,12 +28,12 @@
 //
 
 #import "OLPhotobookPageContentViewController.h"
-#import "OLPrintPhoto.h"
-#import "OLScrollCropViewController.h"
+#import "OLImageEditViewController.h"
 #import "OLProduct.h"
 #import "OLRemoteImageView.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLPageLayout.h"
+#import "OLAsset+Private.h"
 
 @interface OLPhotobookPageContentViewController ()
 
@@ -124,15 +124,15 @@
     if (imageIndex >= self.userSelectedPhotos.count){
         return;
     }
-    OLPrintPhoto *printPhoto = [self.userSelectedPhotos objectAtIndex:imageIndex];
-    if (printPhoto != (id)[NSNull null]){
+    OLAsset *printPhoto = [self.userSelectedPhotos objectAtIndex:imageIndex];
+    if (![printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
         self.imageView.image = nil;
         dispatch_async(dispatch_get_main_queue(), ^{
             NSInteger blockIndex = imageIndex;
             
-            [printPhoto setImageSize:self.imageView.frame.size cropped:YES progress:^(float progress){
+            [printPhoto imageWithSize:self.imageView.frame.size applyEdits:YES progress:^(float progress){
                 [self.imageView setProgress:progress];
-            }completionHandler:^(UIImage *image){
+            }completion:^(UIImage *image, NSError *error){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (blockIndex == imageIndex){
                         self.imageView.image = image;

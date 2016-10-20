@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+@import UIKit;
 
 @protocol OLKiteDelegate;
 @class OLProductHomeViewController;
@@ -44,35 +44,23 @@
 
 + (NSString *)userPhone:(UIViewController *)topVC;
 
-+ (id<OLKiteDelegate>)kiteDelegate:(UIViewController *)topVC;
-
-+ (OLKiteViewController *)kiteVcForViewController:(UIViewController *)vc;
-
 + (BOOL)assetArrayContainsPDF:(NSArray *)array;
 
 + (BOOL)imageProvidersAvailable:(UIViewController *)topVc;
-+ (BOOL)cameraRollEnabled:(UIViewController *)topVc;
++ (BOOL)cameraRollEnabled;
 + (BOOL)facebookEnabled;
 + (BOOL)instagramEnabled;
 + (BOOL)qrCodeUploadEnabled;
++ (NSArray<NSString *> *)supportedPKPaymentNetworks;
++ (BOOL)isApplePayAvailable;
++ (BOOL)isPayPalAvailable;
+
 
 + (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size;
-
-#ifdef OL_KITE_OFFER_APPLE_PAY
-+(BOOL)isApplePayAvailable;
-#endif
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
-
-+ (NSInteger)cameraRollProviderIndex:(UIViewController *)topVc;
-+ (NSInteger)facebookProviderIndex:(UIViewController *)topVc;
-+ (NSInteger)instagramProviderIndex:(UIViewController *)topVc;
-+ (NSInteger)qrCodeProviderStartIndex:(UIViewController *)topVc;
-#ifdef OL_KITE_OFFER_CUSTOM_IMAGE_PROVIDERS
-+ (NSInteger)customProvidersStartIndex:(UIViewController *)topVc;
-#endif
 
 + (void)registerDefaultsWithURL:(NSURL *)url
                         success:(void (^)(NSDictionary *defaults))success
