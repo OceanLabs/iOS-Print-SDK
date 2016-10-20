@@ -82,7 +82,6 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
 @property (nonatomic, assign, readwrite) NSUInteger quantityPerSheet;
 @property (strong, nonatomic) NSArray *_Nullable supportedOptions;
-@property (strong, nonatomic, readwrite) NSArray <OLProductTemplateOption *>*_Nullable options;
 @end
 
 @interface OLCountry (Private)

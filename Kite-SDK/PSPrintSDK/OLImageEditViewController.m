@@ -1493,6 +1493,24 @@ const NSInteger kOLEditTagCrop = 40;
             }
         }
     }
+    else{
+        UIButton *selectedButton;
+        for (UIButton *button in self.editingTools.buttons){
+            if (button.selected){
+                selectedButton = button;
+                break;
+            }
+        }
+        [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+            self.selectedOption = self.product.productTemplate.options[indexPath.item];
+            self.editingTools.collectionView.tag = self.selectedOption.type;
+            selectedButton.selected = YES;
+            [self.editingTools bringSubviewToFront:self.editingTools.drawerView];
+            [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+            [collectionView reloadData];
+            [self showDrawerWithCompletionHandler:NULL];
+        }];
+    }
 }
 
 - (void)registerCollectionViewCells{

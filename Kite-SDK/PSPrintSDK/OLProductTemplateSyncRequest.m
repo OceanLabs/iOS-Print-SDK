@@ -38,6 +38,7 @@
 #import "OLKiteUtils.h"
 #import "OLPageLayout.h"
 #import "OLProductRepresentation.h"
+#import "OLProductTemplateCollection.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
@@ -63,7 +64,7 @@
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
     NSAssert(self.req == nil, @"Oops only one template sync request should be in progress at any given time");
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/?limit=100", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/?limit=200", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
     [self fetchTemplatesWithURL:url templateAccumulator:[[NSMutableArray alloc] init] handler:handler];
 }
 
@@ -117,6 +118,19 @@
                 id userConfig = json[@"user_config"];
                 if ([userConfig isKindOfClass:[NSDictionary class]]){
                     [[OLKiteABTesting sharedInstance] setUserConfig:userConfig];
+                }
+                
+                NSMutableArray *templateCollections = [[NSMutableArray alloc] init];
+                id collections = json[@"collections"];
+                if ([collections isKindOfClass:[NSArray class]]){
+                    for (NSDictionary *collection in collections){
+                        if ([collection isKindOfClass:[NSDictionary class]]){
+                            NSString *name = collection[@"name"];
+                            NSArray *templates = collection[@"templates"];
+                            OLProductTemplateCollection *templateCollection = [[OLProductTemplateCollection alloc] initWithName:name templates:templates];
+                            [templateCollections addObject:templateCollection];
+                        }
+                    }
                 }
                 
                 id payPalSupportedCurrencies = json[@"paypal_supported_currencies"];
@@ -452,6 +466,15 @@
                                         }
                                     }
                                     t.upsellOffers = upsellOffersClean;
+                                    
+                                    for (OLProductTemplateCollection *collection in templateCollections){
+                                        if ([collection containsTemplateIdentifier:identifier]){
+                                            OLProductTemplateOption *option = [[OLProductTemplateOption alloc] initWithTemplateCollection:collection];
+                                            NSMutableArray *options = [t.options mutableCopy];
+                                            [options addObject:option];
+                                            t.options = options;
+                                        }
+                                    }
                                     
                                     [acc addObject:t];
                                 }
