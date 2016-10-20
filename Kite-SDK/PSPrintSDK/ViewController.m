@@ -41,11 +41,10 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLKitePrintSDK.h"
 #import "OLImageCachingManager.h"
 #import "OLImagePickerViewController.h"
-#import "MP.h"
 
 @import Photos;
 
-@interface ViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate, MPPrintDelegate>
+@interface ViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
