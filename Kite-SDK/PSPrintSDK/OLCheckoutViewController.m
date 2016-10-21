@@ -197,6 +197,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     }
     else{
         self.navigationItem.leftBarButtonItem = nil;
+        self.navigationItem.rightBarButtonItem = nil;
     }
     
     self.title = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
@@ -345,11 +346,17 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    if (!self.navigationItem.rightBarButtonItem && !self.presentedViewController){
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
+#endif
+        [self checkAndSaveAddress];
+    }
+}
+
 - (void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-//    self.automaticallyAdjustsScrollViewInsets = NO;
-//    self.tableView.contentInset = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
-//    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 10, 10) animated:NO];
     [self.tableView reloadData];
     if (self.kiteLabel){
         [self positionKiteLabel];
