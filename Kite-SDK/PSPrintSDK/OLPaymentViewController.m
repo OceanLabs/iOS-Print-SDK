@@ -181,7 +181,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *poweredByKiteLabelBottomCon;
 @property (weak, nonatomic) IBOutlet UIView *shippingDetailsBox;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *shippingDetailsCon;
-@property (weak, nonatomic) IBOutlet UIButton *deliveryDetailsButton;
+@property (weak, nonatomic) IBOutlet UILabel *deliveryDetailsLabel;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *totalCostActivityIndicator;
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
 @property (assign, nonatomic) BOOL authorizedApplePay;
@@ -463,6 +463,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }];
         }
     }
+    
+    NSString *deliveryDetailsTitle = NSLocalizedStringFromTableInBundle(@"Delivery Details", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    NSMutableSet *addresses = [[NSMutableSet alloc] init];
+    for (id<OLPrintJob> job in self.printOrder.jobs){
+        if ([job address]){
+            [addresses addObject:[job address]];
+        }
+    }
+    if ([self.printOrder.shippingAddress isValidAddress]){
+        deliveryDetailsTitle = [self.printOrder.shippingAddress descriptionWithoutRecipient];
+    }
+    self.deliveryDetailsLabel.text = deliveryDetailsTitle;
 }
 
 - (void)handleCostError:(NSError *)error{
@@ -557,21 +569,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.tableView reloadData];
         return;
     }
-    
-    NSString *deliveryDetailsTitle = NSLocalizedStringFromTableInBundle(@"Delivery Details", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
-    NSMutableSet *addresses = [[NSMutableSet alloc] init];
-    for (id<OLPrintJob> job in self.printOrder.jobs){
-        if ([job address]){
-            [addresses addObject:[job address]];
-        }
-    }
-    if (addresses.count > 1){
-        deliveryDetailsTitle = [NSString stringWithFormat:NSLocalizedString(@"%lu Delivery Addresses", @""), (unsigned long)addresses.count];
-    }
-    else if ([self.printOrder.shippingAddress isValidAddress]){
-        deliveryDetailsTitle = [self.printOrder.shippingAddress descriptionWithoutRecipient];
-    }
-    [self.deliveryDetailsButton setTitle:deliveryDetailsTitle forState:UIControlStateNormal];
     
     BOOL shouldAnimate = NO;
     if (!self.printOrder.hasCachedCost || self.totalCostActivityIndicator.isAnimating){
@@ -1390,21 +1387,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.kiteDelegate];
         
-        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-        [[(UINavigationController *)vc view] class]; //force viewDidLoad;
-        [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
-        
-        UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
-        if (color1){
-            [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem.tintColor = color1;
-        }
-        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
-        if (font){
-            [[(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName : font} forState:UIControlStateNormal];
-        }
-        
-        nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
-        [self presentViewController:nvc animated:YES completion:NULL];
+        [self.navigationController pushViewController:vc animated:YES];
     }];
 }
 

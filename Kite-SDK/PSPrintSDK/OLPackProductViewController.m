@@ -302,7 +302,13 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
-    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    OLProductPrintJob *job;
+    if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+        job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:photoAssets.firstObject backImageOLAsset:photoAssets.lastObject];
+    }
+    else{
+        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    }
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
@@ -370,6 +376,9 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 - (CGFloat) productAspectRatio{
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
     if (b.top < b.bottom){ //This is for polaroids, since we don't know its pixel dims
+        return 1;
+    }
+    else if (CGSizeEqualToSize(self.product.productTemplate.sizeCm, CGSizeZero)){
         return 1;
     }
     else{
