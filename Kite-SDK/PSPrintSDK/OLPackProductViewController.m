@@ -378,6 +378,9 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     if (b.top < b.bottom){ //This is for polaroids, since we don't know its pixel dims
         return 1;
     }
+    else if (CGSizeEqualToSize(self.product.productTemplate.sizeCm, CGSizeZero)){
+        return 1;
+    }
     else{
         return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
     }

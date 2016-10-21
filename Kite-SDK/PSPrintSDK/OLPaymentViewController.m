@@ -181,7 +181,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *poweredByKiteLabelBottomCon;
 @property (weak, nonatomic) IBOutlet UIView *shippingDetailsBox;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *shippingDetailsCon;
-@property (weak, nonatomic) IBOutlet UIButton *deliveryDetailsButton;
+@property (weak, nonatomic) IBOutlet UILabel *deliveryDetailsLabel;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *totalCostActivityIndicator;
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
 @property (assign, nonatomic) BOOL authorizedApplePay;
@@ -463,6 +463,18 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }];
         }
     }
+    
+    NSString *deliveryDetailsTitle = NSLocalizedStringFromTableInBundle(@"Delivery Details", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    NSMutableSet *addresses = [[NSMutableSet alloc] init];
+    for (id<OLPrintJob> job in self.printOrder.jobs){
+        if ([job address]){
+            [addresses addObject:[job address]];
+        }
+    }
+    if ([self.printOrder.shippingAddress isValidAddress]){
+        deliveryDetailsTitle = [self.printOrder.shippingAddress descriptionWithoutRecipient];
+    }
+    self.deliveryDetailsLabel.text = deliveryDetailsTitle;
 }
 
 - (void)handleCostError:(NSError *)error{
@@ -557,21 +569,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [self.tableView reloadData];
         return;
     }
-    
-    NSString *deliveryDetailsTitle = NSLocalizedStringFromTableInBundle(@"Delivery Details", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
-    NSMutableSet *addresses = [[NSMutableSet alloc] init];
-    for (id<OLPrintJob> job in self.printOrder.jobs){
-        if ([job address]){
-            [addresses addObject:[job address]];
-        }
-    }
-    if (addresses.count > 1){
-        deliveryDetailsTitle = [NSString stringWithFormat:NSLocalizedString(@"%lu Delivery Addresses", @""), (unsigned long)addresses.count];
-    }
-    else if ([self.printOrder.shippingAddress isValidAddress]){
-        deliveryDetailsTitle = [self.printOrder.shippingAddress descriptionWithoutRecipient];
-    }
-    [self.deliveryDetailsButton setTitle:deliveryDetailsTitle forState:UIControlStateNormal];
     
     BOOL shouldAnimate = NO;
     if (!self.printOrder.hasCachedCost || self.totalCostActivityIndicator.isAnimating){
