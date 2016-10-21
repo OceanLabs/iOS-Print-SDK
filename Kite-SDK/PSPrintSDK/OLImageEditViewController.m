@@ -1323,14 +1323,12 @@ const NSInteger kOLEditTagCrop = 40;
         [cell setNeedsDisplay];
     }
     else if (collectionView.tag == kOLEditTagProductOptionsTab){
-        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
-        [self setupToolCell:cell];
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"labelCell" forIndexPath:indexPath];
+        [self setupLabelCell:cell];
         
         OLProductTemplateOption *option = self.product.productTemplate.options[indexPath.item];
-        [option iconWithCompletionHandler:^(UIImage *image){
-            [(UIImageView *)[cell viewWithTag:10] setImage:image];
-        }];
-        [(UILabel *)[cell viewWithTag:20] setText:option.name];
+        [(UILabel *)[cell viewWithTag:10] setText:[option.name uppercaseString]];
+        [(UILabel *)[cell viewWithTag:10] setNumberOfLines:1];
     }
     else if (collectionView.tag == OLProductTemplateOptionTypeGeneric){
         OLProductTemplateOptionChoice *choice = self.selectedOption.choices[indexPath.item];
@@ -1414,6 +1412,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == OLProductTemplateOptionTypeGeneric){
         return CGSizeMake(100, self.editingTools.collectionView.frame.size.height);
+    }
+    else if (collectionView.tag == kOLEditTagProductOptionsTab){
+        return CGSizeMake(120, self.editingTools.collectionView.frame.size.height);
     }
     
     return CGSizeMake(self.editingTools.collectionView.frame.size.height * 1.5, self.editingTools.collectionView.frame.size.height);
@@ -1529,6 +1530,7 @@ const NSInteger kOLEditTagCrop = 40;
     label.textAlignment = NSTextAlignmentCenter;
     label.adjustsFontSizeToFitWidth = YES;
     label.minimumScaleFactor = 0.3;
+    label.textColor = [UIColor colorWithWhite:0.271 alpha:1.000];
     if ([label respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]){
         label.allowsDefaultTighteningForTruncation = YES;
     }
