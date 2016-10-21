@@ -125,7 +125,7 @@
                 if ([collections isKindOfClass:[NSArray class]]){
                     for (NSDictionary *collection in collections){
                         if ([collection isKindOfClass:[NSDictionary class]]){
-                            NSString *name = collection[@"name"];
+                            NSString *name = collection[@"option_label"];
                             NSArray *templates = collection[@"templates"];
                             OLProductTemplateCollection *templateCollection = [[OLProductTemplateCollection alloc] initWithName:name templates:templates];
                             [templateCollections addObject:templateCollection];
