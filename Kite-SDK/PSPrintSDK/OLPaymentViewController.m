@@ -1390,21 +1390,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
         [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.kiteDelegate];
         
-        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-        [[(UINavigationController *)vc view] class]; //force viewDidLoad;
-        [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:vc action:@selector(onButtonDoneClicked)];
-        
-        UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
-        if (color1){
-            [(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem.tintColor = color1;
-        }
-        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
-        if (font){
-            [[(OLCheckoutViewController *)vc navigationItem].rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName : font} forState:UIControlStateNormal];
-        }
-        
-        nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
-        [self presentViewController:nvc animated:YES completion:NULL];
+        [self.navigationController pushViewController:vc animated:YES];
     }];
 }
 
