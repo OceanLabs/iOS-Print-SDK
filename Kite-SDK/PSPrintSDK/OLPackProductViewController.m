@@ -302,7 +302,13 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
-    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    OLProductPrintJob *job;
+    if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+        job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:photoAssets.firstObject backImageOLAsset:photoAssets.lastObject];
+    }
+    else{
+        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
+    }
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
