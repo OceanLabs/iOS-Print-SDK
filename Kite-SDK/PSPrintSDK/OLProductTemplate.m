@@ -413,6 +413,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeObject:self.logo forKey:kKeyLogo];
 }
 
+- (NSString *)description{
+    return [NSString stringWithFormat:@"%@ %@", self.identifier, [super description]];
+}
+
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         _identifier = [aDecoder decodeObjectForKey:kKeyIdentifier];
