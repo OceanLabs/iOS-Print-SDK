@@ -86,7 +86,7 @@ typedef NS_ENUM(NSInteger, OLTemplateUI) {
 @property (assign, nonatomic) NSInteger gridCountX;
 @property (assign, nonatomic) NSInteger gridCountY;
 @property (strong, nonatomic) NSArray <OLUpsellOffer *>*_Nullable upsellOffers;
-@property (strong, nonatomic, readonly) NSArray <OLProductTemplateOption *>*_Nullable options;
+@property (strong, nonatomic) NSArray <OLProductTemplateOption *>*_Nullable options;
 @property (strong, nonatomic) OLProductRepresentation *_Nullable productRepresentation;
 @property (assign, nonatomic) BOOL printInStore;
 @property (strong, nonatomic) NSString *_Nullable collectionId;
