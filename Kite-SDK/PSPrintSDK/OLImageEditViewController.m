@@ -1498,20 +1498,22 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (self.selectedOption && self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
         NSString *templateId = self.selectedOption.choices[indexPath.item].code;
-        self.product = [OLProduct productWithTemplateId:templateId];
+        
+        OLProduct *product = [OLProduct productWithTemplateId:templateId];
+        product.uuid = self.product.uuid;
         
         if (self.navigationController.viewControllers.count > 1){
             OLProductOverviewViewController *vc = self.navigationController.viewControllers[self.navigationController.viewControllers.count - 2];
             if ([vc isKindOfClass:[OLProductOverviewViewController class]]){
-                vc.product = self.product;
+                vc.product = product;
                 [vc setupProductRepresentation];
             }
         }
         
         [self saveEditsToAsset:self.asset];
         
-        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
-        [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
+        [vc safePerformSelector:@selector(setProduct:) withObject:product];
         NSMutableArray *vcs = [self.navigationController.viewControllers mutableCopy];
         [vcs replaceObjectAtIndex:vcs.count-1 withObject:vc];
         [self.navigationController setViewControllers:vcs];
