@@ -42,6 +42,7 @@
 #import "OLKiteABTesting.h"
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "NSObject+Utils.h"
+#import "OLProductOverviewViewController.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -53,6 +54,10 @@ const NSInteger kOLEditTagCrop = 40;
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSArray *fontNames;
+@end
+
+@interface OLProductOverviewViewController ()
+- (void)setupProductRepresentation;
 @end
 
 @interface OLImageEditViewController () <RMImageCropperDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLPhotoTextFieldDelegate, OLImagePickerViewControllerDelegate>
@@ -311,6 +316,12 @@ const NSInteger kOLEditTagCrop = 40;
     [self.cropView removeConstraint:self.aspectRatioConstraint];
     self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
     [self.cropView addConstraints:@[self.aspectRatioConstraint]];
+    
+    [self setupProductRepresentation];
+}
+
+- (void)setupProductRepresentation{
+    
 }
 
 - (void)setupCropGuides{
@@ -1330,7 +1341,7 @@ const NSInteger kOLEditTagCrop = 40;
         [(UILabel *)[cell viewWithTag:10] setText:[option.name uppercaseString]];
         [(UILabel *)[cell viewWithTag:10] setNumberOfLines:1];
     }
-    else if (collectionView.tag == OLProductTemplateOptionTypeGeneric){
+    else if (collectionView.tag == OLProductTemplateOptionTypeGeneric || collectionView.tag == OLProductTemplateOptionTypeTemplateCollection){
         OLProductTemplateOptionChoice *choice = self.selectedOption.choices[indexPath.item];
         __block UIImage *fallbackIcon;
         [choice iconWithCompletionHandler:^(UIImage *image){ //Fallback image returns syncronously
@@ -1340,8 +1351,8 @@ const NSInteger kOLEditTagCrop = 40;
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"labelCell" forIndexPath:indexPath];
             [self setupLabelCell:cell];
             
-            [(UILabel *)[cell viewWithTag:20] setNumberOfLines:2];
-            [(UILabel *)[cell viewWithTag:20] setText:[NSString stringWithFormat:@"%@\n%@", choice.name, choice.extraCost]];
+            [(UILabel *)[cell viewWithTag:10] setNumberOfLines:2];
+            [(UILabel *)[cell viewWithTag:10] setText:[NSString stringWithFormat:@"%@\n%@", choice.name, choice.extraCost]];
         }
         else if (choice.iconImageName || choice.iconURL || fallbackIcon){
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
@@ -1410,7 +1421,7 @@ const NSInteger kOLEditTagCrop = 40;
     else if (collectionView.tag == kOLEditTagFonts){
         return CGSizeMake(collectionView.frame.size.width - 40, 30);
     }
-    else if (collectionView.tag == OLProductTemplateOptionTypeGeneric){
+    else if (collectionView.tag == OLProductTemplateOptionTypeGeneric || collectionView.tag == OLProductTemplateOptionTypeTemplateCollection){
         return CGSizeMake(100, self.editingTools.collectionView.frame.size.height);
     }
     else if (collectionView.tag == kOLEditTagProductOptionsTab){
@@ -1485,6 +1496,24 @@ const NSInteger kOLEditTagCrop = 40;
         self.ctaButton.enabled = YES;
         [collectionView reloadData];
     }
+    else if (self.selectedOption && self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
+        NSString *templateId = self.selectedOption.choices[indexPath.item].code;
+        self.product = [OLProduct productWithTemplateId:templateId];
+        
+        if (self.navigationController.viewControllers.count > 1){
+            OLProductOverviewViewController *vc = self.navigationController.viewControllers[self.navigationController.viewControllers.count - 2];
+            if ([vc isKindOfClass:[OLProductOverviewViewController class]]){
+                vc.product = self.product;
+                [vc setupProductRepresentation];
+            }
+        }
+        
+        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
+        [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+        NSMutableArray *vcs = [self.navigationController.viewControllers mutableCopy];
+        [vcs replaceObjectAtIndex:vcs.count-1 withObject:vc];
+        [self.navigationController setViewControllers:vcs];
+    }
     else if (self.selectedOption){
         self.product.selectedOptions[self.selectedOption.code] = self.selectedOption.choices[indexPath.item].code;
         
@@ -1504,6 +1533,7 @@ const NSInteger kOLEditTagCrop = 40;
         }
         [self dismissDrawerWithCompletionHandler:^(BOOL finished){
             self.selectedOption = self.product.productTemplate.options[indexPath.item];
+            self.editingTools.drawerLabel.text = [self.selectedOption.name uppercaseString];
             self.editingTools.collectionView.tag = self.selectedOption.type;
             selectedButton.selected = YES;
             [self.editingTools bringSubviewToFront:self.editingTools.drawerView];

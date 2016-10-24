@@ -111,14 +111,7 @@
                                                                             target:nil
                                                                             action:nil];
     
-    [self setupDetailsView];
-    
-    if ([self isPushed]){
-        self.parentViewController.title = self.product.productTemplate.name;
-    }
-    else{
-        self.title = self.product.productTemplate.name;
-    }
+    [self setupProductRepresentation];
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;
@@ -136,26 +129,6 @@
     pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
     pageControl.backgroundColor = [UIColor clearColor];
     pageControl.frame = CGRectMake(0, -200, 100, 100);
-    
-    if ([OLKiteABTesting sharedInstance].hidePrice){
-        [self.costLabel removeFromSuperview];
-    }
-    else{
-        self.costLabel.text = self.product.unitCost;
-     
-        NSString *original = self.product.originalUnitCost;
-        if (original){
-            UILabel *originalCostLabel = [[UILabel alloc] init];
-            [self.costLabel.superview addSubview:originalCostLabel];
-            originalCostLabel.translatesAutoresizingMaskIntoConstraints = NO;
-            
-            [originalCostLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:originalCostLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.costLabel attribute:NSLayoutAttributeLeft multiplier:1 constant:-10]];
-            [originalCostLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:originalCostLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.costLabel attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
-            
-            NSAttributedString *attCost = [[NSAttributedString alloc] initWithString:original attributes:@{NSFontAttributeName : self.costLabel.font, NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSForegroundColorAttributeName : [UIColor colorWithWhite:0.40 alpha:1.000]}];
-            originalCostLabel.attributedText = attCost;
-        }
-    }
     
     UIViewController *vc = self.parentViewController;
     while (vc) {
@@ -193,6 +166,41 @@
     
     self.originalBoxConstraint = self.detailsBoxTopCon.constant;
     
+}
+
+- (void)setupProductRepresentation{
+    [self setupDetailsView];
+    
+    if ([self isPushed]){
+        self.parentViewController.title = self.product.productTemplate.name;
+    }
+    else{
+        self.title = self.product.productTemplate.name;
+    }
+    
+    if (self.pageController){
+        [self.pageController setViewControllers:@[[self viewControllerAtIndex:0]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:NULL];
+    }
+    
+    if ([OLKiteABTesting sharedInstance].hidePrice){
+        [self.costLabel removeFromSuperview];
+    }
+    else{
+        self.costLabel.text = self.product.unitCost;
+        
+        NSString *original = self.product.originalUnitCost;
+        if (original){
+            UILabel *originalCostLabel = [[UILabel alloc] init];
+            [self.costLabel.superview addSubview:originalCostLabel];
+            originalCostLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            
+            [originalCostLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:originalCostLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.costLabel attribute:NSLayoutAttributeLeft multiplier:1 constant:-10]];
+            [originalCostLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:originalCostLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.costLabel attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+            
+            NSAttributedString *attCost = [[NSAttributedString alloc] initWithString:original attributes:@{NSFontAttributeName : self.costLabel.font, NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSForegroundColorAttributeName : [UIColor colorWithWhite:0.40 alpha:1.000]}];
+            originalCostLabel.attributedText = attCost;
+        }
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{

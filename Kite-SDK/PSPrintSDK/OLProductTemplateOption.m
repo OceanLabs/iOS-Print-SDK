@@ -85,6 +85,7 @@
     if (self = [super init]){
         self.name = collection.name;
         self.iconURL = collection.icon;
+        self.type = OLProductTemplateOptionTypeTemplateCollection;
         NSMutableArray *choices = [[NSMutableArray alloc] init];
         for (NSDictionary *template in collection.templates){
             OLProductTemplateOptionChoice *choice = [[OLProductTemplateOptionChoice alloc] init];

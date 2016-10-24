@@ -70,8 +70,13 @@
 -(void)viewDidLoad{
     [super viewDidLoad];
     
-    self.downloadImagesOperation = [NSBlockOperation blockOperationWithBlock:^{}];
     
+}
+
+- (void)setupProductRepresentation{
+    self.downloadedMask = NO;
+    
+    self.downloadImagesOperation = [NSBlockOperation blockOperationWithBlock:^{}];
     
     if (self.product.productTemplate.maskImageURL){
         NSOperation *op1 = [NSBlockOperation blockOperationWithBlock:^{}];
@@ -110,7 +115,8 @@
     
     [[NSOperationQueue mainQueue] addOperation:self.downloadImagesOperation];
     
-    self.downloadedMask = NO;
+    [self.view setNeedsLayout];
+    [self.view layoutIfNeeded];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
