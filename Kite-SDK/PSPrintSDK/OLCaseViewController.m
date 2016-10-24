@@ -67,12 +67,6 @@
     return self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width;
 }
 
--(void)viewDidLoad{
-    [super viewDidLoad];
-    
-    
-}
-
 - (void)setupProductRepresentation{
     self.downloadedMask = NO;
     
