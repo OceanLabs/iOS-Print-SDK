@@ -82,7 +82,6 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
 @property (nonatomic, assign, readwrite) NSUInteger quantityPerSheet;
 @property (strong, nonatomic) NSArray *_Nullable supportedOptions;
-@property (strong, nonatomic, readwrite) NSArray <OLProductTemplateOption *>*_Nullable options;
 @end
 
 @interface OLCountry (Private)
@@ -412,6 +411,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeObject:self.collectionName forKey:kKeyCollectionName];
     [aCoder encodeObject:self.representationAssets forKey:kKeyRepresentationAssets];
     [aCoder encodeObject:self.logo forKey:kKeyLogo];
+}
+
+- (NSString *)description{
+    return [NSString stringWithFormat:@"%@ %@", self.identifier, [super description]];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
