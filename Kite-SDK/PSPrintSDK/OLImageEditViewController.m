@@ -1508,6 +1508,8 @@ const NSInteger kOLEditTagCrop = 40;
             }
         }
         
+        [self saveEditsToAsset:self.asset];
+        
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
         [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
         NSMutableArray *vcs = [self.navigationController.viewControllers mutableCopy];
