@@ -55,7 +55,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Grant access to you photo library to customize products with your photos.</string>
 	<key>UILaunchStoryboardName</key>
-	<string>Main</string>
+	<string>CI-Main</string>
 	<key>UIMainStoryboardFile</key>
 	<string>CI-Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
