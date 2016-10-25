@@ -30,6 +30,7 @@
 #import "OLProductTemplateOption.h"
 #import "OLImageDownloader.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLProductTemplateCollection.h"
 
 @interface OLProductTemplateOption ()
 
@@ -77,6 +78,25 @@
         }
         _choices = choices;
     }
+    return self;
+}
+
+- (instancetype)initWithTemplateCollection:(OLProductTemplateCollection *)collection{
+    if (self = [super init]){
+        self.name = collection.name;
+        self.iconURL = collection.icon;
+        self.type = OLProductTemplateOptionTypeTemplateCollection;
+        NSMutableArray *choices = [[NSMutableArray alloc] init];
+        for (NSDictionary *template in collection.templates){
+            OLProductTemplateOptionChoice *choice = [[OLProductTemplateOptionChoice alloc] init];
+            choice.name = template[@"display_label"];
+            choice.code = template[@"template_id"];
+            
+            [choices addObject:choice];
+        }
+        self.choices = choices;
+    }
+    
     return self;
 }
 

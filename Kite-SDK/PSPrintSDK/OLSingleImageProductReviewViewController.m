@@ -107,7 +107,12 @@
     
     self.delegate = self;
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Create Image", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    if (self.navigationController.viewControllers.firstObject == self){
+        self.title = self.product.productTemplate.name;
+    }
+    else{
+        self.title = NSLocalizedStringFromTableInBundle(@"Create Image", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    }
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
