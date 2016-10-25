@@ -28,16 +28,19 @@
 //
 
 #import "OLPromoView.h"
-#import "OLAsset.h"
+#import "OLAsset+Private.h"
 #import "OLKiteUtils.h"
 #import "OLImageRenderOptions.h"
 #import "UIImageView+FadeIn.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 @interface OLPromoView ()
 @property (strong, nonatomic) NSArray <OLAsset *>*assets;
 @property (strong, nonatomic) NSArray <NSString *>*templates;
 
 @property (strong, nonatomic) UIImageView *imageView;
+@property (strong, nonatomic) UILabel *label;
+@property (strong, nonatomic) UIButton *button;
 @end
 
 @interface OLAsset ()
@@ -49,32 +52,96 @@
 
 - (instancetype)init{
     if (self = [super init]){
-        UIImageView *imageView = [[UIImageView alloc] init];
-        self.imageView = imageView;
-        [self addSubview:self.imageView];
-        
-        imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
-                             @"V:|-0-[imageView]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [imageView.superview addConstraints:con];
-
+        [self setupSubviews];
     }
     
     return self;
 }
 
+
+- (void)setupSubviews{
+    self.backgroundColor = [UIColor whiteColor];
+    
+    UIButton *button = [[UIButton alloc] init];
+    self.button = button;
+    [self addSubview:button];
+    [button setImage:[UIImage imageNamedInKiteBundle:@"bigX"] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+    button.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    UILabel *label = [[UILabel alloc] init];
+    label.text = self.tagline;
+    self.label = label;
+    [self addSubview:label];
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.imageView = imageView;
+    [self addSubview:self.imageView];
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    //Label-super: Top
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+    [self addConstraint:con];
+    
+    //Label-super: Leading
+    con = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1 constant:10];
+    [self addConstraint:con];
+    
+    //Label: Height
+    con = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:40];
+    [label addConstraint:con];
+    
+    //Label-Main: Vertical
+    con = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+    con.priority = UILayoutPriorityDefaultHigh;
+    [self addConstraint:con];
+    
+    //Label-button: Horizontal
+    con = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:button attribute:NSLayoutAttributeLeading multiplier:1 constant:0];
+    [self addConstraint:con];
+    
+    //Button-super: Trailing
+    con = [NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:-10];
+    [self addConstraint:con];
+    
+    //Button-super: Top
+    con = [NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+    [self addConstraint:con];
+    
+    //Button: Height
+    con = [NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:40];
+    [button addConstraint:con];
+    //Button: Width
+    con = [NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:40];
+    [button addConstraint:con];
+    
+    //Buttom-Main: Vertical
+    con = [NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+    con.priority = UILayoutPriorityDefaultHigh;
+    [self addConstraint:con];
+    
+    //Main-Super: Leading
+    con = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1 constant:0];
+    [self addConstraint:con];
+    
+    //Main-Super: Trailing
+    con = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:0];
+    [self addConstraint:con];
+    
+    //Main-Super: Bottom
+    con = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    [self addConstraint:con];
+    
+    //Main: Height
+    con = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:100];
+    [imageView addConstraint:con];
+}
+
 - (NSString *)tagline{
     if (!_tagline){
-        return NSLocalizedStringFromTableInBundle(@"", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"Great gifts for all the family", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     
     return _tagline;
@@ -85,20 +152,30 @@
         return;
     }
     
-    [self.assets.firstObject uploadToKiteWithProgress:NULL completionHandler:^(NSError *error){
-        if (error){
-            handler(error);
-        }
-        
-        OLImageRenderOptions *options = [[OLImageRenderOptions alloc] init];
-        options.productId = self.templates.firstObject;
-        options.variant = @"cover";
-        NSURL *url = [self.assets.firstObject imageRenderURLWithOptions:options];
-        [self.imageView setAndFadeInImageWithURL:url size:CGSizeMake(320, 100) placeholder:nil progress:NULL completionHandler:^{
-            if (handler){
-                handler(nil);
+    if (self.assets.firstObject.assetType == kOLAssetTypeRemoteImageURL && !self.assets.firstObject.isEdited){
+        [self downloadRenderedImageWithCompletionHandler:handler];
+    }
+    else{
+        [self.assets.firstObject uploadToKiteWithProgress:NULL completionHandler:^(NSError *error){
+            if (error){
+                handler(error);
             }
+            
+            [self downloadRenderedImageWithCompletionHandler:handler];
         }];
+    }
+}
+
+- (void) downloadRenderedImageWithCompletionHandler:(void(^)(NSError *error))handler{
+    OLImageRenderOptions *options = [[OLImageRenderOptions alloc] init];
+    options.productId = self.templates.firstObject;
+    options.variant = @"cover";
+    options.background = [UIColor clearColor];
+    NSURL *url = self.assets.firstObject.imageURL;//[self.assets.firstObject imageRenderURLWithOptions:options];
+    [self.imageView setAndFadeInImageWithURL:url size:self.frame.size placeholder:nil progress:NULL completionHandler:^{
+        if (handler){
+            handler(nil);
+        }
     }];
 }
 
@@ -110,6 +187,12 @@
     [promoView prepareRendersWithCompletionHandler:^(NSError *error){
         handler(promoView, error);
     }];
+}
+
+- (void)buttonAction:(UIButton *)sender{
+    if ([self.delegate respondsToSelector:@selector(promoViewDidFinish:)]){
+        [self.delegate promoViewDidFinish:self];
+    }
 }
 
 @end

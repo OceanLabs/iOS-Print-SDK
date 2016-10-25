@@ -38,6 +38,7 @@
 #import "RMImageCropper.h"
 #import "OLImageDownloader.h"
 #import "OLImageRenderOptions.h"
+#import "UIColor+OLHexString.h"
 
 static NSString *const kKeyMimeType = @"co.oceanlabs.pssdk.kKeyMimeType";
 static NSString *const kKeyImageData = @"co.oceanlabs.pssdk.kKeyImageData";
@@ -306,6 +307,10 @@ static NSOperationQueue *imageOperationQueue;
     NSMutableString *s = [[NSString stringWithFormat:@"https://image.kite.ly/render/?image=%@", self.imageURL] mutableCopy];
     [s appendString:[NSString stringWithFormat:@"&variant=%@", options.variant]];
     [s appendString:[NSString stringWithFormat:@"&product_id=%@", options.productId]];
+    
+    if (options.background){
+        [s appendString:[NSString stringWithFormat:@"&background=%@", [options.background hexString]]];
+    }
     
     CGFloat alpha;
     [options.background getWhite:nil alpha:&alpha];

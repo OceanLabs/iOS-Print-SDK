@@ -29,9 +29,15 @@
 
 #import <UIKit/UIKit.h>
 @class OLAsset;
+@class OLPromoView;
+
+@protocol OLPromoViewDelegate <NSObject>
+- (void)promoViewDidFinish:(OLPromoView * _Nonnull )promoView;
+@end
 
 @interface OLPromoView : UIView
 + (void)requestPromoViewWithAssets:(NSArray <OLAsset *>*_Nonnull)assets templates:(NSArray <NSString *>*_Nullable)templates completionHandler:(void(^ _Nonnull)(UIView *_Nullable promoView, NSError *_Nullable error))handler;
 @property (strong, nonatomic) NSString *_Nullable tagline;
+@property (weak, nonatomic) id<OLPromoViewDelegate> delegate;
 
 @end

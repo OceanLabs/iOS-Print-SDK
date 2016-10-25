@@ -127,6 +127,76 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [self printWithAssets:assets];
 }
 
+- (IBAction)onButtonExtraTapped:(UIButton *)sender {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Extras" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    [ac addAction:[UIAlertAction actionWithTitle:@"Print Order History" style:UIAlertActionStyleDefault handler:^(id action){
+        [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"PrintOrderHistoryViewController"] animated:YES];
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"Show Promo View" style:UIAlertActionStyleDefault handler:^(id action){
+        UIView *containerView = [[UIView alloc] init];
+        containerView.backgroundColor = [UIColor lightGrayColor];
+        [self.view addSubview:containerView];
+        containerView.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(containerView);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        float height = 200;
+        
+        NSArray *visuals = @[@"H:|-0-[containerView]-0-|",
+                             [NSString stringWithFormat:@"V:[containerView(%f)]-0-|", height]];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [containerView.superview addConstraints:con];
+        
+        UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] init];
+        [activity startAnimating];
+        [containerView addSubview:activity];
+        activity.translatesAutoresizingMaskIntoConstraints = NO;
+        [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+        [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+        
+        NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                            [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
+                            [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+                            [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]];
+        
+        [OLPromoView requestPromoViewWithAssets:assets templates:@[@"i6s_case"/*, @"i7_case", @"i7plus_case"*/] completionHandler:^(UIView *view, NSError *error){
+            [activity stopAnimating];
+            if (error){
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Oops" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:NULL]];
+                [self presentViewController:ac animated:YES completion:NULL];
+                return;
+            }
+            
+            [containerView addSubview:view];
+            view.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(view);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                                 @"V:|-0-[view]-0-|"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [view.superview addConstraints:con];
+
+        }];
+
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:NULL]];
+    
+    [self presentViewController:ac animated:YES completion:NULL];
+}
+
+
 - (void)addCatsAndDogsImagePickersToKite:(OLKiteViewController *)kvc{
     OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]]] name:@"Dogs"];
     OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]] name:@"Cats"];
