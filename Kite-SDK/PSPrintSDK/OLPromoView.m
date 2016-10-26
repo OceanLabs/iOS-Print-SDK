@@ -171,7 +171,7 @@
     options.productId = self.templates.firstObject;
     options.variant = @"cover";
     options.background = [UIColor clearColor];
-    NSURL *url = self.assets.firstObject.imageURL;//[self.assets.firstObject imageRenderURLWithOptions:options];
+    NSURL *url = [self.assets.firstObject imageRenderURLWithOptions:options];
     [self.imageView setAndFadeInImageWithURL:url size:self.frame.size placeholder:nil progress:NULL completionHandler:^{
         if (handler){
             handler(nil);

@@ -52,18 +52,21 @@
     return [UIColor colorWithRed: red green: green blue: blue alpha: alpha];
 }
 
-//From: http://stackoverflow.com/questions/26341008/how-to-convert-uicolor-to-hex-and-display-in-nslog
+//Adapted from: http://stackoverflow.com/questions/26341008/how-to-convert-uicolor-to-hex-and-display-in-nslog
+//Returns in RGBA format
 - (NSString *)hexString{
     const CGFloat *components = CGColorGetComponents(self.CGColor);
     
     CGFloat r = components[0];
     CGFloat g = components[1];
     CGFloat b = components[2];
+    CGFloat a = components[3];
     
-    return [NSString stringWithFormat:@"#%02lX%02lX%02lX",
+    return [NSString stringWithFormat:@"%02lX%02lX%02lX%02lX",
             lroundf(r * 255),
             lroundf(g * 255),
-            lroundf(b * 255)];
+            lroundf(b * 255),
+            lroundf(a * 255)];
 }
 
 @end

@@ -304,18 +304,18 @@ static NSOperationQueue *imageOperationQueue;
     if (!self.imageURL || !options.productId || !options.variant){
         return nil;
     }
-    NSMutableString *s = [[NSString stringWithFormat:@"https://image.kite.ly/render/?image=%@", self.imageURL] mutableCopy];
+    NSMutableString *s = [[NSString stringWithFormat:@"https://image.kite.ly/render/?image=%@", [[self.imageURL absoluteString] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLUserAllowedCharacterSet]]] mutableCopy];
     [s appendString:[NSString stringWithFormat:@"&variant=%@", options.variant]];
     [s appendString:[NSString stringWithFormat:@"&product_id=%@", options.productId]];
     
     if (options.background){
         [s appendString:[NSString stringWithFormat:@"&background=%@", [options.background hexString]]];
-    }
-    
-    CGFloat alpha;
-    [options.background getWhite:nil alpha:&alpha];
-    if (alpha != 1){
-        [s appendString:@"&format=png"];
+        
+        CGFloat alpha;
+        [options.background getWhite:nil alpha:&alpha];
+        if (alpha != 1){
+            [s appendString:@"&format=png"];
+        }
     }
     return [NSURL URLWithString:s];
 }
