@@ -36,8 +36,36 @@
 @end
 
 @interface OLPromoView : UIView
-+ (void)requestPromoViewWithAssets:(NSArray <OLAsset *>*_Nonnull)assets templates:(NSArray <NSString *>*_Nullable)templates completionHandler:(void(^ _Nonnull)(UIView *_Nullable promoView, NSError *_Nullable error))handler;
+
+/**
+ Request a promo view to be returned asyncronously when it's ready.
+
+ @param assets The assets to use to generate the previews
+ @param templates The product templates to generate the previews
+ @param handler Completion handler with the promo view
+ */
++ (void)requestPromoViewWithAssets:(NSArray <OLAsset *>*_Nonnull)assets templates:(NSArray <NSString *>*_Nullable)templates completionHandler:(void(^ _Nonnull)(OLPromoView *_Nullable promoView, NSError *_Nullable error))handler;
+
+
+/**
+ Request a promo view to be returned immediately. Previews will start loading when the view is shown.
+
+ @param assets The assets to use to generate the previews
+ @param templates The product templates to generate the previews
+ @return Completion handler with the promo view
+ */
++ (OLPromoView *_Nonnull)promoViewWithAssets:(NSArray <OLAsset *>*_Nonnull)assets templates:(NSArray <NSString *>*_Nullable)templates;
+
+
+/**
+ Tagline to show on the promo view. Leave nil to use a default.
+ */
 @property (strong, nonatomic) NSString *_Nullable tagline;
-@property (weak, nonatomic) id<OLPromoViewDelegate> delegate;
+
+
+/**
+ Delegate to be notified when the user taps on the X button to dismiss. The dimissal needs to be handled in the delegate.
+ */
+@property (weak, nonatomic) id<OLPromoViewDelegate> _Nullable delegate;
 
 @end

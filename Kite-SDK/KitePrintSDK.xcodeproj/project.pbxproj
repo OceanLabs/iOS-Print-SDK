@@ -1023,10 +1023,6 @@
 				2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */,
 				2EF718321D589DB60036502D /* OLInfoBanner.h */,
 				2EF718331D589DB60036502D /* OLInfoBanner.m */,
-				2E9F13F91DAD048000D8B1EE /* OLPromoView.h */,
-				2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */,
-				2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */,
-				2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1276,6 +1272,8 @@
 				2E837D471C3C1FBB004DA682 /* OLViewController.m */,
 				2E837D4A1C3C221E004DA682 /* OLCollectionViewController.h */,
 				2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */,
+				2E9F13F91DAD048000D8B1EE /* OLPromoView.h */,
+				2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1726,6 +1724,8 @@
 				2E0804B71C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.m */,
 				2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */,
 				2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */,
+				2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */,
+				2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */,
 			);
 			name = Asset;
 			sourceTree = "<group>";

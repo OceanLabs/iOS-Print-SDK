@@ -33,14 +33,18 @@
 #import "OLImageRenderOptions.h"
 #import "UIImageView+FadeIn.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLImageDownloader.h"
 
-@interface OLPromoView ()
+@interface OLPromoView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (strong, nonatomic) NSArray <OLAsset *>*assets;
 @property (strong, nonatomic) NSArray <NSString *>*templates;
 
-@property (strong, nonatomic) UIImageView *imageView;
+@property (strong, nonatomic) UICollectionView *collectionView;
 @property (strong, nonatomic) UILabel *label;
 @property (strong, nonatomic) UIButton *button;
+
+@property (assign, nonatomic) NSInteger numberOfRendersToDownloadBeforeReadyHandler;
+@property (strong, nonatomic) NSError *error;
 @end
 
 @interface OLAsset ()
@@ -50,17 +54,71 @@
 
 @implementation OLPromoView
 
-- (instancetype)init{
-    if (self = [super init]){
-        [self setupSubviews];
-    }
++ (OLPromoView *)promoViewWithAssets:(NSArray <OLAsset *>*_Nonnull)assets templates:(NSArray <NSString *>*_Nullable)templates{
+    NSAssert(assets.count != 0 && templates.count != 0, @"Please supply at least one asset and product to render.");
     
-    return self;
+    OLPromoView *promoView = [[OLPromoView alloc] initWithFrame:CGRectMake(0, 0, 200, 60)];
+    promoView.assets = assets;
+    promoView.templates = templates;
+    
+    promoView.numberOfRendersToDownloadBeforeReadyHandler = promoView.assets.count > 1 || promoView.templates.count > 1 ? 2 : 1;
+    
+    [promoView setupSubviews];
+    
+    return promoView;
 }
 
++ (void)requestPromoViewWithAssets:(NSArray <OLAsset *>*_Nonnull)assets templates:(NSArray <NSString *>*_Nullable)templates completionHandler:(void(^ _Nonnull)(OLPromoView *_Nullable promoView, NSError *_Nullable error))handler{
+    OLPromoView *promoView = [OLPromoView promoViewWithAssets:assets templates:templates];
+    
+    NSBlockOperation *readyHandlerOperation = [NSBlockOperation blockOperationWithBlock:^{
+        handler(promoView, promoView.error);
+    }];
+    
+    NSBlockOperation *downloadOperation0 = [[NSBlockOperation alloc] init];
+    [readyHandlerOperation addDependency:downloadOperation0];
+    [[OLImageDownloader sharedInstance] downloadDataAtURL:[promoView urlForAssetAtIndex:0] priority:0.8 progress:NULL withCompletionHandler:^(NSData *data, NSError *error){
+        [[NSOperationQueue mainQueue] addOperation:downloadOperation0];
+    }];
+    
+    if (promoView.numberOfRendersToDownloadBeforeReadyHandler > 1){
+        NSBlockOperation *downloadOperation1 = [[NSBlockOperation alloc] init];
+        [readyHandlerOperation addDependency:downloadOperation1];
+        [[OLImageDownloader sharedInstance] downloadDataAtURL:[promoView urlForAssetAtIndex:1] priority:0.8 progress:NULL withCompletionHandler:^(NSData *data, NSError *error){
+            [[NSOperationQueue mainQueue] addOperation:downloadOperation1];
+        }];
+    }
+    
+    [[NSOperationQueue mainQueue] addOperation:readyHandlerOperation];
+}
 
-- (void)setupSubviews{
+- (NSString *)tagline{
+    if (!_tagline){
+        return NSLocalizedStringFromTableInBundle(@"Great gifts for all the family", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    }
+    
+    return _tagline;
+}
+
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    
+    [self.collectionView.collectionViewLayout invalidateLayout];
+    [self.collectionView reloadData];
+}
+
+- (void)setupSubviews{    
     self.backgroundColor = [UIColor whiteColor];
+    
+    UICollectionView *main = [[UICollectionView alloc] initWithFrame:self.frame collectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
+    main.dataSource = self;
+    main.delegate = self;
+    main.backgroundColor = [UIColor clearColor];
+    [(UICollectionViewFlowLayout *)main.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+    self.collectionView = main;
+    [self addSubview:self.collectionView];
+    main.translatesAutoresizingMaskIntoConstraints = NO;
+    [main registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"imageCell"];
     
     UIButton *button = [[UIButton alloc] init];
     self.button = button;
@@ -75,12 +133,6 @@
     [self addSubview:label];
     label.translatesAutoresizingMaskIntoConstraints = NO;
     
-    UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
-    self.imageView = imageView;
-    [self addSubview:self.imageView];
-    imageView.translatesAutoresizingMaskIntoConstraints = NO;
-    
     //Label-super: Top
     NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:0];
     [self addConstraint:con];
@@ -94,7 +146,7 @@
     [label addConstraint:con];
     
     //Label-Main: Vertical
-    con = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+    con = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:main attribute:NSLayoutAttributeTop multiplier:1 constant:0];
     con.priority = UILayoutPriorityDefaultHigh;
     [self addConstraint:con];
     
@@ -118,75 +170,85 @@
     [button addConstraint:con];
     
     //Buttom-Main: Vertical
-    con = [NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+    con = [NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:main attribute:NSLayoutAttributeTop multiplier:1 constant:0];
     con.priority = UILayoutPriorityDefaultHigh;
     [self addConstraint:con];
     
     //Main-Super: Leading
-    con = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1 constant:0];
+    con = [NSLayoutConstraint constraintWithItem:main attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1 constant:0];
     [self addConstraint:con];
     
     //Main-Super: Trailing
-    con = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:0];
+    con = [NSLayoutConstraint constraintWithItem:main attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:0];
     [self addConstraint:con];
     
     //Main-Super: Bottom
-    con = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    con = [NSLayoutConstraint constraintWithItem:main attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
     [self addConstraint:con];
     
     //Main: Height
-    con = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:100];
-    [imageView addConstraint:con];
+    con = [NSLayoutConstraint constraintWithItem:main attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:100];
+    [main addConstraint:con];
 }
 
-- (NSString *)tagline{
-    if (!_tagline){
-        return NSLocalizedStringFromTableInBundle(@"Great gifts for all the family", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
+    UIImageView *imageView = [cell viewWithTag:10];
+    if (!imageView){
+        imageView = [[UIImageView alloc] init];
+        imageView.tag = 10;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [cell.contentView addSubview:imageView];
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
+                             @"V:|-0-[imageView]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [imageView.superview addConstraints:con];
+        
     }
     
-    return _tagline;
-}
-
-- (void)prepareRendersWithCompletionHandler:(void(^)(NSError *error))handler{
-    if (self.assets.count == 0 || self.templates.count == 0){
-        return;
-    }
+    [imageView setAndFadeInImageWithURL:[self urlForAssetAtIndex:indexPath.item] size:collectionView.frame.size placeholder:nil progress:NULL completionHandler:NULL];
     
-    if (self.assets.firstObject.assetType == kOLAssetTypeRemoteImageURL && !self.assets.firstObject.isEdited){
-        [self downloadRenderedImageWithCompletionHandler:handler];
-    }
-    else{
-        [self.assets.firstObject uploadToKiteWithProgress:NULL completionHandler:^(NSError *error){
-            if (error){
-                handler(error);
-            }
-            
-            [self downloadRenderedImageWithCompletionHandler:handler];
-        }];
-    }
+    return cell;
 }
 
-- (void) downloadRenderedImageWithCompletionHandler:(void(^)(NSError *error))handler{
+- (NSURL *)urlForAssetAtIndex:(NSInteger)index{
     OLImageRenderOptions *options = [[OLImageRenderOptions alloc] init];
-    options.productId = self.templates.firstObject;
+    options.productId = self.templates[index % self.templates.count];
     options.variant = @"cover";
     options.background = [UIColor clearColor];
-    NSURL *url = [self.assets.firstObject imageRenderURLWithOptions:options];
-    [self.imageView setAndFadeInImageWithURL:url size:self.frame.size placeholder:nil progress:NULL completionHandler:^{
-        if (handler){
-            handler(nil);
-        }
-    }];
+    OLAsset *asset = self.assets[index % self.assets.count];
+    NSURL *url = [asset imageRenderURLWithOptions:options];
+    return url;
 }
 
-+ (void)requestPromoViewWithAssets:(NSArray <OLAsset *>*_Nonnull)assets templates:(NSArray <NSString *>*_Nullable)templates completionHandler:(void(^ _Nonnull)(UIView *_Nullable promoView, NSError *_Nullable error))handler{
-    OLPromoView *promoView = [[OLPromoView alloc] init];
-    promoView.assets = assets;
-    promoView.templates = templates;
-    
-    [promoView prepareRendersWithCompletionHandler:^(NSError *error){
-        handler(promoView, error);
-    }];
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return MAX(self.assets.count, self.templates.count);
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    return CGSizeMake(collectionView.frame.size.width / 2.0, collectionView.frame.size.height);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
+    return 0;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
+    return 0;
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    return UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
 - (void)buttonAction:(UIButton *)sender{

@@ -237,6 +237,22 @@ static NSOperationQueue *imageOperationQueue;
     return nil;
 }
 
+- (void)getImageURLWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSURL *url, NSError *error))handler{
+    if (self.assetType == kOLAssetTypeRemoteImageURL && !self.isEdited){
+        handler(self.imageURL, nil);
+    }
+    else{
+        [self uploadToKiteWithProgress:progressHandler completionHandler:^(NSError *error){
+            if (error){
+                handler(nil, error);
+            }
+            else{
+                handler(self.imageURL, nil);
+            }
+        }];
+    }
+}
+
 - (void)uploadToKiteWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSError *error))handler{
     if (!handler){
         return;

@@ -45,7 +45,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 @import Photos;
 
-@interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate>
+@interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate, OLPromoViewDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @end
@@ -134,7 +134,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"Show Promo View" style:UIAlertActionStyleDefault handler:^(id action){
         UIView *containerView = [[UIView alloc] init];
-        containerView.backgroundColor = [UIColor lightGrayColor];
+        containerView.tag = 1000;
+        containerView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:containerView];
         containerView.translatesAutoresizingMaskIntoConstraints = NO;
         NSDictionary *views = NSDictionaryOfVariableBindings(containerView);
@@ -153,6 +154,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         [containerView.superview addConstraints:con];
         
         UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] init];
+        activity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
         [activity startAnimating];
         [containerView addSubview:activity];
         activity.translatesAutoresizingMaskIntoConstraints = NO;
@@ -164,7 +166,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
                             [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
                             [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]];
         
-        [OLPromoView requestPromoViewWithAssets:assets templates:@[@"i6s_case"/*, @"i7_case", @"i7plus_case"*/] completionHandler:^(UIView *view, NSError *error){
+        [OLPromoView requestPromoViewWithAssets:assets templates:@[@"i6s_case", @"i5_case"] completionHandler:^(OLPromoView *view, NSError *error){
+            view.delegate = self;
             [activity stopAnimating];
             if (error){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Oops" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
@@ -298,6 +301,10 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         
         [self presentViewController:vc animated:YES completion:NULL];
     }
+}
+
+- (void)promoViewDidFinish:(OLPromoView *)promoView{
+    [[self.view viewWithTag:1000] removeFromSuperview];
 }
 
 @end
