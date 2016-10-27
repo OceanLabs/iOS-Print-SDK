@@ -72,8 +72,10 @@
             if (error){
                 handler(nil, error);
             }
-            NSAssert(data, @"Should have data at this point");
-            handler([UIImage imageWithData:data], nil);
+            else{
+                NSAssert(data, @"Should have data at this point");
+                handler([UIImage imageWithData:data], nil);
+            }
         }
     }];
 }

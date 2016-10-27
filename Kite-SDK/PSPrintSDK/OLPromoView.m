@@ -204,9 +204,24 @@
         
         [imageView.superview addConstraints:con];
         
+        UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] init];
+        activity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+        activity.tag = 20;
+        [cell.contentView addSubview:activity];
+        activity.translatesAutoresizingMaskIntoConstraints = NO;
+        [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+        [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+        
     }
     
-    [imageView setAndFadeInImageWithURL:[self urlForAssetAtIndex:indexPath.item] size:collectionView.frame.size placeholder:nil progress:NULL completionHandler:NULL];
+    UIActivityIndicatorView *activity = [cell.contentView viewWithTag:20];
+    if (![activity isKindOfClass:[UIActivityIndicatorView class]]){
+        activity = nil;
+    }
+    [activity startAnimating];
+    [imageView setAndFadeInImageWithURL:[self urlForAssetAtIndex:indexPath.item] size:collectionView.frame.size placeholder:nil progress:NULL completionHandler:^{
+        [activity stopAnimating];
+    }];
     
     return cell;
 }
