@@ -27,12 +27,33 @@
 //  THE SOFTWARE.
 //
 
+/*
+ * Size recommendation: 200 points height, full width
+ * Number of assets and/or templates: 2 for iPhone, 4 for iPad.
+ */
+
 #import <UIKit/UIKit.h>
 @class OLAsset;
 @class OLPromoView;
 
 @protocol OLPromoViewDelegate <NSObject>
+
+/**
+ Called when the user taps on the X button to dismiss. The dimissal needs to be handled by the delegate.
+
+ @param promoView The promo view
+ */
 - (void)promoViewDidFinish:(OLPromoView * _Nonnull )promoView;
+
+
+/**
+ Called when the user taps on a product
+
+ @param promoView The promo view
+ @param templateId The product template shown on the tapped image
+ @param asset The asset shows on the tapped image
+ */
+- (void)promoView:(OLPromoView * _Nonnull)promoView didSelectTemplateId:(NSString * _Nonnull)templateId withAsset:(OLAsset * _Nonnull)asset;
 @end
 
 @interface OLPromoView : UIView
@@ -70,7 +91,7 @@
 
 
 /**
- Delegate to be notified when the user taps on the X button to dismiss. The dimissal needs to be handled in the delegate.
+ Delegate to be notified of events.
  */
 @property (weak, nonatomic) id<OLPromoViewDelegate> _Nullable delegate;
 

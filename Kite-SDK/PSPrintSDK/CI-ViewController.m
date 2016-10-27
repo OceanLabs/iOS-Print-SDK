@@ -162,9 +162,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
         
         NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
-                            [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
-                            [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
-                            [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]];
+                            [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]]];
         
         [OLPromoView requestPromoViewWithAssets:assets templates:@[@"i6s_case", @"i5_case"] completionHandler:^(OLPromoView *view, NSError *error){
             view.delegate = self;
@@ -307,6 +305,19 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 - (void)promoViewDidFinish:(OLPromoView *)promoView{
     [[self.view viewWithTag:1000] removeFromSuperview];
+}
+
+- (void)promoView:(OLPromoView *)promoView didSelectTemplateId:(NSString *)templateId withAsset:(OLAsset *)asset{
+    [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+    
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:@[asset]];
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    
+    OLKiteViewController *kvc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder info:@{@"Entry Point" : @"OLPromoView"}];
+    
+    [self presentViewController:kvc animated:YES completion:NULL];
 }
 
 @end

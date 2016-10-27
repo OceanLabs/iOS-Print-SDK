@@ -260,6 +260,12 @@
     return UIEdgeInsetsMake(0, margin, 0, margin);
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if ([self.delegate respondsToSelector:@selector(promoView:didSelectTemplateId:withAsset:)]){
+        [self.delegate promoView:self didSelectTemplateId:self.templates[indexPath.item % self.templates.count] withAsset:self.assets[indexPath.item % self.assets.count]];
+    }
+}
+
 - (void)buttonAction:(UIButton *)sender{
     if ([self.delegate respondsToSelector:@selector(promoViewDidFinish:)]){
         [self.delegate promoViewDidFinish:self];
