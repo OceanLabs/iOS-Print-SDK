@@ -58,9 +58,15 @@
 
 
 /**
- Tagline to show on the promo view. Leave nil to use a default.
+ Label that shows the lagline on the promo view
  */
-@property (strong, nonatomic) NSString *_Nullable tagline;
+@property (strong, nonatomic) UILabel *_Nullable label;
+
+
+/**
+ The dimiss button.
+ */
+@property (strong, nonatomic) UIButton *_Nullable button;
 
 
 /**

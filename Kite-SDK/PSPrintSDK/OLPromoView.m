@@ -40,8 +40,6 @@
 @property (strong, nonatomic) NSArray <NSString *>*templates;
 
 @property (strong, nonatomic) UICollectionView *collectionView;
-@property (strong, nonatomic) UILabel *label;
-@property (strong, nonatomic) UIButton *button;
 
 @property (assign, nonatomic) NSInteger numberOfRendersToDownloadBeforeReadyHandler;
 @property (strong, nonatomic) NSError *error;
@@ -92,14 +90,6 @@
     [[NSOperationQueue mainQueue] addOperation:readyHandlerOperation];
 }
 
-- (NSString *)tagline{
-    if (!_tagline){
-        return NSLocalizedStringFromTableInBundle(@"Great gifts for all the family", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
-    }
-    
-    return _tagline;
-}
-
 - (void)layoutSubviews{
     [super layoutSubviews];
     
@@ -128,7 +118,7 @@
     button.translatesAutoresizingMaskIntoConstraints = NO;
     
     UILabel *label = [[UILabel alloc] init];
-    label.text = self.tagline;
+    label.text = NSLocalizedStringFromTableInBundle(@"Great gifts for all the family", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     self.label = label;
     [self addSubview:label];
     label.translatesAutoresizingMaskIntoConstraints = NO;
