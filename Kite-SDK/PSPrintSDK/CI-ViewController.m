@@ -195,6 +195,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:NULL]];
+    ac.popoverPresentationController.sourceRect = sender.frame;
+    ac.popoverPresentationController.sourceView = self.view;
     
     [self presentViewController:ac animated:YES completion:NULL];
 }

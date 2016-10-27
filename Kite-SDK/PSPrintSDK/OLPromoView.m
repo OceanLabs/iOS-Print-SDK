@@ -185,6 +185,14 @@
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
     UIImageView *imageView = [cell viewWithTag:10];
     if (!imageView){
+        UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] init];
+        activity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+        activity.tag = 20;
+        [cell.contentView addSubview:activity];
+        activity.translatesAutoresizingMaskIntoConstraints = NO;
+        [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+        [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+        
         imageView = [[UIImageView alloc] init];
         imageView.tag = 10;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -203,15 +211,6 @@
         }
         
         [imageView.superview addConstraints:con];
-        
-        UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] init];
-        activity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-        activity.tag = 20;
-        [cell.contentView addSubview:activity];
-        activity.translatesAutoresizingMaskIntoConstraints = NO;
-        [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-        [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
-        
     }
     
     UIActivityIndicatorView *activity = [cell.contentView viewWithTag:20];
@@ -241,7 +240,11 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return CGSizeMake(collectionView.frame.size.width / 2.0, collectionView.frame.size.height);
+    CGFloat height = collectionView.frame.size.height;
+    CGFloat width;
+    NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
+    width = MAX(MIN(collectionView.frame.size.width / numberOfCells, height / .625), height / 0.86);
+    return CGSizeMake(width, height);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section{
@@ -253,7 +256,8 @@
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    return UIEdgeInsetsMake(0, 0, 0, 0);
+    CGFloat margin = MAX((collectionView.frame.size.width - ([self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]].width * [self collectionView:collectionView numberOfItemsInSection:section] + [self collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section] * ([self collectionView:collectionView numberOfItemsInSection:section]-1)))/2.0, 0);
+    return UIEdgeInsetsMake(0, margin, 0, margin);
 }
 
 - (void)buttonAction:(UIButton *)sender{
