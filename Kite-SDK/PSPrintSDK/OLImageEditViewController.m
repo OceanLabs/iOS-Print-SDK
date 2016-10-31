@@ -1371,7 +1371,7 @@ const NSInteger kOLEditTagCrop = 40;
             [(UILabel *)[cell viewWithTag:10] setText:choice.name];
         }
         
-        if (self.selectedOption.type == OLProductTemplateOptionTypeGeneric){
+        if (self.selectedOption.type == OLProductTemplateOptionTypeGeneric || self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
             [(OLButtonCollectionViewCell *)cell setColorForSelection:self.editingTools.ctaButton.backgroundColor];
         }
         [cell setSelected:[self.product.selectedOptions[self.selectedOption.code] isEqualToString:choice.code] || [choice.code isEqualToString:self.product.templateId]];
@@ -1576,7 +1576,7 @@ const NSInteger kOLEditTagCrop = 40;
     NSDictionary *views = NSDictionaryOfVariableBindings(label);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-0-[label]-0-|",
+    NSArray *visuals = @[@"H:|-2-[label]-2-|",
                          @"V:|-0-[label]-0-|"];
     
     
