@@ -111,6 +111,8 @@
  */
 @property (assign, nonatomic) BOOL showOptOutOfEmailsCheckbox;
 
+@property (assign, nonatomic) BOOL showPrintAtHome;
+
 /**
  *  The delegate object that will be notified about certain events
  */

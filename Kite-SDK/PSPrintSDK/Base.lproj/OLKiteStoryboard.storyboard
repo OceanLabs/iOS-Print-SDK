@@ -1732,6 +1732,74 @@
                                 </constraints>
                                 <size key="customSize" width="600" height="84"/>
                             </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PrintAtHomeCell" id="9Ul-7Z-5bz">
+                                <rect key="frame" x="38" y="1948" width="299" height="264"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="299" height="264"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" tag="41" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="m8c-ef-GUB"/>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="40" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="print-at-home" translatesAutoresizingMaskIntoConstraints="NO" id="QFz-Mf-5hY"/>
+                                        <button opaque="NO" userInteractionEnabled="NO" tag="390" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J28-fV-1aw">
+                                            <color key="backgroundColor" red="0.19560706620000001" green="0.65693438049999997" blue="0.52940922980000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="294" id="aEy-QS-CBE"/>
+                                                <constraint firstAttribute="height" constant="46" id="dYF-nQ-c0R"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                            <inset key="contentEdgeInsets" minX="17" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                            <state key="normal">
+                                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </state>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="aEy-QS-CBE"/>
+                                                </mask>
+                                            </variation>
+                                        </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="300" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRINT AT HOME" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KqI-OG-fgy">
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Or print on a product below ▼" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P3t-Nc-g1K">
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="KqI-OG-fgy" firstAttribute="centerX" secondItem="J28-fV-1aw" secondAttribute="centerX" id="1I5-dt-ZzH"/>
+                                    <constraint firstAttribute="trailing" secondItem="QFz-Mf-5hY" secondAttribute="trailing" id="1Zl-Bj-rsB"/>
+                                    <constraint firstItem="QFz-Mf-5hY" firstAttribute="top" secondItem="9Ul-7Z-5bz" secondAttribute="top" id="EN6-vn-Od5"/>
+                                    <constraint firstAttribute="centerX" secondItem="m8c-ef-GUB" secondAttribute="centerX" constant="0.5" id="F5h-P6-wge"/>
+                                    <constraint firstItem="J28-fV-1aw" firstAttribute="leading" secondItem="QFz-Mf-5hY" secondAttribute="leading" constant="40" id="HIu-rC-Vma"/>
+                                    <constraint firstItem="P3t-Nc-g1K" firstAttribute="top" secondItem="QFz-Mf-5hY" secondAttribute="bottom" id="L0D-l6-7Lj"/>
+                                    <constraint firstItem="KqI-OG-fgy" firstAttribute="leading" secondItem="J28-fV-1aw" secondAttribute="leading" constant="10" id="NlQ-l0-xgu"/>
+                                    <constraint firstItem="J28-fV-1aw" firstAttribute="leading" secondItem="9Ul-7Z-5bz" secondAttribute="leading" priority="750" constant="40" id="PXx-m1-1Yp"/>
+                                    <constraint firstAttribute="bottom" secondItem="QFz-Mf-5hY" secondAttribute="bottom" constant="40" id="RS7-X0-BV8"/>
+                                    <constraint firstItem="QFz-Mf-5hY" firstAttribute="leading" secondItem="9Ul-7Z-5bz" secondAttribute="leading" id="S7u-7q-wPX"/>
+                                    <constraint firstAttribute="centerX" secondItem="J28-fV-1aw" secondAttribute="centerX" id="V5R-ot-4EX"/>
+                                    <constraint firstItem="KqI-OG-fgy" firstAttribute="centerY" secondItem="J28-fV-1aw" secondAttribute="centerY" id="g0Y-ul-iiO"/>
+                                    <constraint firstItem="P3t-Nc-g1K" firstAttribute="centerX" secondItem="9Ul-7Z-5bz" secondAttribute="centerX" id="gaQ-yy-HKJ"/>
+                                    <constraint firstAttribute="trailing" secondItem="J28-fV-1aw" secondAttribute="trailing" priority="750" constant="40" id="jqe-Y2-bCI"/>
+                                    <constraint firstItem="QFz-Mf-5hY" firstAttribute="trailing" secondItem="J28-fV-1aw" secondAttribute="trailing" constant="40" id="sGi-f1-5zv"/>
+                                    <constraint firstAttribute="bottom" secondItem="P3t-Nc-g1K" secondAttribute="bottom" id="v4t-6g-j28"/>
+                                    <constraint firstItem="J28-fV-1aw" firstAttribute="centerY" secondItem="9Ul-7Z-5bz" secondAttribute="centerY" constant="-20" id="x4C-86-nDa"/>
+                                    <constraint firstAttribute="centerY" secondItem="m8c-ef-GUB" secondAttribute="centerY" id="zdc-bO-fYo"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="PXx-m1-1Yp"/>
+                                        <exclude reference="V5R-ot-4EX"/>
+                                        <exclude reference="jqe-Y2-bCI"/>
+                                        <exclude reference="NlQ-l0-xgu"/>
+                                    </mask>
+                                </variation>
+                            </collectionViewCell>
                         </cells>
                         <connections>
                             <outlet property="dataSource" destination="U81-HI-b1P" id="so8-Az-bk6"/>
@@ -3783,6 +3851,7 @@ only £9.99 £8.99</string>
         <image name="photo_frame_1" width="316" height="224"/>
         <image name="plus" width="15" height="15"/>
         <image name="poster_shadow" width="295" height="414"/>
+        <image name="print-at-home" width="715" height="477"/>
         <image name="right chevron" width="12" height="19"/>
         <image name="tag" width="16" height="14"/>
         <image name="white gradient" width="374" height="100"/>
