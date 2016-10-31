@@ -86,14 +86,38 @@
     return [OLFacebookSDKWrapper isFacebookAvailable];
 }
 
-+ (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
-    OLKiteViewController *kiteVc = [OLUserSession currentSession].kiteVc;
++ (BOOL)recentsAvailable{
+    return [OLUserSession currentSession].appAssets.count == 0 && [OLUserSession currentSession].recentPhotos.count == 0;
+}
+
++ (NSInteger)numberOfProvidersAvailable{
+    NSInteger providers = 0;
+    if ([self cameraRollEnabled]){
+        providers++;
+    }
+    if ([self instagramEnabled]){
+        providers++;
+    }
+    if ([self facebookEnabled]){
+        providers++;
+    }
+    if ([self qrCodeUploadEnabled]){
+        providers++;
+    }
+    if ([self recentsAvailable]){
+        providers++;
+    }
+    providers += [OLUserSession currentSession].kiteVc.customImageProviders.count;
     
+    return providers;
+}
+
++ (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
     if ([OLUserSession currentSession].kiteVc.disallowUserToAddMorePhotos){
         return NO;
     }
     
-    return [OLKiteUtils cameraRollEnabled] || [OLKiteUtils instagramEnabled] || [OLKiteUtils facebookEnabled] || kiteVc.customImageProviders.count > 0;
+    return [self numberOfProvidersAvailable] > 0;
 }
 
 + (BOOL)cameraRollEnabled{
