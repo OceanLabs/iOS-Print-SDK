@@ -81,6 +81,17 @@ static CGFloat fadeTime = 0.3;
 
 @implementation OLKiteViewController
 
+- (void)setShowPrintAtHome:(BOOL)showPrintAtHome{
+    _showPrintAtHome = showPrintAtHome;
+    
+    NSMutableDictionary *dict = [[OLAnalytics extraInfo] mutableCopy];
+    if (!dict){
+        dict = [[NSMutableDictionary alloc] init];
+    }
+    dict[@"Launched With Print At Home Tile Enabled"] = [NSNumber numberWithBool:showPrintAtHome];
+    [OLAnalytics setExtraInfo:dict];
+}
+
 - (void)awakeFromNib{
     [super awakeFromNib];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];

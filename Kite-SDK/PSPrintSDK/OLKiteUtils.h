@@ -54,6 +54,8 @@
 + (NSArray<NSString *> *)supportedPKPaymentNetworks;
 + (BOOL)isApplePayAvailable;
 + (BOOL)isPayPalAvailable;
++ (BOOL)recentsAvailable;
++ (NSInteger)numberOfProvidersAvailable;
 
 
 + (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size;

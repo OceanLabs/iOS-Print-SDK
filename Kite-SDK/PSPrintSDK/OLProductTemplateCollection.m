@@ -27,52 +27,27 @@
 //  THE SOFTWARE.
 //
 
-#import "OLProductTemplateOptionChoice.h"
-#import "UIImage+ImageNamedInKiteBundle.h"
-#import "OLImageDownloader.h"
-#import "OLProductTemplateOption.h"
-#import "OLProduct.h"
+#import "OLProductTemplateCollection.h"
 
-@implementation OLProductTemplateOptionChoice
+@implementation OLProductTemplateCollection
 
-- (void)iconWithCompletionHandler:(void(^)(UIImage *icon))handler{
-    handler(nil);
-    if (self.iconURL){
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.iconURL withCompletionHandler:^(UIImage *image, NSError *error){
-            if (error || !image){
-                handler([self fallbackIcon]);
-            }
-            else{
-                handler(image);
-            }
-        }];
+- (_Nonnull instancetype)initWithName:(NSString *_Nonnull)name templates:(NSArray<NSDictionary<NSString *, NSString *> *> *_Nonnull )templates{
+    if (self = [super init]){
+        self.name = name;
+        self.templates = templates;
     }
-    else{
-        handler([self fallbackIcon]);
-    }
+    
+    return self;
 }
 
-- (UIImage *)fallbackIcon{
-    if (self.iconImageName){
-        return [UIImage imageNamedInKiteBundle:self.iconImageName];
-    }
-    else{ //Match known options with embedded assets
-        if ([self.option.code isEqualToString:@"case_style"]){
-            if ([self.code isEqualToString:@"gloss"]){
-                return [UIImage imageNamedInKiteBundle:@"case-options-gloss"];
-            }
-            else if ([self.code isEqualToString:@"matte"]){
-                return [UIImage imageNamedInKiteBundle:@"case-options-matte"];
-            }
+- (BOOL)containsTemplateIdentifier:(NSString *)identifier{
+    for (NSDictionary<NSString *, NSString *> *dict in self.templates){
+        if ([dict[@"template_id"] isEqualToString:identifier]){
+            return YES;
         }
     }
     
-    return nil;
-}
-
-- (NSString *)extraCost{
-    OLProduct *product = [OLProduct productWithTemplateId:self.code];
-    return [product unitCost];
+    return NO;
 }
 
 @end

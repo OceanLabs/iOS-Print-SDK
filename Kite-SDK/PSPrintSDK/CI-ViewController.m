@@ -232,4 +232,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     }
 }
 
+- (void)didCancelPrintFlow:(UIViewController *)printViewController{
+    [printViewController dismissViewControllerAnimated:YES completion:NULL];
+}
+- (void)didFinishPrintFlow:(UIViewController *)printViewController{
+    [printViewController dismissViewControllerAnimated:YES completion:NULL];
+}
+
 @end

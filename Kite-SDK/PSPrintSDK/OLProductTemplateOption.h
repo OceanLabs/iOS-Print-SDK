@@ -30,11 +30,14 @@
 #import <Foundation/Foundation.h>
 #import "OLProductTemplateOptionChoice.h"
 
+@class OLProductTemplateCollection;
+
 typedef NS_ENUM(NSInteger, OLProductTemplateOptionType) {
     OLProductTemplateOptionTypeGeneric,
     OLProductTemplateOptionTypeColor1,
     OLProductTemplateOptionTypeColor2,
     OLProductTemplateOptionTypeColor3,
+    OLProductTemplateOptionTypeTemplateCollection
 //    OLProductTemplateOptionTypeBorderOverride
 };
 
@@ -46,8 +49,8 @@ typedef NS_ENUM(NSInteger, OLProductTemplateOptionType) {
 @property (strong, nonatomic, readonly) NSArray <OLProductTemplateOptionChoice *> *choices;
 @property (strong, nonatomic) NSString *iconImageName;
 
-
 - (instancetype)initWithDictionary:(NSDictionary *)options;
+- (instancetype)initWithTemplateCollection:(OLProductTemplateCollection *)collection;
 
 - (void)iconWithCompletionHandler:(void(^)(UIImage *icon))handler;
 
