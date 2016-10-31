@@ -345,6 +345,14 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:nil];
 }
 
++ (void)trackPrintAtHomeTapped{
+    NSString *eventName = @"Print At Home Tapped";
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+    
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:nil];
+}
+
 + (void)trackProductDescriptionScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice{
     NSString *eventName = @"Product Description Screen Viewed";
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
@@ -804,6 +812,10 @@ static NSString *nonNilStr(NSString *str) {
 
 + (void)setExtraInfo:(NSDictionary *)info{
     extraInfo = info;
+}
+
++ (NSDictionary *)extraInfo{
+    return extraInfo;
 }
 
 @end

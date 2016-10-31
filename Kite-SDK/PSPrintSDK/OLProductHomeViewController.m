@@ -39,6 +39,8 @@
 #import "OLKiteViewController.h"
 #import "OLProduct.h"
 #import "OLProductGroup.h"
+#import "OLHPSDKWrapper.h"
+#import "OLAsset+Private.h"
 #import "OLProductHomeViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "OLProductTemplate.h"
@@ -467,21 +469,32 @@
 
 #pragma mark Banner Section
 
+- (BOOL)printAtHomeAvailable{
+    Class MPPrintItemFactoryClass = NSClassFromString (@"MPPrintItemFactory");
+    BOOL printAtHomeAvailable = [MPPrintItemFactoryClass class] && [OLUserSession currentSession].kiteVc.showPrintAtHome;
+    return printAtHomeAvailable && [OLUserSession currentSession].appAssets.firstObject;
+}
+
 - (BOOL)includeBannerSection{
-    return ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"];
+    return [self printAtHomeAvailable] || ![[OLKiteABTesting sharedInstance].qualityBannerType isEqualToString:@"None"];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView bannerSectionCellForIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
-    UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
-    imageView.image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
-    imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
-    return cell;
+    if ([self printAtHomeAvailable]){
+        return [collectionView dequeueReusableCellWithReuseIdentifier:@"PrintAtHomeCell" forIndexPath:indexPath];
+    }
+    else{
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
+        UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
+        imageView.image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
+        imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
+        return cell;
+    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView sizeForBannerSectionCellForIndexPath:(NSIndexPath *)indexPath{
     CGSize size = self.view.frame.size;
-    CGFloat height = 110;
+    CGFloat height = [self printAtHomeAvailable] ? 233 : 110;
     if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width){
         height = (self.view.frame.size.width * height) / 375.0;
     }
@@ -489,9 +502,22 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView actionForBannerSectionForIndexPath:(NSIndexPath *)indexPath{
-    OLInfoPageViewController *vc = (OLInfoPageViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
-    vc.imageName = @"quality";
-    [self.navigationController pushViewController:vc animated:YES];
+    if ([self printAtHomeAvailable]){
+        [OLAnalytics trackPrintAtHomeTapped];
+        OLAsset *asset = [OLUserSession currentSession].appAssets.firstObject;
+        [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
+            id printItem = [OLHPSDKWrapper printItemWithAsset:[UIImage imageWithData:data scale:1]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIViewController *vc = [OLHPSDKWrapper printViewControllerWithDelegate:[OLUserSession currentSession].kiteVc.delegate dataSource:[OLUserSession currentSession].kiteVc.delegate printItem:printItem fromQueue:NO settingsOnly:NO];
+                [self.navigationController presentViewController:vc animated:YES completion:NULL];
+            });
+        }];
+    }
+    else{
+        OLInfoPageViewController *vc = (OLInfoPageViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
+        vc.imageName = @"quality";
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInBannerSection:(NSInteger)section{
