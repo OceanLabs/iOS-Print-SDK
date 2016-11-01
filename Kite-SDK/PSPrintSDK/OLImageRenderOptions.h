@@ -29,13 +29,24 @@
 
 @import UIKit;
 
-@interface OLImageDownloader : NSObject
+typedef NS_ENUM(NSInteger, OLImageRenderOptionsFillMode){
+    OLImageRenderOptionsFillModeFill,
+    OLImageRenderOptionsFillModeFit
+};
 
-+ (instancetype)sharedInstance;
-- (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler;
-- (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler;
-- (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url priority:(float)priority progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler;
-- (NSURLSessionDownloadTask *)downloadDataAtURL:(NSURL *)url priority:(float)priority progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(NSData *data, NSError *error))handler;
-- (BOOL)cachedDataExistForURL:(NSURL *)url;
+@interface OLImageRenderOptions : NSObject
+@property (strong, nonatomic) NSString *productId;
+@property (strong, nonatomic) NSURL *imageUrl;
+@property (strong, nonatomic) NSString *variant;
+@property (assign, nonatomic) CGSize size;
+@property (assign, nonatomic) OLImageRenderOptionsFillMode *fillMode;
+@property (assign, nonatomic) CGFloat padding;
+@property (assign, nonatomic) CGFloat rotate;
+@property (assign, nonatomic) CGFloat scale;
+@property (assign, nonatomic) CGPoint translate;
+@property (assign, nonatomic) BOOL mirror;
+@property (strong, nonatomic) UIColor *background;
+@property (assign, nonatomic) BOOL printImage;
+
 
 @end

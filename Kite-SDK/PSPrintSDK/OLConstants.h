@@ -53,6 +53,7 @@
 #import "OLAssetUploadRequest.h"
 #import "OLAnalytics.h"
 #import "OLImagePickerProviderCollection.h"
+#import "OLPromoView.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKVersion;

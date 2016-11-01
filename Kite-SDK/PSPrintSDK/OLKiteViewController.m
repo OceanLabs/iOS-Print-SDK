@@ -68,6 +68,8 @@ static CGFloat fadeTime = 0.3;
 @property (strong, nonatomic) NSBlockOperation *remotePlistFetchOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
 
+@property (copy, nonatomic) void (^loadingHandler)();
+
 @end
 
 @interface OLKitePrintSDK (Private)
@@ -165,6 +167,11 @@ static CGFloat fadeTime = 0.3;
     return self;
 }
 
+- (void)setAssets:(NSArray *_Nonnull)assets{
+    [OLUserSession currentSession].appAssets = assets;
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
+}
+
 - (void)addCustomPhotoProviderWithCollections:(NSArray <OLImagePickerProviderCollection *>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
     if (!self.customImageProviders){
         self.customImageProviders = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
@@ -183,18 +190,15 @@ static CGFloat fadeTime = 0.3;
     self.fontNames = fontNames;
 }
 
--(void)viewDidLoad {
-    [super viewDidLoad];
-    
-    if (!self.navigationController){
-        self.navigationBar.hidden = NO;
+- (void)startLoadingWithCompletionHandler:(void(^)())handler{
+    if (!handler){
+        return;
     }
-    
-    
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        self.customNavigationItem.title = @"";
-    }
-    
+    self.loadingHandler = handler;
+    [self loadRemoteData];
+}
+
+- (void)loadRemoteData{
     [[OLUserSession currentSession] calcScreenScaleForTraitCollection:self.traitCollection];
     
     self.operationQueue = [NSOperationQueue mainQueue];
@@ -202,16 +206,19 @@ static CGFloat fadeTime = 0.3;
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
     self.transitionOperation = [[NSBlockOperation alloc] init];
     self.remotePlistFetchOperation = [[NSBlockOperation alloc] init];
-
+    
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
     [self.remotePlistFetchOperation addDependency:self.templateSyncOperation];
     
-    if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
-        [[self.view viewWithTag:9999] removeFromSuperview];
+    if (self.loadingHandler){
+        NSBlockOperation *loadingHandlerOperation = [NSBlockOperation blockOperationWithBlock:^{
+            self.loadingHandler();
+        }];
+        [loadingHandlerOperation addDependency:self.templateSyncOperation];
+        [loadingHandlerOperation addDependency:self.remotePlistSyncOperation];
+        [self.operationQueue addOperation:loadingHandlerOperation];
     }
-    
-    self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
     
     if (![OLKitePrintSDK cacheTemplates]) {
         [OLProductTemplate deleteCachedTemplates];
@@ -244,6 +251,28 @@ static CGFloat fadeTime = 0.3;
         [self.operationQueue addOperation:self.remotePlistFetchOperation];
         [OLProductTemplate sync];
     }
+}
+
+-(void)viewDidLoad {
+    [super viewDidLoad];
+    
+    if (!self.navigationController){
+        self.navigationBar.hidden = NO;
+    }
+    
+    if (!self.loadingHandler){
+        [self loadRemoteData];
+    }
+    
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        self.customNavigationItem.title = @"";
+    }
+    
+    if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
+        [[self.view viewWithTag:9999] removeFromSuperview];
+    }
+    
+    self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
     
     [self transitionToNextScreen];
 }
