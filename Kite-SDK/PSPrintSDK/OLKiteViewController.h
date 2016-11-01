@@ -194,6 +194,21 @@
 
 
 /**
+ Start loading the products in the background
+
+ @param handler Completion handler that is called when all network requests are finished and the Kite View Controller is ready to be shown.
+ */
+- (void)startLoadingWithCompletionHandler:(void(^_Nonnull)())handler;
+
+
+/**
+ Set the assets to use. Use this if you've previously initialized the Kite View Controller. Otherwise use initWithAssets:
+
+ @param assets The assets
+ */
+- (void)setAssets:(NSArray *_Nonnull)assets;
+
+/**
  Returns the printOrder object that is used to handle the active basket
  
  Note: A new object may be created when the user has successfully paid for and submitted their basket.

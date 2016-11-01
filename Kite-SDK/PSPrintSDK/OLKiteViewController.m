@@ -167,6 +167,11 @@ static CGFloat fadeTime = 0.3;
     return self;
 }
 
+- (void)setAssets:(NSArray *_Nonnull)assets{
+    [OLUserSession currentSession].appAssets = assets;
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
+}
+
 - (void)addCustomPhotoProviderWithCollections:(NSArray <OLImagePickerProviderCollection *>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
     if (!self.customImageProviders){
         self.customImageProviders = [[NSMutableArray<OLImagePickerProvider *> alloc] init];

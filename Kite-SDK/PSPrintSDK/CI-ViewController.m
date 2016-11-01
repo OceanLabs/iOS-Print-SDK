@@ -48,6 +48,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 @interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate, OLPromoViewDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
+@property (strong, nonatomic) OLKiteViewController *kiteViewController;
 @end
 
 @interface OLKitePrintSDK (Private)
@@ -133,6 +134,14 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"PrintOrderHistoryViewController"] animated:YES];
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"Show Promo View" style:UIAlertActionStyleDefault handler:^(id action){
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
+        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+        [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+        self.kiteViewController = [[OLKiteViewController alloc] initWithAssets:@[] info:@{@"Entry Point" : @"OLPromoView"}];
+        [self.kiteViewController startLoadingWithCompletionHandler:^{}];
+        
         UIView *containerView = [[UIView alloc] init];
         containerView.tag = 1000;
         containerView.backgroundColor = [UIColor clearColor];
@@ -256,16 +265,17 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)promoView:(OLPromoView *)promoView didSelectTemplateId:(NSString *)templateId withAsset:(OLAsset *)asset{
-    [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
-    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+    [self.kiteViewController setAssets:@[asset]];
+    self.kiteViewController.filterProducts = @[templateId];
+    self.kiteViewController.delegate = self;
     
-    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:@[asset]];
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    [printOrder addPrintJob:job];
-    
-    OLKiteViewController *kvc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder info:@{@"Entry Point" : @"OLPromoView"}];
-    
-    [self presentViewController:kvc animated:YES completion:NULL];
+    [self presentViewController:self.kiteViewController animated:YES completion:NULL];
+}
+
+- (void)kiteControllerDidFinish:(OLKiteViewController *)controller{
+    self.kiteViewController = [[OLKiteViewController alloc] initWithAssets:@[] info:@{@"Entry Point" : @"OLPromoView"}];
+    [self.kiteViewController startLoadingWithCompletionHandler:^{}];
+    [controller dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
