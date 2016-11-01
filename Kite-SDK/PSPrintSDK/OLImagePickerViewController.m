@@ -219,6 +219,9 @@
             self.minimumPhotos = 2;
         }
     }
+    else if (self.maximumPhotos == 1){
+        self.title = NSLocalizedStringFromTableInBundle(@"Choose Photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    }
     
     if (self.selectedAssets.count > self.maximumPhotos && self.maximumPhotos != 0){
         NSArray *maxSelected = [self.selectedAssets subarrayWithRange:NSMakeRange(0, self.maximumPhotos)];
@@ -499,6 +502,9 @@
 }
 
 - (void)reloadPageController{
+    if (!self.pageController){
+        return;
+    }
     [self.pageController setViewControllers:@[[self viewControllerAtIndex:[self.pageController.viewControllers.firstObject pageIndex]]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:NULL];
 }
 

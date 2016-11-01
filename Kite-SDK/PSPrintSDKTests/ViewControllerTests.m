@@ -243,7 +243,7 @@
         });
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     return resultVc;
 }
 
@@ -572,7 +572,7 @@
     [self templateSyncWithSuccessHandler:^{
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
     
     OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
@@ -614,10 +614,10 @@
         [vc onShippingDetailsGestureRecognized:nil];
     }];
     
-    XCTAssert([[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] isKindOfClass:[OLIntegratedCheckoutViewController class]] ,@"");
+    XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLIntegratedCheckoutViewController class]] ,@"");
     
     [self performUIAction:^{
-        [(OLCheckoutViewController *)[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] onButtonDoneClicked];
+        [(OLNavigationController *)vc.navigationController popViewControllerAnimated:YES];
     }];
     
     [OLKiteABTesting sharedInstance].checkoutScreenType = @"Classic";
@@ -626,10 +626,10 @@
         [vc onShippingDetailsGestureRecognized:nil];
     }];
     
-    XCTAssert([[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] isKindOfClass:[OLCheckoutViewController class]] ,@"");
+    XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLCheckoutViewController class]] ,@"");
     
     [self performUIAction:^{
-        [(OLCheckoutViewController *)[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] onButtonDoneClicked];
+        [(OLNavigationController *)vc.navigationController popViewControllerAnimated:YES];
     }];
     
     [self performUIActionWithDelay:5 action:^{
@@ -851,7 +851,7 @@
         });
     }];
 
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
@@ -914,7 +914,7 @@
         });
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
     XCTAssert([nav.topViewController isKindOfClass:[OLProductOverviewViewController class]], @"Not showing Overview vc");
@@ -986,7 +986,7 @@
         });
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
     XCTAssert([nav.topViewController isKindOfClass:[OLImagePickerViewController class]], @"Not showing Review vc");
@@ -1055,7 +1055,7 @@
         });
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
     XCTAssert([nav.topViewController isKindOfClass:[OLProductOverviewViewController class]], @"Not showing Overview vc, but: %@", [nav.topViewController class]);
@@ -1121,7 +1121,7 @@
         });
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
     XCTAssert([nav.topViewController isKindOfClass:[OLImagePickerViewController class]], @"Not showing Review vc");

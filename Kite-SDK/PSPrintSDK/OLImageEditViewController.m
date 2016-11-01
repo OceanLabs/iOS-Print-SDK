@@ -54,6 +54,7 @@ const NSInteger kOLEditTagCrop = 40;
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSArray *fontNames;
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @interface OLProductOverviewViewController ()
@@ -1370,10 +1371,10 @@ const NSInteger kOLEditTagCrop = 40;
             [(UILabel *)[cell viewWithTag:10] setText:choice.name];
         }
         
-        if (self.selectedOption.type == OLProductTemplateOptionTypeGeneric){
+        if (self.selectedOption.type == OLProductTemplateOptionTypeGeneric || self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
             [(OLButtonCollectionViewCell *)cell setColorForSelection:self.editingTools.ctaButton.backgroundColor];
         }
-        [cell setSelected:[self.product.selectedOptions[self.selectedOption.code] isEqualToString:choice.code]];
+        [cell setSelected:[self.product.selectedOptions[self.selectedOption.code] isEqualToString:choice.code] || [choice.code isEqualToString:self.product.templateId]];
     }
     else if (collectionView.tag == kOLEditTagFonts){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fontCell" forIndexPath:indexPath];
@@ -1575,7 +1576,7 @@ const NSInteger kOLEditTagCrop = 40;
     NSDictionary *views = NSDictionaryOfVariableBindings(label);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-0-[label]-0-|",
+    NSArray *visuals = @[@"H:|-2-[label]-2-|",
                          @"V:|-0-[label]-0-|"];
     
     
@@ -1840,11 +1841,11 @@ const NSInteger kOLEditTagCrop = 40;
     vc.maximumPhotos = 1;
     vc.product = self.product;
     
-    [vc.view class]; //Force viewDidLoad
-    if (vc.providers.count == 2 && vc.providers.lastObject.providerType == OLImagePickerProviderTypeViewController){
+    if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
         //Skip the image picker and only show the custom vc
+        
         self.vcDelegateForCustomVc = vc; //Keep strong reference
-        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)vc.providers.lastObject vc];
+        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
         [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         
         [self presentViewController:customVc animated:YES completion:NULL];

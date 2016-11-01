@@ -218,6 +218,9 @@ We also have a [REST print API](https://www.kite.ly/docs/1.1/) for those who pre
 ## Migration from Kite SDK v5.x.x
 We have made significant changes under the hood. Please see the [Migration Documentation](Kite-SDK/docs/migration.md) for any public-facing changes that might affect you.
 
+## HP Print SDK
+You can optionally offer print-at-home functionality by enabling the HP Print SDK, which will integrate it nicely within the Kite SDK. Please see [here](Kite-SDK/docs/hp_sdk.md) for details. 
+
 ## License
 
 Kite iOS Print SDK is available under a modified MIT license. See the [LICENSE](Kite-SDK/LICENSE) file for more info.

@@ -110,6 +110,7 @@ static NSString *const kOLAnalyticsError = @"Error";
 + (void)trackBasketIconTappedWithNumberBadged:(NSInteger)number;
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
 + (void)trackQualityInfoScreenViewed;
++ (void)trackPrintAtHomeTapped;
 
 // upsell events
 + (void)trackUpsellShown:(BOOL)shown;
@@ -119,4 +120,5 @@ static NSString *const kOLAnalyticsError = @"Error";
 + (void)setExtraInfo:(NSDictionary *)info;
 + (NSString *)userDistinctId;
 
++ (NSDictionary *)extraInfo;
 @end
