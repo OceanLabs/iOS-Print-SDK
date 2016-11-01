@@ -161,52 +161,14 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
 #define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
-            [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
-            
-            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-            
-            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets info:@{}];
-            vc.userEmail = @"";
-            vc.userPhone = @"";
-            vc.qrCodeUploadEnabled = YES;
-            vc.delegate = self;
-            
-            [self addCatsAndDogsImagePickersToKite:vc];
-            
-            [self presentViewController:vc animated:YES completion:NULL];
+            [self showKiteVcForAPIKey:OL_KITE_CI_DEPLOY_KEY assets:assets];
         }]];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDefault handler:^(id action){
-            [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
-            
-            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-            [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-            
-            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-            vc.userEmail = @"";
-            vc.userPhone = @"";
-            vc.qrCodeUploadEnabled = YES;
-            vc.delegate = self;
-            
-            [self addCatsAndDogsImagePickersToKite:vc];
-            
-            [self presentViewController:vc animated:YES completion:NULL];
+            [self showKiteVcForAPIKey:pasteboard.string assets:assets];
         }]];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and use staging", @"") style:UIAlertActionStyleDefault handler:^(id action){
             [OLKitePrintSDK setUseStaging:YES];
-            [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
-            
-            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-            [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-            
-            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-            vc.userEmail = @"";
-            vc.userPhone = @"";
-            vc.qrCodeUploadEnabled = YES;
-            vc.delegate = self;
-            
-            [self addCatsAndDogsImagePickersToKite:vc];
-            
-            [self presentViewController:vc animated:YES completion:NULL];
+            [self showKiteVcForAPIKey:pasteboard.string assets:assets];
         }]];
         [self presentViewController:ac animated:YES completion:NULL];
     }
@@ -214,22 +176,27 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
 #define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
-        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
-        
-        [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-        
-        OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-        vc.userEmail = @"";
-        vc.userPhone = @"";
-        vc.delegate = self;
-        vc.qrCodeUploadEnabled = YES;
-       
-        [self addCatsAndDogsImagePickersToKite:vc];
-        
-        [vc addCustomPhotoProviderWithViewController:[[CustomImagePickerViewController alloc] init] name:@"Custom" icon:[UIImage imageNamed:@"cat"]];
-        
-        [self presentViewController:vc animated:YES completion:NULL];
+        [self showKiteVcForAPIKey:OL_KITE_CI_DEPLOY_KEY assets:assets];
     }
+}
+
+- (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
+    [OLKitePrintSDK setAPIKey:s withEnvironment:[self environment]];
+    
+    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+    [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+    vc.userEmail = @"";
+    vc.userPhone = @"";
+    vc.delegate = self;
+    vc.qrCodeUploadEnabled = YES;
+    
+    [self addCatsAndDogsImagePickersToKite:vc];
+    
+    [vc addCustomPhotoProviderWithViewController:[[CustomImagePickerViewController alloc] init] name:@"Custom" icon:[UIImage imageNamed:@"cat"]];
+    
+    [self presentViewController:vc animated:YES completion:NULL];
 }
 
 - (void)didCancelPrintFlow:(UIViewController *)printViewController{
