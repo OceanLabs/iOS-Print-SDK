@@ -55,7 +55,8 @@
 //    }] firstObject];
     
     // Create a new scene
-    SCNScene *scene = [SCNScene sceneNamed:@"case_ip5.dae"];
+    SCNScene *scene = [SCNScene sceneWithURL:[[NSBundle bundleForClass:[OLKiteViewController class]] URLForResource:@"cup" withExtension:@"dae"]
+ options:NULL error:nil];
     
     [[scene rootNode] enumerateChildNodesUsingBlock:^(SCNNode *node, BOOL *stop){
 //        SCNMaterial *material = [[SCNMaterial alloc] init];
