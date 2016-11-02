@@ -4,8 +4,8 @@
   <contributor>
    <authoring_tool>SceneKit Collada Exporter v1.0</authoring_tool>
   </contributor>
-  <created>2016-11-02T9:18:59 amZ</created>
-  <modified>2016-11-02T9:18:59 amZ</modified>
+  <created>2016-11-02T9:25:20 amZ</created>
+  <modified>2016-11-02T9:25:20 amZ</modified>
   <unit meter="1.000000"/>
   <up_axis>Z_UP</up_axis>
  </asset>
@@ -33,7 +33,43 @@
   </camera>
  </library_cameras>
  <library_lights>
-  <light id="Lamp-light" name="Lamp">
+  <light id="Lamp-light" name="Lamp-copy-copy">
+   <technique_common>
+    <point>
+     <color>1 1 1</color>
+     <constant_attenuation>0</constant_attenuation>
+     <linear_attenuation>0</linear_attenuation>
+     <quadratic_attenuation>1</quadratic_attenuation>
+    </point>
+   </technique_common>
+   <extra>
+    <technique profile="SceneKit">
+     <attenuationStart>0</attenuationStart>
+     <attenuationEnd>0</attenuationEnd>
+     <attenuationFalloffExponent>2</attenuationFalloffExponent>
+     <intensity>1000</intensity>
+    </technique>
+   </extra>
+  </light>
+  <light id="Lamp" name="Lamp">
+   <technique_common>
+    <point>
+     <color>1 1 1</color>
+     <constant_attenuation>0</constant_attenuation>
+     <linear_attenuation>0</linear_attenuation>
+     <quadratic_attenuation>1</quadratic_attenuation>
+    </point>
+   </technique_common>
+   <extra>
+    <technique profile="SceneKit">
+     <attenuationStart>0</attenuationStart>
+     <attenuationEnd>0</attenuationEnd>
+     <attenuationFalloffExponent>2</attenuationFalloffExponent>
+     <intensity>1000</intensity>
+    </technique>
+   </extra>
+  </light>
+  <light id="Lamp-copy" name="Lamp-copy">
    <technique_common>
     <point>
      <color>1 1 1</color>
@@ -234,9 +270,9 @@
     <matrix>0.6858805 -0.3173701 0.6548619 7.481132 0.7276337 0.3124686 -0.6106656 -6.50764 -0.01081678 0.8953431 0.4452454 5.343665 0 0 0 1 </matrix>
     <instance_camera url="#Camera-camera"/>
    </node>
-   <node id="Lamp" name="Lamp">
+   <node id="node8" name="Lamp">
     <matrix>-0.2908646 -0.7711008 0.5663932 9.979389 0.9551712 -0.1998834 0.2183912 1.005454 -0.05518906 0.6045247 0.7946723 11.60863 0 0 0 1 </matrix>
-    <instance_light url="#Lamp-light"/>
+    <instance_light url="#Lamp"/>
    </node>
    <node id="Cylinder" name="Cylinder">
     <matrix>1.38449 -0.6296993 0 0 0.6296993 1.38449 0 0 0 0 1.520965 0 0 0 0 1 </matrix>
@@ -249,6 +285,14 @@
       </technique_common>
      </bind_material>
     </instance_geometry>
+   </node>
+   <node id="node9" name="Lamp">
+    <matrix>-0.2908647 -0.7711006 0.5663931 -11.06313 0.9551711 -0.1998834 0.2183912 7.792381 -0.05518901 0.6045246 0.7946723 0.03900695 0 0 0 1 </matrix>
+    <instance_light url="#Lamp-copy"/>
+   </node>
+   <node id="node10" name="Lamp">
+    <matrix>-0.2908649 -0.7711006 0.5663932 -4.315668 0.9551711 -0.1998837 0.2183913 -14.3656 -0.05518895 0.6045247 0.7946724 1.319277 0 0 0 1 </matrix>
+    <instance_light url="#Lamp-light"/>
    </node>
   </visual_scene>
  </library_visual_scenes>
