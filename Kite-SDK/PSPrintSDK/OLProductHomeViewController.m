@@ -55,11 +55,8 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 @interface OLProduct (Private)
-
--(void)setCoverImageToImageView:(UIImageView *)imageView;
--(void)setClassImageToImageView:(UIImageView *)imageView;
+-(void)setClassImageToImageView:(UIImageView *)imageView size:(CGSize)size;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
-
 @end
 
 @interface OLKiteViewController (Private)
@@ -724,7 +721,7 @@
     
     OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
-    [product setClassImageToImageView:cellImageView];
+    [product setClassImageToImageView:cellImageView size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath]];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     

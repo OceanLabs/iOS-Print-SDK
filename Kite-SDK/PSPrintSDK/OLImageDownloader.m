@@ -70,11 +70,16 @@
     return [self downloadDataAtURL:url priority:priority progress:progressHandler withCompletionHandler:^(NSData *data, NSError *error){
         if (handler){
             if (error){
-                handler(nil, error);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    handler(nil, error);
+                });
             }
             else{
                 NSAssert(data, @"Should have data at this point");
-                handler([UIImage imageWithData:data], nil);
+                UIImage *image = [UIImage imageWithData:data];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    handler(image, nil);
+                });
             }
         }
     }];
@@ -86,9 +91,7 @@
     NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
     if (cachedResponse.data){
         if (handler){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                handler(cachedResponse.data, nil);
-            });
+            handler(cachedResponse.data, nil);
         }
         return nil;
     }

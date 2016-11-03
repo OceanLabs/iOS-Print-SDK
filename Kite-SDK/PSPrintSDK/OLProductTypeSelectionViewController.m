@@ -46,7 +46,7 @@
 
 @interface OLProduct (Private)
 
--(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setCoverImageToImageView:(UIImageView *)imageView size:(CGSize)size;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
 
 @end
@@ -316,7 +316,7 @@
     OLProduct *product = (OLProduct *)self.products[indexPath.item];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:40];
-    [product setCoverImageToImageView:imageView];
+    [product setCoverImageToImageView:imageView size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath]];
     
     UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];

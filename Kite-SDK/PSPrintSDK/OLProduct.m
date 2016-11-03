@@ -138,7 +138,7 @@ typedef enum {
     return [[OLProduct alloc] initWithTemplate:[OLProductTemplate templateWithId:templateId]];
 }
 
--(void)setCoverImageToImageView:(UIImageView *)imageView{
+-(void)setCoverImageToImageView:(UIImageView *)imageView size:(CGSize)size{
     UIImage *image;
     if ([self.coverPhoto isKindOfClass:[NSString class]]){
         image = [UIImage imageNamedInKiteBundle:self.coverPhoto];
@@ -154,11 +154,11 @@ typedef enum {
         [imageView setAndFadeInImageWithURL:self.coverPhoto];
     }
     else{
-        [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL];
+        [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL size:size];
     }
 }
 
--(void)setClassImageToImageView:(UIImageView *)imageView{
+-(void)setClassImageToImageView:(UIImageView *)imageView size:(CGSize)size{
     UIImage *image;
     if ([self.coverPhoto isKindOfClass:[NSString class]]){
         image = [UIImage imageNamedInKiteBundle:self.coverPhoto];
@@ -171,15 +171,15 @@ typedef enum {
         imageView.image = image;
     }
     else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
-        [imageView setAndFadeInImageWithURL:self.coverPhoto];
+        [imageView setAndFadeInImageWithURL:self.coverPhoto size:size];
     }
     else{
         OLProductTemplate *productTemplate = self.productTemplate;
         if (productTemplate.classPhotoURL && ![[productTemplate.classPhotoURL absoluteString] isEqualToString:@""]){
-            [imageView setAndFadeInImageWithURL:self.productTemplate.classPhotoURL];
+            [imageView setAndFadeInImageWithURL:self.productTemplate.classPhotoURL size:size];
         }
         else{
-            [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL];
+            [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL size:size];
         }
         
     }
