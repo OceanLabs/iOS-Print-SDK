@@ -43,6 +43,7 @@
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "NSObject+Utils.h"
 #import "OLProductOverviewViewController.h"
+#import "UIImageView+FadeIn.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -50,6 +51,7 @@ const NSInteger kOLEditTagImageTools = 30;
 /**/const NSInteger kOLEditTagTextTools = 31;
 /**/const NSInteger kOLEditTagTextColors = 32;
 /**/const NSInteger kOLEditTagFonts = 33;
+/**/const NSInteger kOLEditTagFilters = 34;
 const NSInteger kOLEditTagCrop = 40;
 
 @interface OLKiteViewController ()
@@ -79,7 +81,6 @@ const NSInteger kOLEditTagCrop = 40;
 @property (assign, nonatomic) CGFloat originalDrawerHeight;
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
-//@property (strong, nonatomic) IBOutletCollection(UIImageView) NSArray *cropFrameEdges;
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewTopCon;
@@ -141,6 +142,10 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     return _borderInsets;
+}
+
+- (NSArray <NSString *> *)filterNames{
+    return @[@"", @"CIPhotoEffectMono", @"CIPhotoEffectTonal", @"CIPhotoEffectNoir", @"CIPhotoEffectFade", @"CIPhotoEffectChrome", @"CIPhotoEffectProcess", @"CIPhotoEffectTransfer", @"CIPhotoEffectInstant", @"CISepiaTone"];
 }
 
 - (void)setActiveTextField:(OLPhotoTextField *)activeTextField{
@@ -530,15 +535,30 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupImage{
+    UIImage *image;
     if (self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical){
-        self.cropView.image = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.fullImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.fullImage.imageOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+        image = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.fullImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.fullImage.imageOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
     }
     else{
-        [self.cropView setImage:self.fullImage];
+        image = self.fullImage;
     }
-    [self.view setNeedsLayout];
-    [self.view layoutIfNeeded];
-    self.cropView.imageView.transform = self.edits.cropTransform;
+    
+    if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
+        OLAsset *asset = [OLAsset assetWithImageAsJPEG:image];
+        asset.edits.filterName = self.edits.filterName;
+        [asset imageWithSize:image.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+            self.cropView.image = image;
+            [self.view setNeedsLayout];
+            [self.view layoutIfNeeded];
+            self.cropView.imageView.transform = self.edits.cropTransform;
+        }];
+    }
+    else{
+        self.cropView.image = image;
+        [self.view setNeedsLayout];
+        [self.view layoutIfNeeded];
+        self.cropView.imageView.transform = self.edits.cropTransform;
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -1274,7 +1294,10 @@ const NSInteger kOLEditTagCrop = 40;
         return self.fonts.count;
     }
     else if (collectionView.tag == kOLEditTagImageTools){
-        return 3;
+        return 4;
+    }
+    else if (collectionView.tag == kOLEditTagFilters){
+        return [self filterNames].count;
     }
     
     return self.selectedOption.choices.count;
@@ -1310,6 +1333,10 @@ const NSInteger kOLEditTagCrop = 40;
         else if (indexPath.item == 2){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Tt"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Add Text", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        }
+        else if (indexPath.item == 3){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"filters"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         }
     }
     else if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
@@ -1390,6 +1417,14 @@ const NSInteger kOLEditTagCrop = 40;
             label.backgroundColor = [UIColor clearColor];
         }
         label.textColor = [UIColor blackColor];
+    }
+    else if (collectionView.tag == kOLEditTagFilters){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
+        [self setupImageCell:cell];
+        UIImageView *imageView = [cell viewWithTag:10];
+        OLAsset *asset = [OLAsset assetWithImageAsJPEG:self.fullImage];
+        asset.edits.filterName = [self filterNames][indexPath.item];
+        [imageView setAndFadeInImageWithOLAsset:asset size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES placeholder:nil progress:NULL completionHandler:NULL];
     }
     cell.clipsToBounds = NO;
     return cell;
@@ -1477,6 +1512,15 @@ const NSInteger kOLEditTagCrop = 40;
         else if (indexPath.item == 2){
             [self onButtonAddTextClicked:nil];
         }
+        else if (indexPath.item == 3){
+            [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+                [self.editingTools bringSubviewToFront:self.editingTools.drawerView];
+                collectionView.tag = kOLEditTagFilters;
+                [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+                [collectionView reloadData];
+                [self showDrawerWithCompletionHandler:NULL];
+            }];
+        }
     }
     else if (collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
         self.printContainerView.backgroundColor = self.availableColors[indexPath.item];
@@ -1496,6 +1540,16 @@ const NSInteger kOLEditTagCrop = 40;
         }
         self.ctaButton.enabled = YES;
         [collectionView reloadData];
+    }
+    else if (collectionView.tag == kOLEditTagFilters){
+        self.ctaButton.enabled = YES;
+        OLAsset *asset = [OLAsset assetWithImageAsJPEG:self.fullImage];
+        asset.edits.filterName = [self filterNames][indexPath.item];
+        self.edits.filterName = asset.edits.filterName;
+        
+        [asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+            self.cropView.imageView.image = image;
+        }];
     }
     else if (self.selectedOption && self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
         NSString *templateId = self.selectedOption.choices[indexPath.item].code;
@@ -1554,6 +1608,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self.editingTools.collectionView registerClass:[OLButtonCollectionViewCell class] forCellWithReuseIdentifier:@"iconCell"];
     [self.editingTools.collectionView registerClass:[OLButtonCollectionViewCell class] forCellWithReuseIdentifier:@"toolCell"];
     [self.editingTools.collectionView registerClass:[OLButtonCollectionViewCell class] forCellWithReuseIdentifier:@"labelCell"];
+    [self.editingTools.collectionView registerClass:[OLButtonCollectionViewCell class] forCellWithReuseIdentifier:@"imageCell"];
     [self.editingTools.collectionView registerClass:[OLColorSelectionCollectionViewCell class] forCellWithReuseIdentifier:@"colorSelectionCell"];
 }
 
@@ -1637,8 +1692,8 @@ const NSInteger kOLEditTagCrop = 40;
     NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-0-[imageView]-0-|", @"H:|-0-[label]-0-|",
-                         @"V:|-0-[imageView(20)]-3-[label]-0-|"];
+    NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
+                         @"V:|-0-[imageView]-0-|"];
     
     
     for (NSString *visual in visuals) {
