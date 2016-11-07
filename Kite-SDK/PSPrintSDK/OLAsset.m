@@ -565,6 +565,16 @@ static NSOperationQueue *imageOperationQueue;
             UIGraphicsEndImageContext();
         }
         
+        if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
+            CIImage *filterImage = [CIImage imageWithCGImage:blockImage.CGImage];
+            CIFilter *filter = [CIFilter filterWithName:self.edits.filterName];
+            [filter setValue:filterImage forKey:@"inputImage"];
+            
+            EAGLContext *eaglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+            CIContext *context = [CIContext contextWithEAGLContext:eaglContext];
+            CGImageRef cgImage = [context createCGImage:filter.outputImage fromRect:filterImage.extent];
+            blockImage = [UIImage imageWithCGImage:cgImage];
+        }
         
         handler(blockImage);
     };
@@ -583,7 +593,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (BOOL)isEdited{
-    return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical || !(CGAffineTransformIsIdentity(self.edits.cropTransform) || self.edits.textsOnPhoto.count > 0);
+    return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical || !(CGAffineTransformIsIdentity(self.edits.cropTransform) || self.edits.textsOnPhoto.count > 0) || (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]);
 }
 
 - (NSUInteger) hash {

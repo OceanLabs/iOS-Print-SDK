@@ -55,11 +55,8 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 @interface OLProduct (Private)
-
--(void)setCoverImageToImageView:(UIImageView *)imageView;
--(void)setClassImageToImageView:(UIImageView *)imageView;
+-(void)setClassImageToImageView:(UIImageView *)imageView size:(CGSize)size;
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
-
 @end
 
 @interface OLKiteViewController (Private)
@@ -705,26 +702,14 @@
     NSString *identifier = [NSString stringWithFormat:@"ProductCell%@", [OLKiteABTesting sharedInstance].productTileStyle];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
-    UIView *view = cell.contentView;
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                         @"V:|-0-[view]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [view.superview addConstraints:con];
-    
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
     
     OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
-    [product setClassImageToImageView:cellImageView];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [product setClassImageToImageView:cellImageView size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath]];
+    });
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     
@@ -761,14 +746,16 @@
     }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
-        button.layer.shadowColor = [[UIColor blackColor] CGColor];
-        button.layer.shadowOpacity = .3;
-        button.layer.shadowOffset = CGSizeMake(0,2);
-        button.layer.shadowRadius = 2;
-        
-        button.backgroundColor = [product labelColor];
-        
-        [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
+        if (button.layer.shadowOpacity == 0){
+            button.layer.shadowColor = [[UIColor blackColor] CGColor];
+            button.layer.shadowOpacity = .3;
+            button.layer.shadowOffset = CGSizeMake(0,2);
+            button.layer.shadowRadius = 2;
+            
+            button.backgroundColor = [product labelColor];
+            
+            [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
+        }
     }
     
     return cell;

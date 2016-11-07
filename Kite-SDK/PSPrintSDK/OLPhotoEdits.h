@@ -42,6 +42,7 @@
 @property (strong, nonatomic) NSMutableArray<OLTextOnPhoto *> *textsOnPhoto;
 @property (strong, nonatomic) UIColor *borderColor;
 @property (strong, nonatomic) OLTextOnPhoto *bottomBorderText;
+@property (strong, nonatomic) NSString *filterName;
 
 - (void)performHorizontalFlipEditFromOrientation:(UIImageOrientation)orientation;
 
