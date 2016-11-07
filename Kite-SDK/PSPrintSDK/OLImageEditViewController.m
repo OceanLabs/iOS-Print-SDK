@@ -145,7 +145,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (NSArray <NSString *> *)filterNames{
-    return @[@"", @"CIPhotoEffectMono", @"CIPhotoEffectTonal", @"CIPhotoEffectNoir", @"CIPhotoEffectFade", @"CIPhotoEffectChrome", @"CIPhotoEffectProcess", @"CIPhotoEffectTransfer", @"CIPhotoEffectInstant", @"CISepiaTone"];
+    return @[@"", @"CIPhotoEffectMono", @"CIPhotoEffectTonal", @"CIPhotoEffectNoir", @"CIPhotoEffectFade", @"CIPhotoEffectChrome", @"CIPhotoEffectProcess", @"CIPhotoEffectTransfer", @"CIPhotoEffectInstant", @"CISepiaTone", @"CIColorPosterize"];
 }
 
 - (void)setActiveTextField:(OLPhotoTextField *)activeTextField{
