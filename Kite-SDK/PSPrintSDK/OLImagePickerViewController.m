@@ -454,10 +454,10 @@
         self.selectedProviderIndicator.alpha = 0;
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
-        [self positionSelectedProviderIndicator];
-        [UIView animateWithDuration:0.25 animations:^{
-            self.selectedProviderIndicator.alpha = 1;
-        }];
+        self.indicatorDestFrame = CGRectZero;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self positionSelectedProviderIndicator];
+        });
     }];
 }
 
@@ -697,11 +697,15 @@
     UICollectionViewCell *cell = [self.sourcesCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0]];
     
     if (cell){
-        self.selectedProviderIndicator.alpha = 1;
+        [UIView animateWithDuration:0.15 animations:^{
+            self.selectedProviderIndicator.alpha = 1;
+        }];
         self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation([self.sourcesCollectionView convertRect:cell.frame toView:self.view].origin.x, 0);
     }
     else{
-        self.selectedProviderIndicator.alpha = 0;
+        [UIView animateWithDuration:0.15 animations:^{
+            self.selectedProviderIndicator.alpha = 0;
+        }];
     }
 }
 
