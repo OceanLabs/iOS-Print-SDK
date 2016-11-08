@@ -570,8 +570,7 @@ static NSOperationQueue *imageOperationQueue;
             CIFilter *filter = [CIFilter filterWithName:self.edits.filterName];
             [filter setValue:filterImage forKey:@"inputImage"];
             
-            EAGLContext *eaglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-            CIContext *context = [CIContext contextWithEAGLContext:eaglContext];
+            CIContext *context = [CIContext contextWithOptions:nil];
             CGImageRef cgImage = [context createCGImage:filter.outputImage fromRect:filterImage.extent];
             blockImage = [UIImage imageWithCGImage:cgImage];
         }
