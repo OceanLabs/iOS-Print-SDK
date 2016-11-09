@@ -888,6 +888,12 @@ const NSInteger kOLEditTagCrop = 40;
     else if (self.editingTools.collectionView.tag == kOLEditTagFonts){
         self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FONTS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
+    else if (self.editingTools.collectionView.tag == kOLEditTagFilters){
+        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FILTERS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    }
+    else if (self.editingTools.collectionView.tag == kOLEditTagCrop){
+        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"CROP", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    }
 
     [UIView animateWithDuration:0.25 animations:^{
         self.editingTools.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.editingTools.drawerView.frame.size.height);
@@ -946,6 +952,8 @@ const NSInteger kOLEditTagCrop = 40;
         self.editingTools.button4.tag = kOLEditTagCrop;
         [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
+    
+    [self.editingTools.drawerDoneButton addTarget:self action:@selector(onDrawerButtonDoneClicked:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)saveEditsToAsset:(OLAsset *)asset{
@@ -1099,7 +1107,7 @@ const NSInteger kOLEditTagCrop = 40;
         buttonAction();
     }
     // Sender is selected but we're showing a 2nd or 3rd level drawer: return to 1st level
-    else if (sender.selected && (self.editingTools.collectionView.tag == kOLEditTagTextTools || self.editingTools.collectionView.tag == kOLEditTagFonts || self.editingTools.collectionView.tag == kOLEditTagTextColors || (self.selectedOption && self.product.productTemplate.options.count != 1))){
+    else if (sender.selected && (self.editingTools.collectionView.tag == kOLEditTagTextTools || self.editingTools.collectionView.tag == kOLEditTagFonts || self.editingTools.collectionView.tag == kOLEditTagTextColors || self.editingTools.collectionView.tag == kOLEditTagFilters || (self.selectedOption && self.product.productTemplate.options.count != 1))){
         [self deselectSelectedButtonWithCompletionHandler:^(){
             buttonAction();
         }];
@@ -1238,6 +1246,16 @@ const NSInteger kOLEditTagCrop = 40;
         }
         [self.view bringSubviewToFront:self.editingTools];
         [self.view bringSubviewToFront:self.navigationBar];
+        
+        [self.view bringSubviewToFront:self.editingTools.drawerView];
+        self.editingTools.collectionView.tag = kOLEditTagCrop;
+        
+        self.editingTools.drawerHeightCon.constant = 80;
+        [self.view layoutIfNeeded];
+        [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+        
+        [self.editingTools.collectionView reloadData];
+        [self showDrawerWithCompletionHandler:NULL];
     } completion:^(BOOL finished){
         self.cropView.clipsToBounds = NO;
         [self.view sendSubviewToBack:self.cropView];
@@ -1262,15 +1280,22 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (IBAction)onDrawerButtonDoneClicked:(UIButton *)sender {
-    [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-        self.editingTools.collectionView.tag = kOLEditTagTextTools;
-        
-        self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
-        [self.view layoutIfNeeded];
-        
-        [self.editingTools.collectionView reloadData];
-        [self showDrawerWithCompletionHandler:NULL];
-    }];
+    if (self.editingTools.collectionView.tag == kOLEditTagTextColors || self.editingTools.collectionView.tag == kOLEditTagFonts){
+        [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+            self.editingTools.collectionView.tag = kOLEditTagTextTools;
+            self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
+            [self.view layoutIfNeeded];
+            [self.editingTools.collectionView reloadData];
+            [self showDrawerWithCompletionHandler:NULL];
+        }];
+    }
+    else{
+        for (UIButton *button in self.editingTools.buttons){
+            if (button.selected){
+                [button sendActionsForControlEvents:UIControlEventTouchUpInside];
+            }
+        }
+    }
 }
 
 #pragma mark CollectionView
@@ -1298,6 +1323,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == kOLEditTagFilters){
         return [self filterNames].count;
+    }
+    else if (collectionView.tag == kOLEditTagCrop){
+        return 0;
     }
     
     return self.selectedOption.choices.count;
@@ -1434,6 +1462,9 @@ const NSInteger kOLEditTagCrop = 40;
     if(collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
         return 25;
     }
+    else if (collectionView.tag == kOLEditTagFilters){
+        return 2;
+    }
     else{
         return 10;
     }
@@ -1442,6 +1473,9 @@ const NSInteger kOLEditTagCrop = 40;
 - (CGFloat) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
     if (collectionView.tag == kOLEditTagFonts){
         return 0;
+    }
+    else if (collectionView.tag == kOLEditTagFilters){
+        return 2;
     }
     else if (collectionView.tag == kOLEditTagTextTools || collectionView.tag == kOLEditTagImageTools){
         return 10;
@@ -1480,7 +1514,7 @@ const NSInteger kOLEditTagCrop = 40;
     if (collectionView.tag == kOLEditTagTextTools){
         if (indexPath.item == 0){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-                [self.editingTools bringSubviewToFront:self.editingTools.drawerView];
+                [self.view bringSubviewToFront:self.editingTools.drawerView];
                 collectionView.tag = kOLEditTagFonts;
                 
                 self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight + 150;
@@ -1493,7 +1527,7 @@ const NSInteger kOLEditTagCrop = 40;
         }
         else if (indexPath.item == 1){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-                [self.editingTools bringSubviewToFront:self.editingTools.drawerView];
+                [self.view bringSubviewToFront:self.editingTools.drawerView];
                 collectionView.tag = kOLEditTagTextColors;
                 [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
                 [collectionView reloadData];
@@ -1514,7 +1548,7 @@ const NSInteger kOLEditTagCrop = 40;
         }
         else if (indexPath.item == 3){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
-                [self.editingTools bringSubviewToFront:self.editingTools.drawerView];
+                [self.view bringSubviewToFront:self.editingTools.drawerView];
                 collectionView.tag = kOLEditTagFilters;
                 [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
                 [collectionView reloadData];
