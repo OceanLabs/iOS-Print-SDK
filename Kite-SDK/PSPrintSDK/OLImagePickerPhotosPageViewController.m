@@ -310,7 +310,7 @@ CGFloat OLImagePickerMargin = 1.5;
     
     for (OLAsset *selectedAsset in self.imagePicker.selectedAssets){
         if ([asset isKindOfClass:[PHAsset class]]){
-            if ([asset isEqual:selectedAsset.phAsset]){
+            if ([asset isEqual:[selectedAsset isKindOfClass:[OLAsset class]] ? selectedAsset.phAsset : selectedAsset]){
                 asset = selectedAsset;
                 break;
             }
