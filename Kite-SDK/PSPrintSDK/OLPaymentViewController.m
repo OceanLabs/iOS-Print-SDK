@@ -140,6 +140,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 
 @interface OLReceiptViewController (Private)
 @property (nonatomic, assign) BOOL presentedModally;
+@property (weak, nonatomic) id<OLCheckoutDelegate>_Nullable delegate;
 @end
 
 @interface OLPrintOrder (Private)
