@@ -415,7 +415,7 @@ UITableViewDataSource, UITextFieldDelegate>
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     if (section == kOLSectionCardNumber) {
-        return NSLocalizedStringFromTableInBundle(@"Your 16 digit card number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"Your 15-16 digit card number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else if (section == kOLSectionExpiryDate) {
         return NSLocalizedStringFromTableInBundle(@"Your card expiry date", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else if (section == kOLSectionCVV) {
