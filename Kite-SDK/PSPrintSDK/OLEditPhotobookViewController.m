@@ -362,7 +362,7 @@ static const NSInteger kSectionPages = 2;
 - (void)updateUserSelectedPhotos{
     [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
     for (OLAsset *item in self.photobookPhotos){
-        if (![item isKindOfClass:[NSNull class]]){
+        if (![item isKindOfClass:[OLPlaceholderAsset class]]){
             [[OLUserSession currentSession].userSelectedPhotos addObject:item];
         }
     }
