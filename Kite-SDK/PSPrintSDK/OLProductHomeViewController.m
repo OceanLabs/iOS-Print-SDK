@@ -707,6 +707,7 @@
     OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
     
+    cellImageView.image = nil;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [product setClassImageToImageView:cellImageView size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath]];
     });
@@ -752,10 +753,9 @@
             button.layer.shadowOffset = CGSizeMake(0,2);
             button.layer.shadowRadius = 2;
             
-            button.backgroundColor = [product labelColor];
-            
             [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
         }
+        button.backgroundColor = [product labelColor];
     }
     
     return cell;
