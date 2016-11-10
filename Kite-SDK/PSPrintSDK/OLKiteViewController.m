@@ -65,7 +65,7 @@ static CGFloat fadeTime = 0.3;
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
 @property (strong, nonatomic) NSBlockOperation *templateSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *remotePlistSyncOperation;
-@property (strong, nonatomic) NSBlockOperation *remotePlistFetchOperation;
+@property (strong, nonatomic) NSBlockOperation *remoteThemePlistSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
 
 @property (copy, nonatomic) void (^loadingHandler)();
@@ -204,12 +204,13 @@ static CGFloat fadeTime = 0.3;
     self.operationQueue = [NSOperationQueue mainQueue];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
+    self.remoteThemePlistSyncOperation = [[NSBlockOperation alloc] init];
     self.transitionOperation = [[NSBlockOperation alloc] init];
-    self.remotePlistFetchOperation = [[NSBlockOperation alloc] init];
     
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
-    [self.remotePlistFetchOperation addDependency:self.templateSyncOperation];
+    [self.transitionOperation addDependency:self.remoteThemePlistSyncOperation];
+    [self.remoteThemePlistSyncOperation addDependency:self.remotePlistSyncOperation];
     
     if (self.loadingHandler){
         NSBlockOperation *loadingHandlerOperation = [NSBlockOperation blockOperationWithBlock:^{
@@ -217,6 +218,7 @@ static CGFloat fadeTime = 0.3;
         }];
         [loadingHandlerOperation addDependency:self.templateSyncOperation];
         [loadingHandlerOperation addDependency:self.remotePlistSyncOperation];
+        [loadingHandlerOperation addDependency:self.remoteThemePlistSyncOperation];
         [self.operationQueue addOperation:loadingHandlerOperation];
     }
     
@@ -234,21 +236,9 @@ static CGFloat fadeTime = 0.3;
     }
     else{
         __weak OLKiteViewController *welf = self;
-        [self.remotePlistFetchOperation addExecutionBlock:^(){
-            [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
-                [welf.operationQueue addOperation:welf.remotePlistSyncOperation];
-                
-#ifndef OL_NO_ANALYTICS
-                if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-                    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
-                }
-                else{
-                    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
-                }
-#endif
-            }];
+        [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
+            [welf.operationQueue addOperation:welf.remotePlistSyncOperation];
         }];
-        [self.operationQueue addOperation:self.remotePlistFetchOperation];
         [OLProductTemplate sync];
     }
 }
@@ -297,6 +287,15 @@ static CGFloat fadeTime = 0.3;
 - (void)transitionToNextScreen{
     __weak OLKiteViewController *welf = self;
     [self.transitionOperation addExecutionBlock:^{
+#ifndef OL_NO_ANALYTICS
+        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
+        }
+        else{
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
+        }
+#endif
+        
         // The screen we transition to will depend on what products are available based on the developers filter preferences.
         NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];
         
@@ -477,6 +476,19 @@ static CGFloat fadeTime = 0.3;
     }
     
     else{
+        if (!self.remoteThemePlistSyncOperation.finished){
+            if ([OLKiteABTesting sharedInstance].userConfig[@"theme"]){
+                __weak OLKiteViewController *welf = self;
+                    [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
+                        [welf.remoteThemePlistSyncOperation addExecutionBlock:^{}];
+                        [welf.operationQueue addOperation:welf.remoteThemePlistSyncOperation];
+                    }];
+            }
+            else{
+                [self.remoteThemePlistSyncOperation addExecutionBlock:^{}];
+                [self.operationQueue addOperation:self.remoteThemePlistSyncOperation];
+            }
+        }
         if (!self.templateSyncOperation.finished){
             [self.operationQueue addOperation:self.templateSyncOperation];
         }
