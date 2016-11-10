@@ -662,7 +662,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 self.shippingCostLabel.alpha = 1;
             }];
         }];
-        [self validateTemplatePricing];
+        [self.tableView reloadData];
+//        [self validateTemplatePricing];
     }];
 }
 
@@ -1234,7 +1235,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 self.printOrder.shippingAddress = [addresses anyObject];
             }
             
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self.printOrder saveOrder];
             [self updateViewsBasedOnCostUpdate];
             
@@ -1248,7 +1248,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         printJob.extraCopies--;
         
         if (indexPath){
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [(UILabel *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:70] setText:@""];
+            [(UILabel *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1000] setText:@""];
+            [(UIActivityIndicatorView *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:90] startAnimating];
         }
         [self.printOrder saveOrder];
         [self updateViewsBasedOnCostUpdate];
@@ -1263,11 +1265,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     CGPoint buttonPosition = [sender.superview convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
-    
     printJob.extraCopies += 1;
     
     if (indexPath){
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [(UILabel *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:70] setText:@""];
+        [(UILabel *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1000] setText:@""];
+        [(UIActivityIndicatorView *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:90] startAnimating];
     }
     
     [self.printOrder saveOrder];
@@ -1558,16 +1561,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:60];
         UIButton *largeEditButton = (UIButton *)[cell.contentView viewWithTag:61];
         UILabel *priceLabel = (UILabel *)[cell.contentView viewWithTag:70];
-        UILabel *addressLabel = (UILabel *)[cell.contentView viewWithTag:80];
         
         id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
-        
-        if ([job address]){
-            addressLabel.text = [[job address] descriptionWithoutRecipient];
-        }
-        else{
-            addressLabel.text = nil;
-        }
         
         OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
         
@@ -1594,21 +1589,34 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [[cell viewWithTag:1000] removeFromSuperview];
         
         if (originalUnitCost){
-            UILabel *finalCostLabel = [[UILabel alloc] init];
-            finalCostLabel.font = priceLabel.font;
-            finalCostLabel.tag = 1000;
+            UILabel *finalCostLabel = [cell viewWithTag:1000];
+            if (!finalUnitCost){
+                finalCostLabel = [[UILabel alloc] init];
+                
+                finalCostLabel.font = priceLabel.font;
+                finalCostLabel.tag = 1000;
+                
+                [cell addSubview:finalCostLabel];
+                finalCostLabel.translatesAutoresizingMaskIntoConstraints = NO;
+                [cell addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeTop multiplier:1 constant:-5]];
+                [cell addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+            }
             finalCostLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[finalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
-            [cell addSubview:finalCostLabel];
-            finalCostLabel.translatesAutoresizingMaskIntoConstraints = NO;
-            [cell addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeTop multiplier:1 constant:-5]];
-            [cell addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
             
             NSString *s = [[numUnitsInJob decimalNumberByMultiplyingBy:[originalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
             priceLabel.attributedText = [[NSAttributedString alloc] initWithString:s attributes:@{NSFontAttributeName : priceLabel.font, NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSForegroundColorAttributeName : [UIColor colorWithWhite:0.40 alpha:1.000]}];
         }
         else{
-            priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[finalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
+            [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+                for (OLPaymentLineItem *item in cost.lineItems){
+                    if ([item.identifier isEqualToString:[job uuid]]){
+                        priceLabel.text = [item costStringInCurrency:self.printOrder.currencyCode];
+                    }
+                }
+            }];
         }
+        
+        [(UIActivityIndicatorView *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:90] startAnimating];
         
         if ([numUnitsInJob integerValue] == 1){
             productNameLabel.text = product.productTemplate.name;

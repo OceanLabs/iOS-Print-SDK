@@ -276,8 +276,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     if (self.kiteViewController){
         self.kiteViewController = [[OLKiteViewController alloc] initWithAssets:@[] info:@{@"Entry Point" : @"OLPromoView"}];
         [self.kiteViewController startLoadingWithCompletionHandler:^{}];
-        [controller dismissViewControllerAnimated:YES completion:NULL];
     }
+    
+    [controller dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
