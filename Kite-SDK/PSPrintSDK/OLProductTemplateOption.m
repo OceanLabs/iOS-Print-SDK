@@ -125,6 +125,13 @@
         if ([self.code isEqualToString:@"case_style"]){
             return [UIImage imageNamedInKiteBundle:@"case-options"];
         }
+        else if([self.code isEqualToString:@"garment_color"]){
+            return [UIImage imageNamedInKiteBundle:@"shirt-size-icon"];
+        }
+        else if([self.code isEqualToString:@"garment_size"]){
+            return [UIImage imageNamedInKiteBundle:@"shirt-size-icon"];
+        }
+
     }
     
     return nil;
