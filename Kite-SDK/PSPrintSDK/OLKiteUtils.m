@@ -240,7 +240,6 @@
     
     NSURLSessionDataTask *downloadTask = [session
                                           dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                              [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                                               if (error){
                                                   failure(error);
                                               }
@@ -257,7 +256,6 @@
                                                   success(dict);
                                               }
                                           }];
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [downloadTask resume];
     [session finishTasksAndInvalidate];
 }

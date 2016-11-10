@@ -235,6 +235,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         NSString *description = lineItemDict[@"description"];
         OLPaymentLineItem * item = [[OLPaymentLineItem alloc] initWithDescription:description costs:productCosts];
         [lineItems addObject:item];
+        item.identifier = lineItemDict[@"job_id"];
         
         OLProductPrintJob *job = order.jobs[idx];
         [jobCosts setObject:@{@"product_cost" : productCosts, @"shipping_cost" : shippingCosts} forKey:job];

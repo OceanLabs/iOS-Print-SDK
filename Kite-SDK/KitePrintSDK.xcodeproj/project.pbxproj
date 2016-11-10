@@ -2667,7 +2667,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"OL_KITE_CI_DEPLOY=ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e",
-					OL_KITE_VERBOSE,
 				);
 				INFOPLIST_FILE = "PSPrintSDK/KiteCI-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
