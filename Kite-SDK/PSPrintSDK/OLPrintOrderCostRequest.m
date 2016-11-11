@@ -231,14 +231,16 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     NSInteger idx = 0;
     for (NSDictionary *lineItemDict in json[@"line_items"]){
         NSDictionary *productCosts = [self createCostsDictionaryFromJSON:lineItemDict[@"product_cost"]];
+        NSDictionary *productDiscountedCosts = [self createCostsDictionaryFromJSON:lineItemDict[@"discounted_cost"]];
         NSDictionary *shippingCosts = [self createCostsDictionaryFromJSON:lineItemDict[@"shipping_cost"]];
         NSString *description = lineItemDict[@"description"];
         OLPaymentLineItem * item = [[OLPaymentLineItem alloc] initWithDescription:description costs:productCosts];
+        item.discountedCosts = productDiscountedCosts;
         [lineItems addObject:item];
         item.identifier = lineItemDict[@"job_id"];
         
         OLProductPrintJob *job = order.jobs[idx];
-        [jobCosts setObject:@{@"product_cost" : productCosts, @"shipping_cost" : shippingCosts} forKey:job];
+        [jobCosts setObject:@{@"product_cost" : productCosts, @"shipping_cost" : shippingCosts, @"discounted_cost" : productDiscountedCosts} forKey:job];
         idx++;
     }
 
