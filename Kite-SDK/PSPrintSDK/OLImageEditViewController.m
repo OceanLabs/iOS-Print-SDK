@@ -1583,6 +1583,7 @@ const NSInteger kOLEditTagCrop = 40;
         
         [asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
             self.cropView.imageView.image = image;
+            [self updateProductRepresentationForChoice:nil];
         }];
     }
     else if (self.selectedOption && self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
@@ -1608,7 +1609,9 @@ const NSInteger kOLEditTagCrop = 40;
         [self.navigationController setViewControllers:vcs];
     }
     else if (self.selectedOption){
-        self.product.selectedOptions[self.selectedOption.code] = self.selectedOption.choices[indexPath.item].code;
+        OLProductTemplateOptionChoice *choice = self.selectedOption.choices[indexPath.item];
+        self.product.selectedOptions[self.selectedOption.code] = choice.code;
+        [self updateProductRepresentationForChoice:choice];
         
         for (NSIndexPath *visibleIndexPath in [collectionView indexPathsForVisibleItems]){
             if (![visibleIndexPath isEqual:indexPath]){
@@ -1635,6 +1638,9 @@ const NSInteger kOLEditTagCrop = 40;
             [self showDrawerWithCompletionHandler:NULL];
         }];
     }
+}
+
+- (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
 }
 
 - (void)registerCollectionViewCells{
@@ -1981,10 +1987,14 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     if (self.presentedVc){
-        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+        [self.presentedVc dismissViewControllerAnimated:YES completion:^{
+            [self updateProductRepresentationForChoice:nil];
+        }];
     }
     else{
-        [vc dismissViewControllerAnimated:YES completion:NULL];
+        [vc dismissViewControllerAnimated:YES completion:^{
+            [self updateProductRepresentationForChoice:nil];
+        }];
     }
     
     self.vcDelegateForCustomVc = nil;

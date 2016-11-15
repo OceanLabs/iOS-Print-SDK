@@ -34,6 +34,8 @@
 #import "UIImage+OLUtils.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
+#import "UIImageView+FadeIn.h"
+#import "OLPhotoTextField.h"
 
 @interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
 
@@ -42,6 +44,9 @@
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
 - (UIEdgeInsets)imageInsetsOnContainer;
 @property (strong, nonatomic) UITextField *borderTextField;
+- (void)onButtonCropClicked:(UIButton *)sender;
+- (void)onTapGestureRecognized:(id)sender;
+@property (strong, nonatomic) OLPhotoTextField *activeTextField;
 @end
 
 @interface OLCaseViewController ()
@@ -54,10 +59,41 @@
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
 @property (strong, nonatomic) NSOperation *downloadImagesOperation;
+@property (strong, nonatomic) UIImageView *renderedImageView;
 
 @end
 
 @implementation OLCaseViewController
+
+- (void)setActiveTextField:(OLPhotoTextField *)activeTextField{
+    if ([self isUsingMultiplyBlend]){
+        if (!activeTextField ){
+            [self renderImage];
+        }
+        else{
+            self.renderedImageView.hidden = YES;
+        }
+    }
+    
+    [super setActiveTextField:activeTextField];
+}
+
+- (void)viewDidLoad{
+    [super viewDidLoad];
+    
+    if ([self isUsingMultiplyBlend]){
+        [self.cropView setGesturesEnabled:NO];
+    }
+}
+
+- (void)onTapGestureRecognized:(id)sender{
+    [self renderImage];
+    [super onTapGestureRecognized:sender];
+}
+
+- (BOOL)isUsingMultiplyBlend{
+    return YES;
+}
 
 - (CGFloat)aspectRatio{
     if (CGSizeEqualToSize(self.product.productTemplate.sizePx, CGSizeZero)){
@@ -82,7 +118,7 @@
     }
     else{
         [self.caseVisualEffectView removeFromSuperview];
-        [self.maskActivityIndicator removeFromSuperview];
+        [self.maskActivityIndicator stopAnimating];
     }
     if (self.product.productTemplate.productHighlightsImageURL){
         NSOperation *op2 = [NSBlockOperation blockOperationWithBlock:^{}];
@@ -95,6 +131,7 @@
     else{
         [self.highlightsView removeFromSuperview];
     }
+    
     if (self.product.productTemplate.productBackgroundImageURL){
         NSOperation *op3 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op3];
@@ -111,6 +148,23 @@
     
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
+    
+    UIImageView *imageView = [[UIImageView alloc] init];
+    self.renderedImageView = imageView;
+    [self.printContainerView addSubview:imageView];
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
+                         @"V:|-0-[imageView]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [imageView.superview addConstraints:con];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -142,10 +196,13 @@
     [self.view bringSubviewToFront:self.deviceView];
     [self.view bringSubviewToFront:self.printContainerView];
     [self.view bringSubviewToFront:self.cropView];
-    [self.view bringSubviewToFront:self.highlightsView];
+//    [self.view bringSubviewToFront:self.highlightsView];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.hintView];
+    [self.view bringSubviewToFront:self.renderedImageView];
+    
+    [self.highlightsView.superview sendSubviewToBack:self.highlightsView];
 }
 
 - (void)viewDidLayoutSubviews{
@@ -199,7 +256,7 @@
             
             self.caseVisualEffectView.hidden = YES;
             self.downloadedMask = YES;
-            [self.maskActivityIndicator removeFromSuperview];
+            [self.maskActivityIndicator stopAnimating];
         }
     }];
 }
@@ -211,6 +268,7 @@
             self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
             [UIView animateWithDuration:0.1 animations:^{
                 self.deviceView.alpha = 1;
+                [self renderImage];
             }];
         }];
     }
@@ -222,6 +280,21 @@
                 self.highlightsView.alpha = 1;
             }];
         }];
+    }
+}
+
+- (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
+    self.renderedImageView.image = nil;
+    if (choice.productBackground){
+        [self.maskActivityIndicator.superview bringSubviewToFront:self.maskActivityIndicator];
+        [self.maskActivityIndicator startAnimating];
+        [self.deviceView setAndFadeInImageWithURL:choice.productBackground size:[UIScreen mainScreen].bounds.size placeholder:nil progress:NULL completionHandler:^{
+            [self.maskActivityIndicator stopAnimating];
+            [self renderImage];
+        }];
+    }
+    else{
+        [self renderImage];
     }
 }
 
@@ -255,6 +328,10 @@
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
+    if ([self isUsingMultiplyBlend]){
+        [self.cropView setGesturesEnabled:YES];
+    }
+    self.renderedImageView.hidden = YES;
     for (UIView *view in self.cropFrameGuideViews){
         [self.printContainerView bringSubviewToFront:view];
     }
@@ -286,6 +363,10 @@
             self.highlightsView.alpha = 1;
         }
     } completion:^(BOOL finished){
+        [self renderImage];
+        if ([self isUsingMultiplyBlend]){
+            [self.cropView setGesturesEnabled:NO];
+        }
     }];
 }
 
@@ -294,6 +375,43 @@
         return;
     }
     [super doCheckout];
+}
+
+- (void)renderImage{
+    self.renderedImageView.image = nil;
+    UIGraphicsBeginImageContextWithOptions(self.highlightsView.bounds.size, NO, [UIScreen mainScreen].scale);
+    [self.highlightsView drawViewHierarchyInRect:self.highlightsView.bounds afterScreenUpdates:YES];
+    UIImage *highlightsSnapshot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    UIGraphicsBeginImageContextWithOptions(self.printContainerView.bounds.size, NO, [UIScreen mainScreen].scale);
+    [self.printContainerView drawViewHierarchyInRect:self.printContainerView.bounds afterScreenUpdates:YES];
+    UIImage *productSnapshot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    CIImage *filterImage = [CIImage imageWithCGImage:productSnapshot.CGImage];
+    CIFilter *filter = [CIFilter filterWithName:@"CIMultiplyCompositing"];
+    [filter setValue:filterImage forKey:@"inputBackgroundImage"];
+    [filter setValue:[CIImage imageWithCGImage:highlightsSnapshot.CGImage] forKey:@"inputImage"];
+    
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CGImageRef cgImage = [context createCGImage:filter.outputImage fromRect:filterImage.extent];
+    UIImage *renderedImage = [UIImage imageWithCGImage:cgImage];
+    self.renderedImageView.image = renderedImage;
+    
+//    self.renderedImageView.alpha = 0;
+    self.renderedImageView.hidden = NO;
+//    [UIView animateWithDuration:0.15 animations:^{
+//        self.renderedImageView.alpha = 1;
+//    }];
+}
+
+#pragma mark - RMImageCropperDelegate methods
+
+- (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper {
+    self.ctaButton.enabled = YES;
+    
+    self.renderedImageView.hidden = YES;
 }
 
 @end
