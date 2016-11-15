@@ -47,6 +47,7 @@
 - (void)onButtonCropClicked:(UIButton *)sender;
 - (void)onTapGestureRecognized:(id)sender;
 @property (strong, nonatomic) OLPhotoTextField *activeTextField;
+- (void)disableOverlay;
 @end
 
 @interface OLCaseViewController ()
@@ -67,11 +68,11 @@
 
 - (void)setActiveTextField:(OLPhotoTextField *)activeTextField{
     if ([self isUsingMultiplyBlend]){
-        if (!activeTextField ){
+        if (self.activeTextField && !activeTextField ){
             [self renderImage];
         }
         else{
-            self.renderedImageView.hidden = YES;
+            [self disableOverlay];
         }
     }
     
@@ -87,12 +88,22 @@
 }
 
 - (void)onTapGestureRecognized:(id)sender{
-    [self renderImage];
+    if (!self.activeTextField){
+        [self renderImage];
+    }
     [super onTapGestureRecognized:sender];
 }
 
 - (BOOL)isUsingMultiplyBlend{
     return YES;
+}
+
+- (BOOL)shouldEnableGestures{
+    return NO;
+}
+
+- (void)disableOverlay{
+    self.renderedImageView.hidden = YES;
 }
 
 - (CGFloat)aspectRatio{
@@ -331,7 +342,7 @@
     if ([self isUsingMultiplyBlend]){
         [self.cropView setGesturesEnabled:YES];
     }
-    self.renderedImageView.hidden = YES;
+    [self disableOverlay];
     for (UIView *view in self.cropFrameGuideViews){
         [self.printContainerView bringSubviewToFront:view];
     }
@@ -411,7 +422,7 @@
 - (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper {
     self.ctaButton.enabled = YES;
     
-    self.renderedImageView.hidden = YES;
+    [self disableOverlay];
 }
 
 @end
