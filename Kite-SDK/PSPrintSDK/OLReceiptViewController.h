@@ -34,8 +34,13 @@
 
 @interface OLReceiptViewController : UITableViewController
 
-@property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
 
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
+/**
+ Create a view controller that shows the user the receipt of their order. If an order is unsuccessful, they can retry.
+
+ @param printOrder The print order object to show the receipt for.
+ @return Return a OLReceiptViewController object.
+ */
+- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nonnull)printOrder;
 
 @end
