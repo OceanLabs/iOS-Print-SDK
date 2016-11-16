@@ -140,6 +140,7 @@ static BOOL haveLoadedAtLeastOnce = NO;
 
 @interface OLReceiptViewController (Private)
 @property (nonatomic, assign) BOOL presentedModally;
+@property (weak, nonatomic) id<OLCheckoutDelegate>_Nullable delegate;
 @end
 
 @interface OLPrintOrder (Private)
@@ -1470,6 +1471,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     self.printOrder.email = email;
     self.printOrder.phone = phone;
     
+    if (![self.printOrder.shippingAddress isValidAddress]){
+        completion(PKPaymentAuthorizationStatusInvalidShippingPostalAddress);
+        return;
+    }
     if (![OLCheckoutViewController validateEmail:email] && [OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
         completion(PKPaymentAuthorizationStatusInvalidShippingContact);
         return;
