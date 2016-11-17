@@ -179,11 +179,8 @@
 
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
     OLTemplateUI templateUI = product.productTemplate.templateUI;
-    if (templateUI == OLTemplateUICase){
+    if (templateUI == OLTemplateUICase || templateUI == OLTemplateUIApparel){
         return @"OLCaseViewController";
-    }
-    else if (templateUI == OLTemplateUIApparel){
-        return @"OLTShirtReviewViewController";
     }
     else if (templateUI == OLTemplateUIPostcard){
         return @"OLPostcardViewController";

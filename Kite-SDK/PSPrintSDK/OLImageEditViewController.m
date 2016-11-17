@@ -625,7 +625,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupBottomBorderTextField{
-    if (self.borderInsets.bottom / self.borderInsets.top >= 1.1 && !self.borderTextField){
+    if (self.product.productTemplate.templateUI != OLTemplateUIApparel && self.borderInsets.bottom / self.borderInsets.top >= 1.1 && !self.borderTextField){
         CGFloat heightFactor = self.cropView.frame.size.height / 212.0;
         
         UITextField *tf = [[UITextField alloc] init];
@@ -1183,56 +1183,15 @@ const NSInteger kOLEditTagCrop = 40;
     }
     self.activeTextField = nil;
     
-    for (UITextField *textField in self.textFields){
-        UITextField *textFieldCopy = [self addTextFieldToView:self.textFieldsView temp:YES];
-        textFieldCopy.text = textField.text;
-        textFieldCopy.transform = textField.transform;
-        textFieldCopy.textColor = textField.textColor;
-        textFieldCopy.font = textField.font;
-        textField.hidden = YES;
-    }
-    
     [(UIBarButtonItem *)sender setEnabled:NO];
     self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
-    CGAffineTransform transform = self.cropView.imageView.transform;
-    transform.tx = self.cropView.imageView.transform.ty;
-    transform.ty = -self.cropView.imageView.transform.tx;
-    
-    CGRect cropboxRect = self.cropView.frame;
     
     UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
-    CGFloat imageAspectRatio = newImage.size.height/newImage.size.width;
     
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.cropView.transform = CGAffineTransformMakeRotation(-M_PI_2);
-        
-        CGFloat boxWidth = self.cropView.frame.size.width;
-        CGFloat boxHeight = self.cropView.frame.size.height;
-        
-        CGFloat imageWidth;
-        CGFloat imageHeight;
-        
-        if (imageAspectRatio > 1.0){
-            imageHeight = boxHeight;
-            imageWidth = boxHeight * imageAspectRatio;
-        }
-        else{
-            imageWidth = boxWidth;
-            imageHeight = boxWidth / imageAspectRatio;
-        }
-        
-        self.cropView.imageView.frame = CGRectMake((boxHeight - imageWidth)/ 2.0, (boxWidth - imageHeight) / 2.0, imageWidth, imageHeight);
+        self.cropView.imageView.transform = CGAffineTransformMakeRotation(-M_PI_2);
         
     } completion:^(BOOL finished){
-        for (UITextField *textField in self.textFields){
-            textField.hidden = NO;
-        }
-        for (UITextField *textField in [self.textFieldsView.subviews copy]){
-            [textField removeFromSuperview];
-        }
-        
-        self.cropView.transform = CGAffineTransformIdentity;
-        self.cropView.frame = cropboxRect;
         [self.cropView setImage:newImage];
         
         [(UIBarButtonItem *)sender setEnabled:YES];

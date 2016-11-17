@@ -61,6 +61,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
 @property (strong, nonatomic) NSOperation *downloadImagesOperation;
 @property (strong, nonatomic) UIImageView *renderedImageView;
+@property (strong, nonatomic) NSBlockOperation *viewDidAppearOperation;
 
 @end
 
@@ -80,11 +81,12 @@
 }
 
 - (void)viewDidLoad{
-    [super viewDidLoad];
-    
     if ([self isUsingMultiplyBlend]){
         [self.cropView setGesturesEnabled:NO];
+        self.viewDidAppearOperation = [NSBlockOperation blockOperationWithBlock:^{}];
     }
+    
+    [super viewDidLoad];
 }
 
 - (void)onTapGestureRecognized:(id)sender{
@@ -95,11 +97,11 @@
 }
 
 - (BOOL)isUsingMultiplyBlend{
-    return YES;
+    return self.product.productTemplate.templateUI == OLTemplateUIApparel;
 }
 
 - (BOOL)shouldEnableGestures{
-    return NO;
+    return self.product.productTemplate.templateUI != OLTemplateUIApparel;
 }
 
 - (void)disableOverlay{
@@ -160,22 +162,24 @@
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
     
-    UIImageView *imageView = [[UIImageView alloc] init];
-    self.renderedImageView = imageView;
-    [self.printContainerView addSubview:imageView];
-    imageView.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
-                         @"V:|-0-[imageView]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    if ([self isUsingMultiplyBlend]){
+        UIImageView *imageView = [[UIImageView alloc] init];
+        self.renderedImageView = imageView;
+        [self.printContainerView addSubview:imageView];
+        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
+                             @"V:|-0-[imageView]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [imageView.superview addConstraints:con];
     }
-    
-    [imageView.superview addConstraints:con];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -199,6 +203,14 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if (self.viewDidAppearOperation && !self.viewDidAppearOperation.finished){
+        [[NSOperationQueue mainQueue] addOperation:self.viewDidAppearOperation];
+    }
+}
+
 - (UIColor *)containerBackgroundColor{
     return self.product.productTemplate.maskImageURL ? [UIColor clearColor] : [UIColor whiteColor];
 }
@@ -207,13 +219,18 @@
     [self.view bringSubviewToFront:self.deviceView];
     [self.view bringSubviewToFront:self.printContainerView];
     [self.view bringSubviewToFront:self.cropView];
-//    [self.view bringSubviewToFront:self.highlightsView];
+    
+    if (![self isUsingMultiplyBlend]){
+        [self.view bringSubviewToFront:self.highlightsView];
+    }
+    else{
+        [self.highlightsView.superview sendSubviewToBack:self.highlightsView];
+    }
+    
     [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.hintView];
     [self.view bringSubviewToFront:self.renderedImageView];
-    
-    [self.highlightsView.superview sendSubviewToBack:self.highlightsView];
 }
 
 - (void)viewDidLayoutSubviews{
@@ -224,6 +241,9 @@
             [self applyDownloadedMask];
         }];
         [block addDependency:self.downloadImagesOperation];
+        if ([self isUsingMultiplyBlend] && !self.viewDidAppearOperation.finished){
+            [block addDependency:self.viewDidAppearOperation];
+        }
         [[NSOperationQueue mainQueue] addOperation:block];
     }
     else{
@@ -389,6 +409,9 @@
 }
 
 - (void)renderImage{
+    if (![self isUsingMultiplyBlend]){
+        return;
+    }
     self.renderedImageView.image = nil;
     UIGraphicsBeginImageContextWithOptions(self.highlightsView.bounds.size, NO, [UIScreen mainScreen].scale);
     [self.highlightsView drawViewHierarchyInRect:self.highlightsView.bounds afterScreenUpdates:YES];
@@ -410,11 +433,7 @@
     UIImage *renderedImage = [UIImage imageWithCGImage:cgImage];
     self.renderedImageView.image = renderedImage;
     
-//    self.renderedImageView.alpha = 0;
     self.renderedImageView.hidden = NO;
-//    [UIView animateWithDuration:0.15 animations:^{
-//        self.renderedImageView.alpha = 1;
-//    }];
 }
 
 #pragma mark - RMImageCropperDelegate methods
