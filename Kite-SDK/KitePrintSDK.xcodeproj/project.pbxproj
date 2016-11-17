@@ -387,7 +387,7 @@
 		2EB8FE551D95685100E26BDF /* OLCheckoutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE561D95685100E26BDF /* OLIntegratedCheckoutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE571D95685100E26BDF /* OLCheckoutDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2EB8FE581D95685100E26BDF /* OLReceiptViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2EB8FE581D95685100E26BDF /* OLReceiptViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE591D95685100E26BDF /* OLCreditCardCaptureViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE5A1D95685100E26BDF /* OLAddressPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB2B18783B8E00316492 /* OLAddressPickerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE5B1D95685100E26BDF /* OLAddressSelectionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB2E187842AB00316492 /* OLAddressSelectionViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -2667,7 +2667,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"OL_KITE_CI_DEPLOY=ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e",
-					OL_KITE_VERBOSE,
 				);
 				INFOPLIST_FILE = "PSPrintSDK/KiteCI-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;

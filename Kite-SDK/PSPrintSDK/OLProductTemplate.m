@@ -373,6 +373,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"CALENDAR"]){
         return OLTemplateUICalendar;
     }
+    else if ([identifier isEqualToString:@"APPAREL"]){
+        return OLTemplateUIApparel;
+    }
     return OLTemplateUINA;
 }
 

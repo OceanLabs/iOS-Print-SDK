@@ -30,8 +30,28 @@
 #import "OLPrintOrder.h"
 
 @interface OLPrintOrder (History)
-+ (NSArray *)printOrderHistory;
+
+/**
+ Get the list of all locally stored successful and unsuccessful orders
+
+ @return An array containing all orders
+ */
++ (NSArray <OLPrintOrder *>* _Nonnull)printOrderHistory;
+
+/**
+ Save an order to the local history
+ */
 - (void)saveToHistory;
+
+/**
+ Delete an order from the local history
+ */
 - (void)deleteFromHistory;
+
+/**
+ Return whether or not an order is stored in the local history
+
+ @return Boolean indicating whether or not an order is stored in the local history
+ */
 - (BOOL)isSavedInHistory;
 @end

@@ -32,11 +32,15 @@
 @interface OLPaymentLineItem : NSObject <NSCoding>
 
 @property (readonly, copy) NSString *description;
+@property (strong, nonatomic) NSString *identifier;
+@property (nonatomic, strong) NSDictionary *discountedCosts;
 
 - (instancetype) initWithDescription:(NSString *)description
                                costs:(NSDictionary<NSString *, NSDecimalNumber *> *)costs;
 
 - (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode;
 - (NSString *)costStringInCurrency:(NSString *)currencyCode;
+- (NSDecimalNumber *)discountedCostInCurrency:(NSString *)currencyCode;
+- (NSString *)discountedCostStringInCurrency:(NSString *)currencyCode;
 
 @end

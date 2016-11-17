@@ -118,6 +118,12 @@ static NSString *const kKeySpecialPromoDiscount = @"ly.kite.iossdk.kKeySpecialPr
     return costs[@"shipping_cost"][currencyCode];
 }
 
+- (NSDecimalNumber *)discountedCostForJob:(id<OLPrintJob>)job inCurrency:(NSString *)currencyCode {
+    NSDictionary *costs = [self.jobCosts objectForKey:job];
+    return costs[@"discounted_cost"][currencyCode];
+}
+
+
 - (NSDecimalNumber *)promoCodeDiscountInCurrency:(NSString *)currencyCode {
     if ([self.paymentMethod isEqualToString:@"APPLE_PAY"] && self.specialPromoDiscount){
         NSDecimalNumber *discount = self.specialPromoDiscount[currencyCode];

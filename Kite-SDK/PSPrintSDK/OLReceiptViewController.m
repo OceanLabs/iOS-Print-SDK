@@ -55,6 +55,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 @interface OLReceiptViewController () <OLCheckoutDelegate>
 @property (nonatomic, strong) OLPrintOrder *printOrder;
 @property (nonatomic, assign) BOOL presentedModally;
+@property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
 @end
 
 @interface OLPrintOrder (Private)
@@ -69,7 +70,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 @implementation OLReceiptViewController
 
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
+- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nonnull)printOrder {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         self.printOrder = printOrder;
     }

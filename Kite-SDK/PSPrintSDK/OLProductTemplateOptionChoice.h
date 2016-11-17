@@ -39,6 +39,7 @@
 @property (strong, nonatomic) NSString *iconImageName;
 @property (strong, nonatomic) UIColor *color;
 @property (strong, nonatomic) NSURL *productOverlay;
+@property (strong, nonatomic) NSURL *productBackground;
 @property (assign, nonatomic) UIEdgeInsets borderOverride;
 @property (weak, nonatomic) OLProductTemplateOption *option;
 
