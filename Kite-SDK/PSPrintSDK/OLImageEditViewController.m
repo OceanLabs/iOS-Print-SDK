@@ -144,6 +144,10 @@ const NSInteger kOLEditTagCrop = 40;
     return _borderInsets;
 }
 
+- (BOOL)shouldEnableGestures{
+    return YES;
+}
+
 - (NSArray <NSString *> *)filterNames{
     return @[@"", @"CIPhotoEffectMono", @"CIPhotoEffectTonal", @"CIPhotoEffectNoir", @"CIPhotoEffectFade", @"CIPhotoEffectChrome", @"CIPhotoEffectProcess", @"CIPhotoEffectTransfer", @"CIPhotoEffectInstant", @"CISepiaTone", @"CIColorPosterize"];
 }
@@ -327,7 +331,11 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupProductRepresentation{
-    
+    //To be used in subclasses
+}
+
+- (void)disableOverlay{
+    //To be used in subclasses
 }
 
 - (void)setupCropGuides{
@@ -617,7 +625,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupBottomBorderTextField{
-    if (self.borderInsets.bottom / self.borderInsets.top >= 1.1 && !self.borderTextField){
+    if (self.product.productTemplate.templateUI != OLTemplateUIApparel && self.borderInsets.bottom / self.borderInsets.top >= 1.1 && !self.borderTextField){
         CGFloat heightFactor = self.cropView.frame.size.height / 212.0;
         
         UITextField *tf = [[UITextField alloc] init];
@@ -674,7 +682,7 @@ const NSInteger kOLEditTagCrop = 40;
         self.previewSourceView.hidden = YES;
         [UIView animateWithDuration:0.25 animations:^{
             self.view.backgroundColor = [UIColor clearColor];
-            for (UIView *view in self.allViews){
+            for (UIView *view in [self.allViews arrayByAddingObjectsFromArray:@[self.editingTools, self.editingTools.collectionView]]){
                 view.alpha = 0;
             }
         } completion:^(BOOL finished){
@@ -693,7 +701,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
 }
 
-- (UITextField *)addTextFieldToView:(UIView *)view temp:(BOOL)temp{
+- (OLPhotoTextField *)addTextFieldToView:(UIView *)view temp:(BOOL)temp{
     OLPhotoTextField *textField = [[OLPhotoTextField alloc] initWithFrame:CGRectMake(0, 0, 130, 70)];
     textField.center = self.cropView.center;
     textField.margins = 10;
@@ -756,14 +764,14 @@ const NSInteger kOLEditTagCrop = 40;
     static CGFloat originalAngle;
     
     if (gesture.state == UIGestureRecognizerStateBegan){
-        [self.cropView setGesturesEnabled:NO];
+        if ([self shouldEnableGestures]){
+            [self.cropView setGesturesEnabled:NO];
+        }
         original = gesture.view.transform;
         originalFrame = gesture.view.frame;
         CGPoint gesturePoint = [gesture locationInView:self.cropView];
         CGPoint translatedPoint = CGPointMake(gesturePoint.x - original.tx, gesturePoint.y - original.ty);
         originalAngle = [self angleOfTouchPoint:translatedPoint fromPoint:gesture.view.center];
-        
-        
         
         OLPhotoTextField *textField = (OLPhotoTextField *)gesture.view;
         originalFontSize = textField.font.pointSize;
@@ -844,7 +852,9 @@ const NSInteger kOLEditTagCrop = 40;
         }
     }
     else if (gesture.state == UIGestureRecognizerStateEnded){
-        [self.cropView setGesturesEnabled:YES];
+        if ([self shouldEnableGestures]){
+            [self.cropView setGesturesEnabled:YES];
+        }
         self.resizingTextField = NO;
         self.rotatingTextField = NO;
     }
@@ -1095,6 +1105,11 @@ const NSInteger kOLEditTagCrop = 40;
             break; //We should never have more than one selected button
         }
     }
+    
+    [self.activeTextField resignFirstResponder];
+    if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+        [self.activeTextField hideButtons];
+    }
 }
 
 - (void)onButtonClicked:(UIButton *)sender {
@@ -1131,6 +1146,7 @@ const NSInteger kOLEditTagCrop = 40;
         return;
     }
     
+    [self disableOverlay];
     self.animating = YES;
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
@@ -1146,6 +1162,8 @@ const NSInteger kOLEditTagCrop = 40;
         
     }completion:^(BOOL finished){
         self.animating = NO;
+        
+        [self updateProductRepresentationForChoice:nil];
     }];
     
     self.ctaButton.enabled = YES;
@@ -1156,6 +1174,8 @@ const NSInteger kOLEditTagCrop = 40;
         return;
     }
     
+    [self disableOverlay];
+    
     self.animating = YES;
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
@@ -1163,70 +1183,33 @@ const NSInteger kOLEditTagCrop = 40;
     }
     self.activeTextField = nil;
     
-    for (UITextField *textField in self.textFields){
-        UITextField *textFieldCopy = [self addTextFieldToView:self.textFieldsView temp:YES];
-        textFieldCopy.text = textField.text;
-        textFieldCopy.transform = textField.transform;
-        textFieldCopy.textColor = textField.textColor;
-        textFieldCopy.font = textField.font;
-        textField.hidden = YES;
-    }
-    
     [(UIBarButtonItem *)sender setEnabled:NO];
     self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
-    CGAffineTransform transform = self.cropView.imageView.transform;
-    transform.tx = self.cropView.imageView.transform.ty;
-    transform.ty = -self.cropView.imageView.transform.tx;
-    
-    CGRect cropboxRect = self.cropView.frame;
     
     UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
-    CGFloat imageAspectRatio = newImage.size.height/newImage.size.width;
     
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.cropView.transform = CGAffineTransformMakeRotation(-M_PI_2);
-        
-        CGFloat boxWidth = self.cropView.frame.size.width;
-        CGFloat boxHeight = self.cropView.frame.size.height;
-        
-        CGFloat imageWidth;
-        CGFloat imageHeight;
-        
-        if (imageAspectRatio > 1.0){
-            imageHeight = boxHeight;
-            imageWidth = boxHeight * imageAspectRatio;
-        }
-        else{
-            imageWidth = boxWidth;
-            imageHeight = boxWidth / imageAspectRatio;
-        }
-        
-        self.cropView.imageView.frame = CGRectMake((boxHeight - imageWidth)/ 2.0, (boxWidth - imageHeight) / 2.0, imageWidth, imageHeight);
+        self.cropView.imageView.transform = CGAffineTransformMakeRotation(-M_PI_2);
         
     } completion:^(BOOL finished){
-        for (UITextField *textField in self.textFields){
-            textField.hidden = NO;
-        }
-        for (UITextField *textField in [self.textFieldsView.subviews copy]){
-            [textField removeFromSuperview];
-        }
-        
-        self.cropView.transform = CGAffineTransformIdentity;
-        self.cropView.frame = cropboxRect;
         [self.cropView setImage:newImage];
         
         [(UIBarButtonItem *)sender setEnabled:YES];
         self.ctaButton.enabled = YES;
         
         self.animating = NO;
+        
+        [self updateProductRepresentationForChoice:nil];
     }];
 }
 
 - (void)onButtonAddTextClicked:(UIButton *)sender {
-    UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
+    OLPhotoTextField *textField = [self addTextFieldToView:self.cropView temp:NO];
     [self.view layoutIfNeeded];
     [textField becomeFirstResponder]; //Take focus away from any existing active TF
     [textField becomeFirstResponder]; //Become first responder
+    
+    self.activeTextField = textField;
     
     self.ctaButton.enabled = YES;
 }
@@ -1583,6 +1566,7 @@ const NSInteger kOLEditTagCrop = 40;
         
         [asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
             self.cropView.imageView.image = image;
+            [self updateProductRepresentationForChoice:nil];
         }];
     }
     else if (self.selectedOption && self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
@@ -1608,7 +1592,9 @@ const NSInteger kOLEditTagCrop = 40;
         [self.navigationController setViewControllers:vcs];
     }
     else if (self.selectedOption){
-        self.product.selectedOptions[self.selectedOption.code] = self.selectedOption.choices[indexPath.item].code;
+        OLProductTemplateOptionChoice *choice = self.selectedOption.choices[indexPath.item];
+        self.product.selectedOptions[self.selectedOption.code] = choice.code;
+        [self updateProductRepresentationForChoice:choice];
         
         for (NSIndexPath *visibleIndexPath in [collectionView indexPathsForVisibleItems]){
             if (![visibleIndexPath isEqual:indexPath]){
@@ -1635,6 +1621,9 @@ const NSInteger kOLEditTagCrop = 40;
             [self showDrawerWithCompletionHandler:NULL];
         }];
     }
+}
+
+- (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
 }
 
 - (void)registerCollectionViewCells{
@@ -1981,10 +1970,14 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     if (self.presentedVc){
-        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+        [self.presentedVc dismissViewControllerAnimated:YES completion:^{
+            [self updateProductRepresentationForChoice:nil];
+        }];
     }
     else{
-        [vc dismissViewControllerAnimated:YES completion:NULL];
+        [vc dismissViewControllerAnimated:YES completion:^{
+            [self updateProductRepresentationForChoice:nil];
+        }];
     }
     
     self.vcDelegateForCustomVc = nil;

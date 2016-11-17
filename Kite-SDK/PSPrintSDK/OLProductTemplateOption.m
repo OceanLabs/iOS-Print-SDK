@@ -70,6 +70,9 @@
             if (dict[@"productOverlay"]){
                 choice.productOverlay = [NSURL URLWithString:dict[@"productOverlay"]];
             }
+            if (dict[@"override_mask"] && ![dict[@"override_mask"] isEqual:[NSNull null]]){
+                choice.productBackground = [NSURL URLWithString:dict[@"override_mask"]];
+            }
             if (dict[@"borderOverride"]){
 //                choice.borderOverride = UIEdgeInsetsMake(0, 0, 0, 0);
             }
@@ -126,10 +129,10 @@
             return [UIImage imageNamedInKiteBundle:@"case-options"];
         }
         else if([self.code isEqualToString:@"garment_color"]){
-            return [UIImage imageNamedInKiteBundle:@"shirt-size-icon"];
+            return [UIImage imageNamedInKiteBundle:@"shirt-icon"];
         }
         else if([self.code isEqualToString:@"garment_size"]){
-            return [UIImage imageNamedInKiteBundle:@"shirt-size-icon"];
+            return [UIImage imageNamedInKiteBundle:@"shirt-icon"];
         }
 
     }
