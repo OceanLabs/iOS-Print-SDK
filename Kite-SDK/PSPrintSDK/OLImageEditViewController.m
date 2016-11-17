@@ -682,7 +682,7 @@ const NSInteger kOLEditTagCrop = 40;
         self.previewSourceView.hidden = YES;
         [UIView animateWithDuration:0.25 animations:^{
             self.view.backgroundColor = [UIColor clearColor];
-            for (UIView *view in self.allViews){
+            for (UIView *view in [self.allViews arrayByAddingObjectsFromArray:@[self.editingTools, self.editingTools.collectionView]]){
                 view.alpha = 0;
             }
         } completion:^(BOOL finished){
