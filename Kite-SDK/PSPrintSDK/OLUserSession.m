@@ -104,6 +104,27 @@
     [self.recentPhotos removeAllObjects];
 }
 
+- (void)logoutOfFacebook{
+    [OLFacebookSDKWrapper logout];
+    [OLFacebookSDKWrapper clearAccessToken];
+}
+
+- (void)logoutOfInstagram{
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray *cookies = [NSArray arrayWithArray:[storage cookies]];
+    for (cookie in cookies) {
+        if ([cookie.domain containsString:@"instagram.com"]) {
+            [storage deleteCookie:cookie];
+        }
+    }
+    
+    NSArray *instagramAccounts = [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
+    for (OLOAuth2Account *account in instagramAccounts) {
+        [[OLOAuth2AccountStore sharedStore] removeAccount:account];
+    }
+}
+
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions{
     if ((cleanupOptions & OLUserSessionCleanupOptionPhotos) == OLUserSessionCleanupOptionPhotos){
         [self clearUserSelectedPhotos];
@@ -122,22 +143,8 @@
         [OLStripeCard clearLastUsedCard];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionSocial) == OLUserSessionCleanupOptionSocial){
-        NSHTTPCookie *cookie;
-        NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-        NSArray *cookies = [NSArray arrayWithArray:[storage cookies]];
-        for (cookie in cookies) {
-            if ([cookie.domain containsString:@"instagram.com"]) {
-                [storage deleteCookie:cookie];
-            }
-        }
-        
-        NSArray *instagramAccounts = [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-        for (OLOAuth2Account *account in instagramAccounts) {
-            [[OLOAuth2AccountStore sharedStore] removeAccount:account];
-        }
-        
-        [OLFacebookSDKWrapper logout];
-        [OLFacebookSDKWrapper clearAccessToken];
+        [self logoutOfInstagram];
+        [self logoutOfFacebook];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionPersonal) == OLUserSessionCleanupOptionPersonal){
         [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientLastName = nil;

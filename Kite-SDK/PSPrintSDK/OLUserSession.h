@@ -57,4 +57,6 @@ typedef NSUInteger OLUserSessionCleanupOption;
 - (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;
 - (void)resetUserSelectedPhotos;
 - (void)clearUserSelectedPhotos;
+- (void)logoutOfInstagram;
+- (void)logoutOfFacebook;
 @end
