@@ -201,7 +201,10 @@ CGFloat OLImagePickerMargin = 1.5;
     if (collectionView.tag == 10){
         if (self.provider.collections.count > self.showingCollectionIndex){
             CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
-            NSInteger numberOfCellsToFillHeight = (NSInteger)ceil((self.collectionView.frame.size.height - self.collectionView.contentInset.top) / (cellSize.height + OLImagePickerMargin));
+            NSInteger numberOfCellsToFillHeight = 0;
+            if (self.logoutButton){
+                numberOfCellsToFillHeight = (NSInteger)ceil((self.collectionView.frame.size.height - self.collectionView.contentInset.top) / (cellSize.height + OLImagePickerMargin));
+            }
             
             return MAX(numberOfCellsToFillHeight * [self numberOfCellsPerRow], [self.provider.collections[self.showingCollectionIndex] count]);
         }
