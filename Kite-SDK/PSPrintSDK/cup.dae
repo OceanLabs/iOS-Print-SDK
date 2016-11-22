@@ -4,8 +4,8 @@
   <contributor>
    <authoring_tool>SceneKit Collada Exporter v1.0</authoring_tool>
   </contributor>
-  <created>2016-11-22T3:19:26 pmZ</created>
-  <modified>2016-11-22T3:19:26 pmZ</modified>
+  <created>2016-11-22T3:27:20 pmZ</created>
+  <modified>2016-11-22T3:27:20 pmZ</modified>
   <unit meter="1.000000"/>
   <up_axis>Z_UP</up_axis>
  </asset>
@@ -282,7 +282,7 @@
     <instance_light url="#Lamp-light"/>
    </node>
    <node id="Lamp_001" name="Lamp_001">
-    <matrix>-0.2908648 -0.7711007 0.5663932 9.979389 0.9551711 -0.1998834 0.2183913 1.005454 -0.05518906 0.6045247 0.7946723 11.60863 0 0 0 1 </matrix>
+    <matrix>-0.290865 -0.7711009 0.5663932 4.44463 0.955171 -0.199884 0.2183912 0.1875808 -0.05518874 0.6045244 0.7946728 -8.790905 0 0 0 1 </matrix>
     <instance_light url="#Lamp_001-light"/>
    </node>
    <node id="Cylinder" name="Cylinder">
@@ -298,11 +298,11 @@
     </instance_geometry>
    </node>
    <node id="Lamp_002" name="Lamp_002">
-    <matrix>-0.2908646 -0.7711006 0.5663932 -11.06313 0.9551711 -0.1998834 0.2183911 7.792381 -0.05518894 0.6045246 0.7946723 0.03900695 0 0 0 1 </matrix>
+    <matrix>-0.2908648 -0.7711006 0.5663933 -10.30202 0.9551711 -0.1998836 0.218391 5.292987 -0.05518874 0.6045246 0.7946723 0.1834197 0 0 0 1 </matrix>
     <instance_light url="#Lamp_002-light"/>
    </node>
    <node id="Lamp_003" name="Lamp_003">
-    <matrix>-0.2908651 -0.7711006 0.5663932 -4.315668 0.955171 -0.1998838 0.2183913 -14.3656 -0.05518884 0.6045246 0.7946724 1.319277 0 0 0 1 </matrix>
+    <matrix>-0.2908653 -0.7711007 0.5663931 -14.69336 0.9551709 -0.1998842 0.2183913 0.3516026 -0.05518877 0.6045246 0.7946725 -7.051795 0 0 0 1 </matrix>
     <instance_light url="#Lamp_003-light"/>
    </node>
   </visual_scene>
