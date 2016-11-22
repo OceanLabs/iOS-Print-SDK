@@ -49,10 +49,10 @@
     SCNScene *scene = [SCNScene sceneWithURL:[[NSBundle bundleForClass:[OLKiteViewController class]] URLForResource:@"cup" withExtension:@"dae"]
  options:NULL error:nil];
     
-    SCNTube *tube = [SCNTube tubeWithInnerRadius:1.421 outerRadius:1.521 height:3.042];
+    SCNTube *tube = [SCNTube tubeWithInnerRadius:1.521 outerRadius:1.521 height:2.81385]; //height = 2*radius * 0.925
     [scene.rootNode addChildNode:[SCNNode nodeWithGeometry:tube]];
     
-    [[OLUserSession currentSession].userSelectedPhotos.lastObject imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+    [[OLUserSession currentSession].userSelectedPhotos.lastObject imageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
         SCNMaterial *material = [[SCNMaterial alloc] init];
         material.litPerPixel = NO;
         material.diffuse.wrapS = SCNWrapModeRepeat;

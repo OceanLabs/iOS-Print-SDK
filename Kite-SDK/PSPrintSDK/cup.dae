@@ -4,8 +4,8 @@
   <contributor>
    <authoring_tool>SceneKit Collada Exporter v1.0</authoring_tool>
   </contributor>
-  <created>2016-11-22T3:27:20 pmZ</created>
-  <modified>2016-11-22T3:27:20 pmZ</modified>
+  <created>2016-11-22T3:50:45 pmZ</created>
+  <modified>2016-11-22T3:50:45 pmZ</modified>
   <unit meter="1.000000"/>
   <up_axis>Z_UP</up_axis>
  </asset>
@@ -277,16 +277,8 @@
     <matrix>0.9999976 -1.157841e-15 -9.778566e-09 0 -5.293943e-23 0.9999968 -1.184083e-07 0 9.778462e-09 1.18407e-07 1.000008 9.95072 0 0 0 1 </matrix>
     <instance_camera url="#Camera-camera"/>
    </node>
-   <node id="Lamp" name="Lamp">
-    <matrix>-0.2908646 -0.7711008 0.5663932 4.076245 0.9551712 -0.1998834 0.2183912 1.005454 -0.05518906 0.6045247 0.7946723 5.903862 0 0 0 1 </matrix>
-    <instance_light url="#Lamp-light"/>
-   </node>
-   <node id="Lamp_001" name="Lamp_001">
-    <matrix>-0.290865 -0.7711009 0.5663932 4.44463 0.955171 -0.199884 0.2183912 0.1875808 -0.05518874 0.6045244 0.7946728 -8.790905 0 0 0 1 </matrix>
-    <instance_light url="#Lamp_001-light"/>
-   </node>
-   <node id="Cylinder" name="Cylinder">
-    <matrix>-1.521 -5.403566e-15 1.329673e-07 0 1.3297e-07 -2.384186e-07 1.520969 0 5.403678e-15 1.520969 1.192093e-07 0 0 0 0 1 </matrix>
+   <node id="Cylinder" name="cup">
+    <matrix>-1.521 -4.322853e-14 2.296599e-07 9.63994e-09 2.296646e-07 -2.384186e-07 1.520968 0.038 0 1.520968 2.384186e-07 8.32501e-09 0 0 0 1 </matrix>
     <instance_geometry url="#Cylinder-mesh">
      <bind_material>
       <technique_common>
@@ -296,6 +288,14 @@
       </technique_common>
      </bind_material>
     </instance_geometry>
+   </node>
+   <node id="Lamp" name="Lamp">
+    <matrix>-0.2908646 -0.7711008 0.5663932 4.076245 0.9551712 -0.1998834 0.2183912 1.005454 -0.05518906 0.6045247 0.7946723 5.903862 0 0 0 1 </matrix>
+    <instance_light url="#Lamp-light"/>
+   </node>
+   <node id="Lamp_001" name="Lamp_001">
+    <matrix>-0.290865 -0.7711009 0.5663932 4.44463 0.955171 -0.199884 0.2183912 0.1875808 -0.05518874 0.6045244 0.7946728 -8.790905 0 0 0 1 </matrix>
+    <instance_light url="#Lamp_001-light"/>
    </node>
    <node id="Lamp_002" name="Lamp_002">
     <matrix>-0.2908648 -0.7711006 0.5663933 -10.30202 0.9551711 -0.1998836 0.218391 5.292987 -0.05518874 0.6045246 0.7946723 0.1834197 0 0 0 1 </matrix>
