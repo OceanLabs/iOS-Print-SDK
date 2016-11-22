@@ -198,6 +198,7 @@
 		2E451E9A1D9565D40080F1C1 /* OLKitePrintSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFB218635F170009DE03 /* OLKitePrintSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E480ADE1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */; };
 		2E480ADF1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */; };
+		2E4DAB651DE47104002F4A84 /* cup.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2E4DAB641DE47104002F4A84 /* cup.dae */; };
 		2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
@@ -447,7 +448,6 @@
 		2ED42EC11D9D79E3003B9AD0 /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC41D2FC109002F5F74 /* bitstream.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
 		2EEAC05A1DC9D89A00D4D6DA /* coffeemug.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2EEAC0581DC9D89A00D4D6DA /* coffeemug.dae */; };
-		2EEAC05B1DC9D89A00D4D6DA /* cup.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2EEAC0591DC9D89A00D4D6DA /* cup.dae */; };
 		2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */; };
 		2EEF0D0C1D9A781700C81086 /* OLCustomPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D0B1D9A781700C81086 /* OLCustomPickerController.h */; };
 		B7106FC2FDFC534AFB2516F3 /* libPods-KiteSDK-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CFE5B84A94297F8524AE7764 /* libPods-KiteSDK-Demo.a */; };
@@ -621,6 +621,7 @@
 		2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = OLProgressHUD.bundle; sourceTree = "<group>"; };
 		2E482B771BEB4C7D007460EA /* OLStripeCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeCard.h; sourceTree = "<group>"; };
 		2E482B781BEB4C7D007460EA /* OLStripeCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLStripeCard.m; sourceTree = "<group>"; };
+		2E4DAB641DE47104002F4A84 /* cup.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = cup.dae; sourceTree = "<group>"; };
 		2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTypeSelectionViewController.h; sourceTree = "<group>"; };
 		2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTypeSelectionViewController.m; sourceTree = "<group>"; };
 		2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSingleImageProductReviewViewController.h; sourceTree = "<group>"; };
@@ -799,7 +800,6 @@
 		2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteViewController.h; sourceTree = "<group>"; };
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
 		2EEAC0581DC9D89A00D4D6DA /* coffeemug.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = coffeemug.dae; sourceTree = "<group>"; };
-		2EEAC0591DC9D89A00D4D6DA /* cup.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = cup.dae; sourceTree = "<group>"; };
 		2EEB52FA1D6C8F4C0066B802 /* OLKiteViewController+Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OLKiteViewController+Theme.h"; sourceTree = "<group>"; };
 		2EEB52FE1D7062870066B802 /* OLProductTemplateOptionChoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOptionChoice.h; sourceTree = "<group>"; };
 		2EEB52FF1D7062870066B802 /* OLProductTemplateOptionChoice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOptionChoice.m; sourceTree = "<group>"; };
@@ -1764,7 +1764,7 @@
 				2EB0DC7C1DC8F16D00B556CE /* case_ip5.dae */,
 				2EB0DC7A1DC8E21300B556CE /* mug.dae */,
 				2EEAC0581DC9D89A00D4D6DA /* coffeemug.dae */,
-				2EEAC0591DC9D89A00D4D6DA /* cup.dae */,
+				2E4DAB641DE47104002F4A84 /* cup.dae */,
 				2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */,
 				2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
@@ -2123,7 +2123,7 @@
 				2EB0DC7B1DC8E21300B556CE /* mug.dae in Resources */,
 				2E451E951D9564620080F1C1 /* OLKiteStoryboard.storyboard in Resources */,
 				2E451E941D95641A0080F1C1 /* OLEditingToolsView.xib in Resources */,
-				2EEAC05B1DC9D89A00D4D6DA /* cup.dae in Resources */,
+				2E4DAB651DE47104002F4A84 /* cup.dae in Resources */,
 				2EB0DC7D1DC8F16D00B556CE /* case_ip5.dae in Resources */,
 				2E451E921D9564100080F1C1 /* OLProgressHUD.bundle in Resources */,
 				2E451E961D9564680080F1C1 /* KitePrintSDK.xcassets in Resources */,

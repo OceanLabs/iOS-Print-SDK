@@ -29,6 +29,8 @@
 
 #import "OL3DCaseViewController.h"
 #import "OLKiteUtils.h"
+#import "OLUserSession.h"
+#import "OLAsset+Private.h"
 
 @import SceneKit;
 
@@ -42,44 +44,22 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-//    NSURL *caseUrl = [NSURL URLWithString:[[OLKiteUtils kiteBundle] pathForResource:@"case.scnassets/case_ip5" ofType:@"dae"]];
-//    
-//    
-//    SCNSceneSource *sceneSource = [SCNSceneSource sceneSourceWithURL:caseUrl options:nil];
-//    
-//    // Get reference to the phone node
-//    SCNNode *phone2 = [sceneSource entryWithIdentifier:@"test" withClass:[SCNGeometry class]];
-//    SCNNode *phone = [[sceneSource entriesPassingTest:^BOOL(id entry, NSString *identifier, BOOL *stop){
-//        return YES;
-//    }] firstObject];
     
     // Create a new scene
     SCNScene *scene = [SCNScene sceneWithURL:[[NSBundle bundleForClass:[OLKiteViewController class]] URLForResource:@"cup" withExtension:@"dae"]
  options:NULL error:nil];
     
-    [[scene rootNode] enumerateChildNodesUsingBlock:^(SCNNode *node, BOOL *stop){
-//        SCNMaterial *material = [[SCNMaterial alloc] init];
-//        material.litPerPixel = NO;
-//        material.diffuse.wrapS = SCNWrapModeRepeat;
-//        material.diffuse.wrapT = SCNWrapModeRepeat;
-//        NSLog(@"%@", [node.geometry geometrySourcesForSemantic:SCNGeometrySourceSemanticTexcoord]);
-//        material.diffuse.contents = [UIImage imageNamed:@"quality"];
-//        node.geometry.materials = @[material];
+    SCNTube *tube = [SCNTube tubeWithInnerRadius:1.421 outerRadius:1.521 height:3.042];
+    [scene.rootNode addChildNode:[SCNNode nodeWithGeometry:tube]];
+    
+    [[OLUserSession currentSession].userSelectedPhotos.lastObject imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+        SCNMaterial *material = [[SCNMaterial alloc] init];
+        material.litPerPixel = NO;
+        material.diffuse.wrapS = SCNWrapModeRepeat;
+        material.diffuse.wrapT = SCNWrapModeRepeat;
+        material.diffuse.contents = image;
+        tube.materials = @[material];
     }];
-    
-    // create and add a camera to the scene
-    self.cameraNode = [SCNNode node];
-    self.cameraNode.camera = [SCNCamera camera];
-    self.cameraNode.camera.zFar = 300;
-    
-    [scene.rootNode addChildNode:self.cameraNode];
-    
-    // place the camera
-    self.cameraNode.position = SCNVector3Make(0,0,120);
-//    self.cameraNode.position = SCNVector3Make(43.628616,71.896751,42.655663);
-//    self.cameraNode.rotation = SCNVector4Make(0,-0.7,0,1.616743);
-//    self.cameraNode.eulerAngles = SCNVector3Make(-1.61009312,0.0242882688,-0.191921934);
     
     // create and add a light to the scene
     SCNNode *lightNode = [SCNNode node];
@@ -102,11 +82,6 @@
     
     // allows the user to manipulate the camera
     scnView.allowsCameraControl = YES;
-    
-#ifdef DEBUG
-    // show statistics such as fps and timing information
-    scnView.showsStatistics = YES;
-#endif
     
     // configure the view
     scnView.backgroundColor = [UIColor clearColor];
