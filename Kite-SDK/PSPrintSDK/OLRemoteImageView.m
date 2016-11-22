@@ -90,9 +90,7 @@
     [self.loadingView setProgress:progress animated:YES];
     
     if (progress == 1){
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             self.loadingView.hidden = YES;
-        });
     }
 }
 

@@ -179,11 +179,8 @@
 
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
     OLTemplateUI templateUI = product.productTemplate.templateUI;
-    if (templateUI == OLTemplateUICase){
+    if (templateUI == OLTemplateUICase || templateUI == OLTemplateUIApparel){
         return @"OL3DCaseViewController";
-    }
-    else if (templateUI == OLTemplateUIApparel){
-        return @"OLTShirtReviewViewController";
     }
     else if (templateUI == OLTemplateUIPostcard){
         return @"OLPostcardViewController";
@@ -240,7 +237,6 @@
     
     NSURLSessionDataTask *downloadTask = [session
                                           dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                              [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                                               if (error){
                                                   failure(error);
                                               }
@@ -257,7 +253,6 @@
                                                   success(dict);
                                               }
                                           }];
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [downloadTask resume];
     [session finishTasksAndInvalidate];
 }

@@ -37,6 +37,7 @@
 #import "OLPhotoEdits.h"
 #import "OLImagePickerViewController.h"
 #import "OLPaymentMethodsViewController.h"
+#import "OLImagePickerPhotosPageViewController.h"
 
 @import Photos;
 
@@ -144,6 +145,17 @@
 
 @interface OLPaymentMethodsViewController ()
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@end
+
+@interface OLImagePickerViewController ()
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
+@property (weak, nonatomic) IBOutlet UICollectionView *sourcesCollectionView;
+@property (strong, nonatomic) UIPageViewController *pageController;
+@end
+
+@interface OLImagePickerPhotosPageViewController ()
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
+- (IBAction)userDidTapOnAlbumLabel:(UITapGestureRecognizer *)sender;
 @end
 
 @implementation ViewControllerTests
@@ -565,6 +577,52 @@
         [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
     }];
     
+}
+
+- (void)testImagePickerViewController{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
+    [self templateSyncWithSuccessHandler:^{
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
+    XCTAssert(sb);
+    OLImagePickerViewController *vc = [sb instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.product = product;
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
+    }];
+    
+    XCTAssert([[(UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController.presentedViewController topViewController] isKindOfClass:[OLImagePickerViewController class]]);
+    
+    OLImagePickerPhotosPageViewController *photosPage = (OLImagePickerPhotosPageViewController *)vc.pageController.viewControllers.firstObject;
+    
+    [self performUIAction:^{
+        [photosPage collectionView:photosPage.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [photosPage userDidTapOnAlbumLabel:nil];
+    }];
+    
+    [self performUIAction:^{
+        [photosPage collectionView:photosPage.albumsCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [vc collectionView:vc.sourcesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [rootVc.topViewController dismissViewControllerAnimated:YES completion:NULL];
+    }];
 }
 
 - (void)testPaymentViewController{

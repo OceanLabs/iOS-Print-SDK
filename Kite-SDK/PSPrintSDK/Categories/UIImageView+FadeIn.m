@@ -171,14 +171,16 @@ static char tasksKey;
                 return;
             }
         }
-        self.image = result;
-        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            self.alpha = 1;
-        }completion:^(BOOL finished){
-            if (handler){
-                handler();
-            }
-        }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.image = result;
+            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                self.alpha = 1;
+            }completion:^(BOOL finished){
+                if (handler){
+                    handler();
+                }
+            }];
+        });
     }];
     self.tasks[asset.localIdentifier] = [NSNumber numberWithLong:requestID];
 }

@@ -362,7 +362,7 @@ static const NSInteger kSectionPages = 2;
 - (void)updateUserSelectedPhotos{
     [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
     for (OLAsset *item in self.photobookPhotos){
-        if (![item isKindOfClass:[NSNull class]]){
+        if (![item isKindOfClass:[OLPlaceholderAsset class]]){
             [[OLUserSession currentSession].userSelectedPhotos addObject:item];
         }
     }
@@ -435,10 +435,9 @@ static const NSInteger kSectionPages = 2;
     cropVc.providesPresentationContextTransitionStyle = true;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    [cropPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+    [cropPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = cropPhoto.edits;
-        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
     }];
     
@@ -825,10 +824,22 @@ static const NSInteger kSectionPages = 2;
 #pragma mark - OLScrollCropView delegate
 
 - (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
+    if (self.longPressImageIndex == -1){
+        [self.coverPhoto unloadImage];
+    }
+    else{
+        [self.photobookPhotos[self.longPressImageIndex] unloadImage];
+    }
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
+    if (self.longPressImageIndex == -1){
+        [self.coverPhoto unloadImage];
+    }
+    else{
+        [self.photobookPhotos[self.longPressImageIndex] unloadImage];
+    }
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 

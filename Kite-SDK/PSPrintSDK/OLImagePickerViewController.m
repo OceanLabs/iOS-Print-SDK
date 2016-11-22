@@ -73,6 +73,8 @@
 @property (strong, nonatomic) UIView *selectedProviderIndicator;
 
 @property (assign, nonatomic) BOOL viewWillDisappear;
+
+@property (assign, nonatomic) CGRect indicatorDestFrame;
 @end
 
 @interface OLProduct ()
@@ -153,6 +155,12 @@
     [self.pageController setViewControllers:@[[self viewControllerAtIndex:0]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:NULL];
     [self addChildViewController:self.pageController];
     [self.containerView addSubview:self.pageController.view];
+    
+    for (UIView *view in self.pageController.view.subviews) {
+        if ([view isKindOfClass:[UIScrollView class]]) {
+            [(UIScrollView *)view setDelegate:self];
+        }
+    }
     
     UIView *view = self.pageController.view;
     view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -446,10 +454,10 @@
         self.selectedProviderIndicator.alpha = 0;
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
-        [self positionSelectedProviderIndicator];
-        [UIView animateWithDuration:0.25 animations:^{
-            self.selectedProviderIndicator.alpha = 1;
-        }];
+        self.indicatorDestFrame = CGRectZero;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self positionSelectedProviderIndicator];
+        });
     }];
 }
 
@@ -600,6 +608,7 @@
     [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[pageViewController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
     self.nextButton.hidden = NO;
     ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).nextButton.hidden = YES;
+    self.indicatorDestFrame = CGRectZero;
     [self positionSelectedProviderIndicator];
 }
 
@@ -648,26 +657,50 @@
         return;
     }
     
+    self.indicatorDestFrame = CGRectNull;
+    
     UIViewController *vc = [self viewControllerAtIndex:indexPath.item];
     
-    [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:NULL];
-    
-    [self positionSelectedProviderIndicator];
+    __weak OLImagePickerViewController *welf = self;
+    [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished){
+        welf.indicatorDestFrame = CGRectZero;
+        [welf positionSelectedProviderIndicator];
+    }];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [self positionSelectedProviderIndicator];
+    if ([scrollView isKindOfClass:[UICollectionView class]]){
+        [self positionSelectedProviderIndicator];
+    }
+    else{
+        CGFloat percentMoved = (scrollView.contentOffset.x - scrollView.frame.size.width) / scrollView.frame.size.width;
+        if (!CGRectIsNull(self.indicatorDestFrame) && CGSizeEqualToSize(self.indicatorDestFrame.size, CGSizeZero)){
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0];
+            if (percentMoved < 0 && indexPath.item > 0){
+                indexPath = [NSIndexPath indexPathForItem:indexPath.item-1 inSection:indexPath.section];
+            }
+            self.indicatorDestFrame = [self.sourcesCollectionView cellForItemAtIndexPath:indexPath].frame;
+        }
+        if (!CGRectIsNull(self.indicatorDestFrame)){
+        CGFloat translationX = [self.sourcesCollectionView convertRect:self.indicatorDestFrame toView:self.view].origin.x + percentMoved * self.indicatorDestFrame.size.width;
+        self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation(translationX, 0);
+        }
+    }
 }
 
 - (void)positionSelectedProviderIndicator{
     UICollectionViewCell *cell = [self.sourcesCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0]];
     
     if (cell){
-        self.selectedProviderIndicator.alpha = 1;
+        [UIView animateWithDuration:0.15 animations:^{
+            self.selectedProviderIndicator.alpha = 1;
+        }];
         self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation([self.sourcesCollectionView convertRect:cell.frame toView:self.view].origin.x, 0);
     }
     else{
-        self.selectedProviderIndicator.alpha = 0;
+        [UIView animateWithDuration:0.15 animations:^{
+            self.selectedProviderIndicator.alpha = 0;
+        }];
     }
 }
 

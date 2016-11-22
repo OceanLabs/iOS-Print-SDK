@@ -419,7 +419,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     cropVc.aspectRatio = [self productAspectRatio];
     cropVc.product = self.product;
     
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
+    [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
@@ -555,7 +555,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         return;
     }
     
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+    [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
         OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
@@ -766,6 +766,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
 - (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
+    [self.editingPrintPhoto unloadImage];
     [cropper dismissViewControllerAnimated:YES completion:^{
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 1;
@@ -775,6 +776,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 - (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
+    [self.editingPrintPhoto unloadImage];
     [UIView animateWithDuration:0.25 animations:^{
         self.nextButton.alpha = 1;
         self.navigationController.navigationBar.alpha = 1;

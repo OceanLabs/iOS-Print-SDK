@@ -659,14 +659,21 @@
                                                         <action selector="onButtonPlusClicked:" destination="awx-dV-KVo" eventType="touchUpInside" id="j3n-ca-EU7"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="50" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Poster" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ui0-Vq-4uT">
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="50" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Poster" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ui0-Vq-4uT">
                                                     <rect key="frame" x="142" y="8" width="46" height="18"/>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                                                     <color key="textColor" red="0.18220192193984985" green="0.18219646811485291" blue="0.18219956755638123" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="70" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="$00.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kd7-xh-0Sj">
+                                                <activityIndicatorView opaque="NO" tag="90" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="yGE-d8-oRw">
+                                                    <rect key="frame" x="325" y="7" width="20" height="20"/>
+                                                </activityIndicatorView>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="70" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kd7-xh-0Sj">
                                                     <rect key="frame" x="310.5" y="8" width="49.5" height="18"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="18" id="VWp-CO-8f8"/>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="49.5" id="wc9-b8-ZIz"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" red="0.18220192193984985" green="0.18219646811485291" blue="0.18219956755638123" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -679,12 +686,6 @@
                                                         <color key="titleColor" red="0.72549019609999998" green="0.72549019609999998" blue="0.72549019609999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="80" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ymo-ee-Hdv">
-                                                    <rect key="frame" x="193" y="41.5" width="0.0" height="0.0"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o0Q-h1-w3b">
                                                     <rect key="frame" x="71" y="7" width="15" height="15"/>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.94999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
@@ -709,12 +710,14 @@
                                             <constraints>
                                                 <constraint firstItem="kd7-xh-0Sj" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Ui0-Vq-4uT" secondAttribute="trailing" constant="5" id="49c-zR-Jdg"/>
                                                 <constraint firstItem="2h9-jt-kQc" firstAttribute="leading" secondItem="KRh-SE-wkM" secondAttribute="leading" constant="2" id="5jz-Bl-eq1"/>
+                                                <constraint firstItem="yGE-d8-oRw" firstAttribute="centerX" secondItem="kd7-xh-0Sj" secondAttribute="centerX" id="92d-rw-ODq"/>
                                                 <constraint firstItem="o0Q-h1-w3b" firstAttribute="top" secondItem="yfC-Fj-2FI" secondAttribute="top" constant="5" id="AHR-nO-k65"/>
                                                 <constraint firstAttribute="bottom" secondItem="xPd-zg-lTZ" secondAttribute="bottom" constant="4" id="AQX-2J-KUH"/>
                                                 <constraint firstAttribute="bottom" secondItem="r1q-4l-S9u" secondAttribute="bottom" constant="2" id="BYo-AM-QE9"/>
                                                 <constraint firstItem="bLL-az-WMS" firstAttribute="leading" secondItem="2h9-jt-kQc" secondAttribute="trailing" constant="240" id="BZh-ot-5zc"/>
                                                 <constraint firstItem="Ui0-Vq-4uT" firstAttribute="top" secondItem="KRh-SE-wkM" secondAttribute="top" constant="8" id="BfP-k2-SOi"/>
                                                 <constraint firstItem="2h9-jt-kQc" firstAttribute="top" secondItem="KRh-SE-wkM" secondAttribute="top" constant="2" id="Ccg-Os-rVc"/>
+                                                <constraint firstItem="yGE-d8-oRw" firstAttribute="centerY" secondItem="kd7-xh-0Sj" secondAttribute="centerY" id="EKo-8I-3AN"/>
                                                 <constraint firstAttribute="bottom" secondItem="yfC-Fj-2FI" secondAttribute="bottom" constant="4" id="FsN-Xv-Grc"/>
                                                 <constraint firstItem="Ui0-Vq-4uT" firstAttribute="leading" secondItem="eMc-p1-sXo" secondAttribute="leading" id="GCC-nx-glE"/>
                                                 <constraint firstItem="bLL-az-WMS" firstAttribute="top" secondItem="KRh-SE-wkM" secondAttribute="top" constant="1" id="GO1-rM-7Vy"/>
@@ -725,17 +728,14 @@
                                                 <constraint firstItem="yfC-Fj-2FI" firstAttribute="top" secondItem="KRh-SE-wkM" secondAttribute="top" constant="2" id="VGE-AN-lIZ"/>
                                                 <constraint firstAttribute="trailing" secondItem="r1q-4l-S9u" secondAttribute="trailing" id="Xum-78-wTo"/>
                                                 <constraint firstItem="r1q-4l-S9u" firstAttribute="leading" secondItem="KRh-SE-wkM" secondAttribute="leading" id="bgg-RF-7gL"/>
-                                                <constraint firstItem="ymo-ee-Hdv" firstAttribute="centerY" secondItem="eMc-p1-sXo" secondAttribute="centerY" id="cSA-Pc-ouI"/>
                                                 <constraint firstItem="yfC-Fj-2FI" firstAttribute="leading" secondItem="2h9-jt-kQc" secondAttribute="trailing" constant="2" id="ebd-Zs-O1f"/>
-                                                <constraint firstItem="ymo-ee-Hdv" firstAttribute="leading" secondItem="eMc-p1-sXo" secondAttribute="trailing" constant="10" id="ga8-3a-NcC"/>
                                                 <constraint firstItem="yfC-Fj-2FI" firstAttribute="trailing" secondItem="o0Q-h1-w3b" secondAttribute="trailing" constant="5" id="geY-SB-HcL"/>
                                                 <constraint firstItem="bLL-az-WMS" firstAttribute="leading" secondItem="xPd-zg-lTZ" secondAttribute="trailing" constant="10" id="p5g-PE-BJ6"/>
                                                 <constraint firstAttribute="trailing" secondItem="kd7-xh-0Sj" secondAttribute="trailing" constant="15" id="qa6-47-1rM"/>
+                                                <constraint firstItem="kd7-xh-0Sj" firstAttribute="top" secondItem="Ui0-Vq-4uT" secondAttribute="top" id="trr-vY-Pqa"/>
                                                 <constraint firstItem="xPd-zg-lTZ" firstAttribute="leading" secondItem="yfC-Fj-2FI" secondAttribute="trailing" constant="2" id="vZe-RB-B4H"/>
                                                 <constraint firstAttribute="bottom" secondItem="2h9-jt-kQc" secondAttribute="bottom" constant="4" id="xEr-Yv-Qav"/>
-                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ymo-ee-Hdv" secondAttribute="trailing" constant="15" id="yyC-oU-Tdx"/>
                                                 <constraint firstAttribute="bottom" secondItem="bLL-az-WMS" secondAttribute="bottom" constant="1" id="z2G-KD-kdg"/>
-                                                <constraint firstItem="kd7-xh-0Sj" firstAttribute="centerY" secondItem="Ui0-Vq-4uT" secondAttribute="centerY" id="zHp-Ol-PI3"/>
                                                 <constraint firstAttribute="bottom" secondItem="eMc-p1-sXo" secondAttribute="bottom" constant="10" id="zv9-ne-OS5"/>
                                             </constraints>
                                             <variation key="default">
@@ -962,7 +962,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4442" y="-588"/>
+            <point key="canvasLocation" x="4516" y="-581"/>
         </scene>
         <!--Payment Method-->
         <scene sceneID="E3C-Dg-pIs">
@@ -1050,7 +1050,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SeA-xU-bXt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5109.6000000000004" y="-588.75562218890559"/>
+            <point key="canvasLocation" x="5337" y="-581"/>
         </scene>
         <!--Edit Photobook View Controller-->
         <scene sceneID="HfJ-UO-EWf">
@@ -1855,7 +1855,7 @@
                                         </view>
                                         <blurEffect style="light"/>
                                     </visualEffectView>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="3eC-J9-SCj">
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="3eC-J9-SCj">
                                         <rect key="frame" x="157.5" y="230.5" width="20" height="20"/>
                                         <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </activityIndicatorView>
@@ -2912,7 +2912,7 @@ an image!</string>
         <scene sceneID="kFc-fy-yh6">
             <objects>
                 <collectionViewController storyboardIdentifier="OLPosterViewController" id="AaA-7l-tb4" customClass="OLPosterViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" dataMode="prototypes" id="LuI-LA-fpj">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="LuI-LA-fpj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3312,7 +3312,7 @@ only £9.99 £8.99</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u6S-70-uku" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1357" y="-2034"/>
+            <point key="canvasLocation" x="1364" y="-2034"/>
         </scene>
         <!--Image Picker Photos Page View Controller-->
         <scene sceneID="dJj-UV-A6G">
