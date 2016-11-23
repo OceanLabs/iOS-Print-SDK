@@ -61,25 +61,42 @@
 }
 
 - (CGFloat)aspectRatio{
-    return 1.0/4.0;
+    return 1.0/2.415;
 }
 
 - (void)orderViews{
     [self.view bringSubviewToFront:self.printContainerView];
     [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.scene];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.hintView];
-    [self.view bringSubviewToFront:self.scene];
 }
 
 - (void)setCropViewImageToMaterial{
+    UIImage *image = [self addBorderToImage:[self.cropView editedImage]];
+    
     SCNMaterial *material = [[SCNMaterial alloc] init];
     material.litPerPixel = NO;
     material.diffuse.wrapS = SCNWrapModeRepeat;
     material.diffuse.wrapT = SCNWrapModeRepeat;
-    material.diffuse.contents = [self.cropView editedImage];
+    material.diffuse.contents = image;
     self.tube.materials = @[material];
+}
+
+- (UIImage *)addBorderToImage:(UIImage *)image {
+    CGFloat borderPercent = 0.1;
+    
+    CGSize size = [image size];
+    CGSize contextSize = CGSizeMake(size.width * (1.0 + borderPercent), size.height);
+    CGRect drawRect = CGRectMake(size.width * borderPercent/2.0, 0, size.width, size.height);
+    
+    UIGraphicsBeginImageContext(contextSize);
+    [image drawInRect:drawRect blendMode:kCGBlendModeNormal alpha:1.0];
+    UIImage *paddedImage =  UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return paddedImage;
 }
 
 - (void)setupImage{
