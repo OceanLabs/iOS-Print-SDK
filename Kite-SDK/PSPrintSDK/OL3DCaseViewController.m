@@ -34,10 +34,13 @@
 
 @import SceneKit;
 
+@interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
+@property (weak, nonatomic) IBOutlet UIView *printContainerView;
+@end
+
 @interface OL3DCaseViewController ()
 @property (weak, nonatomic) IBOutlet SCNView *scene;
 @property (strong, nonatomic) SCNNode *cameraNode;
-
 @end
 
 @implementation OL3DCaseViewController
@@ -87,13 +90,17 @@
     scnView.backgroundColor = [UIColor clearColor];
 }
 
-- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    [super touchesMoved:touches withEvent:event];
-    
+- (void)orderViews{
+    [self.view bringSubviewToFront:self.printContainerView];
+    [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.editingTools.drawerView];
+    [self.view bringSubviewToFront:self.editingTools];
+    [self.view bringSubviewToFront:self.hintView];
+    [self.view bringSubviewToFront:self.scene];
 }
 
-- (void)setupCropGuides{
-    
+- (void)setupProductRepresentation{
+    self.printContainerView.hidden = YES;
 }
 
 @end
