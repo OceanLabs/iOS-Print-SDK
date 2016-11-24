@@ -77,7 +77,6 @@
     UIImage *image = [self addBorderToImage:[self.cropView editedImage]];
     
     SCNMaterial *material = [[SCNMaterial alloc] init];
-    material.litPerPixel = NO;
     material.diffuse.wrapS = SCNWrapModeRepeat;
     material.diffuse.wrapT = SCNWrapModeRepeat;
     material.diffuse.contents = image;
