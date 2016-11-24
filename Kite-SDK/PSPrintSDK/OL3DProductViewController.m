@@ -31,6 +31,7 @@
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
+#import "OLInfoBanner.h"
 
 @import SceneKit;
 
@@ -42,6 +43,7 @@
 @end
 
 @interface OL3DProductViewController ()
+@property (strong, nonatomic) OLInfoBanner *infoBanner;
 @property (weak, nonatomic) IBOutlet SCNView *scene;
 @property (strong, nonatomic) SCNGeometry *tube;
 @end
@@ -58,6 +60,8 @@
     [scene.rootNode addChildNode:[SCNNode nodeWithGeometry:self.tube]];
     
     self.scene.scene = scene;
+    
+    self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Swipe to rotate your mug. Double tap to reset.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
 }
 
 - (CGFloat)aspectRatio{
