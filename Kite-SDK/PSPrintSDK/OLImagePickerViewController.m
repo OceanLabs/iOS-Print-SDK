@@ -666,8 +666,6 @@
         welf.indicatorDestFrame = CGRectZero;
         [welf positionSelectedProviderIndicator];
     }];
-    
-//
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
@@ -691,9 +689,6 @@
 }
 
 - (void)positionSelectedProviderIndicator{
-    if (!CGSizeEqualToSize(self.indicatorDestFrame.size, CGSizeZero)){
-        return;
-    }
     UICollectionViewCell *cell = [self.sourcesCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0]];
     
     if (cell){

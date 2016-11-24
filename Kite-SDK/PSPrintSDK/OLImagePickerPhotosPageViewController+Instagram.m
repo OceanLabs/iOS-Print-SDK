@@ -38,6 +38,10 @@
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
 @end
 
+@interface OLImagePickerPhotosPageViewController () <UICollectionViewDataSource>
+
+@end
+
 @implementation OLImagePickerPhotosPageViewController (Instagram)
 
 - (void)startImageLoading {
@@ -81,7 +85,6 @@
             return;
         }
         
-        NSUInteger mediaStartCount = welf.media.count;
         [welf.media addObjectsFromArray:welf.overflowMedia];
         for (OLInstagramImage *image in welf.overflowMedia){
             [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
@@ -104,20 +107,7 @@
             [self.activityIndicator stopAnimating];
         }
         
-        // Insert new items
-        NSMutableArray *addedItemPaths = [[NSMutableArray alloc] init];
-        for (NSUInteger itemIndex = mediaStartCount; itemIndex < welf.media.count; ++itemIndex) {
-            [addedItemPaths addObject:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
-        }
-        
-        if (welf.view.superview){
-            [welf.collectionView insertItemsAtIndexPaths:addedItemPaths];
-            ((UICollectionViewFlowLayout *) welf.collectionView.collectionViewLayout).footerReferenceSize = CGSizeMake(0, nextRequest == nil ? 0 : 44);
-            [welf.albumsCollectionView reloadData];
-        }
-        else{
-            [welf.collectionView reloadData];
-        }
+        [welf.collectionView reloadData];
     }];
 }
 
