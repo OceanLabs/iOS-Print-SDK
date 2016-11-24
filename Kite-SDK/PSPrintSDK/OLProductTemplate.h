@@ -50,6 +50,7 @@ typedef NS_ENUM(NSInteger, OLTemplateUI) {
     OLTemplateUIApparel,
     OLTemplateUIDoubleSided,
     OLTemplateUICalendar,
+    OLTemplateUIMug,
 };
 
 @class OLProductTemplateSyncRequest;
