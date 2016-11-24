@@ -3905,6 +3905,9 @@ an image!</string>
                                 <rect key="frame" x="0.0" y="64" width="375" height="558"/>
                                 <color key="backgroundColor" red="0.90729904169999998" green="0.92126071450000002" blue="0.93601524830000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </sceneKitView>
+                            <activityIndicatorView hidden="YES" opaque="NO" tag="1010" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="twf-kq-tRY">
+                                <rect key="frame" x="177" y="333" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.90729904169999998" green="0.92126071450000002" blue="0.93601524830000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -3913,7 +3916,9 @@ an image!</string>
                             <constraint firstAttribute="trailing" secondItem="5FW-C9-0CJ" secondAttribute="trailing" priority="750" constant="20" id="3qa-Eg-gar"/>
                             <constraint firstItem="St1-GK-EN2" firstAttribute="top" secondItem="bg6-YY-BPL" secondAttribute="bottom" constant="15" id="4MK-tZ-d0A"/>
                             <constraint firstItem="5FW-C9-0CJ" firstAttribute="centerY" secondItem="nia-Qf-PdV" secondAttribute="centerY" priority="750" id="4Un-x5-cKV"/>
+                            <constraint firstItem="twf-kq-tRY" firstAttribute="centerY" secondItem="d8r-pu-gfJ" secondAttribute="centerY" id="8UW-49-jxI"/>
                             <constraint firstItem="bg6-YY-BPL" firstAttribute="leading" secondItem="nia-Qf-PdV" secondAttribute="leading" constant="-22" id="FkE-i3-OBp"/>
+                            <constraint firstItem="twf-kq-tRY" firstAttribute="centerX" secondItem="d8r-pu-gfJ" secondAttribute="centerX" id="LcI-SR-gLq"/>
                             <constraint firstItem="5FW-C9-0CJ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="EFW-f6-7H0" secondAttribute="bottom" constant="20" id="NIV-CQ-v51"/>
                             <constraint firstAttribute="centerX" secondItem="5FW-C9-0CJ" secondAttribute="centerX" id="PEl-QH-wr0"/>
                             <constraint firstItem="St1-GK-EN2" firstAttribute="top" relation="greaterThanOrEqual" secondItem="5FW-C9-0CJ" secondAttribute="bottom" constant="20" id="Yvn-HK-Btp"/>

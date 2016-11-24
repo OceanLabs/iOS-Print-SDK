@@ -75,21 +75,37 @@
     [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.hintView];
+    [self.view bringSubviewToFront:[self.view viewWithTag:1010]];
 }
 
 - (void)setCropViewImageToMaterial{
-    UIImage *image = [self addBorderToImage:[self.cropView editedImage]];
+    id view = [self.view viewWithTag:1010];
+    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+        [(UIActivityIndicatorView *)view startAnimating];
+    }
     
-    OLAsset *tempAsset = [OLAsset assetWithImageAsPNG:image];
-    tempAsset.edits.filterName = self.edits.filterName;
-    
-    [tempAsset imageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
-        SCNMaterial *material = [[SCNMaterial alloc] init];
-        material.diffuse.wrapS = SCNWrapModeRepeat;
-        material.diffuse.wrapT = SCNWrapModeRepeat;
-        material.diffuse.contents = image;
-        self.tube.materials = @[material];
-    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        UIImage *image = [self addBorderToImage:[self.cropView editedImage]];
+        
+        OLAsset *tempAsset = [OLAsset assetWithImageAsPNG:image];
+        tempAsset.edits.filterName = self.edits.filterName;
+        
+        [tempAsset imageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                
+                SCNMaterial *material = [[SCNMaterial alloc] init];
+                material.diffuse.wrapS = SCNWrapModeRepeat;
+                material.diffuse.wrapT = SCNWrapModeRepeat;
+                material.diffuse.contents = image;
+                self.tube.materials = @[material];
+                
+                if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+                    [(UIActivityIndicatorView *)view stopAnimating];
+                }
+            });
+        }];
+    });
 }
 
 - (UIImage *)addBorderToImage:(UIImage *)image {
