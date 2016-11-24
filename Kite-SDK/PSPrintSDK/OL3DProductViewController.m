@@ -76,11 +76,16 @@
 - (void)setCropViewImageToMaterial{
     UIImage *image = [self addBorderToImage:[self.cropView editedImage]];
     
-    SCNMaterial *material = [[SCNMaterial alloc] init];
-    material.diffuse.wrapS = SCNWrapModeRepeat;
-    material.diffuse.wrapT = SCNWrapModeRepeat;
-    material.diffuse.contents = image;
-    self.tube.materials = @[material];
+    OLAsset *tempAsset = [OLAsset assetWithImageAsPNG:image];
+    tempAsset.edits.filterName = self.edits.filterName;
+    
+    [tempAsset imageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+        SCNMaterial *material = [[SCNMaterial alloc] init];
+        material.diffuse.wrapS = SCNWrapModeRepeat;
+        material.diffuse.wrapT = SCNWrapModeRepeat;
+        material.diffuse.contents = image;
+        self.tube.materials = @[material];
+    }];
 }
 
 - (UIImage *)addBorderToImage:(UIImage *)image {
@@ -101,6 +106,10 @@
 - (void)setupImage{
     [super setupImage];
     
+    [self setCropViewImageToMaterial];
+}
+
+- (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
     [self setCropViewImageToMaterial];
 }
 

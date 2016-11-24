@@ -197,10 +197,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     self.activeTextField = nil;
     
-    if (self.editingTools.collectionView.tag == kOLEditTagCrop){
-        [self exitCropMode];
+    if (self.editingTools.collectionView.tag != kOLEditTagCrop){
+        [self dismissDrawerWithCompletionHandler:NULL];
     }
-    [self dismissDrawerWithCompletionHandler:NULL];
 }
 
 - (void)viewDidLoad {
