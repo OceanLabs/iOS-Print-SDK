@@ -54,7 +54,7 @@
     SCNScene *scene = [SCNScene sceneWithURL:[[NSBundle bundleForClass:[OLKiteViewController class]] URLForResource:@"cup" withExtension:@"dae"]
  options:NULL error:nil];
     
-    self.tube = [SCNTube tubeWithInnerRadius:1.521 outerRadius:1.521 height:2.81385]; //height = 2*radius * 0.925
+    self.tube = [SCNTube tubeWithInnerRadius:1 outerRadius:1 height:1.75];
     [scene.rootNode addChildNode:[SCNNode nodeWithGeometry:self.tube]];
     
     self.scene.scene = scene;
