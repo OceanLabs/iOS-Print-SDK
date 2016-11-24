@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import "OL3DCaseViewController.h"
+#import "OL3DProductViewController.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
@@ -41,12 +41,12 @@
 - (void)exitCropMode;
 @end
 
-@interface OL3DCaseViewController ()
+@interface OL3DProductViewController ()
 @property (weak, nonatomic) IBOutlet SCNView *scene;
 @property (strong, nonatomic) SCNGeometry *tube;
 @end
 
-@implementation OL3DCaseViewController
+@implementation OL3DProductViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

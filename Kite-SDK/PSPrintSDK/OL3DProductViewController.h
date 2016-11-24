@@ -29,6 +29,6 @@
 
 #import "OLSingleImageProductReviewViewController.h"
 
-@interface OL3DCaseViewController : OLSingleImageProductReviewViewController
+@interface OL3DProductViewController : OLSingleImageProductReviewViewController
 
 @end
