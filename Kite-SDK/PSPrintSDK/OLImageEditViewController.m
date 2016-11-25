@@ -1156,14 +1156,17 @@ const NSInteger kOLEditTagCrop = 40;
     
     [self.edits performHorizontalFlipEditFromOrientation:self.cropView.imageView.image.imageOrientation];
     
-    [UIView transitionWithView:self.cropView.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+    
+    [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
         
-        [self.cropView setImage:[UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]]];
-        
-    }completion:^(BOOL finished){
-        self.animating = NO;
-        
-        [self updateProductRepresentationForChoice:nil];
+        [UIView transitionWithView:self.cropView.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+            [self.cropView setImage:image];
+        }completion:^(BOOL finished){
+            self.animating = NO;
+            
+            [self updateProductRepresentationForChoice:nil];
+        }];
     }];
     
     self.ctaButton.enabled = YES;
@@ -1187,19 +1190,21 @@ const NSInteger kOLEditTagCrop = 40;
     self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
     
     UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
-    
-    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.cropView.imageView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+    [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
         
-    } completion:^(BOOL finished){
-        [self.cropView setImage:newImage];
-        
-        [(UIBarButtonItem *)sender setEnabled:YES];
-        self.ctaButton.enabled = YES;
-        
-        self.animating = NO;
-        
-        [self updateProductRepresentationForChoice:nil];
+        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            self.cropView.imageView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+            
+        } completion:^(BOOL finished){
+            [self.cropView setImage:image];
+            
+            [(UIBarButtonItem *)sender setEnabled:YES];
+            self.ctaButton.enabled = YES;
+            
+            self.animating = NO;
+            
+            [self updateProductRepresentationForChoice:nil];
+        }];
     }];
 }
 
@@ -1524,15 +1529,6 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == kOLEditTagImageTools){
         if (indexPath.item == 0){
-            [self onButtonHorizontalFlipClicked:nil];
-        }
-        else if (indexPath.item == 1){
-            [self onButtonRotateClicked:nil];
-        }
-        else if (indexPath.item == 2){
-            [self onButtonAddTextClicked:nil];
-        }
-        else if (indexPath.item == 3){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
                 [self.view bringSubviewToFront:self.editingTools.drawerView];
                 collectionView.tag = kOLEditTagFilters;
@@ -1540,6 +1536,15 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
+        }
+        else if (indexPath.item == 1){
+            [self onButtonHorizontalFlipClicked:nil];
+        }
+        else if (indexPath.item == 2){
+            [self onButtonRotateClicked:nil];
+        }
+        else if (indexPath.item == 3){
+            [self onButtonAddTextClicked:nil];
         }
     }
     else if (collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
@@ -1563,11 +1568,8 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == kOLEditTagFilters){
         self.ctaButton.enabled = YES;
-        OLAsset *asset = [OLAsset assetWithImageAsJPEG:self.fullImage];
-        asset.edits.filterName = [self filterNames][indexPath.item];
-        self.edits.filterName = asset.edits.filterName;
-        
-        [asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+        self.edits.filterName = [self filterNames][indexPath.item];
+        [self applyFilterToImage:self.fullImage withCompletionHandler:^(UIImage *image){
             self.cropView.imageView.image = image;
             [self updateProductRepresentationForChoice:nil];
         }];
@@ -1627,6 +1629,15 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
+}
+
+- (void)applyFilterToImage:(UIImage *)image withCompletionHandler:(void(^)(UIImage *image))handler{
+    OLAsset *asset = [OLAsset assetWithImageAsJPEG:image];
+    asset.edits.filterName = self.edits.filterName;
+    
+    [asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+        handler(image);
+    }];
 }
 
 - (void)registerCollectionViewCells{
