@@ -327,6 +327,26 @@ const NSInteger kOLEditTagCrop = 40;
     [self.cropView addConstraints:@[self.aspectRatioConstraint]];
     
     [self setupProductRepresentation];
+    
+    UIView *gestureView = [[UIView alloc] init];
+    [self.view addSubview:gestureView];
+    gestureView.translatesAutoresizingMaskIntoConstraints = NO;
+    views = NSDictionaryOfVariableBindings(gestureView);
+    con = [[NSMutableArray alloc] init];
+    
+    visuals = @[@"H:|-0-[gestureView]-0-|",
+                         @"V:|-0-[gestureView]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [gestureView.superview addConstraints:con];
+    
+    [gestureView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self.cropView action:@selector(panRecognized:)]];
+    [gestureView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.cropView action:@selector(pinchRecognized:)]];
+
 }
 
 - (void)setupProductRepresentation{
