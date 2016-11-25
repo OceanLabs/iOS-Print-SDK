@@ -1569,7 +1569,10 @@ const NSInteger kOLEditTagCrop = 40;
     else if (collectionView.tag == kOLEditTagFilters){
         self.ctaButton.enabled = YES;
         self.edits.filterName = [self filterNames][indexPath.item];
-        [self applyFilterToImage:self.fullImage withCompletionHandler:^(UIImage *image){
+        
+        UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+        
+        [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
             self.cropView.imageView.image = image;
             [self updateProductRepresentationForChoice:nil];
         }];
