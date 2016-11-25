@@ -299,6 +299,7 @@
             self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
             [UIView animateWithDuration:0.1 animations:^{
                 self.deviceView.alpha = 1;
+            } completion:^(BOOL finished){
                 [self renderImage];
             }];
         }];
