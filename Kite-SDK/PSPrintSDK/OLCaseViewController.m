@@ -225,6 +225,7 @@
     }
     else{
         [self.highlightsView.superview sendSubviewToBack:self.highlightsView];
+        self.highlightsView.hidden = YES;
     }
     
     [self.view bringSubviewToFront:self.editingTools.drawerView];
@@ -316,11 +317,14 @@
 }
 
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
+    
     self.renderedImageView.image = nil;
+    self.cropView.hidden = YES;
     if (choice.productBackground){
         [self.maskActivityIndicator.superview bringSubviewToFront:self.maskActivityIndicator];
         [self.maskActivityIndicator startAnimating];
         [self.deviceView setAndFadeInImageWithURL:choice.productBackground size:[UIScreen mainScreen].bounds.size placeholder:nil progress:NULL completionHandler:^{
+            self.cropView.hidden = NO;
             [self.maskActivityIndicator stopAnimating];
             [self renderImage];
         }];
@@ -413,6 +417,8 @@
     if (![self isUsingMultiplyBlend]){
         return;
     }
+    
+    self.highlightsView.hidden = NO;
     self.renderedImageView.image = nil;
     UIGraphicsBeginImageContextWithOptions(self.highlightsView.bounds.size, NO, [UIScreen mainScreen].scale);
     [self.highlightsView drawViewHierarchyInRect:self.highlightsView.bounds afterScreenUpdates:YES];
@@ -435,6 +441,7 @@
     self.renderedImageView.image = renderedImage;
     
     self.renderedImageView.hidden = NO;
+    self.highlightsView.hidden = YES;
 }
 
 #pragma mark - RMImageCropperDelegate methods
