@@ -47,6 +47,7 @@
 - (void)onButtonCropClicked:(UIButton *)sender;
 - (void)onTapGestureRecognized:(id)sender;
 @property (strong, nonatomic) OLPhotoTextField *activeTextField;
+@property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
 - (void)disableOverlay;
 @end
 
@@ -373,6 +374,9 @@
     }
     sender.selected = YES;
     [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *textField in self.textFields){
+            textField.alpha = 0;
+        }
         for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 1;
             [view.superview bringSubviewToFront:view];
@@ -394,6 +398,9 @@
         [self.printContainerView bringSubviewToFront:view];
     }
     [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *textField in self.textFields){
+            textField.alpha = 1;
+        }
         for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 0;
             self.highlightsView.alpha = 1;
