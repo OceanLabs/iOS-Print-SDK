@@ -1229,6 +1229,7 @@ const NSInteger kOLEditTagCrop = 40;
             
         } completion:^(BOOL finished){
             [self.cropView setImage:image];
+            self.cropView.imageView.transform = CGAffineTransformIdentity;
             
             [(UIBarButtonItem *)sender setEnabled:YES];
             self.ctaButton.enabled = YES;
