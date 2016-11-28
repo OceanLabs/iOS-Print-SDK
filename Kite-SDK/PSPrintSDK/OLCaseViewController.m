@@ -319,8 +319,8 @@
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
     
     self.renderedImageView.image = nil;
-    self.cropView.hidden = YES;
     if (choice.productBackground){
+        self.cropView.hidden = YES;
         [self.maskActivityIndicator.superview bringSubviewToFront:self.maskActivityIndicator];
         [self.maskActivityIndicator startAnimating];
         [self.deviceView setAndFadeInImageWithURL:choice.productBackground size:[UIScreen mainScreen].bounds.size placeholder:nil progress:NULL completionHandler:^{
