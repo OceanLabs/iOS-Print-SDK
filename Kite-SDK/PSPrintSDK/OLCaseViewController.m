@@ -49,6 +49,7 @@
 @property (strong, nonatomic) OLPhotoTextField *activeTextField;
 @property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
 - (void)disableOverlay;
+- (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
 @end
 
 @interface OLCaseViewController ()
@@ -383,6 +384,15 @@
             self.highlightsView.alpha = 0;
         }
         [self.view bringSubviewToFront:self.editingTools];
+        [self.view bringSubviewToFront:self.editingTools.drawerView];
+        self.editingTools.collectionView.tag = 40; // kOLEditTagCrop;
+        
+        self.editingTools.drawerHeightCon.constant = 80;
+        [self.view layoutIfNeeded];
+        [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+        
+        [self.editingTools.collectionView reloadData];
+        [self showDrawerWithCompletionHandler:NULL];
     } completion:^(BOOL finished){
         self.cropView.clipsToBounds = NO;
         [self maskWithImage:nil targetView:self.cropView];
