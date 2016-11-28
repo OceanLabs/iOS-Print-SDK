@@ -250,6 +250,7 @@
                                 NSString *productClass;
                                 NSString *productType;
                                 NSString *uiClass;
+                                NSString *blendMode;
                                 UIColor *labelColor;
                                 CGSize sizeCm = CGSizeZero;
                                 CGSize sizeInches = CGSizeZero;
@@ -298,6 +299,7 @@
                                     productType = [product[@"ios_sdk_product_type"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_product_type"] : nil;
                                     
                                     uiClass = [product[@"ios_sdk_ui_class"] isKindOfClass:[NSString class]] ? product[@"ios_sdk_ui_class"] : nil;
+                                    blendMode = [product[@"mask_blend_mode"] isKindOfClass:[NSString class]] ? product[@"mask_blend_mode"] : nil;
                                     
                                     supportedOptions = [product[@"supported_options"] isKindOfClass:[NSArray class]] ? product[@"supported_options"] : nil;
                                     
@@ -458,6 +460,10 @@
                                     t.collectionName = collectionName;
                                     t.logo = logo;
                                     t.representationAssets = representationAssets;
+                                    
+                                    if ([blendMode isEqualToString:@"MULTIPLY"]){
+                                        t.blendMode = OLImageBlendModeMultiply;
+                                    }
                                     
                                     NSMutableArray <OLUpsellOffer *>*upsellOffersClean = [[NSMutableArray alloc] init];
                                     for (NSDictionary *offerDict in upsellOffers){
