@@ -3901,9 +3901,13 @@ an image!</string>
                                     <constraint firstAttribute="height" constant="45" id="RZI-RS-gBj"/>
                                 </constraints>
                             </view>
-                            <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" allowsCameraControl="YES" wantsMultisampling="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d8r-pu-gfJ">
+                            <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" wantsMultisampling="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d8r-pu-gfJ">
                                 <rect key="frame" x="0.0" y="64" width="375" height="558"/>
                                 <color key="backgroundColor" red="0.90729904169999998" green="0.92126071450000002" blue="0.93601524830000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Zq5-4H-zYn" appends="YES" id="tw7-GJ-WUg"/>
+                                </connections>
                             </sceneKitView>
                             <activityIndicatorView hidden="YES" opaque="NO" tag="1010" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="twf-kq-tRY">
                                 <rect key="frame" x="177" y="333" width="20" height="20"/>
@@ -3962,6 +3966,11 @@ an image!</string>
                         <action selector="onGestureRecognizerTapped:" destination="mXu-AB-iZj" id="5eG-RM-mNw"/>
                     </connections>
                 </tapGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="Zq5-4H-zYn">
+                    <connections>
+                        <action selector="onPanGestureRecognized:" destination="mXu-AB-iZj" id="Ncm-as-Pzf"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2988" y="913"/>
         </scene>

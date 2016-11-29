@@ -46,6 +46,8 @@
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
 @property (weak, nonatomic) IBOutlet SCNView *scene;
 @property (strong, nonatomic) SCNGeometry *tube;
+@property (strong, nonatomic) SCNNode *tubeNode;
+@property (strong, nonatomic) SCNNode *mug;
 @end
 
 @implementation OL3DProductViewController
@@ -56,12 +58,21 @@
     SCNScene *scene = [SCNScene sceneWithURL:[[NSBundle bundleForClass:[OLKiteViewController class]] URLForResource:@"mug" withExtension:@"dae"]
  options:NULL error:nil];
     
-    self.tube = [SCNTube tubeWithInnerRadius:1 outerRadius:1 height:1.75];
-    [scene.rootNode addChildNode:[SCNNode nodeWithGeometry:self.tube]];
+    self.tube = [SCNTube tubeWithInnerRadius:1 outerRadius:1 height:1.95];
+    self.tubeNode = [SCNNode nodeWithGeometry:self.tube];
+    self.tubeNode.eulerAngles = SCNVector3Make(M_PI_2, 0, -M_PI_2);
+    [scene.rootNode addChildNode:self.tubeNode];
     
     self.scene.scene = scene;
     
-    self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Swipe to rotate your mug. Double tap to reset.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Swipe to rotate your mug", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    
+    [[scene rootNode] enumerateChildNodesUsingBlock:^(SCNNode *node, BOOL *stop){
+        if ([node.name isEqualToString:@"mug"]){
+            self.mug = node;
+            *stop = YES;
+        }
+    }];
 }
 
 - (CGFloat)aspectRatio{
@@ -92,8 +103,6 @@
         
         [tempAsset imageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
             dispatch_async(dispatch_get_main_queue(), ^{
-                
-                
                 SCNMaterial *material = [[SCNMaterial alloc] init];
                 material.diffuse.wrapS = SCNWrapModeRepeat;
                 material.diffuse.wrapT = SCNWrapModeRepeat;
@@ -116,6 +125,8 @@
     CGRect drawRect = CGRectMake(size.width * borderPercent/2.0, 0, size.width, size.height);
     
     UIGraphicsBeginImageContext(contextSize);
+    [[UIColor whiteColor] set];
+    UIRectFill(CGRectMake(0.0, 0.0, contextSize.width, contextSize.height));
     [image drawInRect:drawRect blendMode:kCGBlendModeNormal alpha:1.0];
     UIImage *paddedImage =  UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -145,5 +156,21 @@
     [self setCropViewImageToMaterial];
     self.scene.hidden = NO;
 }
+
+- (IBAction)onPanGestureRecognized:(UIPanGestureRecognizer *)sender {
+    static CGFloat startingEulerAngle = 0;
+    if (sender.state == UIGestureRecognizerStateBegan){
+        startingEulerAngle = self.mug.eulerAngles.z;
+    }
+    if (sender.state == UIGestureRecognizerStateChanged){
+        CGPoint translate = [sender translationInView:sender.view.superview];
+        CGFloat angleDelta = startingEulerAngle + (translate.x * M_PI)/180.0;
+        
+        self.mug.eulerAngles = SCNVector3Make(self.mug.eulerAngles.x, self.mug.eulerAngles.y, angleDelta);
+        self.tubeNode.eulerAngles = SCNVector3Make(self.tubeNode.eulerAngles.x, self.tubeNode.eulerAngles.y, -M_PI_2 + angleDelta);
+        
+    }
+}
+
 
 @end
