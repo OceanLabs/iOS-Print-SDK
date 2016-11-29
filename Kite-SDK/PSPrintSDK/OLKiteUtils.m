@@ -194,6 +194,9 @@
     else if (templateUI == OLTemplateUINonCustomizable){
         return @"OLPaymentViewController";
     }
+    else if (templateUI == OLTemplateUIMug){
+        return @"OL3DProductViewController";
+    }
     else if (photoSelectionScreen){
         return @"OLImagePickerViewController";
     }
@@ -202,9 +205,6 @@
     }
     else if (templateUI == OLTemplateUIFrame || templateUI == OLTemplateUICalendar){
         return @"FrameOrderReviewViewController";
-    }
-    else if (templateUI == OLTemplateUIMug){
-        return @"OL3DProductViewController";
     }
     else{
         return @"OrderReviewViewController";

@@ -47,7 +47,9 @@
 - (void)onButtonCropClicked:(UIButton *)sender;
 - (void)onTapGestureRecognized:(id)sender;
 @property (strong, nonatomic) OLPhotoTextField *activeTextField;
+@property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
 - (void)disableOverlay;
+- (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
 @end
 
 @interface OLCaseViewController ()
@@ -97,7 +99,7 @@
 }
 
 - (BOOL)isUsingMultiplyBlend{
-    return self.product.productTemplate.templateUI == OLTemplateUIApparel;
+    return self.product.productTemplate.templateUI == OLTemplateUIApparel || self.product.productTemplate.blendMode == OLImageBlendModeMultiply;
 }
 
 - (BOOL)shouldEnableGestures{
@@ -225,6 +227,7 @@
     }
     else{
         [self.highlightsView.superview sendSubviewToBack:self.highlightsView];
+        self.highlightsView.hidden = YES;
     }
     
     [self.view bringSubviewToFront:self.editingTools.drawerView];
@@ -299,6 +302,7 @@
             self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
             [UIView animateWithDuration:0.1 animations:^{
                 self.deviceView.alpha = 1;
+            } completion:^(BOOL finished){
                 [self renderImage];
             }];
         }];
@@ -315,11 +319,14 @@
 }
 
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
+    
     self.renderedImageView.image = nil;
     if (choice.productBackground){
+        self.cropView.hidden = YES;
         [self.maskActivityIndicator.superview bringSubviewToFront:self.maskActivityIndicator];
         [self.maskActivityIndicator startAnimating];
         [self.deviceView setAndFadeInImageWithURL:choice.productBackground size:[UIScreen mainScreen].bounds.size placeholder:nil progress:NULL completionHandler:^{
+            self.cropView.hidden = NO;
             [self.maskActivityIndicator stopAnimating];
             [self renderImage];
         }];
@@ -368,12 +375,24 @@
     }
     sender.selected = YES;
     [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *textField in self.textFields){
+            textField.alpha = 0;
+        }
         for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 1;
             [view.superview bringSubviewToFront:view];
             self.highlightsView.alpha = 0;
         }
         [self.view bringSubviewToFront:self.editingTools];
+        [self.view bringSubviewToFront:self.editingTools.drawerView];
+        self.editingTools.collectionView.tag = 40; // kOLEditTagCrop;
+        
+        self.editingTools.drawerHeightCon.constant = 80;
+        [self.view layoutIfNeeded];
+        [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+        
+        [self.editingTools.collectionView reloadData];
+        [self showDrawerWithCompletionHandler:NULL];
     } completion:^(BOOL finished){
         self.cropView.clipsToBounds = NO;
         [self maskWithImage:nil targetView:self.cropView];
@@ -389,6 +408,9 @@
         [self.printContainerView bringSubviewToFront:view];
     }
     [UIView animateWithDuration:0.2 animations:^{
+        for (UIView *textField in self.textFields){
+            textField.alpha = 1;
+        }
         for (UIView *view in self.cropFrameGuideViews){
             view.alpha = 0;
             self.highlightsView.alpha = 1;
@@ -412,6 +434,8 @@
     if (![self isUsingMultiplyBlend]){
         return;
     }
+    
+    self.highlightsView.hidden = NO;
     self.renderedImageView.image = nil;
     UIGraphicsBeginImageContextWithOptions(self.highlightsView.bounds.size, NO, [UIScreen mainScreen].scale);
     [self.highlightsView drawViewHierarchyInRect:self.highlightsView.bounds afterScreenUpdates:YES];
@@ -434,6 +458,7 @@
     self.renderedImageView.image = renderedImage;
     
     self.renderedImageView.hidden = NO;
+    self.highlightsView.hidden = YES;
 }
 
 #pragma mark - RMImageCropperDelegate methods

@@ -53,6 +53,11 @@ typedef NS_ENUM(NSInteger, OLTemplateUI) {
     OLTemplateUIMug,
 };
 
+typedef NS_ENUM(NSInteger, OLImageBlendMode) {
+    OLImageBlendModeNormal,
+    OLImageBlendModeMultiply,
+};
+
 @class OLProductTemplateSyncRequest;
 @class OLCountry;
 
@@ -67,6 +72,7 @@ typedef NS_ENUM(NSInteger, OLTemplateUI) {
 @property (strong, nonatomic) NSDictionary<NSString *, NSString *> *_Nullable coverPhotosDict;
 @property (strong, nonatomic) NSArray <NSString *>*_Nullable productPhotographyURLs;
 @property (assign, nonatomic) OLTemplateUI templateUI;
+@property (assign, nonatomic) OLTemplateUI blendMode;
 @property (strong, nonatomic) NSString *_Nullable templateClass;
 @property (strong, nonatomic) NSString *_Nullable templateType;
 @property (strong, nonatomic) NSString *_Nullable shortDescription;
