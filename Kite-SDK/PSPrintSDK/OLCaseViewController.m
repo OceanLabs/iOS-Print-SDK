@@ -99,7 +99,7 @@
 }
 
 - (BOOL)isUsingMultiplyBlend{
-    return self.product.productTemplate.templateUI == OLTemplateUIApparel;
+    return self.product.productTemplate.templateUI == OLTemplateUIApparel || self.product.productTemplate.blendMode == OLImageBlendModeMultiply;
 }
 
 - (BOOL)shouldEnableGestures{
