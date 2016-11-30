@@ -225,7 +225,7 @@
                              @"center_back":[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/2.jpg"]]
                              };
     
-    id<OLPrintJob> tshirt = [OLPrintJob apparelWithTemplateId:@"gildan_tshirt" OLAssets:assets];
+    id<OLPrintJob> tshirt = [OLPrintJob apparelWithTemplateId:@"aa_mens_tshirt" OLAssets:assets];
     [tshirt setValue:@"M" forOption:@"garment_size"];
     [tshirt setValue:@"white" forOption:@"garment_color"];
     
@@ -287,7 +287,7 @@
                         ];
     OLAsset *frontCoverAsset = [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]];
     
-    id<OLPrintJob> photobook = [OLPrintJob photobookWithTemplateId:@"photobook_small_portrait" OLAssets:assets frontCoverOLAsset:frontCoverAsset backCoverOLAsset:nil];
+    id<OLPrintJob> photobook = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_280x210_sm" OLAssets:assets frontCoverOLAsset:frontCoverAsset backCoverOLAsset:nil];
     [photobook setValue:@"#FFFFFF" forOption:@"spine_color"];
     
     OLPrintOrder *order = [[OLPrintOrder alloc] init];
