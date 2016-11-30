@@ -37,7 +37,7 @@
 - (void)setUp {
     [super setUp];
     
-    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+    [OLKitePrintSDK setAPIKey:@"ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
     [OLKitePrintSDK setIsUnitTesting];
     
 }
@@ -70,7 +70,7 @@
     
 //    XCTAssert(![printOrder hasCachedCost], @"Should not have cached cost");
     
-    [printOrder preemptAssetUpload];
+//    [printOrder preemptAssetUpload];
     
     [self submitOrder:printOrder WithSuccessHandler:NULL];
     
@@ -151,7 +151,7 @@
 
 - (void)testMultipleJobsOrder{
     OLProductPrintJob *job1 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
-    OLProductPrintJob *job2 = [OLPrintJob printJobWithTemplateId:@"magnets" OLAssets:[OLKiteTestHelper urlAssets]];
+    OLProductPrintJob *job2 = [OLPrintJob printJobWithTemplateId:@"s9_magnets" OLAssets:[OLKiteTestHelper urlAssets]];
     [self submitJobs:@[job1, job2]];
 }
 
@@ -231,7 +231,7 @@
 }
 
 - (void)testPhotobookOrderWithURLOLAssets{
-    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:[OLKiteTestHelper urlAssets] frontCoverOLAsset:[OLKiteTestHelper urlAssets].firstObject backCoverOLAsset:[OLKiteTestHelper urlAssets].lastObject];
+    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_210x210_sm" OLAssets:[OLKiteTestHelper urlAssets] frontCoverOLAsset:[OLKiteTestHelper urlAssets].firstObject backCoverOLAsset:[OLKiteTestHelper urlAssets].lastObject];
     [self submitJobs:@[job]];
 }
 
