@@ -42,6 +42,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLUserSession.h"
 #import "OLImagePickerViewController.h"
 #import "CustomImagePickerViewController.h"
+#import "OLImageDownloader.h"
+#import "OLProgressHUD.h"
 
 @import Photos;
 
@@ -132,6 +134,33 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Extras" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     [ac addAction:[UIAlertAction actionWithTitle:@"Print Order History" style:UIAlertActionStyleDefault handler:^(id action){
         [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"PrintOrderHistoryViewController"] animated:YES];
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"PDF Photobook" style:UIAlertActionStyleDefault handler:^(id action){
+        [OLProgressHUD showWithStatus:@"Downloading PDF 1/2"];
+        [[OLImageDownloader sharedInstance] downloadDataAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/TestImages/inside.pdf"] priority:0 progress:^(NSInteger progress, NSInteger total){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [OLProgressHUD showProgress:(float)progress/(float)total status:@"Downloading PDF 1/2"];
+            });
+        }withCompletionHandler:^(NSData *data, NSError *error){
+            OLAsset *inside = [OLAsset assetWithDataAsPDF:data];
+            [[OLImageDownloader sharedInstance] downloadDataAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/TestImages/cover.pdf"] priority:0 progress:^(NSInteger progress, NSInteger total){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [OLProgressHUD showProgress:(float)progress/(float)total status:@"Downloading PDF 2/2"];
+                });
+            } withCompletionHandler:^(NSData *data, NSError *error){
+                OLAsset *cover = [OLAsset assetWithDataAsPDF:data];
+                
+                id<OLPrintJob> job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_280x210_sm" OLAssets:@[inside] frontCoverOLAsset:cover backCoverOLAsset:nil];
+                OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+                [printOrder addPrintJob:job];
+                
+                OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [OLProgressHUD dismiss];
+                    [self presentViewController:vc animated:YES completion:NULL];
+                });
+            }];
+        }];
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"Show Promo View" style:UIAlertActionStyleDefault handler:^(id action){
 #define STRINGIZE(x) #x
