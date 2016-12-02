@@ -764,7 +764,20 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
         [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
         if (progress < 1.0){
-            [OLProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload]];
+            NSString *status;
+            if (self.printOrder.jobs.count == 1){
+                OLProductTemplate *template = [OLProductTemplate templateWithId:[self.printOrder.jobs.firstObject templateId]];
+                if (template){
+                    if (template.templateUI == OLTemplateUIPhotobook && [OLKiteUtils assetArrayContainsPDF:[self.printOrder.jobs.firstObject assetsForUploading]]){
+                        status = NSLocalizedStringFromTableInBundle(@"Uploading book", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+                    }
+                }
+                
+            }
+            if (!status){
+                status = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload];
+            }
+            [OLProgressHUD showProgress:progress status:status];
         }
         else{
             [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
