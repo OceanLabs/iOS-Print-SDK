@@ -219,8 +219,7 @@
 
 /**
  *  Add your own photo picker View Controller.
- *  (Needs the 'ImageProviders' subspec or this method won't do anything. See
- *  https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/custom_photo_sources.md for details)
+ *  See https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/custom_photo_sources.md for details
  *
  *  @param vc   Your view controller
  *  @param name The name for the source
@@ -231,13 +230,12 @@
 
 /**
  *  Add your own photo picker View Controller.
- *  (Needs the 'ImageProviders' subspec or this method won't do anything. See
- *  https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/custom_photo_sources.md for details)
-
- @param vc Your view controller
- @param name The name for the source
- @param icon An image to be used as an icon (where applicable)
- @param assets An array of assets that will be prepopulated
+ *  See https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/custom_photo_sources.md for details
+ *
+ *  @param vc Your view controller
+ *  @param name The name for the source
+ *  @param icon An image to be used as an icon (where applicable)
+ *  @param assets An array of assets that will be prepopulated
  */
 - (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *>*_Nullable)assets;
 
