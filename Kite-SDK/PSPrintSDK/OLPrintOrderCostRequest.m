@@ -51,7 +51,7 @@
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-
+@property (strong, nonatomic) NSMutableDictionary *options;
 @end
 
 @interface OLPrintOrder ()
@@ -102,6 +102,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         jobDict[@"template_id"] = job.templateId;
         jobDict[@"quantity"] = [NSNumber numberWithInteger:[job quantity] * ([job extraCopies]+1)];
         jobDict[@"job_id"] = [job uuid];
+        jobDict[@"options"] = [(OLProductPrintJob *)job options];
         [basket addObject:jobDict];
     }
 
