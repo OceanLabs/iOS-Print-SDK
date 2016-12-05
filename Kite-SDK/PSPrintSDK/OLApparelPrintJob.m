@@ -45,6 +45,9 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 @interface OLApparelPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (strong, nonatomic) NSMutableDictionary *options;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @implementation OLApparelPrintJob
