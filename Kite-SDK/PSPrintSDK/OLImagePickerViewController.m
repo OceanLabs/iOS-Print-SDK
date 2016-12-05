@@ -352,7 +352,7 @@
 }
 
 - (void)setupRecentsProvider{
-    if ([OLUserSession currentSession].appAssets.count == 0 && [OLUserSession currentSession].recentPhotos.count == 0){
+    if (([OLUserSession currentSession].appAssets.count == 0 && [OLUserSession currentSession].recentPhotos.count == 0) || [OLUserSession currentSession].kiteVc.disableRecents){
         return;
     }
     
@@ -557,6 +557,15 @@
     return vc;
 }
 
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
+    [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[pageViewController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
+    self.nextButton.hidden = NO;
+    ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).nextButton.hidden = YES;
+    [self positionSelectedProviderIndicator];
+}
+
+#pragma mark Custom VC
+
 - (void)presentExternalViewControllerForProvider:(OLImagePickerProvider *)provider{
     if (provider.providerType == OLImagePickerProviderTypeQRCode){
         OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
@@ -602,14 +611,6 @@
     else{
         [self onButtonDoneTapped:nil];
     }
-}
-
-- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
-    [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[pageViewController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
-    self.nextButton.hidden = NO;
-    ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).nextButton.hidden = YES;
-    self.indicatorDestFrame = CGRectZero;
-    [self positionSelectedProviderIndicator];
 }
 
 #pragma mark CollectionView

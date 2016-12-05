@@ -83,6 +83,13 @@ static CGFloat fadeTime = 0.3;
 
 @implementation OLKiteViewController
 
+-(NSMutableArray *) customImageProviders{
+    if (!_customImageProviders){
+        _customImageProviders = [[NSMutableArray alloc] init];
+    }
+    return _customImageProviders;
+}
+
 - (void)setShowPrintAtHome:(BOOL)showPrintAtHome{
     _showPrintAtHome = showPrintAtHome;
     
@@ -173,17 +180,17 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)addCustomPhotoProviderWithCollections:(NSArray <OLImagePickerProviderCollection *>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
-    if (!self.customImageProviders){
-        self.customImageProviders = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
-    }
     [self.customImageProviders addObject:[[OLImagePickerProvider alloc] initWithCollections:(NSArray <id<NSFastEnumeration>> *)collections name:name icon:image]];
 }
 
 - (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon{
-    if (!self.customImageProviders){
-        self.customImageProviders = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
-    }
-    [self.customImageProviders addObject:[[OLCustomViewControllerPhotoProvider alloc] initWithController:vc name:name icon:icon]];
+    [self addCustomPhotoProviderWithViewController:vc name:name icon:icon prepopulatedAssets:nil];
+}
+
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *> *_Nullable)assets{
+    OLCustomViewControllerPhotoProvider *customProvider = [[OLCustomViewControllerPhotoProvider alloc] initWithController:vc name:name icon:icon];
+    [customProvider.collections.firstObject addAssets:assets unique:NO];
+    [self.customImageProviders addObject:customProvider];
 }
 
 - (void)setFontNamesForImageEditing:(NSArray<NSString *> *_Nullable)fontNames{
