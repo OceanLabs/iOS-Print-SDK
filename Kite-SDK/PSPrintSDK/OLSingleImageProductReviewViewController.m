@@ -259,11 +259,6 @@
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
-    for (OLProductTemplateOption *option in self.product.productTemplate.options){
-        if (![self.product.selectedOptions.allKeys containsObject:option.code]){
-            [job setValue:option.choices.firstObject.code forOption:option.code];
-        }
-    }
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){

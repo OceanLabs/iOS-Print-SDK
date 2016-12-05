@@ -216,7 +216,7 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    [self.product.selectedOptions removeAllObjects];
+    self.product.selectedOptions = nil;
     self.product.uuid = nil;
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {

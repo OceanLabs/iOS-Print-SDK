@@ -265,7 +265,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         }
     }
     
+#ifdef OL_VERBOSE
     NSLog(@"Template with id '%@' not found. Please ensure you've run OLProductTemplate.sync first if your templates are defined in the developer dashboard", identifier);
+#endif
     return nil;
 }
 
