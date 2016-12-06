@@ -1502,6 +1502,7 @@ const NSInteger kOLEditTagCrop = 40;
         
         OLProduct *product = [OLProduct productWithTemplateId:templateId];
         product.uuid = self.product.uuid;
+        [product.selectedOptions removeObjectForKey:self.selectedOption.code];
         
         if (self.navigationController.viewControllers.count > 1){
             OLProductOverviewViewController *vc = self.navigationController.viewControllers[self.navigationController.viewControllers.count - 2];
