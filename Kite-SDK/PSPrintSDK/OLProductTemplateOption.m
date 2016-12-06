@@ -88,6 +88,7 @@
         self.name = collection.name;
         self.iconURL = collection.icon;
         self.type = OLProductTemplateOptionTypeTemplateCollection;
+        self.code = collection.code;
         NSMutableArray *choices = [[NSMutableArray alloc] init];
         for (NSDictionary *template in collection.templates){
             OLProductTemplateOptionChoice *choice = [[OLProductTemplateOptionChoice alloc] init];
@@ -124,7 +125,7 @@
         return [UIImage imageNamedInKiteBundle:self.iconImageName];
     }
     else{ //Match known options with embedded assets
-        if ([self.code isEqualToString:@"case_style"]){
+        if ([self.code isEqualToString:@"case_style"] || [self.code isEqualToString:@"Phone Cases"]){
             return [UIImage imageNamedInKiteBundle:@"case-options"];
         }
         else if([self.code isEqualToString:@"garment_color"]){
