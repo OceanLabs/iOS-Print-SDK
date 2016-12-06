@@ -217,7 +217,7 @@ CGFloat innerMargin = 3;
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
     
-    OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
+    OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section]];
     if (!imageView.image){
         return nil;
     }
@@ -468,7 +468,7 @@ CGFloat innerMargin = 3;
         
         NSInteger numberOfCellsPerRow = collectionView.frame.size.width / cellSize.width;
         CGFloat sideMargin = (collectionView.frame.size.width - (cellSize.width * numberOfCellsPerRow) - margin * (numberOfCellsPerRow - 1))/(numberOfCellsPerRow+1);
-        return UIEdgeInsetsMake(margin,sideMargin,margin,sideMargin);
+        return UIEdgeInsetsMake(margin, sideMargin, margin, sideMargin);
     }
 }
 
@@ -479,8 +479,8 @@ CGFloat innerMargin = 3;
     }
     NSIndexPath* outerCollectionViewIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)outerCollectionViewCell];
     
-    NSInteger trueFromIndex = fromIndexPath.item + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder;
-    NSInteger trueToIndex = toIndexPath.item + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder;
+    NSInteger trueFromIndex = fromIndexPath.item + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:fromIndexPath.section];
+    NSInteger trueToIndex = toIndexPath.item + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:toIndexPath.section];
     
     id object = [self.framePhotos objectAtIndex:trueFromIndex];
     [self.framePhotos removeObjectAtIndex:trueFromIndex];
