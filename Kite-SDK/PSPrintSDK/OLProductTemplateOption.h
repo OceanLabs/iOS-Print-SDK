@@ -38,7 +38,6 @@ typedef NS_ENUM(NSInteger, OLProductTemplateOptionType) {
     OLProductTemplateOptionTypeColor2,
     OLProductTemplateOptionTypeColor3,
     OLProductTemplateOptionTypeTemplateCollection
-//    OLProductTemplateOptionTypeBorderOverride
 };
 
 @interface OLProductTemplateOption : NSObject

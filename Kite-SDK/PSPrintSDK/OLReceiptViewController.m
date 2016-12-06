@@ -414,7 +414,7 @@ static const NSUInteger kSectionErrorRetry = 2;
                 }
             }
             else{
-                cell.textLabel.text = [self.printOrder.jobs[indexPath.item] name];
+                cell.textLabel.text = [self.printOrder.jobs[indexPath.item] productName];
                 cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
             }
         }];

@@ -235,6 +235,10 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
+    
+    if (!self.navigationItem.rightBarButtonItem && !self.presentedViewController){
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonSaveClicked)];
+    }
 }
 
 - (void)registerForKeyboardNotifications
@@ -346,13 +350,15 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)viewWillDisappear:(BOOL)animated{
-    if (!self.navigationItem.rightBarButtonItem && !self.presentedViewController){
-#ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
-#endif
-        [self checkAndSaveAddress];
+- (void)onButtonSaveClicked{
+    if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
+        return;
     }
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
+#endif
+    [self checkAndSaveAddress];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void) viewWillAppear:(BOOL)animated{

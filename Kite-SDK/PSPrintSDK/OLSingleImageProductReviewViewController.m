@@ -247,7 +247,15 @@
     NSArray *assetArray = @[asset];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+    OLProductPrintJob *job;
+    if (self.product.productTemplate.templateUI == OLTemplateUIApparel && assetArray.firstObject){
+        job = [OLPrintJob apparelWithTemplateId:self.product.templateId OLAssets:@{
+                                                                                   @"center_chest": assetArray.firstObject,
+                                                                                   }];
+    }
+    else{
+        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+    }
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }

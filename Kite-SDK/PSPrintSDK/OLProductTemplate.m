@@ -265,7 +265,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         }
     }
     
+#ifdef OL_VERBOSE
     NSLog(@"Template with id '%@' not found. Please ensure you've run OLProductTemplate.sync first if your templates are defined in the developer dashboard", identifier);
+#endif
     return nil;
 }
 
@@ -377,9 +379,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"APPAREL"]){
         return OLTemplateUIApparel;
     }
-    else if ([identifier isEqualToString:@"MUG"]){
-        return OLTemplateUIMug;
-    }
+//    else if ([identifier isEqualToString:@"MUG"]){
+//        return OLTemplateUIMug;
+//    }
     return OLTemplateUINA;
 }
 

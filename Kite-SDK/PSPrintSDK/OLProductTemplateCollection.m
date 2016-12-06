@@ -31,10 +31,11 @@
 
 @implementation OLProductTemplateCollection
 
-- (_Nonnull instancetype)initWithName:(NSString *_Nonnull)name templates:(NSArray<NSDictionary<NSString *, NSString *> *> *_Nonnull )templates{
+- (_Nonnull instancetype)initWithName:(NSString *_Nonnull)name code:(NSString *)code templates:(NSArray<NSDictionary<NSString *, NSString *> *> *_Nonnull )templates{
     if (self = [super init]){
         self.name = name;
         self.templates = templates;
+        self.code = code;
     }
     
     return self;

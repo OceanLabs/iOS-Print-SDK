@@ -33,8 +33,9 @@
 
 @property (strong, nonatomic) NSString *_Nonnull name;
 @property (strong, nonatomic) NSURL *_Nullable icon;
+@property (strong, nonatomic) NSString *_Nonnull code;
 @property (strong, nonatomic) NSArray<NSDictionary<NSString *, NSString *> *> *_Nonnull templates;
-- (_Nonnull instancetype)initWithName:(NSString *_Nonnull)name templates:(NSArray<NSDictionary<NSString *, NSString *> *> *_Nonnull )templates;
+- (_Nonnull instancetype)initWithName:(NSString *_Nonnull)name code:(NSString *_Nonnull)code templates:(NSArray<NSDictionary<NSString *, NSString *> *> *_Nonnull )templates;
 - (BOOL)containsTemplateIdentifier:(NSString *_Nonnull)identifier;
 
 @end
