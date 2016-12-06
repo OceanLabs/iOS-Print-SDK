@@ -218,7 +218,7 @@ CGFloat innerMargin = 3;
     OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
     
     OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section]];
-    if (!imageView.image){
+    if (!imageView.image || [printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
         return nil;
     }
     
