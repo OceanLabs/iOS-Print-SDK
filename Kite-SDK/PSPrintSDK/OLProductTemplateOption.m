@@ -31,6 +31,7 @@
 #import "OLImageDownloader.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLProductTemplateCollection.h"
+#import "UIColor+OLHexString.h"
 
 @interface OLProductTemplateOption ()
 
@@ -61,8 +62,9 @@
             if (dict[@"icon"]){
                 choice.iconURL = [NSURL URLWithString:dict[@"icon"]];
             }
-            if (dict[@"color"]){
-//                choice.color =
+            if (dict[@"color_hex_code"] && ![dict[@"color_hex_code"] isEqualToString:@""]){
+                choice.color = [UIColor colorWithHexString:dict[@"color_hex_code"]];
+                self.type = OLProductTemplateOptionTypeColor1;
             }
             if (dict[@"extraCost"]){
 //                choice.extraCost = 
@@ -72,9 +74,6 @@
             }
             if (dict[@"override_mask"] && ![dict[@"override_mask"] isEqual:[NSNull null]]){
                 choice.productBackground = [NSURL URLWithString:dict[@"override_mask"]];
-            }
-            if (dict[@"borderOverride"]){
-//                choice.borderOverride = UIEdgeInsetsMake(0, 0, 0, 0);
             }
             
             [choices addObject:choice];

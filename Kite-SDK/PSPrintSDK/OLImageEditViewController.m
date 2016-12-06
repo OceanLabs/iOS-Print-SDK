@@ -97,6 +97,7 @@ const NSInteger kOLEditTagCrop = 40;
 @property (weak, nonatomic) UIView *gestureView;
 
 @property (weak, nonatomic) OLProductTemplateOption *selectedOption;
+@property (weak, nonatomic) OLProductTemplateOptionChoice *selectedChoice;
 @property (strong, nonatomic) UITextField *borderTextField;
 @property (assign, nonatomic) BOOL animating;
 
@@ -1395,22 +1396,32 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"colorSelectionCell" forIndexPath:indexPath];
-        
         [cell setSelected:NO];
+        
+        UIColor *color;
+        if (self.selectedOption.choices[indexPath.item].color){
+            color = self.selectedOption.choices[indexPath.item].color;
+        }
+        else{
+            color = self.availableColors[indexPath.item];
+        }
         for (UITextField *textField in self.textFields){
             if ([textField isFirstResponder]){
-                [cell setSelected:[textField.textColor isEqual:self.availableColors[indexPath.item]]];
+                [cell setSelected:[textField.textColor isEqual:color]];
                 break;
             }
         }
         
-        [(OLColorSelectionCollectionViewCell *)cell setColor:self.availableColors[indexPath.item]];
+        [(OLColorSelectionCollectionViewCell *)cell setColor:color];
         
         if (collectionView.tag == kOLEditTagTextColors){
-            [cell setSelected:[self.activeTextField.textColor isEqual:self.availableColors[indexPath.item]]];
+            [cell setSelected:[self.activeTextField.textColor isEqual:color]];
         }
-        else if(collectionView.tag == OLProductTemplateOptionTypeColor1){
-            [cell setSelected:[self.edits.borderColor isEqual:self.availableColors[indexPath.item]]];
+        else if(collectionView.tag == OLProductTemplateOptionTypeColor1 && !self.selectedOption.choices[indexPath.item].productBackground){
+            [cell setSelected:[self.edits.borderColor isEqual:color]];
+        }
+        else{
+            [cell setSelected:self.selectedOption.choices[indexPath.item] == self.selectedChoice];
         }
         
         [cell setNeedsDisplay];
@@ -1528,10 +1539,6 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
-        return UIEdgeInsetsMake(0, 5, 0, 5);
-    }
-    
     CGFloat margin = MAX((collectionView.frame.size.width - ([self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]].width * [self collectionView:collectionView numberOfItemsInSection:section] + [self collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section] * ([self collectionView:collectionView numberOfItemsInSection:section]-1)))/2.0, 5);
     return UIEdgeInsetsMake(0, margin, 0, margin);
 }
@@ -1582,7 +1589,7 @@ const NSInteger kOLEditTagCrop = 40;
             [self onButtonAddTextClicked:nil];
         }
     }
-    else if (collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
+    else if ((collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3) && !self.selectedOption.choices[indexPath.item].productBackground){
         self.printContainerView.backgroundColor = self.availableColors[indexPath.item];
         self.edits.borderColor = self.availableColors[indexPath.item];
         self.ctaButton.enabled = YES;
@@ -1638,10 +1645,13 @@ const NSInteger kOLEditTagCrop = 40;
         OLProductTemplateOptionChoice *choice = self.selectedOption.choices[indexPath.item];
         self.product.selectedOptions[self.selectedOption.code] = choice.code;
         [self updateProductRepresentationForChoice:choice];
+        self.selectedChoice = self.selectedOption.choices[indexPath.item];
         
         for (NSIndexPath *visibleIndexPath in [collectionView indexPathsForVisibleItems]){
             if (![visibleIndexPath isEqual:indexPath]){
-                [collectionView cellForItemAtIndexPath:visibleIndexPath].selected = NO;
+                UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:visibleIndexPath];
+                cell.selected = NO;
+                [cell setNeedsDisplay];
             }
         }
     }
