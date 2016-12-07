@@ -23,7 +23,7 @@ deployment:
   beta_distribution:
     branch: beta
     commands:
-      - gym -w Kite-SDK/KitePrintSDK.xcworkspace -s Kite-CI-Deploy
+      - gym --use_legacy_build_api -w Kite-SDK/KitePrintSDK.xcworkspace -s Kite-CI-Deploy
       - ipa distribute:crashlytics
           --crashlytics_path Kite-SDK/Crashlytics.framework
           --api_token    "$CRASHLYTICS_API_KEY"
