@@ -65,6 +65,9 @@
 @interface OLImagePickerViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIPageViewControllerDelegate, UIPageViewControllerDataSource, OLUpsellViewControllerDelegate, OLCustomImagePickerViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *sourcesCollectionView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *nextButtonLeadingCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *nextButtonTrailingCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *nextButtonBottomCon;
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (assign, nonatomic) CGSize rotationSize;
@@ -169,49 +172,51 @@
     
     [view.superview addConstraints:con];
     
-    UIVisualEffect *blurEffect;
-    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-    
-    self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    view = self.visualEffectView;
-    [self.sourcesCollectionView.superview addSubview:view];
-    [self.sourcesCollectionView.superview sendSubviewToBack:view];
-    
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    views = NSDictionaryOfVariableBindings(view);
-    con = [[NSMutableArray alloc] init];
-    
-    visuals = @[@"H:|-0-[view]-0-|",
-                         @"V:|-0-[view]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    if (self.sourcesCollectionView){
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+        
+        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        view = self.visualEffectView;
+        [self.sourcesCollectionView.superview addSubview:view];
+        [self.sourcesCollectionView.superview sendSubviewToBack:view];
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        views = NSDictionaryOfVariableBindings(view);
+        con = [[NSMutableArray alloc] init];
+        
+        visuals = @[@"H:|-0-[view]-0-|",
+                    @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+        self.selectedProviderIndicator = [[UIView alloc] init];
+        self.selectedProviderIndicator.backgroundColor = self.sourcesCollectionView.tintColor;
+        
+        [self.visualEffectView addSubview:self.selectedProviderIndicator];
+        view = self.selectedProviderIndicator;
+        
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        views = NSDictionaryOfVariableBindings(view);
+        con = [[NSMutableArray alloc] init];
+        
+        CGFloat width = [self collectionView:self.sourcesCollectionView layout:self.sourcesCollectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width;
+        
+        visuals = @[[NSString stringWithFormat:@"H:|-0-[view(%f)]", width],
+                    @"V:[view(1.5)]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
     }
-    
-    [view.superview addConstraints:con];
-    
-    self.selectedProviderIndicator = [[UIView alloc] init];
-    self.selectedProviderIndicator.backgroundColor = self.sourcesCollectionView.tintColor;
-    
-    [self.visualEffectView addSubview:self.selectedProviderIndicator];
-    view = self.selectedProviderIndicator;
-    
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    views = NSDictionaryOfVariableBindings(view);
-    con = [[NSMutableArray alloc] init];
-    
-    CGFloat width = [self collectionView:self.sourcesCollectionView layout:self.sourcesCollectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width;
-    
-    visuals = @[[NSString stringWithFormat:@"H:|-0-[view(%f)]", width],
-                         @"V:[view(1.5)]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [view.superview addConstraints:con];
     
     if (self.maximumPhotos == 0 && self.minimumPhotos == 0){
         if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
@@ -412,6 +417,59 @@
     [self setupInstagramProvider];
     [self setupCustomProviders];
     [self setupQRCodeProvider];
+    
+    if ([self isExclusiveCustomViewControllerProvider]){
+        [self.sourcesCollectionView.superview removeFromSuperview];
+        self.sourcesCollectionView = nil;
+        self.nextButtonLeadingCon.constant = self.nextButton.frame.size.height + 10;
+        self.nextButtonTrailingCon.constant = 5;
+        self.nextButtonBottomCon.constant = 5;
+        
+        UIColor *color;
+        if ([OLKiteABTesting sharedInstance].lightThemeColor2){
+            color = [OLKiteABTesting sharedInstance].lightThemeColor2;
+        }
+        else{
+            color = [UIColor colorWithRed:0.302 green:0.643 blue:0.682 alpha:1.000];
+        }
+        
+        UIButton *addButton = [[UIButton alloc] init];
+        [addButton addTarget:self action:@selector(onButtonAddClicked) forControlEvents:UIControlEventTouchUpInside];
+        [addButton setBackgroundColor:color];
+        [self.nextButton.superview addSubview:addButton];
+        addButton.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(addButton);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[[NSString stringWithFormat:@"H:|-5-[addButton(%f)]", self.nextButton.frame.size.height],
+                             [NSString stringWithFormat:@"V:[addButton(%f)]-5-|", self.nextButton.frame.size.height]];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [addButton.superview addConstraints:con];
+        
+        UILabel *label = [[UILabel alloc] init];
+        label.text = @"+";
+        label.textColor = [UIColor whiteColor];
+        label.font = [UIFont systemFontOfSize:36];
+        [addButton addSubview:label];
+        label.translatesAutoresizingMaskIntoConstraints = NO;
+        [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+        [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:-2]];
+
+
+    }
+}
+
+- (void)onButtonAddClicked{
+    [self presentExternalViewControllerForProvider:self.providers.firstObject];
+}
+
+- (BOOL)isExclusiveCustomViewControllerProvider{
+    return self.providers.count == 1 && self.providers.firstObject.providerType == OLImagePickerProviderTypeViewController;
 }
 
 - (void)updateTopConForVc:(UIViewController *)vc{
