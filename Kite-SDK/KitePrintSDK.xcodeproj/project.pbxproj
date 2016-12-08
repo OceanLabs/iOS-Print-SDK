@@ -798,6 +798,15 @@
 		2EF718331D589DB60036502D /* OLInfoBanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInfoBanner.m; sourceTree = "<group>"; };
 		2EF8BA9D1B99E9E4009BC73B /* OLImageCachingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageCachingManager.h; sourceTree = "<group>"; };
 		2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageCachingManager.m; sourceTree = "<group>"; };
+		2EFC87721DF98AC300DF4175 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
+		2EFC87731DF98AC300DF4175 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
+		2EFC87741DF98AC300DF4175 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
+		2EFC87751DF98AD100DF4175 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
+		2EFC87761DF98AD100DF4175 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
+		2EFC87771DF98AD100DF4175 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
+		2EFC87781DF98AF400DF4175 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
+		2EFC87791DF98AF400DF4175 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
+		2EFC877A1DF98AF400DF4175 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		321E56D8BE2D006816AACDED /* Pods-KiteSDK-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+QueryingExtras.h"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.h"; sourceTree = "<group>"; };
 		3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+QueryingExtras.m"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.m"; sourceTree = "<group>"; };
@@ -2069,6 +2078,9 @@
 			knownRegions = (
 				Base,
 				da,
+				fr,
+				de,
+				es,
 			);
 			mainGroup = CD73BF5F186215790009DE03;
 			productRefGroup = CD73BF69186215790009DE03 /* Products */;
@@ -2527,6 +2539,9 @@
 			children = (
 				2E434AE71D36675700D1BD06 /* Base */,
 				2E53A8C51DA2A263003C8C30 /* da */,
+				2EFC87721DF98AC300DF4175 /* fr */,
+				2EFC87751DF98AD100DF4175 /* de */,
+				2EFC87781DF98AF400DF4175 /* es */,
 			);
 			name = OLEditingToolsView.xib;
 			sourceTree = "<group>";
@@ -2536,6 +2551,9 @@
 			children = (
 				2E6E605E1C50384C00829BB7 /* Base */,
 				2E53A8C11DA2824A003C8C30 /* da */,
+				2EFC87741DF98AC300DF4175 /* fr */,
+				2EFC87771DF98AD100DF4175 /* de */,
+				2EFC877A1DF98AF400DF4175 /* es */,
 			);
 			name = KitePrintSDK.strings;
 			sourceTree = "<group>";
@@ -2545,6 +2563,9 @@
 			children = (
 				2E6E60671C5038AD00829BB7 /* Base */,
 				2E53A8C01DA28249003C8C30 /* da */,
+				2EFC87731DF98AC300DF4175 /* fr */,
+				2EFC87761DF98AD100DF4175 /* de */,
+				2EFC87791DF98AF400DF4175 /* es */,
 			);
 			name = OLKiteStoryboard.storyboard;
 			sourceTree = "<group>";
