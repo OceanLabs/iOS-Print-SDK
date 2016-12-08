@@ -29,6 +29,7 @@
 
 #import "OLURLShortener.h"
 #import "OLConstants.h"
+#import "OLKiteUtils.h"
 
 @implementation OLURLShortener
 
@@ -52,7 +53,7 @@
                     handler([dictionary objectForKey:@"shorturl"], nil);
                 }
                 else{
-                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Failed to get upload URL. Try again later.", @"")}];
+                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedStringFromTableInBundle(@"Failed to get upload URL. Try again later.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}];
                     handler(nil, error);
                 }
             }

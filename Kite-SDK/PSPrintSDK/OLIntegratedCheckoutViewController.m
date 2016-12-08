@@ -120,23 +120,23 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     NSString *errorMessage;
     if ([self.textFieldFirstName.text isEqualToString:@""] || [self.textFieldLastName.text isEqualToString:@""]){
         flag = NO;
-        errorMessage = NSLocalizedString(@"Please enter your first and last name.", @"");
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please enter your first and last name.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     else if ([self.textFieldLine1.text isEqualToString:@""]){
         flag = NO;
-        errorMessage = NSLocalizedString(@"Please fill in Line 1 of the address.", @"");
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in Line 1 of the address.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     else if ([self.textFieldPostCode.text isEqualToString:@""]){
         flag = NO;
-        errorMessage = NSLocalizedString(@"Please fill in your postal code", @"");
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your postal code", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     
     if (!flag){
         UIAlertController *alert= [UIAlertController
-                                   alertControllerWithTitle:NSLocalizedString(@"", @"")
+                                   alertControllerWithTitle:nil
                                    message:errorMessage
                                    preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction * action){}];
         
         [alert addAction:ok];
@@ -402,10 +402,10 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         UITextField *tf = (UITextField *) [cell viewWithTag:kTagTextField];
         NSString *s;
         if (indexPath.section == kSectionEmail){
-            s = NSLocalizedString(@"Email", @"");
+            s = NSLocalizedStringFromTableInBundle(@"Email", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         }
         else if (indexPath.section == kSectionPhone){
-            s = NSLocalizedString(@"Phone", @"");
+            s = NSLocalizedStringFromTableInBundle(@"Phone", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         }
         else{
             s = @"";

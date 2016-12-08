@@ -51,7 +51,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     [self addInstagramLoginObservers];
-    self.title = NSLocalizedString(@"Log In", @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Log In", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     
     self.webView = [[UIWebView alloc] init];
     self.webView.backgroundColor = [UIColor whiteColor];
@@ -86,7 +86,7 @@
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.activityIndicator attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
     
     
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
     self.navigationItem.leftBarButtonItem = cancelButton;
 }
 
@@ -132,7 +132,7 @@
 #pragma mark - Instagram Oauth notification callbacks
 
 - (void)onInstagramOAuthAuthenticateFail:(NSNotification *)notification {
-    NSString *localizedErrorMessage = NSLocalizedString(@"Failed to log in to Instagram. Please check your internet connectivity and try again", @"");
+    NSString *localizedErrorMessage = NSLocalizedStringFromTableInBundle(@"Failed to log in to Instagram. Please check your internet connectivity and try again", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:localizedErrorMessage preferredStyle:UIAlertControllerStyleAlert];
     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
         [self dismissViewControllerAnimated:YES completion:NULL];
@@ -162,7 +162,7 @@
             NSString *errorDescription = [self url:request.URL queryValueForName:@"error_description"];
             
             if ([errorCode isEqualToString:@"access_denied"] && [errorReason isEqualToString:@"user_denied"]) {
-                errorDescription = NSLocalizedString(@"You need to authorize the app to access your Instagram account if you want to import photos from there.", @"");
+                errorDescription = NSLocalizedStringFromTableInBundle(@"You need to authorize the app to access your Instagram account if you want to import photos from there.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             } else {
                 errorDescription = [errorDescription stringByReplacingOccurrencesOfString:@"+" withString:@" "];
                 errorDescription = [errorDescription stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

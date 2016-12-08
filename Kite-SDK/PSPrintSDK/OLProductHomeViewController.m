@@ -109,10 +109,10 @@
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
         if ([self isPushed]){
-            self.parentViewController.title = NSLocalizedString(@"Print Shop", @"");
+            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Print Shop", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         }
         else{
-            self.title = NSLocalizedString(@"Print Shop", @"");
+            self.title = NSLocalizedStringFromTableInBundle(@"Print Shop", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         }
     }
     

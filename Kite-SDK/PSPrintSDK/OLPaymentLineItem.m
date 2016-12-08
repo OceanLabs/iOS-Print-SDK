@@ -28,6 +28,7 @@
 //
 
 #import "OLPaymentLineItem.h"
+#import "OLKiteUtils.h"
 
 static NSString *const kKeyLineItemDescription = @"ly.kite.iossdk.kKeyLineItemDescription";
 static NSString *const kKeyLineItemCosts = @"ly.kite.iossdk.kKeyLineItemCosts";
@@ -61,7 +62,7 @@ static NSString *const kKeyLineItemShippingCosts = @"ly.kite.iossdk.kKeyLineItem
 - (NSString *)costStringInCurrency:(NSString *)currencyCode {
     NSDecimalNumber *cost = [self costInCurrency:currencyCode];
     if ([cost isEqualToNumber:@0]){
-        return NSLocalizedString(@"Free", @"");
+        return NSLocalizedStringFromTableInBundle(@"Free", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else {
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
         [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];

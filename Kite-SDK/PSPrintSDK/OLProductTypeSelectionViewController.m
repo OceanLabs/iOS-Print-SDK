@@ -130,10 +130,10 @@
     [super viewDidLoad];
     
     if ([self isPushed]){
-        self.parentViewController.title = NSLocalizedString(self.templateClass, @"");
+        self.parentViewController.title = self.templateClass;
     }
     else{
-        self.title = NSLocalizedString(self.templateClass, @"");
+        self.title = self.templateClass;
     }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
@@ -333,10 +333,10 @@
     
     if (product.productTemplate.templateUI == OLTemplateUIPoster && !self.subtypeSelection){
         if (product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
-            textView.text = NSLocalizedString(@"Single Photo Poster", @"");
+            textView.text = NSLocalizedStringFromTableInBundle(@"Single Photo Poster", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         }
         else{
-            textView.text = [NSString stringWithFormat:@"%ldx%ld Collage", (long)product.productTemplate.gridCountX, (long)product.productTemplate.gridCountY];
+            textView.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%ldx%ld Collage", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)product.productTemplate.gridCountX, (long)product.productTemplate.gridCountY];
         }
     }
     else if (inSizeCollectionFlag){

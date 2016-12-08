@@ -149,7 +149,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 - (void)setupCtaButton{
     self.nextButton = [[UIButton alloc] init];
     [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
-    [self.nextButton setTitle:NSLocalizedString(@"Add to Basket", @"") forState:UIControlStateNormal];
+    [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.nextButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
@@ -167,7 +167,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            [self.nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+            [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
         }
         
         if(!self.editingPrintJob){
@@ -179,7 +179,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-            [self.nextButton setTitle:NSLocalizedString(@"Save", @"") forState:UIControlStateNormal];
+            [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
             [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
             [self.nextButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
         }
@@ -259,7 +259,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) ([OLUserSession currentSession].userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
     }
     else{
-        self.title = NSLocalizedString(@"Review", @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
 }
 
@@ -503,7 +503,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
             [self presentViewController:ac animated:YES completion:NULL];
         }
         else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Remove?", @"") message:NSLocalizedString(@"Do you want to remove this photo?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Yes, remove it", @"") otherButtonTitles:NSLocalizedString(@"No, keep it", @""), nil];
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Remove?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Do you want to remove this photo?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Yes, remove it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:NSLocalizedStringFromTableInBundle(@"No, keep it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), nil];
             self.indexOfPhotoToDelete = indexPath.item;
             av.tag = kTagAlertViewDeletePhoto;
             [av show];

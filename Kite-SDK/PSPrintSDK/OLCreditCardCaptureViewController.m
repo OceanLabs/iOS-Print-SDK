@@ -155,7 +155,7 @@ UITableViewDataSource, UITextFieldDelegate>
             if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox) {
                 self.title = NSLocalizedStringFromTableInBundle(@"Pay with Credit Card (TEST)", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             } else {
-                self.title = NSLocalizedStringFromTableInBundle(NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+                self.title = NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
             }
         }
         else{

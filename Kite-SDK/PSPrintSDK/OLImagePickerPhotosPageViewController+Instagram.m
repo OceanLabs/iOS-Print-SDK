@@ -46,7 +46,7 @@
     self.nextMediaRequest = [[OLInstagramMediaRequest alloc] init];
     self.overflowMedia = @[];
     [self.collectionView reloadData];
-    [self.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedString(@"All Photos", @"")]];
+    [self.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedStringFromTableInBundle(@"All Photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")]];
     [self loadNextInstagramPage];
 }
 

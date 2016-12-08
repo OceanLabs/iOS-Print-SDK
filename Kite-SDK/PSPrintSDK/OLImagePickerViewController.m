@@ -280,7 +280,7 @@
     PHFetchResult *fetchedPhotos = [PHAsset fetchAssetsInAssetCollection:userLibraryCollection options:options];
     OLImagePickerProviderCollection *userLibraryProviderCollection = [[OLImagePickerProviderCollection alloc] initWithPHFetchResult:fetchedPhotos name:userLibraryCollection.localizedTitle];
     
-    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[userLibraryProviderCollection] name:NSLocalizedString(@"Photo Library", @"") icon:[UIImage imageNamedInKiteBundle:@"import_gallery"]];
+    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[userLibraryProviderCollection] name:NSLocalizedStringFromTableInBundle(@"All Photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"import_gallery"]];
     provider.providerType = OLImagePickerProviderTypePhotoLibrary;
     [(NSMutableArray *)self.providers insertObject:provider atIndex:index];
     
@@ -353,7 +353,7 @@
         return;
     }
     
-    OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[OLUserSession currentSession].appAssets name:NSLocalizedString(@"All Photos", @"")];
+    OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[OLUserSession currentSession].appAssets name:NSLocalizedStringFromTableInBundle(@"All Photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     
     OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:NSLocalizedStringFromTableInBundle(@"Recents", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"bookmark"]];
     provider.providerType = OLImagePickerProviderTypeRecents;
@@ -524,7 +524,7 @@
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
     if (self.selectedAssets.count == 0) {
-        self.title = NSLocalizedString(@"Choose Photos", @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Choose Photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else {
         if (self.product.quantityToFulfillOrder > 1){
             NSUInteger numOrders = 1 + (MAX(0, self.selectedAssets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);

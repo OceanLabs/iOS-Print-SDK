@@ -229,13 +229,13 @@ static const NSUInteger kSectionErrorRetry = 2;
             nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:nvc animated:YES completion:NULL];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
         [self presentViewController:ac animated:YES completion:NULL];
         return;
     }
     else if (self.printOrder.submitStatus == OLPrintOrderSubmitStatusAccepted || self.printOrder.submitStatus == OLPrintOrderSubmitStatusReceived){
         [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
-        [OLProgressHUD showWithStatus:@"Processing"];
+        [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         [self.printOrder validateOrderSubmissionWithCompletionHandler:^(NSString *orderReceipt, NSError *error){
             [OLProgressHUD dismiss];
             if (error){

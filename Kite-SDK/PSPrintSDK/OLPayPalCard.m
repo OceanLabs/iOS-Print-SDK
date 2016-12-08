@@ -148,7 +148,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                 if ([accessToken isKindOfClass:[NSString class]] && !JSONError) {
                     handler(accessToken, nil);
                 } else {
-                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to validate card details, please try again.", @"")}];
+                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate card details, please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}];
                     handler(nil, error);
                 }
             }

@@ -29,6 +29,7 @@
 
 #import "OLStripeCard.h"
 #import "NSString+Formatting.h"
+#import "OLKiteUtils.h"
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.Stripe.kKeyNumberMasked";
 static NSString *const kKeyCustomerId = @"co.oceanlabs.Stripe.kKeyCustomerId";
@@ -130,7 +131,7 @@ static OLStripeCard *lastUsedCard;
                 NSError *error;
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
                 if (error){
-                    handler(nil, [NSError errorWithDomain:@"com.stripe" code:400 userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error trying to validate the card. Please try again later.", @"")}]);
+                    handler(nil, [NSError errorWithDomain:@"com.stripe" code:400 userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error trying to validate the card. Please try again later.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}]);
                 }
                 else if (json[@"error"]){
                     handler(nil, [NSError errorWithDomain:@"com.stripe" code:400 userInfo:@{NSLocalizedDescriptionKey : json[@"error"][@"message"]}]);

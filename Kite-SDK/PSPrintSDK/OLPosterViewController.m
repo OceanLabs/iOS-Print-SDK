@@ -98,7 +98,7 @@ CGFloat posterMargin = 2;
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
-    [self setTitle:NSLocalizedString(@"Edit Poster", @"")];
+    [self setTitle:NSLocalizedStringFromTableInBundle(@"Edit Poster", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     
     self.numberOfColumns = self.product.productTemplate.gridCountX;
     self.numberOfRows = self.product.productTemplate.gridCountY;

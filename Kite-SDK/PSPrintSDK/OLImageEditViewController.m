@@ -112,7 +112,7 @@ const NSInteger kOLEditTagCrop = 40;
                 [fonts addObject:fontName];
             }
         }
-        [fonts addObject:NSLocalizedString(@"Default", @"")];
+        [fonts addObject:NSLocalizedStringFromTableInBundle(@"Default", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         _fonts = [fonts sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     }
     return _fonts;
@@ -1288,11 +1288,11 @@ const NSInteger kOLEditTagCrop = 40;
         
         if (indexPath.item == 0){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Aa"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedString(@"Fonts", @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Fonts", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         }
         else if (indexPath.item == 1){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"paint-bucket-icon"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedString(@"Text Colour", @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Text Colour", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         }
     }
     else if (collectionView.tag == kOLEditTagImageTools){

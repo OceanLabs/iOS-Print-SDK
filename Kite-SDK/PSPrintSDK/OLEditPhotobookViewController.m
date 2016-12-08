@@ -124,7 +124,7 @@ static const NSInteger kSectionPages = 2;
 - (void)setupCtaButton{
     self.nextButton = [[UIButton alloc] init];
     [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
-    [self.nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+    [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.nextButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
@@ -465,9 +465,9 @@ static const NSInteger kSectionPages = 2;
 - (void)onButtonNextClicked{
     if (self.photobookPhotos.count == 0){
         
-        NSString *alertTitle = NSLocalizedString(@"No photos", @"");
-        NSString *alertMessage = NSLocalizedString(@"Please add at least one photo", @"");
-        NSString *actionTitle = NSLocalizedString(@"OK", @"");
+        NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"No photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Please add at least one photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"Please add at least one photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:NULL]];
         [self presentViewController:ac animated:YES completion:NULL];
@@ -475,14 +475,14 @@ static const NSInteger kSectionPages = 2;
     }
     
     if (self.photobookPhotos.count < self.product.quantityToFulfillOrder){
-        NSString *alertTitle = NSLocalizedString(@"You can add more photos", @"");
-        NSString *alertMessage = NSLocalizedString(@"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos", @"");
-        NSString *actionTitle = NSLocalizedString(@"Yes, proceed", @"");
+        NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"You can add more photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"Yes, proceed", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
             [self proceedToBookReview];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, not yet", @"") style:UIAlertActionStyleCancel handler:NULL]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No, not yet", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
         [self presentViewController:ac animated:YES completion:NULL];
     }
     else{
@@ -687,15 +687,15 @@ static const NSInteger kSectionPages = 2;
     }
     [view becomeFirstResponder];
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
+    UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Remove", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") action:@selector(deletePage)];
     [items addObject:deleteItem];
     
     if (![OLUserSession currentSession].kiteVc.disableEditingTools){
-        UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Edit", @"") action:@selector(editImage)];
+        UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") action:@selector(editImage)];
         [items addObject:cropImageItem];
     }
     
-    UIMenuItem *replaceImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Replace Photo", @"") action:@selector(replaceImage)];
+    UIMenuItem *replaceImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Replace Photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") action:@selector(replaceImage)];
     [items addObject:replaceImageItem];
     
     
@@ -715,7 +715,7 @@ static const NSInteger kSectionPages = 2;
     else if (indexPath.section == kSectionHelp){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"helpCell" forIndexPath:indexPath];
         UILabel *label = (UILabel *)[cell viewWithTag:10];
-        label.text = NSLocalizedString(@"Tap to swap pages. Hold for more options.", @"");
+        label.text = NSLocalizedStringFromTableInBundle(@"Tap to swap pages. Hold for more options.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
         [[cell viewWithTag:999] removeFromSuperview];
         return cell;
     }

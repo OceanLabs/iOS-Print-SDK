@@ -34,6 +34,7 @@
 #import "UIImage+OLUtils.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
+#import "OLKiteUtils.h"
 
 @interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
 
@@ -181,7 +182,7 @@
     [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.maskImageURL priority:1 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (error) {
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"")  message:NSLocalizedString(@"Failed to download phone case mask. Please check your internet connectivity and try again", @"")  delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") otherButtonTitles:@"Retry", nil];
+            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  message:NSLocalizedStringFromTableInBundle(@"Failed to download phone case mask. Please check your internet connectivity and try again", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), nil];
             av.tag = 99;
             [av show];
         } else {
