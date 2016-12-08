@@ -27,23 +27,22 @@
 //  THE SOFTWARE.
 //
 
-#import "OLImageEditViewController.h"
-#import "OLPhotoTextField.h"
-#import "OLColorSelectionCollectionViewCell.h"
-#import "OLKiteUtils.h"
-#import "UIImage+ImageNamedInKiteBundle.h"
-#import "UIView+RoundRect.h"
-#import "OLAsset+Private.h"
-#import "OLUserSession.h"
-#import "OLImagePickerViewController.h"
-#import "OLNavigationController.h"
-#import "OLProductTemplateOption.h"
-#import "UIImage+ImageNamedInKiteBundle.h"
-#import "OLKiteABTesting.h"
-#import "OLCustomViewControllerPhotoProvider.h"
 #import "NSObject+Utils.h"
+#import "OLAsset+Private.h"
+#import "OLColorSelectionCollectionViewCell.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "OLImageEditViewController.h"
+#import "OLImagePickerViewController.h"
+#import "OLKiteABTesting.h"
+#import "OLKiteUtils.h"
+#import "OLNavigationController.h"
+#import "OLPhotoTextField.h"
 #import "OLProductOverviewViewController.h"
+#import "OLProductTemplateOption.h"
+#import "OLUserSession.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImageView+FadeIn.h"
+#import "UIView+RoundRect.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
