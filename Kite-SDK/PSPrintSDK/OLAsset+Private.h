@@ -28,14 +28,18 @@
 //
 
 #import "OLAsset.h"
+#import "OLPhotoEdits.h"
+#import "OLPlaceholderAsset.h"
 
 typedef enum {
-    kOLAssetTypeALAsset,
+    kOLAssetTypeCorrupt,
     kOLAssetTypePHAsset,
     kOLAssetTypeRemoteImageURL,
     kOLAssetTypeImageFilePath,
     kOLAssetTypeImageData,
-    kOLAssetTypeDataSource
+    kOLAssetTypeDataSource,
+//    kOLAssetTypeFacebookPhoto,
+//    kOLAssetTypeInstagramPhoto
 } OLAssetType;
 
 @interface OLAsset (FriendMethods)
@@ -45,8 +49,17 @@ typedef enum {
 - (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL;
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler;
 - (void)dataWithCompletionHandler:(GetDataHandler)handler;
+- (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler;
+- (void)unloadImage;
+- (BOOL)isEdited;
+- (BOOL)isEqual:(id)object ignoreEdits:(BOOL)ignoreEdits;
 @property (nonatomic, readonly) OLAssetType assetType;
 @property (nonatomic, strong) NSString *imageFilePath;
-@property (nonatomic, strong) NSURL *imageURL; // if this is set no image data is going to be uploaded, rather we will just pass the url to the server and it can fetch the image when printing
+@property (nonatomic, strong) NSURL *imageURL;
+@property (assign, nonatomic) NSInteger extraCopies;
+@property (strong, nonatomic) OLPhotoEdits *edits;
+@property (strong, nonatomic) NSString *uuid;
+@property (strong, nonatomic) id metadata;
+@property (strong, nonatomic) PHAsset *phAsset;
 @end
 

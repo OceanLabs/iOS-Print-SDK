@@ -28,12 +28,14 @@
 //
 
 #import "OLProductTemplateOption.h"
+#import "OLImageDownloader.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLProductTemplateCollection.h"
 
 @interface OLProductTemplateOption ()
 
-@property (strong, nonatomic) NSArray<NSDictionary *> *options;
-@property (strong, nonatomic, readwrite) NSArray <NSString *> *selections;
-@property (strong, nonatomic) NSDictionary <NSString *, NSString *> *nameForSelectionCode;
+@property (strong, nonatomic, readwrite) NSArray <OLProductTemplateOptionChoice *> *choices;
+@property (strong, nonatomic) NSURL *iconURL;
 
 @end
 
@@ -41,24 +43,92 @@
 
 - (instancetype)initWithDictionary:(NSDictionary *)options{
     if (self = [super init]){
-        _options = options[@"options"];
         _code = options[@"code"];
         _name = options[@"name"];
         
-        NSMutableArray *sel = [[NSMutableArray alloc] init];
-        NSMutableDictionary *nameForCode = [[NSMutableDictionary alloc] init];
-        for (NSDictionary *dict in _options){
-            [sel addObject:dict[@"code"]];
-            nameForCode[dict[@"code"]] = dict[@"name"];
+        NSMutableArray *choices = [[NSMutableArray alloc] init];
+        if (![options[@"options"] isKindOfClass:[NSArray class]]){
+            return nil;
         }
-        _nameForSelectionCode = nameForCode;
-        _selections = sel;
+        for (NSDictionary *dict in options[@"options"]){
+            if (![dict isKindOfClass:[NSDictionary class]]){
+                continue;
+            }
+            OLProductTemplateOptionChoice *choice = [[OLProductTemplateOptionChoice alloc] init];
+            choice.option = self;
+            choice.code = dict[@"code"];
+            choice.name = dict[@"name"];
+            if (dict[@"icon"]){
+                choice.iconURL = [NSURL URLWithString:dict[@"icon"]];
+            }
+            if (dict[@"color"]){
+//                choice.color =
+            }
+            if (dict[@"extraCost"]){
+//                choice.extraCost = 
+            }
+            if (dict[@"productOverlay"]){
+                choice.productOverlay = [NSURL URLWithString:dict[@"productOverlay"]];
+            }
+            if (dict[@"borderOverride"]){
+//                choice.borderOverride = UIEdgeInsetsMake(0, 0, 0, 0);
+            }
+            
+            [choices addObject:choice];
+        }
+        _choices = choices;
     }
     return self;
 }
 
-- (NSString *)nameForSelection:(NSString *)selection{
-    return self.nameForSelectionCode[selection];
+- (instancetype)initWithTemplateCollection:(OLProductTemplateCollection *)collection{
+    if (self = [super init]){
+        self.name = collection.name;
+        self.iconURL = collection.icon;
+        self.type = OLProductTemplateOptionTypeTemplateCollection;
+        self.code = collection.code;
+        NSMutableArray *choices = [[NSMutableArray alloc] init];
+        for (NSDictionary *template in collection.templates){
+            OLProductTemplateOptionChoice *choice = [[OLProductTemplateOptionChoice alloc] init];
+            choice.name = template[@"display_label"];
+            choice.code = template[@"template_id"];
+            
+            [choices addObject:choice];
+        }
+        self.choices = choices;
+    }
+    
+    return self;
+}
+
+- (void)iconWithCompletionHandler:(void(^)(UIImage *icon))handler{
+    handler(nil);
+    if (self.iconURL){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.iconURL withCompletionHandler:^(UIImage *image, NSError *error){
+            if (error || !image){
+                handler([self fallbackIcon]);
+            }
+            else{
+                handler(image);
+            }
+        }];
+    }
+    else{
+        handler([self fallbackIcon]);
+    }
+}
+
+- (UIImage *)fallbackIcon{
+    if (self.iconImageName){
+        return [UIImage imageNamedInKiteBundle:self.iconImageName];
+    }
+    else{ //Match known options with embedded assets
+        if ([self.code isEqualToString:@"case_style"] || [self.code isEqualToString:@"Phone Cases"]){
+            return [UIImage imageNamedInKiteBundle:@"case-options"];
+        }
+    }
+    
+    return nil;
 }
 
 @end

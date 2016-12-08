@@ -28,6 +28,13 @@
 //
 
 #import "OLButtonCollectionViewCell.h"
+#import "UIView+RoundRect.h"
+
+@interface OLButtonCollectionViewCell ()
+
+@property (strong, nonatomic) UIView *borderView;
+
+@end
 
 @implementation OLButtonCollectionViewCell
 
@@ -51,7 +58,46 @@
     }
     
     [button.superview addConstraints:con];
+}
+
+- (void)setSelected:(BOOL)selected{
+    [super setSelected:selected];
     
+    if (!self.colorForSelection){
+        return;
+    }
+    
+    if (self.borderView){
+        [self.borderView removeFromSuperview];
+    }
+    self.borderView = [[UIView alloc] init];
+    self.borderView.userInteractionEnabled = NO;
+    [self.borderView makeRoundRectWithRadius:2];
+    [self addSubview:self.borderView];
+    [self sendSubviewToBack:self.borderView];
+    
+    UIView *view = self.borderView;
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                self.extendedSelectionBox ? @"V:|-(-8)-[view]-0-|" : @"V:|-(-5)-[view]-(-5)-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [view.superview addConstraints:con];
+    
+    if (selected){
+        self.borderView.layer.borderWidth = 1.5;
+        self.borderView.layer.borderColor = self.colorForSelection.CGColor;
+    }
+    else{
+        self.borderView.layer.borderWidth = 0;
+    }
 }
 
 - (void)onButtonTouchUpInside{

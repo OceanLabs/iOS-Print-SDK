@@ -70,7 +70,7 @@ static NSString *const kKeyOfferBannerText = @"co.oceanlabs.pssdk.kKeyOfferBanne
 
 -(BOOL)prepopulatePhotos{
     OLProductTemplate *template = [OLProductTemplate templateWithId:self.offerTemplate];
-    if (template.templateUI == kOLTemplateUINonCustomizable || template.templateUI == kOLTemplateUINA){
+    if (template.templateUI == OLTemplateUINonCustomizable || template.templateUI == OLTemplateUINA){
         return YES;
     }
     

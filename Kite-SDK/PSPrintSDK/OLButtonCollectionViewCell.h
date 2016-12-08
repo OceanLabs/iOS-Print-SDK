@@ -31,4 +31,7 @@
 
 @interface OLButtonCollectionViewCell : UICollectionViewCell
 
+@property (strong, nonatomic) UIColor *colorForSelection;
+@property (assign, nonatomic) BOOL extendedSelectionBox;
+
 @end

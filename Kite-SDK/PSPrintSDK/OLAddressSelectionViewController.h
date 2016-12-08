@@ -29,10 +29,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class OLAddress;
 @class OLAddressSelectionViewController;
 
 @protocol OLAddressSelectionViewControllerDelegate <NSObject>
-- (void)addressSelectionController:(OLAddressSelectionViewController *)vc didFinishPickingAddresses:(NSArray/*<OLAddress>*/ *)addresses;
+- (void)addressSelectionController:(OLAddressSelectionViewController *)vc didFinishPickingAddresses:(NSArray<OLAddress *> *)addresses;
 - (void)addressSelectionControllerDidCancelPicking:(OLAddressSelectionViewController *)vc;
 @end
 
@@ -40,5 +41,5 @@
 @property (weak, nonatomic) id<OLAddressSelectionViewControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL allowMultipleSelection;
 @property (assign, nonatomic) BOOL allowAddressSearch;
-@property (strong, nonatomic) NSArray/*<OLAddress>*/ *selected;
+@property (strong, nonatomic) NSArray<OLAddress *> *selected;
 @end

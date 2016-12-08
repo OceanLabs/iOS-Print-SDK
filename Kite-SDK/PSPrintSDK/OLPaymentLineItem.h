@@ -34,7 +34,7 @@
 @property (readonly, copy) NSString *description;
 
 - (instancetype) initWithDescription:(NSString *)description
-                               costs:(NSDictionary/*<NSString, NSDecimalNumber>*/ *)costs;
+                               costs:(NSDictionary<NSString *, NSDecimalNumber *> *)costs;
 
 - (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode;
 - (NSString *)costStringInCurrency:(NSString *)currencyCode;

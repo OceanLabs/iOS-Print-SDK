@@ -37,18 +37,20 @@ typedef void (^TemplateSyncHandler)(NSError *_Nullable error);
 extern NSString *_Nonnull const kNotificationTemplateSyncComplete;
 extern NSString *_Nonnull const kNotificationKeyTemplateSyncError;
 
-typedef enum {
-    kOLTemplateUINA,
-    kOLTemplateUIRectagle,
-    kOLTemplateUICircle,
-    kOLTemplateUIFrame,
-    kOLTemplateUIPoster,
-    kOLTemplateUICase,
-    kOLTemplateUIPostcard,
-    kOLTemplateUIPhotobook,
-    kOLTemplateUINonCustomizable,
-    kOLTemplateUIApparel
-}OLTemplateUI;
+typedef NS_ENUM(NSInteger, OLTemplateUI) {
+    OLTemplateUINA,
+    OLTemplateUIRectagle,
+    OLTemplateUICircle,
+    OLTemplateUIFrame,
+    OLTemplateUIPoster,
+    OLTemplateUICase,
+    OLTemplateUIPostcard,
+    OLTemplateUIPhotobook,
+    OLTemplateUINonCustomizable,
+    OLTemplateUIApparel,
+    OLTemplateUIDoubleSided,
+    OLTemplateUICalendar,
+};
 
 @class OLProductTemplateSyncRequest;
 @class OLCountry;
@@ -84,9 +86,13 @@ typedef enum {
 @property (assign, nonatomic) NSInteger gridCountX;
 @property (assign, nonatomic) NSInteger gridCountY;
 @property (strong, nonatomic) NSArray <OLUpsellOffer *>*_Nullable upsellOffers;
-@property (strong, nonatomic, readonly) NSArray <OLProductTemplateOption *>*_Nullable options;
+@property (strong, nonatomic) NSArray <OLProductTemplateOption *>*_Nullable options;
 @property (strong, nonatomic) OLProductRepresentation *_Nullable productRepresentation;
 @property (assign, nonatomic) BOOL printInStore;
+@property (strong, nonatomic) NSString *_Nullable collectionId;
+@property (strong, nonatomic) NSString *_Nullable collectionName;
+@property (strong, nonatomic) NSArray <NSURL *>*_Nullable representationAssets;
+@property (strong, nonatomic) NSURL *_Nullable logo;
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *_Nullable)costPerSheetInCurrencyCode:(NSString *_Nonnull)currencyCode;

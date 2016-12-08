@@ -31,7 +31,6 @@
 
 @class OLPrintOrder;
 @protocol OLPrintJob;
-@protocol OLKiteDelegate;
 
 static NSString *const kOLAnalyticsEventName = @"Event Name";
 static NSString *const kOLAnalyticsProductCategory = @"Product Category";
@@ -111,6 +110,7 @@ static NSString *const kOLAnalyticsError = @"Error";
 + (void)trackBasketIconTappedWithNumberBadged:(NSInteger)number;
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
 + (void)trackQualityInfoScreenViewed;
++ (void)trackPrintAtHomeTapped;
 
 // upsell events
 + (void)trackUpsellShown:(BOOL)shown;
@@ -119,6 +119,6 @@ static NSString *const kOLAnalyticsError = @"Error";
 + (void)incrementLaunchSDKCount;
 + (void)setExtraInfo:(NSDictionary *)info;
 + (NSString *)userDistinctId;
-+ (void)setKiteDelegate:(id<OLKiteDelegate>)kd;
 
++ (NSDictionary *)extraInfo;
 @end

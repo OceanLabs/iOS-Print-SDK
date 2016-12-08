@@ -86,7 +86,7 @@
         bodyString = [self.offer.text stringByReplacingOccurrencesOfString:@"[[price]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
     }
     else if ([self.triggeredProduct.templateId isEqualToString:self.offer.offerTemplate]){
-        if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == kOLTemplateUIRectagle || self.product.productTemplate.templateUI == kOLTemplateUICircle)){
+        if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == OLTemplateUIRectagle || self.product.productTemplate.templateUI == OLTemplateUICircle)){
             self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add %ld %@!", @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
             bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create another pack for\nonly %@ %@", @""), self.product.unitCost, discountedString];
         }
@@ -96,7 +96,7 @@
         }
     }
     else{
-        if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == kOLTemplateUIRectagle || self.product.productTemplate.templateUI == kOLTemplateUICircle)){
+        if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == OLTemplateUIRectagle || self.product.productTemplate.templateUI == OLTemplateUICircle)){
             self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add %ld %@!", @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
             bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create a pack for\nonly %@ %@", @""), self.product.unitCost, discountedString];
         }

@@ -38,6 +38,7 @@
 #import "OLKiteABTesting.h"
 #import "OLKeyChainStore.h"
 #import "NSDictionary+RequestParameterData.h"
+#import "OLUserSession.h"
 
 static NSString *const kKeyUserDistinctId = @"ly.kite.sdk.kKeyUserDistinctId";
 static NSString *const kOLMixpanelToken = @"cdf64507670dd359c43aa8895fb87676";
@@ -52,8 +53,6 @@ static NSDictionary *extraInfo;
 static NSString *nonNilStr(NSString *str) {
     return str == nil ? @"" : str;
 }
-
-static __weak id<OLKiteDelegate> kiteDelegate;
 
 @interface OLProduct (Private)
 
@@ -211,7 +210,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 
 + (NSDictionary *)defaultDictionaryForEventName:(NSString *)eventName{
     NSString *environment = @"Live";
-    if ([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox) {
+    if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox) {
         environment = @"Sandbox";
     }
     NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
@@ -284,7 +283,7 @@ static __weak id<OLKiteDelegate> kiteDelegate;
                                    job:(id<OLPrintJob>)job
                             printOrder:(OLPrintOrder *)order
                              extraInfo:(NSDictionary *)info{
-    if ([kiteDelegate respondsToSelector:@selector(logKiteAnalyticsEventWithInfo:)]){
+    if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(logKiteAnalyticsEventWithInfo:)]){
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
         dict[kOLAnalyticsEventName] = nonNilStr(eventName);
         if (job){
@@ -307,11 +306,11 @@ static __weak id<OLKiteDelegate> kiteDelegate;
                 dict[kOLAnalyticsOrderCost] = [cost totalCostInCurrency:order.currencyCode];
                 dict[kOLAnalyticsOrderShippingCost] = [cost shippingCostInCurrency:order.currencyCode];
                 
-                [kiteDelegate logKiteAnalyticsEventWithInfo:dict];
+                [[OLUserSession currentSession].kiteVc.delegate logKiteAnalyticsEventWithInfo:dict];
             }];
         }
         else{
-            [kiteDelegate logKiteAnalyticsEventWithInfo:dict];
+            [[OLUserSession currentSession].kiteVc.delegate logKiteAnalyticsEventWithInfo:dict];
         }
     }
 }
@@ -341,6 +340,14 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     NSString *eventName = @"Quality Info Screen Viewed";
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [dict[@"properties"] setObject:[OLKiteABTesting sharedInstance].qualityBannerType forKey:@"Quality Banner Type"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+    
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:nil];
+}
+
++ (void)trackPrintAtHomeTapped{
+    NSString *eventName = @"Print At Home Tapped";
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
     
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:nil];
@@ -743,10 +750,6 @@ static __weak id<OLKiteDelegate> kiteDelegate;
     [OLAnalytics reportAnalyticsEventToDelegate:@"Basket Icon Tapped" job:nil printOrder:nil extraInfo:@{kOLAnalyticsNumberOnBadge : [NSNumber numberWithInteger:number]}];
 }
 
-+ (void)setKiteDelegate:(id<OLKiteDelegate>)kd{
-    kiteDelegate = kd;
-}
-
 + (NSMutableDictionary *)propertiesForPrintOrder:(OLPrintOrder *)printOrder {
     NSMutableDictionary *p = [[NSMutableDictionary alloc] init];
     
@@ -809,6 +812,10 @@ static __weak id<OLKiteDelegate> kiteDelegate;
 
 + (void)setExtraInfo:(NSDictionary *)info{
     extraInfo = info;
+}
+
++ (NSDictionary *)extraInfo{
+    return extraInfo;
 }
 
 @end

@@ -30,9 +30,9 @@
 #import "OLPosterViewController.h"
 #import "OLProduct.h"
 #import "OLAnalytics.h"
-#import "OLPrintPhoto.h"
+#import "OLAsset.h"
 #import "LXReorderableCollectionViewFlowLayout.h"
-#import "OLScrollCropViewController.h"
+#import "OLImageEditViewController.h"
 #import "OLKiteViewController.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
@@ -41,11 +41,10 @@
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
 #import "OLImagePreviewViewController.h"
-
-#ifdef OL_KITE_OFFER_ADOBE
-#import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
-#import <AdobeCreativeSDKCore/AdobeCreativeSDKCore.h>
-#endif
+#import "OLUserSession.h"
+#import "OLAsset+Private.h"
+#import "UIImageView+FadeIn.h"
+#import "OLImagePickerViewController.h"
 
 CGFloat posterMargin = 2;
 
@@ -55,38 +54,25 @@ CGFloat posterMargin = 2;
 
 @end
 
-@interface OLPosterViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, LXReorderableCollectionViewDataSource,
-#ifdef OL_KITE_OFFER_ADOBE
-AdobeUXImageEditorViewControllerDelegate,
-#endif
-OLScrollCropViewControllerDelegate>
+@interface OLPosterViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, LXReorderableCollectionViewDataSource, OLScrollCropViewControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray *posterPhotos;
 @property (assign, nonatomic) CGFloat numberOfRows;
 @property (assign, nonatomic) CGFloat numberOfColumns;
-@property (weak, nonatomic) OLPrintPhoto *editingPrintPhoto;
+@property (weak, nonatomic) OLAsset *editingPrintPhoto;
 @property (assign, nonatomic) CGSize rotationSize;
 
 @end
 
-@interface OLKitePrintSDK (Private)
-#ifdef OL_KITE_OFFER_ADOBE
-+ (NSString *)adobeCreativeSDKClientSecret;
-+ (NSString *)adobeCreativeSDKClientID;
-#endif
-@end
-
 @interface OLKiteViewController ()
-
-@property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)dismiss;
-
 @end
 
-@interface OLOrderReviewViewController (Private) <UICollectionViewDelegateFlowLayout>
+@interface OLPackProductViewController (Private) <UICollectionViewDelegateFlowLayout>
 
 - (BOOL) shouldGoToCheckout;
 - (void) doCheckout;
+- (void)replacePhoto:(id)sender;
 
 @end
 
@@ -97,12 +83,12 @@ OLScrollCropViewControllerDelegate>
     
     // ensure order is maxed out by adding duplicates as necessary
     self.posterPhotos = [[NSMutableArray alloc] init];
-    [self.posterPhotos addObjectsFromArray:self.userSelectedPhotos];
+    [self.posterPhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedPhotos];
     NSUInteger userSelectedAssetCount = [self.posterPhotos count];
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [self.posterPhotos addObject:self.userSelectedPhotos[i % userSelectedAssetCount]];
+        [self.posterPhotos addObject:[[OLUserSession currentSession].userSelectedPhotos[i % userSelectedAssetCount] copy]];
     }
 #ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
@@ -146,11 +132,6 @@ OLScrollCropViewControllerDelegate>
     return 1;
 }
 
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-    UICollectionReusableView * cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"reviewHeaderCell" forIndexPath:indexPath];
-    return cell;
-}
-
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (collectionView.tag == 10){
         int incompleteFrame = ([self.posterPhotos count] % self.product.quantityToFulfillOrder) != 0 ? 1 : 0;
@@ -164,12 +145,6 @@ OLScrollCropViewControllerDelegate>
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (collectionView.tag == 10){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"posterCell" forIndexPath:indexPath];
-        
-        //Workaround for iOS 7
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-            cell.contentView.frame = cell.bounds;
-            cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-        }
         
         UIView *view = cell.contentView;
         view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -196,13 +171,6 @@ OLScrollCropViewControllerDelegate>
     
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
     
-    
-    //Workaround for iOS 7
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8){
-        cell.contentView.frame = cell.bounds;
-        cell.contentView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-    }
-    
     UIView* view = collectionView.superview;
     while (![view isKindOfClass:[UICollectionViewCell class]]){
         view = view.superview;
@@ -216,13 +184,13 @@ OLScrollCropViewControllerDelegate>
     OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
     imageView.image = nil;
     imageView.userInteractionEnabled = YES;
-    [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onButtonEnhanceClicked:)]];
+    [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editPhoto:)]];
     
-    OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.posterPhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
+    OLAsset *printPhoto =(OLAsset*)[self.posterPhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
     
-    [printPhoto setImageSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] cropped:YES progress:^(float progress){
+    [printPhoto imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
         [imageView setProgress:progress];
-    } completionHandler:^(UIImage *image){
+    } completion:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
             imageView.image = image;
             [activity stopAnimating];
@@ -330,7 +298,7 @@ OLScrollCropViewControllerDelegate>
     [self doCheckout];
 }
 
-- (IBAction)onButtonEnhanceClicked:(id)sender {
+- (IBAction)editPhoto:(id)sender {
     UITapGestureRecognizer* gestureRecognizer = sender;
     NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:self.collectionView]];
     UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
@@ -348,23 +316,15 @@ OLScrollCropViewControllerDelegate>
     
     self.editingPrintPhoto = self.posterPhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
     
-#ifdef OL_KITE_OFFER_ADOBE
-    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:[OLKitePrintSDK adobeCreativeSDKClientID] clientSecret:[OLKitePrintSDK adobeCreativeSDKClientSecret] enableSignUp:true];
-    [AdobeImageEditorCustomization setCropToolPresets:@[@{kAdobeImageEditorCropPresetName:@"", kAdobeImageEditorCropPresetWidth:@1, kAdobeImageEditorCropPresetHeight:@1}]];
-    [AdobeImageEditorCustomization setCropToolCustomEnabled:NO];
-    [AdobeImageEditorCustomization setCropToolInvertEnabled:NO];
-    [AdobeImageEditorCustomization setCropToolOriginalEnabled:NO];
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        [self replacePhoto:nil];
+        return;
+    }
     
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-        AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:image];
-        [editorController setDelegate:self];
-        [self presentViewController:editorController animated:YES completion:nil];
-    }];
-#else
-    
-    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
+    cropVc.product = self.product;
     
     cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
     cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
@@ -373,16 +333,19 @@ OLScrollCropViewControllerDelegate>
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        //        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
     }];
-#endif
 }
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        return nil;
+    }
+    
     NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
     UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
     
@@ -393,7 +356,7 @@ OLScrollCropViewControllerDelegate>
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
     
-    OLPrintPhoto *printPhoto =(OLPrintPhoto*)[self.posterPhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
+    OLAsset *printPhoto =(OLAsset*)[self.posterPhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
     if (!imageView.image){
         return nil;
     }
@@ -402,10 +365,11 @@ OLScrollCropViewControllerDelegate>
     
     self.editingPrintPhoto = printPhoto;
     
-    OLImagePreviewViewController *previewVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePreviewViewController"];
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-        previewVc.image = image;
-    }];
+    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
+    __weak OLImagePreviewViewController *weakVc = previewVc;
+    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingPrintPhoto size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+        [weakVc.imageView setProgress:progress];
+    }completionHandler:NULL];
     previewVc.providesPresentationContextTransitionStyle = true;
     previewVc.definesPresentationContext = true;
     previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
@@ -413,32 +377,20 @@ OLScrollCropViewControllerDelegate>
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-#ifdef OL_KITE_OFFER_ADOBE
-    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:[OLKitePrintSDK adobeCreativeSDKClientID] clientSecret:[OLKitePrintSDK adobeCreativeSDKClientSecret] enableSignUp:true];
-    [AdobeImageEditorCustomization setCropToolPresets:@[@{kAdobeImageEditorCropPresetName:@"", kAdobeImageEditorCropPresetWidth:@1, kAdobeImageEditorCropPresetHeight:@1}]];
-    [AdobeImageEditorCustomization setCropToolCustomEnabled:NO];
-    [AdobeImageEditorCustomization setCropToolInvertEnabled:NO];
-    [AdobeImageEditorCustomization setCropToolOriginalEnabled:NO];
-    
-    [self.editingPrintPhoto getImageWithProgress:NULL completion:^(UIImage *image){
-        AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:image];
-        [editorController setDelegate:self];
-        [self presentViewController:editorController animated:YES completion:nil];
-    }];
-#else
-    OLScrollCropViewController *cropVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
-    cropVc.enableCircleMask = self.product.productTemplate.templateUI == kOLTemplateUICircle;
+    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
-    [self.editingPrintPhoto getImageWithProgress:^(float progress){
+    cropVc.product = self.product;
+    
+    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image){
+    }completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLKiteUtils kiteVcForViewController:self].modalPresentationStyle;
+        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:YES completion:NULL];        
     }];
-#endif
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
@@ -447,11 +399,11 @@ OLScrollCropViewControllerDelegate>
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
-- (void)scrollCropViewControllerDidCancel:(OLScrollCropViewController *)cropper{
+- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
--(void)scrollCropViewController:(OLScrollCropViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+-(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingPrintPhoto unloadImage];
     
     self.editingPrintPhoto.edits = cropper.edits;
@@ -491,67 +443,50 @@ OLScrollCropViewControllerDelegate>
 #endif
 }
 
-#ifdef OL_KITE_OFFER_ADOBE
-- (void)photoEditor:(AdobeUXImageEditorViewController *)editor finishedWithImage:(UIImage *)image{
-    [self.editingPrintPhoto unloadImage];
-    
-    OLPrintPhoto *printPhoto = self.editingPrintPhoto;
-    OLPrintPhoto *copy = [printPhoto copy];
-    printPhoto.asset = [OLAsset assetWithImageAsJPEG:image];
-    
-    [self.collectionView reloadData];
-    
-    [editor dismissViewControllerAnimated:YES completion:NULL];
-    
-    [copy getImageWithProgress:NULL completion:^(UIImage *image){
-        [editor enqueueHighResolutionRenderWithImage:image completion:^(UIImage *result, NSError *error) {
-            NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
-            NSString *documentDirPath = [[(NSURL *)[urls objectAtIndex:0] path] stringByAppendingPathComponent:@"ol-kite-images"];
-            
-            
-            NSFileManager *fileManager= [NSFileManager defaultManager];
-            BOOL isDir;
-            if(![fileManager fileExistsAtPath:documentDirPath isDirectory:&isDir]){
-                [fileManager createDirectoryAtPath:documentDirPath withIntermediateDirectories:YES attributes:nil error:NULL];
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
+    if (index != NSNotFound){
+        [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
+    }
+    index = [self.posterPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
+    [self.posterPhotos replaceObjectAtIndex:index withObject:asset];
+    self.editingPrintPhoto = asset;
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    OLAsset *asset = addedAssets.lastObject;
+    if (asset){
+        [self scrollCropViewController:nil didReplaceAssetWithAsset:asset];
+        
+        //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
+        NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+        for (NSInteger i = 0; i < self.posterPhotos.count; i++){
+            if (self.posterPhotos[i] == self.editingPrintPhoto){
+                NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
+                
+                if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
+                    continue;
+                }
+                
+                NSInteger innerIndex = i - outerIndex * self.product.quantityToFulfillOrder;
+                
+                UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
+                UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
+                
+                
+                
+                NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
+                [indexPaths addObject:innerIndexPath];
+                
+                if (outerIndex != i+1 / self.product.quantityToFulfillOrder){
+                    [innerCollectionView reloadItemsAtIndexPaths:indexPaths];
+                    [indexPaths removeAllObjects];
+                }
             }
-            
-            NSData * binaryImageData = UIImageJPEGRepresentation(result, 0.7);
-            
-            NSString *filePath = [documentDirPath stringByAppendingPathComponent:[[[NSUUID UUID] UUIDString] stringByAppendingString:@".jpg"]];
-            [binaryImageData writeToFile:filePath atomically:YES];
-            
-            printPhoto.asset = [OLAsset assetWithFilePath:filePath];
-        }];
-    }];
-    
-}
-
-- (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor{
-    [editor dismissViewControllerAnimated:YES completion:NULL];
-}
-#endif
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
+        }
+        
+        [vc dismissViewControllerAnimated:YES completion:NULL];
     }
 }
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 @end

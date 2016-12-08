@@ -18,10 +18,6 @@
 @end
 
 @interface OLKitePrintSDK (Private)
-#ifdef OL_OFFER_JUDOPAY
-+ (void)setUseJudoPayForGBP:(BOOL)use;
-+ (BOOL)useJudoPayForGBP;
-#endif
 + (void)setCacheTemplates:(BOOL)cache;
 + (BOOL)cacheTemplates;
 + (NSString *_Nonnull)paypalEnvironment;
@@ -117,32 +113,36 @@
     
 }
 
-#ifdef OL_KITE_OFFER_PAYPAL
 - (void)testOLKitePrintSDK{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for template sync"];
     //Live
-    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentLive];
-    XCTAssert([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentLive, @"Environment fail");
-    XCTAssert([[OLKitePrintSDK paypalEnvironment] isEqualToString:PayPalEnvironmentProduction], @"PayPal environment fail");
-    XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""],@"No PayPal client ID");
-    XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""],@"Stripe key fail");
+    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentLive];
+    XCTAssert([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive, @"Environment fail");
+    XCTAssert([[OLKitePrintSDK paypalEnvironment] isEqualToString:@"live"], @"PayPal environment fail");
+    [OLProductTemplate syncWithCompletionHandler:^(id t, id e){
+        XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""],@"No PayPal client ID");
+        XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""],@"Stripe key fail");
+        
+        
+        //Sandbox
+        [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+        XCTAssert([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox, @"Environment fail");
+        XCTAssert([[OLKitePrintSDK paypalEnvironment] isEqualToString:@"sandbox"], @"PayPal environment fail");
+        [OLProductTemplate syncWithCompletionHandler:^(id t, id e){
+            XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""], @"No PayPal client ID");
+            XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""], @"Stripe key fail");
+            [expectation fulfill];
+        }];
+    }];
     
-    //Sandbox
-    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
-    XCTAssert([OLKitePrintSDK environment] == kOLKitePrintSDKEnvironmentSandbox, @"Environment fail");
-    XCTAssert([[OLKitePrintSDK paypalEnvironment] isEqualToString:PayPalEnvironmentSandbox], @"PayPal environment fail");
-    XCTAssert([OLKitePrintSDK paypalClientId] && ![[OLKitePrintSDK paypalClientId] isEqualToString:@""], @"No PayPal client ID");
-    XCTAssert([OLKitePrintSDK stripePublishableKey] && ![[OLKitePrintSDK stripePublishableKey] isEqualToString:@""], @"Stripe key fail");
-#ifdef OL_OFFER_JUDOPAY
-    [OLKitePrintSDK setUseJudoPayForGBP:NO];
-    XCTAssert(![OLKitePrintSDK useJudoPayForGBP], @"Judopay fail");
-#endif
+    [self waitForExpectationsWithTimeout:120 handler:nil];
     
     [OLKitePrintSDK setCacheTemplates:NO];
     XCTAssert(![OLKitePrintSDK cacheTemplates], @"Cache templates fail");
     
     [OLKitePrintSDK setApplePayMerchantID:@"merchant"];
     XCTAssert([[OLKitePrintSDK appleMerchantID] isEqualToString:@"merchant"], @"Merchant fail");
-    XCTAssert([[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite.ly (via Kite.ly)"], @"Pay to test fail");
+    XCTAssert([[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite.ly"], @"Pay to test fail");
     
     [OLKitePrintSDK setApplePayPayToString:@"Kite Test"];
     XCTAssert([[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite Test"], @"Pay to test fail");
@@ -152,7 +152,6 @@
     XCTAssert([[OLKitePrintSDK instagramSecret] isEqualToString:@"secret"], @"Instagram Fail");
     XCTAssert([[OLKitePrintSDK instagramRedirectURI] isEqualToString:@"redirect"], @"Instagram Fail");
 }
-#endif
 
 - (void)testInstantiateOLPrintJobException{
     @try {
@@ -162,28 +161,6 @@
     @catch (NSException *exception) {
         //All good
     }
-}
-
-- (void)testOLAssetDataEquality{
-    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLSDKModelTests class]] pathForResource:@"1" ofType:@"jpg"]];
-    XCTAssert(data, @"No data");
-    
-    OLAsset *asset1 = [OLAsset assetWithDataAsJPEG:data];
-    
-    OLPrintPhoto *printPhoto = [[OLPrintPhoto alloc] init];
-    printPhoto.asset = asset1;
-    OLAsset *asset2 = [OLAsset assetWithPrintPhoto:printPhoto];
-    
-    XCTAssert([asset1 isEqual:asset2], @"OLAssets should be equal");
-    XCTAssert([asset1 hash] == [asset2 hash], @"OLAsset hashes should be equal");
-    
-    NSData *data1 = [NSKeyedArchiver archivedDataWithRootObject:asset1];
-    NSData *data2 = [NSKeyedArchiver archivedDataWithRootObject:asset2];
-    asset1 = (OLAsset *)[NSKeyedUnarchiver unarchiveObjectWithData:data1];
-    asset2 = (OLAsset *)[NSKeyedUnarchiver unarchiveObjectWithData:data2];
-    
-    XCTAssert([asset1 isEqual:asset2], @"OLAssets should be equal");
-    XCTAssert([asset1 hash] == [asset2 hash], @"OLAsset hashes should be equal");
 }
 
 - (void)testPrintJobProductName{

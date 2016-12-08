@@ -41,7 +41,6 @@
 static const NSInteger kSectionAddressList = 0;
 static const NSInteger kSectionAddAddress = 1;
 
-//static const NSInteger kRowAddAddressFromContacts = 0;
 static const NSInteger kRowAddAddressSearch = 1;
 static const NSInteger kRowAddAddressManually = 0;
 
@@ -51,18 +50,6 @@ static const NSInteger kRowAddAddressManually = 0;
 @end
 
 @implementation OLAddressSelectionViewController
-
-//- (BOOL)prefersStatusBarHidden {
-//    BOOL hidden = [OLKiteABTesting sharedInstance].darkTheme;
-//    
-//    if ([self respondsToSelector:@selector(traitCollection)]){
-//        if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height < self.view.frame.size.width){
-//            hidden |= YES;
-//        }
-//    }
-//    
-//    return hidden;
-//}
 
 - (id)init {
     return [self initWithStyle:UITableViewStyleGrouped];
@@ -264,29 +251,6 @@ static const NSInteger kRowAddAddressManually = 0;
         [self.navigationController pushViewController:[[OLAddressEditViewController alloc] initWithAddress:address] animated:YES];
     }
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#pragma mark - Autorotate and Orientation Methods
-// Currently here to disable landscape orientations and rotation on iOS 7. When support is dropped, these can be deleted.
-
-- (BOOL)shouldAutorotate {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
-        return UIInterfaceOrientationMaskAll;
-    }
-    else{
-        return UIInterfaceOrientationMaskPortrait;
-    }
-}
-#endif
 
 
 @end

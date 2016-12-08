@@ -28,15 +28,30 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OLProductTemplateOptionChoice.h"
+
+@class OLProductTemplateCollection;
+
+typedef NS_ENUM(NSInteger, OLProductTemplateOptionType) {
+    OLProductTemplateOptionTypeGeneric,
+    OLProductTemplateOptionTypeColor1,
+    OLProductTemplateOptionTypeColor2,
+    OLProductTemplateOptionTypeColor3,
+    OLProductTemplateOptionTypeTemplateCollection
+//    OLProductTemplateOptionTypeBorderOverride
+};
 
 @interface OLProductTemplateOption : NSObject
 
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *code;
-@property (strong, nonatomic, readonly) NSArray <NSString *> *selections;
-
+@property (assign, nonatomic) OLProductTemplateOptionType type;
+@property (strong, nonatomic, readonly) NSArray <OLProductTemplateOptionChoice *> *choices;
+@property (strong, nonatomic) NSString *iconImageName;
 
 - (instancetype)initWithDictionary:(NSDictionary *)options;
-- (NSString *)nameForSelection:(NSString *)selection;
+- (instancetype)initWithTemplateCollection:(OLProductTemplateCollection *)collection;
+
+- (void)iconWithCompletionHandler:(void(^)(UIImage *icon))handler;
 
 @end

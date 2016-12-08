@@ -103,23 +103,12 @@
  */
 + (void)endCustomerSession;
 
-#ifdef OL_KITE_OFFER_ADOBE
-/**
- *  Optionally enable Adobe's Creative SDK for advanced photo editing functionality (you'll need to take 5 minutes to register your app )
- *  After you have registered, call this method to set everything up.
- *
- *  @param clientID    Your client ID
- *  @param secret      Your client secret
- */
-//+ (void)setAdobeCreativeSDKEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret;
-#endif
-
 /**
  *  Enable ability to upload a photo from another device through the use of a QR code. Useful for kiosk apps. Default value is NO.
  *
  *  @param enabled BOOL values
  */
-+ (void)setQRCodeUploadEnabled:(BOOL)enabled;
++ (void)setQRCodeUploadEnabled:(BOOL)enabled __deprecated_msg("This method will no longer work. Use the OLKiteViewController property qrCodeUploadEnabled.");;
 
 /**
  *  Indicate that the app will be used in a kiosk environment

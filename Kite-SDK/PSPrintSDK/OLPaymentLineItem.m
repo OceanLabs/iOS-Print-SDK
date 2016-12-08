@@ -41,7 +41,7 @@ static NSString *const kKeyLineItemShippingCosts = @"ly.kite.iossdk.kKeyLineItem
 @implementation OLPaymentLineItem
 
 - (instancetype)initWithDescription:(NSString *)description
-                              costs:(NSDictionary/*<NSString, NSDecimalNumber>*/ *)costs {
+                              costs:(NSDictionary<NSString *, NSDecimalNumber *> *)costs {
     if (self = [super init]){
         _itemDescription = description;
         _costs = costs;

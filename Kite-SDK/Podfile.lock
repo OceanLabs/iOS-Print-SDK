@@ -5,60 +5,26 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
-  - CSStickyHeaderFlowLayout (0.2.10)
-  - CTAssetsPickerController (3.3.1):
-    - PureLayout (~> 3.0.0)
-  - DACircularProgress (2.3.1)
-  - FacebookImagePicker (2.0.11):
-    - FBSDKCoreKit (~> 4.11.0)
-    - FBSDKLoginKit (~> 4.11.0)
-  - FBSDKCoreKit (4.11.0):
+  - FBSDKCoreKit (4.16.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.11.0):
+  - FBSDKLoginKit (4.16.1):
     - FBSDKCoreKit
-  - InstagramImagePicker (1.1.7):
-    - NXOAuth2Client (~> 1.2.8)
-  - KITAssetsPickerController (1.0.9):
-    - PureLayout (~> 3.0.0)
-  - MPFlipViewController (0.0.2)
-  - NXOAuth2Client (1.2.8)
   - PayPal-iOS-SDK/Core (2.12.9)
-  - PureLayout (3.0.2)
-  - Stripe (8.0.6)
-  - SVProgressHUD (1.1.3)
-  - TSMarkdownParser (2.1.1)
+  - Stripe (8.0.7)
 
 DEPENDENCIES:
-  - CSStickyHeaderFlowLayout
-  - CTAssetsPickerController
-  - DACircularProgress
-  - FacebookImagePicker
-  - InstagramImagePicker
-  - KITAssetsPickerController
-  - MPFlipViewController
+  - FBSDKCoreKit (~> 4.16.0)
+  - FBSDKLoginKit (~> 4.16.0)
   - PayPal-iOS-SDK/Core (~> 2.12.5)
   - Stripe (~> 8.0.6)
-  - SVProgressHUD (= 1.1.3)
-  - TSMarkdownParser
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  CSStickyHeaderFlowLayout: 5366582779d8b7c9ba9b9cc729c218cc23888776
-  CTAssetsPickerController: b1d1d50ab87cf6b8b13531de5f4530482e7e53ed
-  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  FacebookImagePicker: 60bfada5c06dafa45c37460224f8958382098522
-  FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b
-  FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
-  InstagramImagePicker: 3b1afb10b1b3e5625b8ef64dfabd13464467020d
-  KITAssetsPickerController: bcb94b0b3267006fa666041f18a2370a00a9b105
-  MPFlipViewController: 86caa6203ca9d35af23cc6b4e1bcf53e53333770
-  NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
+  FBSDKCoreKit: 7a6baaed4a2b2a244ba253346713bdbc74df135b
+  FBSDKLoginKit: 469a56cebe2e1ed62b1621d0b155970fd6aac2d8
   PayPal-iOS-SDK: 98ab60b137b7fd35ab5a785d11f042f6858b4f11
-  PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
-  Stripe: 7b3f1406c6bbc2f872a5781259da824750a7ee9c
-  SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
-  TSMarkdownParser: 64cb52fe5a518b4875a6167a650cb0ed4b18cea5
+  Stripe: 2bb9646115745d0ee8c7799e6872c57ba5dc6cc5
 
-PODFILE CHECKSUM: 543b8494a01ef5aa9bf3b6e20c8b8cf4e6cc685b
+PODFILE CHECKSUM: 588b27d4431d2b431d6bfbb8349896bfa4ccae36
 
 COCOAPODS: 1.0.1

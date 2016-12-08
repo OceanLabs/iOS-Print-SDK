@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+@import UIKit;
 @class OLAddress;
 @class OLAsset;
 @protocol OLAssetDataSource;
