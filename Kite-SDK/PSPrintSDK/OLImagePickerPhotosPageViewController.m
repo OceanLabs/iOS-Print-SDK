@@ -187,7 +187,7 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    if (collectionView.tag == 10 && (self.provider.providerType == OLImagePickerProviderTypeQRCode || self.provider.providerType == OLImagePickerProviderTypeViewController)){
+    if (collectionView.tag == 10 && ![self.imagePicker isExclusiveCustomViewControllerProvider] && (self.provider.providerType == OLImagePickerProviderTypeQRCode || self.provider.providerType == OLImagePickerProviderTypeViewController)){
         return 2;
     }
     return 1;

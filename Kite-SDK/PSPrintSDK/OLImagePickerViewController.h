@@ -60,6 +60,7 @@
 - (void)onButtonNextClicked:(UIButton *)sender;
 - (void)onButtonDoneTapped:(UIButton *)sender;
 - (void)presentExternalViewControllerForProvider:(OLImagePickerProvider *)provider;
+- (BOOL)isExclusiveCustomViewControllerProvider;
 
 
 @end

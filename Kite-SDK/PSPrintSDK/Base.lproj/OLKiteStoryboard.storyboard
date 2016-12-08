@@ -3705,6 +3705,9 @@ only £9.99 £8.99</string>
                     <connections>
                         <outlet property="containerView" destination="rFW-UE-yVX" id="mmz-me-ivQ"/>
                         <outlet property="nextButton" destination="nAS-1v-6Ot" id="eDq-ng-Slj"/>
+                        <outlet property="nextButtonBottomCon" destination="64N-7J-oJh" id="v3v-y7-fYT"/>
+                        <outlet property="nextButtonLeadingCon" destination="hKO-6C-YHe" id="xt2-Re-JR8"/>
+                        <outlet property="nextButtonTrailingCon" destination="P71-5m-cUg" id="h6v-t5-RPW"/>
                         <outlet property="sourcesCollectionView" destination="Caf-8g-q37" id="8e0-xn-zTi"/>
                     </connections>
                 </viewController>
