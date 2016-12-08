@@ -128,7 +128,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     }
     else if ([self.textFieldPostCode.text isEqualToString:@""]){
         flag = NO;
-        errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your postal code", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your postal code.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     }
     
     if (!flag){
