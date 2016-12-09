@@ -1884,11 +1884,6 @@ const NSInteger kOLEditTagCrop = 40;
             [(UIActivityIndicatorView *)view startAnimating];
         }
         
-        for (UITextField *tf in self.textFields){
-            [tf removeFromSuperview];
-        }
-        [self.textFields removeAllObjects];
-        
         [self loadImageFromAsset];
     }
     
