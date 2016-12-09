@@ -522,14 +522,14 @@
 		2E14D2CF1C2AE9AD00F35403 /* OLImagePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePreviewViewController.h; sourceTree = "<group>"; };
 		2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePreviewViewController.m; sourceTree = "<group>"; };
 		2E18A1BF1DF9AA0800F8427D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
-		2E18A1C01DF9AA0800F8427D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E18A1C21DF9AA1000F8427D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
-		2E18A1C31DF9AA1000F8427D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E18A1C51DF9AA2000F8427D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
-		2E18A1C61DF9AA2000F8427D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E18A1C81DF9AB6100F8427D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E18A1C91DF9AB6200F8427D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E18A1CA1DF9AB6300F8427D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
+		2E18A1D81DFAB5A400F8427D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
+		2E18A1DA1DFAB5AA00F8427D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
+		2E18A1E01DFAC8BB00F8427D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E18DC4F1D913DB1004752D2 /* OLPrintPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintPhoto.h; sourceTree = "<group>"; };
 		2E18DC501D913DB1004752D2 /* OLPrintPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintPhoto.m; sourceTree = "<group>"; };
 		2E1E66CD1D477B78002524A4 /* OLImagePickerPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerPageViewController.h; sourceTree = "<group>"; };
@@ -2563,9 +2563,9 @@
 			children = (
 				2E6E60671C5038AD00829BB7 /* Base */,
 				2E53A8C01DA28249003C8C30 /* da */,
-				2E18A1C01DF9AA0800F8427D /* fr */,
-				2E18A1C31DF9AA1000F8427D /* de */,
-				2E18A1C61DF9AA2000F8427D /* es */,
+				2E18A1D81DFAB5A400F8427D /* fr */,
+				2E18A1DA1DFAB5AA00F8427D /* de */,
+				2E18A1E01DFAC8BB00F8427D /* es */,
 			);
 			name = OLKiteStoryboard.storyboard;
 			sourceTree = "<group>";

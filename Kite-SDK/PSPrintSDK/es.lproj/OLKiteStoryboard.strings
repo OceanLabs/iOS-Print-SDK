@@ -2,8 +2,8 @@
 /* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "0k1-YH-dlk"; */
 "0k1-YH-dlk.text" = "Lorem Ipsum";
 
-/* Class = "UILabel"; text = "free"; ObjectID = "1eS-HW-b8T"; */
-"1eS-HW-b8T.text" = "free";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "1eS-HW-b8T"; */
+"1eS-HW-b8T.text" = "Lorem Ipsum";
 
 /* Class = "UIButton"; normalTitle = "Yes Please"; ObjectID = "1iR-Pp-XgH"; */
 "1iR-Pp-XgH.normalTitle" = "Yes Please";
@@ -17,17 +17,17 @@
 /* Class = "UILabel"; text = "Let's pick\nan image!"; ObjectID = "38x-9y-Ixf"; */
 "38x-9y-Ixf.text" = "Let's pick\nan image!";
 
-/* Class = "UILabel"; text = "Create a second sheet for\nonly £9.99 £8.99"; ObjectID = "4UW-Id-rrl"; */
-"4UW-Id-rrl.text" = "Create a second sheet for\nonly £9.99 £8.99";
+/* Class = "UILabel"; text = "Create a second sheet for\nonly Lorem Ipsum"; ObjectID = "4UW-Id-rrl"; */
+"4UW-Id-rrl.text" = "Create a second sheet for\nonly Lorem Ipsum";
 
-/* Class = "UILabel"; text = "Label"; ObjectID = "57a-31-bDV"; */
-"57a-31-bDV.text" = "Label";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "57a-31-bDV"; */
+"57a-31-bDV.text" = "Lorem Ipsum";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "5f8-NB-iac"; */
-"5f8-NB-iac.text" = "Medium Square Prints";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "5f8-NB-iac"; */
+"5f8-NB-iac.text" = "Lorem Ipsum";
 
-/* Class = "UILabel"; text = "1-2 of 24"; ObjectID = "6zv-ER-YtC"; */
-"6zv-ER-YtC.text" = "1-2 of 24";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "6zv-ER-YtC"; */
+"6zv-ER-YtC.text" = "Lorem Ipsum";
 
 /* Class = "UINavigationItem"; title = "Pick Your Images"; ObjectID = "89l-Fj-pqr"; */
 "89l-Fj-pqr.title" = "Pick Your Images";
@@ -35,8 +35,8 @@
 /* Class = "UILabel"; text = "Name"; ObjectID = "8kV-ag-lrd"; */
 "8kV-ag-lrd.text" = "Name";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "ADx-iv-jh9"; */
-"ADx-iv-jh9.text" = "Medium Square Prints";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "ADx-iv-jh9"; */
+"ADx-iv-jh9.text" = "Lorem Ipsum";
 
 /* Class = "UILabel"; text = "Product Details"; ObjectID = "AlQ-Es-3y4"; */
 "AlQ-Es-3y4.text" = "Product Details";
@@ -56,8 +56,8 @@
 /* Class = "UIButton"; normalTitle = "No Thanks"; ObjectID = "FD2-Pp-IVG"; */
 "FD2-Pp-IVG.normalTitle" = "No Thanks";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "IvX-J5-xgp"; */
-"IvX-J5-xgp.text" = "Medium Square Prints";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "IvX-J5-xgp"; */
+"IvX-J5-xgp.text" = "Lorem Ipsum";
 
 /* Class = "UILabel"; text = "Scan QR Code"; ObjectID = "JOI-eQ-7aP"; */
 "JOI-eQ-7aP.text" = "Scan QR Code";
@@ -74,8 +74,8 @@
 /* Class = "UILabel"; text = "Powered by Kite.ly"; ObjectID = "MDv-31-HTi"; */
 "MDv-31-HTi.text" = "Powered by Kite.ly";
 
-/* Class = "UILabel"; text = "Label"; ObjectID = "NTv-v4-WNd"; */
-"NTv-v4-WNd.text" = "Label";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "NTv-v4-WNd"; */
+"NTv-v4-WNd.text" = "Lorem Ipsum";
 
 /* Class = "UINavigationItem"; title = "Product"; ObjectID = "NaT-16-vRa"; */
 "NaT-16-vRa.title" = "Product";
@@ -83,8 +83,8 @@
 /* Class = "UILabel"; text = "Or print on a product below ▼"; ObjectID = "P3t-Nc-g1K"; */
 "P3t-Nc-g1K.text" = "Or print on a product below ▼";
 
-/* Class = "UILabel"; text = "•••• •••• •••• 4444 "; ObjectID = "PTs-gc-3ib"; */
-"PTs-gc-3ib.text" = "•••• •••• •••• 4444 ";
+/* Class = "UILabel"; text = "•••• •••• •••• Lorem Ipsum "; ObjectID = "PTs-gc-3ib"; */
+"PTs-gc-3ib.text" = "•••• •••• •••• Lorem Ipsum ";
 
 /* Class = "UINavigationItem"; title = "Edit"; ObjectID = "R8i-4O-CVl"; */
 "R8i-4O-CVl.title" = "Edit";
@@ -101,26 +101,26 @@
 /* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "Ud9-el-7fA"; */
 "Ud9-el-7fA.title" = "Back";
 
-/* Class = "UILabel"; text = "Poster"; ObjectID = "Ui0-Vq-4uT"; */
-"Ui0-Vq-4uT.text" = "Poster";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "Ui0-Vq-4uT"; */
+"Ui0-Vq-4uT.text" = "Lorem Ipsum";
 
 /* Class = "UILabel"; text = "Start by tapping on this button"; ObjectID = "UmH-R9-S2V"; */
 "UmH-R9-S2V.text" = "Start by tapping on this button";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "X3v-KF-Lrs"; */
-"X3v-KF-Lrs.text" = "Medium Square Prints";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "X3v-KF-Lrs"; */
+"X3v-KF-Lrs.text" = "Lorem Ipsum";
 
-/* Class = "UILabel"; text = "Label"; ObjectID = "X47-ek-8lc"; */
-"X47-ek-8lc.text" = "Label";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "X47-ek-8lc"; */
+"X47-ek-8lc.text" = "Lorem Ipsum";
 
 /* Class = "UILabel"; text = "Price"; ObjectID = "X4d-8D-TEz"; */
 "X4d-8D-TEz.text" = "Price";
 
-/* Class = "UILabel"; text = "Add 9 Magnets!"; ObjectID = "XFs-uG-f7z"; */
-"XFs-uG-f7z.text" = "Add 9 Magnets!";
+/* Class = "UILabel"; text = "Add 9 Lorem Ipsum!"; ObjectID = "XFs-uG-f7z"; */
+"XFs-uG-f7z.text" = "Add 9 Lorem Ipsum!";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "XYC-h1-oJj"; */
-"XYC-h1-oJj.text" = "Medium Square Prints";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "XYC-h1-oJj"; */
+"XYC-h1-oJj.text" = "Lorem Ipsum";
 
 /* Class = "UIButton"; normalTitle = "Add Payment Method"; ObjectID = "Xbv-As-wN3"; */
 "Xbv-As-wN3.normalTitle" = "Add Payment Method";
@@ -140,8 +140,8 @@
 /* Class = "UILabel"; text = "Start by tapping on this button"; ObjectID = "bYn-AM-Rkc"; */
 "bYn-AM-Rkc.text" = "Start by tapping on this button";
 
-/* Class = "UILabel"; text = "Medium Square Prints"; ObjectID = "cdq-11-PAs"; */
-"cdq-11-PAs.text" = "Medium Square Prints";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "cdq-11-PAs"; */
+"cdq-11-PAs.text" = "Lorem Ipsum";
 
 /* Class = "UIButton"; normalTitle = "Edit"; ObjectID = "dyy-fJ-b3t"; */
 "dyy-fJ-b3t.normalTitle" = "Edit";
@@ -152,8 +152,8 @@
 /* Class = "UILabel"; text = "Alternatively type the following URL into your mobile browser's address bar"; ObjectID = "efn-xk-ZpI"; */
 "efn-xk-ZpI.text" = "Alternatively type the following URL into your mobile browser's address bar";
 
-/* Class = "UIButton"; normalTitle = "Pay $00.00"; ObjectID = "fHD-9P-h6H"; */
-"fHD-9P-h6H.normalTitle" = "Pay $00.00";
+/* Class = "UIButton"; normalTitle = "Lorem Ipsum"; ObjectID = "fHD-9P-h6H"; */
+"fHD-9P-h6H.normalTitle" = "Lorem Ipsum";
 
 /* Class = "UILabel"; text = "TEST ENVIRONMENT"; ObjectID = "gBc-WD-lqt"; */
 "gBc-WD-lqt.text" = "TEST ENVIRONMENT";
@@ -161,14 +161,11 @@
 /* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "h85-rl-sB9"; */
 "h85-rl-sB9.text" = "Lorem Ipsum";
 
-/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "iox-F6-2wa"; */
-"iox-F6-2wa.normalTitle" = "Button";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "k8W-GL-Toy"; */
+"k8W-GL-Toy.text" = "Lorem Ipsum";
 
-/* Class = "UILabel"; text = "Label"; ObjectID = "k8W-GL-Toy"; */
-"k8W-GL-Toy.text" = "Label";
-
-/* Class = "UILabel"; text = "$00.00"; ObjectID = "kd7-xh-0Sj"; */
-"kd7-xh-0Sj.text" = "$00.00";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "kd7-xh-0Sj"; */
+"kd7-xh-0Sj.text" = "Lorem Ipsum";
 
 /* Class = "UIButton"; normalTitle = "Next"; ObjectID = "nAS-1v-6Ot"; */
 "nAS-1v-6Ot.normalTitle" = "Next";
@@ -185,8 +182,8 @@
 /* Class = "UIButton"; normalTitle = "Add to Basket"; ObjectID = "sot-G1-rGw"; */
 "sot-G1-rGw.normalTitle" = "Add to Basket";
 
-/* Class = "UILabel"; text = "goo.gl/abcd"; ObjectID = "trE-Pz-Vqg"; */
-"trE-Pz-Vqg.text" = "goo.gl/abcd";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "trE-Pz-Vqg"; */
+"trE-Pz-Vqg.text" = "Lorem Ipsum";
 
 /* Class = "UILabel"; text = "Please scan the QR code using a QR reader app on your device."; ObjectID = "vNB-Ql-dTf"; */
 "vNB-Ql-dTf.text" = "Please scan the QR code using a QR reader app on your device.";
@@ -197,14 +194,11 @@
 /* Class = "UIButton"; normalTitle = "+"; ObjectID = "xPd-zg-lTZ"; */
 "xPd-zg-lTZ.normalTitle" = "+";
 
-/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "ywb-1O-Wlz"; */
-"ywb-1O-Wlz.normalTitle" = "Button";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "zUB-Xd-gmr"; */
+"zUB-Xd-gmr.text" = "Lorem Ipsum";
 
-/* Class = "UILabel"; text = "-$2.50"; ObjectID = "zUB-Xd-gmr"; */
-"zUB-Xd-gmr.text" = "-$2.50";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "zY2-nf-cFp"; */
+"zY2-nf-cFp.text" = "Lorem Ipsum";
 
-/* Class = "UILabel"; text = "Name"; ObjectID = "zY2-nf-cFp"; */
-"zY2-nf-cFp.text" = "Name";
-
-/* Class = "UILabel"; text = "Name"; ObjectID = "zlo-qK-VqK"; */
-"zlo-qK-VqK.text" = "Name";
+/* Class = "UILabel"; text = "Lorem Ipsum"; ObjectID = "zlo-qK-VqK"; */
+"zlo-qK-VqK.text" = "Lorem Ipsum";
