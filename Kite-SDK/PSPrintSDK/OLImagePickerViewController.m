@@ -635,7 +635,7 @@
         UIViewController<OLCustomPickerController> *vc = [(OLCustomViewControllerPhotoProvider *)provider vc];
         vc.delegate = self;
         [vc safePerformSelector:@selector(setSelectedAssets:) withObject:self.selectedAssets];
-        [vc safePerformSelector:@selector(setProductId:) withObject:self.product.productTemplate];
+        [vc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
         if ([vc respondsToSelector:@selector(setMinimumPhotos:)]){
             vc.minimumPhotos = self.product.quantityToFulfillOrder;
         }
