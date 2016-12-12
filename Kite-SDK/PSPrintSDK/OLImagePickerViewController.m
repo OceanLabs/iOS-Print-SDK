@@ -640,7 +640,7 @@
             vc.minimumPhotos = self.product.quantityToFulfillOrder;
         }
         if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
-            NSInteger maximumPhotos;
+            NSInteger maximumPhotos = 0;
             if (self.product.productTemplate.templateUI == OLTemplateUICase || self.product.productTemplate.templateUI == OLTemplateUICalendar || self.product.productTemplate.templateUI == OLTemplateUIPoster || self.product.productTemplate.templateUI == OLTemplateUIPhotobook || self.product.productTemplate.templateUI == OLTemplateUIApparel || self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
                 maximumPhotos = self.product.quantityToFulfillOrder;
             }
