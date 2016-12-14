@@ -553,8 +553,9 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)loadCoverPhoto{
-    if (!self.coverPhoto){
+    if (!self.coverPhoto || (id)self.coverPhoto == [NSNull null]){
         self.coverImageView.image = nil;
+        return;
     }
     __weak OLPhotobookViewController *welf = self;
     if (self.coverImageView){
