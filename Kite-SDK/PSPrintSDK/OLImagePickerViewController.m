@@ -430,8 +430,6 @@
         [self.sourcesCollectionView.superview removeFromSuperview];
         self.sourcesCollectionView = nil;
         self.nextButtonLeadingCon.constant = self.nextButton.frame.size.height + 10;
-        self.nextButtonTrailingCon.constant = 5;
-        self.nextButtonBottomCon.constant = 5;
         
         UIColor *color;
         if ([OLKiteABTesting sharedInstance].lightThemeColor2){

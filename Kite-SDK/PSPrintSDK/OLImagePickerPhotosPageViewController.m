@@ -124,6 +124,7 @@ CGFloat OLImagePickerMargin = 1.5;
     self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
     
     self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
+    self.nextButton.titleLabel.font = self.imagePicker.nextButton.titleLabel.font;
     [self.nextButton setTitle:self.imagePicker.nextButton.currentTitle forState:UIControlStateNormal];
     
     UIVisualEffect *blurEffect;

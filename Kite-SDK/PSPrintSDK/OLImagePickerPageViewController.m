@@ -49,8 +49,8 @@
     NSDictionary *views = NSDictionaryOfVariableBindings(nextButton);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-20-[nextButton]-20-|",
-                         @"V:[nextButton(50)]-10-|"];
+    NSArray *visuals = @[@"H:|-5-[nextButton]-5-|",
+                         @"V:[nextButton(50)]-5-|"];
     
     
     for (NSString *visual in visuals) {
