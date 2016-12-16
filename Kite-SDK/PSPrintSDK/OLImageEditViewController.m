@@ -1767,7 +1767,8 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)setupImageCell:(UICollectionViewCell *)cell{
     UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.contentMode = UIViewContentModeCenter;
+    imageView.clipsToBounds = YES;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.tag = 10;
     imageView.tintColor = [UIColor blackColor];
     
