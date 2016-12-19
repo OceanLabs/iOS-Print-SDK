@@ -445,6 +445,8 @@
 		2ED2B7B51DB8B4D90036B536 /* OLHPSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED2B7B31DB8B4D90036B536 /* OLHPSDKWrapper.m */; };
 		2ED42EC11D9D79E3003B9AD0 /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC41D2FC109002F5F74 /* bitstream.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
+		2EE4BC8E1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */; };
+		2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */; };
 		2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */; };
 		2EEF0D0C1D9A781700C81086 /* OLCustomPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D0B1D9A781700C81086 /* OLCustomPickerController.h */; };
 		B7106FC2FDFC534AFB2516F3 /* libPods-KiteSDK-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CFE5B84A94297F8524AE7764 /* libPods-KiteSDK-Demo.a */; };
@@ -794,6 +796,8 @@
 		2EDBFAAF1BC698F2007BDB83 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
 		2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteViewController.h; sourceTree = "<group>"; };
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
+		2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductOverviewPageAnimatedContentViewController.h; sourceTree = "<group>"; };
+		2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductOverviewPageAnimatedContentViewController.m; sourceTree = "<group>"; };
 		2EEB52FA1D6C8F4C0066B802 /* OLKiteViewController+Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OLKiteViewController+Theme.h"; sourceTree = "<group>"; };
 		2EEB52FE1D7062870066B802 /* OLProductTemplateOptionChoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOptionChoice.h; sourceTree = "<group>"; };
 		2EEB52FF1D7062870066B802 /* OLProductTemplateOptionChoice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOptionChoice.m; sourceTree = "<group>"; };
@@ -1202,6 +1206,8 @@
 				2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */,
 				2EA8BEB01A484FCB008A9248 /* OLProductOverviewPageContentViewController.h */,
 				2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */,
+				2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */,
+				2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */,
 				2EAD11501BD79ED0000BC80E /* OLProductDetailsViewController.h */,
 				2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */,
 				2E5D95AA1CA984E00080EF07 /* OLUpsellViewController.h */,
@@ -1905,6 +1911,7 @@
 				2EB8FDFA1D95685100E26BDF /* OLProductGroup.h in Headers */,
 				2EB8FDFB1D95685100E26BDF /* OLProduct.h in Headers */,
 				2EB8FE0B1D95685100E26BDF /* OLInstagramImage.h in Headers */,
+				2EE4BC8E1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h in Headers */,
 				2EB8FE0C1D95685100E26BDF /* OLFacebookImage.h in Headers */,
 				2EB8FE061D95685100E26BDF /* OLLuhn.h in Headers */,
 				2EB8FDD21D95685100E26BDF /* OLAddress.h in Headers */,
@@ -2380,6 +2387,7 @@
 				2E451E651D955B0D0080F1C1 /* qrencode.c in Sources */,
 				2E451E161D9555870080F1C1 /* OLLabeledCircularProgressView.m in Sources */,
 				2E451E431D9555D30080F1C1 /* OLSingleImageProductReviewViewController.m in Sources */,
+				2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */,
 				2E451E181D9555870080F1C1 /* OLProgressHUD.m in Sources */,
 				2E451DEA1D95555C0080F1C1 /* OLPrintJob.m in Sources */,
 				2E451DFD1D9555620080F1C1 /* OLAnalytics.m in Sources */,

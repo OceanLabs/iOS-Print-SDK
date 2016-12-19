@@ -46,6 +46,7 @@
 #import "OLUpsellViewController.h"
 #import "OLUserSession.h"
 #import "UIViewController+OLMethods.h"
+#import "OLProductOverviewPageAnimatedContentViewController.h"
 
 @interface OLKiteViewController ()
 - (void)dismiss;
@@ -267,7 +268,14 @@
         return nil;
     }
     
-    OLProductOverviewPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ProductOverviewPageContentViewController"];
+    NSString *imageURL = self.product.productTemplate.productPhotographyURLs[index % [self.product.productTemplate.productPhotographyURLs count]];
+    OLProductOverviewPageContentViewController *vc;
+    if ([imageURL hasSuffix:@"mp4"]){
+       vc = (OLProductOverviewPageContentViewController *)[[OLProductOverviewPageAnimatedContentViewController alloc] init];
+    }
+    else{
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ProductOverviewPageContentViewController"];
+    }
     vc.pageIndex = index;
     vc.product = self.product;
     vc.delegate = self;
