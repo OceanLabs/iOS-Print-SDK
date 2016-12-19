@@ -129,10 +129,10 @@
             return [UIImage imageNamedInKiteBundle:@"case-options"];
         }
         else if([self.code isEqualToString:@"garment_color"]){
-            return [UIImage imageNamedInKiteBundle:@"shirt-icon"];
+            return [UIImage imageNamedInKiteBundle:@"paint-bucket-icon"];
         }
         else if([self.code isEqualToString:@"garment_size"]){
-            return [UIImage imageNamedInKiteBundle:@"shirt-icon"];
+            return [UIImage imageNamedInKiteBundle:@"shirt-size-icon"];
         }
 
     }

@@ -519,6 +519,10 @@ const NSInteger kOLEditTagCrop = 40;
     return !UIEdgeInsetsEqualToEdgeInsets(self.borderInsets, UIEdgeInsetsZero);
 }
 
+- (BOOL)cropIsInImageEditingTools{
+    return self.product.productTemplate.templateUI == OLTemplateUIApparel;
+}
+
 - (UIEdgeInsets)imageInsetsOnContainer{
     UIEdgeInsets b = self.borderInsets;
     
@@ -954,17 +958,24 @@ const NSInteger kOLEditTagCrop = 40;
 
 #pragma mark Buttons
 
-- (void)setupButtons{
+- (void)setupTheme{
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.editingTools setColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
-    
+}
+
+- (void)setupCtaButtons{
     [self.editingTools.ctaButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
-    
+    [self.editingTools.drawerDoneButton addTarget:self action:@selector(onDrawerButtonDoneClicked:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)setupButton1{
     [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"add-image-icon"] forState:UIControlStateNormal];
     self.editingTools.button1.tag = kOLEditTagImages;
     [self.editingTools.button1 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    
+}
+
+- (void)setupButton2{
     if (self.product.productTemplate.options.count > 0){
         self.editingTools.button2.tag = kOLEditTagProductOptionsTab;
         [self.editingTools.button2 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -975,7 +986,9 @@ const NSInteger kOLEditTagCrop = 40;
     else{
         [self.editingTools.button2 removeFromSuperview];
     }
-    
+}
+
+- (void)setupButton3{
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
         [self.editingTools.button3 removeFromSuperview];
     }
@@ -984,18 +997,37 @@ const NSInteger kOLEditTagCrop = 40;
         self.editingTools.button3.tag = kOLEditTagImageTools;
         [self.editingTools.button3 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
-    
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        [self.editingTools.button4 removeFromSuperview];
-        [self.cropView setGesturesEnabled:NO];
+}
+
+- (void)setupButton4{
+    if (self.product.productTemplate.templateUI == OLTemplateUIApparel && self.product.productTemplate.options.count > 1){
+        self.editingTools.button4.tag = kOLEditTagProductOptionsTab;
+        [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self.product.productTemplate.options[1] iconWithCompletionHandler:^(UIImage *icon){
+            [self.editingTools.button4 setImage:icon forState:UIControlStateNormal];
+        }];
     }
     else{
-        [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
-        self.editingTools.button4.tag = kOLEditTagCrop;
-        [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+            [self.editingTools.button4 removeFromSuperview];
+            [self.cropView setGesturesEnabled:NO];
+        }
+        else{
+            [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
+            self.editingTools.button4.tag = kOLEditTagCrop;
+            [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        }
     }
+}
+
+- (void)setupButtons{
+    [self setupTheme];
+    [self setupCtaButtons];
     
-    [self.editingTools.drawerDoneButton addTarget:self action:@selector(onDrawerButtonDoneClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self setupButton1];
+    [self setupButton2];
+    [self setupButton3];
+    [self setupButton4];
 }
 
 - (void)saveEditsToAsset:(OLAsset *)asset{
@@ -1094,8 +1126,13 @@ const NSInteger kOLEditTagCrop = 40;
             [self showImagePicker];
             return;
         case kOLEditTagProductOptionsTab:
-            if (self.product.productTemplate.options.count == 1){
-                self.selectedOption = self.product.productTemplate.options.firstObject;
+            if (self.product.productTemplate.options.count == 1 || self.product.productTemplate.templateUI == OLTemplateUIApparel){
+                if (self.product.productTemplate.templateUI == OLTemplateUIApparel && sender == self.editingTools.button4){
+                    self.selectedOption = self.product.productTemplate.options[1];
+                }
+                else{
+                    self.selectedOption = self.product.productTemplate.options.firstObject;
+                }
                 self.editingTools.drawerLabel.text = [self.selectedOption.name uppercaseString];
                 self.editingTools.collectionView.tag = self.selectedOption.type;
             }
@@ -1154,7 +1191,7 @@ const NSInteger kOLEditTagCrop = 40;
         buttonAction();
     }
     // Sender is selected but we're showing a 2nd or 3rd level drawer: return to 1st level
-    else if (sender.selected && (self.editingTools.collectionView.tag == kOLEditTagTextTools || self.editingTools.collectionView.tag == kOLEditTagFonts || self.editingTools.collectionView.tag == kOLEditTagTextColors || self.editingTools.collectionView.tag == kOLEditTagFilters || (self.selectedOption && self.product.productTemplate.options.count != 1))){
+    else if (sender.selected && self.product.productTemplate.templateUI != OLTemplateUIApparel && (self.editingTools.collectionView.tag == kOLEditTagTextTools || self.editingTools.collectionView.tag == kOLEditTagFonts || self.editingTools.collectionView.tag == kOLEditTagTextColors || self.editingTools.collectionView.tag == kOLEditTagFilters || (self.selectedOption && self.product.productTemplate.options.count != 1))){
         [self deselectSelectedButtonWithCompletionHandler:^(){
             buttonAction();
         }];
@@ -1312,6 +1349,16 @@ const NSInteger kOLEditTagCrop = 40;
             [self showDrawerWithCompletionHandler:NULL];
         }];
     }
+    else if (self.editingTools.collectionView.tag == kOLEditTagCrop && [self cropIsInImageEditingTools]){
+        [self dismissDrawerWithCompletionHandler:^(BOOL finished){
+            [self exitCropMode];
+            self.editingTools.collectionView.tag = kOLEditTagImageTools;
+            self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
+            [self.view layoutIfNeeded];
+            [self.editingTools.collectionView reloadData];
+            [self showDrawerWithCompletionHandler:NULL];
+        }];
+    }
     else{
         for (UIButton *button in self.editingTools.buttons){
             if (button.selected){
@@ -1345,7 +1392,11 @@ const NSInteger kOLEditTagCrop = 40;
         if (self.product.productTemplate.templateUI == OLTemplateUIMug){
             return 3;
         }
-        return 4;
+        NSInteger numberOfItems = 4;
+        if ([self cropIsInImageEditingTools]){
+            numberOfItems++;
+        }
+        return numberOfItems;
     }
     else if (collectionView.tag == kOLEditTagFilters){
         return [self filterNames].count;
@@ -1391,6 +1442,10 @@ const NSInteger kOLEditTagCrop = 40;
         else if (indexPath.item == 3){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Tt"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Add Text", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        }
+        else if (indexPath.item == 4){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"crop"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         }
     }
     else if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
@@ -1586,6 +1641,9 @@ const NSInteger kOLEditTagCrop = 40;
         }
         else if (indexPath.item == 3){
             [self onButtonAddTextClicked:nil];
+        }
+        else if (indexPath.item == 4){
+            [self onButtonCropClicked:nil];
         }
     }
     else if ((collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3) && !self.selectedOption.choices[indexPath.item].productBackground){
