@@ -106,7 +106,6 @@
 
 - (void)logoutOfFacebook{
     [OLFacebookSDKWrapper logout];
-    [OLFacebookSDKWrapper clearAccessToken];
 }
 
 - (void)logoutOfInstagram{
