@@ -1520,7 +1520,7 @@ const NSInteger kOLEditTagCrop = 40;
         if (self.selectedOption.type == OLProductTemplateOptionTypeGeneric || self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
             [(OLButtonCollectionViewCell *)cell setColorForSelection:self.editingTools.ctaButton.backgroundColor];
         }
-        [cell setSelected:[self.product.selectedOptions[self.selectedOption.code] isEqualToString:choice.code] || [choice.code isEqualToString:self.product.templateId]];
+        [cell setSelected:[self.product.selectedOptions[self.selectedOption.code] isEqualToString:choice.code] || ([choice.code isEqualToString:self.product.templateId] && !self.product.selectedOptions[self.selectedOption.code])];
     }
     else if (collectionView.tag == kOLEditTagFonts){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fontCell" forIndexPath:indexPath];
@@ -1704,14 +1704,7 @@ const NSInteger kOLEditTagCrop = 40;
         self.product.selectedOptions[self.selectedOption.code] = choice.code;
         [self updateProductRepresentationForChoice:choice];
         self.selectedChoice = self.selectedOption.choices[indexPath.item];
-        
-        for (NSIndexPath *visibleIndexPath in [collectionView indexPathsForVisibleItems]){
-            if (![visibleIndexPath isEqual:indexPath]){
-                UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:visibleIndexPath];
-                cell.selected = NO;
-                [cell setNeedsDisplay];
-            }
-        }
+        [collectionView reloadData];
     }
     else{
         UIButton *selectedButton;
