@@ -534,7 +534,10 @@
     if (self.selectedAssets.count == 0) {
         self.title = NSLocalizedString(@"Choose Photos", @"");
     } else {
-        if (self.product.quantityToFulfillOrder > 1){
+        if (self.maximumPhotos > 0){
+            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.selectedAssets.count + [self totalNumberOfExtras], (unsigned long)self.maximumPhotos];
+        }
+        else if (self.product.quantityToFulfillOrder > 1){
             NSUInteger numOrders = 1 + (MAX(0, self.selectedAssets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
             self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.selectedAssets.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
