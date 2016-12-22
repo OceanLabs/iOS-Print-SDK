@@ -913,7 +913,10 @@ static const NSInteger kSectionPages = 2;
     
     if (self.addNewPhotosAtIndex == -1){
             self.coverPhoto = [addedAssets firstObject];
-        addedAssets = [[addedAssets subarrayWithRange:NSMakeRange(1, assets.count - 1)] mutableCopy];
+        if (addedAssets.count > 0){
+            addedAssets = [addedAssets mutableCopy];
+            [(NSMutableArray *)addedAssets removeObjectAtIndex:0];
+        }
         self.addNewPhotosAtIndex = 0;
         
         for (OLPhotobookViewController *photobook in self.childViewControllers){
