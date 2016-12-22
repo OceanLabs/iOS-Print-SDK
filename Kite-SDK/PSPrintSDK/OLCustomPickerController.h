@@ -29,7 +29,11 @@
 
 
 @protocol OLCustomPickerController
-
 @property (weak, nonatomic) id<OLCustomImagePickerViewControllerDelegate> delegate;
 
+@optional
+@property (assign, nonatomic) NSInteger minimumPhotos;
+@property (assign, nonatomic) NSInteger maximumPhotos;
+@property (strong, nonatomic) NSString *productId;
+@property (strong, nonatomic) NSArray <OLAsset *> *selectedAssets;
 @end

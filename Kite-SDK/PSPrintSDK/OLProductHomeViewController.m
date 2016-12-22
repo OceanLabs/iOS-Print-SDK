@@ -622,7 +622,7 @@
             OLProduct *otherProduct = [[OLProduct alloc] initWithTemplate:template];
             [options addObject:@{
                                  @"code" : otherProduct.productTemplate.identifier,
-                                 @"name" : [NSString stringWithFormat:@"%@\n%@", [otherProduct dimensions], [otherProduct unitCost]],
+                                 @"name" : [NSString stringWithFormat:@"%@", [otherProduct dimensions]],
                                  }];
         }
         

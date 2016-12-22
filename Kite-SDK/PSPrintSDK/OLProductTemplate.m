@@ -379,9 +379,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"APPAREL"]){
         return OLTemplateUIApparel;
     }
-//    else if ([identifier isEqualToString:@"MUG"]){
-//        return OLTemplateUIMug;
-//    }
+    else if ([identifier isEqualToString:@"MUG"]){
+        return OLTemplateUIMug;
+    }
     return OLTemplateUINA;
 }
 

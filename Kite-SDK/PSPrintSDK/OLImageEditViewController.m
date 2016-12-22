@@ -43,6 +43,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImageView+FadeIn.h"
 #import "UIView+RoundRect.h"
+#import "OLCustomPickerController.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -1211,7 +1212,7 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Actions
 
 - (IBAction)onButtonHorizontalFlipClicked:(id)sender {
-    if (self.cropView.isCorrecting || self.animating){
+    if (self.cropView.isCorrecting || self.animating || !self.cropView.imageView.image){
         return;
     }
     
@@ -1242,7 +1243,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (IBAction)onButtonRotateClicked:(id)sender {
-    if (self.cropView.isCorrecting || self.animating){
+    if (self.cropView.isCorrecting || self.animating || !self.cropView.imageView.image){
         return;
     }
     
@@ -1520,7 +1521,7 @@ const NSInteger kOLEditTagCrop = 40;
         if (self.selectedOption.type == OLProductTemplateOptionTypeGeneric || self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
             [(OLButtonCollectionViewCell *)cell setColorForSelection:self.editingTools.ctaButton.backgroundColor];
         }
-        [cell setSelected:[self.product.selectedOptions[self.selectedOption.code] isEqualToString:choice.code] || [choice.code isEqualToString:self.product.templateId]];
+        [cell setSelected:[self.product.selectedOptions[self.selectedOption.code] isEqualToString:choice.code] || ([choice.code isEqualToString:self.product.templateId] && !self.product.selectedOptions[self.selectedOption.code])];
     }
     else if (collectionView.tag == kOLEditTagFonts){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"fontCell" forIndexPath:indexPath];
@@ -1625,6 +1626,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == kOLEditTagImageTools){
         if (indexPath.item == 0){
+            if (!self.cropView.imageView.image){
+                return;
+            }
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
                 [self.view bringSubviewToFront:self.editingTools.drawerView];
                 collectionView.tag = kOLEditTagFilters;
@@ -1704,14 +1708,7 @@ const NSInteger kOLEditTagCrop = 40;
         self.product.selectedOptions[self.selectedOption.code] = choice.code;
         [self updateProductRepresentationForChoice:choice];
         self.selectedChoice = self.selectedOption.choices[indexPath.item];
-        
-        for (NSIndexPath *visibleIndexPath in [collectionView indexPathsForVisibleItems]){
-            if (![visibleIndexPath isEqual:indexPath]){
-                UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:visibleIndexPath];
-                cell.selected = NO;
-                [cell setNeedsDisplay];
-            }
-        }
+        [collectionView reloadData];
     }
     else{
         UIButton *selectedButton;
@@ -2046,6 +2043,10 @@ const NSInteger kOLEditTagCrop = 40;
         self.vcDelegateForCustomVc = vc; //Keep strong reference
         UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
         [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+        [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
+        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
+            vc.maximumPhotos = 1;
+        }
         
         [self presentViewController:customVc animated:YES completion:NULL];
         self.presentedVc = customVc;
@@ -2081,11 +2082,6 @@ const NSInteger kOLEditTagCrop = 40;
         if ([view isKindOfClass:[UIActivityIndicatorView class]]){
             [(UIActivityIndicatorView *)view startAnimating];
         }
-        
-        for (UITextField *tf in self.textFields){
-            [tf removeFromSuperview];
-        }
-        [self.textFields removeAllObjects];
         
         [self loadImageFromAsset];
     }

@@ -203,38 +203,39 @@ CGFloat innerMargin = 3;
 }
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        return nil;
-    }
-    
-    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
-    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
-    
-    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
-    
-    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[collectionView convertPoint:location fromView:self.collectionView]];
-    
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
-    
-    OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section]];
-    if (!imageView.image || [printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
-        return nil;
-    }
-    
-    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
-    
-    self.editingPrintPhoto = printPhoto;
-    
-    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
-    __weak OLImagePreviewViewController *weakVc = previewVc;
-    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingPrintPhoto size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
-        [weakVc.imageView setProgress:progress];
-    }completionHandler:NULL];
-    previewVc.providesPresentationContextTransitionStyle = true;
-    previewVc.definesPresentationContext = true;
-    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    return previewVc;
+    return nil;
+//    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+//        return nil;
+//    }
+//    
+//    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
+//    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
+//    
+//    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
+//    
+//    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[collectionView convertPoint:location fromView:self.collectionView]];
+//    
+//    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+//    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
+//    
+//    OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section]];
+//    if (!imageView.image || [printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+//        return nil;
+//    }
+//    
+//    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
+//    
+//    self.editingPrintPhoto = printPhoto;
+//    
+//    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
+//    __weak OLImagePreviewViewController *weakVc = previewVc;
+//    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingPrintPhoto size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+//        [weakVc.imageView setProgress:progress];
+//    }completionHandler:NULL];
+//    previewVc.providesPresentationContextTransitionStyle = true;
+//    previewVc.definesPresentationContext = true;
+//    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+//    return previewVc;
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
