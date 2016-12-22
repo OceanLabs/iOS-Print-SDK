@@ -245,6 +245,10 @@
     }
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
+    
+    if ((self.product.productTemplate.templateUI == OLTemplateUICalendar || self.product.productTemplate.templateUI == OLTemplateUIDoubleSided) && self.maximumPhotos == 0){
+        self.maximumPhotos = self.product.quantityToFulfillOrder;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -639,8 +643,21 @@
         self.providerForPresentedVc = provider;
     }
     else if (provider.providerType == OLImagePickerProviderTypeViewController && [provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
-        UIViewController *vc = [(OLCustomViewControllerPhotoProvider *)provider vc];
-        ((id<OLCustomPickerController>)vc).delegate = self;
+        UIViewController<OLCustomPickerController> *vc = [(OLCustomViewControllerPhotoProvider *)provider vc];
+        vc.delegate = self;
+        [vc safePerformSelector:@selector(setSelectedAssets:) withObject:self.selectedAssets];
+        [vc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
+        if ([vc respondsToSelector:@selector(setMinimumPhotos:)]){
+            vc.minimumPhotos = self.product.quantityToFulfillOrder;
+        }
+        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
+            NSInteger maximumPhotos = 0;
+            if (self.product.productTemplate.templateUI == OLTemplateUICase || self.product.productTemplate.templateUI == OLTemplateUICalendar || self.product.productTemplate.templateUI == OLTemplateUIPoster || self.product.productTemplate.templateUI == OLTemplateUIPhotobook || self.product.productTemplate.templateUI == OLTemplateUIApparel || self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+                maximumPhotos = self.product.quantityToFulfillOrder;
+            }
+            vc.maximumPhotos = maximumPhotos;
+        }
+        
         [self presentViewController:vc animated:YES completion:nil];
         self.providerForPresentedVc = provider;
     }
@@ -662,10 +679,13 @@
     [self.providerForPresentedVc.collections.firstObject addAssets:validAssets unique:YES];
     for (OLAsset *asset in validAssets){
         if(self.maximumPhotos == 0 || self.selectedAssets.count < self.maximumPhotos){
-            [self.selectedAssets addObject:asset];
+            if (![self.selectedAssets containsObject:asset]){
+                [self.selectedAssets addObject:asset];
+            }
         }
     }
     [self reloadPageController];
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
     if ([[self.nextButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].firstObject isEqualToString:@"onButtonNextClicked:"]){
         [picker dismissViewControllerAnimated:YES completion:NULL];
     }
