@@ -119,7 +119,9 @@
     [super viewDidLoad];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+    if (self.product){
+        [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+    }
 #endif
     
     if (!self.navigationController){
