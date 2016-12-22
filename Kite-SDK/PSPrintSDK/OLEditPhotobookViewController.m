@@ -888,7 +888,7 @@ static const NSInteger kSectionPages = 2;
     }
     vc.selectedAssets = [OLUserSession currentSession].userSelectedPhotos;
     vc.delegate = self;
-    vc.maximumPhotos = self.product.quantityToFulfillOrder;
+    vc.maximumPhotos = self.product.quantityToFulfillOrder; //TODO this is not right
     vc.product = self.product;
     
     [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
@@ -916,6 +916,7 @@ static const NSInteger kSectionPages = 2;
         if (addedAssets.count > 0){
             addedAssets = [addedAssets mutableCopy];
             [(NSMutableArray *)addedAssets removeObjectAtIndex:0];
+            [assets removeObjectIdenticalTo:self.coverPhoto];
         }
         self.addNewPhotosAtIndex = 0;
         
