@@ -42,12 +42,16 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLUserSession.h"
 #import "OLImagePickerViewController.h"
 #import "CustomImagePickerViewController.h"
+#import "KITAssetsPickerController.h"
+#import "CustomAssetCollectionDataSource.h"
+#import "AssetDataSource.h"
 
 @import Photos;
 
 @interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
+@property (strong, nonatomic) NSArray *customDataSources;
 @end
 
 @interface OLKitePrintSDK (Private)
@@ -223,7 +227,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             vc.disableCameraRoll = YES;
             [OLKitePrintSDK setInstagramEnabledWithClientID:@"" secret:@"" redirectURI:@""];
             
-            [vc addCustomPhotoProviderWithViewController:[[CustomImagePickerViewController alloc] init] name:@"Custom" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
+            KITAssetsPickerController *customVc = [[KITAssetsPickerController alloc] init];
+            self.customDataSources = @[[[CustomAssetCollectionDataSource alloc] init]];
+            customVc.collectionDataSources = self.customDataSources;
+            
+            [vc addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *)customVc name:@"External" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
             
             [self presentViewController:vc animated:YES completion:NULL];
         }]];
