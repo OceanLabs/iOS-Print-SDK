@@ -387,6 +387,11 @@
         if ([customProvider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
             customProvider.providerType = OLImagePickerProviderTypeViewController;
             [self.providers addObject:customProvider];
+            
+            //When editing a job from basket, add the assets
+            if ([self isExclusiveCustomViewControllerProvider] && [self overrideImagePickerMode]){
+                [customProvider.collections.firstObject addAssets:[OLUserSession currentSession].userSelectedPhotos unique:NO];
+            }
         }
         else{
             NSMutableArray *collections = [[NSMutableArray alloc] init];
