@@ -658,7 +658,7 @@
 }
 
 - (void)assetsPickerControllerDidCancel:(UIViewController *)picker{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)assetsPickerController:(UIViewController *)picker didFinishPickingAssets:(NSArray<OLAsset *> *)assets{
