@@ -208,6 +208,25 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             
             [self presentViewController:vc animated:YES completion:NULL];
         }]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and LC mode", @"") style:UIAlertActionStyleDefault handler:^(id action){
+            [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
+            
+            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+            [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+            
+            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+            vc.userEmail = @"";
+            vc.userPhone = @"";
+            vc.delegate = self;
+            vc.disableFacebook = YES;
+            vc.disableRecents = YES;
+            vc.disableCameraRoll = YES;
+            [OLKitePrintSDK setInstagramEnabledWithClientID:@"" secret:@"" redirectURI:@""];
+            
+            [vc addCustomPhotoProviderWithViewController:[[CustomImagePickerViewController alloc] init] name:@"Custom" icon:[UIImage imageNamed:@"cat"]];
+            
+            [self presentViewController:vc animated:YES completion:NULL];
+        }]];
         [self presentViewController:ac animated:YES completion:NULL];
     }
     else{
@@ -218,7 +237,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         
         [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
         
-        OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+        OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[]];
         vc.userEmail = @"";
         vc.userPhone = @"";
         vc.delegate = self;
