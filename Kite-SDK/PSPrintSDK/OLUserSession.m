@@ -38,6 +38,7 @@
 #import "OLFacebookSDKWrapper.h"
 #import "OLImagePickerProvider.h"
 #import "OLKiteViewController.h"
+#import "OLCustomViewControllerPhotoProvider.h"
 
 @interface OLPrintOrder (Private)
 @property (weak, nonatomic) NSArray *userSelectedPhotos;
@@ -97,6 +98,12 @@
 - (void)resetUserSelectedPhotos{
     [self clearUserSelectedPhotos];
     [self.userSelectedPhotos addObjectsFromArray:self.appAssets];
+    
+    for (OLCustomViewControllerPhotoProvider *provider in self.kiteVc.customImageProviders){
+        if ([provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+            [provider.collections.firstObject addAssets:provider.preselectedAssets unique:NO];
+        }
+    }
 }
 
 - (void)clearUserSelectedPhotos{
