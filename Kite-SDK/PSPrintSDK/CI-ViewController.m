@@ -128,8 +128,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)addCatsAndDogsImagePickersToKite:(OLKiteViewController *)kvc{
-    OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]]] name:@"Dogs"];
-    OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]] name:@"Cats"];
+    OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/7.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/8.jpg"]]] name:@"Dogs"];
+    OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/9.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/10.jpg"]]] name:@"Cats"];
     [kvc addCustomPhotoProviderWithCollections:@[catsCollection, dogsCollection] name:@"Pets" icon:[UIImage imageNamed:@"dog"]];
 }
 
@@ -223,7 +223,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             vc.disableCameraRoll = YES;
             [OLKitePrintSDK setInstagramEnabledWithClientID:@"" secret:@"" redirectURI:@""];
             
-            [vc addCustomPhotoProviderWithViewController:[[CustomImagePickerViewController alloc] init] name:@"Custom" icon:[UIImage imageNamed:@"cat"]];
+            [vc addCustomPhotoProviderWithViewController:[[CustomImagePickerViewController alloc] init] name:@"Custom" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
             
             [self presentViewController:vc animated:YES completion:NULL];
         }]];
@@ -237,7 +237,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         
         [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
         
-        OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[]];
+        OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
         vc.userEmail = @"";
         vc.userPhone = @"";
         vc.delegate = self;
