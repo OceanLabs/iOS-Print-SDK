@@ -36,13 +36,21 @@
 #import "OLKiteABTesting.h"
 #import "OLAddress+AddressBook.h"
 #import "OLFacebookSDKWrapper.h"
+#import "OLImagePickerProvider.h"
+#import "OLKiteViewController.h"
 
 @interface OLPrintOrder (Private)
-
 @property (weak, nonatomic) NSArray *userSelectedPhotos;
 - (void)saveOrder;
 + (id)loadOrder;
+@end
 
+@interface OLImagePickerProviderCollection ()
+@property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
+@end
+
+@interface OLKiteViewController ()
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @implementation OLUserSession
@@ -102,6 +110,12 @@
         [asset unloadImage];
     }
     [self.recentPhotos removeAllObjects];
+    
+    for (OLImagePickerProvider *provider in self.kiteVc.customImageProviders){
+        for (OLImagePickerProviderCollection *collection in provider.collections){
+            [collection.array removeAllObjects];
+        }
+    }
 }
 
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions{
