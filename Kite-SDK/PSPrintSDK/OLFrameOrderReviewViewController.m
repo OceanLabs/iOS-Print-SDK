@@ -43,7 +43,7 @@
 #import "OLInfoBanner.h"
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "NSObject+Utils.h"
-#import "CustomImagePickerViewController.h"
+#import "OLCustomPickerController.h"
 
 @interface OLPackProductViewController (Private) <OLInfoBannerDelegate, OLImagePickerViewControllerDelegate>
 
