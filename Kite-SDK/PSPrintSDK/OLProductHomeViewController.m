@@ -606,7 +606,6 @@
     OLProductGroup *group = self.productGroups[indexPath.row];
     OLProduct *product = [group.products firstObject];
     product.uuid = nil;
-    [[OLUserSession currentSession] resetUserSelectedPhotos];
     
     NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
     

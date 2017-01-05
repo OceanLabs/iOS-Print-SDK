@@ -99,11 +99,11 @@
     [self clearUserSelectedPhotos];
     [self.userSelectedPhotos addObjectsFromArray:self.appAssets];
     
-    for (OLCustomViewControllerPhotoProvider *provider in self.kiteVc.customImageProviders){
-        if ([provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
-            [provider.collections.firstObject addAssets:provider.preselectedAssets unique:NO];
-        }
-    }
+//    for (OLCustomViewControllerPhotoProvider *provider in self.kiteVc.customImageProviders){
+//        if ([provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+//            [provider.collections.firstObject addAssets:provider.preselectedAssets unique:NO];
+//        }
+//    }
 }
 
 - (void)clearUserSelectedPhotos{
