@@ -296,6 +296,14 @@ typedef enum {
     return [packOfString stringByAppendingFormat:@" %lu\n", (unsigned long)self.quantityToFulfillOrder];
 }
 
+- (BOOL)isMultipack{
+    if (self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUICircle || self.productTemplate.templateUI == OLTemplateUIRectagle){
+        return YES;
+    }
+    
+    return NO;
+}
+
 - (CGSize) dimensionsInInches{
     return self.productTemplate.sizeInches;
 }

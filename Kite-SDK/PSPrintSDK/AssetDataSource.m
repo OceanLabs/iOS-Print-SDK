@@ -12,10 +12,10 @@
 @implementation AssetDataSource
 
 - (void)thumbnailImageWithCompletionHandler:(void (^)(UIImage *))handler{
-    [[OLImageDownloader sharedInstance] downloadImageAtURL:self.imageURL withCompletionHandler:^(UIImage *image, NSError *error){
-        dispatch_async(dispatch_get_main_queue(), ^{
+    [self imageWithSize:CGSizeMake(100, 100) applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+        if (image){
             handler(image);
-        });
+        }
     }];
 }
 
@@ -27,8 +27,9 @@
 }
 
 - (BOOL)isEqual:(id)object{
-    OLAsset *testAsset = [OLAsset assetWithURL:self.imageURL];
-    return [testAsset isEqual:object];
+    OLAsset *selfAsset = [OLAsset assetWithURL:self.imageURL];
+    OLAsset *objectAsset = [OLAsset assetWithURL:[object imageURL]];
+    return [selfAsset isEqual:objectAsset];
 }
 
 @end

@@ -48,6 +48,7 @@
 - (NSString *)originalUnitCost;
 - (NSDecimalNumber*) originalUnitCostDecimalNumber;
 - (NSString *)packInfo;
+- (BOOL)isMultipack;
 - (NSString *)dimensions;
 - (NSString *)detailsString;
 - (BOOL)isValidProductForUI;
