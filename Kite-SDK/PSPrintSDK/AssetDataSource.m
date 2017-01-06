@@ -26,5 +26,9 @@
     return 100;
 }
 
+- (BOOL)isEqual:(id)object{
+    OLAsset *testAsset = [OLAsset assetWithURL:self.imageURL];
+    return [testAsset isEqual:object];
+}
 
 @end

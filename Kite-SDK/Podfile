@@ -6,7 +6,7 @@ def shared_pods
     pod 'Stripe', '~> 8.0.6'
     pod 'FBSDKCoreKit', '~> 4.16.0'
     pod 'FBSDKLoginKit', '~> 4.16.0'
-    pod 'KITAssetsPickerController'
+    pod 'KITAssetsPickerController', :git => 'git@github.com:kkarayannis/KITAssetsPickerController.git' #Only for demo project.
 end
 
 target 'KiteSDK-Demo' do
