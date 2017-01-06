@@ -39,33 +39,13 @@
 
 - (instancetype)init{
     if (self = [super init]){
-        AssetDataSource *asset1 = [[AssetDataSource alloc] init];
-        asset1.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"];
-        AssetDataSource *asset2 = [[AssetDataSource alloc] init];
-        asset2.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"];
-        AssetDataSource *asset3 = [[AssetDataSource alloc] init];
-        asset3.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"];
-        AssetDataSource *asset4 = [[AssetDataSource alloc] init];
-        asset4.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"];
-        AssetDataSource *asset5 = [[AssetDataSource alloc] init];
-        asset5.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"];
-        AssetDataSource *asset6 = [[AssetDataSource alloc] init];
-        asset6.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"];
-        AssetDataSource *asset7 = [[AssetDataSource alloc] init];
-        asset7.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/7.jpg"];
-        AssetDataSource *asset8 = [[AssetDataSource alloc] init];
-        asset8.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/8.jpg"];
-        AssetDataSource *asset9 = [[AssetDataSource alloc] init];
-        asset9.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/9.jpg"];
-        AssetDataSource *asset10 = [[AssetDataSource alloc] init];
-        asset10.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/10.jpg"];
-        AssetDataSource *asset11 = [[AssetDataSource alloc] init];
-        asset11.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/11.jpg"];
-        AssetDataSource *asset12 = [[AssetDataSource alloc] init];
-        asset12.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/12.jpg"];
-        AssetDataSource *asset13 = [[AssetDataSource alloc] init];
-        asset13.imageURL = [NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/13.jpg"];
-        _array = @[asset1, asset2, asset3, asset4, asset5, asset6, asset7, asset8, asset9, asset10, asset11, asset12, asset13];
+        NSArray *urls = @[@"https://s3.amazonaws.com/psps/sdk_static/1.jpg", @"https://s3.amazonaws.com/psps/sdk_static/2.jpg", @"https://s3.amazonaws.com/psps/sdk_static/3.jpg", @"https://s3.amazonaws.com/psps/sdk_static/4.jpg", @"https://s3.amazonaws.com/psps/sdk_static/5.jpg", @"https://s3.amazonaws.com/psps/sdk_static/6.jpg", @"https://s3.amazonaws.com/psps/sdk_static/7.jpg", @"https://s3.amazonaws.com/psps/sdk_static/8.jpg", @"https://s3.amazonaws.com/psps/sdk_static/9.jpg", @"https://s3.amazonaws.com/psps/sdk_static/10.jpg", @"https://s3.amazonaws.com/psps/sdk_static/11.jpg", @"https://s3.amazonaws.com/psps/sdk_static/12.jpg", @"https://s3.amazonaws.com/psps/sdk_static/13.jpg", @"https://s3.amazonaws.com/psps/sdk_static/14.jpg", @"https://s3.amazonaws.com/psps/sdk_static/15.jpg", @"https://s3.amazonaws.com/psps/sdk_static/16.jpg", @"https://s3.amazonaws.com/psps/sdk_static/17.jpg", @"https://s3.amazonaws.com/psps/sdk_static/18.jpg", @"https://s3.amazonaws.com/psps/sdk_static/19.jpg", @"https://s3.amazonaws.com/psps/sdk_static/20.jpg", @"https://s3.amazonaws.com/psps/sdk_static/21.jpg", @"https://s3.amazonaws.com/psps/sdk_static/22.jpg", @"https://s3.amazonaws.com/psps/sdk_static/23.jpg", @"https://s3.amazonaws.com/psps/sdk_static/24.jpg", @"https://s3.amazonaws.com/psps/sdk_static/25.jpg", @"https://s3.amazonaws.com/psps/sdk_static/26.jpg", @"https://s3.amazonaws.com/psps/sdk_static/27.jpg", @"https://s3.amazonaws.com/psps/sdk_static/28.jpg", @"https://s3.amazonaws.com/psps/sdk_static/29.jpg", @"https://s3.amazonaws.com/psps/sdk_static/30.jpg", @"https://s3.amazonaws.com/psps/sdk_static/31.jpg", @"https://s3.amazonaws.com/psps/sdk_static/32.jpg", @"https://s3.amazonaws.com/psps/sdk_static/33.jpg", @"https://s3.amazonaws.com/psps/sdk_static/34.jpg", @"https://s3.amazonaws.com/psps/sdk_static/35.jpg", @"https://s3.amazonaws.com/psps/sdk_static/36.jpg", @"https://s3.amazonaws.com/psps/sdk_static/37.jpg", @"https://s3.amazonaws.com/psps/sdk_static/38.jpg", @"https://s3.amazonaws.com/psps/sdk_static/39.jpg", @"https://s3.amazonaws.com/psps/sdk_static/40.jpg", @"https://s3.amazonaws.com/psps/sdk_static/41.jpg", @"https://s3.amazonaws.com/psps/sdk_static/42.jpg", @"https://s3.amazonaws.com/psps/sdk_static/43.jpg", @"https://s3.amazonaws.com/psps/sdk_static/44.jpg", @"https://s3.amazonaws.com/psps/sdk_static/45.jpg", @"https://s3.amazonaws.com/psps/sdk_static/46.jpg", @"https://s3.amazonaws.com/psps/sdk_static/47.jpg", @"https://s3.amazonaws.com/psps/sdk_static/48.jpg", @"https://s3.amazonaws.com/psps/sdk_static/49.jpg", @"https://s3.amazonaws.com/psps/sdk_static/50.jpg"];
+        NSMutableArray *assets = [[NSMutableArray alloc] init];
+        for (NSString *s in urls){
+            AssetDataSource *asset = [AssetDataSource assetWithURL:[NSURL URLWithString:s]];
+            [assets addObject:asset];
+        }
+        _array = assets;
     }
     
     return self;

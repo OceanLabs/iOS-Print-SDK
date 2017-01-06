@@ -53,6 +53,7 @@ typedef enum {
 - (void)unloadImage;
 - (BOOL)isEdited;
 - (BOOL)isEqual:(id)object ignoreEdits:(BOOL)ignoreEdits;
+- (instancetype)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType;
 @property (nonatomic, readonly) OLAssetType assetType;
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSURL *imageURL;

@@ -49,7 +49,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 @import Photos;
 
-@interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate, OLPromoViewDelegate>
+@interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate, OLPromoViewDelegate, KITAssetsPickerControllerDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
 @property (strong, nonatomic) OLKiteViewController *kiteViewController;
@@ -288,22 +288,12 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
             [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
             
-            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-            vc.userEmail = @"";
-            vc.userPhone = @"";
-            vc.delegate = self;
-            vc.disableFacebook = YES;
-            vc.disableRecents = YES;
-            vc.disableCameraRoll = YES;
-            [OLKitePrintSDK setInstagramEnabledWithClientID:@"" secret:@"" redirectURI:@""];
-            
             KITAssetsPickerController *customVc = [[KITAssetsPickerController alloc] init];
             self.customDataSources = @[[[CustomAssetCollectionDataSource alloc] init]];
             customVc.collectionDataSources = self.customDataSources;
+            customVc.delegate = self;
             
-            [vc addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *)customVc name:@"External" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
-            
-            [self presentViewController:vc animated:YES completion:NULL];
+            [self presentViewController:customVc animated:YES completion:NULL];
         }]];
         [self presentViewController:ac animated:YES completion:NULL];
     }
@@ -364,6 +354,27 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 - (void)didFinishPrintFlow:(UIViewController *)printViewController{
     [printViewController dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)assetsPickerController:(id)ipvc didFinishPickingAssets:(NSMutableArray *)assets{
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+    vc.userEmail = @"";
+    vc.userPhone = @"";
+    vc.delegate = self;
+    vc.disableFacebook = YES;
+    vc.disableRecents = YES;
+    vc.disableCameraRoll = YES;
+    [OLKitePrintSDK setInstagramEnabledWithClientID:@"" secret:@"" redirectURI:@""];
+    
+    KITAssetsPickerController *customVc = [[KITAssetsPickerController alloc] init];
+    self.customDataSources = @[[[CustomAssetCollectionDataSource alloc] init]];
+    customVc.collectionDataSources = self.customDataSources;
+    
+    [vc addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *)customVc name:@"External" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
+    
+    [ipvc dismissViewControllerAnimated:YES completion:^{
+        [self presentViewController:vc animated:YES completion:NULL];
+    }];
 }
 
 @end
