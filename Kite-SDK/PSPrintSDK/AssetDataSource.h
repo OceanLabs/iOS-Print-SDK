@@ -11,5 +11,5 @@
 #import "OLAsset+Private.h"
 
 @interface AssetDataSource : OLAsset <KITAssetDataSource>
-
++ (AssetDataSource *)assetWithURL:(NSURL *)url;
 @end
