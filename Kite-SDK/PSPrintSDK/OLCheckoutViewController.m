@@ -354,10 +354,10 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
         return;
     }
+    [self checkAndSaveAddress];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
 #endif
-    [self checkAndSaveAddress];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

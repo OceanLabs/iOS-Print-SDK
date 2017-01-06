@@ -251,6 +251,7 @@
     }
     
     [self positionSelectedProviderIndicator];
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -387,6 +388,11 @@
         if ([customProvider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
             customProvider.providerType = OLImagePickerProviderTypeViewController;
             [self.providers addObject:customProvider];
+            
+            //When editing a job from basket, add the assets
+            if ([self isExclusiveCustomViewControllerProvider] && [self overrideImagePickerMode]){
+                [customProvider.collections.firstObject addAssets:[OLUserSession currentSession].userSelectedPhotos unique:YES];
+            }
         }
         else{
             NSMutableArray *collections = [[NSMutableArray alloc] init];
@@ -532,6 +538,9 @@
     } else {
         if (self.product.quantityToFulfillOrder > 1){
             NSUInteger numOrders = 1 + (MAX(0, self.selectedAssets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+            if (![self.product isMultipack]){
+                numOrders = 1;
+            }
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
             self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.selectedAssets.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
         }
@@ -653,7 +662,7 @@
 }
 
 - (void)assetsPickerControllerDidCancel:(UIViewController *)picker{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)assetsPickerController:(UIViewController *)picker didFinishPickingAssets:(NSArray<OLAsset *> *)assets{
@@ -763,6 +772,9 @@
     }
     else if (self.selectedAssets.count < self.minimumPhotos){
         errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select at least %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.minimumPhotos];
+    }
+    else if (![self.product isMultipack] && self.selectedAssets.count > self.maximumPhotos){
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select no more than %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.maximumPhotos];
     }
     if (errorMessage) {
         UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
