@@ -251,6 +251,7 @@
     }
     
     [self positionSelectedProviderIndicator];
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
