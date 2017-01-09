@@ -217,7 +217,7 @@
 /**
  *  https://www.kite.ly/docs/?objective_c#ordering-apparel
  */
-- (void)testSiteExampleApparel{
+- (void)disable_testSiteExampleApparel{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSDictionary *assets = @{
