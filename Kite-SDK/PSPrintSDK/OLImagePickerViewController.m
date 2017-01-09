@@ -773,7 +773,7 @@
     else if (self.selectedAssets.count < self.minimumPhotos){
         errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select at least %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.minimumPhotos];
     }
-    else if (![self.product isMultipack] && self.selectedAssets.count > self.maximumPhotos){
+    else if (![self.product isMultipack] && self.selectedAssets.count > self.maximumPhotos && self.maximumPhotos != 0){
         errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select no more than %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.maximumPhotos];
     }
     if (errorMessage) {
