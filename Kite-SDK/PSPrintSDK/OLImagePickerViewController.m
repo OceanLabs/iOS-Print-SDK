@@ -429,9 +429,10 @@
     [self setupQRCodeProvider];
     
     if ([self isExclusiveCustomViewControllerProvider]){
+        CGFloat height = 50;
         [self.sourcesCollectionView.superview removeFromSuperview];
         self.sourcesCollectionView = nil;
-        self.nextButtonLeadingCon.constant = self.nextButton.frame.size.height + 10;
+        self.nextButtonLeadingCon.constant = height + 10;
         self.nextButtonTrailingCon.constant = 5;
         self.nextButtonBottomCon.constant = 5;
         
@@ -451,9 +452,8 @@
         NSDictionary *views = NSDictionaryOfVariableBindings(addButton);
         NSMutableArray *con = [[NSMutableArray alloc] init];
         
-        NSArray *visuals = @[[NSString stringWithFormat:@"H:|-5-[addButton(%f)]", self.nextButton.frame.size.height],
-                             [NSString stringWithFormat:@"V:[addButton(%f)]-5-|", self.nextButton.frame.size.height]];
-        
+        NSArray *visuals = @[[NSString stringWithFormat:@"H:|-5-[addButton(%f)]", height],
+                             [NSString stringWithFormat:@"V:[addButton(%f)]-5-|", height]];
         
         for (NSString *visual in visuals) {
             [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
@@ -469,8 +469,6 @@
         label.translatesAutoresizingMaskIntoConstraints = NO;
         [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
         [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:-2]];
-
-
     }
 }
 
