@@ -34,4 +34,5 @@
 
 @interface OLQRCodeUploadViewController : UIViewController
 @property (nonatomic, weak) id<OLCustomImagePickerViewControllerDelegate> delegate;
+- (void)onBarButtonItemCancelTapped:(id)sender;
 @end

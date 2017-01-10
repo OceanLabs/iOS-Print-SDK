@@ -102,5 +102,10 @@
     [self.imagePoller stopPolling];
 }
 
+- (void)onBarButtonItemCancelTapped:(id)sender{
+    [self.imagePoller stopPolling];
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
 
 @end
