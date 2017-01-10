@@ -5,7 +5,7 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
-  - FBSDKCoreKit (4.16.0):
+  - FBSDKCoreKit (4.16.1):
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.16.1):
     - FBSDKCoreKit
@@ -28,12 +28,12 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   KITAssetsPickerController:
-    :commit: 6e87bbc5d45b67dc5dce1d2a99ba1a717fd5ca38
+    :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
     :git: git@github.com:kkarayannis/KITAssetsPickerController.git
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  FBSDKCoreKit: 7a6baaed4a2b2a244ba253346713bdbc74df135b
+  FBSDKCoreKit: 6feac4e8921ccd7afa83fb1df6291dc6eec42c7c
   FBSDKLoginKit: 469a56cebe2e1ed62b1621d0b155970fd6aac2d8
   KITAssetsPickerController: bcb94b0b3267006fa666041f18a2370a00a9b105
   PayPal-iOS-SDK: 98ab60b137b7fd35ab5a785d11f042f6858b4f11

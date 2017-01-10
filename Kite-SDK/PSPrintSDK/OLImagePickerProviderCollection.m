@@ -98,6 +98,11 @@
     return [self.array indexOfObject:obj];
 }
 
+- (void)removeAsset:(OLAsset *)asset{
+    [self.array removeObject:asset];
+}
+
+
 - (void)addAssets:(NSArray<OLAsset *> *)assets unique:(BOOL)unique{
     if (unique){
         for (OLAsset *asset in assets){
