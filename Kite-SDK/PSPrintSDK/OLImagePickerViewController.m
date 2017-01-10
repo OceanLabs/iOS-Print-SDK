@@ -671,7 +671,11 @@
             [validAssets removeObjectIdenticalTo:obj];
         }
     }
-    
+    for (OLAsset *asset in [self.providerForPresentedVc.collections.firstObject copy]){
+        if (![validAssets containsObject:asset]){
+            [self.providerForPresentedVc.collections.firstObject removeAsset:asset];
+        }
+    }
     [self.providerForPresentedVc.collections.firstObject addAssets:validAssets unique:YES];
     for (OLAsset *asset in validAssets){
         if(self.maximumPhotos == 0 || self.selectedAssets.count < self.maximumPhotos){
