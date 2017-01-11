@@ -184,7 +184,7 @@
         self.kvoValueToObserve = nil;
     }
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:5 action:^{
         [[[UIApplication sharedApplication].delegate window].rootViewController dismissViewControllerAnimated:NO completion:NULL];
     }];
     
