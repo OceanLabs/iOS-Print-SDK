@@ -1061,6 +1061,7 @@
 		2E10F0511D93D6F700014C19 /* 3rd Party */ = {
 			isa = PBXGroup;
 			children = (
+				2E67B7C11E2658C000E70805 /* UICKeychainStore */,
 				2E96BA3B1D2FA9CF002F5F74 /* QREncoder */,
 				2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */,
 				3D8122E21A759E41004E7297 /* RMImageCropper */,
@@ -1316,6 +1317,15 @@
 			name = Wrappers;
 			sourceTree = "<group>";
 		};
+		2E67B7C11E2658C000E70805 /* UICKeychainStore */ = {
+			isa = PBXGroup;
+			children = (
+				2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */,
+				2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */,
+			);
+			name = UICKeychainStore;
+			sourceTree = "<group>";
+		};
 		2E96BA3B1D2FA9CF002F5F74 /* QREncoder */ = {
 			isa = PBXGroup;
 			children = (
@@ -1489,8 +1499,6 @@
 				2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */,
 				2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */,
 				2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */,
-				2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */,
-				2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */,
 				2EB715D31CFDD12900618C7B /* OLLuhn.h */,
 				2EB715D41CFDD12900618C7B /* OLLuhn.m */,
 			);

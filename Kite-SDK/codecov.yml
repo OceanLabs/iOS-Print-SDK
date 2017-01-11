@@ -4,6 +4,7 @@ ignore:
   - "Kite-SDK/PSPrintSDK/AppDelegate*"
   - "Kite-SDK/PSPrintSDK/AssetDataSource*"
   - "Kite-SDK/PSPrintSDK/CI-ViewController*"
+  - "Kite-SDK/PSPrintSDK/ViewController*"
   - "Kite-SDK/PSPrintSDK/CustomAssetCollectionDataSource*"
   - "Kite-SDK/PSPrintSDK/LXReorderableCollectionViewFlowLayout*"
   - "Kite-SDK/PSPrintSDK/OLAnimation*"
@@ -21,3 +22,5 @@ ignore:
   - "Kite-SDK/PSPrintSDK/NSString+OLOAuth2*"
   - "Kite-SDK/PSPrintSDK/NSData+OLOAuth2*"
   - "Kite-SDK/PSPrintSDK/OLOAuth2*"
+  - "Kite-SDK/PSPrintSDK/OLKeyChainStore*"
+  - "Kite-SDK/PSPrintSDK/main.m"
