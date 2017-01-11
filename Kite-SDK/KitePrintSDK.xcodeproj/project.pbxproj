@@ -1151,12 +1151,13 @@
 			name = Private;
 			sourceTree = "<group>";
 		};
-		2E451DC91D9554B40080F1C1 /* Kite */ = {
+		2E451DC91D9554B40080F1C1 /* Kite Framework */ = {
 			isa = PBXGroup;
 			children = (
 				2E451DCA1D9554B40080F1C1 /* KiteSDK.h */,
 				2E451DCB1D9554B40080F1C1 /* Info.plist */,
 			);
+			name = "Kite Framework";
 			path = Kite;
 			sourceTree = "<group>";
 		};
@@ -1529,7 +1530,7 @@
 				CD73BFA01862FA210009DE03 /* Sample App */,
 				CD73BF71186215790009DE03 /* Kite Print SDK */,
 				CD73BF90186215790009DE03 /* Kite Print SDK Tests */,
-				2E451DC91D9554B40080F1C1 /* Kite */,
+				2E451DC91D9554B40080F1C1 /* Kite Framework */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				01A3969341E0D10D83284FD0 /* Pods */,

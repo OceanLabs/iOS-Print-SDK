@@ -518,6 +518,16 @@ static NSOperationQueue *imageOperationQueue;
         
         blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:self.edits.cropImageFrame andImageRect:self.edits.cropImageRect andImageViewWidth:self.edits.cropImageSize.width andImageViewHeight:self.edits.cropImageSize.height];
         
+        if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
+            CIImage *filterImage = [CIImage imageWithCGImage:blockImage.CGImage];
+            CIFilter *filter = [CIFilter filterWithName:self.edits.filterName];
+            [filter setValue:filterImage forKey:@"inputImage"];
+            
+            CIContext *context = [CIContext contextWithOptions:nil];
+            CGImageRef cgImage = [context createCGImage:filter.outputImage fromRect:filterImage.extent];
+            blockImage = [UIImage imageWithCGImage:cgImage];
+        }
+        
         for (OLTextOnPhoto *textOnPhoto in self.edits.textsOnPhoto){
             CGFloat scaling = MIN(blockImage.size.width, blockImage.size.height) / MIN(self.edits.cropImageFrame.size.width, self.edits.cropImageFrame.size.height);
             UIFont *font = [OLKiteUtils fontWithName:textOnPhoto.fontName size:textOnPhoto.fontSize * scaling];
@@ -563,16 +573,6 @@ static NSOperationQueue *imageOperationQueue;
             [textImage drawInRect:textRect];
             blockImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-        }
-        
-        if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
-            CIImage *filterImage = [CIImage imageWithCGImage:blockImage.CGImage];
-            CIFilter *filter = [CIFilter filterWithName:self.edits.filterName];
-            [filter setValue:filterImage forKey:@"inputImage"];
-            
-            CIContext *context = [CIContext contextWithOptions:nil];
-            CGImageRef cgImage = [context createCGImage:filter.outputImage fromRect:filterImage.extent];
-            blockImage = [UIImage imageWithCGImage:cgImage];
         }
         
         handler(blockImage);

@@ -1242,7 +1242,7 @@ const NSInteger kOLEditTagCrop = 40;
     self.ctaButton.enabled = YES;
 }
 
-- (IBAction)onButtonRotateClicked:(id)sender {
+- (void)onButtonRotateClicked:(id)sender {
     if (self.cropView.isCorrecting || self.animating || !self.cropView.imageView.image){
         return;
     }
