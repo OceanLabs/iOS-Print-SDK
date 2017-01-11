@@ -54,6 +54,7 @@
 #import "OLAnalytics.h"
 #import "OLImagePickerProviderCollection.h"
 #import "OLPromoView.h"
+#import "OLReceiptViewController.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKVersion;
