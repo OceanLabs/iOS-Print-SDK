@@ -94,6 +94,10 @@
 - (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender;
 @end
 
+@interface OLImageEditViewController () <UICollectionViewDelegate>
+- (void)onButtonClicked:(UIButton *)sender;
+@end
+
 @interface OLCaseViewController ()
 @property (assign, nonatomic) BOOL downloadedMask;
 @end
@@ -180,7 +184,7 @@
         self.kvoValueToObserve = nil;
     }
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:5 action:^{
         [[[UIApplication sharedApplication].delegate window].rootViewController dismissViewControllerAnimated:NO completion:NULL];
     }];
     
@@ -435,6 +439,20 @@
         [expectation fulfill];
     });
     [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    
+    //TODO: Check product option that default selected is first option
+    [self performUIAction:^{
+        [caseVc onButtonClicked:caseVc.editingTools.button2];
+    }];
+    
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].isSelected, @"Default option (first) should selected");
+    
+    [self performUIAction:^{
+        [caseVc collectionView:caseVc.editingTools.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
+    }];
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option  should selected");
+    //TODO: Check product option that second is selected
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];

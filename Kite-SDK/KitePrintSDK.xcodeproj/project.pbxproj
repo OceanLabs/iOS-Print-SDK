@@ -108,7 +108,6 @@
 		2E451E131D9555870080F1C1 /* OLTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AB41D92D768006C0EE6 /* OLTransition.m */; };
 		2E451E141D9555870080F1C1 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
 		2E451E151D9555870080F1C1 /* OLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */; };
-		2E451E161D9555870080F1C1 /* OLLabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */; };
 		2E451E171D9555870080F1C1 /* OLIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AC81D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m */; };
 		2E451E181D9555870080F1C1 /* OLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACB1D92DB9B006C0EE6 /* OLProgressHUD.m */; };
 		2E451E191D9555870080F1C1 /* OLRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACD1D92DB9B006C0EE6 /* OLRadialGradientLayer.m */; };
@@ -198,6 +197,8 @@
 		2E451E9A1D9565D40080F1C1 /* OLKitePrintSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFB218635F170009DE03 /* OLKitePrintSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E480ADE1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */; };
 		2E480ADF1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */; };
+		2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */; };
+		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
 		2E4DAB651DE47104002F4A84 /* mug.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2E4DAB641DE47104002F4A84 /* mug.dae */; };
 		2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
@@ -206,7 +207,6 @@
 		2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */; };
 		2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */; };
 		2E7D39731DAE39820046D255 /* OLImageRenderOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */; };
-		2E88A21C1DB0EED600732F4B /* CustomImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */; };
 		2E898CCB1CC518180041CCD8 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
 		2E898CCC1CC518180041CCD8 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */; };
 		2E898CCE1CC518180041CCD8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0151C7B2237009C1E42 /* QuartzCore.framework */; };
@@ -329,7 +329,6 @@
 		2EB8FE171D95685100E26BDF /* OLTransitionEnumerations.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AB51D92D768006C0EE6 /* OLTransitionEnumerations.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE181D95685100E26BDF /* OLMarkdownParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE191D95685100E26BDF /* OLCircularProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F0321D93CC0900014C19 /* OLCircularProgressView.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE1A1D95685100E26BDF /* OLLabeledCircularProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F0341D93CC0900014C19 /* OLLabeledCircularProgressView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE1B1D95685100E26BDF /* OLIndefiniteAnimatedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AC71D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE1C1D95685100E26BDF /* OLProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480ACA1D92DB9B006C0EE6 /* OLProgressHUD.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE1D1D95685100E26BDF /* OLRadialGradientLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480ACC1D92DB9B006C0EE6 /* OLRadialGradientLayer.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -518,8 +517,6 @@
 		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
 		2E10F0321D93CC0900014C19 /* OLCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCircularProgressView.h; sourceTree = "<group>"; };
 		2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCircularProgressView.m; sourceTree = "<group>"; };
-		2E10F0341D93CC0900014C19 /* OLLabeledCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLLabeledCircularProgressView.h; sourceTree = "<group>"; };
-		2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLLabeledCircularProgressView.m; sourceTree = "<group>"; };
 		2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLMarkdownParser.h; sourceTree = "<group>"; };
 		2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLMarkdownParser.m; sourceTree = "<group>"; };
 		2E10F0531D93D71D00014C19 /* OLStripeWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeWrapper.h; sourceTree = "<group>"; };
@@ -620,6 +617,10 @@
 		2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = OLProgressHUD.bundle; sourceTree = "<group>"; };
 		2E482B771BEB4C7D007460EA /* OLStripeCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeCard.h; sourceTree = "<group>"; };
 		2E482B781BEB4C7D007460EA /* OLStripeCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLStripeCard.m; sourceTree = "<group>"; };
+		2E4C31261E1E5B3900B3F28C /* AssetDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetDataSource.h; sourceTree = "<group>"; };
+		2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetDataSource.m; sourceTree = "<group>"; };
+		2E4C31281E1E5B3900B3F28C /* CustomAssetCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAssetCollectionDataSource.h; sourceTree = "<group>"; };
+		2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAssetCollectionDataSource.m; sourceTree = "<group>"; };
 		2E4DAB641DE47104002F4A84 /* mug.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = mug.dae; sourceTree = "<group>"; };
 		2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTypeSelectionViewController.h; sourceTree = "<group>"; };
 		2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTypeSelectionViewController.m; sourceTree = "<group>"; };
@@ -665,8 +666,6 @@
 		2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCollectionViewController.m; sourceTree = "<group>"; };
 		2E884F441D37B566007CA45A /* OLImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerViewController.h; sourceTree = "<group>"; };
 		2E884F451D37B566007CA45A /* OLImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerViewController.m; sourceTree = "<group>"; };
-		2E88A21A1DB0EED600732F4B /* CustomImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomImagePickerViewController.h; sourceTree = "<group>"; };
-		2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomImagePickerViewController.m; sourceTree = "<group>"; };
 		2E898CEA1CC518180041CCD8 /* Kite-CI-Deploy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kite-CI-Deploy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E898F851BE37F9B00739F5A /* OLProductTemplateOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOption.h; sourceTree = "<group>"; };
 		2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOption.m; sourceTree = "<group>"; };
@@ -1046,8 +1045,6 @@
 			children = (
 				2E10F0321D93CC0900014C19 /* OLCircularProgressView.h */,
 				2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */,
-				2E10F0341D93CC0900014C19 /* OLLabeledCircularProgressView.h */,
-				2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */,
 			);
 			name = DACircularProgress;
 			sourceTree = "<group>";
@@ -1064,14 +1061,10 @@
 		2E10F0511D93D6F700014C19 /* 3rd Party */ = {
 			isa = PBXGroup;
 			children = (
-				2ED2B7B61DB8B4DF0036B536 /* HP SDK */,
+				2E67B7C11E2658C000E70805 /* UICKeychainStore */,
 				2E96BA3B1D2FA9CF002F5F74 /* QREncoder */,
 				2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */,
 				3D8122E21A759E41004E7297 /* RMImageCropper */,
-				2E10F0591D93E5E200014C19 /* PayPal */,
-				2E10F0521D93D70300014C19 /* Stripe */,
-				2EB612F61D48AFDA00B48E29 /* Instagram */,
-				2E1E66D91D4795C8002524A4 /* Facebook */,
 				2E480AAB1D92D6D4006C0EE6 /* MPFlipViewController */,
 				2E10F03E1D93CC3600014C19 /* TSMarkdownParser */,
 				2E10F0311D93CBF100014C19 /* DACircularProgress */,
@@ -1149,8 +1142,10 @@
 				2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */,
 				2E23EB991D5091FC00E2BF42 /* CI-ViewController.h */,
 				2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */,
-				2E88A21A1DB0EED600732F4B /* CustomImagePickerViewController.h */,
-				2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */,
+				2E4C31261E1E5B3900B3F28C /* AssetDataSource.h */,
+				2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */,
+				2E4C31281E1E5B3900B3F28C /* CustomAssetCollectionDataSource.h */,
+				2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */,
 				2E5E2D5C1D8ADC2F00D9B1B2 /* KiteCI-Info.plist */,
 			);
 			name = Private;
@@ -1306,9 +1301,29 @@
 				CD550BD61886BF6000782D75 /* Payment */,
 				CD7696A11868DE7A006D4A26 /* Print */,
 				3DE2B0C01A77D2290092D97F /* Util */,
-				2E10F0511D93D6F700014C19 /* 3rd Party */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		2E67B7C01E2645F400E70805 /* Wrappers */ = {
+			isa = PBXGroup;
+			children = (
+				2ED2B7B61DB8B4DF0036B536 /* HP SDK */,
+				2E10F0591D93E5E200014C19 /* PayPal */,
+				2E10F0521D93D70300014C19 /* Stripe */,
+				2EB612F61D48AFDA00B48E29 /* Instagram */,
+				2E1E66D91D4795C8002524A4 /* Facebook */,
+			);
+			name = Wrappers;
+			sourceTree = "<group>";
+		};
+		2E67B7C11E2658C000E70805 /* UICKeychainStore */ = {
+			isa = PBXGroup;
+			children = (
+				2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */,
+				2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */,
+			);
+			name = UICKeychainStore;
 			sourceTree = "<group>";
 		};
 		2E96BA3B1D2FA9CF002F5F74 /* QREncoder */ = {
@@ -1484,8 +1499,6 @@
 				2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */,
 				2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */,
 				2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */,
-				2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */,
-				2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */,
 				2EB715D31CFDD12900618C7B /* OLLuhn.h */,
 				2EB715D41CFDD12900618C7B /* OLLuhn.m */,
 			);
@@ -1572,6 +1585,8 @@
 				2E0DB88E1A6402D9001032E3 /* View */,
 				CDA8BF4F18D70CF500D835BB /* Controller */,
 				2EA8BEC11A48509E008A9248 /* Categories */,
+				2E67B7C01E2645F400E70805 /* Wrappers */,
+				2E10F0511D93D6F700014C19 /* 3rd Party */,
 				E29C862E1BE3C4640041D4CF /* Resources */,
 			);
 			name = "Kite Print SDK";
@@ -1939,7 +1954,6 @@
 				2EB8FE151D95685100E26BDF /* OLFlipViewController.h in Headers */,
 				2EB8FE4F1D95685100E26BDF /* OLEditPhotobookViewController.h in Headers */,
 				2EB8FE641D95685100E26BDF /* qrspec.h in Headers */,
-				2EB8FE1A1D95685100E26BDF /* OLLabeledCircularProgressView.h in Headers */,
 				2EB8FDFC1D95685100E26BDF /* OLPageLayout.h in Headers */,
 				2EB8FE731D95685100E26BDF /* UIViewController+OLMethods.h in Headers */,
 				2EB8FE3F1D95685100E26BDF /* OLProductDetailsViewController.h in Headers */,
@@ -2385,7 +2399,6 @@
 				2E451E381D9555870080F1C1 /* OLImagePickerViewController.m in Sources */,
 				2E451E5E1D9555EF0080F1C1 /* OLKiteViewController.m in Sources */,
 				2E451E651D955B0D0080F1C1 /* qrencode.c in Sources */,
-				2E451E161D9555870080F1C1 /* OLLabeledCircularProgressView.m in Sources */,
 				2E451E431D9555D30080F1C1 /* OLSingleImageProductReviewViewController.m in Sources */,
 				2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */,
 				2E451E181D9555870080F1C1 /* OLProgressHUD.m in Sources */,
@@ -2498,10 +2511,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */,
 				2E9A77361DA683FE00A50C4D /* PrintOrderHistoryViewController.m in Sources */,
+				2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */,
 				2E9A77371DA683FE00A50C4D /* CI-ViewController.m in Sources */,
 				2E9A77391DA684FB00A50C4D /* main.m in Sources */,
-				2E88A21C1DB0EED600732F4B /* CustomImagePickerViewController.m in Sources */,
 				2E9A77351DA683FE00A50C4D /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2849,7 +2863,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1a1a5519-5fee-4d30-a8f3-a126c3e39cb4";
+				PROVISIONING_PROFILE = "ac99d5ad-0631-46fe-b0a9-ef763fc91e9d";
 				PROVISIONING_PROFILE_SPECIFIER = "Kite SDK CI";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;

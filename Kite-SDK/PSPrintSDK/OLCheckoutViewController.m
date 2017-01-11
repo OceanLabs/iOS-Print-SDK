@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -354,10 +354,10 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
         return;
     }
+    [self checkAndSaveAddress];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
 #endif
-    [self checkAndSaveAddress];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

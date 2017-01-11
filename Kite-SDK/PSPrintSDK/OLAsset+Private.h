@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -53,6 +53,7 @@ typedef enum {
 - (void)unloadImage;
 - (BOOL)isEdited;
 - (BOOL)isEqual:(id)object ignoreEdits:(BOOL)ignoreEdits;
+- (instancetype)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType;
 @property (nonatomic, readonly) OLAssetType assetType;
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSURL *imageURL;

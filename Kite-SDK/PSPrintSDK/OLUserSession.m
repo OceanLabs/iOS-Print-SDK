@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -36,13 +36,22 @@
 #import "OLKiteABTesting.h"
 #import "OLAddress+AddressBook.h"
 #import "OLFacebookSDKWrapper.h"
+#import "OLImagePickerProvider.h"
+#import "OLKiteViewController.h"
+#import "OLCustomViewControllerPhotoProvider.h"
 
 @interface OLPrintOrder (Private)
-
 @property (weak, nonatomic) NSArray *userSelectedPhotos;
 - (void)saveOrder;
 + (id)loadOrder;
+@end
 
+@interface OLImagePickerProviderCollection ()
+@property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
+@end
+
+@interface OLKiteViewController ()
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @implementation OLUserSession
@@ -89,6 +98,12 @@
 - (void)resetUserSelectedPhotos{
     [self clearUserSelectedPhotos];
     [self.userSelectedPhotos addObjectsFromArray:self.appAssets];
+    
+//    for (OLCustomViewControllerPhotoProvider *provider in self.kiteVc.customImageProviders){
+//        if ([provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+//            [provider.collections.firstObject addAssets:provider.preselectedAssets unique:NO];
+//        }
+//    }
 }
 
 - (void)clearUserSelectedPhotos{
@@ -102,6 +117,12 @@
         [asset unloadImage];
     }
     [self.recentPhotos removeAllObjects];
+    
+    for (OLImagePickerProvider *provider in self.kiteVc.customImageProviders){
+        for (OLImagePickerProviderCollection *collection in provider.collections){
+            [collection.array removeAllObjects];
+        }
+    }
 }
 
 - (void)logoutOfFacebook{

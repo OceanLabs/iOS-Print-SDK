@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -261,6 +261,7 @@
     }
     
     [self positionSelectedProviderIndicator];
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -397,6 +398,11 @@
         if ([customProvider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
             customProvider.providerType = OLImagePickerProviderTypeViewController;
             [self.providers addObject:customProvider];
+            
+            //When editing a job from basket, add the assets
+            if ([self isExclusiveCustomViewControllerProvider] && [self overrideImagePickerMode]){
+                [customProvider.collections.firstObject addAssets:[OLUserSession currentSession].userSelectedPhotos unique:YES];
+            }
         }
         else{
             NSMutableArray *collections = [[NSMutableArray alloc] init];
@@ -433,9 +439,12 @@
     [self setupQRCodeProvider];
     
     if ([self isExclusiveCustomViewControllerProvider]){
+        CGFloat height = 50;
         [self.sourcesCollectionView.superview removeFromSuperview];
         self.sourcesCollectionView = nil;
-        self.nextButtonLeadingCon.constant = self.nextButton.frame.size.height + 10;
+        self.nextButtonLeadingCon.constant = height + 10;
+        self.nextButtonTrailingCon.constant = 5;
+        self.nextButtonBottomCon.constant = 5;
         
         UIColor *color;
         if ([OLKiteABTesting sharedInstance].lightThemeColor2){
@@ -453,9 +462,8 @@
         NSDictionary *views = NSDictionaryOfVariableBindings(addButton);
         NSMutableArray *con = [[NSMutableArray alloc] init];
         
-        NSArray *visuals = @[[NSString stringWithFormat:@"H:|-5-[addButton(%f)]", self.nextButton.frame.size.height],
-                             [NSString stringWithFormat:@"V:[addButton(%f)]-5-|", self.nextButton.frame.size.height]];
-        
+        NSArray *visuals = @[[NSString stringWithFormat:@"H:|-5-[addButton(%f)]", height],
+                             [NSString stringWithFormat:@"V:[addButton(%f)]-5-|", height]];
         
         for (NSString *visual in visuals) {
             [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
@@ -471,8 +479,6 @@
         label.translatesAutoresizingMaskIntoConstraints = NO;
         [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
         [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:-2]];
-
-
     }
 }
 
@@ -543,6 +549,9 @@
         }
         else if (self.product.quantityToFulfillOrder > 1){
             NSUInteger numOrders = 1 + (MAX(0, self.selectedAssets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+            if (![self.product isMultipack]){
+                numOrders = 1;
+            }
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
             self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.selectedAssets.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
         }
@@ -636,7 +645,7 @@
         OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
         vc.modalPresentationStyle = UIModalPresentationFormSheet;
         vc.delegate = self;
-        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(assetsPickerControllerDidCancel:)];
+        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(onBarButtonItemCancelTapped:)];
         OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
         [self presentViewController:nvc animated:YES completion:nil];
         
@@ -664,7 +673,7 @@
 }
 
 - (void)assetsPickerControllerDidCancel:(UIViewController *)picker{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)assetsPickerController:(UIViewController *)picker didFinishPickingAssets:(NSArray<OLAsset *> *)assets{
@@ -675,7 +684,12 @@
             [validAssets removeObjectIdenticalTo:obj];
         }
     }
-    
+    for (OLAsset *asset in [self.providerForPresentedVc.collections.firstObject copy]){
+        if (![validAssets containsObject:asset]){
+            [self.providerForPresentedVc.collections.firstObject removeAsset:asset];
+            [self.selectedAssets removeObject:asset];
+        }
+    }
     [self.providerForPresentedVc.collections.firstObject addAssets:validAssets unique:YES];
     for (OLAsset *asset in validAssets){
         if(self.maximumPhotos == 0 || self.selectedAssets.count < self.maximumPhotos){
@@ -798,6 +812,9 @@
     }
     else if (self.selectedAssets.count < self.minimumPhotos){
         errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select at least %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.minimumPhotos];
+    }
+    else if (![self.product isMultipack] && self.selectedAssets.count > self.maximumPhotos && self.maximumPhotos != 0){
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select no more than %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.maximumPhotos];
     }
     if (errorMessage) {
         UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];

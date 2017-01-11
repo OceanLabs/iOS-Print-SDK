@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -479,22 +479,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 - (void)handleCostError:(NSError *)error{
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
     if (error.code == kOLKiteSDKErrorCodeProductNotAvailableInRegion){
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-            if ([[OLCountry countryForCurrentLocale].codeAlpha3 isEqualToString:self.printOrder.shippingAddress.country.codeAlpha3] || !self.printOrder.shippingAddress.country){
-                NSMutableArray *navigationStack = [self.navigationController.viewControllers mutableCopy];
-                if (self.printOrder.jobs.count == 1){
-                    [self.printOrder removePrintJob:self.printOrder.jobs.firstObject];
-                }
-                else if (navigationStack.count > 1){
-                    UIViewController *reviewVc = navigationStack[navigationStack.count-2];
-                    if ([reviewVc respondsToSelector:@selector(editingPrintJob)]){
-                        [self.printOrder removePrintJob:[reviewVc performSelector:@selector(editingPrintJob)]];
-                    }
-                }
-                [self.printOrder saveOrder];
-                [self updateViewsBasedOnCostUpdate];
-            }
-        }]];
+        [self setViewsToBlank];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
     }
     else{
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
@@ -560,12 +546,16 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     [self.view layoutIfNeeded];
 }
 
+- (void)setViewsToBlank{
+    [self.paymentButton2 setTitle:@"0.00" forState:UIControlStateNormal];
+    self.shippingCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
+    self.promoCodeCostLabel.text = @"";
+    [self.tableView reloadData];
+}
+
 - (void)updateViewsBasedOnCostUpdate {
-    if (self.printOrder.jobs.count == 0){
-        [self.paymentButton2 setTitle:@"0.00" forState:UIControlStateNormal];
-        self.shippingCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
-        self.promoCodeCostLabel.text = @"";
-        [self.tableView reloadData];
+    if (self.printOrder.jobs.count == 0 ){
+        [self setViewsToBlank];
         return;
     }
     
@@ -1347,6 +1337,13 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
     
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+        if (error.code == kOLKiteSDKErrorCodeProductNotAvailableInRegion){
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+            [self presentViewController:ac animated:YES completion:NULL];
+            return;
+        }
+        
         NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
         if (result == NSOrderedAscending || result == NSOrderedSame) {
             if (![self checkForShippingAddress]){
