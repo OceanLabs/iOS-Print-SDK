@@ -687,6 +687,7 @@
     for (OLAsset *asset in [self.providerForPresentedVc.collections.firstObject copy]){
         if (![validAssets containsObject:asset]){
             [self.providerForPresentedVc.collections.firstObject removeAsset:asset];
+            [self.selectedAssets removeObject:asset];
         }
     }
     [self.providerForPresentedVc.collections.firstObject addAssets:validAssets unique:YES];
