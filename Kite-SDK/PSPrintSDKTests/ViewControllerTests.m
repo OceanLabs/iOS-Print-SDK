@@ -38,6 +38,8 @@
 #import "OLImagePickerViewController.h"
 #import "OLPaymentMethodsViewController.h"
 #import "OLImagePickerPhotosPageViewController.h"
+#import "OLButtonCollectionViewCell.h"
+#import "OLPhotoTextField.h"
 
 @import Photos;
 
@@ -50,18 +52,18 @@
 @end
 
 @interface OLKitePrintSDK ()
-
 + (BOOL)setUseStripeForCreditCards:(BOOL)use;
 + (void)setUseStaging:(BOOL)staging;
 + (void)setCacheTemplates:(BOOL)cache;
-
 @end
 
 @interface OLProductTypeSelectionViewController (Private)
-
 -(NSMutableArray *) products;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
+@end
 
+@interface OLButtonCollectionViewCell ()
+- (void)onButtonTouchUpInside;
 @end
 
 @interface OLKiteViewController ()
@@ -94,8 +96,12 @@
 - (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender;
 @end
 
-@interface OLImageEditViewController () <UICollectionViewDelegate>
+@interface OLImageEditViewController () <UICollectionViewDelegate, UITextFieldDelegate>
 - (void)onButtonClicked:(UIButton *)sender;
+@property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
+- (IBAction)onButtonDoneTapped:(UIBarButtonItem *)sender;
+- (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender;
+- (void)onTapGestureRecognized:(id)sender;
 @end
 
 @interface OLCaseViewController ()
@@ -140,11 +146,6 @@
 @interface OLUpsellViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *acceptButton;
 @property (weak, nonatomic) IBOutlet UIButton *declineButton;
-@end
-
-@interface OLImageEditViewController ()
-- (IBAction)onButtonDoneTapped:(UIBarButtonItem *)sender;
-- (IBAction)onBarButtonCancelTapped:(UIBarButtonItem *)sender;
 @end
 
 @interface OLPaymentMethodsViewController ()
@@ -443,7 +444,7 @@
     
     //TODO: Check product option that default selected is first option
     [self performUIAction:^{
-        [caseVc onButtonClicked:caseVc.editingTools.button2];
+         [caseVc.editingTools.button2 sendActionsForControlEvents:UIControlEventTouchUpInside];
     }];
     
     XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].isSelected, @"Default option (first) should selected");
@@ -523,25 +524,6 @@
     
     [self performUIAction:^{
         [vc onLabelDetailsTapped:nil];
-    }];
-}
-
-- (void)testScrollCropViewController{
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
-    XCTAssert(sb);
-    
-    OLImageEditViewController *cropVc = [sb instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
-    cropVc.enableCircleMask = YES;
-    cropVc.aspectRatio = 1.1;
-    
-    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
-    [cropVc setFullImage:[UIImage imageWithData:data1]];
-    cropVc.edits = [[OLPhotoEdits alloc] init];
-    
-    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-    
-    [self performUIAction:^{
-        [rootVc.topViewController presentViewController:cropVc animated:YES completion:NULL];
     }];
 }
 
@@ -1337,6 +1319,159 @@
     
     [self waitForExpectationsWithTimeout:120 handler:NULL];
     
+}
+
+- (void)testImageEditor{
+    NSArray *olAssets = @[
+                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]
+                          ];
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    
+    [OLUserSession currentSession].appAssets = [olAssets mutableCopy];
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
+    
+    [self chooseClass:@"Prints" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Squares" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLImagePickerViewController *photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]]);
+    
+    [self tapNextOnViewController:photoVc];
+    
+    OLPackProductViewController *reviewVc = (OLPackProductViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([reviewVc isKindOfClass:[OLPackProductViewController class]]);
+    
+    UICollectionViewCell *cell = [reviewVc.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    UIButton *button = [cell viewWithTag:11];
+    
+    [self performUIAction:^{
+        [button sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    OLImageEditViewController *editVc = (OLImageEditViewController *)reviewVc.presentedViewController;
+    XCTAssert([editVc isKindOfClass:[OLImageEditViewController class]], @"Did not show edit screen");
+    
+    [self performUIAction:^{
+        [editVc.editingTools.button4 sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    XCTAssert(editVc.editingTools.collectionView.tag == 40/*kOLEditTagCrop*/, @"Crop mode not shown");
+    
+    [self performUIAction:^{
+        [editVc.editingTools.drawerDoneButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    [self performUIAction:^{
+        [editVc.editingTools.button3 sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    XCTAssert(editVc.editingTools.collectionView.tag == 30/*kOLEditTagImageTools*/, @"Image Tools not shown");
+    
+    [self performUIAction:^{
+        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] onButtonTouchUpInside];
+    }];
+    XCTAssert(editVc.editingTools.collectionView.tag == 34/*kOLEditTagFilters*/, @"Filters not shown");
+    
+    [self performUIAction:^{
+        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] onButtonTouchUpInside];
+    }];
+    XCTAssert(editVc.edits.filterName && ![editVc.edits.filterName isEqualToString:@""], @"Filter not selected");
+    
+    [self performUIAction:^{
+        [editVc.editingTools.drawerDoneButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    XCTAssert(editVc.editingTools.collectionView.tag == 30/*kOLEditTagImageTools*/, @"Image Tools not restored");
+    
+    [self performUIAction:^{
+        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] onButtonTouchUpInside];
+    }];
+    XCTAssert(editVc.edits.flipVertical || editVc.edits.flipHorizontal, @"Image not flipped");
+    
+    [self performUIAction:^{
+        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:2 inSection:0]] onButtonTouchUpInside];
+    }];
+    XCTAssert(editVc.edits.counterClockwiseRotations > 0, @"Image not rotated");
+    
+    [self performUIAction:^{
+        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:3 inSection:0]] onButtonTouchUpInside];
+    }];
+    XCTAssert(editVc.textFields.count == 1, @"Textfield not inserted");
+    
+    [self performUIAction:^{
+        editVc.textFields.firstObject.text = @"👦🏻💍🌋?";
+    }];
+    [self performUIAction:^{
+        [editVc onTapGestureRecognized:nil];
+    }];
+    
+    [self performUIAction:^{
+        [editVc.editingTools.button3 sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    XCTAssert(editVc.editingTools.collectionView.tag == 30/*kOLEditTagImageTools*/, @"Image Tools not shown");
+    [self performUIAction:^{
+        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:3 inSection:0]] onButtonTouchUpInside];
+    }];
+    XCTAssert(editVc.textFields.count == 2, @"Textfield not inserted");
+    [self performUIAction:^{
+        [editVc.textFields.firstObject resignFirstResponder];
+    }];
+    
+    [self performUIAction:^{
+        [editVc onButtonDoneTapped:nil];
+    }];
+    
+    [self performUIAction:^{
+        [button sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    editVc = (OLImageEditViewController *)reviewVc.presentedViewController;
+    XCTAssert([editVc isKindOfClass:[OLImageEditViewController class]], @"Did not show edit screen");
+    
+    editVc.textFields.firstObject.text = @"Lord of the Rings";
+    
+    [self performUIAction:^{
+        [editVc textFieldShouldBeginEditing:editVc.textFields.firstObject];
+    }];
+    XCTAssert(editVc.editingTools.collectionView.tag == 31/*kOLEditTagTextTools*/, @"Text Tools not shown");
+    
+    [self performUIAction:^{
+        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] onButtonTouchUpInside];
+    }];
+    XCTAssert(editVc.editingTools.collectionView.tag == 33/*kOLEditTagFonts*/, @"Fonts not shown");
+    
+    [self performUIAction:^{
+        [editVc collectionView:editVc.editingTools.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:[editVc.editingTools.collectionView numberOfItemsInSection:0] - 1 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [editVc.editingTools.drawerDoneButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    XCTAssert(editVc.editingTools.collectionView.tag == 31/*kOLEditTagTextTools*/, @"Text Tools not restored");
+    
+    ///
+    [self performUIAction:^{
+        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] onButtonTouchUpInside];
+    }];
+    XCTAssert(editVc.editingTools.collectionView.tag == 32/*kOLEditTagTextColors*/, @"Font Colors not shown");
+    
+    [self performUIAction:^{
+        [editVc collectionView:editVc.editingTools.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:14 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [editVc.editingTools.drawerDoneButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    XCTAssert(editVc.editingTools.collectionView.tag == 31/*kOLEditTagTextTools*/, @"Text Tools not restored");
+    
+    [self performUIAction:^{
+        [editVc onBarButtonCancelTapped:nil];
+    }];
 }
 
 @end
