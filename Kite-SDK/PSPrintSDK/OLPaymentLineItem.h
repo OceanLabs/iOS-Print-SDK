@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -32,11 +32,15 @@
 @interface OLPaymentLineItem : NSObject <NSCoding>
 
 @property (readonly, copy) NSString *description;
+@property (strong, nonatomic) NSString *identifier;
+@property (nonatomic, strong) NSDictionary *discountedCosts;
 
 - (instancetype) initWithDescription:(NSString *)description
                                costs:(NSDictionary<NSString *, NSDecimalNumber *> *)costs;
 
 - (NSDecimalNumber *)costInCurrency:(NSString *)currencyCode;
 - (NSString *)costStringInCurrency:(NSString *)currencyCode;
+- (NSDecimalNumber *)discountedCostInCurrency:(NSString *)currencyCode;
+- (NSString *)discountedCostStringInCurrency:(NSString *)currencyCode;
 
 @end

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,32 +29,25 @@
 
 #import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
-#import "OLSingleImageProductReviewViewController.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
-#import "OLProductPrintJob.h"
-#import "OLAsset+Private.h"
 #import "OLImageCachingManager.h"
+#import "OLImagePickerViewController.h"
+#import "OLImagePreviewViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
-#import "OLUserSession.h"
-#import "OLNavigationController.h"
-#import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
+#import "OLNavigationController.h"
 #import "OLPaymentViewController.h"
 #import "OLProductPrintJob.h"
 #import "OLProductTemplateOption.h"
-#import "OLRemoteImageView.h"
 #import "OLRemoteImageCropper.h"
-#import "OLAsset+Private.h"
-#import "OLProductTemplateOption.h"
-#import "OLPaymentViewController.h"
-#import "UIViewController+OLMethods.h"
+#import "OLRemoteImageView.h"
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLUpsellViewController.h"
-#import "OLImagePreviewViewController.h"
-#import "OLImagePickerViewController.h"
+#import "OLUserSession.h"
+#import "UIViewController+OLMethods.h"
 
 @interface OLPaymentViewController (Private)
 -(void)saveAndDismissReviewController;
@@ -247,7 +240,15 @@
     NSArray *assetArray = @[asset];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+    OLProductPrintJob *job;
+    if (self.product.productTemplate.templateUI == OLTemplateUIApparel && assetArray.firstObject){
+        job = [OLPrintJob apparelWithTemplateId:self.product.templateId OLAssets:@{
+                                                                                   @"center_chest": assetArray.firstObject,
+                                                                                   }];
+    }
+    else{
+        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+    }
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }

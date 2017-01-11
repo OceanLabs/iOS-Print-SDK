@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@
 //
 
 #import "OLColorSelectionCollectionViewCell.h"
+#import "UIColor+OLHexString.h"
 
 static CGFloat circlesDiff = 0.2;
 
@@ -37,10 +38,10 @@ static CGFloat circlesDiff = 0.2;
     UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(2, 2, self.frame.size.width-4, self.frame.size.height-4)];
     UIColor *strokeColor;
     
-    if ([self.color isEqual:[UIColor whiteColor]] && !self.darkMode){
+    if (([self.color isEqual:[UIColor whiteColor]] || [[self.color hexString] isEqualToString:@"FFFFFFFF"]) && !self.darkMode){
         strokeColor = [UIColor grayColor];
     }
-    else if ([self.color isEqual:[UIColor blackColor]] && self.darkMode){
+    else if (([self.color isEqual:[UIColor blackColor]] || [[self.color hexString] isEqualToString:@"000000FF"]) && self.darkMode){
         strokeColor = [UIColor lightGrayColor];
     }
     else{

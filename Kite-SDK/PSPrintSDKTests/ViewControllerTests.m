@@ -37,6 +37,7 @@
 #import "OLPhotoEdits.h"
 #import "OLImagePickerViewController.h"
 #import "OLPaymentMethodsViewController.h"
+#import "OLImagePickerPhotosPageViewController.h"
 
 @import Photos;
 
@@ -93,6 +94,10 @@
 - (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender;
 @end
 
+@interface OLImageEditViewController () <UICollectionViewDelegate>
+- (void)onButtonClicked:(UIButton *)sender;
+@end
+
 @interface OLCaseViewController ()
 @property (assign, nonatomic) BOOL downloadedMask;
 @end
@@ -146,6 +151,17 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @end
 
+@interface OLImagePickerViewController ()
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
+@property (weak, nonatomic) IBOutlet UICollectionView *sourcesCollectionView;
+@property (strong, nonatomic) UIPageViewController *pageController;
+@end
+
+@interface OLImagePickerPhotosPageViewController ()
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
+- (IBAction)userDidTapOnAlbumLabel:(UITapGestureRecognizer *)sender;
+@end
+
 @implementation ViewControllerTests
 
 - (void)setUp {
@@ -168,7 +184,7 @@
         self.kvoValueToObserve = nil;
     }
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:5 action:^{
         [[[UIApplication sharedApplication].delegate window].rootViewController dismissViewControllerAnimated:NO completion:NULL];
     }];
     
@@ -243,7 +259,7 @@
         });
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     return resultVc;
 }
 
@@ -326,7 +342,7 @@
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
     
-    [self chooseProduct:@"A5 Landscape Photobook" onOLProductTypeSelectionViewController:productTypeVc];
+    [self chooseProduct:@"Small Square Hardcover" onOLProductTypeSelectionViewController:productTypeVc];
     
     [OLUserSession currentSession].userSelectedPhotos = [@[[OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, ] mutableCopy];
     
@@ -357,10 +373,6 @@
     [self tapNextOnViewController:photobookEditVc];
     
     photobook = (OLPhotobookViewController *)productHomeVc.navigationController.topViewController;
-    
-//    [self performUIAction:^{
-//        [photobook touches]
-//    }
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
@@ -401,7 +413,7 @@
         [expectation fulfill];
     });
     
-    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    [self waitForExpectationsWithTimeout:240 handler:NULL];
 }
 
 - (void)testCompleteCaseJourney{
@@ -427,6 +439,20 @@
         [expectation fulfill];
     });
     [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    
+    //TODO: Check product option that default selected is first option
+    [self performUIAction:^{
+        [caseVc onButtonClicked:caseVc.editingTools.button2];
+    }];
+    
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].isSelected, @"Default option (first) should selected");
+    
+    [self performUIAction:^{
+        [caseVc collectionView:caseVc.editingTools.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
+    }];
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option  should selected");
+    //TODO: Check product option that second is selected
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
@@ -567,12 +593,58 @@
     
 }
 
+- (void)testImagePickerViewController{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
+    [self templateSyncWithSuccessHandler:^{
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
+    XCTAssert(sb);
+    OLImagePickerViewController *vc = [sb instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.product = product;
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
+    }];
+    
+    XCTAssert([[(UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController.presentedViewController topViewController] isKindOfClass:[OLImagePickerViewController class]]);
+    
+    OLImagePickerPhotosPageViewController *photosPage = (OLImagePickerPhotosPageViewController *)vc.pageController.viewControllers.firstObject;
+    
+    [self performUIAction:^{
+        [photosPage collectionView:photosPage.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [photosPage userDidTapOnAlbumLabel:nil];
+    }];
+    
+    [self performUIAction:^{
+        [photosPage collectionView:photosPage.albumsCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [vc collectionView:vc.sourcesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [rootVc.topViewController dismissViewControllerAnimated:YES completion:NULL];
+    }];
+}
+
 - (void)testPaymentViewController{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
     [self templateSyncWithSuccessHandler:^{
         [expectation fulfill];
     }];
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
     
     OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
@@ -614,10 +686,10 @@
         [vc onShippingDetailsGestureRecognized:nil];
     }];
     
-    XCTAssert([[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] isKindOfClass:[OLIntegratedCheckoutViewController class]] ,@"");
+    XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLIntegratedCheckoutViewController class]] ,@"");
     
     [self performUIAction:^{
-        [(OLCheckoutViewController *)[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] onButtonDoneClicked];
+        [(OLNavigationController *)vc.navigationController popViewControllerAnimated:YES];
     }];
     
     [OLKiteABTesting sharedInstance].checkoutScreenType = @"Classic";
@@ -626,10 +698,10 @@
         [vc onShippingDetailsGestureRecognized:nil];
     }];
     
-    XCTAssert([[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] isKindOfClass:[OLCheckoutViewController class]] ,@"");
+    XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLCheckoutViewController class]] ,@"");
     
     [self performUIAction:^{
-        [(OLCheckoutViewController *)[(OLNavigationController *)vc.navigationController.presentedViewController topViewController] onButtonDoneClicked];
+        [(OLNavigationController *)vc.navigationController popViewControllerAnimated:YES];
     }];
     
     [self performUIActionWithDelay:5 action:^{
@@ -851,7 +923,7 @@
         });
     }];
 
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
@@ -914,7 +986,7 @@
         });
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
     XCTAssert([nav.topViewController isKindOfClass:[OLProductOverviewViewController class]], @"Not showing Overview vc");
@@ -986,7 +1058,7 @@
         });
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
     XCTAssert([nav.topViewController isKindOfClass:[OLImagePickerViewController class]], @"Not showing Review vc");
@@ -1055,7 +1127,7 @@
         });
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
     XCTAssert([nav.topViewController isKindOfClass:[OLProductOverviewViewController class]], @"Not showing Overview vc, but: %@", [nav.topViewController class]);
@@ -1121,7 +1193,7 @@
         });
     }];
     
-    [self waitForExpectationsWithTimeout:60 handler:NULL];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
     XCTAssert([nav.topViewController isKindOfClass:[OLImagePickerViewController class]], @"Not showing Review vc");

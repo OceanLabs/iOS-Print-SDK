@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -50,6 +50,12 @@ typedef NS_ENUM(NSInteger, OLTemplateUI) {
     OLTemplateUIApparel,
     OLTemplateUIDoubleSided,
     OLTemplateUICalendar,
+    OLTemplateUIMug,
+};
+
+typedef NS_ENUM(NSInteger, OLImageBlendMode) {
+    OLImageBlendModeNormal,
+    OLImageBlendModeMultiply,
 };
 
 @class OLProductTemplateSyncRequest;
@@ -66,6 +72,7 @@ typedef NS_ENUM(NSInteger, OLTemplateUI) {
 @property (strong, nonatomic) NSDictionary<NSString *, NSString *> *_Nullable coverPhotosDict;
 @property (strong, nonatomic) NSArray <NSString *>*_Nullable productPhotographyURLs;
 @property (assign, nonatomic) OLTemplateUI templateUI;
+@property (assign, nonatomic) OLTemplateUI blendMode;
 @property (strong, nonatomic) NSString *_Nullable templateClass;
 @property (strong, nonatomic) NSString *_Nullable templateType;
 @property (strong, nonatomic) NSString *_Nullable shortDescription;

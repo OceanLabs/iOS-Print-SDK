@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -136,7 +136,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
                             }
                             
                             for (OLAsset *asset in imageURLAssets) {
-                                if (asset.assetType == kOLAssetTypeRemoteImageURL  && ![asset isEdited] && [asset.imageURL.absoluteString isEqualToString:url]) {
+                                if (asset.assetType == kOLAssetTypeRemoteImageURL  && ![asset isEdited] && [asset.imageURL.absoluteString isEqualToString:url] && !asset.assetId) {
                                     [asset setUploadedWithAssetId:[assetId unsignedIntegerValue] previewURL:url];
                                     ++registeredAssetCount;
                                 }

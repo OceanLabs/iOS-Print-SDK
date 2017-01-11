@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -361,8 +361,11 @@ static const NSInteger kSectionPages = 2;
 
 - (void)updateUserSelectedPhotos{
     [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
+    if (self.coverPhoto && ![self.coverPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+        [[OLUserSession currentSession].userSelectedPhotos addObject:self.coverPhoto];
+    }
     for (OLAsset *item in self.photobookPhotos){
-        if (![item isKindOfClass:[NSNull class]]){
+        if (![item isKindOfClass:[OLPlaceholderAsset class]]){
             [[OLUserSession currentSession].userSelectedPhotos addObject:item];
         }
     }
@@ -397,6 +400,8 @@ static const NSInteger kSectionPages = 2;
 
 - (void)deletePage{
     if (self.longPressImageIndex == -1){
+        [self.photobookPhotos removeObjectIdenticalTo:self.coverPhoto];
+        [[OLUserSession currentSession].userSelectedPhotos removeObjectIdenticalTo:self.coverPhoto];
         self.coverPhoto = nil;
         self.interactionPhotobook.coverPhoto = nil;
         [self.interactionPhotobook loadCoverPhoto];
@@ -407,6 +412,7 @@ static const NSInteger kSectionPages = 2;
         [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         self.selectedIndexNumber = nil;
     }
+    [[OLUserSession currentSession].userSelectedPhotos removeObjectIdenticalTo:self.photobookPhotos[self.longPressImageIndex]];
     self.photobookPhotos[self.longPressImageIndex] = [OLPlaceholderAsset asset];
     [self updateUserSelectedPhotos];
     self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
@@ -435,29 +441,15 @@ static const NSInteger kSectionPages = 2;
     cropVc.providesPresentationContextTransitionStyle = true;
     cropVc.definesPresentationContext = true;
     cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    [cropPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+    [cropPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = cropPhoto.edits;
-        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
     }];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
 #endif
-}
-
-- (void)replaceImage{
-    UIImageView *imageView;
-    if (self.longPressImageIndex == -1){
-        imageView = self.interactionPhotobook.coverImageView;
-    }
-    else{
-        imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
-    }
-    
-    self.replacingImageNumber = [NSNumber numberWithInteger:self.longPressImageIndex];
-    [self addMorePhotosFromView:imageView];
 }
 
 #pragma mark - User Actions
@@ -695,10 +687,6 @@ static const NSInteger kSectionPages = 2;
         [items addObject:cropImageItem];
     }
     
-    UIMenuItem *replaceImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Replace Photo", @"") action:@selector(replaceImage)];
-    [items addObject:replaceImageItem];
-    
-    
     UIMenuController *mc = [UIMenuController sharedMenuController];
     [mc setMenuItems:items];
     [mc setTargetRect:view.frame inView:view];
@@ -825,10 +813,22 @@ static const NSInteger kSectionPages = 2;
 #pragma mark - OLScrollCropView delegate
 
 - (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
+    if (self.longPressImageIndex == -1){
+        [self.coverPhoto unloadImage];
+    }
+    else{
+        [self.photobookPhotos[self.longPressImageIndex] unloadImage];
+    }
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
+    if (self.longPressImageIndex == -1){
+        [self.coverPhoto unloadImage];
+    }
+    else{
+        [self.photobookPhotos[self.longPressImageIndex] unloadImage];
+    }
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 
@@ -871,13 +871,16 @@ static const NSInteger kSectionPages = 2;
 #pragma mark - Adding new images
 
 - (void)addMorePhotosFromView:(UIView *)view{
-    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
-    if ([self.photobookPhotos indexOfObject:self.coverPhoto] == NSNotFound){
-        [[OLUserSession currentSession].userSelectedPhotos removeObject:self.coverPhoto];
+    NSInteger max = self.product.quantityToFulfillOrder + 1; //Plus cover photo
+    NSInteger current = [self photobookPhotosCount];
+    if (self.replacingImageNumber){
+        current--;
     }
+    
+    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     vc.selectedAssets = [OLUserSession currentSession].userSelectedPhotos;
     vc.delegate = self;
-    vc.maximumPhotos = self.product.quantityToFulfillOrder;
+    vc.maximumPhotos = max;
     vc.product = self.product;
     
     [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
@@ -902,7 +905,11 @@ static const NSInteger kSectionPages = 2;
     
     if (self.addNewPhotosAtIndex == -1){
             self.coverPhoto = [addedAssets firstObject];
-        addedAssets = [[addedAssets subarrayWithRange:NSMakeRange(1, assets.count - 1)] mutableCopy];
+        if (addedAssets.count > 0){
+            addedAssets = [addedAssets mutableCopy];
+            [(NSMutableArray *)addedAssets removeObjectAtIndex:0];
+            [assets removeObjectIdenticalTo:self.coverPhoto];
+        }
         self.addNewPhotosAtIndex = 0;
         
         for (OLPhotobookViewController *photobook in self.childViewControllers){

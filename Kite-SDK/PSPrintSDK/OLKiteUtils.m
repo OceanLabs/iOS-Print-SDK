@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -179,11 +179,8 @@
 
 + (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
     OLTemplateUI templateUI = product.productTemplate.templateUI;
-    if (templateUI == OLTemplateUICase){
+    if (templateUI == OLTemplateUICase || templateUI == OLTemplateUIApparel){
         return @"OLCaseViewController";
-    }
-    else if (templateUI == OLTemplateUIApparel){
-        return @"OLTShirtReviewViewController";
     }
     else if (templateUI == OLTemplateUIPostcard){
         return @"OLPostcardViewController";
@@ -196,6 +193,9 @@
     }
     else if (templateUI == OLTemplateUINonCustomizable){
         return @"OLPaymentViewController";
+    }
+    else if (templateUI == OLTemplateUIMug){
+        return @"OL3DProductViewController";
     }
     else if (photoSelectionScreen){
         return @"OLImagePickerViewController";

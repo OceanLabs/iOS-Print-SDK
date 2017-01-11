@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,7 @@
 @property (strong, nonatomic) NSString *iconImageName;
 @property (strong, nonatomic) UIColor *color;
 @property (strong, nonatomic) NSURL *productOverlay;
+@property (strong, nonatomic) NSURL *productBackground;
 @property (assign, nonatomic) UIEdgeInsets borderOverride;
 @property (weak, nonatomic) OLProductTemplateOption *option;
 

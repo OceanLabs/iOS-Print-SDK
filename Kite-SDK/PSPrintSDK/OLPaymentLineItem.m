@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -58,8 +58,24 @@ static NSString *const kKeyLineItemShippingCosts = @"ly.kite.iossdk.kKeyLineItem
     return self.costs[currencyCode];
 }
 
+- (NSDecimalNumber *)discountedCostInCurrency:(NSString *)currencyCode {
+    return self.discountedCosts[currencyCode];
+}
+
 - (NSString *)costStringInCurrency:(NSString *)currencyCode {
     NSDecimalNumber *cost = [self costInCurrency:currencyCode];
+    if ([cost isEqualToNumber:@0]){
+        return NSLocalizedString(@"Free", @"");
+    } else {
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+        [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+        [formatter setCurrencyCode:currencyCode];
+        return [formatter stringFromNumber:cost];
+    }
+}
+
+- (NSString *)discountedCostStringInCurrency:(NSString *)currencyCode {
+    NSDecimalNumber *cost = [self discountedCostInCurrency:currencyCode];
     if ([cost isEqualToNumber:@0]){
         return NSLocalizedString(@"Free", @"");
     } else {

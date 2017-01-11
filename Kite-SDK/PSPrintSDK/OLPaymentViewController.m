@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,55 +27,53 @@
 //  THE SOFTWARE.
 //
 
-#import "OLProgressHUD.h"
-#import "OLImageDownloader.h"
-#import "OLPaymentViewController.h"
-#import "OLReceiptViewController.h"
-#import "OLPrintOrder.h"
-#import "OLPrintJob.h"
-#import "OLPrintOrder+History.h"
-#import "OLPostcardPrintJob.h"
-#import "OLCheckoutViewController.h"
-#import "Util.h"
-#import "OLPayPalCard.h"
 #import "NSArray+QueryingExtras.h"
-#import "OLKitePrintSDK.h"
-#import "OLProductTemplate.h"
-#import "OLUserSession.h"
-#import "OLCountry.h"
-#import "NSObject+Utils.h"
-#import "OLConstants.h"
-#import "OLCreditCardCaptureViewController.h"
-#import "OLAnalytics.h"
-#import "OLPaymentLineItem.h"
-#import "UIView+RoundRect.h"
-#import "OLBaseRequest.h"
-#import "OLPrintOrderCost.h"
-#import "OLKiteABTesting.h"
-#import "UIImage+OLUtils.h"
-#import "UIImage+ImageNamedInKiteBundle.h"
-#import "UIImageView+FadeIn.h"
 #import "NSDecimalNumber+CostFormatter.h"
+#import "NSObject+Utils.h"
+#import "OLAddress+AddressBook.h"
+#import "OLAnalytics.h"
+#import "OLAsset+Private.h"
+#import "OLBaseRequest.h"
+#import "OLCheckoutViewController.h"
+#import "OLConstants.h"
+#import "OLCountry.h"
+#import "OLCreditCardCaptureViewController.h"
+#import "OLFrameOrderReviewViewController.h"
+#import "OLImageDownloader.h"
+#import "OLImagePickerViewController.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
 #import "OLPackProductViewController.h"
-#import "OLPhotobookViewController.h"
-#import "NSObject+Utils.h"
-#import "OLProductOverviewViewController.h"
-#import "OLSingleImageProductReviewViewController.h"
-#import "OLPosterViewController.h"
-#import "OLFrameOrderReviewViewController.h"
-#import "OLAsset+Private.h"
-#import "UIViewController+OLMethods.h"
-#import "OLAddress+AddressBook.h"
-#import "NSObject+Utils.h"
+#import "OLPaymentLineItem.h"
 #import "OLPaymentMethodsViewController.h"
+#import "OLPaymentViewController.h"
 #import "OLPayPalCard+OLCardIcon.h"
-#import "OLStripeCard+OLCardIcon.h"
-#import "OLImagePickerViewController.h"
-#import "OLStripeWrapper.h"
+#import "OLPayPalCard.h"
 #import "OLPayPalWrapper.h"
 #import "OLPhotobookPrintJob.h"
+#import "OLPhotobookViewController.h"
+#import "OLPostcardPrintJob.h"
+#import "OLPosterViewController.h"
+#import "OLPrintJob.h"
+#import "OLPrintOrder+History.h"
+#import "OLPrintOrder.h"
+#import "OLPrintOrderCost.h"
+#import "OLProductOverviewViewController.h"
+#import "OLProductTemplate.h"
+#import "OLProgressHUD.h"
+#import "OLReceiptViewController.h"
+#import "OLSingleImageProductReviewViewController.h"
+#import "OLStripeCard+OLCardIcon.h"
+#import "OLStripeWrapper.h"
+#import "OLUserSession.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIImage+OLUtils.h"
+#import "UIImageView+FadeIn.h"
+#import "UIView+RoundRect.h"
+#import "UIViewController+OLMethods.h"
+#import "Util.h"
 
 @import PassKit;
 @import Contacts;
@@ -653,7 +651,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 self.shippingCostLabel.alpha = 1;
             }];
         }];
-        [self validateTemplatePricing];
+        [self.tableView reloadData];
+//        [self validateTemplatePricing];
     }];
 }
 
@@ -753,7 +752,20 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
         [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
         if (progress < 1.0){
-            [OLProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload]];
+            NSString *status;
+            if (self.printOrder.jobs.count == 1){
+                OLProductTemplate *template = [OLProductTemplate templateWithId:[self.printOrder.jobs.firstObject templateId]];
+                if (template){
+                    if (template.templateUI == OLTemplateUIPhotobook && [OLKiteUtils assetArrayContainsPDF:[self.printOrder.jobs.firstObject assetsForUploading]]){
+                        status = NSLocalizedStringFromTableInBundle(@"Uploading book", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+                    }
+                }
+                
+            }
+            if (!status){
+                status = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) totalAssetsUploaded + 1 + totalURLAssets, (unsigned long) self.printOrder.totalAssetsToUpload];
+            }
+            [OLProgressHUD showProgress:progress status:status];
         }
         else{
             [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
@@ -1225,7 +1237,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                 self.printOrder.shippingAddress = [addresses anyObject];
             }
             
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
             [self.printOrder saveOrder];
             [self updateViewsBasedOnCostUpdate];
             
@@ -1239,7 +1250,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         printJob.extraCopies--;
         
         if (indexPath){
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [(UILabel *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:70] setText:@""];
+            [(UILabel *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1000] setText:@""];
+            [(UIActivityIndicatorView *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:90] startAnimating];
         }
         [self.printOrder saveOrder];
         [self updateViewsBasedOnCostUpdate];
@@ -1254,11 +1267,12 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     CGPoint buttonPosition = [sender.superview convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
-    
     printJob.extraCopies += 1;
     
     if (indexPath){
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [(UILabel *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:70] setText:@""];
+        [(UILabel *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1000] setText:@""];
+        [(UIActivityIndicatorView *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:90] startAnimating];
     }
     
     [self.printOrder saveOrder];
@@ -1560,16 +1574,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:60];
         UIButton *largeEditButton = (UIButton *)[cell.contentView viewWithTag:61];
         UILabel *priceLabel = (UILabel *)[cell.contentView viewWithTag:70];
-        UILabel *addressLabel = (UILabel *)[cell.contentView viewWithTag:80];
         
         id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
-        
-        if ([job address]){
-            addressLabel.text = [[job address] descriptionWithoutRecipient];
-        }
-        else{
-            addressLabel.text = nil;
-        }
         
         OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
         
@@ -1589,28 +1595,36 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
         
         NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
-        
-        NSDecimalNumber *originalUnitCost = product.originalUnitCostDecimalNumber;
-        NSDecimalNumber *finalUnitCost = [product unitCostDecimalNumber];
-        
+
         [[cell viewWithTag:1000] removeFromSuperview];
         
-        if (originalUnitCost){
-            UILabel *finalCostLabel = [[UILabel alloc] init];
-            finalCostLabel.font = priceLabel.font;
-            finalCostLabel.tag = 1000;
-            finalCostLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[finalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
-            [cell addSubview:finalCostLabel];
-            finalCostLabel.translatesAutoresizingMaskIntoConstraints = NO;
-            [cell addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeTop multiplier:1 constant:-5]];
-            [cell addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-            
-            NSString *s = [[numUnitsInJob decimalNumberByMultiplyingBy:[originalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
-            priceLabel.attributedText = [[NSAttributedString alloc] initWithString:s attributes:@{NSFontAttributeName : priceLabel.font, NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSForegroundColorAttributeName : [UIColor colorWithWhite:0.40 alpha:1.000]}];
-        }
-        else{
-            priceLabel.text = [[numUnitsInJob decimalNumberByMultiplyingBy:[finalUnitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]] formatCostForCurrencyCode:self.printOrder.currencyCode];
-        }
+        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+            for (OLPaymentLineItem *item in cost.lineItems){
+                if ([item.identifier isEqualToString:[job uuid]]){
+                    priceLabel.text = [item costStringInCurrency:self.printOrder.currencyCode];
+                    
+                    NSString *discountedPrice = [item discountedCostStringInCurrency:self.printOrder.currencyCode];
+                    if (discountedPrice && ![discountedPrice isEqualToString:@""]){
+                        UILabel *finalCostLabel = [cell.contentView viewWithTag:1000];
+                        if (!finalCostLabel){
+                            finalCostLabel = [[UILabel alloc] init];
+                            
+                            finalCostLabel.font = priceLabel.font;
+                            finalCostLabel.tag = 1000;
+                            
+                            [cell.contentView addSubview:finalCostLabel];
+                            finalCostLabel.translatesAutoresizingMaskIntoConstraints = NO;
+                            [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeTop multiplier:1 constant:-5]];
+                            [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+                        }
+                        finalCostLabel.text = discountedPrice;
+                        
+                        priceLabel.attributedText = [[NSAttributedString alloc] initWithString:priceLabel.text attributes:@{NSFontAttributeName : priceLabel.font, NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSForegroundColorAttributeName : [UIColor colorWithWhite:0.40 alpha:1.000]}];
+                    }
+                }
+            }
+            [(UIActivityIndicatorView *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:90] stopAnimating];
+        }];
         
         if ([numUnitsInJob integerValue] == 1){
             productNameLabel.text = product.productTemplate.name;
@@ -1755,7 +1769,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     [OLUserSession currentSession].userSelectedPhotos = userSelectedPhotos;
     
-    if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != OLTemplateUICase && product.productTemplate.templateUI != OLTemplateUIPhotobook && product.productTemplate.templateUI != OLTemplateUIPostcard && !(product.productTemplate.templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){
+    if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != OLTemplateUICase && product.productTemplate.templateUI != OLTemplateUIApparel && product.productTemplate.templateUI != OLTemplateUIPhotobook && product.productTemplate.templateUI != OLTemplateUIPostcard && !(product.productTemplate.templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){
         OLImagePickerViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
         photoVc.product = product;
         photoVc.overrideImagePickerMode = YES;

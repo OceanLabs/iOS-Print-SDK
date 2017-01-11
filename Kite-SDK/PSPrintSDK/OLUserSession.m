@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -125,6 +125,26 @@
     }
 }
 
+- (void)logoutOfFacebook{
+    [OLFacebookSDKWrapper logout];
+}
+
+- (void)logoutOfInstagram{
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray *cookies = [NSArray arrayWithArray:[storage cookies]];
+    for (cookie in cookies) {
+        if ([cookie.domain containsString:@"instagram.com"]) {
+            [storage deleteCookie:cookie];
+        }
+    }
+    
+    NSArray *instagramAccounts = [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
+    for (OLOAuth2Account *account in instagramAccounts) {
+        [[OLOAuth2AccountStore sharedStore] removeAccount:account];
+    }
+}
+
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions{
     if ((cleanupOptions & OLUserSessionCleanupOptionPhotos) == OLUserSessionCleanupOptionPhotos){
         [self clearUserSelectedPhotos];
@@ -143,22 +163,8 @@
         [OLStripeCard clearLastUsedCard];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionSocial) == OLUserSessionCleanupOptionSocial){
-        NSHTTPCookie *cookie;
-        NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-        NSArray *cookies = [NSArray arrayWithArray:[storage cookies]];
-        for (cookie in cookies) {
-            if ([cookie.domain containsString:@"instagram.com"]) {
-                [storage deleteCookie:cookie];
-            }
-        }
-        
-        NSArray *instagramAccounts = [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-        for (OLOAuth2Account *account in instagramAccounts) {
-            [[OLOAuth2AccountStore sharedStore] removeAccount:account];
-        }
-        
-        [OLFacebookSDKWrapper logout];
-        [OLFacebookSDKWrapper clearAccessToken];
+        [self logoutOfInstagram];
+        [self logoutOfFacebook];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionPersonal) == OLUserSessionCleanupOptionPersonal){
         [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientLastName = nil;

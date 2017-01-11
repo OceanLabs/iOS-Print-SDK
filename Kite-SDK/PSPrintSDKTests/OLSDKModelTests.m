@@ -164,11 +164,19 @@
 }
 
 - (void)testPrintJobProductName{
-    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" images:@[]];
-    XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"squares"].name]);
+    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Sync Templates"];
+    [OLProductTemplate syncWithCompletionHandler:^(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error){
+        id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" images:@[]];
+        XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"squares"].name]);
+        
+        job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_210x210_sm" OLAssets:@[] frontCoverOLAsset:nil backCoverOLAsset:nil];
+        XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"rpi_wrap_210x210_sm"].name]);
+        
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
     
-    job = [OLPrintJob photobookWithTemplateId:@"photobook_small_portrait" OLAssets:@[] frontCoverOLAsset:nil backCoverOLAsset:nil];
-    XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"photobook_small_portrait"].name]);
 }
 
 - (void)testCreditCardExpiryFormat{

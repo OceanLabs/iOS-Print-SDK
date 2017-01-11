@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,7 @@ static NSString *const kKeyFlipVertical = @"co.oceanlabs.psprintstudio.kKeyFlipV
 static NSString *const kKeyTextsOnPhoto = @"co.oceanlabs.psprintstudio.kKeyTextsOnPhoto";
 static NSString *const kKeyBorderColor = @"co.oceanlabs.psprintstudio.kKeyBorderColor";
 static NSString *const kKeyBottomBorderText = @"co.oceanlabs.psprintstudio.kKeyBottomBorderText";
+static NSString *const kKeyFilterName = @"co.oceanlabs.psprintstudio.kKeyFilterName";
 
 @implementation OLPhotoEdits
 
@@ -68,6 +69,7 @@ static NSString *const kKeyBottomBorderText = @"co.oceanlabs.psprintstudio.kKeyB
         _textsOnPhoto = [aDecoder decodeObjectForKey:kKeyTextsOnPhoto];
         _borderColor = [aDecoder decodeObjectForKey:kKeyBorderColor];
         _bottomBorderText = [aDecoder decodeObjectForKey:kKeyBottomBorderText];
+        _filterName = [aDecoder decodeObjectForKey:kKeyFilterName];
     }
     return self;
 }
@@ -83,6 +85,7 @@ static NSString *const kKeyBottomBorderText = @"co.oceanlabs.psprintstudio.kKeyB
     [aCoder encodeObject:self.textsOnPhoto forKey:kKeyTextsOnPhoto];
     [aCoder encodeObject:self.borderColor forKey:kKeyBorderColor];
     [aCoder encodeObject:self.bottomBorderText forKey:kKeyBottomBorderText];
+    [aCoder encodeObject:self.filterName forKey:kKeyFilterName];
 }
 
 - (void)performHorizontalFlipEditFromOrientation:(UIImageOrientation)orientation{
@@ -232,6 +235,7 @@ static NSString *const kKeyBottomBorderText = @"co.oceanlabs.psprintstudio.kKeyB
     copy.textsOnPhoto = [[NSMutableArray alloc] initWithArray:self.textsOnPhoto copyItems:YES];
     copy.borderColor = [self.borderColor copyWithZone:zone];
     copy.bottomBorderText = [self.bottomBorderText copyWithZone:zone];
+    copy.filterName = [self.filterName copyWithZone:zone];
 
     return copy;
 }
@@ -250,6 +254,7 @@ static NSString *const kKeyBottomBorderText = @"co.oceanlabs.psprintstudio.kKeyB
         retVal &= [self.textsOnPhoto isEqualToArray:other.textsOnPhoto];
         retVal &= [self.borderColor isEqual:other.borderColor] || (!self.borderColor && !other.borderColor);
         retVal &= [self.bottomBorderText isEqual:other.bottomBorderText] || (!self.bottomBorderText && !other.bottomBorderText);
+        retVal &= [self.filterName isEqualToString:other.filterName];
     }
     
     return retVal;
