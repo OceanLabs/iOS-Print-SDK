@@ -437,10 +437,6 @@ static const CGFloat kBookEdgePadding = 38;
     }
 }
 
-- (void)ios7Back{
-    [self dismissViewControllerAnimated:YES completion:NULL];
-}
-
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     

@@ -50,16 +50,16 @@
     [self.delegate performSelector:@selector(deletePage)];
 }
 
-- (void)addPage{
-    [self.delegate performSelector:@selector(addPage)];
-}
+//- (void)addPage{
+//    [self.delegate performSelector:@selector(addPage)];
+//}
 
 - (void)cropImage{
     [self.delegate performSelector:@selector(cropImage)];
 }
 
-- (void)replaceImage{
-    [self.delegate performSelector:@selector(replaceImage)];
-}
+//- (void)replaceImage{
+//    [self.delegate performSelector:@selector(replaceImage)];
+//}
 
 @end

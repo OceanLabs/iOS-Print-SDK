@@ -397,14 +397,6 @@ static const NSInteger kSectionPages = 2;
     return count;
 }
 
-- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller{
-    return UIModalPresentationNone;
-}
-
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller traitCollection:(UITraitCollection *)traitCollection {
-    return UIModalPresentationNone;
-}
-
 #pragma mark - Menu Actions
 
 - (void)deletePage{
