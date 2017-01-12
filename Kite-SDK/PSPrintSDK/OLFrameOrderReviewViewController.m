@@ -611,7 +611,15 @@ CGFloat innerMargin = 3;
             }
         }
         
-        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+        if (self.presentedVc){
+            [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+        }
+        else{
+            [vc dismissViewControllerAnimated:YES completion:NULL];
+        }
+        
+        self.vcDelegateForCustomVc = nil;
+        self.presentedVc = nil;
     }
 }
 

@@ -40,6 +40,7 @@
 #import "OLImagePickerPhotosPageViewController.h"
 #import "OLButtonCollectionViewCell.h"
 #import "OLPhotoTextField.h"
+#import "OLPosterViewController.h"
 
 @import Photos;
 
@@ -232,7 +233,14 @@
     
     __block OLProductHomeViewController *resultVc;
     
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLKiteTestHelper imageAssets].firstObject]];
+    NSArray *urls = @[@"https://s3.amazonaws.com/psps/sdk_static/1.jpg", @"https://s3.amazonaws.com/psps/sdk_static/2.jpg", @"https://s3.amazonaws.com/psps/sdk_static/3.jpg", @"https://s3.amazonaws.com/psps/sdk_static/4.jpg", @"https://s3.amazonaws.com/psps/sdk_static/5.jpg", @"https://s3.amazonaws.com/psps/sdk_static/6.jpg", @"https://s3.amazonaws.com/psps/sdk_static/7.jpg", @"https://s3.amazonaws.com/psps/sdk_static/8.jpg", @"https://s3.amazonaws.com/psps/sdk_static/9.jpg", @"https://s3.amazonaws.com/psps/sdk_static/10.jpg", @"https://s3.amazonaws.com/psps/sdk_static/11.jpg", @"https://s3.amazonaws.com/psps/sdk_static/12.jpg", @"https://s3.amazonaws.com/psps/sdk_static/13.jpg", @"https://s3.amazonaws.com/psps/sdk_static/14.jpg", @"https://s3.amazonaws.com/psps/sdk_static/15.jpg", @"https://s3.amazonaws.com/psps/sdk_static/16.jpg", @"https://s3.amazonaws.com/psps/sdk_static/17.jpg", @"https://s3.amazonaws.com/psps/sdk_static/18.jpg", @"https://s3.amazonaws.com/psps/sdk_static/19.jpg", @"https://s3.amazonaws.com/psps/sdk_static/20.jpg", @"https://s3.amazonaws.com/psps/sdk_static/21.jpg", @"https://s3.amazonaws.com/psps/sdk_static/22.jpg", @"https://s3.amazonaws.com/psps/sdk_static/23.jpg", @"https://s3.amazonaws.com/psps/sdk_static/24.jpg", @"https://s3.amazonaws.com/psps/sdk_static/25.jpg", @"https://s3.amazonaws.com/psps/sdk_static/26.jpg", @"https://s3.amazonaws.com/psps/sdk_static/27.jpg", @"https://s3.amazonaws.com/psps/sdk_static/28.jpg", @"https://s3.amazonaws.com/psps/sdk_static/29.jpg", @"https://s3.amazonaws.com/psps/sdk_static/30.jpg", @"https://s3.amazonaws.com/psps/sdk_static/31.jpg", @"https://s3.amazonaws.com/psps/sdk_static/32.jpg", @"https://s3.amazonaws.com/psps/sdk_static/33.jpg", @"https://s3.amazonaws.com/psps/sdk_static/34.jpg", @"https://s3.amazonaws.com/psps/sdk_static/35.jpg", @"https://s3.amazonaws.com/psps/sdk_static/36.jpg", @"https://s3.amazonaws.com/psps/sdk_static/37.jpg", @"https://s3.amazonaws.com/psps/sdk_static/38.jpg", @"https://s3.amazonaws.com/psps/sdk_static/39.jpg", @"https://s3.amazonaws.com/psps/sdk_static/40.jpg", @"https://s3.amazonaws.com/psps/sdk_static/41.jpg", @"https://s3.amazonaws.com/psps/sdk_static/42.jpg", @"https://s3.amazonaws.com/psps/sdk_static/43.jpg", @"https://s3.amazonaws.com/psps/sdk_static/44.jpg", @"https://s3.amazonaws.com/psps/sdk_static/45.jpg", @"https://s3.amazonaws.com/psps/sdk_static/46.jpg", @"https://s3.amazonaws.com/psps/sdk_static/47.jpg", @"https://s3.amazonaws.com/psps/sdk_static/48.jpg", @"https://s3.amazonaws.com/psps/sdk_static/49.jpg", @"https://s3.amazonaws.com/psps/sdk_static/50.jpg"];
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (NSString *s in urls){
+        OLAsset *asset = [OLAsset assetWithURL:[NSURL URLWithString:s]];
+        [assets addObject:asset];
+    }
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     
     OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]]] name:@"Dogs"];
     OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]] name:@"Cats"];
@@ -345,8 +353,6 @@
     
     [self chooseProduct:@"Small Square Hardcover" onOLProductTypeSelectionViewController:productTypeVc];
     
-    [OLUserSession currentSession].userSelectedPhotos = [@[[OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, [OLUserSession currentSession].userSelectedPhotos.firstObject, ] mutableCopy];
-    
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
     OLEditPhotobookViewController *photobookEditVc = (OLEditPhotobookViewController *)productHomeVc.navigationController.topViewController;
@@ -383,6 +389,61 @@
     
     OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+    
+    UITableViewCell *cell = [paymentVc.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    [self performUIAction:^{
+        [(UIButton *)[cell viewWithTag:61] sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    UIViewController *presentedNav = paymentVc.presentedViewController;
+    XCTAssert([presentedNav isKindOfClass:[OLNavigationController class]], @"Did not present navigation vc");
+    UIViewController *presentedVc = [(OLNavigationController *)presentedNav topViewController];
+    XCTAssert([presentedVc isKindOfClass:[OLEditPhotobookViewController class]], @"Did not present editing vc");
+    
+    [self performUIActionWithDelay:3 action:^{
+        [[UIDevice currentDevice] setValue:
+         [NSNumber numberWithInteger: UIInterfaceOrientationLandscapeLeft]
+                                    forKey:@"orientation"];
+    }];
+    
+    [self performUIActionWithDelay:3 action:^{
+        [[UIDevice currentDevice] setValue:
+         [NSNumber numberWithInteger: UIInterfaceOrientationPortrait]
+                                    forKey:@"orientation"];
+    }];
+    
+    [self tapNextOnViewController:presentedVc];
+    presentedVc = [(OLNavigationController *)presentedNav topViewController];
+    XCTAssert([presentedVc isKindOfClass:[OLPhotobookViewController class]], @"Did not proceed to photobook vc");
+    
+    [self performUIActionWithDelay:3 action:^{
+        [[UIDevice currentDevice] setValue:
+         [NSNumber numberWithInteger: UIInterfaceOrientationLandscapeLeft]
+                                    forKey:@"orientation"];
+    }];
+    
+    [self performUIActionWithDelay:3 action:^{
+        [[UIDevice currentDevice] setValue:
+         [NSNumber numberWithInteger: UIInterfaceOrientationPortrait]
+                                    forKey:@"orientation"];
+    }];
+    
+    [self performUIAction:^{
+        [(OLPhotobookViewController *)presentedVc onCoverTapRecognized:nil];
+    }];
+    
+    [self performUIAction:^{
+        [presentedVc.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
+    [(OLPhotobookViewController *)presentedVc setCoverPhoto:nil];
+    
+    [self performUIAction:^{
+        [(OLPhotobookViewController *)presentedVc onCoverTapRecognized:nil];
+    }];
+    
+    [self tapNextOnViewController:presentedVc];
+    XCTAssert(!paymentVc.presentedViewController, @"Did not dismiss photobook screen");
     
     [self performUIAction:^{
         [paymentVc onButtonPayWithCreditCardClicked];
@@ -1472,6 +1533,91 @@
     [self performUIAction:^{
         [editVc onBarButtonCancelTapped:nil];
     }];
+}
+
+- (void)testCompletePosterJourney{
+    NSArray *urls = @[@"https://s3.amazonaws.com/psps/sdk_static/1.jpg", @"https://s3.amazonaws.com/psps/sdk_static/2.jpg", @"https://s3.amazonaws.com/psps/sdk_static/3.jpg", @"https://s3.amazonaws.com/psps/sdk_static/4.jpg", @"https://s3.amazonaws.com/psps/sdk_static/5.jpg", @"https://s3.amazonaws.com/psps/sdk_static/6.jpg", @"https://s3.amazonaws.com/psps/sdk_static/7.jpg", @"https://s3.amazonaws.com/psps/sdk_static/8.jpg", @"https://s3.amazonaws.com/psps/sdk_static/9.jpg", @"https://s3.amazonaws.com/psps/sdk_static/10.jpg", @"https://s3.amazonaws.com/psps/sdk_static/11.jpg", @"https://s3.amazonaws.com/psps/sdk_static/12.jpg", @"https://s3.amazonaws.com/psps/sdk_static/13.jpg", @"https://s3.amazonaws.com/psps/sdk_static/14.jpg", @"https://s3.amazonaws.com/psps/sdk_static/15.jpg", @"https://s3.amazonaws.com/psps/sdk_static/16.jpg", @"https://s3.amazonaws.com/psps/sdk_static/17.jpg", @"https://s3.amazonaws.com/psps/sdk_static/18.jpg", @"https://s3.amazonaws.com/psps/sdk_static/19.jpg", @"https://s3.amazonaws.com/psps/sdk_static/20.jpg", @"https://s3.amazonaws.com/psps/sdk_static/21.jpg", @"https://s3.amazonaws.com/psps/sdk_static/22.jpg", @"https://s3.amazonaws.com/psps/sdk_static/23.jpg", @"https://s3.amazonaws.com/psps/sdk_static/24.jpg", @"https://s3.amazonaws.com/psps/sdk_static/25.jpg", @"https://s3.amazonaws.com/psps/sdk_static/26.jpg", @"https://s3.amazonaws.com/psps/sdk_static/27.jpg", @"https://s3.amazonaws.com/psps/sdk_static/28.jpg", @"https://s3.amazonaws.com/psps/sdk_static/29.jpg", @"https://s3.amazonaws.com/psps/sdk_static/30.jpg"];
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (NSString *s in urls){
+        OLAsset *asset = [OLAsset assetWithURL:[NSURL URLWithString:s]];
+        [assets addObject:asset];
+    }
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    
+    [OLUserSession currentSession].userSelectedPhotos = [assets mutableCopy];
+    
+    [self chooseClass:@"Posters" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Poster" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Poster" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLImagePickerViewController *photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]]);
+    
+    [self tapNextOnViewController:photoVc];
+    
+    OLPosterViewController *reviewVc = (OLPosterViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([reviewVc isKindOfClass:[OLPosterViewController class]]);
+    
+//    UICollectionViewCell *cell = [reviewVc.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    //TODO Show edit screen
+    
+    //    UIViewController *scrollVc = [reviewVc previewingContext:nil viewControllerForLocation:[cell convertPoint:CGPointMake(100, 100) toView:reviewVc.collectionView]];
+    //    XCTAssert([scrollVc isKindOfClass:[OLImagePreviewViewController class]]);
+    //    [reviewVc previewingContext:nil commitViewController:scrollVc];
+    //
+    //    XCTAssert([reviewVc.presentedViewController isKindOfClass:[OLImageEditViewController class]], @"Did not show crop screen");
+    //
+    //    [self performUIAction:^{
+    //        [reviewVc dismissViewControllerAnimated:YES completion:NULL];
+    //    }];
+    
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    [self tapNextOnViewController:reviewVc];
+    
+    XCTAssert(![printOrder isSavedInHistory], @"Print order should not be in history");
+    
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+    
+    [paymentVc onButtonPayWithCreditCardClicked];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for Payment VC"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    
+    OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    creditCardVc.rootVC.textFieldCVV.text = @"111";
+    creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
+    creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
+    
+    [creditCardVc.rootVC onButtonPayClicked];
+    
+    expectation = [self expectationWithDescription:@"Wait for order complete"];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (!printOrder.printed) {
+            sleep(3);
+        }
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:240 handler:NULL];
 }
 
 @end

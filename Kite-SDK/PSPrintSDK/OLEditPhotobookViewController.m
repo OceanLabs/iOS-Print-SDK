@@ -43,6 +43,9 @@
 #import "OLImagePickerViewController.h"
 #import "OLNavigationController.h"
 #import "OLKiteABTesting.h"
+#import "OLCustomPickerController.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "NSObject+Utils.h"
 
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionHelp = 1;
@@ -56,6 +59,10 @@ static const NSInteger kSectionPages = 2;
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
 + (NSString *) instagramClientID;
+@end
+
+@interface OLKiteViewController ()
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate>
@@ -74,6 +81,8 @@ static const NSInteger kSectionPages = 2;
 @property (strong, nonatomic) UIButton *nextButton;
 @property (assign, nonatomic) BOOL autoAddedCover;
 @property (assign, nonatomic) BOOL shownImagePicker;
+@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
+@property (strong, nonatomic) UIViewController *presentedVc;
 
 @end
 
@@ -386,14 +395,6 @@ static const NSInteger kSectionPages = 2;
     }
     
     return count;
-}
-
-- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller{
-    return UIModalPresentationNone;
-}
-
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller traitCollection:(UITraitCollection *)traitCollection {
-    return UIModalPresentationNone;
 }
 
 #pragma mark - Menu Actions
@@ -883,6 +884,24 @@ static const NSInteger kSectionPages = 2;
     vc.maximumPhotos = max;
     vc.product = self.product;
     
+    if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+        //Skip the image picker and only show the custom vc
+        
+        self.vcDelegateForCustomVc = vc; //Keep strong reference
+        vc.providerForPresentedVc = [OLUserSession currentSession].kiteVc.customImageProviders.firstObject;
+        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
+        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+        [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
+        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[OLUserSession currentSession].userSelectedPhotos];
+        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
+            vc.maximumPhotos = self.product.quantityToFulfillOrder;
+        }
+        
+        [self presentViewController:customVc animated:YES completion:NULL];
+        self.presentedVc = customVc;
+        return;
+    }
+    
     [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 
@@ -949,7 +968,15 @@ static const NSInteger kSectionPages = 2;
         }
     }
     
-    [vc dismissViewControllerAnimated:YES completion:^(void){}];
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
     
 }
 

@@ -48,6 +48,9 @@
 }
 
 - (BOOL)isEqual:(id)object{
+    if (![object respondsToSelector:@selector(imageURL)]){
+        return NO;
+    }
     OLAsset *selfAsset = [OLAsset assetWithURL:self.imageURL];
     OLAsset *objectAsset = [OLAsset assetWithURL:[object imageURL]];
     return [selfAsset isEqual:objectAsset];

@@ -57,6 +57,9 @@
 #import "UIViewController+OLMethods.h"
 #import "OLImagePickerViewController.h"
 #import "OLNavigationController.h"
+#import "OLCustomPickerController.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "NSObject+Utils.h"
 
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;
@@ -76,6 +79,10 @@ static const CGFloat kBookEdgePadding = 38;
 @interface OLPrintOrder (Private)
 - (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 - (void)saveOrder;
+@end
+
+@interface OLKiteViewController ()
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @interface OLFlipTransition (Private)
@@ -130,6 +137,8 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
 @property (strong, nonatomic) UILabel *coverHelpLabel;
+@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
+@property (strong, nonatomic) UIViewController *presentedVc;
 
 @end
 
@@ -426,10 +435,6 @@ static const CGFloat kBookEdgePadding = 38;
     else{
         self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", displayPage, displayPage + 1, (long)self.product.quantityToFulfillOrder];
     }
-}
-
-- (void)ios7Back{
-    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)viewDidLayoutSubviews{
@@ -1505,6 +1510,24 @@ static const CGFloat kBookEdgePadding = 38;
     vc.delegate = self;
     vc.maximumPhotos = self.product.quantityToFulfillOrder;
     
+    if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+        //Skip the image picker and only show the custom vc
+        
+        self.vcDelegateForCustomVc = vc; //Keep strong reference
+        vc.providerForPresentedVc = [OLUserSession currentSession].kiteVc.customImageProviders.firstObject;
+        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
+        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+        [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
+        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[OLUserSession currentSession].userSelectedPhotos];
+        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
+            vc.maximumPhotos = self.product.quantityToFulfillOrder;
+        }
+        
+        [self presentViewController:customVc animated:YES completion:NULL];
+        self.presentedVc = customVc;
+        return;
+    }
+    
     [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 
@@ -1534,7 +1557,15 @@ static const CGFloat kBookEdgePadding = 38;
     }
     [self updateUserSelectedPhotos];
     
-    [vc dismissViewControllerAnimated:YES completion:^(void){}];
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
     
 }
 
