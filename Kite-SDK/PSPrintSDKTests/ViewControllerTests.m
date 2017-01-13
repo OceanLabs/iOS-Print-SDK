@@ -1717,5 +1717,74 @@
     NSLog(@"%@", info);
 }
 
+- (void)testPromoView{
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+    OLKiteViewController *kvc = [[OLKiteViewController alloc] initWithAssets:@[] info:@{@"Entry Point" : @"OLPromoView"}];
+    [kvc startLoadingWithCompletionHandler:^{}];
+    
+    UIView *containerView = [[UIView alloc] init];
+    containerView.tag = 1000;
+    containerView.backgroundColor = [UIColor clearColor];
+    [rootVc.topViewController.view addSubview:containerView];
+    containerView.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(containerView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    float height = 200;
+    
+    NSArray *visuals = @[@"H:|-0-[containerView]-0-|",
+                         [NSString stringWithFormat:@"V:[containerView(%f)]-0-|", height]];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [containerView.superview addConstraints:con];
+    
+    UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] init];
+    activity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    [activity startAnimating];
+    [containerView addSubview:activity];
+    activity.translatesAutoresizingMaskIntoConstraints = NO;
+    [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    
+    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]]];
+    
+    XCTestExpectation *exp = [self expectationWithDescription:@"Promo View Expectation failed"];
+    [OLPromoView requestPromoViewWithAssets:assets templates:@[@"i6s_case", @"i5_case"] completionHandler:^(OLPromoView *view, NSError *error){
+        [activity stopAnimating];
+        if (error){
+            NSLog(@"ERROR: %@", error.localizedDescription);
+            return;
+        }
+        
+        [containerView addSubview:view];
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [exp fulfill];
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:240 handler:NULL];
+}
+
 
 @end
