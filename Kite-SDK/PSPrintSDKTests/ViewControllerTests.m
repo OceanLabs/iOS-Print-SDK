@@ -563,6 +563,89 @@
     
 }
 
+- (void)testCompleteApparelJourney{
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"T-shirts" onOLProductHomeViewController:productHomeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLCaseViewController *caseVc = (OLCaseViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([caseVc isKindOfClass:[OLCaseViewController class]]);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for case mask to download"];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (!caseVc.cropView.image || !caseVc.downloadedMask){
+            sleep(3);
+        }
+        [expectation fulfill];
+    });
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    
+    //TODO: Check product option that default selected is first option
+    [self performUIAction:^{
+        [caseVc.editingTools.button2 sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].isSelected, @"Default option (first) should selected");
+    
+    [self performUIAction:^{
+        [caseVc collectionView:caseVc.editingTools.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
+    }];
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option  should selected");
+    //TODO: Check product option that second is selected
+    
+    //Wait for the overlay to finish rendering. Can be slow in simulators.
+    expectation = [self expectationWithDescription:@"Wait for Payment VC"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+    
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    [self tapNextOnViewController:caseVc];
+    
+    XCTAssert(![printOrder isSavedInHistory], @"Print order should not be in history");
+    
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+    
+    [paymentVc onButtonPayWithCreditCardClicked];
+    
+    expectation = [self expectationWithDescription:@"Wait for Payment VC"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    
+    OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    creditCardVc.rootVC.textFieldCVV.text = @"111";
+    creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
+    creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
+    
+    [creditCardVc.rootVC onButtonPayClicked];
+    
+    expectation = [self expectationWithDescription:@"Wait for order complete"];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (!printOrder.printed) {
+            sleep(3);
+        }
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    XCTAssert([printOrder isSavedInHistory], @"Print order is not saved in history");
+    
+    [printOrder deleteFromHistory];
+    XCTAssert(![printOrder isSavedInHistory], @"Print order was not deleted from history");
+    
+}
+
 - (void)testProductDescriptionDrawer{
     OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
     
