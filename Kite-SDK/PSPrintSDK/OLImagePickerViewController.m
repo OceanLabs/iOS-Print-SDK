@@ -829,6 +829,11 @@
             [self presentViewController:c animated:NO completion:NULL];
         }
         else{
+            for (OLAsset *asset in [OLUserSession currentSession].userSelectedPhotos){
+                if ([asset isEdited]){
+                    [asset unloadImage];
+                }
+            }
             [self showOrderPreview];
         }
     }
