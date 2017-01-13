@@ -652,46 +652,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }];
         }];
         [self.tableView reloadData];
-//        [self validateTemplatePricing];
-    }];
-}
-
-/**
- *  The price on the line items on this screen are the prices from the templates. To avoid the situation where the template prices have changed and we don't know about it, do a comparison between the expected cost (based on the known template prices) and the actual prices that we got from the /cost endpoint. If we detect a discrepancy, resync the templates here.
- */
-- (void)validateTemplatePricing{
-    NSDecimalNumber *expectedCost = [NSDecimalNumber decimalNumberWithString:@"0"];
-    for (id<OLPrintJob> job in self.printOrder.jobs){
-        OLProductTemplate *template = [OLProductTemplate templateWithId:[job templateId]];
-        
-        NSDictionary *costDict = template.originalCostsByCurrencyCode.count != 0 ? template.originalCostsByCurrencyCode : template.costsByCurrencyCode;
-        NSDecimalNumber *sheetCost = costDict[[self.printOrder currencyCode]];
-        NSUInteger sheetQuanity = template.quantityPerSheet == 0 ? 1 : template.quantityPerSheet;
-        NSUInteger numSheets = (NSUInteger) ceil([OLProduct productWithTemplateId:[job templateId]].quantityToFulfillOrder / sheetQuanity);
-        NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];
-        
-        float numberOfPhotos = [job assetsForUploading].count;
-        if (template.templateUI == OLTemplateUIPhotobook){
-            // Front cover photo should count towards total photos
-            if ([(OLPhotobookPrintJob *)job frontCover]){
-                numberOfPhotos--;
-            }
-        }
-        
-        NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
-        
-        expectedCost = [expectedCost decimalNumberByAdding:[unitCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)([job extraCopies] + 1)*[numUnitsInJob integerValue]]]]];
-    }
-    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-        NSDecimalNumber *actualCost = [cost totalCostInCurrency:self.printOrder.currencyCode];
-        actualCost = [actualCost decimalNumberBySubtracting:[cost shippingCostInCurrency:self.printOrder.currencyCode]];
-        actualCost = [actualCost decimalNumberBySubtracting:[cost promoCodeDiscountInCurrency:self.printOrder.currencyCode]];
-        
-        if ([actualCost compare:expectedCost] != NSOrderedSame){
-            [OLProductTemplate syncWithCompletionHandler:^(NSArray *templates, NSError *error){
-                [self.tableView reloadData];
-            }];
-        }
     }];
 }
 
@@ -988,25 +948,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if ([self.promoCodeTextField.text isEqualToString:@""]) {
         // Clear promo code
         [self applyPromoCode:nil];
-    } else {
-        
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-        // Ugly bit of code for S9, it's such a small bit of work it doesn't warrant forking the repo & associated overhead just to add client side promo rejection
-        if ([self.delegate respondsToSelector:@selector(shouldAcceptPromoCode:)]) {
-            NSString *rejectMessage = [self.delegate performSelector:@selector(shouldAcceptPromoCode:) withObject:self.promoCodeTextField.text];
-            if (rejectMessage) {
-                [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:rejectMessage delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
-                
-                self.printOrder.promoCode = nil;
-                [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
-                    [self costCalculationCompletedWithError:error];
-                }];
-                return;
-            }
-        }
-#pragma clang diagnostic pop
-        
+    }
+    else {
         NSString *promoCode = [self.promoCodeTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         [self applyPromoCode:promoCode];
     }

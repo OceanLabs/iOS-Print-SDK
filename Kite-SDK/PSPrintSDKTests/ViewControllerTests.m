@@ -45,11 +45,9 @@
 @import Photos;
 
 @interface ViewControllerTests : XCTestCase
-
 @property (strong, nonatomic) NSString *kvoValueToObserve;
 @property (copy, nonatomic) void (^kvoBlockToExecute)();
 @property (weak, nonatomic) id kvoObjectToObserve;
-
 @end
 
 @interface OLKitePrintSDK ()
@@ -111,8 +109,7 @@
 
 @interface OLPaymentViewController () <UITableViewDataSource>
 - (IBAction)onButtonPayWithCreditCardClicked;
-- (IBAction)onButtonMoreOptionsClicked:(id)sender;
-- (IBAction)onButtonBackToApplePayClicked:(UIButton *)sender;
+- (IBAction)onButtonPayWithPayPalClicked;
 @property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)onBackgroundClicked;
@@ -121,6 +118,10 @@
 - (IBAction)onShippingDetailsGestureRecognized:(id)sender;
 - (IBAction)onButtonPayWithApplePayClicked;
 - (IBAction)onButtonAddPaymentMethodClicked:(id)sender;
+- (void)payPalPaymentDidCancel:(id)paymentViewController;
+- (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender;
+- (IBAction)onButtonPayClicked:(UIButton *)sender;
+- (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method;
 @end
 
 
@@ -794,6 +795,24 @@
         [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:1]];
         
         [paymentMethodsVc.navigationController popViewControllerAnimated:YES];
+    }];
+    
+    [self performUIAction:^{
+        [vc onButtonPayWithPayPalClicked];
+    }];
+    
+    [self performUIAction:^{
+        [vc payPalPaymentDidCancel:vc.presentedViewController];
+    }];
+    
+    [self performUIAction:^{
+        UIButton *minusButton = [cell.contentView viewWithTag:10];
+        [minusButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+        XCTAssert([job extraCopies] == 0);
+    }];
+    
+    [self performUIAction:^{
+        [vc.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
     }];
     
     XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLPaymentViewController class]]);
@@ -1618,6 +1637,53 @@
     });
     
     [self waitForExpectationsWithTimeout:240 handler:NULL];
+}
+
+- (void)testContinueShopping{
+    NSArray *urls = @[@"https://s3.amazonaws.com/psps/sdk_static/1.jpg", @"https://s3.amazonaws.com/psps/sdk_static/2.jpg", @"https://s3.amazonaws.com/psps/sdk_static/3.jpg", @"https://s3.amazonaws.com/psps/sdk_static/4.jpg", @"https://s3.amazonaws.com/psps/sdk_static/5.jpg", @"https://s3.amazonaws.com/psps/sdk_static/6.jpg", @"https://s3.amazonaws.com/psps/sdk_static/7.jpg", @"https://s3.amazonaws.com/psps/sdk_static/8.jpg", @"https://s3.amazonaws.com/psps/sdk_static/9.jpg", @"https://s3.amazonaws.com/psps/sdk_static/10.jpg", @"https://s3.amazonaws.com/psps/sdk_static/11.jpg", @"https://s3.amazonaws.com/psps/sdk_static/12.jpg", @"https://s3.amazonaws.com/psps/sdk_static/13.jpg", @"https://s3.amazonaws.com/psps/sdk_static/14.jpg", @"https://s3.amazonaws.com/psps/sdk_static/15.jpg", @"https://s3.amazonaws.com/psps/sdk_static/16.jpg", @"https://s3.amazonaws.com/psps/sdk_static/17.jpg", @"https://s3.amazonaws.com/psps/sdk_static/18.jpg", @"https://s3.amazonaws.com/psps/sdk_static/19.jpg", @"https://s3.amazonaws.com/psps/sdk_static/20.jpg", @"https://s3.amazonaws.com/psps/sdk_static/21.jpg", @"https://s3.amazonaws.com/psps/sdk_static/22.jpg", @"https://s3.amazonaws.com/psps/sdk_static/23.jpg", @"https://s3.amazonaws.com/psps/sdk_static/24.jpg", @"https://s3.amazonaws.com/psps/sdk_static/25.jpg", @"https://s3.amazonaws.com/psps/sdk_static/26.jpg", @"https://s3.amazonaws.com/psps/sdk_static/27.jpg", @"https://s3.amazonaws.com/psps/sdk_static/28.jpg", @"https://s3.amazonaws.com/psps/sdk_static/29.jpg", @"https://s3.amazonaws.com/psps/sdk_static/30.jpg", @"https://s3.amazonaws.com/psps/sdk_static/31.jpg", @"https://s3.amazonaws.com/psps/sdk_static/32.jpg", @"https://s3.amazonaws.com/psps/sdk_static/33.jpg"];
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (NSString *s in urls){
+        OLAsset *asset = [OLAsset assetWithURL:[NSURL URLWithString:s]];
+        [assets addObject:asset];
+    }
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    
+    [OLUserSession currentSession].userSelectedPhotos = [assets mutableCopy];
+    
+    [self chooseClass:@"Prints" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Squares" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLImagePickerViewController *photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]]);
+    
+    [self tapNextOnViewController:photoVc];
+    
+    UIViewController *reviewVc = productHomeVc.navigationController.topViewController;
+    
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+    [self tapNextOnViewController:reviewVc];
+    
+    XCTAssert(![printOrder isSavedInHistory], @"Print order should not be in history");
+    
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+    
+    [paymentVc paymentMethodsViewController:nil didPickPaymentMethod:kOLPaymentMethodPayPal];
+    
+    [self performUIAction:^{
+        [paymentVc onButtonPayClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [paymentVc onButtonContinueShoppingClicked:nil];
+    }];
 }
 
 @end
