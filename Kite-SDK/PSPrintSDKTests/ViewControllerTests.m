@@ -44,7 +44,7 @@
 
 @import Photos;
 
-@interface ViewControllerTests : XCTestCase
+@interface ViewControllerTests : XCTestCase <OLKiteDelegate>
 @property (strong, nonatomic) NSString *kvoValueToObserve;
 @property (copy, nonatomic) void (^kvoBlockToExecute)();
 @property (weak, nonatomic) id kvoObjectToObserve;
@@ -129,6 +129,7 @@
 @property (strong, nonatomic, readwrite) NSString *qualityBannerType;
 @property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
 @property (strong, nonatomic, readwrite) NSString *checkoutScreenType;
+@property (strong, nonatomic, readwrite) NSString *promoBannerText;
 @end
 
 @class OLCreditCardCaptureRootController;
@@ -242,6 +243,7 @@
     }
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+    vc.delegate = self;
     
     OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]]] name:@"Dogs"];
     OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]] name:@"Cats"];
@@ -840,6 +842,9 @@
                           [OLAsset assetWithDataAsPNG:data2],
                           [OLAsset assetWithPHAsset:phAsset]
                           ];
+    [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"promoBannerText" andExecuteBlock:^{
+        [OLKiteABTesting sharedInstance].promoBannerText = @"<header>Hello Inspector!</header><para>This message will self-destruct in [[2115-08-04 18:05 GMT+3]]</para>";
+    }];
     
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     
@@ -1685,5 +1690,32 @@
         [paymentVc onButtonContinueShoppingClicked:nil];
     }];
 }
+
+- (void)testThemeableElements{
+    [OLProductTemplate syncWithCompletionHandler:^(id templates, NSError *error){
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:@"https://dl.dropboxusercontent.com/u/3007013/Triforce.png" forKey:kOLKiteThemeHeaderLogoImageURL];
+        [defaults synchronize];
+    }];
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
+    XCTAssert(sb);
+    
+    OLProductHomeViewController *vc = [sb instantiateViewControllerWithIdentifier:@"ProductHomeViewController"];
+    XCTAssert(vc);
+    
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
+    }];
+}
+
+- (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
+    NSLog(@"%@", info);
+}
+
 
 @end
