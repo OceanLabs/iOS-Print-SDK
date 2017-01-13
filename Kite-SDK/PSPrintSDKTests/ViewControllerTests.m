@@ -44,12 +44,10 @@
 
 @import Photos;
 
-@interface ViewControllerTests : XCTestCase
-
+@interface ViewControllerTests : XCTestCase <OLKiteDelegate>
 @property (strong, nonatomic) NSString *kvoValueToObserve;
 @property (copy, nonatomic) void (^kvoBlockToExecute)();
 @property (weak, nonatomic) id kvoObjectToObserve;
-
 @end
 
 @interface OLKitePrintSDK ()
@@ -111,8 +109,7 @@
 
 @interface OLPaymentViewController () <UITableViewDataSource>
 - (IBAction)onButtonPayWithCreditCardClicked;
-- (IBAction)onButtonMoreOptionsClicked:(id)sender;
-- (IBAction)onButtonBackToApplePayClicked:(UIButton *)sender;
+- (IBAction)onButtonPayWithPayPalClicked;
 @property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)onBackgroundClicked;
@@ -121,6 +118,10 @@
 - (IBAction)onShippingDetailsGestureRecognized:(id)sender;
 - (IBAction)onButtonPayWithApplePayClicked;
 - (IBAction)onButtonAddPaymentMethodClicked:(id)sender;
+- (void)payPalPaymentDidCancel:(id)paymentViewController;
+- (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender;
+- (IBAction)onButtonPayClicked:(UIButton *)sender;
+- (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method;
 @end
 
 
@@ -128,6 +129,7 @@
 @property (strong, nonatomic, readwrite) NSString *qualityBannerType;
 @property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
 @property (strong, nonatomic, readwrite) NSString *checkoutScreenType;
+@property (strong, nonatomic, readwrite) NSString *promoBannerText;
 @end
 
 @class OLCreditCardCaptureRootController;
@@ -241,6 +243,7 @@
     }
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+    vc.delegate = self;
     
     OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]]] name:@"Dogs"];
     OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]] name:@"Cats"];
@@ -560,6 +563,89 @@
     
 }
 
+- (void)testCompleteApparelJourney{
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"T-shirts" onOLProductHomeViewController:productHomeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLCaseViewController *caseVc = (OLCaseViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([caseVc isKindOfClass:[OLCaseViewController class]]);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for case mask to download"];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (!caseVc.cropView.image || !caseVc.downloadedMask){
+            sleep(3);
+        }
+        [expectation fulfill];
+    });
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    
+    //TODO: Check product option that default selected is first option
+    [self performUIAction:^{
+        [caseVc.editingTools.button2 sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].isSelected, @"Default option (first) should selected");
+    
+    [self performUIAction:^{
+        [caseVc collectionView:caseVc.editingTools.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
+    }];
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option  should selected");
+    //TODO: Check product option that second is selected
+    
+    //Wait for the overlay to finish rendering. Can be slow in simulators.
+    expectation = [self expectationWithDescription:@"Wait for Payment VC"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+    
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    [self tapNextOnViewController:caseVc];
+    
+    XCTAssert(![printOrder isSavedInHistory], @"Print order should not be in history");
+    
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+    
+    [paymentVc onButtonPayWithCreditCardClicked];
+    
+    expectation = [self expectationWithDescription:@"Wait for Payment VC"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    
+    OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    creditCardVc.rootVC.textFieldCVV.text = @"111";
+    creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
+    creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
+    
+    [creditCardVc.rootVC onButtonPayClicked];
+    
+    expectation = [self expectationWithDescription:@"Wait for order complete"];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        while (!printOrder.printed) {
+            sleep(3);
+        }
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    XCTAssert([printOrder isSavedInHistory], @"Print order is not saved in history");
+    
+    [printOrder deleteFromHistory];
+    XCTAssert(![printOrder isSavedInHistory], @"Print order was not deleted from history");
+    
+}
+
 - (void)testProductDescriptionDrawer{
     OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
     
@@ -796,6 +882,24 @@
         [paymentMethodsVc.navigationController popViewControllerAnimated:YES];
     }];
     
+    [self performUIAction:^{
+        [vc onButtonPayWithPayPalClicked];
+    }];
+    
+    [self performUIAction:^{
+        [vc payPalPaymentDidCancel:vc.presentedViewController];
+    }];
+    
+    [self performUIAction:^{
+        UIButton *minusButton = [cell.contentView viewWithTag:10];
+        [minusButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+        XCTAssert([job extraCopies] == 0);
+    }];
+    
+    [self performUIAction:^{
+        [vc.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
+    }];
+    
     XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLPaymentViewController class]]);
 }
 
@@ -821,6 +925,9 @@
                           [OLAsset assetWithDataAsPNG:data2],
                           [OLAsset assetWithPHAsset:phAsset]
                           ];
+    [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"promoBannerText" andExecuteBlock:^{
+        [OLKiteABTesting sharedInstance].promoBannerText = @"<header>Hello Inspector!</header><para>This message will self-destruct in [[2115-08-04 18:05 GMT+3]]</para>";
+    }];
     
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     
@@ -1619,5 +1726,148 @@
     
     [self waitForExpectationsWithTimeout:240 handler:NULL];
 }
+
+- (void)testContinueShopping{
+    NSArray *urls = @[@"https://s3.amazonaws.com/psps/sdk_static/1.jpg", @"https://s3.amazonaws.com/psps/sdk_static/2.jpg", @"https://s3.amazonaws.com/psps/sdk_static/3.jpg", @"https://s3.amazonaws.com/psps/sdk_static/4.jpg", @"https://s3.amazonaws.com/psps/sdk_static/5.jpg", @"https://s3.amazonaws.com/psps/sdk_static/6.jpg", @"https://s3.amazonaws.com/psps/sdk_static/7.jpg", @"https://s3.amazonaws.com/psps/sdk_static/8.jpg", @"https://s3.amazonaws.com/psps/sdk_static/9.jpg", @"https://s3.amazonaws.com/psps/sdk_static/10.jpg", @"https://s3.amazonaws.com/psps/sdk_static/11.jpg", @"https://s3.amazonaws.com/psps/sdk_static/12.jpg", @"https://s3.amazonaws.com/psps/sdk_static/13.jpg", @"https://s3.amazonaws.com/psps/sdk_static/14.jpg", @"https://s3.amazonaws.com/psps/sdk_static/15.jpg", @"https://s3.amazonaws.com/psps/sdk_static/16.jpg", @"https://s3.amazonaws.com/psps/sdk_static/17.jpg", @"https://s3.amazonaws.com/psps/sdk_static/18.jpg", @"https://s3.amazonaws.com/psps/sdk_static/19.jpg", @"https://s3.amazonaws.com/psps/sdk_static/20.jpg", @"https://s3.amazonaws.com/psps/sdk_static/21.jpg", @"https://s3.amazonaws.com/psps/sdk_static/22.jpg", @"https://s3.amazonaws.com/psps/sdk_static/23.jpg", @"https://s3.amazonaws.com/psps/sdk_static/24.jpg", @"https://s3.amazonaws.com/psps/sdk_static/25.jpg", @"https://s3.amazonaws.com/psps/sdk_static/26.jpg", @"https://s3.amazonaws.com/psps/sdk_static/27.jpg", @"https://s3.amazonaws.com/psps/sdk_static/28.jpg", @"https://s3.amazonaws.com/psps/sdk_static/29.jpg", @"https://s3.amazonaws.com/psps/sdk_static/30.jpg", @"https://s3.amazonaws.com/psps/sdk_static/31.jpg", @"https://s3.amazonaws.com/psps/sdk_static/32.jpg", @"https://s3.amazonaws.com/psps/sdk_static/33.jpg"];
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (NSString *s in urls){
+        OLAsset *asset = [OLAsset assetWithURL:[NSURL URLWithString:s]];
+        [assets addObject:asset];
+    }
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    
+    [OLUserSession currentSession].userSelectedPhotos = [assets mutableCopy];
+    
+    [self chooseClass:@"Prints" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Squares" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLImagePickerViewController *photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]]);
+    
+    [self tapNextOnViewController:photoVc];
+    
+    UIViewController *reviewVc = productHomeVc.navigationController.topViewController;
+    
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+    [self tapNextOnViewController:reviewVc];
+    
+    XCTAssert(![printOrder isSavedInHistory], @"Print order should not be in history");
+    
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+    
+    [paymentVc paymentMethodsViewController:nil didPickPaymentMethod:kOLPaymentMethodPayPal];
+    
+    [self performUIAction:^{
+        [paymentVc onButtonPayClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [paymentVc onButtonContinueShoppingClicked:nil];
+    }];
+}
+
+- (void)testThemeableElements{
+    [OLProductTemplate syncWithCompletionHandler:^(id templates, NSError *error){
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:@"https://dl.dropboxusercontent.com/u/3007013/Triforce.png" forKey:kOLKiteThemeHeaderLogoImageURL];
+        [defaults synchronize];
+    }];
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
+    XCTAssert(sb);
+    
+    OLProductHomeViewController *vc = [sb instantiateViewControllerWithIdentifier:@"ProductHomeViewController"];
+    XCTAssert(vc);
+    
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
+    }];
+}
+
+- (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
+    NSLog(@"%@", info);
+}
+
+- (void)testPromoView{
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+    OLKiteViewController *kvc = [[OLKiteViewController alloc] initWithAssets:@[] info:@{@"Entry Point" : @"OLPromoView"}];
+    [kvc startLoadingWithCompletionHandler:^{}];
+    
+    UIView *containerView = [[UIView alloc] init];
+    containerView.tag = 1000;
+    containerView.backgroundColor = [UIColor clearColor];
+    [rootVc.topViewController.view addSubview:containerView];
+    containerView.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(containerView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    float height = 200;
+    
+    NSArray *visuals = @[@"H:|-0-[containerView]-0-|",
+                         [NSString stringWithFormat:@"V:[containerView(%f)]-0-|", height]];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [containerView.superview addConstraints:con];
+    
+    UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] init];
+    activity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    [activity startAnimating];
+    [containerView addSubview:activity];
+    activity.translatesAutoresizingMaskIntoConstraints = NO;
+    [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    
+    NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]]];
+    
+    XCTestExpectation *exp = [self expectationWithDescription:@"Promo View Expectation failed"];
+    [OLPromoView requestPromoViewWithAssets:assets templates:@[@"i6s_case", @"i5_case"] completionHandler:^(OLPromoView *view, NSError *error){
+        [activity stopAnimating];
+        if (error){
+            NSLog(@"ERROR: %@", error.localizedDescription);
+            return;
+        }
+        
+        [containerView addSubview:view];
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(view);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                             @"V:|-0-[view]-0-|"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [view.superview addConstraints:con];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [exp fulfill];
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:240 handler:NULL];
+}
+
 
 @end
