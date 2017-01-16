@@ -1405,6 +1405,9 @@ const NSInteger kOLEditTagCrop = 40;
     else if (collectionView.tag == kOLEditTagCrop){
         return 0;
     }
+    else if (collectionView.tag == -1){
+        return 0;
+    }
     
     return self.selectedOption.choices.count;
 }

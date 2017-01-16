@@ -1,3 +1,6 @@
+codecov:
+  branch: beta
+
 ignore:
   - "Kite-SDK/PSPrintSDK/RMImageCropper"
   - "Kite-SDK/PSPrintSDK/QREncoder"
