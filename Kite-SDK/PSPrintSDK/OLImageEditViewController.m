@@ -850,6 +850,7 @@ const NSInteger kOLEditTagCrop = 40;
         self.editingTools.drawerView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished){
         self.editingTools.collectionView.tag = -1;
+        [self.editingTools.collectionView reloadData];
         [self.view bringSubviewToFront:self.editingTools];
         self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
         [self.view layoutIfNeeded];
@@ -1276,6 +1277,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == kOLEditTagImageTools){
         return 3;
+    }
+    else if (collectionView.tag == -1){
+        return 0;
     }
     
     return self.selectedOption.choices.count;
