@@ -1100,7 +1100,7 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Actions
 
 - (IBAction)onButtonHorizontalFlipClicked:(id)sender {
-    if (self.cropView.isCorrecting || self.animating){
+    if (self.cropView.isCorrecting || self.animating || !self.cropView.imageView.image){
         return;
     }
     
@@ -1125,7 +1125,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (IBAction)onButtonRotateClicked:(id)sender {
-    if (self.cropView.isCorrecting || self.animating){
+    if (self.cropView.isCorrecting || self.animating || !self.cropView.imageView.image){
         return;
     }
     
