@@ -36,6 +36,7 @@
 #import "OLAsset+Private.h"
 #import "UIImageView+FadeIn.h"
 #import "OLPhotoTextField.h"
+#import "OLKiteUtils.h"
 
 @interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
 
@@ -50,6 +51,7 @@
 @property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
 - (void)disableOverlay;
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
+- (void)onButtonDoneTapped:(id)sender;
 @end
 
 @interface OLCaseViewController ()
@@ -211,6 +213,20 @@
     if (self.viewDidAppearOperation && !self.viewDidAppearOperation.finished){
         [[NSOperationQueue mainQueue] addOperation:self.viewDidAppearOperation];
     }
+    
+    if ([OLUserSession currentSession].userSelectedPhotos.count != 0 && self.hintView.alpha <= 0.1f && self.product.productTemplate.templateUI == OLTemplateUIApparel && !self.product.selectedOptions[@"garment_size"]) {
+        [self showHintViewForView:self.editingTools.button2 header:NSLocalizedStringFromTableInBundle(@"Select size", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    }
+    
+}
+
+- (void)onButtonDoneTapped:(id)sender{
+    if ([OLUserSession currentSession].userSelectedPhotos.count != 0 && self.product.productTemplate.templateUI == OLTemplateUIApparel && !self.product.selectedOptions[@"garment_size"]) {
+        [self showHintViewForView:self.editingTools.button2 header:NSLocalizedStringFromTableInBundle(@"Select size", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        return;
+    }
+    
+    [super onButtonDoneTapped:sender];
 }
 
 - (UIColor *)containerBackgroundColor{

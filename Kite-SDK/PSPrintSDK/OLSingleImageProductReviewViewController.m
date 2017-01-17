@@ -147,20 +147,40 @@
     [self.hintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
     
     self.hintView.layer.masksToBounds = NO;
-    self.hintView.layer.shadowOffset = CGSizeMake(-5, -5);
+    self.hintView.layer.shadowOffset = CGSizeMake(0, 2);
     self.hintView.layer.shadowRadius = 5;
     self.hintView.layer.shadowOpacity = 0.3;
+}
+
+- (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body{
+    for (NSLayoutConstraint *con in self.view.constraints){
+        if ([con.identifier isEqualToString:@"toolBarCon"]){
+            [self.view removeConstraint:con];
+        }
+    }
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:[self.hintView viewWithTag:10] attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+    con.identifier = @"toolBarCon";
+    [self.view addConstraint:con];
+    
+    if (header){
+        [(UILabel *)[self.hintView viewWithTag:20] setText:header];
+    }
+    if (body){
+        [(UILabel *)[self.hintView viewWithTag:30] setText:body];
+    }
+    
+    NSTimeInterval delay = 1;
+    NSTimeInterval duration = 0.3;
+    [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.hintView.alpha = 1;
+    } completion:NULL];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    NSTimeInterval delay = 1;
-    NSTimeInterval duration = 0.3;
     if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && self.hintView.alpha <= 0.1f) {
-        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.hintView.alpha = 1;
-        } completion:NULL];
+        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     }
 }
 
@@ -186,12 +206,6 @@
         [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLUserSession currentSession].userSelectedPhotos.count];
     }
 #endif
-}
-
-- (void)viewDidLayoutSubviews{
-    [super viewDidLayoutSubviews];
-    
-    self.hintView.transform = CGAffineTransformMakeTranslation(self.editingTools.button1.frame.size.width / 2.0, 0);
 }
 
 - (void)orderViews{
