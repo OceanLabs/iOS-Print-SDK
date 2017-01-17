@@ -337,6 +337,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     vc.userPhone = @"";
     vc.delegate = self;
     vc.qrCodeUploadEnabled = YES;
+    vc.filterProducts = @[@"gildan_adult_cotton_tshirt"];
     
     [self addCatsAndDogsImagePickersToKite:vc];
     

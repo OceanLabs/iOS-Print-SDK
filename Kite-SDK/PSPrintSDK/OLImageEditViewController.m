@@ -613,6 +613,8 @@ const NSInteger kOLEditTagCrop = 40;
     else{
         [self loadImageFromAsset];
     }
+    
+    [self updateButtonBadges];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
@@ -1209,6 +1211,18 @@ const NSInteger kOLEditTagCrop = 40;
     }
 }
 
+- (void)updateButtonBadges{
+    for (OLProductTemplateOption *option in self.product.productTemplate.options){
+        if ([option.code isEqualToString:@"garment_size"]){
+            for (OLProductTemplateOptionChoice *choice in option.choices){
+                if ([choice.code isEqualToString:self.product.selectedOptions[@"garment_size"]]){
+                    [self.editingTools.button2 updateBadge:choice.name];
+                }
+            }
+        }
+    }
+}
+
 #pragma mark Actions
 
 - (IBAction)onButtonHorizontalFlipClicked:(id)sender {
@@ -1736,6 +1750,8 @@ const NSInteger kOLEditTagCrop = 40;
             [self showDrawerWithCompletionHandler:NULL];
         }];
     }
+    
+    [self updateButtonBadges];
 }
 
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
