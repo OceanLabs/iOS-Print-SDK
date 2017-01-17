@@ -75,6 +75,7 @@ CGFloat OLImagePickerMargin = 1.5;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
+    [OLAsset cancelAllImageOperations];
     [self.collectionView reloadData];
 }
 

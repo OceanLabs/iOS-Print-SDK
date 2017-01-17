@@ -39,12 +39,14 @@
     handler(nil);
     if (self.iconURL){
         [[OLImageDownloader sharedInstance] downloadImageAtURL:self.iconURL withCompletionHandler:^(UIImage *image, NSError *error){
-            if (error || !image){
-                handler([self fallbackIcon]);
-            }
-            else{
-                handler(image);
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error || !image){
+                    handler([self fallbackIcon]);
+                }
+                else{
+                    handler(image);
+                }
+            });
         }];
     }
     else{

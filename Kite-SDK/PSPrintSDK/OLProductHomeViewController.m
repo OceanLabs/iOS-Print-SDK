@@ -383,18 +383,20 @@
         [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
             if (error) return;
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
-            UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
-            titleImageView.alpha = 0;
-            if ([self isPushed]){
-                self.parentViewController.navigationItem.titleView = titleImageView;
-            }
-            else{
-                self.navigationItem.titleView = titleImageView;
-            }
-            titleImageView.alpha = 0;
-            [UIView animateWithDuration:0.5 animations:^{
-                titleImageView.alpha = 1;
-            }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
+                titleImageView.alpha = 0;
+                if ([self isPushed]){
+                    self.parentViewController.navigationItem.titleView = titleImageView;
+                }
+                else{
+                    self.navigationItem.titleView = titleImageView;
+                }
+                titleImageView.alpha = 0;
+                [UIView animateWithDuration:0.5 animations:^{
+                    titleImageView.alpha = 1;
+                }];
+            });
         }];
     }
     
@@ -685,8 +687,10 @@
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
             if (error) return;
-            cellImageView.image = image;
-            cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cellImageView.image = image;
+                cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            });
         }];
         if (self.fromRotation){
             self.fromRotation = NO;

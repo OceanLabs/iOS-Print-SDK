@@ -168,7 +168,10 @@ static dispatch_once_t srand48OnceToken;
         if (url){
             [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
                 if (!image){
-                    [defaults removeObjectForKey:s];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [defaults removeObjectForKey:s];
+                        [defaults synchronize];
+                    });
                 }
             }];
         }

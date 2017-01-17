@@ -153,11 +153,15 @@ static const NSUInteger kSectionErrorRetry = 2;
             if (bgUrl){
                 [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:bgUrl] withCompletionHandler:^(UIImage *bgImage, NSError *error){
                     bgImage = [UIImage imageWithCGImage:bgImage.CGImage scale:2 orientation:image.imageOrientation];
-                    [self setupBannerImage:image withBgImage:bgImage];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self setupBannerImage:image withBgImage:bgImage];
+                    });
                 }];
             }
             else{
-                [self setupBannerImage:image withBgImage:nil];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self setupBannerImage:image withBgImage:nil];
+                });
             }
             
         }];

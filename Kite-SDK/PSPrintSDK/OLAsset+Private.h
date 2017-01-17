@@ -38,8 +38,6 @@ typedef enum {
     kOLAssetTypeImageFilePath,
     kOLAssetTypeImageData,
     kOLAssetTypeDataSource,
-//    kOLAssetTypeFacebookPhoto,
-//    kOLAssetTypeInstagramPhoto
 } OLAssetType;
 
 @interface OLAsset (FriendMethods)
@@ -54,6 +52,7 @@ typedef enum {
 - (BOOL)isEdited;
 - (BOOL)isEqual:(id)object ignoreEdits:(BOOL)ignoreEdits;
 - (instancetype)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType;
++ (void)cancelAllImageOperations;
 @property (nonatomic, readonly) OLAssetType assetType;
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSURL *imageURL;

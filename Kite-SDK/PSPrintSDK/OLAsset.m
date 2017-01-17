@@ -405,7 +405,11 @@ static NSOperationQueue *imageOperationQueue;
     }
     
     NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
+    __weak NSBlockOperation *weakBlock = blockOperation;
     [blockOperation addExecutionBlock:^{
+        if (weakBlock.isCancelled){
+            return;
+        }
         if (self.assetType == kOLAssetTypePHAsset) {
             PHImageManager *imageManager = [PHImageManager defaultManager];
             PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -462,10 +466,12 @@ static NSOperationQueue *imageOperationQueue;
                 handler(image, nil);
             }];
         }
-        else if (/*self.assetType == kOLAssetTypeFacebookPhoto || self.assetType == kOLAssetTypeInstagramPhoto || */self.assetType == kOLAssetTypeRemoteImageURL) {
+        else if (self.assetType == kOLAssetTypeRemoteImageURL) {
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.imageURL progress:^(NSInteger currentProgress, NSInteger total){
                 if (progress) {
-                    progress(MAX(0.05f, (float)currentProgress / (float) total));
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                       progress(MAX(0.05f, (float)currentProgress / (float) total));
+                    });
                 }
             }withCompletionHandler:^(UIImage *image, NSError *error){
                 [self resizeImage:image size:size applyEdits:applyEdits completion:^(UIImage *image){
@@ -473,10 +479,12 @@ static NSOperationQueue *imageOperationQueue;
                         if (!fullResolution){
                             self.cachedEditedImage = image;
                         }
-                        if (progress){
-                            progress(1);
-                        }
-                        handler(image, nil);
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (progress){
+                                progress(1);
+                            }
+                            handler(image, nil);
+                        });
                     }
                 }];
             }];
@@ -498,6 +506,10 @@ static NSOperationQueue *imageOperationQueue;
         
     }];
     [[OLAsset imageOperationQueue] addOperation:blockOperation];
+}
+
++ (void)cancelAllImageOperations{
+    [[OLAsset imageOperationQueue] cancelAllOperations];
 }
 
 - (void)resizeImage:(UIImage *)image size:(CGSize)size applyEdits:(BOOL)applyEdits completion:(void(^)(UIImage *image))handler{
