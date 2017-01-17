@@ -215,14 +215,14 @@
     }
     
     if ([OLUserSession currentSession].userSelectedPhotos.count != 0 && self.hintView.alpha <= 0.1f && self.product.productTemplate.templateUI == OLTemplateUIApparel && !self.product.selectedOptions[@"garment_size"]) {
-        [self showHintViewForView:self.editingTools.button2 header:NSLocalizedStringFromTableInBundle(@"Select size", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        [self showHintViewForView:self.editingTools.button4 header:NSLocalizedStringFromTableInBundle(@"Select size", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
     }
     
 }
 
 - (void)onButtonDoneTapped:(id)sender{
     if ([OLUserSession currentSession].userSelectedPhotos.count != 0 && self.product.productTemplate.templateUI == OLTemplateUIApparel && !self.product.selectedOptions[@"garment_size"]) {
-        [self showHintViewForView:self.editingTools.button2 header:NSLocalizedStringFromTableInBundle(@"Select size", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        [self showHintViewForView:self.editingTools.button4 header:NSLocalizedStringFromTableInBundle(@"Select size", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
         return;
     }
     

@@ -1216,7 +1216,7 @@ const NSInteger kOLEditTagCrop = 40;
         if ([option.code isEqualToString:@"garment_size"]){
             for (OLProductTemplateOptionChoice *choice in option.choices){
                 if ([choice.code isEqualToString:self.product.selectedOptions[@"garment_size"]]){
-                    [self.editingTools.button2 updateBadge:choice.name];
+                    [self.editingTools.button4 updateBadge:choice.name];
                 }
             }
         }
