@@ -52,6 +52,7 @@
 - (void)disableOverlay;
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
 - (void)onButtonDoneTapped:(id)sender;
+@property (assign, nonatomic) CGAffineTransform backupTransform;
 @end
 
 @interface OLCaseViewController ()
@@ -388,6 +389,11 @@
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
+    self.backupTransform = self.cropView.imageView.transform;
+    self.editingTools.drawerDoneButton.hidden = YES;
+    self.editingTools.halfWidthDrawerDoneButton.hidden = NO;
+    self.editingTools.halfWidthDrawerCancelButton.hidden = NO;
+    
     if ([self isUsingMultiplyBlend]){
         [self.cropView setGesturesEnabled:YES];
     }

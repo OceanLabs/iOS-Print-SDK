@@ -104,6 +104,8 @@ const NSInteger kOLEditTagCrop = 40;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
 
+@property (assign, nonatomic) CGAffineTransform backupTransform;
+
 @end
 
 @implementation OLImageEditViewController
@@ -970,6 +972,8 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)setupCtaButtons{
     [self.editingTools.ctaButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self.editingTools.drawerDoneButton addTarget:self action:@selector(onDrawerButtonDoneClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.halfWidthDrawerDoneButton addTarget:self action:@selector(onDrawerButtonDoneClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.halfWidthDrawerCancelButton addTarget:self action:@selector(onDrawerButtonCancelClicked:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setupButton1{
@@ -1305,6 +1309,11 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
+    self.backupTransform = self.cropView.imageView.transform;
+    self.editingTools.drawerDoneButton.hidden = YES;
+    self.editingTools.halfWidthDrawerDoneButton.hidden = NO;
+    self.editingTools.halfWidthDrawerCancelButton.hidden = NO;
+    
     for (UIView *view in self.cropFrameGuideViews){
         [self.printContainerView bringSubviewToFront:view];
     }
@@ -1336,6 +1345,12 @@ const NSInteger kOLEditTagCrop = 40;
     }];
 }
 
+- (void)onDrawerButtonCancelClicked:(id)sender{
+    self.cropView.imageView.transform = self.backupTransform;
+
+    [self onDrawerButtonDoneClicked:sender];
+}
+
 - (void)exitCropMode{
     self.cropView.clipsToBounds = YES;
     [self orderViews];
@@ -1351,6 +1366,9 @@ const NSInteger kOLEditTagCrop = 40;
             view.alpha = 0;
         }
     } completion:^(BOOL finished){
+        self.editingTools.drawerDoneButton.hidden = NO;
+        self.editingTools.halfWidthDrawerDoneButton.hidden = YES;
+        self.editingTools.halfWidthDrawerCancelButton.hidden = YES;
     }];
 }
 

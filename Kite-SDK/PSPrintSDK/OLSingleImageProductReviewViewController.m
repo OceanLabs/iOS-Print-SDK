@@ -99,6 +99,7 @@
     [super viewDidLoad];
     
     self.delegate = self;
+    self.view.clipsToBounds = YES;
     
     if (self.navigationController.viewControllers.firstObject == self){
         self.title = self.product.productTemplate.name;
@@ -139,7 +140,7 @@
         [self.ctaButton.titleLabel setFont:font];
     }
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
