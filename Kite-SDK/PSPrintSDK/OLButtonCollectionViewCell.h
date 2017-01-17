@@ -33,5 +33,6 @@
 
 @property (strong, nonatomic) UIColor *colorForSelection;
 @property (assign, nonatomic) BOOL extendedSelectionBox;
+@property (assign, nonatomic) BOOL circleSelectionStyle;
 
 @end

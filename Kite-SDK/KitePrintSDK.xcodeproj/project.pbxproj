@@ -1014,10 +1014,10 @@
 		2E0DB88E1A6402D9001032E3 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				2E67B9281D267A3E00914D56 /* OLColorSelectionCollectionViewCell.h */,
-				2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */,
 				2E0FF2E11D2A9003007093C0 /* OLButtonCollectionViewCell.h */,
 				2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */,
+				2E67B9281D267A3E00914D56 /* OLColorSelectionCollectionViewCell.h */,
+				2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */,
 				2E973EEC1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.h */,
 				2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */,
 				2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */,

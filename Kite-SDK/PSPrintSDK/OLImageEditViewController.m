@@ -1518,6 +1518,10 @@ const NSInteger kOLEditTagCrop = 40;
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"labelCell" forIndexPath:indexPath];
             [self setupLabelCell:cell];
             
+            if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+                [(OLButtonCollectionViewCell *)cell setCircleSelectionStyle:YES];
+            }
+            
             [(UILabel *)[cell viewWithTag:10] setText:choice.name];
         }
         
@@ -1580,7 +1584,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
+    if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3 || self.product.productTemplate.templateUI == OLTemplateUIApparel){
         return CGSizeMake(self.editingTools.collectionView.frame.size.height, self.editingTools.collectionView.frame.size.height);
     }
     else if (collectionView.tag == kOLEditTagFonts){
@@ -1763,7 +1767,7 @@ const NSInteger kOLEditTagCrop = 40;
     label.textAlignment = NSTextAlignmentCenter;
     label.adjustsFontSizeToFitWidth = YES;
     label.minimumScaleFactor = 0.3;
-    label.textColor = [UIColor colorWithWhite:0.271 alpha:1.000];
+    label.textColor = [UIColor blackColor];
     if ([label respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]){
         label.allowsDefaultTighteningForTruncation = YES;
     }
