@@ -36,7 +36,7 @@
 /**
  *  https://www.kite.ly/docs/?objective_c#placing-orders
  */
-- (void)testSiteExampleOrder{
+- (void)DISABLE_testSiteExampleOrder{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSArray *assets = @[
@@ -95,7 +95,7 @@
 /**
  *  https://www.kite.ly/docs/?objective_c#ordering-print-products
  */
-- (void)testSiteExamplePrints{
+- (void)DISABLE_testSiteExamplePrints{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSArray *assets = @[
@@ -156,7 +156,7 @@
 /**
  *  https://www.kite.ly/docs/?objective_c#ordering-phone-cases
  */
-- (void)testSiteExampleCases{
+- (void)DISABLE_testSiteExampleCases{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSArray *assets = @[
@@ -217,7 +217,7 @@
 /**
  *  https://www.kite.ly/docs/?objective_c#ordering-apparel
  */
-- (void)testSiteExampleApparel{
+- (void)DISABLE_testSiteExampleApparel{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSDictionary *assets = @{
@@ -279,7 +279,7 @@
 /**
  *  https://www.kite.ly/docs/?objective_c#ordering-photobooks
  */
-- (void)testSiteExamplePhotoBook{
+- (void)DISABLE_testSiteExamplePhotoBook{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSArray *assets = @[
@@ -336,7 +336,7 @@
     [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
-- (void)testSiteExamplePostcard{
+- (void)DISABLE_testSiteExamplePostcard{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     OLAsset *frontImage = [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]];
@@ -404,7 +404,7 @@
     XCTFail(@"Address search failed with: %@", error);
 }
 
-- (void)testSiteExampleAddressSearch{
+- (void)DISABLE_testSiteExampleAddressSearch{
     self.addressRequestExpectation = [self expectationWithDescription:@"Address Search Request completed"];
     
     OLCountry *usa = [OLCountry countryForCode:@"USA"];
