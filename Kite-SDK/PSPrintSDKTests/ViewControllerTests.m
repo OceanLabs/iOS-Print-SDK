@@ -1442,14 +1442,14 @@
     [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
-- (void)DISABLED_testCompleteAccessoryOrder{
+- (void)testCompleteAccessoryOrder{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
-    [self chooseClass:@"Accessories and Display" onOLProductHomeViewController:productHomeVc];
+    [self chooseClass:@"New and Extras" onOLProductHomeViewController:productHomeVc];
 
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
     
-    [self chooseProduct:@"Print Shelves" onOLProductTypeSelectionViewController:productTypeVc];
+    [self chooseProduct:@"Speech Bubble Magnets" onOLProductTypeSelectionViewController:productTypeVc];
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     

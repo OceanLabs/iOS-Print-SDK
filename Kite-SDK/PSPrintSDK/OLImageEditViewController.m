@@ -104,6 +104,8 @@ const NSInteger kOLEditTagCrop = 40;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
 
+@property (assign, nonatomic) CGAffineTransform backupTransform;
+
 @end
 
 @implementation OLImageEditViewController
@@ -613,6 +615,8 @@ const NSInteger kOLEditTagCrop = 40;
     else{
         [self loadImageFromAsset];
     }
+    
+    [self updateButtonBadges];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
@@ -968,6 +972,8 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)setupCtaButtons{
     [self.editingTools.ctaButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self.editingTools.drawerDoneButton addTarget:self action:@selector(onDrawerButtonDoneClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.halfWidthDrawerDoneButton addTarget:self action:@selector(onDrawerButtonDoneClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self.editingTools.halfWidthDrawerCancelButton addTarget:self action:@selector(onDrawerButtonCancelClicked:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setupButton1{
@@ -1209,6 +1215,18 @@ const NSInteger kOLEditTagCrop = 40;
     }
 }
 
+- (void)updateButtonBadges{
+    for (OLProductTemplateOption *option in self.product.productTemplate.options){
+        if ([option.code isEqualToString:@"garment_size"]){
+            for (OLProductTemplateOptionChoice *choice in option.choices){
+                if ([choice.code isEqualToString:self.product.selectedOptions[@"garment_size"]]){
+                    [self.editingTools.button4 updateBadge:choice.name];
+                }
+            }
+        }
+    }
+}
+
 #pragma mark Actions
 
 - (IBAction)onButtonHorizontalFlipClicked:(id)sender {
@@ -1291,6 +1309,11 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
+    self.backupTransform = self.cropView.imageView.transform;
+    self.editingTools.drawerDoneButton.hidden = YES;
+    self.editingTools.halfWidthDrawerDoneButton.hidden = NO;
+    self.editingTools.halfWidthDrawerCancelButton.hidden = NO;
+    
     for (UIView *view in self.cropFrameGuideViews){
         [self.printContainerView bringSubviewToFront:view];
     }
@@ -1322,6 +1345,12 @@ const NSInteger kOLEditTagCrop = 40;
     }];
 }
 
+- (void)onDrawerButtonCancelClicked:(id)sender{
+    self.cropView.imageView.transform = self.backupTransform;
+
+    [self onDrawerButtonDoneClicked:sender];
+}
+
 - (void)exitCropMode{
     self.cropView.clipsToBounds = YES;
     [self orderViews];
@@ -1337,6 +1366,9 @@ const NSInteger kOLEditTagCrop = 40;
             view.alpha = 0;
         }
     } completion:^(BOOL finished){
+        self.editingTools.drawerDoneButton.hidden = NO;
+        self.editingTools.halfWidthDrawerDoneButton.hidden = YES;
+        self.editingTools.halfWidthDrawerCancelButton.hidden = YES;
     }];
 }
 
@@ -1518,6 +1550,10 @@ const NSInteger kOLEditTagCrop = 40;
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"labelCell" forIndexPath:indexPath];
             [self setupLabelCell:cell];
             
+            if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+                [(OLButtonCollectionViewCell *)cell setCircleSelectionStyle:YES];
+            }
+            
             [(UILabel *)[cell viewWithTag:10] setText:choice.name];
         }
         
@@ -1580,7 +1616,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
+    if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3 || self.product.productTemplate.templateUI == OLTemplateUIApparel){
         return CGSizeMake(self.editingTools.collectionView.frame.size.height, self.editingTools.collectionView.frame.size.height);
     }
     else if (collectionView.tag == kOLEditTagFonts){
@@ -1732,6 +1768,8 @@ const NSInteger kOLEditTagCrop = 40;
             [self showDrawerWithCompletionHandler:NULL];
         }];
     }
+    
+    [self updateButtonBadges];
 }
 
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
@@ -1763,7 +1801,7 @@ const NSInteger kOLEditTagCrop = 40;
     label.textAlignment = NSTextAlignmentCenter;
     label.adjustsFontSizeToFitWidth = YES;
     label.minimumScaleFactor = 0.3;
-    label.textColor = [UIColor colorWithWhite:0.271 alpha:1.000];
+    label.textColor = [UIColor blackColor];
     if ([label respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]){
         label.allowsDefaultTighteningForTruncation = YES;
     }

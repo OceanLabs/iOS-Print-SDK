@@ -68,7 +68,9 @@ static char tasksKey;
         NSURLSessionTask *task = [[OLImageDownloader sharedInstance] downloadImageAtURL:url progress:^(NSInteger downloaded, NSInteger total){
             if (progressHandler){
                 float progress = (float)downloaded / (float)total;
-                progressHandler(progress);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    progressHandler(progress);
+                });
             }
         }withCompletionHandler:^(UIImage *image, NSError *error){
             if ([self.tasks[url] state] == NSURLSessionTaskStateCanceling){

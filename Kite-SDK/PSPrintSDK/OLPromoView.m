@@ -66,6 +66,7 @@
     return promoView;
 }
 
+
 + (void)requestPromoViewWithAssets:(NSArray <OLAsset *>*_Nonnull)assets templates:(NSArray <NSString *>*_Nullable)templates completionHandler:(void(^ _Nonnull)(OLPromoView *_Nullable promoView, NSError *_Nullable error))handler{
     OLPromoView *promoView = [OLPromoView promoViewWithAssets:assets templates:templates];
     

@@ -36,6 +36,7 @@
 #import "OLAsset+Private.h"
 #import "UIImageView+FadeIn.h"
 #import "OLPhotoTextField.h"
+#import "OLKiteUtils.h"
 
 @interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
 
@@ -50,6 +51,8 @@
 @property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
 - (void)disableOverlay;
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
+- (void)onButtonDoneTapped:(id)sender;
+@property (assign, nonatomic) CGAffineTransform backupTransform;
 @end
 
 @interface OLCaseViewController ()
@@ -211,6 +214,20 @@
     if (self.viewDidAppearOperation && !self.viewDidAppearOperation.finished){
         [[NSOperationQueue mainQueue] addOperation:self.viewDidAppearOperation];
     }
+    
+    if ([OLUserSession currentSession].userSelectedPhotos.count != 0 && self.hintView.alpha <= 0.1f && self.product.productTemplate.templateUI == OLTemplateUIApparel && !self.product.selectedOptions[@"garment_size"]) {
+        [self showHintViewForView:self.editingTools.button4 header:NSLocalizedStringFromTableInBundle(@"Select size", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    }
+    
+}
+
+- (void)onButtonDoneTapped:(id)sender{
+    if ([OLUserSession currentSession].userSelectedPhotos.count != 0 && self.product.productTemplate.templateUI == OLTemplateUIApparel && !self.product.selectedOptions[@"garment_size"]) {
+        [self showHintViewForView:self.editingTools.button4 header:NSLocalizedStringFromTableInBundle(@"Select size", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        return;
+    }
+    
+    [super onButtonDoneTapped:sender];
 }
 
 - (UIColor *)containerBackgroundColor{
@@ -270,28 +287,30 @@
     }
     
     [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.maskImageURL priority:1 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        if (error) {
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"")  message:NSLocalizedString(@"Failed to download phone case mask. Please check your internet connectivity and try again", @"")  delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") otherButtonTitles:@"Retry", nil];
-            av.tag = 99;
-            [av show];
-        } else {
-            [self.cropView removeConstraint:self.aspectRatioConstraint];
-            NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:[self aspectRatio] constant:0];
-            [self.cropView addConstraints:@[con]];
-            
-            [self.view setNeedsLayout];
-            [self.view layoutIfNeeded];
-            
-            self.maskImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-            [self maskWithImage:self.maskImage targetView:self.cropView];
-            
-            [self applyProductImageLayers];
-            
-            self.caseVisualEffectView.hidden = YES;
-            self.downloadedMask = YES;
-            [self.maskActivityIndicator stopAnimating];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            if (error) {
+                UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"")  message:NSLocalizedString(@"Failed to download phone case mask. Please check your internet connectivity and try again", @"")  delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") otherButtonTitles:@"Retry", nil];
+                av.tag = 99;
+                [av show];
+            } else {
+                [self.cropView removeConstraint:self.aspectRatioConstraint];
+                NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:[self aspectRatio] constant:0];
+                [self.cropView addConstraints:@[con]];
+                
+                [self.view setNeedsLayout];
+                [self.view layoutIfNeeded];
+                
+                self.maskImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+                [self maskWithImage:self.maskImage targetView:self.cropView];
+                
+                [self applyProductImageLayers];
+                
+                self.caseVisualEffectView.hidden = YES;
+                self.downloadedMask = YES;
+                [self.maskActivityIndicator stopAnimating];
+            }
+        });
     }];
 }
 
@@ -299,21 +318,25 @@
     if (!self.deviceView.image){
         self.deviceView.alpha = 0;
         [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-            self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-            [UIView animateWithDuration:0.1 animations:^{
-                self.deviceView.alpha = 1;
-            } completion:^(BOOL finished){
-                [self renderImage];
-            }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+                [UIView animateWithDuration:0.1 animations:^{
+                    self.deviceView.alpha = 1;
+                } completion:^(BOOL finished){
+                    [self renderImage];
+                }];
+            });
         }];
     }
     if (!self.highlightsView.image){
         self.highlightsView.alpha = 0;
         [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-            self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-            [UIView animateWithDuration:0.1 animations:^{
-                self.highlightsView.alpha = 1;
-            }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+                [UIView animateWithDuration:0.1 animations:^{
+                    self.highlightsView.alpha = 1;
+                }];
+            });
         }];
     }
 }
@@ -366,6 +389,11 @@
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
+    self.backupTransform = self.cropView.imageView.transform;
+    self.editingTools.drawerDoneButton.hidden = YES;
+    self.editingTools.halfWidthDrawerDoneButton.hidden = NO;
+    self.editingTools.halfWidthDrawerCancelButton.hidden = NO;
+    
     if ([self isUsingMultiplyBlend]){
         [self.cropView setGesturesEnabled:YES];
     }

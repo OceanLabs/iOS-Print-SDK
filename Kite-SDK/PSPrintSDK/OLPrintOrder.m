@@ -277,7 +277,9 @@ static NSBlockOperation *templateSyncOperation;
         return @"EUR";
     }
     
-    code = [self.currenciesSupported firstObject]; // return the first currency supported if the user hasn't specified one explicitly
+    if ([self.currenciesSupported firstObject]){
+        code = [self.currenciesSupported firstObject]; // return the first currency supported if the user hasn't specified one explicitly
+    }
     return code;
 }
 

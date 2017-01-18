@@ -58,16 +58,18 @@
             OLProductTemplateOptionChoice *choice = [[OLProductTemplateOptionChoice alloc] init];
             choice.option = self;
             choice.code = dict[@"code"];
-            choice.name = dict[@"name"];
+            if ([_code isEqualToString:@"garment_size"]){
+                choice.name = dict[@"short_name"];
+            }
+            else{
+                choice.name = dict[@"name"];
+            }
             if (dict[@"icon"]){
                 choice.iconURL = [NSURL URLWithString:dict[@"icon"]];
             }
             if (dict[@"color_hex_code"] && ![dict[@"color_hex_code"] isEqualToString:@""]){
                 choice.color = [UIColor colorWithHexString:dict[@"color_hex_code"]];
                 self.type = OLProductTemplateOptionTypeColor1;
-            }
-            if (dict[@"extraCost"]){
-//                choice.extraCost = 
             }
             if (dict[@"productOverlay"]){
                 choice.productOverlay = [NSURL URLWithString:dict[@"productOverlay"]];
@@ -107,12 +109,14 @@
     handler(nil);
     if (self.iconURL){
         [[OLImageDownloader sharedInstance] downloadImageAtURL:self.iconURL withCompletionHandler:^(UIImage *image, NSError *error){
-            if (error || !image){
-                handler([self fallbackIcon]);
-            }
-            else{
-                handler(image);
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error || !image){
+                    handler([self fallbackIcon]);
+                }
+                else{
+                    handler(image);
+                }
+            });
         }];
     }
     else{

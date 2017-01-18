@@ -85,8 +85,6 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 static OLPaymentMethod selectedPaymentMethod;
 
-static BOOL haveLoadedAtLeastOnce = NO;
-
 @interface OLProductTemplate ()
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
 @end
@@ -192,10 +190,28 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 @property (weak, nonatomic) IBOutlet UIView *addPaymentBox;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *paymentMethodBottomCon;
 
+@property (strong, nonatomic) NSOperation *viewDidAppearOperation;
+@property (strong, nonatomic) NSOperation *costCalculationOperation;
+@property (strong, nonatomic) NSOperation *reloadTableViewOperation;
+
 @end
 
 
 @implementation OLPaymentViewController
+
+-(NSOperation *) viewDidAppearOperation{
+    if (!_viewDidAppearOperation){
+        _viewDidAppearOperation = [[NSOperation alloc] init];
+    }
+    return _viewDidAppearOperation;
+}
+
+-(NSOperation *) costCalculationOperation{
+    if (!_costCalculationOperation){
+        _costCalculationOperation = [[NSOperation alloc] init];
+    }
+    return _costCalculationOperation;
+}
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
     NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
@@ -233,12 +249,21 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                                                             target:nil
                                                                             action:nil];
     
+    self.reloadTableViewOperation = [NSBlockOperation blockOperationWithBlock:^{
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }];
+    [self.reloadTableViewOperation addDependency:self.viewDidAppearOperation];
+    [self.reloadTableViewOperation addDependency:self.costCalculationOperation];
+    [[NSOperationQueue mainQueue] addOperation:self.reloadTableViewOperation];
+    
     if (self.navigationController.viewControllers.firstObject == self){
         NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
         if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
             [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
                 if (error) return;
-                self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(dismiss)];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                   self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(dismiss)];
+                });
             }];
         }
         else{
@@ -361,9 +386,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
     }
     
-    if (!haveLoadedAtLeastOnce){
-        haveLoadedAtLeastOnce = YES;
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+    if (!self.viewDidAppearOperation.finished){
+        [[NSOperationQueue mainQueue] addOperation:self.viewDidAppearOperation];
     }
 }
 
@@ -377,6 +401,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
 #endif
     }
+}
+
+- (BOOL)finishedLoading{
+    return self.viewDidAppearOperation.finished && self.costCalculationOperation.finished;
 }
 
 - (void)dismiss{
@@ -497,6 +525,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (void)costCalculationCompletedWithError:(NSError *)error {
+    if (!self.costCalculationOperation.finished){
+        [[NSOperationQueue mainQueue] addOperation:self.costCalculationOperation];
+    }
+    
     [self.totalCostActivityIndicator stopAnimating];
     if (error) {
         [self handleCostError:error];
@@ -848,7 +880,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
         [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
             if (error) return;
-            ((UIViewController *)[vcs firstObject]).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(dismissPresentedViewController)];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                ((UIViewController *)[vcs firstObject]).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(dismissPresentedViewController)];
+            });
         }];
     }
     else{
@@ -1489,8 +1523,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0 && self.printOrder.jobs.count > 0){
-        return haveLoadedAtLeastOnce ? self.printOrder.jobs.count : 1;
+    NSInteger numberOfItems = self.printOrder.jobs.count;
+    
+    if (section == 0 && numberOfItems > 0){
+        return [self finishedLoading] ? numberOfItems : 1;
     }
     else if (section == 0 && self.printOrder.jobs.count == 0){
         return 1;
@@ -1501,7 +1537,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0 && !haveLoadedAtLeastOnce){
+    if (indexPath.section == 0 && ![self finishedLoading]){
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"loadingCell"];
         UIActivityIndicatorView *activity = [cell viewWithTag:10];
         [activity startAnimating];
@@ -1514,6 +1550,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:20];
         UILabel *quantityLabel = (UILabel *)[cell.contentView viewWithTag:30];
         UILabel *productNameLabel = (UILabel *)[cell.contentView viewWithTag:50];
+        productNameLabel.text = @"";
         UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:60];
         UIButton *largeEditButton = (UIButton *)[cell.contentView viewWithTag:61];
         UILabel *priceLabel = (UILabel *)[cell.contentView viewWithTag:70];
@@ -1532,18 +1569,20 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         }
         
         [[OLImageDownloader sharedInstance] downloadImageAtURL:product.productTemplate.coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error){
-            imageView.image = image;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                imageView.image = image;
+            });
         }];
         
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
         
-        NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
-
         [[cell viewWithTag:1000] removeFromSuperview];
         
         [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
             for (OLPaymentLineItem *item in cost.lineItems){
                 if ([item.identifier isEqualToString:[job uuid]]){
+                    productNameLabel.text = item.description;
+                    
                     priceLabel.text = [item costStringInCurrency:self.printOrder.currencyCode];
                     
                     NSString *discountedPrice = [item discountedCostStringInCurrency:self.printOrder.currencyCode];
@@ -1568,13 +1607,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             }
             [(UIActivityIndicatorView *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:90] stopAnimating];
         }];
-        
-        if ([numUnitsInJob integerValue] == 1){
-            productNameLabel.text = product.productTemplate.name;
-        }
-        else{
-            productNameLabel.text = [NSString stringWithFormat:@"%@ (x %ld)", product.productTemplate.name, (long)[numUnitsInJob integerValue]];
-        }
         
         cell.backgroundColor = [UIColor clearColor];
         

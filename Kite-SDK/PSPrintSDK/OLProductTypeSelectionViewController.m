@@ -278,8 +278,10 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
-            cellImageView.image = image;
-            cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cellImageView.image = image;
+                cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            });
         }];
         if (self.fromRotation){
             self.fromRotation = NO;

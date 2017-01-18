@@ -41,6 +41,8 @@ IB_DESIGNABLE
 
 @property (weak, nonatomic) IBOutlet UIView *drawerView;
 @property (weak, nonatomic) IBOutlet UIButton *drawerDoneButton;
+@property (weak, nonatomic) IBOutlet UIButton *halfWidthDrawerDoneButton;
+@property (weak, nonatomic) IBOutlet UIButton *halfWidthDrawerCancelButton;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UILabel *drawerLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *drawerHeightCon;
