@@ -58,7 +58,9 @@
         self.storageIdentifier = maxStorageIdentifier + 1;
         [printOrders addObject:self];
     } else {
-        // as a storage identifier is assigned this print order must already be stored in the array
+        // as a storage identifier is assigned this print order must already be stored in the array,
+        // replace it there as there might have been changes
+        [printOrders replaceObjectAtIndex:(NSUInteger)self.storageIdentifier withObject:self];
     }
     
      [NSKeyedArchiver archiveRootObject:printOrders toFile:[OLPrintOrder historyFilePath]];
