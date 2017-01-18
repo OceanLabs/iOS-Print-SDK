@@ -343,6 +343,11 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
+    if (self.assetType == kOLAssetTypeRemoteImageURL && !self.isEdited){
+        handler(0, nil);
+        return;
+    }
+    
     [self dataWithCompletionHandler:^(NSData *data, NSError *error){
         handler(data.length, error);
     }];
