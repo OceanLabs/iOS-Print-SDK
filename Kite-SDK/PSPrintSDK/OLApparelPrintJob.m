@@ -140,7 +140,10 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     }
     
     val = 38 * val + self.extraCopies;
-    val = 39 * val + [self.options hash];
+    
+    for (NSString *key in self.options.allKeys){
+        val = 39 * val + [self.options[key] hash] + [key hash];
+    }
     val = 40 * val + [self.address hash];
     
     return val;
