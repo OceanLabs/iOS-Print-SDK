@@ -140,7 +140,7 @@
         [self.ctaButton.titleLabel setFont:font];
     }
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
