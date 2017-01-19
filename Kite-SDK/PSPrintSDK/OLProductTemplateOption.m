@@ -47,7 +47,7 @@
         _code = options[@"code"];
         _name = options[@"name"];
         
-        NSMutableArray *choices = [[NSMutableArray alloc] init];
+        NSMutableArray<OLProductTemplateOptionChoice *> *choices = [[NSMutableArray alloc] init];
         if (![options[@"options"] isKindOfClass:[NSArray class]]){
             return nil;
         }
@@ -59,7 +59,7 @@
             choice.option = self;
             choice.code = dict[@"code"];
             if ([_code isEqualToString:@"garment_size"]){
-                choice.name = dict[@"short_name"];
+                choice.name = [dict[@"short_name"] uppercaseString];
             }
             else{
                 choice.name = dict[@"name"];
@@ -80,6 +80,7 @@
             
             [choices addObject:choice];
         }
+        
         _choices = choices;
     }
     return self;

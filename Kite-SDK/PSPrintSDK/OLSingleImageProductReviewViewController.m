@@ -153,7 +153,7 @@
     self.hintView.layer.shadowOpacity = 0.3;
 }
 
-- (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body{
+- (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body delay:(BOOL)shouldDelay{
     for (NSLayoutConstraint *con in self.view.constraints){
         if ([con.identifier isEqualToString:@"toolBarCon"]){
             [self.view removeConstraint:con];
@@ -170,7 +170,7 @@
         [(UILabel *)[self.hintView viewWithTag:30] setText:body];
     }
     
-    NSTimeInterval delay = 1;
+    NSTimeInterval delay = shouldDelay ? 1 : 0;
     NSTimeInterval duration = 0.3;
     [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
         self.hintView.alpha = 1;
@@ -181,7 +181,7 @@
     [super viewDidAppear:animated];
     
     if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && self.hintView.alpha <= 0.1f) {
-        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")delay:YES];
     }
 }
 
