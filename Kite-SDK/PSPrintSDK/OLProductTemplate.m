@@ -134,12 +134,19 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 - (void)setSupportedOptions:(NSArray *_Nullable)supportedOptions{
     _supportedOptions = supportedOptions;
-    NSMutableArray *options = [[NSMutableArray alloc] init];
+    NSMutableArray<OLProductTemplateOption *> *options = [[NSMutableArray alloc] init];
     for (NSDictionary *option in supportedOptions){
         if ([option isKindOfClass:[NSDictionary class]]){
             [options addObject:[[OLProductTemplateOption alloc] initWithDictionary:option]];
         }
     }
+    
+    if ([options.lastObject.code isEqualToString:@"garment_size"]){
+        OLProductTemplateOption *sizeOption = options.lastObject;
+        [options removeObject:sizeOption];
+        [options insertObject:sizeOption atIndex:0];
+    }
+    
     self.options = options;
 }
 
