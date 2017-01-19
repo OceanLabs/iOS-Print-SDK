@@ -588,7 +588,7 @@
         [caseVc.editingTools.button2 sendActionsForControlEvents:UIControlEventTouchUpInside];
     }];
     
-    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].isSelected, @"Default option (first) should selected");
+    XCTAssert(![caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].isSelected, @"Default option (first) should not be selected");
     
     [self performUIAction:^{
         [caseVc collectionView:caseVc.editingTools.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
