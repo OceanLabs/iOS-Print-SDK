@@ -41,6 +41,8 @@
 #import "OLButtonCollectionViewCell.h"
 #import "OLPhotoTextField.h"
 #import "OLPosterViewController.h"
+#import "OLBaseRequest.h"
+#import "OLImagePickerLoginPageViewController.h"
 
 @import Photos;
 
@@ -48,6 +50,15 @@
 @property (strong, nonatomic) NSString *kvoValueToObserve;
 @property (copy, nonatomic) void (^kvoBlockToExecute)();
 @property (weak, nonatomic) id kvoObjectToObserve;
+@end
+
+@interface OLImagePickerLoginPageViewController ()
+- (IBAction)onButtonLoginTapped:(UIButton *)sender ;
+@end
+
+@interface OLUpsellViewController ()
+- (IBAction)acceptButtonAction:(UIButton *)sender;
+- (IBAction)declineButtonAction:(UIButton *)sender;
 @end
 
 @interface OLKitePrintSDK ()
@@ -488,7 +499,7 @@
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
     
-    [self chooseProduct:@"iPhone 6" onOLProductTypeSelectionViewController:productTypeVc];
+    [self chooseProduct:@"iPhone 6s" onOLProductTypeSelectionViewController:productTypeVc];
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
@@ -747,7 +758,7 @@
     
     OLImagePickerPhotosPageViewController *photosPage = (OLImagePickerPhotosPageViewController *)vc.pageController.viewControllers.firstObject;
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:5 action:^{
         [photosPage collectionView:photosPage.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     }];
     
@@ -760,7 +771,14 @@
     }];
     
     [self performUIAction:^{
-        [vc collectionView:vc.sourcesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
+        [vc collectionView:vc.sourcesCollectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:2 inSection:0]];
+    }];
+    
+    photosPage = (OLImagePickerPhotosPageViewController *)vc.pageController.viewControllers.firstObject;
+    XCTAssert([photosPage isKindOfClass:[OLImagePickerLoginPageViewController class]], @"");
+    
+    [self performUIAction:^{
+        [(OLImagePickerLoginPageViewController *)photosPage onButtonLoginTapped:nil];
     }];
     
     [self performUIAction:^{
@@ -1867,6 +1885,146 @@
     }];
     
     [self waitForExpectationsWithTimeout:240 handler:NULL];
+}
+
+- (void)testVideoDescription{
+    [OLKiteTestHelper mockTemplateRequest];
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"Retro Prints" onOLProductHomeViewController:productHomeVc];
+    
+    [self performUIActionWithDelay:5 action:^{
+        //Just wait for the video to load
+    }];
+}
+
+- (void)testPrintsUpsellDecline{
+    [OLKiteTestHelper mockTemplateRequest];
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"Prints" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Mini Squares" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLImagePickerViewController *photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]]);
+    
+    [self tapNextOnViewController:photoVc];
+    
+    photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]], @"Should not have proceeded");
+    
+    OLUpsellViewController *upsellVc = (OLUpsellViewController *)photoVc.presentedViewController;
+    XCTAssert([upsellVc isKindOfClass:[OLUpsellViewController class]], @"Did not show upsell");
+    
+    [self performUIActionWithDelay:5 action:^{
+        [upsellVc declineButtonAction:nil];
+    }];
+    
+    OLPackProductViewController *reviewVc = (OLPackProductViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([reviewVc isKindOfClass:[OLPackProductViewController class]], @"Did not proceed to review");
+}
+
+- (void)testPrintsUpsellAccept{
+    [OLKiteTestHelper mockTemplateRequest];
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"Prints" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Mini Squares" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLImagePickerViewController *photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]]);
+    
+    [self tapNextOnViewController:photoVc];
+    
+    photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]], @"Should not have proceeded");
+    
+    OLUpsellViewController *upsellVc = (OLUpsellViewController *)photoVc.presentedViewController;
+    XCTAssert([upsellVc isKindOfClass:[OLUpsellViewController class]], @"Did not show upsell");
+    
+    [self performUIActionWithDelay:5 action:^{
+        [upsellVc acceptButtonAction:nil];
+    }];
+    
+    OLImagePickerViewController *photoVc2 = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc2 isKindOfClass:[OLImagePickerViewController class]] && photoVc != photoVc2, @"Did not proceed to another image picker");
+}
+
+- (void)testCaseUpsellDecline{
+    [OLKiteTestHelper mockTemplateRequest];
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"Snap Cases" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"iPhone 6" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLCaseViewController *photoVc = (OLCaseViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLCaseViewController class]]);
+    
+    [self tapNextOnViewController:photoVc];
+    
+    photoVc = (OLCaseViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLCaseViewController class]], @"Should not have proceeded");
+    
+    OLUpsellViewController *upsellVc = (OLUpsellViewController *)photoVc.presentedViewController;
+    XCTAssert([upsellVc isKindOfClass:[OLUpsellViewController class]], @"Did not show upsell");
+    
+    [self performUIActionWithDelay:5 action:^{
+        [upsellVc declineButtonAction:nil];
+    }];
+    
+    OLPaymentViewController *reviewVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([reviewVc isKindOfClass:[OLPaymentViewController class]], @"Did not proceed to payment");
+}
+
+
+- (void)testCaseUpsellAccept{
+    [OLKiteTestHelper mockTemplateRequest];
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"Snap Cases" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"iPhone 6" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLCaseViewController *photoVc = (OLCaseViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLCaseViewController class]]);
+    
+    [self tapNextOnViewController:photoVc];
+    
+    photoVc = (OLCaseViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLCaseViewController class]], @"Should not have proceeded");
+    
+    OLUpsellViewController *upsellVc = (OLUpsellViewController *)photoVc.presentedViewController;
+    XCTAssert([upsellVc isKindOfClass:[OLUpsellViewController class]], @"Did not show upsell");
+    
+    [self performUIActionWithDelay:5 action:^{
+        [upsellVc acceptButtonAction:nil];
+    }];
+    
+    OLCaseViewController *photoVc2 = (OLCaseViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc2 isKindOfClass:[OLCaseViewController class]] && photoVc != photoVc2, @"Did not proceed to another phone");
 }
 
 

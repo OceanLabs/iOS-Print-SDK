@@ -46,6 +46,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "KITAssetsPickerController.h"
 #import "CustomAssetCollectionDataSource.h"
 #import "AssetDataSource.h"
+#import "OLKiteTestHelper.h"
 
 @import Photos;
 
@@ -295,6 +296,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             
             [self presentViewController:customVc animated:YES completion:NULL];
         }]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes but mock templates", @"") style:UIAlertActionStyleDefault handler:^(id action){
+            [OLKiteTestHelper mockTemplateRequest];
+            
+            [self showKiteVcForAPIKey:pasteboard.string assets:assets];
+        }]];
         [self presentViewController:ac animated:YES completion:NULL];
     }
     else{
@@ -337,6 +343,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     vc.userPhone = @"";
     vc.delegate = self;
     vc.qrCodeUploadEnabled = YES;
+    
+//    vc.filterProducts = @[@"squares"];
     
     [self addCatsAndDogsImagePickersToKite:vc];
     

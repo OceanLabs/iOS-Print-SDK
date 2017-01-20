@@ -209,7 +209,7 @@
                             id imagesPerSheet = productTemplate[@"images_per_page"];
                             id product = productTemplate[@"product"];
                             
-                            NSDictionary *upsellOffers = [productTemplate[@"upsell_offers"] isKindOfClass:[NSArray class]] ? productTemplate[@"upsell_offers"] : nil;
+                            NSArray *upsellOffers = [productTemplate[@"upsell_offers"] isKindOfClass:[NSArray class]] ? productTemplate[@"upsell_offers"] : nil;
                             
                             NSNumber *enabledNumber = productTemplate[@"enabled"];
                             NSString *description = productTemplate[@"description"];

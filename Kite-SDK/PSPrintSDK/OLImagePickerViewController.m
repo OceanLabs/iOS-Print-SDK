@@ -913,9 +913,6 @@
 #pragma mark Upsells
 
 - (OLUpsellOffer *)upsellOfferToShow{
-    if (/* DISABLES CODE */ (YES)){
-        return nil;// Need to test first
-    }
     NSArray *upsells = self.product.productTemplate.upsellOffers;
     if (upsells.count == 0){
         return nil;
@@ -951,6 +948,21 @@
 }
 
 - (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
+    //Drop previous screens from the navigation stack
+    NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+    if (navigationStack.count > 1) {
+        NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
+        for (UIViewController *vc in self.navigationController.viewControllers){
+            [viewControllers addObject:vc];
+            if ([vc isKindOfClass:[OLKiteViewController class]]){
+                [viewControllers addObject:self];
+                [self.navigationController setViewControllers:viewControllers animated:YES];
+                break;
+            }
+        }
+        [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
+    }
+    
     [self.product.acceptedOffers addObject:vc.offer];
     [vc dismissViewControllerAnimated:NO completion:^{
         if (vc.offer.prepopulatePhotos){

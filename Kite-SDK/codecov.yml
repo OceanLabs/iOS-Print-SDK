@@ -27,3 +27,6 @@ ignore:
   - "Kite-SDK/PSPrintSDK/OLOAuth2*"
   - "Kite-SDK/PSPrintSDK/OLKeyChainStore*"
   - "Kite-SDK/PSPrintSDK/main.m"
+  - "Kite-SDK/PSPrintSDKTests/OLBaseRequest+mock.m"
+  - "Kite-SDK/PSPrintSDKTests/OLSwizzler.m"
+  - "Kite-SDK/PSPrintSDKTests/OLKiteTestHelper.m"

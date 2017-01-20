@@ -444,6 +444,13 @@
 		2ED2B7B51DB8B4D90036B536 /* OLHPSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED2B7B31DB8B4D90036B536 /* OLHPSDKWrapper.m */; };
 		2ED42EC11D9D79E3003B9AD0 /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC41D2FC109002F5F74 /* bitstream.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
+		2EE0542A1E31084200417DA4 /* templates.json in Resources */ = {isa = PBXBuildFile; fileRef = 2EE054291E31084200417DA4 /* templates.json */; };
+		2EE0542E1E3201F400417DA4 /* OLSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE0542D1E3201F400417DA4 /* OLSwizzler.m */; };
+		2EE054311E32054F00417DA4 /* OLBaseRequest+Mock.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE054301E32054F00417DA4 /* OLBaseRequest+Mock.m */; };
+		2EE054321E32177A00417DA4 /* OLBaseRequest+Mock.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE054301E32054F00417DA4 /* OLBaseRequest+Mock.m */; };
+		2EE054331E32177E00417DA4 /* templates.json in Resources */ = {isa = PBXBuildFile; fileRef = 2EE054291E31084200417DA4 /* templates.json */; };
+		2EE054341E321C7000417DA4 /* OLSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE0542D1E3201F400417DA4 /* OLSwizzler.m */; };
+		2EE054351E321CC900417DA4 /* OLKiteTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E924BE41BC6A3A00038938A /* OLKiteTestHelper.m */; };
 		2EE4BC8E1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */; };
 		2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */; };
 		2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */; };
@@ -793,6 +800,11 @@
 		2ED5DEBD1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LXReorderableCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LXReorderableCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		2EDBFAAF1BC698F2007BDB83 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
+		2EE054291E31084200417DA4 /* templates.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = templates.json; sourceTree = "<group>"; };
+		2EE0542C1E3201F400417DA4 /* OLSwizzler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSwizzler.h; sourceTree = "<group>"; };
+		2EE0542D1E3201F400417DA4 /* OLSwizzler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSwizzler.m; sourceTree = "<group>"; };
+		2EE0542F1E32054F00417DA4 /* OLBaseRequest+Mock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLBaseRequest+Mock.h"; sourceTree = "<group>"; };
+		2EE054301E32054F00417DA4 /* OLBaseRequest+Mock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLBaseRequest+Mock.m"; sourceTree = "<group>"; };
 		2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteViewController.h; sourceTree = "<group>"; };
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
 		2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductOverviewPageAnimatedContentViewController.h; sourceTree = "<group>"; };
@@ -1395,10 +1407,14 @@
 		2EAB0AF61CDCDE9900625BD6 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				2EE0542C1E3201F400417DA4 /* OLSwizzler.h */,
+				2EE0542D1E3201F400417DA4 /* OLSwizzler.m */,
 				2E924BE31BC6A3A00038938A /* OLKiteTestHelper.h */,
 				2E924BE41BC6A3A00038938A /* OLKiteTestHelper.m */,
 				2EAB0AF11CDCD57A00625BD6 /* OLTestTapGestureRecognizer.h */,
 				2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */,
+				2EE0542F1E32054F00417DA4 /* OLBaseRequest+Mock.h */,
+				2EE054301E32054F00417DA4 /* OLBaseRequest+Mock.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -1622,6 +1638,7 @@
 		CD73BF91186215790009DE03 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2EE054291E31084200417DA4 /* templates.json */,
 				2EDBFAAF1BC698F2007BDB83 /* 1.jpg */,
 				2E7483501BCCFB5900360550 /* 2.png */,
 				2EAB0AEC1CDB834E00625BD6 /* 3.pdf */,
@@ -2147,6 +2164,7 @@
 				2E23EB9B1D5091FC00E2BF42 /* CI-Main.storyboard in Resources */,
 				2E480ADF1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */,
 				2E898CDD1CC518180041CCD8 /* KitePrintSDK.strings in Resources */,
+				2EE054331E32177E00417DA4 /* templates.json in Resources */,
 				2E898CDE1CC518180041CCD8 /* OLKiteStoryboard.storyboard in Resources */,
 				2E434AE61D36675700D1BD06 /* OLEditingToolsView.xib in Resources */,
 				2E898CE11CC518180041CCD8 /* Images.xcassets in Resources */,
@@ -2175,6 +2193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EAB0AEE1CDB835700625BD6 /* 3.pdf in Resources */,
+				2EE0542A1E31084200417DA4 /* templates.json in Resources */,
 				2E7483511BCCFB5900360550 /* 2.png in Resources */,
 				2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */,
 			);
@@ -2512,9 +2531,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EE054351E321CC900417DA4 /* OLKiteTestHelper.m in Sources */,
 				2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */,
 				2E9A77361DA683FE00A50C4D /* PrintOrderHistoryViewController.m in Sources */,
+				2EE054321E32177A00417DA4 /* OLBaseRequest+Mock.m in Sources */,
 				2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */,
+				2EE054341E321C7000417DA4 /* OLSwizzler.m in Sources */,
 				2E9A77371DA683FE00A50C4D /* CI-ViewController.m in Sources */,
 				2E9A77391DA684FB00A50C4D /* main.m in Sources */,
 				2E9A77351DA683FE00A50C4D /* AppDelegate.m in Sources */,
@@ -2539,9 +2561,11 @@
 				2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */,
 				2E924BE21BC6A0C80038938A /* OLKiteRequestTests.m in Sources */,
 				2E0EB0EC1D9EB43F001A6CC9 /* ViewController.m in Sources */,
+				2EE054311E32054F00417DA4 /* OLBaseRequest+Mock.m in Sources */,
 				2E924BE51BC6A3A00038938A /* OLKiteTestHelper.m in Sources */,
 				2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */,
 				CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */,
+				2EE0542E1E3201F400417DA4 /* OLSwizzler.m in Sources */,
 				2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */,
 				2EAB0AF51CDCD58400625BD6 /* OLTestTapGestureRecognizer.m in Sources */,
 			);
