@@ -27,38 +27,11 @@
 //  THE SOFTWARE.
 //
 
-#import "OLProductOverviewPageContentViewController.h"
-#import "OLProductTemplate.h"
-#import "OLProduct.h"
-#import "OLProductOverviewViewController.h"
+#import <Foundation/Foundation.h>
 
-@interface OLProduct (Private)
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
-@end
+@interface OLSwizzler : NSObject
 
-@interface OLProductOverviewViewController (Private)
-
-- (IBAction)onButtonStartClicked:(UIBarButtonItem *)sender;
-
-@end
-
-@interface OLProductOverviewPageContentViewController ()
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@end
-
-@implementation OLProductOverviewPageContentViewController
-
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self.product setProductPhotography:self.pageIndex toImageView:self.imageView];
-}
-
-- (IBAction)userDidTapOnImage:(UITapGestureRecognizer *)sender {
-    if ([self.delegate respondsToSelector:@selector(userDidTapOnImage)]){
-        [self.delegate userDidTapOnImage];
-    }
-}
-
+BOOL OLSwizzleClassMethods(Class class, SEL dstSel, SEL srcSel);
+BOOL OLSwizzleInstanceMethods(Class class, SEL dstSel, SEL srcSel);
 
 @end

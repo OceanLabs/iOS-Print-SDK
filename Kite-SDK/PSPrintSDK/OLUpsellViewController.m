@@ -48,7 +48,7 @@
 @end
 
 @interface OLProduct ()
--(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setCoverImageToImageView:(UIImageView *)imageView size:(CGSize)size;
 - (NSDecimalNumber*) unitCostDecimalNumber;
 - (NSString *)currencyCode;
 @end
@@ -66,7 +66,7 @@
     [self.declineButton makeRoundRectWithRadius:2];
     
     self.product = [OLProduct productWithTemplateId:self.offer.offerTemplate];
-    [self.product setCoverImageToImageView:self.imageView];
+    [self.product setCoverImageToImageView:self.imageView size:self.imageView.frame.size];
     
     
     NSDecimalNumber *discountedCost = self.product.unitCostDecimalNumber;
