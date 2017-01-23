@@ -157,12 +157,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
-
 @property (strong, nonatomic) NSBlockOperation *applePayDismissOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionBlockOperation;
-
-@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
-
 @property (weak, nonatomic) IBOutlet UIButton *paymentButton1;
 @property (weak, nonatomic) IBOutlet UIButton *paymentButton2;
 @property (weak, nonatomic) IBOutlet UILabel *promoCodeCostLabel;

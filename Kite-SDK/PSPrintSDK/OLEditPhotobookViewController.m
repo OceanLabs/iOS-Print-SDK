@@ -457,7 +457,6 @@ static const NSInteger kSectionPages = 2;
 
 - (void)onButtonNextClicked{
     if (self.photobookPhotos.count == 0){
-        
         NSString *alertTitle = NSLocalizedString(@"No photos", @"");
         NSString *alertMessage = NSLocalizedString(@"Please add at least one photo", @"");
         NSString *actionTitle = NSLocalizedString(@"OK", @"");

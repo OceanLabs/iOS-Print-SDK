@@ -43,6 +43,7 @@
 #import "OLPosterViewController.h"
 #import "OLBaseRequest.h"
 #import "OLImagePickerLoginPageViewController.h"
+#import "OLMockPanGestureRecognizer.h"
 
 @import Photos;
 
@@ -95,10 +96,17 @@
 - (void) deletePhotoAtIndex:(NSUInteger)index;
 @end
 
+@interface OLEditPhotobookViewController ()
+- (void)deletePage;
+- (void)editImage;
+@end
+
 @interface OLPhotobookViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender;
 - (void)onCoverTapRecognized:(UITapGestureRecognizer *)sender;
+- (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer;
+- (void)openBook:(UIGestureRecognizer *)sender;
 @end
 
 @interface OLProductOverviewViewController ()
@@ -172,7 +180,7 @@
 @property (strong, nonatomic) UIPageViewController *pageController;
 @end
 
-@interface OLImagePickerPhotosPageViewController ()
+@interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegate>
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 - (IBAction)userDidTapOnAlbumLabel:(UITapGestureRecognizer *)sender;
 @end
@@ -391,9 +399,75 @@
         [photobook onTapGestureRecognized:tap];
     }];
     
+    tap.customLocationInView = CGPointMake(100, 100);
+    
+    [self performUIAction:^{
+        [photobook onTapGestureRecognized:tap];
+    }];
+    
+    [self performUIAction:^{
+        [photobookEditVc editImage];
+    }];
+    
+    OLImageEditViewController *editor = (OLImageEditViewController *)photobook.presentedViewController;
+    
+    [self performUIAction:^{
+        [editor.editingTools.button1 sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    OLImagePickerViewController *picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
+    
+    [self performUIAction:^{
+        OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
+        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:7 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [editor onButtonDoneTapped:nil];
+    }];
+    
     [self tapNextOnViewController:photobookEditVc];
     
     photobook = (OLPhotobookViewController *)productHomeVc.navigationController.topViewController;
+    
+    [self performUIAction:^{
+        [photobook openBook:nil];
+    }];
+    
+    OLMockPanGestureRecognizer *pan = [[OLMockPanGestureRecognizer alloc] init];
+    pan.mockTranslation = CGPointMake(-200, 0);
+    
+    [self performUIAction:^{
+        [photobook onPanGestureRecognized:pan];
+    }];
+    
+    pan.mockState = UIGestureRecognizerStateEnded;
+    pan.mockVelocity = CGPointMake(-100, 0);
+    [self performUIAction:^{
+        [photobook onPanGestureRecognized:pan];
+    }];
+    
+    [self performUIAction:^{
+        tap.customLocationInView = CGPointMake(photobook.view.frame.size.width-100, 100);
+        [photobook onTapGestureRecognized:tap];
+    }];
+    
+    editor = (OLImageEditViewController *)photobook.presentedViewController;
+    
+    [self performUIAction:^{
+        [editor.editingTools.button1 sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
+    
+    [self performUIAction:^{
+        OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
+        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:7 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [editor onButtonDoneTapped:nil];
+    }];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
@@ -1003,19 +1077,22 @@
     
     XCTAssert([reviewVc.presentedViewController isKindOfClass:[OLImageEditViewController class]], @"Did not show crop screen");
     
+    OLImageEditViewController *editor = (OLImageEditViewController *)reviewVc.presentedViewController;
+    
     [self performUIAction:^{
-        [reviewVc dismissViewControllerAnimated:YES completion:NULL];
+        [editor.editingTools.button1 sendActionsForControlEvents:UIControlEventTouchUpInside];
     }];
     
-//    UIViewController *scrollVc = [reviewVc previewingContext:nil viewControllerForLocation:[cell convertPoint:CGPointMake(100, 100) toView:reviewVc.collectionView]];
-//    XCTAssert([scrollVc isKindOfClass:[OLImagePreviewViewController class]]);
-//    [reviewVc previewingContext:nil commitViewController:scrollVc];
-//    
-//    XCTAssert([reviewVc.presentedViewController isKindOfClass:[OLImageEditViewController class]], @"Did not show crop screen");
-//    
-//    [self performUIAction:^{
-//        [reviewVc dismissViewControllerAnimated:YES completion:NULL];
-//    }];
+    OLImagePickerViewController *picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
+    
+    [self performUIAction:^{
+        OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
+        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:5 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [editor onButtonDoneTapped:nil];
+    }];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];

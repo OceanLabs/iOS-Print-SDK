@@ -200,6 +200,7 @@
 		2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */; };
 		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
 		2E4DAB651DE47104002F4A84 /* mug.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2E4DAB641DE47104002F4A84 /* mug.dae */; };
+		2E5D13AE1E36238800927D19 /* OLMockPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */; };
 		2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
@@ -637,6 +638,8 @@
 		2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
 		2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloadDelegate.h; sourceTree = "<group>"; };
 		2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloadDelegate.m; sourceTree = "<group>"; };
+		2E5D13AC1E36238800927D19 /* OLMockPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLMockPanGestureRecognizer.h; sourceTree = "<group>"; };
+		2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLMockPanGestureRecognizer.m; sourceTree = "<group>"; };
 		2E5D95AA1CA984E00080EF07 /* OLUpsellViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUpsellViewController.h; sourceTree = "<group>"; };
 		2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLUpsellViewController.m; sourceTree = "<group>"; };
 		2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLCheckoutDelegate.h; sourceTree = "<group>"; };
@@ -1415,6 +1418,8 @@
 				2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */,
 				2EE0542F1E32054F00417DA4 /* OLBaseRequest+Mock.h */,
 				2EE054301E32054F00417DA4 /* OLBaseRequest+Mock.m */,
+				2E5D13AC1E36238800927D19 /* OLMockPanGestureRecognizer.h */,
+				2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -2564,6 +2569,7 @@
 				2EE054311E32054F00417DA4 /* OLBaseRequest+Mock.m in Sources */,
 				2E924BE51BC6A3A00038938A /* OLKiteTestHelper.m in Sources */,
 				2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */,
+				2E5D13AE1E36238800927D19 /* OLMockPanGestureRecognizer.m in Sources */,
 				CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */,
 				2EE0542E1E3201F400417DA4 /* OLSwizzler.m in Sources */,
 				2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */,
