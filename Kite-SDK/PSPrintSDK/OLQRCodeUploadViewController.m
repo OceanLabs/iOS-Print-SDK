@@ -31,7 +31,7 @@
 #import "OLQRCodeUploadedImagePoller.h"
 #import "OLURLShortener.h"
 #import "UIImage+MDQRCode.h"
-
+#import "OLKiteUtils.h"
 
 @interface OLQRCodeUploadViewController ()
 @property (nonatomic, retain) IBOutlet UIImageView *qrCodeImageView;
@@ -60,7 +60,9 @@
     [self.urlShortner shortenURL:uploadURL handler:^(NSString *shortenedURL, NSError *error) {
         if (error) {
             [self dismissViewControllerAnimated:YES completion:^{
-                [[[UIAlertView alloc] initWithTitle:@"Oops" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+                [self presentViewController:ac animated:YES completion:NULL];
             }];
         } else {
             self.activityIndicator.hidden = YES;
