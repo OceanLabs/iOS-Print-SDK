@@ -158,4 +158,78 @@
     XCTAssert([photoVc2 isKindOfClass:[OLCaseViewController class]] && photoVc != photoVc2, @"Did not proceed to another phone");
 }
 
+- (void)testPhotobookUpsellDecline{
+    [OLKiteTestHelper mockTemplateRequest];
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"Photo Books" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Medium Square Hardcover" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    UIViewController *vc = productHomeVc.navigationController.topViewController;
+    XCTAssert([vc isKindOfClass:[OLEditPhotobookViewController class]]);
+    
+    [self tapNextOnViewController:vc];
+    
+    vc = productHomeVc.navigationController.topViewController;
+    XCTAssert([vc isKindOfClass:[OLPhotobookViewController class]]);
+    
+    [self tapNextOnViewController:vc];
+    
+    vc = productHomeVc.navigationController.topViewController;
+    XCTAssert([vc isKindOfClass:[OLPhotobookViewController class]], @"Should not have proceeded");
+    
+    OLUpsellViewController *upsellVc = (OLUpsellViewController *)vc.presentedViewController;
+    XCTAssert([upsellVc isKindOfClass:[OLUpsellViewController class]], @"Did not show upsell");
+    
+    [self performUIActionWithDelay:5 action:^{
+        [upsellVc declineButtonAction:nil];
+    }];
+    
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]], @"Did not proceed to review");
+}
+
+- (void)testPhotobookUpsellAccept{
+    [OLKiteTestHelper mockTemplateRequest];
+    
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [self chooseClass:@"Photo Books" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Medium Square Hardcover" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    UIViewController *vc = productHomeVc.navigationController.topViewController;
+    XCTAssert([vc isKindOfClass:[OLEditPhotobookViewController class]]);
+    
+    [self tapNextOnViewController:vc];
+    
+    vc = productHomeVc.navigationController.topViewController;
+    XCTAssert([vc isKindOfClass:[OLPhotobookViewController class]]);
+    
+    [self tapNextOnViewController:vc];
+    
+    vc = productHomeVc.navigationController.topViewController;
+    XCTAssert([vc isKindOfClass:[OLPhotobookViewController class]], @"Should not have proceeded");
+    
+    OLUpsellViewController *upsellVc = (OLUpsellViewController *)vc.presentedViewController;
+    XCTAssert([upsellVc isKindOfClass:[OLUpsellViewController class]], @"Did not show upsell");
+    
+    [self performUIActionWithDelay:5 action:^{
+        [upsellVc acceptButtonAction:nil];
+    }];
+    
+    OLImagePickerViewController *photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]] && vc != photoVc, @"Did not proceed to another image picker");
+}
+
 @end

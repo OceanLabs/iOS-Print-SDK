@@ -127,6 +127,8 @@
 }
 
 - (void)testImagePickerViewController{
+    [[OLUserSession currentSession] logoutOfInstagram];
+    
     XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
     [self templateSyncWithSuccessHandler:^{
         [expectation fulfill];
@@ -168,6 +170,7 @@
     }];
     
     photosPage = (OLImagePickerPhotosPageViewController *)vc.pageController.viewControllers.firstObject;
+    
     XCTAssert([photosPage isKindOfClass:[OLImagePickerLoginPageViewController class]], @"");
     
     [self performUIAction:^{

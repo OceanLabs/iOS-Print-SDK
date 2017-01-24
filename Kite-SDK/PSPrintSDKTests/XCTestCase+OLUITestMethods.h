@@ -189,4 +189,5 @@
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegate>
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 - (IBAction)userDidTapOnAlbumLabel:(UITapGestureRecognizer *)sender;
+- (void)onButtonLogoutTapped;
 @end
