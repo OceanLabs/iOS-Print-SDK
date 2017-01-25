@@ -44,6 +44,7 @@
 #import "OLBaseRequest.h"
 #import "OLImagePickerLoginPageViewController.h"
 #import "OLMockPanGestureRecognizer.h"
+#import "OL3DProductViewController.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (OLProductHomeViewController *)loadKiteViewController;
