@@ -1140,7 +1140,12 @@ const NSInteger kOLEditTagCrop = 40;
                 else{
                     self.selectedOption = self.product.productTemplate.options.firstObject;
                 }
-                self.editingTools.drawerLabel.text = [self.selectedOption.name uppercaseString];
+                if (self.selectedChoice.color){
+                    self.editingTools.drawerLabel.text = [[self.selectedOption.name stringByAppendingString:[NSString stringWithFormat:@" - %@", self.selectedChoice.name]] uppercaseString];
+                }
+                else{
+                    self.editingTools.drawerLabel.text = [self.selectedOption.name uppercaseString];
+                }
                 self.editingTools.collectionView.tag = self.selectedOption.type;
             }
             else{
@@ -1220,7 +1225,7 @@ const NSInteger kOLEditTagCrop = 40;
         if ([option.code isEqualToString:@"garment_size"]){
             for (OLProductTemplateOptionChoice *choice in option.choices){
                 if ([choice.code isEqualToString:self.product.selectedOptions[@"garment_size"]]){
-                    [self.editingTools.button4 updateBadge:choice.name];
+                    [self.editingTools.button2 updateBadge:choice.name];
                 }
             }
         }
@@ -1748,6 +1753,10 @@ const NSInteger kOLEditTagCrop = 40;
         [self updateProductRepresentationForChoice:choice];
         self.selectedChoice = self.selectedOption.choices[indexPath.item];
         [collectionView reloadData];
+        
+        if (self.selectedChoice.color){
+            self.editingTools.drawerLabel.text = [[self.selectedOption.name stringByAppendingString:[NSString stringWithFormat:@" - %@", self.selectedChoice.name]] uppercaseString];
+        }
     }
     else{
         UIButton *selectedButton;
