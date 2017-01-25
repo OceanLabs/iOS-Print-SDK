@@ -945,5 +945,64 @@
     }];
 }
 
+- (void)testAddingPhotosToPhotobook{
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    
+    [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
+    
+    [self chooseClass:@"Photo Books" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Small Square Hardcover" onOLProductTypeSelectionViewController:productTypeVc];
+    
+    [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
+    
+    OLEditPhotobookViewController *photobookEditVc = (OLEditPhotobookViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([photobookEditVc isKindOfClass:[OLEditPhotobookViewController class]]);
+    
+    XCTAssert([[(UINavigationController *)photobookEditVc.presentedViewController topViewController] isKindOfClass:[OLImagePickerViewController class]], @"Did not show image picker on entry because of no images");
+    
+    OLImagePickerViewController *picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
+    
+    [self performUIAction:^{
+        OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
+        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:7 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [picker onButtonDoneTapped:nil];
+    }];
+    
+    [self tapNextOnViewController:photobookEditVc];
+    
+    OLPhotobookViewController *photobook = (OLPhotobookViewController *)productHomeVc.navigationController.topViewController;
+    
+    [self performUIAction:^{
+        [photobook openBook:nil];
+    }];
+    
+    OLTestTapGestureRecognizer *tap = [[OLTestTapGestureRecognizer alloc] init];
+    tap.customLocationInView = CGPointMake(photobook.view.frame.size.width-100, 100);
+    
+    [self performUIAction:^{
+        [photobook onTapGestureRecognized:tap];
+    }];
+    
+    picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
+    
+    [self performUIAction:^{
+        OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
+        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:6 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [picker onButtonDoneTapped:nil];
+    }];
+    
+    XCTAssert([OLUserSession currentSession].userSelectedPhotos.count == 2, @"Did not pick 2 images");
+}
+
 
 @end
