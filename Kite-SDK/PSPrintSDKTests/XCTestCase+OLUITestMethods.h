@@ -113,6 +113,9 @@
 - (void)onCoverTapRecognized:(UITapGestureRecognizer *)sender;
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer;
 - (void)openBook:(UIGestureRecognizer *)sender;
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
+- (void)closeBookFrontForGesture:(UIPanGestureRecognizer *)sender;
+- (void)closeBookBackForGesture:(UIPanGestureRecognizer *)sender;
 @end
 
 @interface OLProductOverviewViewController ()

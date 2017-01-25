@@ -98,17 +98,38 @@
         [photobook openBook:nil];
     }];
     
-    OLMockPanGestureRecognizer *pan = [[OLMockPanGestureRecognizer alloc] init];
-    pan.mockTranslation = CGPointMake(-200, 0);
+    OLMockPanGestureRecognizer *leftPan = [[OLMockPanGestureRecognizer alloc] init];
+    leftPan.mockTranslation = CGPointMake(-200, 0);
+    
+    OLMockPanGestureRecognizer *rightPan = [[OLMockPanGestureRecognizer alloc] init];
+    rightPan.mockTranslation = CGPointMake(200, 0);
     
     [self performUIAction:^{
-        [photobook onPanGestureRecognized:pan];
+        [photobook closeBookBackForGesture:leftPan];
     }];
     
-    pan.mockState = UIGestureRecognizerStateEnded;
-    pan.mockVelocity = CGPointMake(-100, 0);
     [self performUIAction:^{
-        [photobook onPanGestureRecognized:pan];
+        [photobook openBook:rightPan];
+    }];
+    
+    [self performUIAction:^{
+        [photobook closeBookFrontForGesture:rightPan];
+    }];
+    
+    [self performUIAction:^{
+        [photobook openBook:leftPan];
+    }];
+    
+    [self performUIAction:^{
+        if ([photobook gestureRecognizerShouldBegin:leftPan]){
+            [photobook onPanGestureRecognized:leftPan];
+        }
+    }];
+    
+    leftPan.mockState = UIGestureRecognizerStateEnded;
+    leftPan.mockVelocity = CGPointMake(-100, 0);
+    [self performUIAction:^{
+        [photobook onPanGestureRecognized:leftPan];
     }];
     
     [self performUIAction:^{
