@@ -81,7 +81,7 @@
     
     self.bannerLabel.text = self.offer.bannerText;
     
-    if (self.offer.text){
+    if (self.offer.text && ![self.offer.text isEqualToString:@""]){
         self.headerLabel.text = [self.offer.headerText stringByReplacingOccurrencesOfString:@"[[price]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
         bodyString = [self.offer.text stringByReplacingOccurrencesOfString:@"[[price]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
     }

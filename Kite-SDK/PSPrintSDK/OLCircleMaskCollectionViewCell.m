@@ -35,12 +35,11 @@
     [super drawRect:rect];
     
     if (self.enableMask){
-        UIImageView *imageView = (UIImageView *)[self.contentView viewWithTag:10];
         CAShapeLayer *aCircle=[CAShapeLayer layer];
-        aCircle.path=[UIBezierPath bezierPathWithRoundedRect:imageView.bounds cornerRadius:imageView.frame.size.height/2].CGPath;
+        aCircle.path=[UIBezierPath bezierPathWithRoundedRect:self.imageView.bounds cornerRadius:self.imageView.frame.size.height/2].CGPath;
         
         aCircle.fillColor=[UIColor blackColor].CGColor;
-        imageView.layer.mask=aCircle;
+        self.imageView.layer.mask=aCircle;
     }
 }
 

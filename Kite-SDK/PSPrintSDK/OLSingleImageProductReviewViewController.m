@@ -348,14 +348,10 @@
 }
 
 -(void) doCheckout{
-    if (!self.cropView.image) {
-        NSTimeInterval duration = 0.3;
-        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.hintView.alpha = 1;
-        } completion:NULL];
+    if ([OLUserSession currentSession].userSelectedPhotos.count == 0) {
+        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")delay:YES];
         return;
     }
-    
     [self saveJobWithCompletionHandler:^{
         if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
             UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];

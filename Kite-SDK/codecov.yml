@@ -30,3 +30,7 @@ ignore:
   - "Kite-SDK/PSPrintSDKTests/OLBaseRequest+mock.m"
   - "Kite-SDK/PSPrintSDKTests/OLSwizzler.m"
   - "Kite-SDK/PSPrintSDKTests/OLKiteTestHelper.m"
+  - "Kite-SDK/PSPrintSDKTests/XCTestCase+OLUITestMethods.m"
+  - "Kite-SDK/PSPrintSDKTests/UpsellTests.m"
+  - "Kite-SDK/PSPrintSDKTests/ViewControllerTests.m"
+  - "Kite-SDK/PSPrintSDKTests/CompleteJourneyTests.m"

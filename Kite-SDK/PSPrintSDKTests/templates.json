@@ -11115,9 +11115,8 @@
     },
     {
       "active" : true,
-      "upsell_offers" : [
-
-      ],
+               "upsell_offers" : [
+               ],
       "product_active" : true,
       "print_in_store" : false,
       "wholesale_shipping_costs" : {
@@ -13504,9 +13503,22 @@
     },
     {
       "active" : true,
-      "upsell_offers" : [
-
-      ],
+               "upsell_offers" : [
+                                  {
+                                  "active" : 1,
+                                  "discount_percentage" : 90,
+                                  "id" : 12346,
+                                  "offer_template" : "magnets",
+                                  "offer_type" : "ITEM_ADD",
+                                  "prepopulate_photos" : 0,
+                                  "priority" : 0,
+                                  "min_valid_units" : 0,
+                                  "max_valid_units" : 99,
+                                  "upsell_header_text" : "",
+                                  "upsell_text" : "",
+                                  "upsell_banner_text" : "🤑"
+                                  }
+                                  ],
       "product_active" : true,
       "print_in_store" : false,
       "wholesale_shipping_costs" : {
