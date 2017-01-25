@@ -644,21 +644,20 @@
         [OLKiteABTesting sharedInstance].promoBannerText = @"<header>Hello Inspector!</header><para>This message will self-destruct in [[2115-08-04 18:05 GMT+3]]</para>";
     }];
     
-    NSArray *olAssets = @[
-                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]
-                          ];
     
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    
+    NSArray *olAssets = [[OLUserSession currentSession].userSelectedPhotos subarrayWithRange:NSMakeRange(0, 11)];
     
     [OLUserSession currentSession].appAssets = [olAssets mutableCopy];
     [[OLUserSession currentSession] resetUserSelectedPhotos];
     
-    [self chooseClass:@"Prints" onOLProductHomeViewController:productHomeVc];
+    [self chooseClass:@"Stickers" onOLProductHomeViewController:productHomeVc];
     
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
     
-    [self chooseProduct:@"Squares" onOLProductTypeSelectionViewController:productTypeVc];
+    [self chooseProduct:@"Circle Stickers" onOLProductTypeSelectionViewController:productTypeVc];
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
@@ -794,6 +793,20 @@
     [self performUIAction:^{
         [editVc onBarButtonCancelTapped:nil];
     }];
+    
+    [self performUIActionWithDelay:3 action:^{
+        [[UIDevice currentDevice] setValue:
+         [NSNumber numberWithInteger: UIInterfaceOrientationLandscapeLeft]
+                                    forKey:@"orientation"];
+    }];
+    
+    [self performUIActionWithDelay:3 action:^{
+        [[UIDevice currentDevice] setValue:
+         [NSNumber numberWithInteger: UIInterfaceOrientationPortrait]
+                                    forKey:@"orientation"];
+    }];
+    
+    [self tapNextOnViewController:reviewVc];
 }
 
 - (void)testContinueShopping{
