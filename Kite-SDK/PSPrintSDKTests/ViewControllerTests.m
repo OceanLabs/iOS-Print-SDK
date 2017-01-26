@@ -126,6 +126,22 @@
     
 }
 
+- (void)testAddressSearch{
+    OLAddressLookupViewController *vc = [[OLAddressLookupViewController alloc] init];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+    }];
+    
+    vc.searchController.searchBar.text = @"457 Finchley Road, NW3 6HN, London";
+    
+    [self performUIActionWithDelay:5 action:^{
+        [vc updateSearchResultsForSearchController:vc.searchController];
+    }];
+}
+
+
 - (void)testImagePickerViewController{
     [[OLUserSession currentSession] logoutOfInstagram];
     
@@ -1016,6 +1032,5 @@
     
     XCTAssert([OLUserSession currentSession].userSelectedPhotos.count == 2, @"Did not pick 2 images");
 }
-
 
 @end
