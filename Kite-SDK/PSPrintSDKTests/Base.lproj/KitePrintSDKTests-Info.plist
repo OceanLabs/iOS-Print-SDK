@@ -19,6 +19,6 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Grant access to you photo library to customize products with your photos.</string>
+	<string>Grant access to your photo library to customize products with your photos.</string>
 </dict>
 </plist>
