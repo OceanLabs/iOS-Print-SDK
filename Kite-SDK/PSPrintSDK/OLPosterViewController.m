@@ -336,7 +336,6 @@ CGFloat posterMargin = 2;
     [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
     }];
 }
@@ -408,35 +407,36 @@ CGFloat posterMargin = 2;
     
     self.editingPrintPhoto.edits = cropper.edits;
     
+    NSInteger posterQty = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
     //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     for (NSInteger i = 0; i < self.posterPhotos.count; i++){
         if (self.posterPhotos[i] == self.editingPrintPhoto){
-            NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
-
+            NSInteger outerIndex = i / posterQty;
+            
             if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
                 continue;
             }
             
-            NSInteger innerIndex = i - outerIndex * self.product.quantityToFulfillOrder;
+            NSInteger innerIndex = i - outerIndex * posterQty;
             
             UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
             UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
             
-            
-            
             NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
-            [indexPaths addObject:innerIndexPath];
             
-            if (outerIndex != i+1 / self.product.quantityToFulfillOrder){
-                [innerCollectionView reloadItemsAtIndexPaths:indexPaths];
-                [indexPaths removeAllObjects];
+            if (innerIndexPath){
+                [innerCollectionView reloadItemsAtIndexPaths:@[innerIndexPath]];
             }
         }
     }
     
     
-    [cropper dismissViewControllerAnimated:YES completion:^{}];
+    [cropper dismissViewControllerAnimated:YES completion:^{
+        [UIView animateWithDuration:0.25 animations:^{
+            //            self.nextButton.alpha = 1;
+            self.navigationController.navigationBar.alpha = 1;
+        }];
+    }];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];

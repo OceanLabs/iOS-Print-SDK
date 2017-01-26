@@ -36,6 +36,7 @@
 @interface OLCustomViewControllerPhotoProvider : OLImagePickerProvider
 
 @property (strong, nonatomic) UIViewController<OLCustomPickerController> *vc;
+@property (strong, nonatomic) NSArray *preselectedAssets;
 
 - (instancetype)initWithController:(UIViewController<OLCustomPickerController> *)controller name:(NSString *)name icon:(UIImage *)icon;
 

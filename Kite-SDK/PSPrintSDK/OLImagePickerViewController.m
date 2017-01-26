@@ -117,7 +117,9 @@
     [super viewDidLoad];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+    if (self.product){
+        [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+    }
 #endif
     
     if (!self.navigationController){
@@ -235,6 +237,10 @@
     }
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
+    
+    if ((self.product.productTemplate.templateUI == OLTemplateUICalendar || self.product.productTemplate.templateUI == OLTemplateUIDoubleSided) && self.maximumPhotos == 0){
+        self.maximumPhotos = self.product.quantityToFulfillOrder;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -247,6 +253,7 @@
     }
     
     [self positionSelectedProviderIndicator];
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -383,6 +390,11 @@
         if ([customProvider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
             customProvider.providerType = OLImagePickerProviderTypeViewController;
             [self.providers addObject:customProvider];
+            
+            //When editing a job from basket, add the assets
+            if ([self isExclusiveCustomViewControllerProvider] && [self overrideImagePickerMode]){
+                [customProvider.collections.firstObject addAssets:[OLUserSession currentSession].userSelectedPhotos unique:YES];
+            }
         }
         else{
             NSMutableArray *collections = [[NSMutableArray alloc] init];
@@ -419,9 +431,10 @@
     [self setupQRCodeProvider];
     
     if ([self isExclusiveCustomViewControllerProvider]){
+        CGFloat height = 50;
         [self.sourcesCollectionView.superview removeFromSuperview];
         self.sourcesCollectionView = nil;
-        self.nextButtonLeadingCon.constant = self.nextButton.frame.size.height + 10;
+        self.nextButtonLeadingCon.constant = height + 10;
         self.nextButtonTrailingCon.constant = 5;
         self.nextButtonBottomCon.constant = 5;
         
@@ -441,9 +454,8 @@
         NSDictionary *views = NSDictionaryOfVariableBindings(addButton);
         NSMutableArray *con = [[NSMutableArray alloc] init];
         
-        NSArray *visuals = @[[NSString stringWithFormat:@"H:|-5-[addButton(%f)]", self.nextButton.frame.size.height],
-                             [NSString stringWithFormat:@"V:[addButton(%f)]-5-|", self.nextButton.frame.size.height]];
-        
+        NSArray *visuals = @[[NSString stringWithFormat:@"H:|-5-[addButton(%f)]", height],
+                             [NSString stringWithFormat:@"V:[addButton(%f)]-5-|", height]];
         
         for (NSString *visual in visuals) {
             [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
@@ -459,8 +471,6 @@
         label.translatesAutoresizingMaskIntoConstraints = NO;
         [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
         [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:-2]];
-
-
     }
 }
 
@@ -528,6 +538,9 @@
     } else {
         if (self.product.quantityToFulfillOrder > 1){
             NSUInteger numOrders = 1 + (MAX(0, self.selectedAssets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+            if (![self.product isMultipack]){
+                numOrders = 1;
+            }
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
             self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.selectedAssets.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
         }
@@ -628,15 +641,28 @@
         self.providerForPresentedVc = provider;
     }
     else if (provider.providerType == OLImagePickerProviderTypeViewController && [provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
-        UIViewController *vc = [(OLCustomViewControllerPhotoProvider *)provider vc];
-        ((id<OLCustomPickerController>)vc).delegate = self;
+        UIViewController<OLCustomPickerController> *vc = [(OLCustomViewControllerPhotoProvider *)provider vc];
+        vc.delegate = self;
+        [vc safePerformSelector:@selector(setSelectedAssets:) withObject:self.selectedAssets];
+        [vc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
+        if ([vc respondsToSelector:@selector(setMinimumPhotos:)]){
+            vc.minimumPhotos = self.product.quantityToFulfillOrder;
+        }
+        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
+            NSInteger maximumPhotos = 0;
+            if (self.product.productTemplate.templateUI == OLTemplateUICase || self.product.productTemplate.templateUI == OLTemplateUICalendar || self.product.productTemplate.templateUI == OLTemplateUIPoster || self.product.productTemplate.templateUI == OLTemplateUIPhotobook || self.product.productTemplate.templateUI == OLTemplateUIApparel || self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+                maximumPhotos = self.product.quantityToFulfillOrder;
+            }
+            vc.maximumPhotos = maximumPhotos;
+        }
+        
         [self presentViewController:vc animated:YES completion:nil];
         self.providerForPresentedVc = provider;
     }
 }
 
 - (void)assetsPickerControllerDidCancel:(UIViewController *)picker{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)assetsPickerController:(UIViewController *)picker didFinishPickingAssets:(NSArray<OLAsset *> *)assets{
@@ -647,14 +673,22 @@
             [validAssets removeObjectIdenticalTo:obj];
         }
     }
-    
+    for (OLAsset *asset in [self.providerForPresentedVc.collections.firstObject copy]){
+        if (![validAssets containsObject:asset]){
+            [self.providerForPresentedVc.collections.firstObject removeAsset:asset];
+            [self.selectedAssets removeObject:asset];
+        }
+    }
     [self.providerForPresentedVc.collections.firstObject addAssets:validAssets unique:YES];
     for (OLAsset *asset in validAssets){
         if(self.maximumPhotos == 0 || self.selectedAssets.count < self.maximumPhotos){
-            [self.selectedAssets addObject:asset];
+            if (![self.selectedAssets containsObject:asset]){
+                [self.selectedAssets addObject:asset];
+            }
         }
     }
     [self reloadPageController];
+    [self updateTitleBasedOnSelectedPhotoQuanitity];
     if ([[self.nextButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].firstObject isEqualToString:@"onButtonNextClicked:"]){
         [picker dismissViewControllerAnimated:YES completion:NULL];
     }
@@ -744,6 +778,9 @@
     else if (self.selectedAssets.count < self.minimumPhotos){
         errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select at least %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.minimumPhotos];
     }
+    else if (![self.product isMultipack] && self.selectedAssets.count > self.maximumPhotos && self.maximumPhotos != 0){
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select no more than %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.maximumPhotos];
+    }
     if (errorMessage) {
         UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
         [av addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
@@ -792,6 +829,11 @@
             [self presentViewController:c animated:NO completion:NULL];
         }
         else{
+            for (OLAsset *asset in [OLUserSession currentSession].userSelectedPhotos){
+                if ([asset isEdited]){
+                    [asset unloadImage];
+                }
+            }
             [self showOrderPreview];
         }
     }

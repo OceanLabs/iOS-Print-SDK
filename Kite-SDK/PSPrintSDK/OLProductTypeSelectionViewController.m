@@ -210,7 +210,6 @@
     
     OLProduct *product = self.products[indexPath.row];
     product.uuid = nil;
-    [[OLUserSession currentSession] resetUserSelectedPhotos];
     
     NSString *identifier;
     NSMutableArray *posters = [[NSMutableArray alloc] init];

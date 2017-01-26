@@ -43,6 +43,7 @@
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "NSObject+Utils.h"
 #import "OLProductOverviewViewController.h"
+#import "OLCustomPickerController.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -849,6 +850,7 @@ const NSInteger kOLEditTagCrop = 40;
         self.editingTools.drawerView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished){
         self.editingTools.collectionView.tag = -1;
+        [self.editingTools.collectionView reloadData];
         [self.view bringSubviewToFront:self.editingTools];
         self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
         [self.view layoutIfNeeded];
@@ -1099,7 +1101,7 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Actions
 
 - (IBAction)onButtonHorizontalFlipClicked:(id)sender {
-    if (self.cropView.isCorrecting || self.animating){
+    if (self.cropView.isCorrecting || self.animating || !self.cropView.imageView.image){
         return;
     }
     
@@ -1124,7 +1126,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (IBAction)onButtonRotateClicked:(id)sender {
-    if (self.cropView.isCorrecting || self.animating){
+    if (self.cropView.isCorrecting || self.animating || !self.cropView.imageView.image){
         return;
     }
     
@@ -1275,6 +1277,9 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (collectionView.tag == kOLEditTagImageTools){
         return 3;
+    }
+    else if (collectionView.tag == -1){
+        return 0;
     }
     
     return self.selectedOption.choices.count;
@@ -1848,6 +1853,11 @@ const NSInteger kOLEditTagCrop = 40;
         self.vcDelegateForCustomVc = vc; //Keep strong reference
         UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
         [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+        [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
+        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
+        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
+            vc.maximumPhotos = 1;
+        }
         
         [self presentViewController:customVc animated:YES completion:NULL];
         self.presentedVc = customVc;
@@ -1883,11 +1893,6 @@ const NSInteger kOLEditTagCrop = 40;
         if ([view isKindOfClass:[UIActivityIndicatorView class]]){
             [(UIActivityIndicatorView *)view startAnimating];
         }
-        
-        for (UITextField *tf in self.textFields){
-            [tf removeFromSuperview];
-        }
-        [self.textFields removeAllObjects];
         
         [self loadImageFromAsset];
     }

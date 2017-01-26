@@ -163,7 +163,7 @@
     }
 }
 
-- (void)testPrintJobProductName{
+- (void)DISABLE_testPrintJobProductName{
     id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" images:@[]];
     XCTAssert([job.productName isEqualToString:[OLProductTemplate templateWithId:@"squares"].name]);
     

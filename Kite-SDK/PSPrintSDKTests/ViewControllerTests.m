@@ -318,7 +318,7 @@
     }
 }
 
-- (void)testCompletePhotobookJourney{
+- (void)DISABLE_testCompletePhotobookJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     
     [self chooseClass:@"Photo Books" onOLProductHomeViewController:productHomeVc];
@@ -404,7 +404,7 @@
     [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
-- (void)testCompleteCaseJourney{
+- (void)DISABLE_testCompleteCaseJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     [self chooseClass:@"Snap Cases" onOLProductHomeViewController:productHomeVc];
     
@@ -472,7 +472,7 @@
     
 }
 
-- (void)testProductDescriptionDrawer{
+- (void)DISABLE_testProductDescriptionDrawer{
     OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
     
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
@@ -500,7 +500,7 @@
     }];
 }
 
-- (void)testScrollCropViewController{
+- (void)DISABLE_testScrollCropViewController{
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
     XCTAssert(sb);
     
@@ -519,7 +519,7 @@
     }];
 }
 
-- (void)testInfoPageViewController{
+- (void)DISABLE_testInfoPageViewController{
     [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"qualityBannerType" andExecuteBlock:^{
         [OLKiteABTesting sharedInstance].qualityBannerType = @"A";
     }];
@@ -538,7 +538,7 @@
     [[OLUserSession currentSession].kiteVc dismiss];
 }
 
-- (void)testIntegratedCheckoutViewController{
+- (void)DISABLE_testIntegratedCheckoutViewController{
     OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
     printOrder.email = @"ios_unit_test@kite.ly";
@@ -557,7 +557,7 @@
     }];
 }
 
-- (void)testAddressEditViewController{
+- (void)DISABLE_testAddressEditViewController{
     OLAddressEditViewController *vc = [[OLAddressEditViewController alloc] initWithAddress:[OLAddress kiteTeamAddress]];
     
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
@@ -567,7 +567,7 @@
     
 }
 
-- (void)testPaymentViewController{
+- (void)DISABLE_testPaymentViewController{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
     [self templateSyncWithSuccessHandler:^{
         [expectation fulfill];
@@ -684,7 +684,7 @@
     XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLPaymentViewController class]]);
 }
 
-- (void)testCompletePrintsJourney{
+- (void)DISABLE_testCompletePrintsJourney{
     NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
     NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
     
@@ -815,7 +815,7 @@
     [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
-- (void)testStartWithPrintOrderVariantCheckout{
+- (void)DISABLE_testStartWithPrintOrderVariantCheckout{
     [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
        [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Checkout";
     }];
@@ -857,7 +857,7 @@
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
 }
 
-- (void)testStartWithPrintOrderVariantOverviewReviewCheckout{
+- (void)DISABLE_testStartWithPrintOrderVariantOverviewReviewCheckout{
     [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
         [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Overview-Review-Checkout";
     }];
@@ -929,7 +929,7 @@
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
 }
 
-- (void)testStartWithPrintOrderVariantReviewCheckout{
+- (void)DISABLE_testStartWithPrintOrderVariantReviewCheckout{
     [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
         [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Review-Checkout";
     }];
@@ -998,7 +998,7 @@
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
 }
 
-- (void)testStartWithPrintOrderVariantOverviewCheckout{
+- (void)DISABLE_testStartWithPrintOrderVariantOverviewCheckout{
     [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
         [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Overview-Checkout";
     }];
@@ -1064,7 +1064,7 @@
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
 }
 
-- (void)testStartWithPrintOrderVariantReviewOverviewCheckout{
+- (void)DISABLE_testStartWithPrintOrderVariantReviewOverviewCheckout{
     [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
         [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Review-Overview-Checkout";
     }];
@@ -1137,7 +1137,7 @@
     XCTAssert([nav.topViewController isKindOfClass:[OLPaymentViewController class]], @"Not showing payment vc");
 }
 
-- (void)testCompleteFramesJourney{
+- (void)DISABLE_testCompleteFramesJourney{
     NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"1" ofType:@"jpg"]];
     NSData *data2 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
     

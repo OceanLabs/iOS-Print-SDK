@@ -198,6 +198,8 @@
 		2E451E9A1D9565D40080F1C1 /* OLKitePrintSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFB218635F170009DE03 /* OLKitePrintSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E480ADE1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */; };
 		2E480ADF1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */; };
+		2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */; };
+		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
 		2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
@@ -620,6 +622,10 @@
 		2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = OLProgressHUD.bundle; sourceTree = "<group>"; };
 		2E482B771BEB4C7D007460EA /* OLStripeCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeCard.h; sourceTree = "<group>"; };
 		2E482B781BEB4C7D007460EA /* OLStripeCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLStripeCard.m; sourceTree = "<group>"; };
+		2E4C31261E1E5B3900B3F28C /* AssetDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetDataSource.h; sourceTree = "<group>"; };
+		2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetDataSource.m; sourceTree = "<group>"; };
+		2E4C31281E1E5B3900B3F28C /* CustomAssetCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAssetCollectionDataSource.h; sourceTree = "<group>"; };
+		2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAssetCollectionDataSource.m; sourceTree = "<group>"; };
 		2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTypeSelectionViewController.h; sourceTree = "<group>"; };
 		2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTypeSelectionViewController.m; sourceTree = "<group>"; };
 		2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSingleImageProductReviewViewController.h; sourceTree = "<group>"; };
@@ -1145,6 +1151,10 @@
 				2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */,
 				2E88A21A1DB0EED600732F4B /* CustomImagePickerViewController.h */,
 				2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */,
+				2E4C31261E1E5B3900B3F28C /* AssetDataSource.h */,
+				2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */,
+				2E4C31281E1E5B3900B3F28C /* CustomAssetCollectionDataSource.h */,
+				2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */,
 				2E5E2D5C1D8ADC2F00D9B1B2 /* KiteCI-Info.plist */,
 			);
 			name = Private;
@@ -2479,7 +2489,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */,
 				2E9A77361DA683FE00A50C4D /* PrintOrderHistoryViewController.m in Sources */,
+				2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */,
 				2E9A77371DA683FE00A50C4D /* CI-ViewController.m in Sources */,
 				2E9A77391DA684FB00A50C4D /* main.m in Sources */,
 				2E88A21C1DB0EED600732F4B /* CustomImagePickerViewController.m in Sources */,
@@ -2602,7 +2614,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Kite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2843,7 +2855,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1a1a5519-5fee-4d30-a8f3-a126c3e39cb4";
+				PROVISIONING_PROFILE = "ac99d5ad-0631-46fe-b0a9-ef763fc91e9d";
 				PROVISIONING_PROFILE_SPECIFIER = "Kite SDK CI";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;

@@ -458,15 +458,15 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section > 0){
+    if (indexPath.section > 0){ // + button for external vc
         [self.imagePicker presentExternalViewControllerForProvider:self.provider];
         return;
     }
     
-    if (collectionView.tag == 10){
+    if (collectionView.tag == 10){ //Images collection view
         OLAsset *printPhoto = [self assetForIndexPath:indexPath];
         
-        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
+        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){ //Photo is selected
             if ([printPhoto isEdited]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
@@ -481,7 +481,7 @@ CGFloat OLImagePickerMargin = 1.5;
                 [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
             }
         }
-        else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){
+        else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){ //Maximum reached
             NSString *message;
             if (self.imagePicker.maximumPhotos != self.imagePicker.minimumPhotos && self.imagePicker.maximumPhotos != 1){
                 message = [NSString stringWithFormat:self.imagePicker.maximumPhotos == 1 ? NSLocalizedStringFromTableInBundle(@"Please select only %ld photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") : NSLocalizedStringFromTableInBundle(@"Please select up to %ld photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)self.imagePicker.maximumPhotos];
@@ -503,7 +503,7 @@ CGFloat OLImagePickerMargin = 1.5;
             
             [self.imagePicker presentViewController:alert animated:YES completion:nil];
         }
-        else{
+        else{ //Add photo
             [self.imagePicker.selectedAssets addObject:printPhoto];
             printPhoto.edits = nil;
             [printPhoto unloadImage];
@@ -521,7 +521,7 @@ CGFloat OLImagePickerMargin = 1.5;
         
         [self.imagePicker updateTitleBasedOnSelectedPhotoQuanitity];
     }
-    else{
+    else{ //Albums collection view
         self.showingCollectionIndex = indexPath.item;
         [self.collectionView reloadData];
         if ([self.collectionView numberOfItemsInSection:0] > 0){

@@ -12,4 +12,5 @@
 
 @interface CustomImagePickerViewController : UIViewController <OLCustomPickerController>
 @property (weak, nonatomic) id<OLCustomImagePickerViewControllerDelegate> delegate;
+@property (strong, nonatomic) NSString *productId;
 @end

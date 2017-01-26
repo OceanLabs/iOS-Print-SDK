@@ -41,8 +41,11 @@
 #import "UIImageView+FadeIn.h"
 #import "OLImagePickerViewController.h"
 #import "OLInfoBanner.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "NSObject+Utils.h"
+#import "OLCustomPickerController.h"
 
-@interface OLPackProductViewController (Private) <OLInfoBannerDelegate>
+@interface OLPackProductViewController (Private) <OLInfoBannerDelegate, OLImagePickerViewControllerDelegate>
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (BOOL) shouldGoToCheckout;
@@ -55,10 +58,16 @@
 
 @end
 
+@interface OLKiteViewController ()
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
+@end
+
 @interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate,UIViewControllerPreviewingDelegate>
 
 @property (strong, nonatomic) NSMutableArray* framePhotos;
 @property (weak, nonatomic) OLAsset *editingPrintPhoto;
+@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
+@property (strong, nonatomic) UIViewController *presentedVc;
 
 @end
 
@@ -90,6 +99,34 @@ CGFloat innerMargin = 3;
 #endif
     
     self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+}
+
+- (void)replacePhoto:(id)sender{
+    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.delegate = self;
+    vc.selectedAssets = [[NSMutableArray alloc] init];
+    vc.maximumPhotos = 1;
+    vc.product = self.product;
+    
+    if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+        //Skip the image picker and only show the custom vc
+        
+        self.vcDelegateForCustomVc = vc; //Keep strong reference
+        vc.providerForPresentedVc = [OLUserSession currentSession].kiteVc.customImageProviders.firstObject;
+        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
+        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+        [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
+        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
+        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
+            vc.maximumPhotos = 1;
+        }
+        
+        [self presentViewController:customVc animated:YES completion:NULL];
+        self.presentedVc = customVc;
+        return;
+    }
+    
+    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 
 - (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer {
@@ -203,38 +240,39 @@ CGFloat innerMargin = 3;
 }
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        return nil;
-    }
-    
-    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
-    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
-    
-    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
-    
-    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[collectionView convertPoint:location fromView:self.collectionView]];
-    
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
-    
-    OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section]];
-    if (!imageView.image || [printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
-        return nil;
-    }
-    
-    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
-    
-    self.editingPrintPhoto = printPhoto;
-    
-    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
-    __weak OLImagePreviewViewController *weakVc = previewVc;
-    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingPrintPhoto size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
-        [weakVc.imageView setProgress:progress];
-    }completionHandler:NULL];
-    previewVc.providesPresentationContextTransitionStyle = true;
-    previewVc.definesPresentationContext = true;
-    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    return previewVc;
+    return nil;
+//    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+//        return nil;
+//    }
+//    
+//    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
+//    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
+//    
+//    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
+//    
+//    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[collectionView convertPoint:location fromView:self.collectionView]];
+//    
+//    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+//    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
+//    
+//    OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section]];
+//    if (!imageView.image || [printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+//        return nil;
+//    }
+//    
+//    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
+//    
+//    self.editingPrintPhoto = printPhoto;
+//    
+//    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
+//    __weak OLImagePreviewViewController *weakVc = previewVc;
+//    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingPrintPhoto size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+//        [weakVc.imageView setProgress:progress];
+//    }completionHandler:NULL];
+//    previewVc.providesPresentationContextTransitionStyle = true;
+//    previewVc.definesPresentationContext = true;
+//    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+//    return previewVc;
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
@@ -573,7 +611,15 @@ CGFloat innerMargin = 3;
             }
         }
         
-        [vc dismissViewControllerAnimated:YES completion:NULL];
+        if (self.presentedVc){
+            [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+        }
+        else{
+            [vc dismissViewControllerAnimated:YES completion:NULL];
+        }
+        
+        self.vcDelegateForCustomVc = nil;
+        self.presentedVc = nil;
     }
 }
 
