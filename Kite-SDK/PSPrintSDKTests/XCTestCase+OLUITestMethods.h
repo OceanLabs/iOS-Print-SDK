@@ -61,6 +61,10 @@
 
 @end
 
+@interface OLFrameOrderReviewViewController ()
+- (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer;
+@end
+
 @interface OLAddressLookupViewController ()
 @property (strong, nonatomic) UISearchController *searchController;
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController;
