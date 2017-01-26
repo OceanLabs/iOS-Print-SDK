@@ -725,12 +725,12 @@
     }];
     XCTAssert(editVc.editingTools.collectionView.tag == 30/*kOLEditTagImageTools*/, @"Image Tools not restored");
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:5 action:^{
         [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] onButtonTouchUpInside];
     }];
     XCTAssert(editVc.edits.flipVertical || editVc.edits.flipHorizontal, @"Image not flipped");
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:5 action:^{
         [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:2 inSection:0]] onButtonTouchUpInside];
     }];
     XCTAssert(editVc.edits.counterClockwiseRotations > 0, @"Image not rotated");
