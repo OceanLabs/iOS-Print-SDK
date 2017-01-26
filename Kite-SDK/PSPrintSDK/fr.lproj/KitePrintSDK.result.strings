@@ -70,7 +70,7 @@
 "Failed to download phone case mask. Please check your internet connectivity and try again" = "Impossible de télécharger le masque de coque de téléphone. Veuillez vérifier votre connexion Internet et réessayer ";
 "Failed to get the price of the order. Please try again." =  "Nous n'avons pu enregistrer le total de la commande. Veuillez réessayer.";
 "Failed to get upload URL. Try again later." = "Échec de l'importation de l'URL. Réessayez plus tard.";
-"Failed to log in to Instagram. Please check your internet connectivity and try again" = Impossible de se connecter à Instagram. Vérifiez votre connexion Internet et réessayez";
+"Failed to log in to Instagram. Please check your internet connectivity and try again" = "Impossible de se connecter à Instagram. Vérifiez votre connexion Internet et réessayez";
 "Failed to store card details with PayPal. Please try again." =  "Nous n'avons pu enregistrer vos données Paypal. Veuillez réessayer.";
 "Failed to synchronize product templates. Please try again." = "Nous n'avons pu synchroniser les gabarits produits. Veuillez réessayer.";
 "Failed to validate card details, please try again." = "Impossible de valider les détails de la carte. Veuillez réessayer.";

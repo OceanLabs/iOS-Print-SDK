@@ -529,7 +529,6 @@
 		2E18A1C81DF9AB6100F8427D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E18A1C91DF9AB6200F8427D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E18A1CA1DF9AB6300F8427D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E18A1D81DFAB5A400F8427D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E18A1DA1DFAB5AA00F8427D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E18A1E01DFAC8BB00F8427D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E18DC4F1D913DB1004752D2 /* OLPrintPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintPhoto.h; sourceTree = "<group>"; };
@@ -818,6 +817,7 @@
 		2EFDD4261E3A2DD3001B4E83 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = fr; path = "fr.lproj/KitePrintSDKTests-Info.plist"; sourceTree = "<group>"; };
 		2EFDD4271E3A2DD4001B4E83 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = de; path = "de.lproj/KitePrintSDKTests-Info.plist"; sourceTree = "<group>"; };
 		2EFDD4281E3A2DD6001B4E83 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = es; path = "es.lproj/KitePrintSDKTests-Info.plist"; sourceTree = "<group>"; };
+		2EFDD42A1E3A2F26001B4E83 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		321E56D8BE2D006816AACDED /* Pods-KiteSDK-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+QueryingExtras.h"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.h"; sourceTree = "<group>"; };
 		3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+QueryingExtras.m"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.m"; sourceTree = "<group>"; };
@@ -2579,9 +2579,9 @@
 			children = (
 				2E6E60671C5038AD00829BB7 /* Base */,
 				2E53A8C01DA28249003C8C30 /* da */,
-				2E18A1D81DFAB5A400F8427D /* fr */,
 				2E18A1DA1DFAB5AA00F8427D /* de */,
 				2E18A1E01DFAC8BB00F8427D /* es */,
+				2EFDD42A1E3A2F26001B4E83 /* fr */,
 			);
 			name = OLKiteStoryboard.storyboard;
 			sourceTree = "<group>";
