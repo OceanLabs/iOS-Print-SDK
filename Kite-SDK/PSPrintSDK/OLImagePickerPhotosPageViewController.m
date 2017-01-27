@@ -350,15 +350,13 @@ CGFloat OLImagePickerMargin = 1.5;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
         options.resizeMode = PHImageRequestOptionsResizeModeFast;
         
-        options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [imageView setProgress:progress];
-            });
-        };
+        __weak OLRemoteImageView *weakImageView = imageView;
         
         CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [imageView setAndFadeInImageWithPHAsset:asset size:CGSizeMake(cellSize.width * [OLUserSession currentSession].screenScale, cellSize.height * [OLUserSession currentSession].screenScale) options:options];
+            [imageView setAndFadeInImageWithPHAsset:asset size:CGSizeMake(cellSize.width * [OLUserSession currentSession].screenScale, cellSize.height * [OLUserSession currentSession].screenScale) options:options placeholder:nil progress:^(float progress){
+                [weakImageView setProgress:progress];
+            }completionHandler:NULL];
         });
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
