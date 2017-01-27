@@ -344,9 +344,10 @@ CGFloat innerMargin = 3;
             CGFloat imageViewWidth = size.width - 2 * innerCollectionViewHorizontalMargin * scaleFactor;
             CGFloat imageViewHeight = size.width - 2 * innerCollectionViewHorizontalMargin * scaleFactor;
             
+            CGSize imageSize = [self collectionView:innerCollectionView layout:innerCollectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
             UIImageView *imageView = [cell.contentView viewWithTag:1010];
             if (indexPath.item < self.product.productTemplate.representationAssets.count){
-                [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item] size:CGSizeMake(imageViewWidth, imageViewHeight)];
+                [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item] size:CGSizeMake(imageSize.width, imageSize.height)];
             }
             if (self.product.productTemplate.logo){
                 __weak UIImageView *imageView = [cell.contentView viewWithTag:1011];
