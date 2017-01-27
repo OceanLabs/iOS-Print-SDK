@@ -27,7 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#import "NSArray+QueryingExtras.h"
 #import "NSDecimalNumber+CostFormatter.h"
 #import "NSObject+Utils.h"
 #import "OLAddress+AddressBook.h"

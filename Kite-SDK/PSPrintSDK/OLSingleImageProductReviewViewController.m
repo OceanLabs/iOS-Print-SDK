@@ -27,7 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"

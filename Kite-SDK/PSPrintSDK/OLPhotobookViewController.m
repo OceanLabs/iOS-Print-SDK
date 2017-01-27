@@ -28,7 +28,6 @@
 //
 
 #import "OLFlipTransition.h"
-#import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLImageCachingManager.h"

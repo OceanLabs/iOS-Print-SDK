@@ -46,6 +46,7 @@
 #import "OLMockPanGestureRecognizer.h"
 #import "OL3DProductViewController.h"
 #import "OLAddressLookupViewController.h"
+#import "OLAddressSelectionViewController.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (OLProductHomeViewController *)loadKiteViewController;
@@ -59,6 +60,10 @@
 - (void)tearDownHelper;
 - (void)setUpHelper;
 
+@end
+
+@interface UIViewController ()
+- (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender;
 @end
 
 @interface OLPosterViewController ()

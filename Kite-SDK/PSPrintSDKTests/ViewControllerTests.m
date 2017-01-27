@@ -126,6 +126,14 @@
     
 }
 
+- (void)testAddressSelection{
+    OLAddressSelectionViewController *vc = [[OLAddressSelectionViewController alloc] init];
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
+    }];
+}
+
 - (void)testAddressSearch{
     OLAddressLookupViewController *vc = [[OLAddressLookupViewController alloc] init];
     
@@ -969,8 +977,16 @@
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     [self chooseClass:@"Retro Prints" onOLProductHomeViewController:productHomeVc];
     
-    [self performUIActionWithDelay:5 action:^{
+    [self performUIActionWithDelay:7 action:^{
         //Just wait for the video to load
+    }];
+}
+
+- (void)testBasket{
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    
+    [self performUIActionWithDelay:3 action:^{
+        [productHomeVc onButtonBasketClicked:nil];
     }];
 }
 

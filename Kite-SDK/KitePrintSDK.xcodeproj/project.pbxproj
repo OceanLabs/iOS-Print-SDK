@@ -418,7 +418,6 @@
 		2EB8FE721D95685100E26BDF /* UIColor+OLHexString.h in Headers */ = {isa = PBXBuildFile; fileRef = E237FA621D63035600A7912E /* UIColor+OLHexString.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE731D95685100E26BDF /* UIViewController+OLMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E53E0CB1C1AEAAD00BF7887 /* UIViewController+OLMethods.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE741D95685100E26BDF /* NSObject+Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE751D95685100E26BDF /* NSArray+QueryingExtras.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE761D95685100E26BDF /* UITextField+Selection.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE771D95685100E26BDF /* NSString+Formatting.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DEF0D161A964881000F1E66 /* NSString+Formatting.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE781D95685100E26BDF /* UIImageView+FadeIn.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8122EF1A75A46D004E7297 /* UIImageView+FadeIn.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -430,7 +429,6 @@
 		2EB8FE7E1D95692000E26BDF /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
 		2EB8FE7F1D95692000E26BDF /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
 		2EB8FE801D95692000E26BDF /* NSObject+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */; };
-		2EB8FE811D95692000E26BDF /* NSArray+QueryingExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */; };
 		2EB8FE821D95692000E26BDF /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
 		2EB8FE831D95692000E26BDF /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D171A964881000F1E66 /* NSString+Formatting.m */; };
 		2EB8FE841D95692000E26BDF /* UIImageView+FadeIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */; };
@@ -835,8 +833,6 @@
 		2EFDD41D1E378047001B4E83 /* UpsellTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpsellTests.m; sourceTree = "<group>"; };
 		2EFDD41F1E378173001B4E83 /* CompleteJourneyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompleteJourneyTests.m; sourceTree = "<group>"; };
 		321E56D8BE2D006816AACDED /* Pods-KiteSDK-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.debug.xcconfig"; sourceTree = "<group>"; };
-		3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+QueryingExtras.h"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.h"; sourceTree = "<group>"; };
-		3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+QueryingExtras.m"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.m"; sourceTree = "<group>"; };
 		3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCreditCardCaptureViewController.h; sourceTree = "<group>"; };
 		3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCreditCardCaptureViewController.m; sourceTree = "<group>"; };
 		3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kite_corrupt.jpg; sourceTree = "<group>"; };
@@ -1389,8 +1385,6 @@
 				2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */,
 				3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */,
 				3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */,
-				3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */,
-				3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */,
 				3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */,
 				3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */,
 				3DEF0D161A964881000F1E66 /* NSString+Formatting.h */,
@@ -1950,7 +1944,6 @@
 				2EB8FDEB1D95685100E26BDF /* OLUserSession.h in Headers */,
 				2EB8FE0A1D95685100E26BDF /* OLInstagramImagePickerConstants.h in Headers */,
 				2EB0DC761DC8DB7400B556CE /* OL3DProductViewController.h in Headers */,
-				2EB8FE751D95685100E26BDF /* NSArray+QueryingExtras.h in Headers */,
 				2EB8FE1B1D95685100E26BDF /* OLIndefiniteAnimatedView.h in Headers */,
 				2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */,
 				2EB8FE131D95685100E26BDF /* OLFlipEnumerations.h in Headers */,
@@ -2464,7 +2457,6 @@
 				2E451DE51D9555580080F1C1 /* OLStripeCard+OLCardIcon.m in Sources */,
 				2E451DD01D95554D0080F1C1 /* OLAddress.m in Sources */,
 				2E451DE41D9555580080F1C1 /* OLStripeCard.m in Sources */,
-				2EB8FE811D95692000E26BDF /* NSArray+QueryingExtras.m in Sources */,
 				2EB8FE861D95692000E26BDF /* UIImage+OLUtils.m in Sources */,
 				2E451DF71D95555D0080F1C1 /* OLProductGroup.m in Sources */,
 				2E451DD71D9555540080F1C1 /* OLPrintOrderCostRequest.m in Sources */,
