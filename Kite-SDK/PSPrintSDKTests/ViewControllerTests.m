@@ -126,6 +126,30 @@
     
 }
 
+- (void)testAddressSelection{
+    OLAddressSelectionViewController *vc = [[OLAddressSelectionViewController alloc] init];
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
+    }];
+}
+
+- (void)testAddressSearch{
+    OLAddressLookupViewController *vc = [[OLAddressLookupViewController alloc] init];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+    }];
+    
+    vc.searchController.searchBar.text = @"457 Finchley Road, NW3 6HN, London";
+    
+    [self performUIActionWithDelay:5 action:^{
+        [vc updateSearchResultsForSearchController:vc.searchController];
+    }];
+}
+
+
 - (void)testImagePickerViewController{
     [[OLUserSession currentSession] logoutOfInstagram];
     
@@ -709,12 +733,12 @@
     }];
     XCTAssert(editVc.editingTools.collectionView.tag == 30/*kOLEditTagImageTools*/, @"Image Tools not restored");
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:5 action:^{
         [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] onButtonTouchUpInside];
     }];
     XCTAssert(editVc.edits.flipVertical || editVc.edits.flipHorizontal, @"Image not flipped");
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:5 action:^{
         [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:2 inSection:0]] onButtonTouchUpInside];
     }];
     XCTAssert(editVc.edits.counterClockwiseRotations > 0, @"Image not rotated");
@@ -953,8 +977,16 @@
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     [self chooseClass:@"Retro Prints" onOLProductHomeViewController:productHomeVc];
     
-    [self performUIActionWithDelay:5 action:^{
+    [self performUIActionWithDelay:7 action:^{
         //Just wait for the video to load
+    }];
+}
+
+- (void)testBasket{
+    OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    
+    [self performUIActionWithDelay:3 action:^{
+        [productHomeVc onButtonBasketClicked:nil];
     }];
 }
 
@@ -1016,6 +1048,5 @@
     
     XCTAssert([OLUserSession currentSession].userSelectedPhotos.count == 2, @"Did not pick 2 images");
 }
-
 
 @end

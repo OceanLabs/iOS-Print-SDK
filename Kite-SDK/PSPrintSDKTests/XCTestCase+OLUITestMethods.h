@@ -45,6 +45,8 @@
 #import "OLImagePickerLoginPageViewController.h"
 #import "OLMockPanGestureRecognizer.h"
 #import "OL3DProductViewController.h"
+#import "OLAddressLookupViewController.h"
+#import "OLAddressSelectionViewController.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (OLProductHomeViewController *)loadKiteViewController;
@@ -58,6 +60,23 @@
 - (void)tearDownHelper;
 - (void)setUpHelper;
 
+@end
+
+@interface UIViewController ()
+- (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender;
+@end
+
+@interface OLPosterViewController ()
+- (IBAction)editPhoto:(id)sender;
+@end
+
+@interface OLFrameOrderReviewViewController ()
+- (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer;
+@end
+
+@interface OLAddressLookupViewController ()
+@property (strong, nonatomic) UISearchController *searchController;
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController;
 @end
 
 @interface OLImagePickerLoginPageViewController ()

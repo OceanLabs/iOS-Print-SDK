@@ -20,6 +20,7 @@
   },
   "user_config" : {
     "user_type" : "KITE_TEST",
+    "theme" : "unittest",
     "banner_carousel_images" : [
 
     ]

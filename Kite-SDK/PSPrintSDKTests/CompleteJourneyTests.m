@@ -649,6 +649,35 @@
     OLFrameOrderReviewViewController *reviewVc = (OLFrameOrderReviewViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([reviewVc isKindOfClass:[OLFrameOrderReviewViewController class]]);
     
+    UICollectionViewCell *outerCollectionViewCell = [reviewVc.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
+    
+    [self performUIAction:^{
+        OLTestTapGestureRecognizer *tap = [[OLTestTapGestureRecognizer alloc] init];
+        tap.customLocationInView = [reviewVc.collectionView convertPoint:CGPointMake(10, 10) fromView:imageView];
+        
+        [reviewVc onTapGestureThumbnailTapped:tap];
+    }];
+    
+    OLImageEditViewController *editor = (OLImageEditViewController *)reviewVc.presentedViewController;
+    
+    [self performUIAction:^{
+        [editor.editingTools.button1 sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    OLImagePickerViewController *picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
+    
+    [self performUIAction:^{
+        OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
+        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:5 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [editor onButtonDoneTapped:nil];
+    }];
+    
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
     printOrder.email = @"ios_unit_test@kite.ly";
@@ -767,6 +796,35 @@
     
     OLPosterViewController *reviewVc = (OLPosterViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([reviewVc isKindOfClass:[OLPosterViewController class]]);
+    
+    UICollectionViewCell *outerCollectionViewCell = [reviewVc.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
+    
+    [self performUIAction:^{
+        OLTestTapGestureRecognizer *tap = [[OLTestTapGestureRecognizer alloc] init];
+        tap.customLocationInView = [reviewVc.collectionView convertPoint:CGPointMake(10, 10) fromView:imageView];
+        
+        [reviewVc editPhoto:tap];
+    }];
+    
+    OLImageEditViewController *editor = (OLImageEditViewController *)reviewVc.presentedViewController;
+    
+    [self performUIAction:^{
+        [editor.editingTools.button1 sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
+    
+    OLImagePickerViewController *picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
+    
+    [self performUIAction:^{
+        OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
+        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:5 inSection:0]];
+    }];
+    
+    [self performUIAction:^{
+        [editor onButtonDoneTapped:nil];
+    }];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
