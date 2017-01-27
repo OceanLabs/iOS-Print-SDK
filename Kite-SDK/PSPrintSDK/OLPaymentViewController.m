@@ -1532,7 +1532,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0 && ![self finishedLoading]){
+    if (indexPath.section == 0 && ![self finishedLoading] && self.printOrder.jobs.count > 0){
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"loadingCell"];
         UIActivityIndicatorView *activity = [cell viewWithTag:10];
         [activity startAnimating];
@@ -1607,13 +1607,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         return cell;
     }
-    else if (indexPath.section == 0 && self.printOrder.jobs.count == 0){
-        UITableViewCell *cell =  [tableView dequeueReusableCellWithIdentifier:@"emptyCell"];
-        cell.backgroundColor = [UIColor clearColor];
-        return cell;
-    }
     else{
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"continueCell"];
+        UITableViewCell *cell =  [tableView dequeueReusableCellWithIdentifier:@"emptyCell"];
         cell.backgroundColor = [UIColor clearColor];
         return cell;
     }
