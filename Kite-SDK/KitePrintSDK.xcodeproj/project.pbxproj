@@ -200,6 +200,7 @@
 		2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */; };
 		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
 		2E4DAB651DE47104002F4A84 /* mug.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2E4DAB641DE47104002F4A84 /* mug.dae */; };
+		2E5D13AE1E36238800927D19 /* OLMockPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */; };
 		2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
@@ -417,7 +418,6 @@
 		2EB8FE721D95685100E26BDF /* UIColor+OLHexString.h in Headers */ = {isa = PBXBuildFile; fileRef = E237FA621D63035600A7912E /* UIColor+OLHexString.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE731D95685100E26BDF /* UIViewController+OLMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E53E0CB1C1AEAAD00BF7887 /* UIViewController+OLMethods.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE741D95685100E26BDF /* NSObject+Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE751D95685100E26BDF /* NSArray+QueryingExtras.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE761D95685100E26BDF /* UITextField+Selection.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE771D95685100E26BDF /* NSString+Formatting.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DEF0D161A964881000F1E66 /* NSString+Formatting.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE781D95685100E26BDF /* UIImageView+FadeIn.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8122EF1A75A46D004E7297 /* UIImageView+FadeIn.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -429,7 +429,6 @@
 		2EB8FE7E1D95692000E26BDF /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
 		2EB8FE7F1D95692000E26BDF /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
 		2EB8FE801D95692000E26BDF /* NSObject+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */; };
-		2EB8FE811D95692000E26BDF /* NSArray+QueryingExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */; };
 		2EB8FE821D95692000E26BDF /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
 		2EB8FE831D95692000E26BDF /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D171A964881000F1E66 /* NSString+Formatting.m */; };
 		2EB8FE841D95692000E26BDF /* UIImageView+FadeIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */; };
@@ -455,6 +454,9 @@
 		2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */; };
 		2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */; };
 		2EEF0D0C1D9A781700C81086 /* OLCustomPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D0B1D9A781700C81086 /* OLCustomPickerController.h */; };
+		2EFDD4191E377B75001B4E83 /* XCTestCase+OLUITestMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EFDD4181E377B75001B4E83 /* XCTestCase+OLUITestMethods.m */; };
+		2EFDD41E1E378047001B4E83 /* UpsellTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EFDD41D1E378047001B4E83 /* UpsellTests.m */; };
+		2EFDD4201E378173001B4E83 /* CompleteJourneyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EFDD41F1E378173001B4E83 /* CompleteJourneyTests.m */; };
 		B7106FC2FDFC534AFB2516F3 /* libPods-KiteSDK-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CFE5B84A94297F8524AE7764 /* libPods-KiteSDK-Demo.a */; };
 		CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF8A186215790009DE03 /* XCTest.framework */; };
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
@@ -637,6 +639,8 @@
 		2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
 		2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloadDelegate.h; sourceTree = "<group>"; };
 		2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloadDelegate.m; sourceTree = "<group>"; };
+		2E5D13AC1E36238800927D19 /* OLMockPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLMockPanGestureRecognizer.h; sourceTree = "<group>"; };
+		2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLMockPanGestureRecognizer.m; sourceTree = "<group>"; };
 		2E5D95AA1CA984E00080EF07 /* OLUpsellViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUpsellViewController.h; sourceTree = "<group>"; };
 		2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLUpsellViewController.m; sourceTree = "<group>"; };
 		2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLCheckoutDelegate.h; sourceTree = "<group>"; };
@@ -824,9 +828,11 @@
 		2EF718331D589DB60036502D /* OLInfoBanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInfoBanner.m; sourceTree = "<group>"; };
 		2EF8BA9D1B99E9E4009BC73B /* OLImageCachingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageCachingManager.h; sourceTree = "<group>"; };
 		2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageCachingManager.m; sourceTree = "<group>"; };
+		2EFDD4171E377B75001B4E83 /* XCTestCase+OLUITestMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XCTestCase+OLUITestMethods.h"; sourceTree = "<group>"; };
+		2EFDD4181E377B75001B4E83 /* XCTestCase+OLUITestMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XCTestCase+OLUITestMethods.m"; sourceTree = "<group>"; };
+		2EFDD41D1E378047001B4E83 /* UpsellTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpsellTests.m; sourceTree = "<group>"; };
+		2EFDD41F1E378173001B4E83 /* CompleteJourneyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompleteJourneyTests.m; sourceTree = "<group>"; };
 		321E56D8BE2D006816AACDED /* Pods-KiteSDK-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.debug.xcconfig"; sourceTree = "<group>"; };
-		3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+QueryingExtras.h"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.h"; sourceTree = "<group>"; };
-		3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+QueryingExtras.m"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.m"; sourceTree = "<group>"; };
 		3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCreditCardCaptureViewController.h; sourceTree = "<group>"; };
 		3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCreditCardCaptureViewController.m; sourceTree = "<group>"; };
 		3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kite_corrupt.jpg; sourceTree = "<group>"; };
@@ -1379,8 +1385,6 @@
 				2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */,
 				3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */,
 				3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */,
-				3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */,
-				3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */,
 				3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */,
 				3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */,
 				3DEF0D161A964881000F1E66 /* NSString+Formatting.h */,
@@ -1407,6 +1411,8 @@
 		2EAB0AF61CDCDE9900625BD6 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				2EFDD4171E377B75001B4E83 /* XCTestCase+OLUITestMethods.h */,
+				2EFDD4181E377B75001B4E83 /* XCTestCase+OLUITestMethods.m */,
 				2EE0542C1E3201F400417DA4 /* OLSwizzler.h */,
 				2EE0542D1E3201F400417DA4 /* OLSwizzler.m */,
 				2E924BE31BC6A3A00038938A /* OLKiteTestHelper.h */,
@@ -1415,6 +1421,8 @@
 				2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */,
 				2EE0542F1E32054F00417DA4 /* OLBaseRequest+Mock.h */,
 				2EE054301E32054F00417DA4 /* OLBaseRequest+Mock.m */,
+				2E5D13AC1E36238800927D19 /* OLMockPanGestureRecognizer.h */,
+				2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -1486,6 +1494,27 @@
 				2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */,
 			);
 			name = LXReorderableCollectionViewFlowLayout;
+			sourceTree = "<group>";
+		};
+		2EFDD4211E3781E6001B4E83 /* UI Tests */ = {
+			isa = PBXGroup;
+			children = (
+				2E7483521BCD11F800360550 /* ViewControllerTests.m */,
+				2EFDD41F1E378173001B4E83 /* CompleteJourneyTests.m */,
+				2EFDD41D1E378047001B4E83 /* UpsellTests.m */,
+			);
+			name = "UI Tests";
+			sourceTree = "<group>";
+		};
+		2EFDD4221E3781F0001B4E83 /* Model Tests */ = {
+			isa = PBXGroup;
+			children = (
+				CD73BF96186215790009DE03 /* OLSDKModelTests.m */,
+				2E924BE11BC6A0C80038938A /* OLKiteRequestTests.m */,
+				2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */,
+				2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */,
+			);
+			name = "Model Tests";
 			sourceTree = "<group>";
 		};
 		3D8122E21A759E41004E7297 /* RMImageCropper */ = {
@@ -1623,11 +1652,8 @@
 		CD73BF90186215790009DE03 /* Kite Print SDK Tests */ = {
 			isa = PBXGroup;
 			children = (
-				CD73BF96186215790009DE03 /* OLSDKModelTests.m */,
-				2E924BE11BC6A0C80038938A /* OLKiteRequestTests.m */,
-				2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */,
-				2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */,
-				2E7483521BCD11F800360550 /* ViewControllerTests.m */,
+				2EFDD4221E3781F0001B4E83 /* Model Tests */,
+				2EFDD4211E3781E6001B4E83 /* UI Tests */,
 				2EAB0AF61CDCDE9900625BD6 /* Helpers */,
 				CD73BF91186215790009DE03 /* Supporting Files */,
 			);
@@ -1918,7 +1944,6 @@
 				2EB8FDEB1D95685100E26BDF /* OLUserSession.h in Headers */,
 				2EB8FE0A1D95685100E26BDF /* OLInstagramImagePickerConstants.h in Headers */,
 				2EB0DC761DC8DB7400B556CE /* OL3DProductViewController.h in Headers */,
-				2EB8FE751D95685100E26BDF /* NSArray+QueryingExtras.h in Headers */,
 				2EB8FE1B1D95685100E26BDF /* OLIndefiniteAnimatedView.h in Headers */,
 				2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */,
 				2EB8FE131D95685100E26BDF /* OLFlipEnumerations.h in Headers */,
@@ -2432,7 +2457,6 @@
 				2E451DE51D9555580080F1C1 /* OLStripeCard+OLCardIcon.m in Sources */,
 				2E451DD01D95554D0080F1C1 /* OLAddress.m in Sources */,
 				2E451DE41D9555580080F1C1 /* OLStripeCard.m in Sources */,
-				2EB8FE811D95692000E26BDF /* NSArray+QueryingExtras.m in Sources */,
 				2EB8FE861D95692000E26BDF /* UIImage+OLUtils.m in Sources */,
 				2E451DF71D95555D0080F1C1 /* OLProductGroup.m in Sources */,
 				2E451DD71D9555540080F1C1 /* OLPrintOrderCostRequest.m in Sources */,
@@ -2563,11 +2587,15 @@
 				2E0EB0EC1D9EB43F001A6CC9 /* ViewController.m in Sources */,
 				2EE054311E32054F00417DA4 /* OLBaseRequest+Mock.m in Sources */,
 				2E924BE51BC6A3A00038938A /* OLKiteTestHelper.m in Sources */,
+				2EFDD4201E378173001B4E83 /* CompleteJourneyTests.m in Sources */,
 				2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */,
+				2EFDD4191E377B75001B4E83 /* XCTestCase+OLUITestMethods.m in Sources */,
+				2E5D13AE1E36238800927D19 /* OLMockPanGestureRecognizer.m in Sources */,
 				CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */,
 				2EE0542E1E3201F400417DA4 /* OLSwizzler.m in Sources */,
 				2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */,
 				2EAB0AF51CDCD58400625BD6 /* OLTestTapGestureRecognizer.m in Sources */,
+				2EFDD41E1E378047001B4E83 /* UpsellTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

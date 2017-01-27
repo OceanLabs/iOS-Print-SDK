@@ -27,7 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#import "NSArray+QueryingExtras.h"
 #import "NSDecimalNumber+CostFormatter.h"
 #import "NSObject+Utils.h"
 #import "OLAddress+AddressBook.h"
@@ -157,12 +156,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
-
 @property (strong, nonatomic) NSBlockOperation *applePayDismissOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionBlockOperation;
-
-@property (strong, nonatomic) UIVisualEffectView *visualEffectView;
-
 @property (weak, nonatomic) IBOutlet UIButton *paymentButton1;
 @property (weak, nonatomic) IBOutlet UIButton *paymentButton2;
 @property (weak, nonatomic) IBOutlet UILabel *promoCodeCostLabel;
@@ -1537,7 +1532,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0 && ![self finishedLoading]){
+    if (indexPath.section == 0 && ![self finishedLoading] && self.printOrder.jobs.count > 0){
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"loadingCell"];
         UIActivityIndicatorView *activity = [cell viewWithTag:10];
         [activity startAnimating];
@@ -1612,13 +1607,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         
         return cell;
     }
-    else if (indexPath.section == 0 && self.printOrder.jobs.count == 0){
-        UITableViewCell *cell =  [tableView dequeueReusableCellWithIdentifier:@"emptyCell"];
-        cell.backgroundColor = [UIColor clearColor];
-        return cell;
-    }
     else{
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"continueCell"];
+        UITableViewCell *cell =  [tableView dequeueReusableCellWithIdentifier:@"emptyCell"];
         cell.backgroundColor = [UIColor clearColor];
         return cell;
     }

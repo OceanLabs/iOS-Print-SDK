@@ -33,7 +33,7 @@ typedef NS_ENUM(NSUInteger, OLProgressHUDMaskType) {
     OLProgressHUDMaskTypeNone = 1,  // default mask type, allow user interactions while HUD is displayed
     OLProgressHUDMaskTypeClear,     // don't allow user interactions
     OLProgressHUDMaskTypeBlack,     // don't allow user interactions and dim the UI in the back of the HUD, as on iOS 7 and above
-    OLProgressHUDMaskTypeGradient   // don't allow user interactions and dim the UI with a a-la UIAlertView background gradient, as on iOS 6
+    OLProgressHUDMaskTypeGradient   // don't allow user interactions and dim the UI with a a-la alert view background gradient, as on iOS 6
 };
 
 typedef NS_ENUM(NSUInteger, OLProgressHUDAnimationType) {

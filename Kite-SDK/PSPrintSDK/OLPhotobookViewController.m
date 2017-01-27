@@ -28,7 +28,6 @@
 //
 
 #import "OLFlipTransition.h"
-#import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLImageCachingManager.h"
@@ -371,7 +370,7 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     if (!self.editMode || !self.startOpen){ //Start with book closed
-        [self setUpBookCoverViewForGesture:nil];
+        [self setUpBookCoverViewForFrontCover:YES];
         self.bookCover.hidden = NO;
         self.containerView.layer.shadowOpacity = 0;
         
@@ -532,7 +531,7 @@ static const CGFloat kBookEdgePadding = 38;
     [self.view addConstraint:self.widthCon];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        [self setUpBookCoverViewForGesture:nil];
+        [self setUpBookCoverViewForFrontCover:YES];
         if (size.width > size.height){
             self.containerView.transform = CGAffineTransformIdentity;
         }
@@ -813,8 +812,9 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     if (selectedCount == 0){
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"") message:NSLocalizedString(@"Please add some photos to your photo book", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
-        [av show];
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please add some photos to your photo book", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+        [self presentViewController:ac animated:YES completion:NULL];
         return NO;
     }
     
@@ -1183,17 +1183,14 @@ static const CGFloat kBookEdgePadding = 38;
     coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
 }
 
--(void) setUpBookCoverViewForGesture:(UIPanGestureRecognizer *)sender{
+-(void) setUpBookCoverViewForFrontCover:(BOOL)front{
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverTapRecognized:)];
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverLongPressRecognized:)];
     
     UIView *halfBookCoverImageContainer;
     
-    CGPoint translation = [sender translationInView:self.containerView];
-    BOOL draggingRight = translation.x >= 0;
-    
-    if ([self isBookAtStart] && (!sender || draggingRight)){
+    if (front){
         halfBookCoverImageContainer = [self.bookCover viewWithTag:kTagRight];
         [self.bookCover viewWithTag:kTagLeft].hidden = YES;
         if (!halfBookCoverImageContainer){
@@ -1397,7 +1394,11 @@ static const CGFloat kBookEdgePadding = 38;
         return;
     }
     self.animating = YES;
-    [self setUpBookCoverViewForGesture:sender];
+    
+    CGPoint translation = [sender translationInView:self.containerView];
+    BOOL draggingRight = translation.x >= 0;
+    
+    [self setUpBookCoverViewForFrontCover:draggingRight];
     self.bookCover.hidden = NO;
     
     //Fade in shadow of the half-book.
@@ -1449,7 +1450,11 @@ static const CGFloat kBookEdgePadding = 38;
         return;
     }
     self.animating = YES;
-    [self setUpBookCoverViewForGesture:sender];
+    
+    CGPoint translation = [sender translationInView:self.containerView];
+    BOOL draggingRight = translation.x >= 0;
+    
+    [self setUpBookCoverViewForFrontCover:draggingRight];
     self.bookCover.hidden = NO;
     
     // Turn off containerView shadow because we will be animating that. Will use bookCover view shadow for the duration of the animation.
