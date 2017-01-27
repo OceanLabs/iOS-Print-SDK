@@ -341,9 +341,6 @@ CGFloat innerMargin = 3;
         if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
             cell.contentView.backgroundColor = [UIColor whiteColor];
             
-            CGFloat imageViewWidth = size.width - 2 * innerCollectionViewHorizontalMargin * scaleFactor;
-            CGFloat imageViewHeight = size.width - 2 * innerCollectionViewHorizontalMargin * scaleFactor;
-            
             CGSize imageSize = [self collectionView:innerCollectionView layout:innerCollectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
             UIImageView *imageView = [cell.contentView viewWithTag:1010];
             if (indexPath.item < self.product.productTemplate.representationAssets.count){
