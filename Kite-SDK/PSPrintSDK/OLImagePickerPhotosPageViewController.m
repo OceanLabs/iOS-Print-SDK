@@ -201,6 +201,7 @@ CGFloat OLImagePickerMargin = 1.5;
     }
     
     if (collectionView.tag == 10){
+        NSInteger numberOfItems = 0;
         if (self.provider.collections.count > self.showingCollectionIndex){
             CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
             NSInteger numberOfCellsToFillHeight = 0;
@@ -208,11 +209,10 @@ CGFloat OLImagePickerMargin = 1.5;
                 numberOfCellsToFillHeight = (NSInteger)ceil((self.collectionView.frame.size.height - self.collectionView.contentInset.top) / (cellSize.height + OLImagePickerMargin));
             }
             
-            return MAX(numberOfCellsToFillHeight * [self numberOfCellsPerRow], [self.provider.collections[self.showingCollectionIndex] count]);
+            numberOfItems = MAX(numberOfCellsToFillHeight * [self numberOfCellsPerRow], [self.provider.collections[self.showingCollectionIndex] count]);
         }
-        else{
-            return 0;
-        }
+        self.activityIndicator.hidden = numberOfItems > 0;
+        return numberOfItems;
     }
     else{
         return [self.provider.collections count];
