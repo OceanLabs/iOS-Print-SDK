@@ -159,31 +159,22 @@ typedef enum {
     }
 }
 
--(void)setClassImageToImageView:(UIImageView *)imageView size:(CGSize)size{
-    UIImage *image;
-    if ([self.coverPhoto isKindOfClass:[NSString class]]){
-        image = [UIImage imageNamedInKiteBundle:self.coverPhoto];
-    }
-    else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
-        image = self.coverPhoto;
-    }
-    
-    if (image){
-        imageView.image = image;
-    }
-    else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
-        [imageView setAndFadeInImageWithURL:self.coverPhoto size:size];
-    }
-    else{
-        OLProductTemplate *productTemplate = self.productTemplate;
-        if (productTemplate.classPhotoURL && ![[productTemplate.classPhotoURL absoluteString] isEqualToString:@""]){
-            [imageView setAndFadeInImageWithURL:self.productTemplate.classPhotoURL size:size];
+-(OLAsset *)classImageAsset{
+        if ([self.coverPhoto isKindOfClass:[NSString class]]){
+            return [OLAsset assetWithImageAsPNG:[UIImage imageNamedInKiteBundle:self.coverPhoto]];
+        }
+        else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
+            return [OLAsset assetWithImageAsPNG:self.coverPhoto];
+        }
+        else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
+            return [OLAsset assetWithURL:self.coverPhoto];
+        }
+        else if (self.productTemplate.classPhotoURL && ![[self.productTemplate.classPhotoURL absoluteString] isEqualToString:@""]){
+            return [OLAsset assetWithURL:self.productTemplate.classPhotoURL];
         }
         else{
-            [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL size:size];
+            return [OLAsset assetWithURL:self.productTemplate.coverPhotoURL];
         }
-        
-    }
 }
 
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView{

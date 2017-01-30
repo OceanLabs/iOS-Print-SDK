@@ -131,32 +131,33 @@ static char tasksKey;
     self.alpha = 0;
     self.tasks[asset.uuid] = [NSNull null];
     [asset imageWithSize:self.frame.size applyEdits:applyEdits progress:^(float progress){
-        if (!self.tasks[asset.uuid]){
-            progressHandler(1);
-            return;
+        if (progressHandler){
+            if (!self.tasks[asset.uuid]){
+                progressHandler(1);
+                return;
+            }
+            progressHandler(progress);
         }
-        progressHandler(progress);
     }completion:^(UIImage *image, NSError *error){
         if (!self.tasks[asset.uuid]){
             return;
         }
         [self.tasks removeObjectForKey:asset.uuid];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (progressHandler){
-                progressHandler(1);
+        if (progressHandler){
+            progressHandler(1);
+        }
+        
+        self.contentMode = UIViewContentModeScaleAspectFill;
+        
+        self.image = image;
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            self.alpha = 1;
+        }completion:^(BOOL finished){
+            if (handler){
+                handler();
             }
-            
-            self.contentMode = UIViewContentModeScaleAspectFill;
-            self.image = image;
-            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                self.alpha = 1;
-            }completion:^(BOOL finished){
-                if (handler){
-                    handler();
-                }
-            }];
-        });
+        }];
     }];
 }
 
@@ -173,13 +174,15 @@ static char tasksKey;
     
     if (progressHandler){
         options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (!self.tasks[asset.localIdentifier]){
-                    progressHandler(1);
-                    return;
-                }
-                progressHandler(progress);
-            });
+            if (progressHandler){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (!self.tasks[asset.localIdentifier]){
+                        progressHandler(1);
+                        return;
+                    }
+                    progressHandler(progress);
+                });
+            }
         };
     }
     

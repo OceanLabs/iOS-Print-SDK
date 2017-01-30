@@ -55,8 +55,7 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 @interface OLProduct (Private)
--(void)setClassImageToImageView:(UIImageView *)imageView size:(CGSize)size;
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+-(OLAsset *)classImageAsset;
 @end
 
 @interface OLKiteViewController (Private)
@@ -710,10 +709,7 @@
     OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
     
-    cellImageView.image = nil;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [product setClassImageToImageView:cellImageView size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath]];
-    });
+    [cellImageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:OLAssetMaximumSize applyEdits:NO placeholder:nil progress:nil completionHandler:NULL];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     
