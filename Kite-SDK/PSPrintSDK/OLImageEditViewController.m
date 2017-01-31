@@ -512,6 +512,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self.view bringSubviewToFront:self.previewView];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
+    [self.view bringSubviewToFront:self.gestureView];
 }
 
 - (UIColor *)containerBackgroundColor{
