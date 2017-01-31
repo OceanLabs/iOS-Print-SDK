@@ -211,7 +211,9 @@ CGFloat OLImagePickerMargin = 1.5;
             
             numberOfItems = MAX(numberOfCellsToFillHeight * [self numberOfCellsPerRow], [self.provider.collections[self.showingCollectionIndex] count]);
         }
-        self.activityIndicator.hidden = numberOfItems > 0;
+        if (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram){
+            self.activityIndicator.hidden = numberOfItems > 0;
+        }
         return numberOfItems;
     }
     else{
