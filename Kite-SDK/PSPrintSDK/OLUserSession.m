@@ -108,12 +108,14 @@
 
 - (void)clearUserSelectedPhotos{
     for (OLAsset *asset in self.userSelectedPhotos){
+        asset.edits = nil;
         [asset unloadImage];
     }
     
     [self.userSelectedPhotos removeAllObjects];
     
     for (OLAsset *asset in self.recentPhotos){
+        asset.edits = nil;
         [asset unloadImage];
     }
     [self.recentPhotos removeAllObjects];
@@ -149,6 +151,7 @@
     if ((cleanupOptions & OLUserSessionCleanupOptionPhotos) == OLUserSessionCleanupOptionPhotos){
         [self clearUserSelectedPhotos];
         for (OLAsset *asset in self.appAssets){
+            asset.edits = nil;
             [asset unloadImage];
         }
         
