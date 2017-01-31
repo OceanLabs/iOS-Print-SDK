@@ -890,7 +890,7 @@ static const NSInteger kSectionPages = 2;
         UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
         [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
-        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[OLUserSession currentSession].userSelectedPhotos];
+        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[OLUserSession currentSession].userSelectedPhotos mutableCopy]];
         if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
             vc.maximumPhotos = self.product.quantityToFulfillOrder;
         }
