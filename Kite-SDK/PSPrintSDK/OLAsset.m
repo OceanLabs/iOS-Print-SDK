@@ -474,22 +474,27 @@ static NSOperationQueue *imageOperationQueue;
         else if (self.assetType == kOLAssetTypeRemoteImageURL) {
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.imageURL progress:^(NSInteger currentProgress, NSInteger total){
                 if (progress) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                       progress(MAX(0.05f, (float)currentProgress / (float) total));
-                    });
+                    progress(MAX(0.05f, (float)currentProgress / (float) total));
                 }
             }withCompletionHandler:^(UIImage *image, NSError *error){
                 [self resizeImage:image size:size applyEdits:applyEdits completion:^(UIImage *image){
                     if (!error) {
                         if (!fullResolution){
                             self.cachedEditedImage = image;
+                            
+                            // Decompress image to improve performance
+                            // Source: http://stackoverflow.com/questions/10790183/setting-image-property-of-uiimageview-causes-major-lag
+                            if (image) {
+                                UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
+                                [image drawAtPoint:CGPointZero];
+                                image = UIGraphicsGetImageFromCurrentImageContext();
+                                UIGraphicsEndImageContext();
+                            }
                         }
-                        dispatch_async(dispatch_get_main_queue(), ^{
                             if (progress){
                                 progress(1);
                             }
                             handler(image, nil);
-                        });
                     }
                 }];
             }];

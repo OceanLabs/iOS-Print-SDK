@@ -103,11 +103,11 @@ static char tasksKey;
 }
 
 - (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options{
-    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:nil completionHandler:NULL];
+    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:nil progress:nil completionHandler:NULL];
 }
 
 - (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder{
-    [self setAndFadeInImageWithPHAsset:asset size:size options:options  placeholder:placeholder completionHandler:NULL];
+    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:placeholder progress:nil completionHandler:NULL];
 }
 
 - (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
@@ -130,27 +130,38 @@ static char tasksKey;
     
     self.alpha = 0;
     self.tasks[asset.uuid] = [NSNull null];
-    [asset imageWithSize:self.frame.size applyEdits:applyEdits progress:progressHandler completion:^(UIImage *image, NSError *error){
+    [asset imageWithSize:self.frame.size applyEdits:applyEdits progress:^(float progress){
+        if (progressHandler){
+            if (!self.tasks[asset.uuid]){
+                progressHandler(1);
+                return;
+            }
+            progressHandler(progress);
+        }
+    }completion:^(UIImage *image, NSError *error){
         if (!self.tasks[asset.uuid]){
             return;
         }
         [self.tasks removeObjectForKey:asset.uuid];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.contentMode = UIViewContentModeScaleAspectFill;
-            self.image = image;
-            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                self.alpha = 1;
-            }completion:^(BOOL finished){
-                if (handler){
-                    handler();
-                }
-            }];
-        });
+        if (progressHandler){
+            progressHandler(1);
+        }
+        
+        self.contentMode = UIViewContentModeScaleAspectFill;
+        
+        self.image = image;
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            self.alpha = 1;
+        }completion:^(BOOL finished){
+            if (handler){
+                handler();
+            }
+        }];
     }];
 }
 
-- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder completionHandler:(void(^)())handler{
+- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
     for (id key in self.tasks.allKeys){
         if (![key isEqual:asset.localIdentifier] && [self.tasks[key] isKindOfClass:[NSNumber class]]){
             PHImageRequestID requestID = (PHImageRequestID)[self.tasks[key] longValue];
@@ -160,6 +171,20 @@ static char tasksKey;
     }
     
     self.alpha = 0;
+    
+    if (progressHandler){
+        options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
+            if (progressHandler){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (!self.tasks[asset.localIdentifier]){
+                        progressHandler(1);
+                        return;
+                    }
+                    progressHandler(progress);
+                });
+            }
+        };
+    }
     
     PHImageRequestID requestID = [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:size contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *result, NSDictionary *info){
         if (!result){
@@ -174,6 +199,11 @@ static char tasksKey;
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (options.progressHandler){
+                BOOL dummyBool = NO;
+                options.progressHandler(1, nil, &dummyBool, nil);
+            }
+            
             self.image = result;
             [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                 self.alpha = 1;

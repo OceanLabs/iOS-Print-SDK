@@ -88,6 +88,10 @@ static OLPaymentMethod selectedPaymentMethod;
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
 @end
 
+@interface OLProduct (Private)
+-(OLAsset *)classImageAsset;
+@end
+
 @interface OLProductPrintJob ()
 @property (strong, nonatomic) NSMutableDictionary *options;
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
@@ -1563,11 +1567,9 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             largeEditButton.hidden = NO;
         }
         
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:product.productTemplate.coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                imageView.image = image;
-            });
-        }];
+        CGFloat rowHeight = [self tableView:self.tableView heightForRowAtIndexPath:indexPath];
+        
+        [imageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:CGSizeMake(rowHeight, rowHeight) applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
         
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
         
