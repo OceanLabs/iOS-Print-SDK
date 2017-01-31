@@ -654,7 +654,7 @@
     else if (provider.providerType == OLImagePickerProviderTypeViewController && [provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
         UIViewController<OLCustomPickerController> *vc = [(OLCustomViewControllerPhotoProvider *)provider vc];
         vc.delegate = self;
-        [vc safePerformSelector:@selector(setSelectedAssets:) withObject:self.selectedAssets];
+        [vc safePerformSelector:@selector(setSelectedAssets:) withObject:[self.selectedAssets mutableCopy]];
         [vc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
         if ([vc respondsToSelector:@selector(setMinimumPhotos:)]){
             vc.minimumPhotos = self.product.quantityToFulfillOrder;
