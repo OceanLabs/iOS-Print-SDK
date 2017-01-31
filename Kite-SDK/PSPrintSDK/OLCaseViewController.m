@@ -459,7 +459,7 @@
 }
 
 - (void)renderImage{
-    if (![self isUsingMultiplyBlend]){
+    if (![self isUsingMultiplyBlend] || [[[UIDevice currentDevice] systemVersion] floatValue] < 10){
         return;
     }
     
