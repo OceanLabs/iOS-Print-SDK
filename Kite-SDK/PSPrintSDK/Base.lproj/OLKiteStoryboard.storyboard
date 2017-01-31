@@ -1933,6 +1933,13 @@
                                     <constraint firstAttribute="height" constant="45" id="rcB-6U-gch"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zSi-VT-4hb">
+                                <rect key="frame" x="15" y="79" width="35" height="35"/>
+                                <state key="normal" image="flip-black"/>
+                                <connections>
+                                    <action selector="onButtonProductFlipClicked:" destination="B6a-B5-3aL" eventType="touchUpInside" id="Ta2-nL-skW"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -1948,6 +1955,8 @@
                             <constraint firstItem="0Bh-Hi-gAg" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="5" id="RLs-gD-nD7"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="centerY" secondItem="b43-Nd-ulU" secondAttribute="centerY" priority="750" id="WJO-0d-onl"/>
                             <constraint firstItem="QM0-Ve-Vzs" firstAttribute="top" secondItem="0Bh-Hi-gAg" secondAttribute="bottom" constant="15" id="ZMw-3z-8GE"/>
+                            <constraint firstItem="zSi-VT-4hb" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="15" id="ayw-nc-fYb"/>
+                            <constraint firstItem="zSi-VT-4hb" firstAttribute="top" secondItem="xRf-1g-got" secondAttribute="bottom" constant="15" id="kdo-wB-Pd1"/>
                             <constraint firstItem="QM0-Ve-Vzs" firstAttribute="top" relation="greaterThanOrEqual" secondItem="nF0-F4-GDd" secondAttribute="bottom" constant="35" id="mT9-vx-pwa"/>
                             <constraint firstItem="Mvu-z2-gQf" firstAttribute="top" secondItem="QM0-Ve-Vzs" secondAttribute="bottom" id="rWF-QN-zW2"/>
                             <constraint firstAttribute="trailing" secondItem="nF0-F4-GDd" secondAttribute="trailing" priority="750" constant="20" id="t3Q-8z-ksk"/>
@@ -1978,6 +1987,7 @@
                         <outlet property="hintView" destination="0Bh-Hi-gAg" id="T9O-RQ-gWD"/>
                         <outlet property="maskActivityIndicator" destination="3eC-J9-SCj" id="qxu-Q4-fT7"/>
                         <outlet property="printContainerView" destination="nF0-F4-GDd" id="8Gz-CG-XXG"/>
+                        <outlet property="productFlipButton" destination="zSi-VT-4hb" id="zaS-KT-hfs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="amW-38-PIq" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -4023,6 +4033,7 @@ only £9.99 £8.99</string>
         <image name="details-arrow" width="8" height="5"/>
         <image name="dropshadow" width="375" height="3"/>
         <image name="envelope" width="14" height="9"/>
+        <image name="flip-black" width="35" height="35"/>
         <image name="frame_border" width="290" height="313"/>
         <image name="grey-chevron" width="7" height="11"/>
         <image name="line" width="1" height="1"/>

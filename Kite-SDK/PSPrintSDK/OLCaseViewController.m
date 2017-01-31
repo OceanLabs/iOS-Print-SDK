@@ -62,12 +62,14 @@
 @property (strong, nonatomic) IBOutlet UIVisualEffectView *caseVisualEffectView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 @property (strong, nonatomic) UIImage *maskImage;
+@property (weak, nonatomic) IBOutlet UIButton *productFlipButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
 @property (strong, nonatomic) NSOperation *downloadImagesOperation;
 @property (strong, nonatomic) UIImageView *renderedImageView;
 @property (strong, nonatomic) NSBlockOperation *viewDidAppearOperation;
+@property (assign, nonatomic) BOOL showingBack;
 
 @end
 
@@ -454,6 +456,23 @@
         }
     }];
 }
+
+- (IBAction)onButtonProductFlipClicked:(UIButton *)sender {
+    [self disableOverlay];
+    [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+        if (self.showingBack){
+            self.showingBack = NO;
+            //Change view here
+        }
+        else{
+            self.showingBack = YES;
+            //Change view here
+        }
+    }completion:^(BOOL finished){
+        [self renderImage];
+    }];
+}
+
 
 -(void) doCheckout{
     if (!self.downloadedMask && self.product.productTemplate.maskImageURL) {
