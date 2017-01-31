@@ -53,6 +53,7 @@
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
 - (void)onButtonDoneTapped:(id)sender;
 @property (assign, nonatomic) CGAffineTransform backupTransform;
+@property (weak, nonatomic) UIView *gestureView;
 @end
 
 @interface OLCaseViewController ()
@@ -244,8 +245,9 @@
     
     [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
-    [self.view bringSubviewToFront:self.hintView];
     [self.view bringSubviewToFront:self.renderedImageView];
+    [self.view bringSubviewToFront:self.hintView];
+    [self.view bringSubviewToFront:self.gestureView];
 }
 
 - (void)viewDidLayoutSubviews{
@@ -397,6 +399,7 @@
     if ([self isUsingMultiplyBlend]){
         [self.cropView setGesturesEnabled:YES];
     }
+    self.gestureView.userInteractionEnabled = YES;
     [self disableOverlay];
     for (UIView *view in self.cropFrameGuideViews){
         [self.printContainerView bringSubviewToFront:view];
@@ -435,6 +438,7 @@
     for (UIView *view in self.cropFrameGuideViews){
         [self.printContainerView bringSubviewToFront:view];
     }
+    self.gestureView.userInteractionEnabled = NO;
     [UIView animateWithDuration:0.2 animations:^{
         for (UIView *textField in self.textFields){
             textField.alpha = 1;
