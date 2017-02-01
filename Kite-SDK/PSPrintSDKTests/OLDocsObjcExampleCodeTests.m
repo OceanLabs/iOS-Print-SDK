@@ -36,7 +36,7 @@
 /**
  *  https://www.kite.ly/docs/?objective_c#placing-orders
  */
-- (void)DISABLE_testSiteExampleOrder{
+- (void)testSiteExampleOrder{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSArray *assets = @[
@@ -95,7 +95,7 @@
 /**
  *  https://www.kite.ly/docs/?objective_c#ordering-print-products
  */
-- (void)DISABLE_testSiteExamplePrints{
+- (void)testSiteExamplePrints{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSArray *assets = @[
@@ -156,7 +156,7 @@
 /**
  *  https://www.kite.ly/docs/?objective_c#ordering-phone-cases
  */
-- (void)DISABLE_testSiteExampleCases{
+- (void)testSiteExampleCases{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSArray *assets = @[
@@ -217,7 +217,7 @@
 /**
  *  https://www.kite.ly/docs/?objective_c#ordering-apparel
  */
-- (void)DISABLE_testSiteExampleApparel{
+- (void)testSiteExampleApparel{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSDictionary *assets = @{
@@ -225,7 +225,7 @@
                              @"center_back":[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/2.jpg"]]
                              };
     
-    id<OLPrintJob> tshirt = [OLPrintJob apparelWithTemplateId:@"gildan_tshirt" OLAssets:assets];
+    id<OLPrintJob> tshirt = [OLPrintJob apparelWithTemplateId:@"gildan_adult_cotton_tshirt" OLAssets:assets];
     [tshirt setValue:@"M" forOption:@"garment_size"];
     [tshirt setValue:@"white" forOption:@"garment_color"];
     
@@ -279,7 +279,7 @@
 /**
  *  https://www.kite.ly/docs/?objective_c#ordering-photobooks
  */
-- (void)DISABLE_testSiteExamplePhotoBook{
+- (void)testSiteExamplePhotoBook{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     NSArray *assets = @[
@@ -287,7 +287,7 @@
                         ];
     OLAsset *frontCoverAsset = [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]];
     
-    id<OLPrintJob> photobook = [OLPrintJob photobookWithTemplateId:@"photobook_small_portrait" OLAssets:assets frontCoverOLAsset:frontCoverAsset backCoverOLAsset:nil];
+    id<OLPrintJob> photobook = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_280x210_sm" OLAssets:assets frontCoverOLAsset:frontCoverAsset backCoverOLAsset:nil];
     [photobook setValue:@"#FFFFFF" forOption:@"spine_color"];
     
     OLPrintOrder *order = [[OLPrintOrder alloc] init];
@@ -336,7 +336,7 @@
     [self waitForExpectationsWithTimeout:120 handler:NULL];
 }
 
-- (void)DISABLE_testSiteExamplePostcard{
+- (void)testSiteExamplePostcard{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     OLAsset *frontImage = [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]];
@@ -404,7 +404,7 @@
     XCTFail(@"Address search failed with: %@", error);
 }
 
-- (void)DISABLE_testSiteExampleAddressSearch{
+- (void)testSiteExampleAddressSearch{
     self.addressRequestExpectation = [self expectationWithDescription:@"Address Search Request completed"];
     
     OLCountry *usa = [OLCountry countryForCode:@"USA"];

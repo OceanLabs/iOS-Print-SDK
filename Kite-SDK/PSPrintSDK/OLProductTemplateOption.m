@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@
 #import "OLImageDownloader.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLProductTemplateCollection.h"
+#import "UIColor+OLHexString.h"
 
 @interface OLProductTemplateOption ()
 
@@ -46,7 +47,7 @@
         _code = options[@"code"];
         _name = options[@"name"];
         
-        NSMutableArray *choices = [[NSMutableArray alloc] init];
+        NSMutableArray<OLProductTemplateOptionChoice *> *choices = [[NSMutableArray alloc] init];
         if (![options[@"options"] isKindOfClass:[NSArray class]]){
             return nil;
         }
@@ -57,25 +58,29 @@
             OLProductTemplateOptionChoice *choice = [[OLProductTemplateOptionChoice alloc] init];
             choice.option = self;
             choice.code = dict[@"code"];
-            choice.name = dict[@"name"];
+            if ([_code isEqualToString:@"garment_size"]){
+                choice.name = [dict[@"short_name"] uppercaseString];
+            }
+            else{
+                choice.name = dict[@"name"];
+            }
             if (dict[@"icon"]){
                 choice.iconURL = [NSURL URLWithString:dict[@"icon"]];
             }
-            if (dict[@"color"]){
-//                choice.color =
-            }
-            if (dict[@"extraCost"]){
-//                choice.extraCost = 
+            if (dict[@"color_hex_code"] && ![dict[@"color_hex_code"] isEqualToString:@""]){
+                choice.color = [UIColor colorWithHexString:dict[@"color_hex_code"]];
+                self.type = OLProductTemplateOptionTypeColor1;
             }
             if (dict[@"productOverlay"]){
                 choice.productOverlay = [NSURL URLWithString:dict[@"productOverlay"]];
             }
-            if (dict[@"borderOverride"]){
-//                choice.borderOverride = UIEdgeInsetsMake(0, 0, 0, 0);
+            if (dict[@"override_mask"] && ![dict[@"override_mask"] isEqual:[NSNull null]]){
+                choice.productBackground = [NSURL URLWithString:dict[@"override_mask"]];
             }
             
             [choices addObject:choice];
         }
+        
         _choices = choices;
     }
     return self;
@@ -105,12 +110,14 @@
     handler(nil);
     if (self.iconURL){
         [[OLImageDownloader sharedInstance] downloadImageAtURL:self.iconURL withCompletionHandler:^(UIImage *image, NSError *error){
-            if (error || !image){
-                handler([self fallbackIcon]);
-            }
-            else{
-                handler(image);
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error || !image){
+                    handler([self fallbackIcon]);
+                }
+                else{
+                    handler(image);
+                }
+            });
         }];
     }
     else{
@@ -126,6 +133,13 @@
         if ([self.code isEqualToString:@"case_style"] || [self.code isEqualToString:@"Phone Cases"]){
             return [UIImage imageNamedInKiteBundle:@"case-options"];
         }
+        else if([self.code isEqualToString:@"garment_color"]){
+            return [UIImage imageNamedInKiteBundle:@"paint-bucket-icon"];
+        }
+        else if([self.code isEqualToString:@"garment_size"]){
+            return [UIImage imageNamedInKiteBundle:@"shirt-size-icon"];
+        }
+
     }
     
     return nil;

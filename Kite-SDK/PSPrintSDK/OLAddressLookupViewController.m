@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -47,9 +47,6 @@
 @property (nonatomic, strong) UILabel *labelCountry;
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) NSArray<OLAddress *> *searchResults;
-
-@property (nonatomic, strong) UIAlertView *errorAlertView;
-
 @property (nonatomic, assign) BOOL progressToEditViewControllerOnUniqueAddressResult;
 @property (nonatomic, strong) UITableViewCell *countryPickerView;
 @property (nonatomic, assign) BOOL showSectionHeader;
@@ -243,7 +240,7 @@
     [OLProgressHUD dismiss];
     self.progressToEditViewControllerOnUniqueAddressResult = NO;
     self.inProgressRequest = nil;
-    if (self.errorAlertView.isVisible) {
+    if (self.presentedViewController) {
         return;
     }
     
@@ -256,7 +253,7 @@
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didSuceedWithUniqueAddress:(OLAddress *)addr {
     [OLProgressHUD dismiss];
     self.inProgressRequest = nil;
-    if (self.errorAlertView.isVisible) {
+    if (self.presentedViewController) {
         return;
     }
     
@@ -276,12 +273,13 @@
     [OLProgressHUD dismiss];
     self.progressToEditViewControllerOnUniqueAddressResult = NO;
     self.inProgressRequest = nil;
-    if (self.errorAlertView.isVisible) {
+    if (self.presentedViewController) {
         return;
     }
     
-    self.errorAlertView = [[UIAlertView alloc] initWithTitle:@"Oops!" message:error.localizedDescription delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [self.errorAlertView show];
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+    [self presentViewController:ac animated:YES completion:NULL];
 }
 
 #pragma mark - UISearchBarDelegate methods

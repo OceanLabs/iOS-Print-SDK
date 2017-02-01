@@ -54,12 +54,38 @@
 
 + (NSString *)stringByFormattingCreditCardNumber:(NSString *)input{
     input = [NSString stringByTrimmingSpecialCharacters:input];
+    if (input.length > 1 && ([input hasPrefix:@"37"] || [input hasPrefix:@"34"])){
+        return [self stringByFormattingAMEXCreditCardNumber:input];
+    }
+    
     NSString *result = @"";
     NSUInteger i = 0;
     while (i < input.length && i < 16){
         NSString *substring = [input substringFromIndex:i];
         result = [result stringByAppendingString:[NSString stringWithFormat:@"%@ ", [substring substringToIndex:MIN(4, substring.length)]]];
         i += 4;
+    }
+    return [result stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+}
+
++ (NSString *)stringByFormattingAMEXCreditCardNumber:(NSString *)input{
+    NSString *result = @"";
+    NSUInteger i = 0;
+    while (i < input.length && i < 15){
+        NSUInteger step;
+        if (i == 0){
+            step = 4;
+        }
+        else if (i == 4){
+            step = 6;
+        }
+        else{
+            step = 5;
+        }
+        
+        NSString *substring = [input substringFromIndex:i];
+        result = [result stringByAppendingString:[NSString stringWithFormat:@"%@ ", [substring substringToIndex:MIN(step, substring.length)]]];
+        i += step;
     }
     return [result stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
 }

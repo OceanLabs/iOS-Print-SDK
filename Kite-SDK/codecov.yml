@@ -1,5 +1,5 @@
 codecov:
-  branch: beta
+  branch: master
 
 ignore:
   - "Kite-SDK/PSPrintSDK/RMImageCropper"
@@ -27,3 +27,10 @@ ignore:
   - "Kite-SDK/PSPrintSDK/OLOAuth2*"
   - "Kite-SDK/PSPrintSDK/OLKeyChainStore*"
   - "Kite-SDK/PSPrintSDK/main.m"
+  - "Kite-SDK/PSPrintSDKTests/OLBaseRequest+mock.m"
+  - "Kite-SDK/PSPrintSDKTests/OLSwizzler.m"
+  - "Kite-SDK/PSPrintSDKTests/OLKiteTestHelper.m"
+  - "Kite-SDK/PSPrintSDKTests/XCTestCase+OLUITestMethods.m"
+  - "Kite-SDK/PSPrintSDKTests/UpsellTests.m"
+  - "Kite-SDK/PSPrintSDKTests/ViewControllerTests.m"
+  - "Kite-SDK/PSPrintSDKTests/CompleteJourneyTests.m"

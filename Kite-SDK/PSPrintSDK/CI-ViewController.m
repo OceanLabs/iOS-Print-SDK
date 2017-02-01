@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -41,16 +41,19 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLImageCachingManager.h"
 #import "OLUserSession.h"
 #import "OLImagePickerViewController.h"
-#import "CustomImagePickerViewController.h"
+#import "OLImageDownloader.h"
+#import "OLProgressHUD.h"
 #import "KITAssetsPickerController.h"
 #import "CustomAssetCollectionDataSource.h"
 #import "AssetDataSource.h"
+#import "OLKiteTestHelper.h"
 
 @import Photos;
 
-@interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate, KITAssetsPickerControllerDelegate>
+@interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate, OLPromoViewDelegate, KITAssetsPickerControllerDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (nonatomic, strong) OLPrintOrder* printOrder;
+@property (strong, nonatomic) OLKiteViewController *kiteViewController;
 @property (strong, nonatomic) NSArray *customDataSources;
 @end
 
@@ -131,6 +134,114 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [self printWithAssets:assets];
 }
 
+- (IBAction)onButtonExtraTapped:(UIButton *)sender {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Extras" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    [ac addAction:[UIAlertAction actionWithTitle:@"Print Order History" style:UIAlertActionStyleDefault handler:^(id action){
+        [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"PrintOrderHistoryViewController"] animated:YES];
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"PDF Photobook" style:UIAlertActionStyleDefault handler:^(id action){
+        [OLProgressHUD showWithStatus:@"Downloading PDF 1/2"];
+        [[OLImageDownloader sharedInstance] downloadDataAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/TestImages/inside.pdf"] priority:0 progress:^(NSInteger progress, NSInteger total){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [OLProgressHUD showProgress:(float)progress/(float)total status:@"Downloading PDF 1/2"];
+            });
+        }withCompletionHandler:^(NSData *data, NSError *error){
+            OLAsset *inside = [OLAsset assetWithDataAsPDF:data];
+            [[OLImageDownloader sharedInstance] downloadDataAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/TestImages/cover.pdf"] priority:0 progress:^(NSInteger progress, NSInteger total){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [OLProgressHUD showProgress:(float)progress/(float)total status:@"Downloading PDF 2/2"];
+                });
+            } withCompletionHandler:^(NSData *data, NSError *error){
+                OLAsset *cover = [OLAsset assetWithDataAsPDF:data];
+                
+                id<OLPrintJob> job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_280x210_sm" OLAssets:@[inside] frontCoverOLAsset:cover backCoverOLAsset:nil];
+                OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+                [printOrder addPrintJob:job];
+                
+                OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [OLProgressHUD dismiss];
+                    [self presentViewController:vc animated:YES completion:NULL];
+                });
+            }];
+        }];
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"Show Promo View" style:UIAlertActionStyleDefault handler:^(id action){
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
+        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+        [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+        self.kiteViewController = [[OLKiteViewController alloc] initWithAssets:@[] info:@{@"Entry Point" : @"OLPromoView"}];
+        [self.kiteViewController startLoadingWithCompletionHandler:^{}];
+        
+        UIView *containerView = [[UIView alloc] init];
+        containerView.tag = 1000;
+        containerView.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:containerView];
+        containerView.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(containerView);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        float height = 200;
+        
+        NSArray *visuals = @[@"H:|-0-[containerView]-0-|",
+                             [NSString stringWithFormat:@"V:[containerView(%f)]-0-|", height]];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [containerView.superview addConstraints:con];
+        
+        UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] init];
+        activity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+        [activity startAnimating];
+        [containerView addSubview:activity];
+        activity.translatesAutoresizingMaskIntoConstraints = NO;
+        [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+        [activity.superview addConstraint:[NSLayoutConstraint constraintWithItem:activity attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:activity.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+        
+        NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+                            [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]]];
+        
+        [OLPromoView requestPromoViewWithAssets:assets templates:@[@"i6s_case", @"i5_case"] completionHandler:^(OLPromoView *view, NSError *error){
+            view.delegate = self;
+            [activity stopAnimating];
+            if (error){
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Oops" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:NULL]];
+                [self presentViewController:ac animated:YES completion:NULL];
+                return;
+            }
+            
+            [containerView addSubview:view];
+            view.translatesAutoresizingMaskIntoConstraints = NO;
+            NSDictionary *views = NSDictionaryOfVariableBindings(view);
+            NSMutableArray *con = [[NSMutableArray alloc] init];
+            
+            NSArray *visuals = @[@"H:|-0-[view]-0-|",
+                                 @"V:|-0-[view]-0-|"];
+            
+            
+            for (NSString *visual in visuals) {
+                [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+            }
+            
+            [view.superview addConstraints:con];
+
+        }];
+
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:NULL]];
+    ac.popoverPresentationController.sourceRect = sender.frame;
+    ac.popoverPresentationController.sourceView = self.view;
+    
+    [self presentViewController:ac animated:YES completion:NULL];
+}
+
+
 - (void)addCatsAndDogsImagePickersToKite:(OLKiteViewController *)kvc{
     OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/7.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/8.jpg"]]] name:@"Dogs"];
     OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/9.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/10.jpg"]]] name:@"Cats"];
@@ -149,8 +260,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #endif
 }
 
-#pragma mark Internal
-
 - (void)setupCIDeploymentWithAssets:(NSArray *)assets{
     BOOL shouldOfferAPIChange = YES;
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
@@ -165,52 +274,14 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
 #define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
-            [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
-            
-            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-            
-            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets info:@{}];
-            vc.userEmail = @"";
-            vc.userPhone = @"";
-            vc.qrCodeUploadEnabled = YES;
-            vc.delegate = self;
-            
-            [self addCatsAndDogsImagePickersToKite:vc];
-            
-            [self presentViewController:vc animated:YES completion:NULL];
+            [self showKiteVcForAPIKey:OL_KITE_CI_DEPLOY_KEY assets:assets];
         }]];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDefault handler:^(id action){
-            [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
-            
-            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-            [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-            
-            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-            vc.userEmail = @"";
-            vc.userPhone = @"";
-            vc.qrCodeUploadEnabled = YES;
-            vc.delegate = self;
-            
-            [self addCatsAndDogsImagePickersToKite:vc];
-            
-            [self presentViewController:vc animated:YES completion:NULL];
+            [self showKiteVcForAPIKey:pasteboard.string assets:assets];
         }]];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and use staging", @"") style:UIAlertActionStyleDefault handler:^(id action){
             [OLKitePrintSDK setUseStaging:YES];
-            [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
-            
-            [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-            [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
-            
-            OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-            vc.userEmail = @"";
-            vc.userPhone = @"";
-            vc.qrCodeUploadEnabled = YES;
-            vc.delegate = self;
-            
-            [self addCatsAndDogsImagePickersToKite:vc];
-            
-            [self presentViewController:vc animated:YES completion:NULL];
+            [self showKiteVcForAPIKey:pasteboard.string assets:assets];
         }]];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and LC mode", @"") style:UIAlertActionStyleDefault handler:^(id action){
             [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
@@ -225,28 +296,65 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             
             [self presentViewController:customVc animated:YES completion:NULL];
         }]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes but mock templates", @"") style:UIAlertActionStyleDefault handler:^(id action){
+            [OLKiteTestHelper mockTemplateRequest];
+            
+            [self showKiteVcForAPIKey:pasteboard.string assets:assets];
+        }]];
         [self presentViewController:ac animated:YES completion:NULL];
     }
     else{
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
 #define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
-        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
-        
-        [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
-        
-        OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-        vc.userEmail = @"";
-        vc.userPhone = @"";
-        vc.delegate = self;
-        vc.qrCodeUploadEnabled = YES;
-       
-        [self addCatsAndDogsImagePickersToKite:vc];
-        
-        [vc addCustomPhotoProviderWithViewController:[[CustomImagePickerViewController alloc] init] name:@"Custom" icon:[UIImage imageNamed:@"cat"]];
-        
-        [self presentViewController:vc animated:YES completion:NULL];
+        [self showKiteVcForAPIKey:OL_KITE_CI_DEPLOY_KEY assets:assets];
     }
+}
+
+- (void)promoViewDidFinish:(OLPromoView *)promoView{
+    [[self.view viewWithTag:1000] removeFromSuperview];
+}
+
+- (void)promoView:(OLPromoView *)promoView didSelectTemplateId:(NSString *)templateId withAsset:(OLAsset *)asset{
+    [self.kiteViewController setAssets:@[asset]];
+    self.kiteViewController.filterProducts = @[templateId];
+    self.kiteViewController.delegate = self;
+    
+    [self presentViewController:self.kiteViewController animated:YES completion:NULL];
+}
+
+- (void)kiteControllerDidFinish:(OLKiteViewController *)controller{
+    if (self.kiteViewController){
+        self.kiteViewController = [[OLKiteViewController alloc] initWithAssets:@[] info:@{@"Entry Point" : @"OLPromoView"}];
+        [self.kiteViewController startLoadingWithCompletionHandler:^{}];
+    }
+    
+    [controller dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
+    [OLKitePrintSDK setAPIKey:s withEnvironment:[self environment]];
+    
+    [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+    [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+    vc.userEmail = @"";
+    vc.userPhone = @"";
+    vc.delegate = self;
+    vc.qrCodeUploadEnabled = YES;
+    
+//    vc.filterProducts = @[@"squares"];
+    
+    [self addCatsAndDogsImagePickersToKite:vc];
+    
+    KITAssetsPickerController *customVc = [[KITAssetsPickerController alloc] init];
+    self.customDataSources = @[[[CustomAssetCollectionDataSource alloc] init]];
+    customVc.collectionDataSources = self.customDataSources;
+    
+    [vc addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *)customVc name:@"External" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
+    
+    [self presentViewController:vc animated:YES completion:NULL];
 }
 
 - (void)didCancelPrintFlow:(UIViewController *)printViewController{

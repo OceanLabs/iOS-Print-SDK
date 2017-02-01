@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@
     static OLImageDownloader *sharedInstance;
     dispatch_once(&once, ^{
         sharedInstance = [[self alloc] init];
-        NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024
+        NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:20 * 1024 * 1024
                                                              diskCapacity:200 * 1024 * 1024
                                                                  diskPath:nil];
         [NSURLCache setSharedURLCache:URLCache];
@@ -67,15 +67,27 @@
 }
 
 - (NSURLSessionDownloadTask *)downloadImageAtURL:(NSURL *)url priority:(float)priority progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(UIImage *image, NSError *error))handler{
+    return [self downloadDataAtURL:url priority:priority progress:progressHandler withCompletionHandler:^(NSData *data, NSError *error){
+        if (handler){
+            if (error){
+                handler(nil, error);
+            }
+            else{
+                NSAssert(data, @"Should have data at this point");
+                UIImage *image = [UIImage imageWithData:data];
+                handler(image, nil);
+            }
+        }
+    }];
+}
+
+- (NSURLSessionDownloadTask *)downloadDataAtURL:(NSURL *)url priority:(float)priority progress:(void(^)(NSInteger progress, NSInteger total))progressHandler withCompletionHandler:(void(^)(NSData *data, NSError *error))handler{
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
     
     NSCachedURLResponse *cachedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
     if (cachedResponse.data){
         if (handler){
-            UIImage *image = [UIImage imageWithData:cachedResponse.data];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                handler(image, nil);
-            });
+            handler(cachedResponse.data, nil);
         }
         return nil;
     }
@@ -98,27 +110,21 @@
             return;
         }
         if (error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (handler){
-                    handler(nil, error);
-                }
-            });
+            if (handler){
+                handler(nil, error);
+            }
         }
         else if (data && [(NSHTTPURLResponse *)response statusCode] >= 200 && [(NSHTTPURLResponse *)response statusCode] <= 299){
             NSCachedURLResponse *cachedResponse = [[NSCachedURLResponse alloc] initWithResponse:response data:data userInfo:nil storagePolicy:NSURLCacheStorageAllowed];
             [configuration.URLCache storeCachedResponse:cachedResponse forRequest:request];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (handler){
-                    handler([UIImage imageWithData:data], nil);
-                }
-            });
+            if (handler){
+                handler(data, nil);
+            }
         }
         else{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (handler){
-                    handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:[(NSHTTPURLResponse *)response statusCode] userInfo:nil]);
-                }
-            });
+            if (handler){
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:[(NSHTTPURLResponse *)response statusCode] userInfo:nil]);
+            }
         }
     };
     
@@ -129,27 +135,21 @@
         downloadTask = [session downloadTaskWithRequest:request completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error){
             NSData *data = [NSData dataWithContentsOfURL:location];
             if (error){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (handler){
-                        handler(nil, error);
-                    }
-                });
+                if (handler){
+                    handler(nil, error);
+                }
             }
             else if (data && [(NSHTTPURLResponse *)response statusCode] >= 200 && [(NSHTTPURLResponse *)response statusCode] <= 299){
                 NSCachedURLResponse *cachedResponse = [[NSCachedURLResponse alloc] initWithResponse:response data:data userInfo:nil storagePolicy:NSURLCacheStorageAllowed];
                 [configuration.URLCache storeCachedResponse:cachedResponse forRequest:request];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (handler){
-                        handler([UIImage imageWithData:data], nil);
-                    }
-                });
+                if (handler){
+                    handler(data, nil);
+                }
             }
             else{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (handler){
-                        handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:[(NSHTTPURLResponse *)response statusCode] userInfo:nil]);
-                    }
-                });
+                if (handler){
+                    handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:[(NSHTTPURLResponse *)response statusCode] userInfo:nil]);
+                }
             }
         }];
     }

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,6 @@
 #import "OLPrintOrder+History.h"
 #import "OLProductPrintJob.h"
 
-static NSMutableArray *printOrders;
-
 @interface OLPrintOrder ()
 @property (nonatomic, assign) NSInteger storageIdentifier;
 @end
@@ -49,24 +47,29 @@ static NSMutableArray *printOrders;
 }
 
 - (void)saveToHistory {
+    NSMutableArray *printOrders = (NSMutableArray *)[OLPrintOrder printOrderHistory];
     if (self.storageIdentifier == NSNotFound) {
         // Get a new unique storage identifier
         NSInteger maxStorageIdentifier = -1;
-        for (OLPrintOrder *order in [OLPrintOrder printOrderHistory]) {
+        for (OLPrintOrder *order in printOrders) {
             maxStorageIdentifier = MAX(maxStorageIdentifier, order.storageIdentifier);
         }
         
         self.storageIdentifier = maxStorageIdentifier + 1;
         [printOrders addObject:self];
     } else {
-        // as a storage identifier is assigned this print order must already be stored in the array
+        // as a storage identifier is assigned this print order must already be stored in the array,
+        // replace it there as there might have been changes
+        [printOrders replaceObjectAtIndex:(NSUInteger)self.storageIdentifier withObject:self];
     }
     
      [NSKeyedArchiver archiveRootObject:printOrders toFile:[OLPrintOrder historyFilePath]];
+    printOrders = nil;
 }
 
 - (void)deleteFromHistory {
-    for (OLPrintOrder *order in [OLPrintOrder printOrderHistory]) {
+    NSMutableArray *printOrders = (NSMutableArray *)[OLPrintOrder printOrderHistory];
+    for (OLPrintOrder *order in printOrders) {
         if (order.storageIdentifier == self.storageIdentifier) {
             self.storageIdentifier = NSNotFound;
             [printOrders removeObject:order];
@@ -78,11 +81,9 @@ static NSMutableArray *printOrders;
 }
 
 + (NSArray *)printOrderHistory {
+    NSMutableArray *printOrders = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder historyFilePath]];
     if (!printOrders) {
-        printOrders = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder historyFilePath]];
-        if (!printOrders) {
-            printOrders = [[NSMutableArray alloc] init];
-        }
+        printOrders = [[NSMutableArray alloc] init];
     }
     
     return printOrders;

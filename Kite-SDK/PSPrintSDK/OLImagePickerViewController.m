@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,30 +27,30 @@
 //  THE SOFTWARE.
 //
 
-#import "OLImagePickerViewController.h"
-#import "UIImage+ImageNamedInKiteBundle.h"
-#import "OLKiteUtils.h"
-#import "OLCustomViewControllerPhotoProvider.h"
-#import <Photos/Photos.h>
-#import "OLUpsellViewController.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
-#import "OLProductPrintJob.h"
-#import "OLPrintOrder.h"
-#import "OLUserSession.h"
 #import "OLAsset+Private.h"
-#import "OLImagePickerProviderCollection.h"
-#import "OLImagePickerProvider.h"
-#import "OLImagePickerLoginPageViewController.h"
-#import "OLOAuth2AccountStore.h"
-#import "OLKitePrintSDK.h"
-#import "UIViewController+OLMethods.h"
-#import "OLPaymentViewController.h"
-#import "OLFacebookSDKWrapper.h"
-#import "OLQRCodeUploadViewController.h"
-#import "OLImagePickerPhotosPageViewController.h"
 #import "OLCustomPickerController.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "OLFacebookSDKWrapper.h"
+#import "OLImagePickerLoginPageViewController.h"
+#import "OLImagePickerPhotosPageViewController.h"
+#import "OLImagePickerProvider.h"
+#import "OLImagePickerProviderCollection.h"
+#import "OLImagePickerViewController.h"
 #import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
+#import "OLOAuth2AccountStore.h"
+#import "OLPaymentViewController.h"
+#import "OLPrintOrder.h"
+#import "OLProductPrintJob.h"
+#import "OLQRCodeUploadViewController.h"
+#import "OLUpsellViewController.h"
+#import "OLUserSession.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIViewController+OLMethods.h"
+#import <Photos/Photos.h>
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomViewControllerPhotoProvider *> *customImageProviders;
@@ -76,6 +76,8 @@
 @property (strong, nonatomic) UIView *selectedProviderIndicator;
 
 @property (assign, nonatomic) BOOL viewWillDisappear;
+
+@property (assign, nonatomic) CGRect indicatorDestFrame;
 @end
 
 @interface OLProduct ()
@@ -132,7 +134,7 @@
         [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
     }
     else{
-        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                                  style:UIBarButtonItemStylePlain
                                                                                 target:nil
                                                                                 action:nil];
@@ -158,6 +160,12 @@
     [self.pageController setViewControllers:@[[self viewControllerAtIndex:0]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:NULL];
     [self addChildViewController:self.pageController];
     [self.containerView addSubview:self.pageController.view];
+    
+    for (UIView *view in self.pageController.view.subviews) {
+        if ([view isKindOfClass:[UIScrollView class]]) {
+            [(UIScrollView *)view setDelegate:self];
+        }
+    }
     
     UIView *view = self.pageController.view;
     view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -514,10 +522,10 @@
         self.selectedProviderIndicator.alpha = 0;
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
-        [self positionSelectedProviderIndicator];
-        [UIView animateWithDuration:0.25 animations:^{
-            self.selectedProviderIndicator.alpha = 1;
-        }];
+        self.indicatorDestFrame = CGRectZero;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self positionSelectedProviderIndicator];
+        });
     }];
 }
 
@@ -536,7 +544,10 @@
     if (self.selectedAssets.count == 0) {
         self.title = NSLocalizedStringFromTableInBundle(@"Choose Photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
     } else {
-        if (self.product.quantityToFulfillOrder > 1){
+        if (self.maximumPhotos > 0){
+            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.selectedAssets.count + [self totalNumberOfExtras], (unsigned long)self.maximumPhotos];
+        }
+        else if (self.product.quantityToFulfillOrder > 1){
             NSUInteger numOrders = 1 + (MAX(0, self.selectedAssets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
             if (![self.product isMultipack]){
                 numOrders = 1;
@@ -634,7 +645,7 @@
         OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
         vc.modalPresentationStyle = UIModalPresentationFormSheet;
         vc.delegate = self;
-        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(assetsPickerControllerDidCancel:)];
+        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(onBarButtonItemCancelTapped:)];
         OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
         [self presentViewController:nvc animated:YES completion:nil];
         
@@ -643,7 +654,7 @@
     else if (provider.providerType == OLImagePickerProviderTypeViewController && [provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
         UIViewController<OLCustomPickerController> *vc = [(OLCustomViewControllerPhotoProvider *)provider vc];
         vc.delegate = self;
-        [vc safePerformSelector:@selector(setSelectedAssets:) withObject:self.selectedAssets];
+        [vc safePerformSelector:@selector(setSelectedAssets:) withObject:[self.selectedAssets mutableCopy]];
         [vc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
         if ([vc respondsToSelector:@selector(setMinimumPhotos:)]){
             vc.minimumPhotos = self.product.quantityToFulfillOrder;
@@ -742,26 +753,50 @@
         return;
     }
     
+    self.indicatorDestFrame = CGRectNull;
+    
     UIViewController *vc = [self viewControllerAtIndex:indexPath.item];
     
-    [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:NULL];
-    
-    [self positionSelectedProviderIndicator];
+    __weak OLImagePickerViewController *welf = self;
+    [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished){
+        welf.indicatorDestFrame = CGRectZero;
+        [welf positionSelectedProviderIndicator];
+    }];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [self positionSelectedProviderIndicator];
+    if ([scrollView isKindOfClass:[UICollectionView class]]){
+        [self positionSelectedProviderIndicator];
+    }
+    else{
+        CGFloat percentMoved = (scrollView.contentOffset.x - scrollView.frame.size.width) / scrollView.frame.size.width;
+        if (!CGRectIsNull(self.indicatorDestFrame) && CGSizeEqualToSize(self.indicatorDestFrame.size, CGSizeZero)){
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0];
+            if (percentMoved < 0 && indexPath.item > 0){
+                indexPath = [NSIndexPath indexPathForItem:indexPath.item-1 inSection:indexPath.section];
+            }
+            self.indicatorDestFrame = [self.sourcesCollectionView cellForItemAtIndexPath:indexPath].frame;
+        }
+        if (!CGRectIsNull(self.indicatorDestFrame)){
+        CGFloat translationX = [self.sourcesCollectionView convertRect:self.indicatorDestFrame toView:self.view].origin.x + percentMoved * self.indicatorDestFrame.size.width;
+        self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation(translationX, 0);
+        }
+    }
 }
 
 - (void)positionSelectedProviderIndicator{
     UICollectionViewCell *cell = [self.sourcesCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0]];
     
     if (cell){
-        self.selectedProviderIndicator.alpha = 1;
+        [UIView animateWithDuration:0.15 animations:^{
+            self.selectedProviderIndicator.alpha = 1;
+        }];
         self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation([self.sourcesCollectionView convertRect:cell.frame toView:self.view].origin.x, 0);
     }
     else{
-        self.selectedProviderIndicator.alpha = 0;
+        [UIView animateWithDuration:0.15 animations:^{
+            self.selectedProviderIndicator.alpha = 0;
+        }];
     }
 }
 
@@ -878,9 +913,6 @@
 #pragma mark Upsells
 
 - (OLUpsellOffer *)upsellOfferToShow{
-    if (/* DISABLES CODE */ (YES)){
-        return nil;// Need to test first
-    }
     NSArray *upsells = self.product.productTemplate.upsellOffers;
     if (upsells.count == 0){
         return nil;
@@ -916,6 +948,21 @@
 }
 
 - (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
+    //Drop previous screens from the navigation stack
+    NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+    if (navigationStack.count > 1) {
+        NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
+        for (UIViewController *vc in self.navigationController.viewControllers){
+            [viewControllers addObject:vc];
+            if ([vc isKindOfClass:[OLKiteViewController class]]){
+                [viewControllers addObject:self];
+                [self.navigationController setViewControllers:viewControllers animated:YES];
+                break;
+            }
+        }
+        [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
+    }
+    
     [self.product.acceptedOffers addObject:vc.offer];
     [vc dismissViewControllerAnimated:NO completion:^{
         if (vc.offer.prepopulatePhotos){

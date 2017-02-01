@@ -108,7 +108,6 @@
 		2E451E131D9555870080F1C1 /* OLTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AB41D92D768006C0EE6 /* OLTransition.m */; };
 		2E451E141D9555870080F1C1 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
 		2E451E151D9555870080F1C1 /* OLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */; };
-		2E451E161D9555870080F1C1 /* OLLabeledCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */; };
 		2E451E171D9555870080F1C1 /* OLIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AC81D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m */; };
 		2E451E181D9555870080F1C1 /* OLProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACB1D92DB9B006C0EE6 /* OLProgressHUD.m */; };
 		2E451E191D9555870080F1C1 /* OLRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480ACD1D92DB9B006C0EE6 /* OLRadialGradientLayer.m */; };
@@ -200,12 +199,15 @@
 		2E480ADF1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */; };
 		2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */; };
 		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
+		2E4DAB651DE47104002F4A84 /* mug.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2E4DAB641DE47104002F4A84 /* mug.dae */; };
+		2E5D13AE1E36238800927D19 /* OLMockPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */; };
 		2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
 		2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7483521BCD11F800360550 /* ViewControllerTests.m */; };
 		2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */; };
-		2E88A21C1DB0EED600732F4B /* CustomImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */; };
+		2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */; };
+		2E7D39731DAE39820046D255 /* OLImageRenderOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */; };
 		2E898CCB1CC518180041CCD8 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
 		2E898CCC1CC518180041CCD8 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */; };
 		2E898CCE1CC518180041CCD8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0151C7B2237009C1E42 /* QuartzCore.framework */; };
@@ -239,6 +241,8 @@
 		2E9A77371DA683FE00A50C4D /* CI-ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */; };
 		2E9A77381DA684FA00A50C4D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF77186215790009DE03 /* main.m */; };
 		2E9A77391DA684FB00A50C4D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF77186215790009DE03 /* main.m */; };
+		2E9F13FB1DAD048000D8B1EE /* OLPromoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E9F13F91DAD048000D8B1EE /* OLPromoView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E9F13FC1DAD048000D8B1EE /* OLPromoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */; };
 		2EAB0AEE1CDB835700625BD6 /* 3.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2EAB0AEC1CDB834E00625BD6 /* 3.pdf */; };
 		2EAB0AF51CDCD58400625BD6 /* OLTestTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */; };
 		2EADD84E1BE79D6D0051CD31 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD550D94188AA20100782D75 /* AssetsLibrary.framework */; };
@@ -251,6 +255,8 @@
 		2EADD85C1BE79D6D0051CD31 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
 		2EADD85E1BE79D6D0051CD31 /* kite_corrupt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */; };
 		2EADD85F1BE79D6D0051CD31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF7D186215790009DE03 /* Main.storyboard */; };
+		2EB0DC761DC8DB7400B556CE /* OL3DProductViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB0DC741DC8DB7400B556CE /* OL3DProductViewController.h */; };
+		2EB0DC771DC8DB7400B556CE /* OL3DProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB0DC751DC8DB7400B556CE /* OL3DProductViewController.m */; };
 		2EB8FDD11D95671400E26BDF /* OLConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFAF18634ED50009DE03 /* OLConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FDD21D95685100E26BDF /* OLAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFA21862FC510009DE03 /* OLAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FDD31D95685100E26BDF /* OLAddress+AddressBook.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB3218785D3B00316492 /* OLAddress+AddressBook.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -324,7 +330,6 @@
 		2EB8FE171D95685100E26BDF /* OLTransitionEnumerations.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AB51D92D768006C0EE6 /* OLTransitionEnumerations.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE181D95685100E26BDF /* OLMarkdownParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE191D95685100E26BDF /* OLCircularProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F0321D93CC0900014C19 /* OLCircularProgressView.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE1A1D95685100E26BDF /* OLLabeledCircularProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F0341D93CC0900014C19 /* OLLabeledCircularProgressView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE1B1D95685100E26BDF /* OLIndefiniteAnimatedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AC71D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE1C1D95685100E26BDF /* OLProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480ACA1D92DB9B006C0EE6 /* OLProgressHUD.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE1D1D95685100E26BDF /* OLRadialGradientLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480ACC1D92DB9B006C0EE6 /* OLRadialGradientLayer.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -413,7 +418,6 @@
 		2EB8FE721D95685100E26BDF /* UIColor+OLHexString.h in Headers */ = {isa = PBXBuildFile; fileRef = E237FA621D63035600A7912E /* UIColor+OLHexString.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE731D95685100E26BDF /* UIViewController+OLMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E53E0CB1C1AEAAD00BF7887 /* UIViewController+OLMethods.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE741D95685100E26BDF /* NSObject+Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE751D95685100E26BDF /* NSArray+QueryingExtras.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE761D95685100E26BDF /* UITextField+Selection.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE771D95685100E26BDF /* NSString+Formatting.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DEF0D161A964881000F1E66 /* NSString+Formatting.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE781D95685100E26BDF /* UIImageView+FadeIn.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8122EF1A75A46D004E7297 /* UIImageView+FadeIn.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -425,7 +429,6 @@
 		2EB8FE7E1D95692000E26BDF /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
 		2EB8FE7F1D95692000E26BDF /* UIViewController+OLMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */; };
 		2EB8FE801D95692000E26BDF /* NSObject+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */; };
-		2EB8FE811D95692000E26BDF /* NSArray+QueryingExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */; };
 		2EB8FE821D95692000E26BDF /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
 		2EB8FE831D95692000E26BDF /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D171A964881000F1E66 /* NSString+Formatting.m */; };
 		2EB8FE841D95692000E26BDF /* UIImageView+FadeIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */; };
@@ -440,8 +443,20 @@
 		2ED2B7B51DB8B4D90036B536 /* OLHPSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED2B7B31DB8B4D90036B536 /* OLHPSDKWrapper.m */; };
 		2ED42EC11D9D79E3003B9AD0 /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC41D2FC109002F5F74 /* bitstream.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
+		2EE0542A1E31084200417DA4 /* templates.json in Resources */ = {isa = PBXBuildFile; fileRef = 2EE054291E31084200417DA4 /* templates.json */; };
+		2EE0542E1E3201F400417DA4 /* OLSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE0542D1E3201F400417DA4 /* OLSwizzler.m */; };
+		2EE054311E32054F00417DA4 /* OLBaseRequest+Mock.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE054301E32054F00417DA4 /* OLBaseRequest+Mock.m */; };
+		2EE054321E32177A00417DA4 /* OLBaseRequest+Mock.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE054301E32054F00417DA4 /* OLBaseRequest+Mock.m */; };
+		2EE054331E32177E00417DA4 /* templates.json in Resources */ = {isa = PBXBuildFile; fileRef = 2EE054291E31084200417DA4 /* templates.json */; };
+		2EE054341E321C7000417DA4 /* OLSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE0542D1E3201F400417DA4 /* OLSwizzler.m */; };
+		2EE054351E321CC900417DA4 /* OLKiteTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E924BE41BC6A3A00038938A /* OLKiteTestHelper.m */; };
+		2EE4BC8E1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */; };
+		2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */; };
 		2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */; };
 		2EEF0D0C1D9A781700C81086 /* OLCustomPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D0B1D9A781700C81086 /* OLCustomPickerController.h */; };
+		2EFDD4191E377B75001B4E83 /* XCTestCase+OLUITestMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EFDD4181E377B75001B4E83 /* XCTestCase+OLUITestMethods.m */; };
+		2EFDD41E1E378047001B4E83 /* UpsellTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EFDD41D1E378047001B4E83 /* UpsellTests.m */; };
+		2EFDD4201E378173001B4E83 /* CompleteJourneyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EFDD41F1E378173001B4E83 /* CompleteJourneyTests.m */; };
 		B7106FC2FDFC534AFB2516F3 /* libPods-KiteSDK-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CFE5B84A94297F8524AE7764 /* libPods-KiteSDK-Demo.a */; };
 		CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF8A186215790009DE03 /* XCTest.framework */; };
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
@@ -511,8 +526,6 @@
 		2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+RoundRect.m"; path = "PSPrintSDK/Categories/UIView+RoundRect.m"; sourceTree = "<group>"; };
 		2E10F0321D93CC0900014C19 /* OLCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCircularProgressView.h; sourceTree = "<group>"; };
 		2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCircularProgressView.m; sourceTree = "<group>"; };
-		2E10F0341D93CC0900014C19 /* OLLabeledCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLLabeledCircularProgressView.h; sourceTree = "<group>"; };
-		2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLLabeledCircularProgressView.m; sourceTree = "<group>"; };
 		2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLMarkdownParser.h; sourceTree = "<group>"; };
 		2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLMarkdownParser.m; sourceTree = "<group>"; };
 		2E10F0531D93D71D00014C19 /* OLStripeWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeWrapper.h; sourceTree = "<group>"; };
@@ -625,6 +638,7 @@
 		2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetDataSource.m; sourceTree = "<group>"; };
 		2E4C31281E1E5B3900B3F28C /* CustomAssetCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAssetCollectionDataSource.h; sourceTree = "<group>"; };
 		2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAssetCollectionDataSource.m; sourceTree = "<group>"; };
+		2E4DAB641DE47104002F4A84 /* mug.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = mug.dae; sourceTree = "<group>"; };
 		2E5258FC1A9C884700DBC69B /* OLProductTypeSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTypeSelectionViewController.h; sourceTree = "<group>"; };
 		2E5258FD1A9C884700DBC69B /* OLProductTypeSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTypeSelectionViewController.m; sourceTree = "<group>"; };
 		2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSingleImageProductReviewViewController.h; sourceTree = "<group>"; };
@@ -636,6 +650,8 @@
 		2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
 		2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloadDelegate.h; sourceTree = "<group>"; };
 		2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloadDelegate.m; sourceTree = "<group>"; };
+		2E5D13AC1E36238800927D19 /* OLMockPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLMockPanGestureRecognizer.h; sourceTree = "<group>"; };
+		2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLMockPanGestureRecognizer.m; sourceTree = "<group>"; };
 		2E5D95AA1CA984E00080EF07 /* OLUpsellViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUpsellViewController.h; sourceTree = "<group>"; };
 		2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLUpsellViewController.m; sourceTree = "<group>"; };
 		2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLCheckoutDelegate.h; sourceTree = "<group>"; };
@@ -662,6 +678,8 @@
 		2E7BDAD81D3E1713005F142C /* OLUserSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUserSession.h; sourceTree = "<group>"; };
 		2E7BDAD91D3E1713005F142C /* OLUserSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLUserSession.m; sourceTree = "<group>"; };
 		2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductOrderTests.m; sourceTree = "<group>"; };
+		2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageRenderOptions.h; sourceTree = "<group>"; };
+		2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageRenderOptions.m; sourceTree = "<group>"; };
 		2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLGreetingCardPrintJob.m; sourceTree = "<group>"; };
 		2E7F516F1BF5FBCD00A78718 /* OLGreetingCardPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLGreetingCardPrintJob.h; sourceTree = "<group>"; };
 		2E837D461C3C1FBB004DA682 /* OLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLViewController.h; sourceTree = "<group>"; };
@@ -670,8 +688,6 @@
 		2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCollectionViewController.m; sourceTree = "<group>"; };
 		2E884F441D37B566007CA45A /* OLImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerViewController.h; sourceTree = "<group>"; };
 		2E884F451D37B566007CA45A /* OLImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerViewController.m; sourceTree = "<group>"; };
-		2E88A21A1DB0EED600732F4B /* CustomImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomImagePickerViewController.h; sourceTree = "<group>"; };
-		2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomImagePickerViewController.m; sourceTree = "<group>"; };
 		2E898CEA1CC518180041CCD8 /* Kite-CI-Deploy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Kite-CI-Deploy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E898F851BE37F9B00739F5A /* OLProductTemplateOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOption.h; sourceTree = "<group>"; };
 		2E898F861BE37F9B00739F5A /* OLProductTemplateOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOption.m; sourceTree = "<group>"; };
@@ -706,6 +722,8 @@
 		2E9965A91ABC7035007F010F /* OLNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLNavigationController.m; sourceTree = "<group>"; };
 		2E9AC8221D2127C900BF0A1A /* OLCircleSelectedCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCircleSelectedCollectionViewCell.h; sourceTree = "<group>"; };
 		2E9AC8231D2127C900BF0A1A /* OLCircleSelectedCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCircleSelectedCollectionViewCell.m; sourceTree = "<group>"; };
+		2E9F13F91DAD048000D8B1EE /* OLPromoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPromoView.h; sourceTree = "<group>"; };
+		2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPromoView.m; sourceTree = "<group>"; };
 		2EA008791CB293A900C23DFA /* OLUpsellOffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUpsellOffer.h; sourceTree = "<group>"; };
 		2EA0087A1CB293A900C23DFA /* OLUpsellOffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLUpsellOffer.m; sourceTree = "<group>"; };
 		2EA13E1E1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ImageNamedInKiteBundle.h"; path = "PSPrintSDK/Categories/UIImage+ImageNamedInKiteBundle.h"; sourceTree = "<group>"; };
@@ -747,6 +765,8 @@
 		2EB00A881D92C9D400668B29 /* OLOAuth2Connection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2Connection.m; sourceTree = "<group>"; };
 		2EB00A891D92C9D400668B29 /* OLOAuth2ConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2ConnectionDelegate.h; sourceTree = "<group>"; };
 		2EB00A8A1D92C9D400668B29 /* OLOAuth2Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2Constants.h; sourceTree = "<group>"; };
+		2EB0DC741DC8DB7400B556CE /* OL3DProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OL3DProductViewController.h; sourceTree = "<group>"; };
+		2EB0DC751DC8DB7400B556CE /* OL3DProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OL3DProductViewController.m; sourceTree = "<group>"; };
 		2EB1978F1CF872F200648696 /* OLPaymentMethodsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPaymentMethodsViewController.h; sourceTree = "<group>"; };
 		2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentMethodsViewController.m; sourceTree = "<group>"; };
 		2EB1C40F1B551D6000EFE0D0 /* OLKiteABTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteABTesting.h; sourceTree = "<group>"; };
@@ -795,8 +815,15 @@
 		2ED5DEBD1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LXReorderableCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LXReorderableCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		2EDBFAAF1BC698F2007BDB83 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
+		2EE054291E31084200417DA4 /* templates.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = templates.json; sourceTree = "<group>"; };
+		2EE0542C1E3201F400417DA4 /* OLSwizzler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSwizzler.h; sourceTree = "<group>"; };
+		2EE0542D1E3201F400417DA4 /* OLSwizzler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSwizzler.m; sourceTree = "<group>"; };
+		2EE0542F1E32054F00417DA4 /* OLBaseRequest+Mock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLBaseRequest+Mock.h"; sourceTree = "<group>"; };
+		2EE054301E32054F00417DA4 /* OLBaseRequest+Mock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLBaseRequest+Mock.m"; sourceTree = "<group>"; };
 		2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteViewController.h; sourceTree = "<group>"; };
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
+		2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductOverviewPageAnimatedContentViewController.h; sourceTree = "<group>"; };
+		2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductOverviewPageAnimatedContentViewController.m; sourceTree = "<group>"; };
 		2EEB52FA1D6C8F4C0066B802 /* OLKiteViewController+Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OLKiteViewController+Theme.h"; sourceTree = "<group>"; };
 		2EEB52FE1D7062870066B802 /* OLProductTemplateOptionChoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOptionChoice.h; sourceTree = "<group>"; };
 		2EEB52FF1D7062870066B802 /* OLProductTemplateOptionChoice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOptionChoice.m; sourceTree = "<group>"; };
@@ -812,11 +839,13 @@
 		2EF718331D589DB60036502D /* OLInfoBanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInfoBanner.m; sourceTree = "<group>"; };
 		2EF8BA9D1B99E9E4009BC73B /* OLImageCachingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageCachingManager.h; sourceTree = "<group>"; };
 		2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageCachingManager.m; sourceTree = "<group>"; };
+		2EFDD4171E377B75001B4E83 /* XCTestCase+OLUITestMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XCTestCase+OLUITestMethods.h"; sourceTree = "<group>"; };
+		2EFDD4181E377B75001B4E83 /* XCTestCase+OLUITestMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XCTestCase+OLUITestMethods.m"; sourceTree = "<group>"; };
+		2EFDD41D1E378047001B4E83 /* UpsellTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpsellTests.m; sourceTree = "<group>"; };
+		2EFDD41F1E378173001B4E83 /* CompleteJourneyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompleteJourneyTests.m; sourceTree = "<group>"; };
 		2EFDD4231E3A2D9D001B4E83 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = "Base.lproj/KitePrintSDKTests-Info.plist"; sourceTree = "<group>"; };
 		2EFDD42A1E3A2F26001B4E83 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		321E56D8BE2D006816AACDED /* Pods-KiteSDK-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.debug.xcconfig"; sourceTree = "<group>"; };
-		3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+QueryingExtras.h"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.h"; sourceTree = "<group>"; };
-		3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+QueryingExtras.m"; path = "PSPrintSDK/Categories/NSArray+QueryingExtras.m"; sourceTree = "<group>"; };
 		3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCreditCardCaptureViewController.h; sourceTree = "<group>"; };
 		3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCreditCardCaptureViewController.m; sourceTree = "<group>"; };
 		3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kite_corrupt.jpg; sourceTree = "<group>"; };
@@ -1015,10 +1044,10 @@
 		2E0DB88E1A6402D9001032E3 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				2E67B9281D267A3E00914D56 /* OLColorSelectionCollectionViewCell.h */,
-				2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */,
 				2E0FF2E11D2A9003007093C0 /* OLButtonCollectionViewCell.h */,
 				2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */,
+				2E67B9281D267A3E00914D56 /* OLColorSelectionCollectionViewCell.h */,
+				2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */,
 				2E973EEC1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.h */,
 				2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */,
 				2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */,
@@ -1046,8 +1075,6 @@
 			children = (
 				2E10F0321D93CC0900014C19 /* OLCircularProgressView.h */,
 				2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */,
-				2E10F0341D93CC0900014C19 /* OLLabeledCircularProgressView.h */,
-				2E10F0351D93CC0900014C19 /* OLLabeledCircularProgressView.m */,
 			);
 			name = DACircularProgress;
 			sourceTree = "<group>";
@@ -1064,14 +1091,10 @@
 		2E10F0511D93D6F700014C19 /* 3rd Party */ = {
 			isa = PBXGroup;
 			children = (
-				2ED2B7B61DB8B4DF0036B536 /* HP SDK */,
+				2E67B7C11E2658C000E70805 /* UICKeychainStore */,
 				2E96BA3B1D2FA9CF002F5F74 /* QREncoder */,
 				2ED5DEB01AC94337003301A8 /* LXReorderableCollectionViewFlowLayout */,
 				3D8122E21A759E41004E7297 /* RMImageCropper */,
-				2E10F0591D93E5E200014C19 /* PayPal */,
-				2E10F0521D93D70300014C19 /* Stripe */,
-				2EB612F61D48AFDA00B48E29 /* Instagram */,
-				2E1E66D91D4795C8002524A4 /* Facebook */,
 				2E480AAB1D92D6D4006C0EE6 /* MPFlipViewController */,
 				2E10F03E1D93CC3600014C19 /* TSMarkdownParser */,
 				2E10F0311D93CBF100014C19 /* DACircularProgress */,
@@ -1149,8 +1172,6 @@
 				2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */,
 				2E23EB991D5091FC00E2BF42 /* CI-ViewController.h */,
 				2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */,
-				2E88A21A1DB0EED600732F4B /* CustomImagePickerViewController.h */,
-				2E88A21B1DB0EED600732F4B /* CustomImagePickerViewController.m */,
 				2E4C31261E1E5B3900B3F28C /* AssetDataSource.h */,
 				2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */,
 				2E4C31281E1E5B3900B3F28C /* CustomAssetCollectionDataSource.h */,
@@ -1160,12 +1181,13 @@
 			name = Private;
 			sourceTree = "<group>";
 		};
-		2E451DC91D9554B40080F1C1 /* Kite */ = {
+		2E451DC91D9554B40080F1C1 /* Kite Framework */ = {
 			isa = PBXGroup;
 			children = (
 				2E451DCA1D9554B40080F1C1 /* KiteSDK.h */,
 				2E451DCB1D9554B40080F1C1 /* Info.plist */,
 			);
+			name = "Kite Framework";
 			path = Kite;
 			sourceTree = "<group>";
 		};
@@ -1210,6 +1232,8 @@
 				2EA8BEAF1A484FCB008A9248 /* OLProductOverviewViewController.m */,
 				2EA8BEB01A484FCB008A9248 /* OLProductOverviewPageContentViewController.h */,
 				2EA8BEB11A484FCB008A9248 /* OLProductOverviewPageContentViewController.m */,
+				2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */,
+				2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */,
 				2EAD11501BD79ED0000BC80E /* OLProductDetailsViewController.h */,
 				2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */,
 				2E5D95AA1CA984E00080EF07 /* OLUpsellViewController.h */,
@@ -1227,6 +1251,8 @@
 				2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */,
 				2E20BD841AD4229700FB2446 /* OLCaseViewController.h */,
 				2E20BD851AD4229700FB2446 /* OLCaseViewController.m */,
+				2EB0DC741DC8DB7400B556CE /* OL3DProductViewController.h */,
+				2EB0DC751DC8DB7400B556CE /* OL3DProductViewController.m */,
 				2EA8BEB41A484FCB008A9248 /* OLPackProductViewController.h */,
 				2EA8BEB51A484FCB008A9248 /* OLPackProductViewController.m */,
 				2EA8BEB61A484FCB008A9248 /* OLFrameOrderReviewViewController.h */,
@@ -1291,6 +1317,8 @@
 				2E837D471C3C1FBB004DA682 /* OLViewController.m */,
 				2E837D4A1C3C221E004DA682 /* OLCollectionViewController.h */,
 				2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */,
+				2E9F13F91DAD048000D8B1EE /* OLPromoView.h */,
+				2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1304,9 +1332,29 @@
 				CD550BD61886BF6000782D75 /* Payment */,
 				CD7696A11868DE7A006D4A26 /* Print */,
 				3DE2B0C01A77D2290092D97F /* Util */,
-				2E10F0511D93D6F700014C19 /* 3rd Party */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		2E67B7C01E2645F400E70805 /* Wrappers */ = {
+			isa = PBXGroup;
+			children = (
+				2ED2B7B61DB8B4DF0036B536 /* HP SDK */,
+				2E10F0591D93E5E200014C19 /* PayPal */,
+				2E10F0521D93D70300014C19 /* Stripe */,
+				2EB612F61D48AFDA00B48E29 /* Instagram */,
+				2E1E66D91D4795C8002524A4 /* Facebook */,
+			);
+			name = Wrappers;
+			sourceTree = "<group>";
+		};
+		2E67B7C11E2658C000E70805 /* UICKeychainStore */ = {
+			isa = PBXGroup;
+			children = (
+				2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */,
+				2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */,
+			);
+			name = UICKeychainStore;
 			sourceTree = "<group>";
 		};
 		2E96BA3B1D2FA9CF002F5F74 /* QREncoder */ = {
@@ -1349,8 +1397,6 @@
 				2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */,
 				3DF9D6FF1B0F65C700A40C0C /* NSObject+Utils.h */,
 				3DF9D7001B0F65C700A40C0C /* NSObject+Utils.m */,
-				3D0D7ACA1AC0C44C00746FC8 /* NSArray+QueryingExtras.h */,
-				3D0D7ACB1AC0C44C00746FC8 /* NSArray+QueryingExtras.m */,
 				3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */,
 				3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */,
 				3DEF0D161A964881000F1E66 /* NSString+Formatting.h */,
@@ -1377,10 +1423,18 @@
 		2EAB0AF61CDCDE9900625BD6 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				2EFDD4171E377B75001B4E83 /* XCTestCase+OLUITestMethods.h */,
+				2EFDD4181E377B75001B4E83 /* XCTestCase+OLUITestMethods.m */,
+				2EE0542C1E3201F400417DA4 /* OLSwizzler.h */,
+				2EE0542D1E3201F400417DA4 /* OLSwizzler.m */,
 				2E924BE31BC6A3A00038938A /* OLKiteTestHelper.h */,
 				2E924BE41BC6A3A00038938A /* OLKiteTestHelper.m */,
 				2EAB0AF11CDCD57A00625BD6 /* OLTestTapGestureRecognizer.h */,
 				2EAB0AF21CDCD57A00625BD6 /* OLTestTapGestureRecognizer.m */,
+				2EE0542F1E32054F00417DA4 /* OLBaseRequest+Mock.h */,
+				2EE054301E32054F00417DA4 /* OLBaseRequest+Mock.m */,
+				2E5D13AC1E36238800927D19 /* OLMockPanGestureRecognizer.h */,
+				2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -1454,6 +1508,27 @@
 			name = LXReorderableCollectionViewFlowLayout;
 			sourceTree = "<group>";
 		};
+		2EFDD4211E3781E6001B4E83 /* UI Tests */ = {
+			isa = PBXGroup;
+			children = (
+				2E7483521BCD11F800360550 /* ViewControllerTests.m */,
+				2EFDD41F1E378173001B4E83 /* CompleteJourneyTests.m */,
+				2EFDD41D1E378047001B4E83 /* UpsellTests.m */,
+			);
+			name = "UI Tests";
+			sourceTree = "<group>";
+		};
+		2EFDD4221E3781F0001B4E83 /* Model Tests */ = {
+			isa = PBXGroup;
+			children = (
+				CD73BF96186215790009DE03 /* OLSDKModelTests.m */,
+				2E924BE11BC6A0C80038938A /* OLKiteRequestTests.m */,
+				2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */,
+				2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */,
+			);
+			name = "Model Tests";
+			sourceTree = "<group>";
+		};
 		3D8122E21A759E41004E7297 /* RMImageCropper */ = {
 			isa = PBXGroup;
 			children = (
@@ -1482,8 +1557,6 @@
 				2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */,
 				2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */,
 				2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */,
-				2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */,
-				2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */,
 				2EB715D31CFDD12900618C7B /* OLLuhn.h */,
 				2EB715D41CFDD12900618C7B /* OLLuhn.m */,
 			);
@@ -1514,7 +1587,7 @@
 				CD73BFA01862FA210009DE03 /* Sample App */,
 				CD73BF71186215790009DE03 /* Kite Print SDK */,
 				CD73BF90186215790009DE03 /* Kite Print SDK Tests */,
-				2E451DC91D9554B40080F1C1 /* Kite */,
+				2E451DC91D9554B40080F1C1 /* Kite Framework */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				01A3969341E0D10D83284FD0 /* Pods */,
@@ -1570,6 +1643,8 @@
 				2E0DB88E1A6402D9001032E3 /* View */,
 				CDA8BF4F18D70CF500D835BB /* Controller */,
 				2EA8BEC11A48509E008A9248 /* Categories */,
+				2E67B7C01E2645F400E70805 /* Wrappers */,
+				2E10F0511D93D6F700014C19 /* 3rd Party */,
 				E29C862E1BE3C4640041D4CF /* Resources */,
 			);
 			name = "Kite Print SDK";
@@ -1589,11 +1664,8 @@
 		CD73BF90186215790009DE03 /* Kite Print SDK Tests */ = {
 			isa = PBXGroup;
 			children = (
-				CD73BF96186215790009DE03 /* OLSDKModelTests.m */,
-				2E924BE11BC6A0C80038938A /* OLKiteRequestTests.m */,
-				2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */,
-				2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */,
-				2E7483521BCD11F800360550 /* ViewControllerTests.m */,
+				2EFDD4221E3781F0001B4E83 /* Model Tests */,
+				2EFDD4211E3781E6001B4E83 /* UI Tests */,
 				2EAB0AF61CDCDE9900625BD6 /* Helpers */,
 				CD73BF91186215790009DE03 /* Supporting Files */,
 			);
@@ -1604,6 +1676,7 @@
 		CD73BF91186215790009DE03 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2EE054291E31084200417DA4 /* templates.json */,
 				2EDBFAAF1BC698F2007BDB83 /* 1.jpg */,
 				2E7483501BCCFB5900360550 /* 2.png */,
 				2EAB0AEC1CDB834E00625BD6 /* 3.pdf */,
@@ -1750,6 +1823,8 @@
 				2E0804B71C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.m */,
 				2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */,
 				2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */,
+				2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */,
+				2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */,
 			);
 			name = Asset;
 			sourceTree = "<group>";
@@ -1757,6 +1832,7 @@
 		E29C862E1BE3C4640041D4CF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2E4DAB641DE47104002F4A84 /* mug.dae */,
 				2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */,
 				2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
@@ -1845,6 +1921,7 @@
 				2EB8FE5A1D95685100E26BDF /* OLAddressPickerController.h in Headers */,
 				2EB8FE2C1D95685100E26BDF /* OLOAuth2PostBodyPart.h in Headers */,
 				2EB8FE421D95685100E26BDF /* OLImagePickerPageViewController.h in Headers */,
+				2E9F13FB1DAD048000D8B1EE /* OLPromoView.h in Headers */,
 				2EB8FE3E1D95685100E26BDF /* OLProductOverviewPageContentViewController.h in Headers */,
 				2E149AE81DB7B00D000E5849 /* OLProductTemplateCollection.h in Headers */,
 				2EB8FDDA1D95685100E26BDF /* OLPrintOrderSubmitStatusRequest.h in Headers */,
@@ -1878,8 +1955,9 @@
 				2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */,
 				2EB8FDEB1D95685100E26BDF /* OLUserSession.h in Headers */,
 				2EB8FE0A1D95685100E26BDF /* OLInstagramImagePickerConstants.h in Headers */,
-				2EB8FE751D95685100E26BDF /* NSArray+QueryingExtras.h in Headers */,
+				2EB0DC761DC8DB7400B556CE /* OL3DProductViewController.h in Headers */,
 				2EB8FE1B1D95685100E26BDF /* OLIndefiniteAnimatedView.h in Headers */,
+				2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */,
 				2EB8FE131D95685100E26BDF /* OLFlipEnumerations.h in Headers */,
 				2EB8FE5C1D95685100E26BDF /* OLAddressLookupViewController.h in Headers */,
 				2EB8FE2D1D95685100E26BDF /* OLOAuth2PostBodyStream.h in Headers */,
@@ -1903,6 +1981,7 @@
 				2EB8FDFA1D95685100E26BDF /* OLProductGroup.h in Headers */,
 				2EB8FDFB1D95685100E26BDF /* OLProduct.h in Headers */,
 				2EB8FE0B1D95685100E26BDF /* OLInstagramImage.h in Headers */,
+				2EE4BC8E1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h in Headers */,
 				2EB8FE0C1D95685100E26BDF /* OLFacebookImage.h in Headers */,
 				2EB8FE061D95685100E26BDF /* OLLuhn.h in Headers */,
 				2EB8FDD21D95685100E26BDF /* OLAddress.h in Headers */,
@@ -1930,7 +2009,6 @@
 				2EB8FE151D95685100E26BDF /* OLFlipViewController.h in Headers */,
 				2EB8FE4F1D95685100E26BDF /* OLEditPhotobookViewController.h in Headers */,
 				2EB8FE641D95685100E26BDF /* qrspec.h in Headers */,
-				2EB8FE1A1D95685100E26BDF /* OLLabeledCircularProgressView.h in Headers */,
 				2EB8FDFC1D95685100E26BDF /* OLPageLayout.h in Headers */,
 				2EB8FE731D95685100E26BDF /* UIViewController+OLMethods.h in Headers */,
 				2EB8FE3F1D95685100E26BDF /* OLProductDetailsViewController.h in Headers */,
@@ -2053,7 +2131,6 @@
 				TargetAttributes = {
 					2E451DC71D9554B40080F1C1 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = L78L4U72YJ;
 						ProvisioningStyle = Manual;
 					};
 					2E4CAF081BC25F0A0089FA26 = {
@@ -2115,6 +2192,7 @@
 				2E451E911D95640D0080F1C1 /* KitePrintSDK.strings in Resources */,
 				2E451E951D9564620080F1C1 /* OLKiteStoryboard.storyboard in Resources */,
 				2E451E941D95641A0080F1C1 /* OLEditingToolsView.xib in Resources */,
+				2E4DAB651DE47104002F4A84 /* mug.dae in Resources */,
 				2E451E921D9564100080F1C1 /* OLProgressHUD.bundle in Resources */,
 				2E451E961D9564680080F1C1 /* KitePrintSDK.xcassets in Resources */,
 			);
@@ -2127,6 +2205,7 @@
 				2E23EB9B1D5091FC00E2BF42 /* CI-Main.storyboard in Resources */,
 				2E480ADF1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */,
 				2E898CDD1CC518180041CCD8 /* KitePrintSDK.strings in Resources */,
+				2EE054331E32177E00417DA4 /* templates.json in Resources */,
 				2E898CDE1CC518180041CCD8 /* OLKiteStoryboard.storyboard in Resources */,
 				2E434AE61D36675700D1BD06 /* OLEditingToolsView.xib in Resources */,
 				2E898CE11CC518180041CCD8 /* Images.xcassets in Resources */,
@@ -2155,6 +2234,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EAB0AEE1CDB835700625BD6 /* 3.pdf in Resources */,
+				2EE0542A1E31084200417DA4 /* templates.json in Resources */,
 				2E7483511BCCFB5900360550 /* 2.png in Resources */,
 				2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */,
 			);
@@ -2341,6 +2421,7 @@
 				2E451E221D9555870080F1C1 /* OLOAuth2Constants.m in Sources */,
 				2EB8FE7E1D95692000E26BDF /* UIColor+OLHexString.m in Sources */,
 				2E451DE01D9555540080F1C1 /* OLImagePickerProvider.m in Sources */,
+				2EB0DC771DC8DB7400B556CE /* OL3DProductViewController.m in Sources */,
 				2E451DE61D9555580080F1C1 /* OLPayPalCard+OLCardIcon.m in Sources */,
 				2E451E3C1D9555870080F1C1 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2E451E051D9555860080F1C1 /* OLPayPalWrapper.m in Sources */,
@@ -2353,9 +2434,11 @@
 				2E451E331D9555870080F1C1 /* OLProductTypeSelectionViewController.m in Sources */,
 				2E451E591D9555DE0080F1C1 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
 				2E451E241D9555870080F1C1 /* OLOAuth2PostBodyPart.m in Sources */,
+				2E9F13FC1DAD048000D8B1EE /* OLPromoView.m in Sources */,
 				2E451E1B1D9555870080F1C1 /* NSString+OLOAuth2.m in Sources */,
 				2E451E1A1D9555870080F1C1 /* NSURL+OLOAuth2.m in Sources */,
 				2E451E4C1D9555D30080F1C1 /* OLPhotobookPageBlankContentViewController.m in Sources */,
+				2E7D39731DAE39820046D255 /* OLImageRenderOptions.m in Sources */,
 				2E451E001D9555620080F1C1 /* OLKiteUtils.m in Sources */,
 				2E451E4A1D9555D30080F1C1 /* OLPhotobookViewController.m in Sources */,
 				2E451DDF1D9555540080F1C1 /* OLTextOnPhoto.m in Sources */,
@@ -2377,8 +2460,8 @@
 				2E451E381D9555870080F1C1 /* OLImagePickerViewController.m in Sources */,
 				2E451E5E1D9555EF0080F1C1 /* OLKiteViewController.m in Sources */,
 				2E451E651D955B0D0080F1C1 /* qrencode.c in Sources */,
-				2E451E161D9555870080F1C1 /* OLLabeledCircularProgressView.m in Sources */,
 				2E451E431D9555D30080F1C1 /* OLSingleImageProductReviewViewController.m in Sources */,
+				2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */,
 				2E451E181D9555870080F1C1 /* OLProgressHUD.m in Sources */,
 				2E451DEA1D95555C0080F1C1 /* OLPrintJob.m in Sources */,
 				2E451DFD1D9555620080F1C1 /* OLAnalytics.m in Sources */,
@@ -2390,7 +2473,6 @@
 				2E451DE51D9555580080F1C1 /* OLStripeCard+OLCardIcon.m in Sources */,
 				2E451DD01D95554D0080F1C1 /* OLAddress.m in Sources */,
 				2E451DE41D9555580080F1C1 /* OLStripeCard.m in Sources */,
-				2EB8FE811D95692000E26BDF /* NSArray+QueryingExtras.m in Sources */,
 				2EB8FE861D95692000E26BDF /* UIImage+OLUtils.m in Sources */,
 				2E451DF71D95555D0080F1C1 /* OLProductGroup.m in Sources */,
 				2E451DD71D9555540080F1C1 /* OLPrintOrderCostRequest.m in Sources */,
@@ -2489,12 +2571,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EE054351E321CC900417DA4 /* OLKiteTestHelper.m in Sources */,
 				2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */,
 				2E9A77361DA683FE00A50C4D /* PrintOrderHistoryViewController.m in Sources */,
+				2EE054321E32177A00417DA4 /* OLBaseRequest+Mock.m in Sources */,
 				2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */,
+				2EE054341E321C7000417DA4 /* OLSwizzler.m in Sources */,
 				2E9A77371DA683FE00A50C4D /* CI-ViewController.m in Sources */,
 				2E9A77391DA684FB00A50C4D /* main.m in Sources */,
-				2E88A21C1DB0EED600732F4B /* CustomImagePickerViewController.m in Sources */,
 				2E9A77351DA683FE00A50C4D /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2517,11 +2601,17 @@
 				2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */,
 				2E924BE21BC6A0C80038938A /* OLKiteRequestTests.m in Sources */,
 				2E0EB0EC1D9EB43F001A6CC9 /* ViewController.m in Sources */,
+				2EE054311E32054F00417DA4 /* OLBaseRequest+Mock.m in Sources */,
 				2E924BE51BC6A3A00038938A /* OLKiteTestHelper.m in Sources */,
+				2EFDD4201E378173001B4E83 /* CompleteJourneyTests.m in Sources */,
 				2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */,
+				2EFDD4191E377B75001B4E83 /* XCTestCase+OLUITestMethods.m in Sources */,
+				2E5D13AE1E36238800927D19 /* OLMockPanGestureRecognizer.m in Sources */,
 				CD73BF97186215790009DE03 /* OLSDKModelTests.m in Sources */,
+				2EE0542E1E3201F400417DA4 /* OLSwizzler.m in Sources */,
 				2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */,
 				2EAB0AF51CDCD58400625BD6 /* OLTestTapGestureRecognizer.m in Sources */,
+				2EFDD41E1E378047001B4E83 /* UpsellTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2610,9 +2700,9 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = 6.0.0;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = L78L4U72YJ;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2644,7 +2734,7 @@
 				CURRENT_PROJECT_VERSION = 6.0.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = L78L4U72YJ;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2699,7 +2789,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"OL_KITE_CI_DEPLOY=ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e",
-					OL_KITE_VERBOSE,
 				);
 				INFOPLIST_FILE = "PSPrintSDK/KiteCI-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
@@ -2768,7 +2857,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1720851a-4a4d-417b-b6e6-e3bcd50272e6";
+				PROVISIONING_PROFILE = "a5cf22df-d6a2-45d4-b858-0ed1fdbcf3c5";
 				PROVISIONING_PROFILE_SPECIFIER = "Kite SDK Dev";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -50,8 +50,8 @@
     NSDictionary *views = NSDictionaryOfVariableBindings(nextButton);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-20-[nextButton]-20-|",
-                         @"V:[nextButton(50)]-10-|"];
+    NSArray *visuals = @[@"H:|-5-[nextButton]-5-|",
+                         @"V:[nextButton(50)]-5-|"];
     
     
     for (NSString *visual in visuals) {

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@
 #import "OLQRCodeUploadedImagePoller.h"
 #import "OLURLShortener.h"
 #import "UIImage+MDQRCode.h"
-
+#import "OLKiteUtils.h"
 
 @interface OLQRCodeUploadViewController ()
 @property (nonatomic, retain) IBOutlet UIImageView *qrCodeImageView;
@@ -60,7 +60,9 @@
     [self.urlShortner shortenURL:uploadURL handler:^(NSString *shortenedURL, NSError *error) {
         if (error) {
             [self dismissViewControllerAnimated:YES completion:^{
-                [[[UIAlertView alloc] initWithTitle:@"Oops" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+                [self presentViewController:ac animated:YES completion:NULL];
             }];
         } else {
             self.activityIndicator.hidden = YES;
@@ -100,6 +102,11 @@
     [super viewWillDisappear:animated];
     
     [self.imagePoller stopPolling];
+}
+
+- (void)onBarButtonItemCancelTapped:(id)sender{
+    [self.imagePoller stopPolling];
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 

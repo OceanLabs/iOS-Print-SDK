@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -33,5 +33,6 @@
 
 @property (strong, nonatomic) UIColor *colorForSelection;
 @property (assign, nonatomic) BOOL extendedSelectionBox;
+@property (assign, nonatomic) BOOL circleSelectionStyle;
 
 @end

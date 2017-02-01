@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,33 +27,29 @@
 //  THE SOFTWARE.
 //
 
-#import "OLPackProductViewController.h"
-#import "OLAsset+Private.h"
-#import "OLProductPrintJob.h"
-#import "OLConstants.h"
-#import "OLCheckoutDelegate.h"
-#import "OLProductTemplate.h"
-#import "OLProduct.h"
-#import "OLCircleMaskCollectionViewCell.h"
-#import "OLAsset+Private.h"
-#import "OLAnalytics.h"
-#import "OLKitePrintSDK.h"
-#import "OLIntegratedCheckoutViewController.h"
-#import "OLKiteViewController.h"
-#import "OLKiteABTesting.h"
 #import "NSObject+Utils.h"
-#import "OLRemoteImageView.h"
-#import "OLKiteUtils.h"
-#import "OLPaymentViewController.h"
-#import "UIViewController+OLMethods.h"
-#import "OLImagePreviewViewController.h"
-#import "OLUserSession.h"
+#import "OLAnalytics.h"
 #import "OLAsset+Private.h"
-#import "UIImageView+FadeIn.h"
-#import "OLInfoBanner.h"
+#import "OLCheckoutDelegate.h"
+#import "OLCircleMaskCollectionViewCell.h"
+#import "OLConstants.h"
 #import "OLImagePickerViewController.h"
-
-static const NSUInteger kTagAlertViewDeletePhoto = 98;
+#import "OLImagePreviewViewController.h"
+#import "OLInfoBanner.h"
+#import "OLIntegratedCheckoutViewController.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
+#import "OLKiteViewController.h"
+#import "OLPackProductViewController.h"
+#import "OLPaymentViewController.h"
+#import "OLProduct.h"
+#import "OLProductPrintJob.h"
+#import "OLProductTemplate.h"
+#import "OLRemoteImageView.h"
+#import "OLUserSession.h"
+#import "UIImageView+FadeIn.h"
+#import "UIViewController+OLMethods.h"
 
 @interface OLPaymentViewController (Private)
 
@@ -89,7 +85,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 @property (weak, nonatomic) OLAsset *editingPrintPhoto;
 @property (strong, nonatomic) UIView *addMorePhotosView;
 @property (strong, nonatomic) UIButton *addMorePhotosButton;
-@property (assign, nonatomic) NSUInteger indexOfPhotoToDelete;
 @property (strong, nonatomic) UIButton *nextButton;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
 
@@ -419,7 +414,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     cropVc.aspectRatio = [self productAspectRatio];
     cropVc.product = self.product;
     
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
+    [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
@@ -494,20 +489,12 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     
     NSInteger extraCopies = [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies];
     if (extraCopies == 0){
-        if ([UIAlertController class]){
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Remove?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Do you want to remove this photo?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes, remove it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
-                [self deletePhotoAtIndex:indexPath.item];
-            }]];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No, keep it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
-            [self presentViewController:ac animated:YES completion:NULL];
-        }
-        else{
-            UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Remove?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Do you want to remove this photo?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") delegate:self cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"Yes, remove it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:NSLocalizedStringFromTableInBundle(@"No, keep it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), nil];
-            self.indexOfPhotoToDelete = indexPath.item;
-            av.tag = kTagAlertViewDeletePhoto;
-            [av show];
-        }
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Remove?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Do you want to remove this photo?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes, remove it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
+            [self deletePhotoAtIndex:indexPath.item];
+        }]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No, keep it", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){}]];
+        [self presentViewController:ac animated:YES completion:NULL];
         return;
     }
     extraCopies--;
@@ -555,7 +542,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         return;
     }
     
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+    [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
         OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
@@ -766,6 +753,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
 - (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
+    [self.editingPrintPhoto unloadImage];
     [cropper dismissViewControllerAnimated:YES completion:^{
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 1;
@@ -775,6 +763,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 - (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
+    [self.editingPrintPhoto unloadImage];
     [UIView animateWithDuration:0.25 animations:^{
         self.nextButton.alpha = 1;
         self.navigationController.navigationBar.alpha = 1;

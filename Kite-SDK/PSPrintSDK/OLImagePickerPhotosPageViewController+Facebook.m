@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,10 @@
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
+@end
+
+@interface OLImagePickerPhotosPageViewController () <UICollectionViewDataSource>
+
 @end
 
 @implementation OLImagePickerPhotosPageViewController (Facebook)
@@ -118,7 +122,6 @@
             return;
         }
         
-        NSUInteger photosStartCount = welf.photos.count;
         for (OLFacebookImage *image in welf.overflowPhotos){
             [welf.provider.collections[self.showingCollectionIndex].array addObject:[OLAsset assetWithURL:image.fullURL]];
         }
@@ -141,19 +144,7 @@
             [self.activityIndicator stopAnimating];
         }
         
-        // Insert new items
-        NSMutableArray *addedItemPaths = [[NSMutableArray alloc] init];
-        for (NSUInteger itemIndex = photosStartCount; itemIndex < welf.photos.count; ++itemIndex) {
-            [addedItemPaths addObject:[NSIndexPath indexPathForItem:itemIndex inSection:0]];
-        }
-        
-        if (welf.view.superview){
-            [welf.collectionView insertItemsAtIndexPaths:addedItemPaths];
-            ((UICollectionViewFlowLayout *) welf.collectionView.collectionViewLayout).footerReferenceSize = CGSizeMake(0, nextPageRequest == nil ? 0 : 44);
-        }
-        else{
-            [welf.collectionView reloadData];
-        }
+        [welf.collectionView reloadData];
     }];
     
 }

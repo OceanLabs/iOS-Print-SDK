@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,27 +27,26 @@
 //  THE SOFTWARE.
 //
 
-#import "OLKiteViewController.h"
-#import "OLPrintOrder.h"
-#import "OLProductTemplate.h"
-#import "OLProductHomeViewController.h"
-#import "OLKitePrintSDK.h"
-#import "OLProduct.h"
-#import "OLProductOverviewViewController.h"
-#import "OLProductTypeSelectionViewController.h"
-#import "OLKitePrintSDK.h"
-#import "OLAnalytics.h"
-#import "OLProductGroup.h"
-#import "OLNavigationController.h"
 #import "NSObject+Utils.h"
-#import "OLKiteABTesting.h"
-#import "UIImage+OLUtils.h"
-#import "OLKiteUtils.h"
-#import "OLUserSession.h"
-#import "OLCustomViewControllerPhotoProvider.h"
+#import "OLAnalytics.h"
 #import "OLAsset+Private.h"
+#import "OLCustomViewControllerPhotoProvider.h"
 #import "OLImageDownloader.h"
 #import "OLImagePickerViewController.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
+#import "OLKiteViewController.h"
+#import "OLNavigationController.h"
+#import "OLPrintOrder.h"
+#import "OLProduct.h"
+#import "OLProductGroup.h"
+#import "OLProductHomeViewController.h"
+#import "OLProductOverviewViewController.h"
+#import "OLProductTemplate.h"
+#import "OLProductTypeSelectionViewController.h"
+#import "OLUserSession.h"
+#import "UIImage+OLUtils.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -65,8 +64,10 @@ static CGFloat fadeTime = 0.3;
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
 @property (strong, nonatomic) NSBlockOperation *templateSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *remotePlistSyncOperation;
-@property (strong, nonatomic) NSBlockOperation *remotePlistFetchOperation;
+@property (strong, nonatomic) NSBlockOperation *remoteThemePlistSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
+
+@property (copy, nonatomic) void (^loadingHandler)();
 
 @end
 
@@ -172,6 +173,11 @@ static CGFloat fadeTime = 0.3;
     return self;
 }
 
+- (void)setAssets:(NSArray *_Nonnull)assets{
+    [OLUserSession currentSession].appAssets = assets;
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
+}
+
 - (void)addCustomPhotoProviderWithCollections:(NSArray <OLImagePickerProviderCollection *>*_Nonnull)collections name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)image{
     [self.customImageProviders addObject:[[OLImagePickerProvider alloc] initWithCollections:(NSArray <id<NSFastEnumeration>> *)collections name:name icon:image]];
 }
@@ -191,35 +197,37 @@ static CGFloat fadeTime = 0.3;
     self.fontNames = fontNames;
 }
 
--(void)viewDidLoad {
-    [super viewDidLoad];
-    
-    if (!self.navigationController){
-        self.navigationBar.hidden = NO;
+- (void)startLoadingWithCompletionHandler:(void(^)())handler{
+    if (!handler){
+        return;
     }
-    
-    
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        self.customNavigationItem.title = @"";
-    }
-    
+    self.loadingHandler = handler;
+    [self loadRemoteData];
+}
+
+- (void)loadRemoteData{
     [[OLUserSession currentSession] calcScreenScaleForTraitCollection:self.traitCollection];
     
     self.operationQueue = [NSOperationQueue mainQueue];
     self.templateSyncOperation = [[NSBlockOperation alloc] init];
     self.remotePlistSyncOperation = [[NSBlockOperation alloc] init];
+    self.remoteThemePlistSyncOperation = [[NSBlockOperation alloc] init];
     self.transitionOperation = [[NSBlockOperation alloc] init];
-    self.remotePlistFetchOperation = [[NSBlockOperation alloc] init];
-
+    
     [self.transitionOperation addDependency:self.templateSyncOperation];
     [self.transitionOperation addDependency:self.remotePlistSyncOperation];
-    [self.remotePlistFetchOperation addDependency:self.templateSyncOperation];
+    [self.transitionOperation addDependency:self.remoteThemePlistSyncOperation];
+    [self.remoteThemePlistSyncOperation addDependency:self.remotePlistSyncOperation];
     
-    if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
-        [[self.view viewWithTag:9999] removeFromSuperview];
+    if (self.loadingHandler){
+        NSBlockOperation *loadingHandlerOperation = [NSBlockOperation blockOperationWithBlock:^{
+            self.loadingHandler();
+        }];
+        [loadingHandlerOperation addDependency:self.templateSyncOperation];
+        [loadingHandlerOperation addDependency:self.remotePlistSyncOperation];
+        [loadingHandlerOperation addDependency:self.remoteThemePlistSyncOperation];
+        [self.operationQueue addOperation:loadingHandlerOperation];
     }
-    
-    self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
     
     if (![OLKitePrintSDK cacheTemplates]) {
         [OLProductTemplate deleteCachedTemplates];
@@ -235,23 +243,33 @@ static CGFloat fadeTime = 0.3;
     }
     else{
         __weak OLKiteViewController *welf = self;
-        [self.remotePlistFetchOperation addExecutionBlock:^(){
-            [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
-                [welf.operationQueue addOperation:welf.remotePlistSyncOperation];
-                
-#ifndef OL_NO_ANALYTICS
-                if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-                    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
-                }
-                else{
-                    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
-                }
-#endif
-            }];
+        [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
+            [welf.operationQueue addOperation:welf.remotePlistSyncOperation];
         }];
-        [self.operationQueue addOperation:self.remotePlistFetchOperation];
         [OLProductTemplate sync];
     }
+}
+
+-(void)viewDidLoad {
+    [super viewDidLoad];
+    
+    if (!self.navigationController){
+        self.navigationBar.hidden = NO;
+    }
+    
+    if (!self.loadingHandler){
+        [self loadRemoteData];
+    }
+    
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        self.customNavigationItem.title = @"";
+    }
+    
+    if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
+        [[self.view viewWithTag:9999] removeFromSuperview];
+    }
+    
+    self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
     
     [self transitionToNextScreen];
 }
@@ -276,6 +294,15 @@ static CGFloat fadeTime = 0.3;
 - (void)transitionToNextScreen{
     __weak OLKiteViewController *welf = self;
     [self.transitionOperation addExecutionBlock:^{
+#ifndef OL_NO_ANALYTICS
+        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
+        }
+        else{
+            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
+        }
+#endif
+        
         // The screen we transition to will depend on what products are available based on the developers filter preferences.
         NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];
         
@@ -312,7 +339,9 @@ static CGFloat fadeTime = 0.3;
                         if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
                             [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
                                 if (error) return;
-                                ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                   ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                                });
                             }];
                         }
                         else{
@@ -342,7 +371,9 @@ static CGFloat fadeTime = 0.3;
                 if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
                     [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
                         if (error) return;
-                        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                        });
                     }];
                 }
                 else{
@@ -377,7 +408,9 @@ static CGFloat fadeTime = 0.3;
             if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
                 [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
                     if (error) return;
-                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                    });
                 }];
             }
             else{
@@ -456,6 +489,19 @@ static CGFloat fadeTime = 0.3;
     }
     
     else{
+        if (!self.remoteThemePlistSyncOperation.finished){
+            if ([OLKiteABTesting sharedInstance].userConfig[@"theme"]){
+                __weak OLKiteViewController *welf = self;
+                    [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
+                        [welf.remoteThemePlistSyncOperation addExecutionBlock:^{}];
+                        [welf.operationQueue addOperation:welf.remoteThemePlistSyncOperation];
+                    }];
+            }
+            else{
+                [self.remoteThemePlistSyncOperation addExecutionBlock:^{}];
+                [self.operationQueue addOperation:self.remoteThemePlistSyncOperation];
+            }
+        }
         if (!self.templateSyncOperation.finished){
             [self.operationQueue addOperation:self.templateSyncOperation];
         }

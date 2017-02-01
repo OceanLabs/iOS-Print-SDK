@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -63,13 +63,19 @@
 - (void)setSelected:(BOOL)selected{
     [super setSelected:selected];
     
+    if (self.borderView || self.circleSelectionStyle){
+        [self.borderView removeFromSuperview];
+        
+        if (self.circleSelectionStyle){
+            [self setNeedsDisplay];
+            return;
+        }
+    }
+    
     if (!self.colorForSelection){
         return;
     }
     
-    if (self.borderView){
-        [self.borderView removeFromSuperview];
-    }
     self.borderView = [[UIView alloc] init];
     self.borderView.userInteractionEnabled = NO;
     [self.borderView makeRoundRectWithRadius:2];
@@ -124,6 +130,18 @@
         [self initialize];
     }
     return self;
+}
+
+- (void)drawRect:(CGRect)rect{
+    if (self.circleSelectionStyle && self.isSelected){
+        CGFloat thickness = 1.5;
+        CGFloat diameter = MIN(rect.size.height, rect.size.width) - thickness;
+        
+        UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(rect.size.width/2.0 - diameter/2.0, thickness/2.0, diameter, diameter)];
+        [[UIColor blackColor] setStroke];
+        ovalPath.lineWidth = thickness;
+        [ovalPath stroke];
+    }
 }
 
 @end
