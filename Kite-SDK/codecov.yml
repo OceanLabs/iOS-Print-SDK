@@ -1,5 +1,5 @@
 codecov:
-  branch: beta
+  branch: master
 
 ignore:
   - "Kite-SDK/PSPrintSDK/RMImageCropper"
