@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,28 +27,25 @@
 //  THE SOFTWARE.
 //
 
-#import "OLProductTypeSelectionViewController.h"
-#import "OLKitePrintSDK.h"
-#import "OLProduct.h"
-#import "OLSingleImageProductReviewViewController.h"
-#import "OLProductOverviewViewController.h"
-#import "OLAnalytics.h"
-#import "UIImageView+FadeIn.h"
-#import "OLKiteABTesting.h"
-#import "OLKiteUtils.h"
-#import "UIViewController+OLMethods.h"
 #import "NSObject+Utils.h"
-#import "UIImage+OLUtils.h"
+#import "OLAnalytics.h"
 #import "OLImageDownloader.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
+#import "OLProduct.h"
+#import "OLProductOverviewViewController.h"
+#import "OLProductTypeSelectionViewController.h"
+#import "OLSingleImageProductReviewViewController.h"
 #import "OLUserSession.h"
+#import "UIImage+OLUtils.h"
+#import "UIImageView+FadeIn.h"
+#import "UIViewController+OLMethods.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 @interface OLProduct (Private)
-
--(void)setCoverImageToImageView:(UIImageView *)imageView;
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
-
+-(OLAsset *)classImageAsset;
 @end
 
 @interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
@@ -278,8 +275,10 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
-            cellImageView.image = image;
-            cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cellImageView.image = image;
+                cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            });
         }];
         if (self.fromRotation){
             self.fromRotation = NO;
@@ -315,7 +314,7 @@
     OLProduct *product = (OLProduct *)self.products[indexPath.item];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:40];
-    [product setCoverImageToImageView:imageView];
+    [imageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
     
     UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];

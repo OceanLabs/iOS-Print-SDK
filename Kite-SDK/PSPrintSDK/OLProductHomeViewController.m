@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -28,38 +28,34 @@
 //
 
 
-#import "OLMarkdownParser.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
-#import "OLNavigationController.h"
+#import "OLAsset+Private.h"
+#import "OLHPSDKWrapper.h"
+#import "OLImageDownloader.h"
 #import "OLInfoPageViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
+#import "OLMarkdownParser.h"
+#import "OLNavigationController.h"
 #import "OLProduct.h"
 #import "OLProductGroup.h"
-#import "OLHPSDKWrapper.h"
-#import "OLAsset+Private.h"
 #import "OLProductHomeViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProductTypeSelectionViewController.h"
-#import "UIImage+OLUtils.h"
+#import "OLUserSession.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIImage+OLUtils.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
-#import "OLImageDownloader.h"
-#import "OLUserSession.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 @interface OLProduct (Private)
-
--(void)setCoverImageToImageView:(UIImageView *)imageView;
--(void)setClassImageToImageView:(UIImageView *)imageView;
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
-
+-(OLAsset *)classImageAsset;
 @end
 
 @interface OLKiteViewController (Private)
@@ -386,18 +382,20 @@
         [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
             if (error) return;
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
-            UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
-            titleImageView.alpha = 0;
-            if ([self isPushed]){
-                self.parentViewController.navigationItem.titleView = titleImageView;
-            }
-            else{
-                self.navigationItem.titleView = titleImageView;
-            }
-            titleImageView.alpha = 0;
-            [UIView animateWithDuration:0.5 animations:^{
-                titleImageView.alpha = 1;
-            }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
+                titleImageView.alpha = 0;
+                if ([self isPushed]){
+                    self.parentViewController.navigationItem.titleView = titleImageView;
+                }
+                else{
+                    self.navigationItem.titleView = titleImageView;
+                }
+                titleImageView.alpha = 0;
+                [UIView animateWithDuration:0.5 animations:^{
+                    titleImageView.alpha = 1;
+                }];
+            });
         }];
     }
     
@@ -624,7 +622,7 @@
             OLProduct *otherProduct = [[OLProduct alloc] initWithTemplate:template];
             [options addObject:@{
                                  @"code" : otherProduct.productTemplate.identifier,
-                                 @"name" : [NSString stringWithFormat:@"%@\n%@", [otherProduct dimensions], [otherProduct unitCost]],
+                                 @"name" : [NSString stringWithFormat:@"%@", [otherProduct dimensions]],
                                  }];
         }
         
@@ -688,8 +686,10 @@
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
             if (error) return;
-            cellImageView.image = image;
-            cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cellImageView.image = image;
+                cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            });
         }];
         if (self.fromRotation){
             self.fromRotation = NO;
@@ -704,26 +704,12 @@
     NSString *identifier = [NSString stringWithFormat:@"ProductCell%@", [OLKiteABTesting sharedInstance].productTileStyle];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
-    UIView *view = cell.contentView;
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                         @"V:|-0-[view]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [view.superview addConstraints:con];
-    
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
     
     OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
-    [product setClassImageToImageView:cellImageView];
+    
+    [cellImageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:OLAssetMaximumSize applyEdits:NO placeholder:nil progress:nil completionHandler:NULL];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     
@@ -760,14 +746,15 @@
     }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
-        button.layer.shadowColor = [[UIColor blackColor] CGColor];
-        button.layer.shadowOpacity = .3;
-        button.layer.shadowOffset = CGSizeMake(0,2);
-        button.layer.shadowRadius = 2;
-        
+        if (button.layer.shadowOpacity == 0){
+            button.layer.shadowColor = [[UIColor blackColor] CGColor];
+            button.layer.shadowOpacity = .3;
+            button.layer.shadowOffset = CGSizeMake(0,2);
+            button.layer.shadowRadius = 2;
+            
+            [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
+        }
         button.backgroundColor = [product labelColor];
-        
-        [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
     }
     
     return cell;

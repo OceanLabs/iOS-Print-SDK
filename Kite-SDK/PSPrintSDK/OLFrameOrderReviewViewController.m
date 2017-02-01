@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -151,7 +151,7 @@ CGFloat innerMargin = 3;
         return;
     }
     
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+    [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
         OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
@@ -241,59 +241,6 @@ CGFloat innerMargin = 3;
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
     return nil;
-//    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-//        return nil;
-//    }
-//    
-//    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
-//    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
-//    
-//    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
-//    
-//    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[collectionView convertPoint:location fromView:self.collectionView]];
-//    
-//    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-//    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
-//    
-//    OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section]];
-//    if (!imageView.image || [printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
-//        return nil;
-//    }
-//    
-//    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
-//    
-//    self.editingPrintPhoto = printPhoto;
-//    
-//    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
-//    __weak OLImagePreviewViewController *weakVc = previewVc;
-//    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingPrintPhoto size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
-//        [weakVc.imageView setProgress:progress];
-//    }completionHandler:NULL];
-//    previewVc.providesPresentationContextTransitionStyle = true;
-//    previewVc.definesPresentationContext = true;
-//    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-//    return previewVc;
-}
-
-- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
-    cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
-    cropVc.delegate = self;
-    cropVc.aspectRatio = 1;
-    cropVc.product = self.product;
-    
-    [self.editingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:^(float progress){
-        [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image, NSError *error){
-        [cropVc setFullImage:image];
-        cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
-        [self presentViewController:cropVc animated:YES completion:NULL];
-    }];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
-#endif
 }
 
 #pragma mark Button Actions
@@ -394,12 +341,10 @@ CGFloat innerMargin = 3;
         if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
             cell.contentView.backgroundColor = [UIColor whiteColor];
             
-            CGFloat imageViewWidth = size.width - 2 * innerCollectionViewHorizontalMargin * scaleFactor;
-            CGFloat imageViewHeight = size.width - 2 * innerCollectionViewHorizontalMargin * scaleFactor;
-            
+            CGSize imageSize = [self collectionView:innerCollectionView layout:innerCollectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
             UIImageView *imageView = [cell.contentView viewWithTag:1010];
             if (indexPath.item < self.product.productTemplate.representationAssets.count){
-                [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item] size:CGSizeMake(imageViewWidth, imageViewHeight)];
+                [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item] size:CGSizeMake(imageSize.width, imageSize.height)];
             }
             if (self.product.productTemplate.logo){
                 __weak UIImageView *imageView = [cell.contentView viewWithTag:1011];

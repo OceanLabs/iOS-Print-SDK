@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,25 +27,26 @@
 //  THE SOFTWARE.
 //
 
-#import "OLProductOverviewViewController.h"
-#import "OLProductOverviewPageContentViewController.h"
-#import "OLProduct.h"
-#import "OLPackProductViewController.h"
-#import "OLKiteViewController.h"
-#import "OLAnalytics.h"
-#import "OLProductTypeSelectionViewController.h"
-#import "OLSingleImageProductReviewViewController.h"
-#import "OLFrameOrderReviewViewController.h"
-#import "OLPostcardViewController.h"
-#import "NSObject+Utils.h"
 #import "NSDecimalNumber+CostFormatter.h"
+#import "NSObject+Utils.h"
+#import "OLAnalytics.h"
+#import "OLFrameOrderReviewViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
-#import "OLProductDetailsViewController.h"
-#import "UIViewController+OLMethods.h"
+#import "OLKiteViewController.h"
+#import "OLPackProductViewController.h"
 #import "OLPaymentViewController.h"
+#import "OLPostcardViewController.h"
+#import "OLProduct.h"
+#import "OLProductDetailsViewController.h"
+#import "OLProductOverviewPageContentViewController.h"
+#import "OLProductOverviewViewController.h"
+#import "OLProductTypeSelectionViewController.h"
+#import "OLSingleImageProductReviewViewController.h"
 #import "OLUpsellViewController.h"
 #import "OLUserSession.h"
+#import "UIViewController+OLMethods.h"
+#import "OLProductOverviewPageAnimatedContentViewController.h"
 
 @interface OLKiteViewController ()
 - (void)dismiss;
@@ -216,7 +217,7 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    [self.product.selectedOptions removeAllObjects];
+    self.product.selectedOptions = nil;
     self.product.uuid = nil;
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
@@ -267,7 +268,14 @@
         return nil;
     }
     
-    OLProductOverviewPageContentViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ProductOverviewPageContentViewController"];
+    NSString *imageURL = self.product.productTemplate.productPhotographyURLs[index % [self.product.productTemplate.productPhotographyURLs count]];
+    OLProductOverviewPageContentViewController *vc;
+    if ([imageURL hasSuffix:@"mp4"]){
+       vc = (OLProductOverviewPageContentViewController *)[[OLProductOverviewPageAnimatedContentViewController alloc] init];
+    }
+    else{
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ProductOverviewPageContentViewController"];
+    }
     vc.pageIndex = index;
     vc.product = self.product;
     vc.delegate = self;
@@ -590,6 +598,21 @@
 }
 
 - (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
+    //Drop previous screens from the navigation stack
+    NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+    if (navigationStack.count > 1) {
+        NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
+        for (UIViewController *vc in self.navigationController.viewControllers){
+            [viewControllers addObject:vc];
+            if ([vc isKindOfClass:[OLKiteViewController class]]){
+                [viewControllers addObject:self];
+                [self.navigationController setViewControllers:viewControllers animated:YES];
+                break;
+            }
+        }
+        [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
+    }
+    
     [self.product.acceptedOffers addObject:vc.offer];
     [vc dismissViewControllerAnimated:NO completion:^{
         [self saveJobWithCompletionHandler:^{

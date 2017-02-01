@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -50,16 +50,16 @@
     [self.delegate performSelector:@selector(deletePage)];
 }
 
-- (void)addPage{
-    [self.delegate performSelector:@selector(addPage)];
-}
+//- (void)addPage{
+//    [self.delegate performSelector:@selector(addPage)];
+//}
 
 - (void)cropImage{
     [self.delegate performSelector:@selector(cropImage)];
 }
 
-- (void)replaceImage{
-    [self.delegate performSelector:@selector(replaceImage)];
-}
+//- (void)replaceImage{
+//    [self.delegate performSelector:@selector(replaceImage)];
+//}
 
 @end

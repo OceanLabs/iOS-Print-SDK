@@ -37,7 +37,7 @@
 - (void)setUp {
     [super setUp];
     
-    [OLKitePrintSDK setAPIKey:@"a45bf7f39523d31aa1ca4ecf64d422b4d810d9c4" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+    [OLKitePrintSDK setAPIKey:@"ba171b0d91b1418fbd04f7b12af1e37e42d2cb1e" withEnvironment:OLKitePrintSDKEnvironmentSandbox];
     [OLKitePrintSDK setIsUnitTesting];
     
 }
@@ -70,7 +70,7 @@
     
 //    XCTAssert(![printOrder hasCachedCost], @"Should not have cached cost");
     
-    [printOrder preemptAssetUpload];
+//    [printOrder preemptAssetUpload];
     
     [self submitOrder:printOrder WithSuccessHandler:NULL];
     
@@ -144,23 +144,23 @@
 
 #pragma mark Test cases
 
-- (void)DISABLE_testSquaresOrderWithURLOLAssets{
+- (void)testSquaresOrderWithURLOLAssets{
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testMultipleJobsOrder{
+- (void)testMultipleJobsOrder{
     OLProductPrintJob *job1 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
-    OLProductPrintJob *job2 = [OLPrintJob printJobWithTemplateId:@"magnets" OLAssets:[OLKiteTestHelper urlAssets]];
+    OLProductPrintJob *job2 = [OLPrintJob printJobWithTemplateId:@"s9_magnets" OLAssets:[OLKiteTestHelper urlAssets]];
     [self submitJobs:@[job1, job2]];
 }
 
-- (void)DISABLE_testSquaresOrderWithImageOLAssets{
+- (void)testSquaresOrderWithImageOLAssets{
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper imageAssets]];
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testSquaresOrderWithJpgDataOLAssets{
+- (void)testSquaresOrderWithJpgDataOLAssets{
     NSData *data = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLProductOrderTests class]] pathForResource:@"1" ofType:@"jpg"]];
     XCTAssert(data, @"No data");
     
@@ -168,7 +168,7 @@
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testSquaresOrderWithPngDataOLAssets{
+- (void)testSquaresOrderWithPngDataOLAssets{
     NSData *data = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLProductOrderTests class]] pathForResource:@"2" ofType:@"png"]];
     XCTAssert(data, @"No data");
     
@@ -176,7 +176,7 @@
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testSquaresOrderWithImages{
+- (void)testSquaresOrderWithImages{
     NSData *data = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLProductOrderTests class]] pathForResource:@"1" ofType:@"jpg"]];
     XCTAssert(data, @"No data");
     
@@ -187,7 +187,7 @@
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testSquaresOrderWithFilePaths{
+- (void)testSquaresOrderWithFilePaths{
     NSString *path = [[NSBundle bundleForClass:[OLProductOrderTests class]] pathForResource:@"1" ofType:@"jpg"];
     XCTAssert(path, @"No path");
     
@@ -195,7 +195,7 @@
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testSquaresOrderWithPHAssetOLAssets{
+- (void)testSquaresOrderWithPHAssetOLAssets{
     PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
     XCTAssert(fetchResult.count > 0, @"There are no assets available");
     
@@ -205,22 +205,22 @@
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testSquaresOrderWithURLOLAssetPrintPhotos{
+- (void)testSquaresOrderWithURLOLAssetPrintPhotos{
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].firstObject]];
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testSquaresOrderWithImageOLAssetPrintPhotos{
+- (void)testSquaresOrderWithImageOLAssetPrintPhotos{
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper imageAssets].firstObject]];
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testSquaresOrderWithImageOLAssetPrintPhotoOLAsset{
+- (void)testSquaresOrderWithImageOLAssetPrintPhotoOLAsset{
     OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper imageAssets].firstObject]];
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testSquaresOrderWithPHAssetPrintPhotos{
+- (void)testSquaresOrderWithPHAssetPrintPhotos{
     PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
     XCTAssert(fetchResult.count > 0, @"There are no assets available");
     
@@ -230,22 +230,22 @@
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testPhotobookOrderWithURLOLAssets{
-    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:[OLKiteTestHelper urlAssets] frontCoverOLAsset:[OLKiteTestHelper urlAssets].firstObject backCoverOLAsset:[OLKiteTestHelper urlAssets].lastObject];
+- (void)testPhotobookOrderWithURLOLAssets{
+    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_210x210_sm" OLAssets:[OLKiteTestHelper urlAssets] frontCoverOLAsset:[OLKiteTestHelper urlAssets].firstObject backCoverOLAsset:[OLKiteTestHelper urlAssets].lastObject];
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testPostcardOrderWithURLOLAssets{
+- (void)testPostcardOrderWithURLOLAssets{
     id<OLPrintJob> job = [OLPrintJob postcardWithTemplateId:@"postcard" frontImageOLAsset:[OLKiteTestHelper urlAssets].firstObject backImageOLAsset:[OLKiteTestHelper urlAssets].lastObject];
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testGreetingCardOrderWithURLOLAssets{
+- (void)testGreetingCardOrderWithURLOLAssets{
     id<OLPrintJob> job = [OLPrintJob greetingCardWithTemplateId:@"greeting_cards_a5" frontImageOLAsset:[OLKiteTestHelper urlAssets].firstObject backImageOLAsset:[OLKiteTestHelper urlAssets].lastObject insideRightImageAsset:[OLKiteTestHelper urlAssets][1] insideLeftImageAsset:[OLKiteTestHelper urlAssets][2]];
     [self submitJobs:@[job]];
 }
 
-- (void)DISABLE_testPDFOLAssetPhotobook{
+- (void)testPDFOLAssetPhotobook{
     NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"3" ofType:@"pdf"]];
     
     OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:@[[OLAsset assetWithDataAsPDF:data1]] frontCoverOLAsset:nil backCoverOLAsset:nil];

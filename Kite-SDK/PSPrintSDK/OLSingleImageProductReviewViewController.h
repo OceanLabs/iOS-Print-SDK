@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -37,9 +37,9 @@
 @interface OLSingleImageProductReviewViewController : OLImageEditViewController
 
 @property (weak, nonatomic) IBOutlet UIView *hintView;
-
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler;
+- (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body delay:(BOOL)shouldDelay;
 
 @end

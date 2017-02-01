@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +45,8 @@
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *albumsContainerView;
 @property (weak, nonatomic) IBOutlet UIView *albumsCollectionViewContainerView;
+@property (strong, nonatomic) UIButton *logoutButton;
+@property (assign, nonatomic) CGFloat topInset;
 
 @end
 
@@ -73,6 +75,7 @@ CGFloat OLImagePickerMargin = 1.5;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
+    [OLAsset cancelAllImageOperations];
     [self.collectionView reloadData];
 }
 
@@ -80,6 +83,16 @@ CGFloat OLImagePickerMargin = 1.5;
     [super viewDidAppear:animated];
     
     [self.albumsCollectionView reloadData];
+    
+    if (!self.logoutButton && (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram)){
+        self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(0, -45, self.collectionView.frame.size.width, 45)];
+        [self.logoutButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [self.logoutButton setTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+        [self.collectionView addSubview:self.logoutButton];
+        [self.logoutButton addTarget:self action:@selector(onButtonLogoutTapped) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.topInset = self.collectionView.contentInset.top;
+    }
 }
 
 - (void)viewDidLoad {
@@ -112,6 +125,7 @@ CGFloat OLImagePickerMargin = 1.5;
     self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
     
     self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
+    self.nextButton.titleLabel.font = self.imagePicker.nextButton.titleLabel.font;
     [self.nextButton setTitle:self.imagePicker.nextButton.currentTitle forState:UIControlStateNormal];
     
     UIVisualEffect *blurEffect;
@@ -167,6 +181,8 @@ CGFloat OLImagePickerMargin = 1.5;
         [self.albumsCollectionView.collectionViewLayout invalidateLayout];
         
         self.albumsContainerView.transform = CGAffineTransformIdentity;
+        
+        self.logoutButton.frame = CGRectMake(0, -45, size.width, 45);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         
     }];
@@ -185,12 +201,20 @@ CGFloat OLImagePickerMargin = 1.5;
     }
     
     if (collectionView.tag == 10){
+        NSInteger numberOfItems = 0;
         if (self.provider.collections.count > self.showingCollectionIndex){
-            return [self.provider.collections[self.showingCollectionIndex] count];
+            CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
+            NSInteger numberOfCellsToFillHeight = 0;
+            if (self.logoutButton){
+                numberOfCellsToFillHeight = (NSInteger)ceil((self.collectionView.frame.size.height - self.collectionView.contentInset.top) / (cellSize.height + OLImagePickerMargin));
+            }
+            
+            numberOfItems = MAX(numberOfCellsToFillHeight * [self numberOfCellsPerRow], [self.provider.collections[self.showingCollectionIndex] count]);
         }
-        else{
-            return 0;
+        if (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram){
+            self.activityIndicator.hidden = numberOfItems > 0;
         }
+        return numberOfItems;
     }
     else{
         return [self.provider.collections count];
@@ -310,7 +334,7 @@ CGFloat OLImagePickerMargin = 1.5;
     
     for (OLAsset *selectedAsset in self.imagePicker.selectedAssets){
         if ([asset isKindOfClass:[PHAsset class]]){
-            if ([asset isEqual:selectedAsset.phAsset]){
+            if ([asset isEqual:[selectedAsset isKindOfClass:[OLAsset class]] ? selectedAsset.phAsset : selectedAsset]){
                 asset = selectedAsset;
                 break;
             }
@@ -328,14 +352,14 @@ CGFloat OLImagePickerMargin = 1.5;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
         options.resizeMode = PHImageRequestOptionsResizeModeFast;
         
-        options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [imageView setProgress:progress];
-            });
-        };
+        __weak OLRemoteImageView *weakImageView = imageView;
         
         CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
-        [imageView setAndFadeInImageWithPHAsset:asset size:CGSizeMake(cellSize.width * [OLUserSession currentSession].screenScale, cellSize.height * [OLUserSession currentSession].screenScale) options:options];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [imageView setAndFadeInImageWithPHAsset:asset size:CGSizeMake(cellSize.width * [OLUserSession currentSession].screenScale, cellSize.height * [OLUserSession currentSession].screenScale) options:options placeholder:nil progress:^(float progress){
+                [weakImageView setProgress:progress];
+            }completionHandler:NULL];
+        });
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
         __weak OLRemoteImageView *weakImageView = imageView;
@@ -503,7 +527,7 @@ CGFloat OLImagePickerMargin = 1.5;
             
             [self.imagePicker presentViewController:alert animated:YES completion:nil];
         }
-        else{ //Add photo
+        else if (printPhoto){ //Add photo
             [self.imagePicker.selectedAssets addObject:printPhoto];
             printPhoto.edits = nil;
             [printPhoto unloadImage];
@@ -555,6 +579,14 @@ CGFloat OLImagePickerMargin = 1.5;
             // we've reached the bottom, lets load the next page of facebook images.
             [self loadNextFacebookPage];
         }
+    }
+    
+    if ((self.provider.providerType == OLImagePickerProviderTypeInstagram || self.provider.providerType == OLImagePickerProviderTypeFacebook) && self.collectionView.contentInset.top == self.topInset){
+//        if (self.collectionView.contentSize.height < self.collectionView.frame.size.height - self.topInset){
+//            self.collectionView.contentSize = CGSizeMake(self.collectionView.contentSize.height, self.collectionView.frame.size.height - self.topInset);
+//        }
+        
+        self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 45, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
     }
 }
 
@@ -661,6 +693,30 @@ CGFloat OLImagePickerMargin = 1.5;
             }completion:^(BOOL finished){}];
         }
     }
+}
+
+- (void)onButtonLogoutTapped{
+    NSString *serviceName;
+    if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
+        serviceName = @"Facebook";
+    }
+    else if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
+        serviceName = @"Instagram";
+    }
+    
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Do you want to log out of %@?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), serviceName] preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
+        if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
+            [[OLUserSession currentSession] logoutOfFacebook];
+        }
+        else if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
+            [[OLUserSession currentSession] logoutOfInstagram];
+        }
+        
+        [self.imagePicker reloadPageController];
+    }]];
+     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+    [self.imagePicker presentViewController:ac animated:YES completion:NULL];
 }
 
 

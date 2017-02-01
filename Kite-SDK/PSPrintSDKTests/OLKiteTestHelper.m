@@ -8,6 +8,8 @@
 
 #import "OLKiteTestHelper.h"
 #import "OLKitePrintSDK.h"
+#import "OLSwizzler.h"
+#import "OLBaseRequest+Mock.h"
 
 @import Photos;
 
@@ -37,6 +39,13 @@
     PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
     
     return [fetchResult objectAtIndex:fetchResult.count-1];
+}
+
++ (void)mockTemplateRequest{
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        OLSwizzleInstanceMethods([OLBaseRequest class], @selector(startWithCompletionHandler:), @selector(mockTemplateStartStartWithCompletionHandler:));
+    });
 }
 
 @end

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -197,6 +197,21 @@
  */
 - (void)clearBasket;
 
+
+/**
+ Start loading the products in the background
+
+ @param handler Completion handler that is called when all network requests are finished and the Kite View Controller is ready to be shown.
+ */
+- (void)startLoadingWithCompletionHandler:(void(^_Nonnull)())handler;
+
+
+/**
+ Set the assets to use. Use this if you've previously initialized the Kite View Controller. Otherwise use initWithAssets:
+
+ @param assets The assets
+ */
+- (void)setAssets:(NSArray *_Nonnull)assets;
 
 /**
  Returns the printOrder object that is used to handle the active basket

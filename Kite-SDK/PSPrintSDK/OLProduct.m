@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -104,9 +104,10 @@ typedef enum {
     if (!_selectedOptions){
         _selectedOptions = [[NSMutableDictionary alloc] init];
         
-        OLProductTemplateOption *firstOption = [self.productTemplate.options firstObject];
-        if (firstOption.choices.count > 0){
-            _selectedOptions[firstOption.code] = firstOption.choices.firstObject.code;
+        for (OLProductTemplateOption *option in self.productTemplate.options){
+            if (option.choices.count > 0 && ![option.code isEqualToString:@"garment_size"]){
+                _selectedOptions[option.code] = option.choices.firstObject.code;
+            }
         }
     }
     return _selectedOptions;
@@ -138,7 +139,7 @@ typedef enum {
     return [[OLProduct alloc] initWithTemplate:[OLProductTemplate templateWithId:templateId]];
 }
 
--(void)setCoverImageToImageView:(UIImageView *)imageView{
+-(void)setCoverImageToImageView:(UIImageView *)imageView size:(CGSize)size{
     UIImage *image;
     if ([self.coverPhoto isKindOfClass:[NSString class]]){
         image = [UIImage imageNamedInKiteBundle:self.coverPhoto];
@@ -154,35 +155,26 @@ typedef enum {
         [imageView setAndFadeInImageWithURL:self.coverPhoto];
     }
     else{
-        [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL];
+        [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL size:size];
     }
 }
 
--(void)setClassImageToImageView:(UIImageView *)imageView{
-    UIImage *image;
-    if ([self.coverPhoto isKindOfClass:[NSString class]]){
-        image = [UIImage imageNamedInKiteBundle:self.coverPhoto];
-    }
-    else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
-        image = self.coverPhoto;
-    }
-    
-    if (image){
-        imageView.image = image;
-    }
-    else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
-        [imageView setAndFadeInImageWithURL:self.coverPhoto];
-    }
-    else{
-        OLProductTemplate *productTemplate = self.productTemplate;
-        if (productTemplate.classPhotoURL && ![[productTemplate.classPhotoURL absoluteString] isEqualToString:@""]){
-            [imageView setAndFadeInImageWithURL:self.productTemplate.classPhotoURL];
+-(OLAsset *)classImageAsset{
+        if ([self.coverPhoto isKindOfClass:[NSString class]]){
+            return [OLAsset assetWithImageAsPNG:[UIImage imageNamedInKiteBundle:self.coverPhoto]];
+        }
+        else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
+            return [OLAsset assetWithImageAsPNG:self.coverPhoto];
+        }
+        else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
+            return [OLAsset assetWithURL:self.coverPhoto];
+        }
+        else if (self.productTemplate.classPhotoURL && ![[self.productTemplate.classPhotoURL absoluteString] isEqualToString:@""]){
+            return [OLAsset assetWithURL:self.productTemplate.classPhotoURL];
         }
         else{
-            [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL];
+            return [OLAsset assetWithURL:self.productTemplate.coverPhotoURL];
         }
-        
-    }
 }
 
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView{

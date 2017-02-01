@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -37,8 +37,8 @@
 #import "UIImage+OLUtils.h"
 #import "RMImageCropper.h"
 #import "OLImageDownloader.h"
-//#import "OLInstagramImage.h"
-//#import "OLFacebookImage.h"
+#import "OLImageRenderOptions.h"
+#import "UIColor+OLHexString.h"
 
 static NSString *const kKeyMimeType = @"co.oceanlabs.pssdk.kKeyMimeType";
 static NSString *const kKeyImageData = @"co.oceanlabs.pssdk.kKeyImageData";
@@ -64,8 +64,6 @@ static NSOperationQueue *imageOperationQueue;
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSData *imageData;
 @property (strong, nonatomic) PHAsset *phAsset;
-//@property (strong, nonatomic) OLFacebookImage *facebookImage;
-//@property (strong, nonatomic) OLInstagramImage *instagramImage;
 @property (nonatomic, strong) id<OLAssetDataSource> dataSource;
 @property (nonatomic, strong) NSURL *imageURL;
 @property (assign, nonatomic) BOOL corrupt;
@@ -79,6 +77,7 @@ static NSOperationQueue *imageOperationQueue;
 @property (nonatomic, readwrite) NSString *mimeType;
 @property (nonatomic, readwrite) long long assetId;
 @property (nonatomic, readwrite) NSURL *previewURL;
+@property (strong, nonatomic) NSURLSession *kiteImageUploadURLSession;
 @end
 
 @implementation OLAsset
@@ -168,12 +167,6 @@ static NSOperationQueue *imageOperationQueue;
     if (self.imageData) {
         return kOLAssetTypeImageData;
     }
-//    else if (self.instagramImage){
-//        return kOLAssetTypeInstagramPhoto;
-//    }
-//    else if (self.facebookImage){
-//        return kOLAssetTypeFacebookPhoto;
-//    }
     else if (self.imageURL) {
         return kOLAssetTypeRemoteImageURL;
     }
@@ -244,6 +237,105 @@ static NSOperationQueue *imageOperationQueue;
     return nil;
 }
 
+- (void)getImageURLWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSURL *url, NSError *error))handler{
+    if (self.assetType == kOLAssetTypeRemoteImageURL && !self.isEdited){
+        handler(self.imageURL, nil);
+    }
+    else{
+        [self uploadToKiteWithProgress:progressHandler completionHandler:^(NSError *error){
+            if (error){
+                handler(nil, error);
+            }
+            else{
+                handler(self.imageURL, nil);
+            }
+        }];
+    }
+}
+
+- (void)uploadToKiteWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSError *error))handler{
+    if (!handler){
+        return;
+    }
+    
+    [self dataWithCompletionHandler:^(NSData *imageData, NSError *error){
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://image.kite.ly/upload/"]];
+        
+        [request setValue:@"multipart/form-data; charset=utf-8; boundary=__X_KITE_BOUNDARY__" forHTTPHeaderField:@"Content-Type"];
+        
+        [request setHTTPMethod:@"POST"];
+        
+        // Build the request body
+        NSString *boundary = @"__X_KITE_BOUNDARY__";
+        NSMutableData *body = [NSMutableData data];
+        // Body part for the attachament. This is an image.
+        if (imageData) {
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", @"file"] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:imageData];
+            [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+        if (self.kiteImageUploadURLSession){
+            [self.kiteImageUploadURLSession invalidateAndCancel];
+        }
+        self.kiteImageUploadURLSession = [NSURLSession sessionWithConfiguration:sessionConfig
+                                                              delegate:nil
+                                                         delegateQueue:nil];
+        if (error){
+            handler(error);
+        }
+        
+        [request setHTTPBody:body];
+        [[self.kiteImageUploadURLSession uploadTaskWithRequest:request fromData:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            NSInteger httpStatusCode = [(NSHTTPURLResponse *)response statusCode];
+            if ((httpStatusCode < 200 || httpStatusCode > 299) && httpStatusCode != 0) {
+                NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Image upload failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) httpStatusCode]);
+                
+                error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
+            }
+            if (error){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    handler(error);
+                });
+            }
+            NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+            if (jsonDict[@"full"]){
+                self.imageURL = [NSURL URLWithString:jsonDict[@"full"]];
+            }
+            if (jsonDict[@"preview"]){
+                self.previewURL = [NSURL URLWithString:jsonDict[@"preview"]];
+            }
+            
+            handler(nil);
+            
+        }] resume];
+    }];
+}
+
+- (NSURL *)imageRenderURLWithOptions:(OLImageRenderOptions *)options{
+    if (!self.imageURL || !options.productId || !options.variant){
+        return nil;
+    }
+    NSMutableString *s = [[NSString stringWithFormat:@"https://image.kite.ly/render/?image=%@", [[self.imageURL absoluteString] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLUserAllowedCharacterSet]]] mutableCopy];
+    [s appendString:[NSString stringWithFormat:@"&variant=%@", options.variant]];
+    [s appendString:[NSString stringWithFormat:@"&product_id=%@", options.productId]];
+    
+    if (options.background){
+        [s appendString:[NSString stringWithFormat:@"&background=%@", [options.background hexString]]];
+        
+        CGFloat alpha;
+        [options.background getWhite:nil alpha:&alpha];
+        if (alpha != 1){
+            [s appendString:@"&format=png"];
+        }
+    }
+    return [NSURL URLWithString:s];
+}
+
 - (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL {
     _assetId = assetId;
     _previewURL = previewURL;
@@ -251,6 +343,11 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
+    if (self.assetType == kOLAssetTypeRemoteImageURL && !self.isEdited){
+        handler(0, nil);
+        return;
+    }
+    
     [self dataWithCompletionHandler:^(NSData *data, NSError *error){
         handler(data.length, error);
     }];
@@ -313,7 +410,11 @@ static NSOperationQueue *imageOperationQueue;
     }
     
     NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
+    __weak NSBlockOperation *weakBlock = blockOperation;
     [blockOperation addExecutionBlock:^{
+        if (weakBlock.isCancelled){
+            return;
+        }
         if (self.assetType == kOLAssetTypePHAsset) {
             PHImageManager *imageManager = [PHImageManager defaultManager];
             PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -370,7 +471,7 @@ static NSOperationQueue *imageOperationQueue;
                 handler(image, nil);
             }];
         }
-        else if (/*self.assetType == kOLAssetTypeFacebookPhoto || self.assetType == kOLAssetTypeInstagramPhoto || */self.assetType == kOLAssetTypeRemoteImageURL) {
+        else if (self.assetType == kOLAssetTypeRemoteImageURL) {
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.imageURL progress:^(NSInteger currentProgress, NSInteger total){
                 if (progress) {
                     progress(MAX(0.05f, (float)currentProgress / (float) total));
@@ -380,11 +481,20 @@ static NSOperationQueue *imageOperationQueue;
                     if (!error) {
                         if (!fullResolution){
                             self.cachedEditedImage = image;
+                            
+                            // Decompress image to improve performance
+                            // Source: http://stackoverflow.com/questions/10790183/setting-image-property-of-uiimageview-causes-major-lag
+                            if (image) {
+                                UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
+                                [image drawAtPoint:CGPointZero];
+                                image = UIGraphicsGetImageFromCurrentImageContext();
+                                UIGraphicsEndImageContext();
+                            }
                         }
-                        if (progress){
-                            progress(1);
-                        }
-                        handler(image, nil);
+                            if (progress){
+                                progress(1);
+                            }
+                            handler(image, nil);
                     }
                 }];
             }];
@@ -408,6 +518,10 @@ static NSOperationQueue *imageOperationQueue;
     [[OLAsset imageOperationQueue] addOperation:blockOperation];
 }
 
++ (void)cancelAllImageOperations{
+    [[OLAsset imageOperationQueue] cancelAllOperations];
+}
+
 - (void)resizeImage:(UIImage *)image size:(CGSize)size applyEdits:(BOOL)applyEdits completion:(void(^)(UIImage *image))handler{
     __block UIImage *blockImage = image;
     void (^localBlock)() = ^{
@@ -425,6 +539,16 @@ static NSOperationQueue *imageOperationQueue;
         }
         
         blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:self.edits.cropImageFrame andImageRect:self.edits.cropImageRect andImageViewWidth:self.edits.cropImageSize.width andImageViewHeight:self.edits.cropImageSize.height];
+        
+        if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
+            CIImage *filterImage = [CIImage imageWithCGImage:blockImage.CGImage];
+            CIFilter *filter = [CIFilter filterWithName:self.edits.filterName];
+            [filter setValue:filterImage forKey:@"inputImage"];
+            
+            CIContext *context = [CIContext contextWithOptions:nil];
+            CGImageRef cgImage = [context createCGImage:filter.outputImage fromRect:filterImage.extent];
+            blockImage = [UIImage imageWithCGImage:cgImage];
+        }
         
         for (OLTextOnPhoto *textOnPhoto in self.edits.textsOnPhoto){
             CGFloat scaling = MIN(blockImage.size.width, blockImage.size.height) / MIN(self.edits.cropImageFrame.size.width, self.edits.cropImageFrame.size.height);
@@ -473,7 +597,6 @@ static NSOperationQueue *imageOperationQueue;
             UIGraphicsEndImageContext();
         }
         
-        
         handler(blockImage);
     };
     if ([NSThread isMainThread]){
@@ -491,7 +614,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (BOOL)isEdited{
-    return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical || !(CGAffineTransformIsIdentity(self.edits.cropTransform) || self.edits.textsOnPhoto.count > 0);
+    return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical || !(CGAffineTransformIsIdentity(self.edits.cropTransform) || self.edits.textsOnPhoto.count > 0) || (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]);
 }
 
 - (NSUInteger) hash {

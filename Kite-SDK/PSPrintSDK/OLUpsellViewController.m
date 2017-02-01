@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,7 @@
 @end
 
 @interface OLProduct ()
--(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setCoverImageToImageView:(UIImageView *)imageView size:(CGSize)size;
 - (NSDecimalNumber*) unitCostDecimalNumber;
 - (NSString *)currencyCode;
 @end
@@ -66,7 +66,7 @@
     [self.declineButton makeRoundRectWithRadius:2];
     
     self.product = [OLProduct productWithTemplateId:self.offer.offerTemplate];
-    [self.product setCoverImageToImageView:self.imageView];
+    [self.product setCoverImageToImageView:self.imageView size:self.imageView.frame.size];
     
     
     NSDecimalNumber *discountedCost = self.product.unitCostDecimalNumber;
@@ -81,7 +81,7 @@
     
     self.bannerLabel.text = self.offer.bannerText;
     
-    if (self.offer.text){
+    if (self.offer.text && ![self.offer.text isEqualToString:@""]){
         self.headerLabel.text = [self.offer.headerText stringByReplacingOccurrencesOfString:@"[[price]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
         bodyString = [self.offer.text stringByReplacingOccurrencesOfString:@"[[price]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
     }

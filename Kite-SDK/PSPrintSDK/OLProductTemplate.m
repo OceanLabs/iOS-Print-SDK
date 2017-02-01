@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //  
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //  
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,7 @@ static NSString *const kKeyProductPhotographyURLs = @"co.oceanlabs.pssdk.kKeyPro
 static NSString *const kKeyTemplateClass = @"co.oceanlabs.pssdk.kKeyTemplateClass";
 static NSString *const kKeyTemplateType = @"co.oceanlabs.pssdk.kKeyTemplateType";
 static NSString *const kKeyTemplateUI = @"co.oceanlabs.pssdk.kKeyTemplateUI";
+static NSString *const kKeyBlendMode = @"co.oceanlabs.pssdk.kKeyBlendMode";
 static NSString *const kKeyLabelColor = @"co.oceanlabs.pssdk.kKeyLabelColor";
 static NSString *const kKeySizeCm = @"co.oceanlabs.pssdk.kKeySizeCm";
 static NSString *const kKeySizeInches = @"co.oceanlabs.pssdk.kKeySizeInches";
@@ -133,12 +134,19 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 
 - (void)setSupportedOptions:(NSArray *_Nullable)supportedOptions{
     _supportedOptions = supportedOptions;
-    NSMutableArray *options = [[NSMutableArray alloc] init];
+    NSMutableArray<OLProductTemplateOption *> *options = [[NSMutableArray alloc] init];
     for (NSDictionary *option in supportedOptions){
         if ([option isKindOfClass:[NSDictionary class]]){
             [options addObject:[[OLProductTemplateOption alloc] initWithDictionary:option]];
         }
     }
+    
+    if ([options.lastObject.code isEqualToString:@"garment_size"]){
+        OLProductTemplateOption *sizeOption = options.lastObject;
+        [options removeObject:sizeOption];
+        [options insertObject:sizeOption atIndex:0];
+    }
+    
     self.options = options;
 }
 
@@ -264,7 +272,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         }
     }
     
+#ifdef OL_VERBOSE
     NSLog(@"Template with id '%@' not found. Please ensure you've run OLProductTemplate.sync first if your templates are defined in the developer dashboard", identifier);
+#endif
     return nil;
 }
 
@@ -373,6 +383,12 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"CALENDAR"]){
         return OLTemplateUICalendar;
     }
+    else if ([identifier isEqualToString:@"APPAREL"]){
+        return OLTemplateUIApparel;
+    }
+//    else if ([identifier isEqualToString:@"MUG"]){
+//        return OLTemplateUIMug;
+//    }
     return OLTemplateUINA;
 }
 
@@ -387,6 +403,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeObject:self.productPhotographyURLs forKey:kKeyProductPhotographyURLs];
     [aCoder encodeObject:self.labelColor forKey:kKeyLabelColor];
     [aCoder encodeObject:[NSNumber numberWithInt:self.templateUI] forKey:kKeyTemplateUI];
+    [aCoder encodeObject:[NSNumber numberWithInt:self.blendMode] forKey:kKeyBlendMode];
     [aCoder encodeObject:self.templateClass forKey:kKeyTemplateClass];
     [aCoder encodeObject:self.templateType forKey:kKeyTemplateType];
     [aCoder encodeCGSize:self.sizeCm forKey:kKeySizeCm];
@@ -427,6 +444,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         _coverPhotosDict = [aDecoder decodeObjectForKey:kKeyCoverPhotosDict];
         _productPhotographyURLs = [aDecoder decodeObjectForKey:kKeyProductPhotographyURLs];
         _templateUI = [[aDecoder decodeObjectForKey:kKeyTemplateUI] intValue];
+        _blendMode = [[aDecoder decodeObjectForKey:kKeyBlendMode] intValue];
         _templateClass = [aDecoder decodeObjectForKey:kKeyTemplateClass];
         _templateType = [aDecoder decodeObjectForKey:kKeyTemplateType];
         _labelColor = [aDecoder decodeObjectForKey:kKeyLabelColor];

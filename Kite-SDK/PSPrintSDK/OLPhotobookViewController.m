@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@
 //
 
 #import "OLFlipTransition.h"
-#import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLImageCachingManager.h"
@@ -371,7 +370,7 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     if (!self.editMode || !self.startOpen){ //Start with book closed
-        [self setUpBookCoverViewForGesture:nil];
+        [self setUpBookCoverViewForFrontCover:YES];
         self.bookCover.hidden = NO;
         self.containerView.layer.shadowOpacity = 0;
         
@@ -435,10 +434,6 @@ static const CGFloat kBookEdgePadding = 38;
     else{
         self.pagesLabel.text = [NSString stringWithFormat:@"%d-%d of %ld", displayPage, displayPage + 1, (long)self.product.quantityToFulfillOrder];
     }
-}
-
-- (void)ios7Back{
-    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)viewDidLayoutSubviews{
@@ -536,7 +531,7 @@ static const CGFloat kBookEdgePadding = 38;
     [self.view addConstraint:self.widthCon];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        [self setUpBookCoverViewForGesture:nil];
+        [self setUpBookCoverViewForFrontCover:YES];
         if (size.width > size.height){
             self.containerView.transform = CGAffineTransformIdentity;
         }
@@ -562,8 +557,9 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)loadCoverPhoto{
-    if (!self.coverPhoto){
+    if (!self.coverPhoto || (id)self.coverPhoto == [NSNull null]){
         self.coverImageView.image = nil;
+        return;
     }
     __weak OLPhotobookViewController *welf = self;
     if (self.coverImageView){
@@ -645,6 +641,21 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
+    //Drop previous screens from the navigation stack
+    NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+    if (navigationStack.count > 1) {
+        NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
+        for (UIViewController *vc in self.navigationController.viewControllers){
+            [viewControllers addObject:vc];
+            if ([vc isKindOfClass:[OLKiteViewController class]]){
+                [viewControllers addObject:self];
+                [self.navigationController setViewControllers:viewControllers animated:YES];
+                break;
+            }
+        }
+        [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
+    }
+    
     [self.product.acceptedOffers addObject:vc.offer];
     [vc dismissViewControllerAnimated:NO completion:^{
         if (vc.offer.prepopulatePhotos){
@@ -679,7 +690,7 @@ static const CGFloat kBookEdgePadding = 38;
 
 -(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.croppingPrintPhoto unloadImage];
-    self.croppingPrintPhoto = [OLAsset assetWithImageAsJPEG:croppedImage];
+    self.croppingPrintPhoto.edits = cropper.edits;
     if (self.croppingPrintPhoto == self.coverPhoto){
         [self loadCoverPhoto];
     }
@@ -801,8 +812,9 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     if (selectedCount == 0){
-        UIAlertView *av = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Oops", @"") message:NSLocalizedString(@"Please add some photos to your photo book", @"") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"") otherButtonTitles:nil];
-        [av show];
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please add some photos to your photo book", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+        [self presentViewController:ac animated:YES completion:NULL];
         return NO;
     }
     
@@ -927,10 +939,9 @@ static const CGFloat kBookEdgePadding = 38;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         cropVc.product = self.product;
         
-        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+        [self.croppingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             [cropVc setFullImage:image];
             cropVc.edits = self.croppingPrintPhoto.edits;
-            cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:cropVc animated:NO completion:NULL];
         }];
     }
@@ -948,7 +959,7 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)updateUserSelectedPhotos{
     [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
     for (OLAsset *item in self.photobookPhotos){
-        if (![item isKindOfClass:[NSNull class]]){
+        if (![item isKindOfClass:[OLPlaceholderAsset class]]){
             [[OLUserSession currentSession].userSelectedPhotos addObject:item];
         }
     }
@@ -984,7 +995,7 @@ static const CGFloat kBookEdgePadding = 38;
         }
         UIImageView *imageView = [page imageView];
         self.croppingPrintPhoto = self.photobookPhotos[index];
-        [self.croppingPrintPhoto imageWithSize:OLAssetMaximumSize applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+        [self.croppingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
             cropVc.delegate = self;
             cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
@@ -1172,17 +1183,14 @@ static const CGFloat kBookEdgePadding = 38;
     coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
 }
 
--(void) setUpBookCoverViewForGesture:(UIPanGestureRecognizer *)sender{
+-(void) setUpBookCoverViewForFrontCover:(BOOL)front{
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverTapRecognized:)];
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverLongPressRecognized:)];
     
     UIView *halfBookCoverImageContainer;
     
-    CGPoint translation = [sender translationInView:self.containerView];
-    BOOL draggingRight = translation.x >= 0;
-    
-    if ([self isBookAtStart] && (!sender || draggingRight)){
+    if (front){
         halfBookCoverImageContainer = [self.bookCover viewWithTag:kTagRight];
         [self.bookCover viewWithTag:kTagLeft].hidden = YES;
         if (!halfBookCoverImageContainer){
@@ -1386,7 +1394,11 @@ static const CGFloat kBookEdgePadding = 38;
         return;
     }
     self.animating = YES;
-    [self setUpBookCoverViewForGesture:sender];
+    
+    CGPoint translation = [sender translationInView:self.containerView];
+    BOOL draggingRight = translation.x >= 0;
+    
+    [self setUpBookCoverViewForFrontCover:draggingRight];
     self.bookCover.hidden = NO;
     
     //Fade in shadow of the half-book.
@@ -1438,7 +1450,11 @@ static const CGFloat kBookEdgePadding = 38;
         return;
     }
     self.animating = YES;
-    [self setUpBookCoverViewForGesture:sender];
+    
+    CGPoint translation = [sender translationInView:self.containerView];
+    BOOL draggingRight = translation.x >= 0;
+    
+    [self setUpBookCoverViewForFrontCover:draggingRight];
     self.bookCover.hidden = NO;
     
     // Turn off containerView shadow because we will be animating that. Will use bookCover view shadow for the duration of the animation.
@@ -1522,7 +1538,7 @@ static const CGFloat kBookEdgePadding = 38;
         UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
         [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
-        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[OLUserSession currentSession].userSelectedPhotos];
+        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[OLUserSession currentSession].userSelectedPhotos mutableCopy]];
         if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
             vc.maximumPhotos = self.product.quantityToFulfillOrder;
         }

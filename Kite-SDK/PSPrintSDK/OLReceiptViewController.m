@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -153,11 +153,15 @@ static const NSUInteger kSectionErrorRetry = 2;
             if (bgUrl){
                 [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:bgUrl] withCompletionHandler:^(UIImage *bgImage, NSError *error){
                     bgImage = [UIImage imageWithCGImage:bgImage.CGImage scale:2 orientation:image.imageOrientation];
-                    [self setupBannerImage:image withBgImage:bgImage];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self setupBannerImage:image withBgImage:bgImage];
+                    });
                 }];
             }
             else{
-                [self setupBannerImage:image withBgImage:nil];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self setupBannerImage:image withBgImage:nil];
+                });
             }
             
         }];
@@ -271,7 +275,9 @@ static const NSUInteger kSectionErrorRetry = 2;
         [OLProgressHUD dismiss];
         
         if (error) {
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription delegate:nil cancelButtonTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") otherButtonTitles:nil] show];
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+            [self presentViewController:ac animated:YES completion:NULL];
         } else {
             [self retryWasSuccessful];
         }
@@ -381,8 +387,18 @@ static const NSUInteger kSectionErrorRetry = 2;
             cell.textLabel.adjustsFontSizeToFitWidth = YES;
             cell.detailTextLabel.adjustsFontSizeToFitWidth = YES;
             cell.textLabel.minimumScaleFactor = 0.5;
+            cell.textLabel.numberOfLines = 2;
             cell.detailTextLabel.minimumScaleFactor = 0.5;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            [cell.detailTextLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+            
+            cell.textLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            cell.detailTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            [cell.textLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:cell.textLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:cell.textLabel.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+            [cell.detailTextLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:cell.detailTextLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:cell.detailTextLabel.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+            [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:cell.textLabel attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationLessThanOrEqual toItem:cell.detailTextLabel attribute:NSLayoutAttributeLeading multiplier:1 constant:-5]];
+            [cell.textLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:cell.textLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:cell.textLabel.superview attribute:NSLayoutAttributeLeading multiplier:1 constant:15]];
+            [cell.detailTextLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:cell.detailTextLabel attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:cell.detailTextLabel.superview attribute:NSLayoutAttributeTrailing multiplier:1 constant:-15]];
         }
         
         [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *orderCost, NSError *error) {

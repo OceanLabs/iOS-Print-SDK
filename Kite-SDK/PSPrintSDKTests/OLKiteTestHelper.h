@@ -17,5 +17,6 @@
 + (NSArray <OLAsset *>*)imageAssets;
 + (NSData *)testImageData;
 + (PHAsset *)aPHAsset;
++ (void)mockTemplateRequest;
 
 @end

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -39,12 +39,14 @@
     handler(nil);
     if (self.iconURL){
         [[OLImageDownloader sharedInstance] downloadImageAtURL:self.iconURL withCompletionHandler:^(UIImage *image, NSError *error){
-            if (error || !image){
-                handler([self fallbackIcon]);
-            }
-            else{
-                handler(image);
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error || !image){
+                    handler([self fallbackIcon]);
+                }
+                else{
+                    handler(image);
+                }
+            });
         }];
     }
     else{

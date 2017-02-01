@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,34 +27,26 @@
 //  THE SOFTWARE.
 //
 
-#import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
-#import "OLSingleImageProductReviewViewController.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
-#import "OLProductPrintJob.h"
-#import "OLAsset+Private.h"
 #import "OLImageCachingManager.h"
+#import "OLImagePickerViewController.h"
+#import "OLImagePreviewViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
-#import "OLUserSession.h"
-#import "OLNavigationController.h"
-#import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
+#import "OLNavigationController.h"
 #import "OLPaymentViewController.h"
 #import "OLProductPrintJob.h"
 #import "OLProductTemplateOption.h"
-#import "OLRemoteImageView.h"
 #import "OLRemoteImageCropper.h"
-#import "OLAsset+Private.h"
-#import "OLProductTemplateOption.h"
-#import "OLPaymentViewController.h"
-#import "UIViewController+OLMethods.h"
+#import "OLRemoteImageView.h"
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLUpsellViewController.h"
-#import "OLImagePreviewViewController.h"
-#import "OLImagePickerViewController.h"
+#import "OLUserSession.h"
+#import "UIViewController+OLMethods.h"
 
 @interface OLPaymentViewController (Private)
 -(void)saveAndDismissReviewController;
@@ -106,6 +98,7 @@
     [super viewDidLoad];
     
     self.delegate = self;
+    self.view.clipsToBounds = YES;
     
     if (self.navigationController.viewControllers.firstObject == self){
         self.title = self.product.productTemplate.name;
@@ -146,7 +139,7 @@
         [self.ctaButton.titleLabel setFont:font];
     }
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
@@ -154,20 +147,40 @@
     [self.hintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
     
     self.hintView.layer.masksToBounds = NO;
-    self.hintView.layer.shadowOffset = CGSizeMake(-5, -5);
+    self.hintView.layer.shadowOffset = CGSizeMake(0, 2);
     self.hintView.layer.shadowRadius = 5;
     self.hintView.layer.shadowOpacity = 0.3;
+}
+
+- (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body delay:(BOOL)shouldDelay{
+    for (NSLayoutConstraint *con in self.view.constraints){
+        if ([con.identifier isEqualToString:@"toolBarCon"]){
+            [self.view removeConstraint:con];
+        }
+    }
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:[self.hintView viewWithTag:10] attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+    con.identifier = @"toolBarCon";
+    [self.view addConstraint:con];
+    
+    if (header){
+        [(UILabel *)[self.hintView viewWithTag:20] setText:header];
+    }
+    if (body){
+        [(UILabel *)[self.hintView viewWithTag:30] setText:body];
+    }
+    
+    NSTimeInterval delay = shouldDelay ? 1 : 0;
+    NSTimeInterval duration = 0.3;
+    [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.hintView.alpha = 1;
+    } completion:NULL];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    NSTimeInterval delay = 1;
-    NSTimeInterval duration = 0.3;
     if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && self.hintView.alpha <= 0.1f) {
-        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.hintView.alpha = 1;
-        } completion:NULL];
+        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")delay:YES];
     }
 }
 
@@ -193,12 +206,6 @@
         [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLUserSession currentSession].userSelectedPhotos.count];
     }
 #endif
-}
-
-- (void)viewDidLayoutSubviews{
-    [super viewDidLayoutSubviews];
-    
-    self.hintView.transform = CGAffineTransformMakeTranslation(self.editingTools.button1.frame.size.width / 2.0, 0);
 }
 
 - (void)orderViews{
@@ -247,7 +254,15 @@
     NSArray *assetArray = @[asset];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+    OLProductPrintJob *job;
+    if (self.product.productTemplate.templateUI == OLTemplateUIApparel && assetArray.firstObject){
+        job = [OLPrintJob apparelWithTemplateId:self.product.templateId OLAssets:@{
+                                                                                   @"center_chest": assetArray.firstObject,
+                                                                                   }];
+    }
+    else{
+        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+    }
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
@@ -332,14 +347,10 @@
 }
 
 -(void) doCheckout{
-    if (!self.cropView.image) {
-        NSTimeInterval duration = 0.3;
-        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.hintView.alpha = 1;
-        } completion:NULL];
+    if ([OLUserSession currentSession].userSelectedPhotos.count == 0) {
+        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")delay:YES];
         return;
     }
-    
     [self saveJobWithCompletionHandler:^{
         if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
             UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
@@ -415,6 +426,21 @@
 }
 
 - (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
+    //Drop previous screens from the navigation stack
+    NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+    if (navigationStack.count > 1) {
+        NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
+        for (UIViewController *vc in self.navigationController.viewControllers){
+            [viewControllers addObject:vc];
+            if ([vc isKindOfClass:[OLKiteViewController class]]){
+                [viewControllers addObject:self];
+                [self.navigationController setViewControllers:viewControllers animated:YES];
+                break;
+            }
+        }
+        [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
+    }
+    
     [self.product.acceptedOffers addObject:vc.offer];
     [vc dismissViewControllerAnimated:NO completion:^{
         if (vc.offer.prepopulatePhotos){

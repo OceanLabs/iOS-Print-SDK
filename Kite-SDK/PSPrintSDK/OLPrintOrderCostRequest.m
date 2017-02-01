@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,7 @@
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-
+@property (strong, nonatomic) NSMutableDictionary *options;
 @end
 
 @interface OLPrintOrder ()
@@ -102,6 +102,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         jobDict[@"template_id"] = job.templateId;
         jobDict[@"quantity"] = [NSNumber numberWithInteger:[job quantity] * ([job extraCopies]+1)];
         jobDict[@"job_id"] = [job uuid];
+        jobDict[@"options"] = [(OLProductPrintJob *)job options];
         [basket addObject:jobDict];
     }
 
@@ -231,13 +232,16 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     NSInteger idx = 0;
     for (NSDictionary *lineItemDict in json[@"line_items"]){
         NSDictionary *productCosts = [self createCostsDictionaryFromJSON:lineItemDict[@"product_cost"]];
+        NSDictionary *productDiscountedCosts = [self createCostsDictionaryFromJSON:lineItemDict[@"discounted_cost"]];
         NSDictionary *shippingCosts = [self createCostsDictionaryFromJSON:lineItemDict[@"shipping_cost"]];
         NSString *description = lineItemDict[@"description"];
         OLPaymentLineItem * item = [[OLPaymentLineItem alloc] initWithDescription:description costs:productCosts];
+        item.discountedCosts = productDiscountedCosts;
         [lineItems addObject:item];
+        item.identifier = lineItemDict[@"job_id"];
         
         OLProductPrintJob *job = order.jobs[idx];
-        [jobCosts setObject:@{@"product_cost" : productCosts, @"shipping_cost" : shippingCosts} forKey:job];
+        [jobCosts setObject:@{@"product_cost" : productCosts, @"shipping_cost" : shippingCosts, @"discounted_cost" : productDiscountedCosts} forKey:job];
         idx++;
     }
 
