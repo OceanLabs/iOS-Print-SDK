@@ -284,7 +284,7 @@ typedef enum {
     if (self.productTemplate.templateUI == OLTemplateUICalendar || self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUIPoster || self.productTemplate.templateUI == OLTemplateUIPostcard || self.productTemplate.templateUI == OLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
         return @"";
     }
-    NSString* packOfString = NSLocalizedStringFromTableInBundle(@"Pack of", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    NSString* packOfString = NSLocalizedStringFromTableInBundle(@"Pack of", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     return [packOfString stringByAppendingFormat:@" %lu\n", (unsigned long)self.quantityToFulfillOrder];
 }
 
@@ -310,14 +310,14 @@ typedef enum {
     switch (sizeUnits) {
         case kSizeUnitsCentimetres:
             dimensions = [self dimensionsInCentimetres];
-            unitsName =  NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+            unitsName =  NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
             break;
         case kSizeUnitsInches:
             dimensions = [self dimensionsInInches];
-            unitsName =  NSLocalizedStringFromTableInBundle(@"inches", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+            unitsName =  NSLocalizedStringFromTableInBundle(@"inches", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
             if (dimensions.width < 0.1 && dimensions.height < 0.1){
                 dimensions = [self dimensionsInCentimetres];
-                unitsName = NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+                unitsName = NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
             }
             break;
         default:
@@ -362,23 +362,23 @@ typedef enum {
     
     //Add description
     if (self.productTemplate.productDescription && ![self.productTemplate.productDescription isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Description**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [self.productTemplate.productDescription stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Description**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), [self.productTemplate.productDescription stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]]];
     }
     
     //Add size info
     OLTemplateUI templateClass = self.productTemplate.templateUI;
     if (templateClass != OLTemplateUICase){
-        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Size**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.dimensions]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Size**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.dimensions]];
     }
     
     //Add qty info
     if (self.packInfo && ![self.packInfo isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Quantity**\n%lu\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long)self.quantityToFulfillOrder]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Quantity**\n%lu\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (unsigned long)self.quantityToFulfillOrder]];
     }
     
     //Add price info
     if ([OLKiteABTesting sharedInstance].hidePrice){
-        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Price**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.unitCost]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Price**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.unitCost]];
     }
     
     //Add shipping info
@@ -387,17 +387,17 @@ typedef enum {
         if (![OLKiteABTesting sharedInstance].hidePrice){
             NSDecimalNumber *original = [self.productTemplate originalShippingCostForCountry:[OLCountry countryForCurrentLocale]];
             if (original){
-                s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Shipping**\n~%@~ %@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [original formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]], [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
+                s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Shipping**\n~%@~ %@\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), [original formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]], [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
             }
             else{
-                s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Shipping**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
+                s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Shipping**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
             }
         }
     }
     else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, don't add any shipping info
     }
     else{
-        s = [s stringByAppendingString:NSLocalizedStringFromTableInBundle(@"**Shipping**\nFREE\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        s = [s stringByAppendingString:NSLocalizedStringFromTableInBundle(@"**Shipping**\nFREE\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     }
     
     //Add quality guarantee

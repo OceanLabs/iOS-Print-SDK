@@ -219,7 +219,7 @@
 
 - (void)onButtonDoneTapped:(id)sender{
     if ([OLUserSession currentSession].userSelectedPhotos.count != 0 && self.product.productTemplate.templateUI == OLTemplateUIApparel && !self.product.selectedOptions[@"garment_size"]) {
-        [self showHintViewForView:self.editingTools.button2 header:NSLocalizedStringFromTableInBundle(@"Select size", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")delay:NO];
+        [self showHintViewForView:self.editingTools.button2 header:NSLocalizedStringFromTableInBundle(@"Select size", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
         return;
     }
     
@@ -287,11 +287,11 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
             if (error) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Failed to download phone case mask. Please check your internet connectivity and try again", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Failed to download phone case mask. Please check your internet connectivity and try again", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
                 [self.navigationController popViewControllerAnimated:YES];
                 }]];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
                     [self applyDownloadedMask];
                 }]];
                 [self presentViewController:ac animated:YES completion:NULL];

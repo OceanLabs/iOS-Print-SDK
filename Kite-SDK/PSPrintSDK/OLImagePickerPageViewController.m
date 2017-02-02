@@ -37,7 +37,7 @@
     
     UIButton *nextButton = [[UIButton alloc] init];
     self.nextButton = nextButton;
-    [nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+    [nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     [nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     [nextButton addTarget:self.imagePicker action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
     [nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];

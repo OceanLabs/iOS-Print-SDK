@@ -122,7 +122,7 @@ const NSInteger kOLEditTagCrop = 40;
                 [fonts addObject:fontName];
             }
         }
-        [fonts addObject:NSLocalizedStringFromTableInBundle(@"Default", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        [fonts addObject:NSLocalizedStringFromTableInBundle(@"Default", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
         _fonts = [fonts sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     }
     return _fonts;
@@ -223,7 +223,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self registerCollectionViewCells];
     self.editingTools.collectionView.dataSource = self;
     self.editingTools.collectionView.delegate = self;
-    [self.editingTools.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+    [self.editingTools.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     [self setupCropGuides];
     
@@ -932,19 +932,19 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
     if (self.editingTools.collectionView.tag == kOLEditTagTextTools){
-        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT TOOLS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT TOOLS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if (self.editingTools.collectionView.tag == kOLEditTagTextColors){
-        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT COLOUR", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT COLOUR", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if (self.editingTools.collectionView.tag == kOLEditTagFonts){
-        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FONTS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FONTS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if (self.editingTools.collectionView.tag == kOLEditTagFilters){
-        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FILTERS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FILTERS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if (self.editingTools.collectionView.tag == kOLEditTagCrop){
-        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"CROP", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"CROP", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
 
     [UIView animateWithDuration:0.25 animations:^{
@@ -1128,7 +1128,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     switch (sender.tag) {
         case kOLEditTagImageTools:
-            self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"IMAGE TOOLS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+            self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"IMAGE TOOLS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
             break;
         case kOLEditTagImages:
             [self showImagePicker];
@@ -1150,7 +1150,7 @@ const NSInteger kOLEditTagCrop = 40;
                 self.editingTools.collectionView.tag = self.selectedOption.type;
             }
             else{
-                self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"PRODUCT OPTIONS", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+                self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"PRODUCT OPTIONS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
             }
 
             break;
@@ -1458,11 +1458,11 @@ const NSInteger kOLEditTagCrop = 40;
         
         if (indexPath.item == 0){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Aa"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Fonts", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Fonts", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
         }
         else if (indexPath.item == 1){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"paint-bucket-icon"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Text Colour", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Text Colour", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
         }
     }
     else if (collectionView.tag == kOLEditTagImageTools){
@@ -1471,23 +1471,23 @@ const NSInteger kOLEditTagCrop = 40;
         
         if (indexPath.item == 0){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"filters"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
         }
         else if (indexPath.item == 1){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"flip"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Flip", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Flip", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
         }
         else if (indexPath.item == 2){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"rotate"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Rotate", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Rotate", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
         }
         else if (indexPath.item == 3){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Tt"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Add Text", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Add Text", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
         }
         else if (indexPath.item == 4){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"crop"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
         }
     }
     else if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){

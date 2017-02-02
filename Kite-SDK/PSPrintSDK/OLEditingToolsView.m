@@ -42,7 +42,7 @@
 
 -(id)initWithCoder:(NSCoder *)aDecoder{
     if ((self = [super initWithCoder:aDecoder])){
-        UIView *view = [[[NSBundle bundleForClass:self.class] loadNibNamed:@"OLEditingToolsView"
+        UIView *view = [[[OLKiteUtils kiteResourcesBundle] loadNibNamed:@"OLEditingToolsView"
                                                       owner:self
                                                     options:nil] objectAtIndex:0];
         view.frame = self.bounds;
@@ -64,7 +64,7 @@
     
     if (self)
     {
-        UIView *view = [[[NSBundle bundleForClass:self.class] loadNibNamed:@"OLEditingToolsView"
+        UIView *view = [[[OLKiteUtils kiteResourcesBundle] loadNibNamed:@"OLEditingToolsView"
                                                       owner:self
                                                     options:nil] objectAtIndex:0];
         view.frame = self.bounds;

@@ -131,7 +131,7 @@
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onBarButtonItemCancelTapped:)];
         [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.nextButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+        [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     else{
         self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
@@ -235,7 +235,7 @@
         }
     }
     else if (self.maximumPhotos == 1){
-        self.title = NSLocalizedStringFromTableInBundle(@"Choose Photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Choose Photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     
     if (self.selectedAssets.count > self.maximumPhotos && self.maximumPhotos != 0){
@@ -295,7 +295,7 @@
     PHFetchResult *fetchedPhotos = [PHAsset fetchAssetsInAssetCollection:userLibraryCollection options:options];
     OLImagePickerProviderCollection *userLibraryProviderCollection = [[OLImagePickerProviderCollection alloc] initWithPHFetchResult:fetchedPhotos name:userLibraryCollection.localizedTitle];
     
-    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[userLibraryProviderCollection] name:NSLocalizedStringFromTableInBundle(@"All Photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"import_gallery"]];
+    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[userLibraryProviderCollection] name:NSLocalizedStringFromTableInBundle(@"All Photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"import_gallery"]];
     provider.providerType = OLImagePickerProviderTypePhotoLibrary;
     [(NSMutableArray *)self.providers insertObject:provider atIndex:index];
     
@@ -368,9 +368,9 @@
         return;
     }
     
-    OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[OLUserSession currentSession].appAssets name:NSLocalizedStringFromTableInBundle(@"All Photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[OLUserSession currentSession].appAssets name:NSLocalizedStringFromTableInBundle(@"All Photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     
-    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:NSLocalizedStringFromTableInBundle(@"Recents", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"bookmark"]];
+    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:NSLocalizedStringFromTableInBundle(@"Recents", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"bookmark"]];
     provider.providerType = OLImagePickerProviderTypeRecents;
     [self.providers addObject:provider];
 }
@@ -424,7 +424,7 @@
 - (void)setupQRCodeProvider{
     if ([OLKiteUtils qrCodeUploadEnabled]){
         OLImagePickerProviderCollection *emptyCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[] name:@"QR Code Upload"];
-        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[emptyCollection] name:NSLocalizedStringFromTableInBundle(@"Your Phone", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"case-options"]];
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[emptyCollection] name:NSLocalizedStringFromTableInBundle(@"Your Phone", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"case-options"]];
         provider.providerType = OLImagePickerProviderTypeQRCode;
         [self.providers addObject:provider];
     }
@@ -542,7 +542,7 @@
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
     if (self.selectedAssets.count == 0) {
-        self.title = NSLocalizedStringFromTableInBundle(@"Choose Photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Choose Photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     } else {
         if (self.maximumPhotos > 0){
             self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.selectedAssets.count + [self totalNumberOfExtras], (unsigned long)self.maximumPhotos];
@@ -642,7 +642,7 @@
 
 - (void)presentExternalViewControllerForProvider:(OLImagePickerProvider *)provider{
     if (provider.providerType == OLImagePickerProviderTypeQRCode){
-        OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
+        OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
         vc.modalPresentationStyle = UIModalPresentationFormSheet;
         vc.delegate = self;
         vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(onBarButtonItemCancelTapped:)];
@@ -805,20 +805,20 @@
 - (BOOL)shouldGoToOrderPreview {
     NSString *errorMessage;
     if (self.selectedAssets.count == 0){
-        errorMessage = NSLocalizedStringFromTableInBundle(@"Please select some images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please select some images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if (self.selectedAssets.count < self.minimumPhotos && self.minimumPhotos == self.maximumPhotos){
-        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.minimumPhotos];
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.minimumPhotos];
     }
     else if (self.selectedAssets.count < self.minimumPhotos){
-        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select at least %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.minimumPhotos];
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select at least %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.minimumPhotos];
     }
     else if (![self.product isMultipack] && self.selectedAssets.count > self.maximumPhotos && self.maximumPhotos != 0){
-        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select no more than %d images.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.maximumPhotos];
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select no more than %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.maximumPhotos];
     }
     if (errorMessage) {
-        UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
-        [av addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+        UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
+        [av addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
         [self presentViewController:av animated:YES completion:NULL];
         return NO;
     }

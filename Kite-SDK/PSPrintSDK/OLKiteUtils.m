@@ -56,8 +56,16 @@
 
 @implementation OLKiteUtils
 
-+ (NSBundle *)kiteBundle{
-    return [NSBundle bundleWithPath:[[NSBundle bundleForClass:[OLKiteViewController class]] pathForResource:@"KiteResources" ofType:@"bundle"]];
++ (NSBundle *)kiteLocalizationBundle{
+    return [NSBundle bundleWithPath:[[NSBundle bundleForClass:[OLKiteViewController class]] pathForResource:@"OLKiteLocalizationResources" ofType:@"bundle"]];
+}
+
++ (NSBundle *)kiteResourcesBundle{
+#ifdef COCOAPODS
+    return [NSBundle bundleWithPath:[[NSBundle bundleForClass:[OLKiteViewController class]] pathForResource:@"OLKiteResources" ofType:@"bundle"]];
+#else
+    return [NSBundle bundleForClass:[OLKiteViewController class]];
+#endif
 }
 
 + (NSString *)userEmail:(UIViewController *)topVC {

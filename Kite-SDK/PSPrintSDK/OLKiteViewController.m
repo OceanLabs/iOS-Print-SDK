@@ -149,8 +149,7 @@ static CGFloat fadeTime = 0.3;
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info{
     [OLAnalytics setExtraInfo:info];
-    NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
-    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
+    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         [OLUserSession currentSession].appAssets = assets;
         [[OLUserSession currentSession] resetUserSelectedPhotos];
         [OLUserSession currentSession].printOrder.userData = info;
@@ -162,8 +161,7 @@ static CGFloat fadeTime = 0.3;
 
 - (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info{
     [OLAnalytics setExtraInfo:info];
-    NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
-    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
+    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printOrder != nil;
         [OLUserSession currentSession].appAssets = [[printOrder.jobs firstObject] assetsForUploading];
         [[OLUserSession currentSession] resetUserSelectedPhotos];
@@ -306,13 +304,12 @@ static CGFloat fadeTime = 0.3;
         // The screen we transition to will depend on what products are available based on the developers filter preferences.
         NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];
         
-        NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
-        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle];
+        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]];
         NSString *nextVcNavIdentifier;
         OLProduct *product;
         if (groups.count == 0 && !([OLProductTemplate templates].count != 0 && [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Store Maintenance", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Store Maintenance", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                     [welf dismiss];
                 }]];
                 [welf presentViewController:ac animated:YES completion:NULL];
@@ -474,15 +471,15 @@ static CGFloat fadeTime = 0.3;
         }
         
         NSError *error = n.userInfo[kNotificationKeyTemplateSyncError];
-        NSString *message = NSLocalizedStringFromTableInBundle(@"There was a problem getting Print Shop products. Check your Internet connectivity or try again later.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        NSString *message = NSLocalizedStringFromTableInBundle(@"There was a problem getting Print Shop products. Check your Internet connectivity or try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         if (error.code == kOLKiteSDKErrorCodeMaintenanceMode) {
             message = kOLKiteSDKErrorMessageMaintenanceMode;
         }
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
             [self dismiss];
         }]];
-        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
             [OLProductTemplate sync];
         }]];
         [self presentViewController:alert animated:YES completion:^(void){}];

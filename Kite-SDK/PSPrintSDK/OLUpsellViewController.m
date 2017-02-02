@@ -88,22 +88,22 @@
     }
     else if ([self.triggeredProduct.templateId isEqualToString:self.offer.offerTemplate]){
         if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == OLTemplateUIRectagle || self.product.productTemplate.templateUI == OLTemplateUICircle)){
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add %ld %@!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create another pack for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add %ld %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create another pack for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.unitCost, discountedString];
         }
         else{
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add another %@!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create another %@ for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add another %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create another %@ for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
         }
     }
     else{
         if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == OLTemplateUIRectagle || self.product.productTemplate.templateUI == OLTemplateUICircle)){
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add %ld %@!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create a pack for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add %ld %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create a pack for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.unitCost, discountedString];
         }
         else{
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add a %@!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create a %@ for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add a %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create a %@ for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
         }
     }
     
