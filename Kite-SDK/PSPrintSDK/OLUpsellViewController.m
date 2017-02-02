@@ -64,7 +64,10 @@
     self.offerContainerView.transform = CGAffineTransformMakeTranslation(self.view.frame.size.width, 0);
     
     [self.acceptButton makeRoundRectWithRadius:2];
+    [self.acceptButton setTitle:NSLocalizedStringFromTableInBundle(@"Yes Please", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    
     [self.declineButton makeRoundRectWithRadius:2];
+    [self.declineButton setTitle:NSLocalizedStringFromTableInBundle(@"No Thanks", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     self.product = [OLProduct productWithTemplateId:self.offer.offerTemplate];
     [self.product setCoverImageToImageView:self.imageView size:self.imageView.frame.size];

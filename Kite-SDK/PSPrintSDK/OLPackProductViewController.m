@@ -643,11 +643,12 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [cell.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editPhoto:)]];
     }
     
-    UIButton *enhanceButton = (UIButton *)[cell.contentView viewWithTag:11];
-    [enhanceButton addTarget:self action:@selector(editPhoto:) forControlEvents:UIControlEventTouchUpInside];
+    UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:11];
+    [editButton addTarget:self action:@selector(editPhoto:) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor2){
-        [enhanceButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
+        [editButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
     }
+    [editButton setTitle:NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     UIButton *upButton = (UIButton *)[cell.contentView viewWithTag:12];
     [upButton addTarget:self action:@selector(onButtonUpArrowClicked:) forControlEvents:UIControlEventTouchUpInside];

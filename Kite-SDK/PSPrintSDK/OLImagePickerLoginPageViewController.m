@@ -53,9 +53,11 @@
     NSString *providerName;
     if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
         providerName = @"Instagram";
+        [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Login", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
         providerName = @"Facebook";
+        [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Login", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     else if (self.provider.providerType == OLImagePickerProviderTypePhotoLibrary){
         providerName = [UIDevice currentDevice].localizedModel;

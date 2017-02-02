@@ -64,6 +64,8 @@
 
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
+    
+    self.title = NSLocalizedStringFromTableInBundle(@"Payment Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {

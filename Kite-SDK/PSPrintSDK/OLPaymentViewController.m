@@ -247,6 +247,10 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
                                                                             target:nil
                                                                             action:nil];
     
+    self.poweredByKiteLabel.text = NSLocalizedStringFromTableInBundle(@"Powered by Kite.ly", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    [self.shippingButton setTitle:NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    [self.paymentButton1 setTitle:NSLocalizedStringFromTableInBundle(@"Continue Shopping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    
     self.reloadTableViewOperation = [NSBlockOperation blockOperationWithBlock:^{
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
     }];
@@ -273,6 +277,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     
     self.shippingCostLabel.text = @"";
     self.promoCodeCostLabel.text = @"";
+    self.promoCodeTextField.placeholder = NSLocalizedStringFromTableInBundle(@"Promo Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     self.promoCodeTextField.text = self.printOrder.promoCode;
     
     NSString *applePayAvailableStr = @"N/A";
@@ -1565,6 +1570,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             editButton.hidden = NO;
             largeEditButton.hidden = NO;
         }
+        [editButton setTitle:[@"  " stringByAppendingString:NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")] forState:UIControlStateNormal];
         
         CGFloat rowHeight = [self tableView:self.tableView heightForRowAtIndexPath:indexPath];
         
@@ -1611,6 +1617,8 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     else{
         UITableViewCell *cell =  [tableView dequeueReusableCellWithIdentifier:@"emptyCell"];
         cell.backgroundColor = [UIColor clearColor];
+        UILabel *label = [cell viewWithTag:10];
+        label.text = NSLocalizedStringFromTableInBundle(@"Basket is empty", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         return cell;
     }
 }

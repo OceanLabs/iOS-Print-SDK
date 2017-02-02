@@ -31,6 +31,7 @@
 #import "OLMarkdownParser.h"
 #import "OLAnalytics.h"
 #import "OLKiteABTesting.h"
+#import "OLKiteUtils.h"
 
 @interface OLMarkDownParser ()
 
@@ -66,6 +67,7 @@
     if (font){
         [self.detailsLabel setFont:font];
     }
+    self.detailsLabel.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
     NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
