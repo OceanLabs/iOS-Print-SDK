@@ -57,7 +57,7 @@
 @implementation OLKiteUtils
 
 + (NSBundle *)kiteBundle{
-    return [NSBundle bundleForClass:[OLKiteViewController class]];
+    return [NSBundle bundleWithPath:[[NSBundle bundleForClass:[OLKiteViewController class]] pathForResource:@"KiteResources" ofType:@"bundle"]];
 }
 
 + (NSString *)userEmail:(UIViewController *)topVC {

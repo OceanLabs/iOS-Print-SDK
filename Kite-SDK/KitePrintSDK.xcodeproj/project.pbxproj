@@ -188,7 +188,6 @@
 		2E451E691D955B1F0080F1C1 /* qrspec.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E96BACB1D2FC109002F5F74 /* qrspec.c */; };
 		2E451E6A1D955B1F0080F1C1 /* rscode.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E96BACD1D2FC109002F5F74 /* rscode.c */; };
 		2E451E6B1D955B1F0080F1C1 /* split.c in Sources */ = {isa = PBXBuildFile; fileRef = 2E96BACF1D2FC109002F5F74 /* split.c */; };
-		2E451E911D95640D0080F1C1 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E451E921D9564100080F1C1 /* OLProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */; };
 		2E451E931D9564140080F1C1 /* kite_corrupt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */; };
 		2E451E941D95641A0080F1C1 /* OLEditingToolsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */; };
@@ -201,7 +200,6 @@
 		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
 		2E4DAB651DE47104002F4A84 /* mug.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2E4DAB641DE47104002F4A84 /* mug.dae */; };
 		2E5D13AE1E36238800927D19 /* OLMockPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */; };
-		2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
 		2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7483521BCD11F800360550 /* ViewControllerTests.m */; };
@@ -222,7 +220,6 @@
 		2E898CD81CC518180041CCD8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6D186215790009DE03 /* CoreGraphics.framework */; };
 		2E898CD91CC518180041CCD8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		2E898CDA1CC518180041CCD8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
-		2E898CDD1CC518180041CCD8 /* KitePrintSDK.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */; };
 		2E898CDE1CC518180041CCD8 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E898CE11CC518180041CCD8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF83186215790009DE03 /* Images.xcassets */; };
 		2E898CE21CC518180041CCD8 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
@@ -436,6 +433,7 @@
 		2EB8FE861D95692000E26BDF /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2EB8FE881D95692000E26BDF /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
+		2EBDF4CE1E434A0B004775BD /* KiteResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2EBDF4CD1E434A0B004775BD /* KiteResources.bundle */; };
 		2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */; };
 		2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */; };
 		2ECC956A1BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */; };
@@ -539,9 +537,6 @@
 		2E18A1BF1DF9AA0800F8427D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
 		2E18A1C21DF9AA1000F8427D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
 		2E18A1C51DF9AA2000F8427D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
-		2E18A1C81DF9AB6100F8427D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E18A1C91DF9AB6200F8427D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
-		2E18A1CA1DF9AB6300F8427D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E18A1DA1DFAB5AA00F8427D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E18A1E01DFAC8BB00F8427D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
 		2E18DC4F1D913DB1004752D2 /* OLPrintPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintPhoto.h; sourceTree = "<group>"; };
@@ -644,7 +639,6 @@
 		2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSingleImageProductReviewViewController.h; sourceTree = "<group>"; };
 		2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSingleImageProductReviewViewController.m; sourceTree = "<group>"; };
 		2E53A8C01DA28249003C8C30 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/OLKiteStoryboard.strings; sourceTree = "<group>"; };
-		2E53A8C11DA2824A003C8C30 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E53A8C51DA2A263003C8C30 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/OLEditingToolsView.strings; sourceTree = "<group>"; };
 		2E53E0CB1C1AEAAD00BF7887 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
 		2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
@@ -667,7 +661,6 @@
 		2E67B9281D267A3E00914D56 /* OLColorSelectionCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLColorSelectionCollectionViewCell.h; sourceTree = "<group>"; };
 		2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLColorSelectionCollectionViewCell.m; sourceTree = "<group>"; };
 		2E6C20F31BF375EE00109081 /* KiteSDK-Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "KiteSDK-Demo.entitlements"; sourceTree = "<group>"; };
-		2E6E605E1C50384C00829BB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/KitePrintSDK.strings; sourceTree = "<group>"; };
 		2E6E60671C5038AD00829BB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/OLKiteStoryboard.storyboard; sourceTree = "<group>"; };
 		2E7483501BCCFB5900360550 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		2E7483521BCD11F800360550 /* ViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewControllerTests.m; sourceTree = "<group>"; };
@@ -799,6 +792,7 @@
 		2EB919941D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPageBlankContentViewController.m; sourceTree = "<group>"; };
 		2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloader.h; sourceTree = "<group>"; };
 		2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloader.m; sourceTree = "<group>"; };
+		2EBDF4CD1E434A0B004775BD /* KiteResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = KiteResources.bundle; sourceTree = "<group>"; };
 		2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPlaceholderAsset.h; sourceTree = "<group>"; };
 		2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPlaceholderAsset.m; sourceTree = "<group>"; };
 		2ECC95691BC6B88F00F44CE1 /* OLDocsObjcExampleCodeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLDocsObjcExampleCodeTests.m; sourceTree = "<group>"; };
@@ -1833,7 +1827,7 @@
 			isa = PBXGroup;
 			children = (
 				2E4DAB641DE47104002F4A84 /* mug.dae */,
-				2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */,
+				2EBDF4CD1E434A0B004775BD /* KiteResources.bundle */,
 				2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
 				2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */,
@@ -2188,8 +2182,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EBDF4CE1E434A0B004775BD /* KiteResources.bundle in Resources */,
 				2E451E931D9564140080F1C1 /* kite_corrupt.jpg in Resources */,
-				2E451E911D95640D0080F1C1 /* KitePrintSDK.strings in Resources */,
 				2E451E951D9564620080F1C1 /* OLKiteStoryboard.storyboard in Resources */,
 				2E451E941D95641A0080F1C1 /* OLEditingToolsView.xib in Resources */,
 				2E4DAB651DE47104002F4A84 /* mug.dae in Resources */,
@@ -2204,7 +2198,6 @@
 			files = (
 				2E23EB9B1D5091FC00E2BF42 /* CI-Main.storyboard in Resources */,
 				2E480ADF1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */,
-				2E898CDD1CC518180041CCD8 /* KitePrintSDK.strings in Resources */,
 				2EE054331E32177E00417DA4 /* templates.json in Resources */,
 				2E898CDE1CC518180041CCD8 /* OLKiteStoryboard.storyboard in Resources */,
 				2E434AE61D36675700D1BD06 /* OLEditingToolsView.xib in Resources */,
@@ -2218,7 +2211,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E6E605D1C50384C00829BB7 /* KitePrintSDK.strings in Resources */,
 				2E480ADE1D92DBEF006C0EE6 /* OLProgressHUD.bundle in Resources */,
 				2E6E60661C5038AD00829BB7 /* OLKiteStoryboard.storyboard in Resources */,
 				2E434AE51D36675700D1BD06 /* OLEditingToolsView.xib in Resources */,
@@ -2646,18 +2638,6 @@
 				2E18A1C51DF9AA2000F8427D /* es */,
 			);
 			name = OLEditingToolsView.xib;
-			sourceTree = "<group>";
-		};
-		2E6E605F1C50384C00829BB7 /* KitePrintSDK.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2E6E605E1C50384C00829BB7 /* Base */,
-				2E53A8C11DA2824A003C8C30 /* da */,
-				2E18A1C81DF9AB6100F8427D /* fr */,
-				2E18A1C91DF9AB6200F8427D /* de */,
-				2E18A1CA1DF9AB6300F8427D /* es */,
-			);
-			name = KitePrintSDK.strings;
 			sourceTree = "<group>";
 		};
 		2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */ = {
