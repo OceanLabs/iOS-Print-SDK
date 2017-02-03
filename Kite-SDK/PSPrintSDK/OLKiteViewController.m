@@ -253,8 +253,9 @@ static CGFloat fadeTime = 0.3;
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
+        self.customNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
     }
-    
+
     if (!self.loadingHandler){
         [self loadRemoteData];
     }
