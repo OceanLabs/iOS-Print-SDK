@@ -671,6 +671,7 @@
 		2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintOrderCostRequest.m; sourceTree = "<group>"; };
 		2E8C29EE1B18D1E10045DC21 /* OLPrintOrderCost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintOrderCost.h; sourceTree = "<group>"; };
 		2E8C29EF1B18D1E10045DC21 /* OLPrintOrderCost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintOrderCost.m; sourceTree = "<group>"; };
+		2E8CAA211E44C469000E6FD2 /* KitePrintSDKTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KitePrintSDKTests-Info.plist"; sourceTree = "<group>"; };
 		2E8FD26E1BF9E73B00F4FC5A /* OLPhotoEdits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotoEdits.h; sourceTree = "<group>"; };
 		2E8FD26F1BF9E73B00F4FC5A /* OLPhotoEdits.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotoEdits.m; sourceTree = "<group>"; };
 		2E924BE11BC6A0C80038938A /* OLKiteRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteRequestTests.m; sourceTree = "<group>"; };
@@ -1652,6 +1653,7 @@
 		CD73BF91186215790009DE03 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2E8CAA211E44C469000E6FD2 /* KitePrintSDKTests-Info.plist */,
 				2EE054291E31084200417DA4 /* templates.json */,
 				2EDBFAAF1BC698F2007BDB83 /* 1.jpg */,
 				2E7483501BCCFB5900360550 /* 2.png */,
