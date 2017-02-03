@@ -436,7 +436,7 @@
         else{
             [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
                 if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Checkout"]){
-                    [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:(OLKiteViewController *)vc action:@selector(dismiss)]];
+                    [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:(OLKiteViewController *)vc action:@selector(dismiss)]];
                 }
                 [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
                 [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];

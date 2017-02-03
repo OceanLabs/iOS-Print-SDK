@@ -342,7 +342,7 @@ static CGFloat fadeTime = 0.3;
                             }];
                         }
                         else{
-                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                         }
                         [welf fadeToViewController:nvc];
                     }
@@ -374,7 +374,7 @@ static CGFloat fadeTime = 0.3;
                     }];
                 }
                 else{
-                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                 }
                 [welf fadeToViewController:nvc];
             }
@@ -411,7 +411,7 @@ static CGFloat fadeTime = 0.3;
                 }];
             }
             else{
-                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
             }
             [welf fadeToViewController:nvc];
         }

@@ -128,7 +128,7 @@
         [self.nextButton removeFromSuperview];
     }
     else if (self.navigationController.viewControllers.firstObject == self && !self.overrideImagePickerMode){
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onBarButtonItemCancelTapped:)];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onBarButtonItemCancelTapped:)];
         [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.nextButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
@@ -646,7 +646,7 @@
         OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
         vc.modalPresentationStyle = UIModalPresentationFormSheet;
         vc.delegate = self;
-        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:vc action:@selector(onBarButtonItemCancelTapped:)];
+        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:vc action:@selector(onBarButtonItemCancelTapped:)];
         OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
         [self presentViewController:nvc animated:YES completion:nil];
         
