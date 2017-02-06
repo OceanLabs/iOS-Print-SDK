@@ -26,6 +26,7 @@
 "Back" = "Retour";
 "BACK" = "RETOUR";
 "Basket is empty" = "Le panier est vide";
+"basket.Edit" = "Modifier";
 "Cancel" = "Annuler";
 "Card Number" = "Numéro de carte";
 "Checking Code" = " Code de vérification";

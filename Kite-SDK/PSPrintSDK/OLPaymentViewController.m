@@ -1570,7 +1570,7 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
             editButton.hidden = NO;
             largeEditButton.hidden = NO;
         }
-        [editButton setTitle:[@"  " stringByAppendingString:NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit basket item")] forState:UIControlStateNormal];
+        [editButton setTitle:[@"  " stringByAppendingString:NSLocalizedStringFromTableInBundle(@"basket.Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit basket item")] forState:UIControlStateNormal];
         
         CGFloat rowHeight = [self tableView:self.tableView heightForRowAtIndexPath:indexPath];
         

@@ -31,9 +31,6 @@ for line in file:
     translatedReader = csv.reader(translated, delimiter=',', quotechar='"')
     translatedReader.next()
     for translatedLine in translatedReader:
-        if len(translatedLine) < 2:
-            continue
-           
         if (strings[0])[1:-1] == translatedLine[0]:
             found = True
             result.write('"' + translatedLine[0] + "\" = \"" + translatedLine[1] + "\";\n")

@@ -946,7 +946,7 @@ const NSInteger kOLEditTagCrop = 40;
         self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image filters") uppercaseStringWithLocale:[NSLocale currentLocale]];
     }
     else if (self.editingTools.collectionView.tag == kOLEditTagCrop){
-        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image crop") uppercaseStringWithLocale:[NSLocale currentLocale]];
+        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Crop image") uppercaseStringWithLocale:[NSLocale currentLocale]];
     }
 
     [UIView animateWithDuration:0.25 animations:^{

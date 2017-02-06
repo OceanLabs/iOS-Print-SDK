@@ -268,7 +268,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print these", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
             [self doCheckout];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Add more", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Add more photos") style:UIAlertActionStyleCancel handler:NULL]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Add more", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Add more [photos]") style:UIAlertActionStyleCancel handler:NULL]];
         [self presentViewController:ac animated:YES completion:NULL];
         return NO;
     }
@@ -648,7 +648,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     if ([OLKiteABTesting sharedInstance].lightThemeColor2){
         [editButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
     }
-    [editButton setTitle:NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit photo") forState:UIControlStateNormal];
+    [editButton setTitle:NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit image") forState:UIControlStateNormal];
     
     UIButton *upButton = (UIButton *)[cell.contentView viewWithTag:12];
     [upButton addTarget:self action:@selector(onButtonUpArrowClicked:) forControlEvents:UIControlEventTouchUpInside];

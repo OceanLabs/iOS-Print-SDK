@@ -425,7 +425,7 @@
 - (void)setupQRCodeProvider{
     if ([OLKiteUtils qrCodeUploadEnabled]){
         OLImagePickerProviderCollection *emptyCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[] name:@"QR Code Upload"];
-        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[emptyCollection] name:NSLocalizedStringFromTableInBundle(@"Your Phone", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"case-options"]];
+        OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[emptyCollection] name:NSLocalizedStringFromTableInBundle(@"Your Phone", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Device, not number") icon:[UIImage imageNamedInKiteBundle:@"case-options"]];
         provider.providerType = OLImagePickerProviderTypeQRCode;
         [self.providers addObject:provider];
     }

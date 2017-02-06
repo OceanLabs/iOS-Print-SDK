@@ -206,5 +206,6 @@ Your Phone,Votre téléphone
 Your card expiry date,Date d'expiration de votre carte
 Your payment was not approved (transaction state: %@). Please try again.,Votre paiement n'a pas été approuvé (état de transaction : %@). Veuillez réessayer.
 ZIP Code,Code postal
+basket.Edit,Modifier,/* Edit basket item */
 cm,cm
 inches,pouces

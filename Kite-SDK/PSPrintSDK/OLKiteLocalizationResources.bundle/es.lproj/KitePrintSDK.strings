@@ -26,6 +26,7 @@
 "Back" = "Espalda";
 "BACK" = "ESPALDA";
 "Basket is empty" = "La cesta está vacía";
+"basket.Edit" = "Editar";
 "Cancel" = "Cancelar";
 "Card Number" = "Número de tarjeta";
 "Checking Code" = "Código de verificación";
