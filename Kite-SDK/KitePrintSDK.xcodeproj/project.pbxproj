@@ -2037,8 +2037,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E898CE71CC518180041CCD8 /* Build configuration list for PBXNativeTarget "Kite-CI-Deploy" */;
 			buildPhases = (
-				2E8CAA221E44E729000E6FD2 /* Generate Localization Files */,
 				843CD35EB784C6F33070581E /* [CP] Check Pods Manifest.lock */,
+				2E8CAA221E44E729000E6FD2 /* Generate Localization Files */,
 				2E898C4E1CC518180041CCD8 /* Sources */,
 				2E898CCA1CC518180041CCD8 /* Frameworks */,
 				2E898CDC1CC518180041CCD8 /* Resources */,
@@ -2338,7 +2338,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		A5C135E7BF18F5D8A7843D7D /* [CP] Check Pods Manifest.lock */ = {
@@ -2353,7 +2353,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		D801D965E628C76A96EAF7B6 /* [CP] Copy Pods Resources */ = {
