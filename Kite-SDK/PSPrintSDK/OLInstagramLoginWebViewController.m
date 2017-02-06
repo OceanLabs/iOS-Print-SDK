@@ -133,7 +133,7 @@
 
 - (void)onInstagramOAuthAuthenticateFail:(NSNotification *)notification {
     NSString *localizedErrorMessage = NSLocalizedStringFromTableInBundle(@"Failed to log in to Instagram. Please check your internet connectivity and try again", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedErrorMessage preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedErrorMessage preferredStyle:UIAlertControllerStyleAlert];
     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
         [self dismissViewControllerAnimated:YES completion:NULL];
     }]];

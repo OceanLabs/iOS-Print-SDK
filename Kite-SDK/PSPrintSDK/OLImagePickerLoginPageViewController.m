@@ -84,7 +84,7 @@
     else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
         [OLFacebookSDKWrapper login:[OLFacebookSDKWrapper loginManager] withReadPermissions:@[@"public_profile", @"user_photos"] fromViewController:self handler:^(id result, NSError *error) {
             if (error) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")  style:UIAlertActionStyleDefault handler:NULL]];
                 [self.imagePicker presentViewController:ac animated:YES completion:NULL];
             } else if ([result isCancelled]) {
