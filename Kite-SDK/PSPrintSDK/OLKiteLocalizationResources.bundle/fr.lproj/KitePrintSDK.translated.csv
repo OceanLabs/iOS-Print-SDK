@@ -8,10 +8,10 @@ ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
 "Search by street, address or ZIP code","Recherche par rue, adresse ou code postal"
 "Yes, proceed","Oui, procédez"
 "Yes, remove it","Oui, le retirer"
-%ldx%ld Collage,%1$ldx%2$ld Collage
+%ldx%ld Collage,%ldx%ld Collage
 401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,Une erreur 401 Requête non autorisée est survenue durant le téléchargement. Veuillez réessayer.
 500 Internal Server Error whilst trying to upload an asset. Please try again.,Une erreur 500 Serveur Interne est survenue durant le téléchargement. Veuillez réessayer.
-Add %ld %@!,Ajouter %1$ld %2$@!
+Add %ld %@!,Ajouter %ld %@!
 Add Address,Ajouter une adresse
 Add Credit Card (TEST),Ajouter une carte de crédit (TEST)
 Add Credit Card,Ajouter une carte de crédit
@@ -51,10 +51,10 @@ Continue Shopping,Continuer mes achats
 Country,Pays
 County,Région
 Create Image,Créer une image
-Create a %@ for\nonly %@ %@,Créer un %1$@ pour\nseulement %2$@ %3$@
-Create a pack for\nonly %@ %@,Créer un pack pour\nseulement %1$@ %2$@
-Create another %@ for\nonly %@ %@,Créer un autre %1$@ pour\nseulement %2$@ %3$@
-Create another pack for\nonly %@ %@,Créer un autre pack pour\nseulement %1$@ %2$@
+Create a %@ for\nonly %@ %@,Créer un %@ pour\nseulement %@ %@
+Create a pack for\nonly %@ %@,Créer un pack pour\nseulement %@ %@
+Create another %@ for\nonly %@ %@,Créer un autre %@ pour\nseulement %@ %@
+Create another pack for\nonly %@ %@,Créer un autre pack pour\nseulement %@ %@
 Default,Défaut
 Delete Item,Supprimer un élément
 Delivery Address,Adresse de livraison
@@ -107,7 +107,7 @@ No photos,Pas de photos
 No,Non
 Not now,Pas maintenant
 OK,OK
-Only registered %d/%d image URLs with the asset endpoint,Seules les URL d'image %1$d/%2$d enregistrées avec le point d'extrémité d'actif
+Only registered %d/%d image URLs with the asset endpoint,Seules les URL d'image %d/%d enregistrées avec le point d'extrémité d'actif
 Oops!,Oups!
 Oops,Oups
 Or print on a product below ▼,Ou imprimer sur un produit ci-dessous ▼
@@ -189,7 +189,7 @@ There was an error trying to validate the card. Please try again later.,Une erre
 This is the 3-4 digit verification number/security code normally found on the back of your card,Il s'agit du numéro de vérification / code de sécurité de 3 à 4 chiffres qui se trouve normalement au dos de votre carte
 This will discard your edits.,Ceci annulera vos modifications.
 Total,Total
-Uploading Images \n%lu / %lu,Images en cours de téléchargement \n%1$lu / %2$lu
+Uploading Images \n%lu / %lu,Images en cours de téléchargement \n%lu / %lu
 View Item,Voir les éléments
 We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,Nous vous enverrons une confirmation et des mises à jour de commande. Décochez cette case si vous ne souhaitez pas recevoir d'emails de notre part.
 We'll send you confirmation and order updates.,Nous vous enverrons une confirmation et des mises à jour de commande.

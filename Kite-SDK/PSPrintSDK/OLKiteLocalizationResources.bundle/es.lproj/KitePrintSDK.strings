@@ -1,10 +1,10 @@
-"%ldx%ld Collage" = "%1$ldx%2$ld Collage";
+"%ldx%ld Collage" = "%ldx%ld Collage";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Garantía de calidad**\nNuestros productos son de la más alta calidad y estamos seguros de que usted amará el suyo. Si no, ofrecemos una garantía de devolución de dinero. ¡Disfruta!";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Error de solicitud no autorizada al intentar cargar un recurso. Compruebe que incluyó un encabezado de autorización y que las credenciales de autenticación suministradas son correctas.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Error interno del servidor al intentar cargar un activo. Vuelve a intentarlo.";
 "Add" = "Añadir";
-"Add %ld %@!" = "¡Añadir %1$ld %2$@!";
-"Add a %@!" = "¡Añadir una %@!";
+"Add %ld %@!" = "¡Añadir %ld %@!";
+"Add a %@!" = "Añadir una %@!";
 "Add Address" = "Añadir une dirección";
 "Add another %@!" = "Añadir otra %@!";
 "Add Credit Card" = "Añadir tarjeta de crédito";
@@ -42,10 +42,10 @@
 "Continue Shopping" = "Seguir comprando";
 "Country" = "País";
 "County" = "País";
-"Create a %@ for\nonly %@ %@" = "Crear un %1$@\nsolo %2$@ %3$@";
-"Create a pack for\nonly %@ %@" = "Crear un paquete\nsolo %1$@ %2$@";
-"Create another %@ for\nonly %@ %@" = "Crear una otra %1$@\nsolo %2$@ %3$@";
-"Create another pack for\nonly %@ %@" = "Crear un paquete\nsolo %1$@ %2$@";
+"Create a %@ for\nonly %@ %@" = "Crear un %@\nsolo %@ %@";
+"Create a pack for\nonly %@ %@" = "Crear un paquete\nsolo %@ %@";
+"Create another %@ for\nonly %@ %@" = "Crear una otra %@\nsolo %@ %@";
+"Create another pack for\nonly %@ %@" = "Crear un paquete\nsolo %@ %@";
 "Create Image" = "Crear Image";
 "CVV" = "CVV";
 "Default" = "Defecto";
@@ -103,7 +103,7 @@
 "No, not yet" = "No, ahora no";
 "Not now" = "Ahora no";
 "OK" = "OK";
-"Only registered %d/%d image URLs with the asset endpoint" = "Solo se registran las URL de imagen% 1$d/%2$d con el punto final del recurso";
+"Only registered %d/%d image URLs with the asset endpoint" = "Solo se registran las URL de imagen %d/%d con el punto final del recurso";
 "Oops!" = "Oops!";
 "Or print on a product below ▼" = "O imprimir sobre un producto debajo de ▼";
 "Order Id" = "Número de identificación del pedido";
@@ -185,7 +185,7 @@
 "This is the 3-4 digit verification number/security code normally found on the back of your card" = "Este es el número de verificación de 3-4 dígitos / código de seguridad que normalmente se encuentra en la parte posterior de su tarjeta";
 "This will discard your edits." = "Esto descartará sus ediciones.";
 "Total" = "Total";
-"Uploading Images \n%lu / %lu" = "Subiendo Imágenes \n%1$lu / %2$lu";
+"Uploading Images \n%lu / %lu" = "Subiendo Imágenes \n%lu / %lu";
 "View Item" = "Ver elemento";
 "We'll send you confirmation and order updates." = "Le enviaremos confirmación y actualizaciones de pedidos.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Le enviaremos confirmación y actualizaciones de pedidos. Desmarca esta casilla para inhabilitar las campañas de correo electrónico.";
