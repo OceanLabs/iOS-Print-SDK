@@ -1,13 +1,14 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
-%ldx%ld Collage,%1$ldx%2$ld Collage
-**Description**\n%@\n\n,**Description**\n%@\n\n
-**Price**\n%@\n\n,**Prix**\n%@\n\n
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!","**Garantie de Qualité**\nNos produits sont de la plus haute qualité et nous sommes certains que vous aimerez le vôtre. Sinon, nous offrons une garantie de remboursement. Profitez-en ! !"
-**Quantity**\n%lu\n\n,**Quantité**\n%lu\n\n
-**Shipping**\n%@\n\n,**Livraison**\n%@\n\n
-**Shipping**\nFREE\n\n,**Livraison**\nGRATUITE\n\n
-**Shipping**\n~%@~ %@\n\n,**Livraison**\n~%1$@~ %2$@\n\n
-**Size**\n%@\n\n,**Taille**\n%@\n\n
+"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos","Êtes-vous sûr de vouloir continuer ? Si vous le faites, les pages vierges seront remplies avec des photos en double"
+"Failed to validate card details, please try again.",Impossible de valider les détails de la carte. Veuillez réessayer.
+"No, keep it","Non, le garder"
+"No, not yet","Non, pas maintenant"
+"Search by postcode, street or address","Recherche par code postal, rue ou adresse"
+"Search by street, address or ZIP code","Recherche par rue, adresse ou code postal"
+"Yes, proceed","Oui, procédez"
+"Yes, remove it","Oui, le retirer"
+%ldx%ld Collage,%1$ldx%2$ld Collage
 401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,Une erreur 401 Requête non autorisée est survenue durant le téléchargement. Veuillez réessayer.
 500 Internal Server Error whilst trying to upload an asset. Please try again.,Une erreur 500 Serveur Interne est survenue durant le téléchargement. Veuillez réessayer.
 Add %ld %@!,Ajouter %1$ld %2$@!
@@ -28,7 +29,6 @@ Address Search,Rechercher une adresse
 All Photos,Toutes les photos
 Alternatively type the following URL into your mobile browser's address bar,"Autrement, saisissez l’URL suivante dans la barre de votre navigateur mobile"
 Are you sure you want to delete this item?,Etes-vous sûr de vouloir supprimer cet élément ?
-"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos","Êtes-vous sûr de vouloir continuer ? Si vous le faites, les pages vierges seront remplies avec des photos en double"
 Are you sure?,Êtes-vous certain ?
 Authorise,Autoriser
 BACK,RETOUR
@@ -59,6 +59,7 @@ Default,Défaut
 Delete Item,Supprimer un élément
 Delivery Address,Adresse de livraison
 Delivery Details,Détails de livraison
+Description,Description
 Details,Détails
 Do you want to remove this photo?,Voulez-vous supprimer cette photo ?
 Done,OK
@@ -71,21 +72,18 @@ Enter a valid CVV number,Saisissez un cryptogramme valide
 Enter a valid credit card number,Saisissez un numéro de carte valide
 Enter a valid expiry date,Entrer une date d'expiratio valide
 Error validating the order. Please try again later.,Erreur de validation de la commande. Veuillez réessayer plus tard.
-FONTS,POLICES
 FREE,GRATUIT
 FRONT,DEVANT
-Failed to download phone case mask. Please check your internet connectivity and try again,Impossible de télécharger le masque de coque de téléphone. Veuillez vérifier votre connexion Internet et réessayer 
+Failed to download phone case mask. Please check your internet connectivity and try again,Impossible de télécharger le masque de coque de téléphone. Veuillez vérifier votre connexion Internet et réessayer
 Failed to get the price of the order. Please try again.,Nous n'avons pu enregistrer le total de la commande. Veuillez réessayer.
 Failed to get upload URL. Try again later.,Échec de l'importation de l'URL. Réessayez plus tard.
 Failed to log in to Instagram. Please check your internet connectivity and try again,Impossible de se connecter à Instagram. Vérifiez votre connexion Internet et réessayez
 Failed to store card details with PayPal. Please try again.,Nous n'avons pu enregistrer vos données Paypal. Veuillez réessayer.
 Failed to synchronize product templates. Please try again.,Nous n'avons pu synchroniser les gabarits produits. Veuillez réessayer.
-"Failed to validate card details, please try again.",Impossible de valider les détails de la carte. Veuillez réessayer.
 Failed to validate the order. Please try again.,Nous n'avons pu valider la commande. Veuillez réessayer.
 First Name,Prénom
 Flip,Flip
 Fonts,Polices
-Free,Gratuit
 IMAGE TOOLS,OUTILS D'IMAGE
 Image Is Too Small,La taille de l’image est insuffisante
 Image upload failed with a %lu HTTP response status code. Please try again.,Le téléchargement de l'image a échoué avec un code de réponse HTTP %lu. Veuillez réessayer.
@@ -107,8 +105,6 @@ Next,Suivant
 No Thanks,Non merci
 No photos,Pas de photos
 No,Non
-"No, keep it","Non, le garder"
-"No, not yet","Non, pas maintenant"
 Not now,Pas maintenant
 OK,OK
 Only registered %d/%d image URLs with the asset endpoint,Seules les URL d'image %1$d/%2$d enregistrées avec le point d'extrémité d'actif
@@ -143,7 +139,7 @@ Please enter a valid phone number,Merci d'ajouter un numéro de téléphonevalid
 Please enter your first and last name.,Merci d'entrer votre nom et prénom.
 Please fill in Line 1 of the address.,Merci de remplir la première ligne de votre adresse.
 Please fill in your postal code.,Merci de remplir votre code postal.
-Please scan the QR code using a QR reader app on your device.,Veuillez scanner le QR code en utilisant un lecteur QR sur votre smartphone. 
+Please scan the QR code using a QR reader app on your device.,Veuillez scanner le QR code en utilisant un lecteur QR sur votre smartphone.
 Please select %d images.,Merci de sélectionner %d images.
 Please select %ld photos,Merci de sélectionner %ld photos
 Please select at least %d images.,Merci de sélectionner au moins %d images.
@@ -153,6 +149,7 @@ Please select up to %ld photos,Merci de sélectionner %ld photos maximum
 Please zoom out or pick a higher quality image,Agrandissez l’image ou sélectionnez une autre image de meilleure qualité
 Postcode,Code Postale
 Powered by Kite.ly,Propulsé par Kite.ly
+Price,Prix
 Print It Anyway,Imprimer cette image
 Print Shop,Print shop
 Print order submission failed with a %lu HTTP response status code. Please try again.,La soumission de commande d'impression a échoué avec un code d'état de réponse HTTP %lu. Veuillez réessayer.
@@ -160,6 +157,7 @@ Print these,Imprimer ceci
 Processing,En cours de traitement
 Promo Code,Code Promo
 Promotional Discount,Remise promotionnelle
+Quantity,Quantité
 Recents,Récents
 Remove,Retirer
 Remove?,Retirer ?
@@ -170,18 +168,15 @@ Review,Revoir
 Rotate,Faire pivoter
 Save,Sauvegarder
 Scan QR Code,QR Code
-"Search by postcode, street or address","Recherche par code postal, rue ou adresse"
-"Search by street, address or ZIP code","Recherche par rue, adresse ou code postal"
 Search for Address,Rechercher une adresse
 Shipping,Livraison
 Single Photo Poster,Affiche avec une seule photo
+Size,Taille
 Small,Petit
 Start Creating,Commencer la création
 State,Etat
 Store Maintenance,Magagsin en Maintenance
-TEXT COLOUR,COULEUR DU TEXTE
 TEXT TOOLS,OUTILES DE TEXTE
-Tap Image to Change ,Tapez sur l'image pour changer
 Tap Image to Change,Tapez sur l'image pour changer
 Tap Image to Edit or Hold to Rearrange,Tapez sur l'image pour modifier ou maintenir pour réarranger
 Tap Image to Edit,tapez sur l'image pour modifier
@@ -200,8 +195,6 @@ We'll send you confirmation and order updates. Uncheck this box to opt out of em
 We'll send you confirmation and order updates.,Nous vous enverrons une confirmation et des mises à jour de commande.
 Yes Please,Oui s'il vous plaît
 Yes,Oui
-"Yes, proceed","Oui, procédez"
-"Yes, remove it","Oui, le retirer"
 You can add %d more for the same price.,Vous pouvez ajouter %d de plus pour le même prix.
 You can add more photos,Vous pouvez ajouter plus de photos
 You need to authorize the app to access your Instagram account if you want to import photos from there.,Vous devez autoriser l'application à accéder à votre compte Instagram si vous souhaitez importer des photos à partir de là.
@@ -210,7 +203,7 @@ You've only selected %d photos.,Vous avez sélectionné seulement %d photos.
 You've selected %d photos.,Vous avez sélectionné %d photos.
 Your 16 digit card number,Votre numéro de carte à 16 chiffres
 Your Phone,Votre téléphone
-Your card expiry date,Date d'expiration de votre carte 
+Your card expiry date,Date d'expiration de votre carte
 Your payment was not approved (transaction state: %@). Please try again.,Votre paiement n'a pas été approuvé (état de transaction : %@). Veuillez réessayer.
 ZIP Code,Code postal
 cm,cm

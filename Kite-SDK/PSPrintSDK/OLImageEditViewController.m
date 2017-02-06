@@ -937,16 +937,16 @@ const NSInteger kOLEditTagCrop = 40;
         self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT TOOLS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if (self.editingTools.collectionView.tag == kOLEditTagTextColors){
-        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT COLOUR", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Text Colour", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
     }
     else if (self.editingTools.collectionView.tag == kOLEditTagFonts){
-        self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FONTS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Fonts", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") uppercaseStringWithLocale:[NSLocale currentLocale]];
     }
     else if (self.editingTools.collectionView.tag == kOLEditTagFilters){
-        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image filters") uppercaseString];
+        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image filters") uppercaseStringWithLocale:[NSLocale currentLocale]];
     }
     else if (self.editingTools.collectionView.tag == kOLEditTagCrop){
-        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image crop") uppercaseString];
+        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image crop") uppercaseStringWithLocale:[NSLocale currentLocale]];
     }
 
     [UIView animateWithDuration:0.25 animations:^{
