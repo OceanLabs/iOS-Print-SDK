@@ -1,5 +1,3 @@
-#!/usr/local/bin/python
-
 import sys
 import io
 
@@ -11,15 +9,14 @@ for line in file:
     if (len(line) < 2 or line[0] == """/"""):
         continue
     strings = line.split(" = ")
-#    print strings[1]
-    if len(strings) < 2 or r'Lorem Ipsum' in strings[1]:
+    if len(strings) < 2:
         continue        
         
     found = False
     
     translated = open(sys.argv[2], 'r')
     for translatedLine in translated:
-        if (len(line) < 2 or line[0] == """/"""):
+        if (len(translatedLine) < 2 or translatedLine[0] == """/"""):
             continue
         translatedStrings = translatedLine.split(" = ")
         if len(translatedStrings) < 2:
