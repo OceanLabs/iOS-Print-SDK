@@ -269,7 +269,7 @@ UITableViewDataSource, UITextFieldDelegate>
     [self.textFieldCVV resignFirstResponder];
     
     if (![self.textFieldCardNumber.text isValidCreditCardNumber]) {
-        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"ΟΚ", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
@@ -277,7 +277,7 @@ UITableViewDataSource, UITextFieldDelegate>
     }
     
     if (self.textFieldExpiryDate.text.length != 5) {
-        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"For credit cards");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"ΟΚ", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
@@ -285,7 +285,7 @@ UITableViewDataSource, UITextFieldDelegate>
     }
     
     if (self.textFieldCVV.text.length == 0) {
-        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid CVV number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid CVV number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"The credit card security number");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"ΟΚ", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
@@ -295,7 +295,7 @@ UITableViewDataSource, UITextFieldDelegate>
     NSUInteger expireMonth = [self cardExpireMonth];
     NSUInteger expireYear = [self cardExpireYear];
     if (expireMonth > 12) {
-        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"For credit cards");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"ΟΚ", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
@@ -306,7 +306,7 @@ UITableViewDataSource, UITextFieldDelegate>
     NSDateComponents *components = [[NSCalendar currentCalendar] components:flags fromDate:[NSDate date]];
     NSInteger componentsYear = components.year - 2000; //This will obviously cause problems near 2100.
     if (componentsYear > expireYear || (componentsYear == expireYear && components.month > expireMonth)){
-        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"For credit cards");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"ΟΚ", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
@@ -329,7 +329,7 @@ UITableViewDataSource, UITextFieldDelegate>
             paypalCard = kOLPayPalCardTypeDiscover;
             break;
         default: {
-            NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid credit card number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
             [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"ΟΚ", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
             [self presentViewController:ac animated:YES completion:NULL];
@@ -346,7 +346,7 @@ UITableViewDataSource, UITextFieldDelegate>
         
         if (self.printOrder){
             [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
-            [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+            [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Processing the order")];
             [card chargeCard:nil currencyCode:nil description:nil completionHandler:^(NSString *proofOfPayment, NSError *error) {
                 if (error) {
                     [OLProgressHUD dismiss];
@@ -478,10 +478,10 @@ UITableViewDataSource, UITextFieldDelegate>
         self.textFieldCardNumber = textField;
         
     } else if (indexPath.section == kOLSectionExpiryDate) {
-        textField.placeholder = NSLocalizedStringFromTableInBundle(@"MM/YY", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        textField.placeholder = NSLocalizedStringFromTableInBundle(@"MM/YY", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Credit card date format: MonthMonth/YearYear");
         self.textFieldExpiryDate = textField;
     } else if (indexPath.section == kOLSectionCVV) {
-        textField.placeholder = NSLocalizedStringFromTableInBundle(@"CVV", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        textField.placeholder = NSLocalizedStringFromTableInBundle(@"CVV", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"The credit card security code");
         self.textFieldCVV = textField;
     }
     

@@ -316,7 +316,7 @@ static const CGFloat kBookEdgePadding = 38;
     [self.pageController.view addGestureRecognizer:panGesture];
     [self.pageController.view addGestureRecognizer:longPressGesture];
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
@@ -825,8 +825,8 @@ static const CGFloat kBookEdgePadding = 38;
     if (selectedCount < quantityToFulfilOrder) {
         NSUInteger canSelectExtraCount = quantityToFulfilOrder - selectedCount;
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You can add %d more for the same price.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Add more", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print these", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Add more", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Add more [photos]") style:UIAlertActionStyleCancel handler:NULL]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print these", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Print these [photos]") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
             [self doCheckout];
         }]];
         [self presentViewController:ac animated:YES completion:NULL];
@@ -1274,7 +1274,7 @@ static const CGFloat kBookEdgePadding = 38;
             UILabel *helpLabel = [[UILabel alloc] init];
             helpLabel.tag = 1234;
             helpLabel.font = [UIFont systemFontOfSize:11];
-            helpLabel.text = NSLocalizedStringFromTableInBundle(@"Tap to edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            helpLabel.text = NSLocalizedStringFromTableInBundle(@"Tap to edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Tap to edit [photo]");
             helpLabel.translatesAutoresizingMaskIntoConstraints = NO;
             self.coverHelpLabel = helpLabel;
             [halfBookCoverImageContainer insertSubview:helpLabel belowSubview:coverImageView];

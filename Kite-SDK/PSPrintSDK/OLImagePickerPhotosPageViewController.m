@@ -492,7 +492,7 @@ CGFloat OLImagePickerMargin = 1.5;
         
         if ([self.imagePicker.selectedAssets containsObject:printPhoto]){ //Photo is selected
             if ([printPhoto isEdited]){
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"The image edits, like crop, filters, etc") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
                     [self.imagePicker.selectedAssets removeObject:printPhoto];
                     [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
@@ -704,7 +704,7 @@ CGFloat OLImagePickerMargin = 1.5;
         serviceName = @"Instagram";
     }
     
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Do you want to log out of %@?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), serviceName] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Do you want to log out of %@?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Log out of Instagram/Facebook"), serviceName] preferredStyle:UIAlertControllerStyleAlert];
     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
         if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
             [[OLUserSession currentSession] logoutOfFacebook];

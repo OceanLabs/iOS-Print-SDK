@@ -99,7 +99,7 @@ static const NSInteger kSectionPages = 2;
     [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
 #endif
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Move Pages", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Move Pages", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen that allows the user to move the pages of a book around");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
@@ -456,7 +456,7 @@ static const NSInteger kSectionPages = 2;
 
 - (void)onButtonNextClicked{
     if (self.photobookPhotos.count == 0){
-        NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"No photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"No photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of an alert letting the user know that they selected no photos");
         NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Please add at least one photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
@@ -678,7 +678,7 @@ static const NSInteger kSectionPages = 2;
     }
     [view becomeFirstResponder];
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Remove", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") action:@selector(deletePage)];
+    UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Remove", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Remove/clear an image") action:@selector(deletePage)];
     [items addObject:deleteItem];
     
     if (![OLUserSession currentSession].kiteVc.disableEditingTools){

@@ -334,11 +334,11 @@
             textView.text = NSLocalizedStringFromTableInBundle(@"Single Photo Poster", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
         else{
-            textView.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%ldx%ld Collage", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (long)product.productTemplate.gridCountX, (long)product.productTemplate.gridCountY];
+            textView.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%ldx%ld Collage", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"example: 5x7 Collage"), (long)product.productTemplate.gridCountX, (long)product.productTemplate.gridCountY];
         }
     }
     else if (inSizeCollectionFlag){
-        textView.text = [[[[product.productTemplate.templateType stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Small", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@""] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Medium", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@""] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Large", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@""] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+        textView.text = [[[[product.productTemplate.templateType stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Small", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@"Small product size"] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Medium", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@"Medium Product size"] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Large", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@"Large Product Size"] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
     }
     else{
         textView.text = product.productTemplate.templateType;

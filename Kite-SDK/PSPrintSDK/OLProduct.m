@@ -284,7 +284,7 @@ typedef enum {
     if (self.productTemplate.templateUI == OLTemplateUICalendar || self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUIPoster || self.productTemplate.templateUI == OLTemplateUIPostcard || self.productTemplate.templateUI == OLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
         return @"";
     }
-    NSString* packOfString = NSLocalizedStringFromTableInBundle(@"Pack of", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    NSString* packOfString = NSLocalizedStringFromTableInBundle(@"Pack of", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Pack of [20 square photos]");
     return [packOfString stringByAppendingFormat:@" %lu\n", (unsigned long)self.quantityToFulfillOrder];
 }
 
@@ -310,14 +310,14 @@ typedef enum {
     switch (sizeUnits) {
         case kSizeUnitsCentimetres:
             dimensions = [self dimensionsInCentimetres];
-            unitsName =  NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            unitsName =  NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Centimeters");
             break;
         case kSizeUnitsInches:
             dimensions = [self dimensionsInInches];
             unitsName =  NSLocalizedStringFromTableInBundle(@"inches", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
             if (dimensions.width < 0.1 && dimensions.height < 0.1){
                 dimensions = [self dimensionsInCentimetres];
-                unitsName = NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+                unitsName = NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Centimeters");
             }
             break;
         default:
@@ -362,18 +362,18 @@ typedef enum {
     
     //Add description
     if (self.productTemplate.productDescription && ![self.productTemplate.productDescription isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Description**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), [self.productTemplate.productDescription stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Description**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product description"), [self.productTemplate.productDescription stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]]];
     }
     
     //Add size info
     OLTemplateUI templateClass = self.productTemplate.templateUI;
     if (templateClass != OLTemplateUICase){
-        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Size**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.dimensions]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Size**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Physical size of the product"), self.dimensions]];
     }
     
     //Add qty info
     if (self.packInfo && ![self.packInfo isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Quantity**\n%lu\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (unsigned long)self.quantityToFulfillOrder]];
+        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Quantity**\n%lu\n\n", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Quantity of photos"), (unsigned long)self.quantityToFulfillOrder]];
     }
     
     //Add price info

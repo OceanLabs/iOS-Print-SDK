@@ -145,14 +145,14 @@
             [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Checkout", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         }
         else{
-            [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+            [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering") forState:UIControlStateNormal];
         }
     }
     else if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
         [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     else{
-        [self.callToActionButton setTitle:NSLocalizedStringFromTableInBundle(@"Start Creating", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+        [self.callToActionButton setTitle:NSLocalizedStringFromTableInBundle(@"Start Creating", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Start Creating [your product]") forState:UIControlStateNormal];
     }
     
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){

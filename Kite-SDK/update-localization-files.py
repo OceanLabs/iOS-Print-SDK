@@ -12,6 +12,9 @@ comment = ""
 
 for line in file:
     if line[0] == """/""":
+        if "No comment provided by engineer." in line:
+            comment = ""
+            continue
         comment = line
         continue
     elif (len(line) < 2):

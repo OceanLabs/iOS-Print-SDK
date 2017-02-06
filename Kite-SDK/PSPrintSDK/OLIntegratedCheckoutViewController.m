@@ -352,12 +352,12 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
                 
                 break;
             case 1:
-                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Line 1", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Line 1", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Address Line 1") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 tf.text = self.shippingAddress.line1;
                 self.textFieldLine1 = tf;
                 break;
             case 2:
-                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Line 2", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Line 2", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Address Line 2") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 tf.text = self.shippingAddress.line2;
                 self.textFieldLine2 = tf;
                 break;
@@ -368,16 +368,16 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
                 break;
             case 4:
                 if (self.shippingAddress.country == [OLCountry countryForCode:@"USA"]) {
-                    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"State", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+                    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"State", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Address State (for US addresses)") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 } else {
-                    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"County", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+                    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"County", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Address county") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 }
                 tf.text = self.shippingAddress.stateOrCounty;
                 self.textFieldCounty = tf;
                 break;
             case 5:
                 if (self.shippingAddress.country == [OLCountry countryForCode:@"USA"]) {
-                    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"ZIP Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+                    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"ZIP Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"For US Addresses") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 } else {
                     tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Postcode", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
                 }
@@ -405,7 +405,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
             s = NSLocalizedStringFromTableInBundle(@"Email", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
         else if (indexPath.section == kSectionPhone){
-            s = NSLocalizedStringFromTableInBundle(@"Phone", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            s = NSLocalizedStringFromTableInBundle(@"Phone", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Phone number");
         }
         else{
             s = @"";

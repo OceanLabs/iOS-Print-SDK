@@ -371,7 +371,7 @@
     
     OLImagePickerProviderCollection *collection = [[OLImagePickerProviderCollection alloc] initWithArray:[OLUserSession currentSession].appAssets name:NSLocalizedStringFromTableInBundle(@"All Photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     
-    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:NSLocalizedStringFromTableInBundle(@"Recents", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") icon:[UIImage imageNamedInKiteBundle:@"bookmark"]];
+    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:@[collection] name:NSLocalizedStringFromTableInBundle(@"Recents", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Recent photos used") icon:[UIImage imageNamedInKiteBundle:@"bookmark"]];
     provider.providerType = OLImagePickerProviderTypeRecents;
     [self.providers addObject:provider];
 }
@@ -809,13 +809,13 @@
         errorMessage = NSLocalizedStringFromTableInBundle(@"Please select some images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if (self.selectedAssets.count < self.minimumPhotos && self.minimumPhotos == self.maximumPhotos){
-        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.minimumPhotos];
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Please select [number] images"), self.minimumPhotos];
     }
     else if (self.selectedAssets.count < self.minimumPhotos){
-        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select at least %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.minimumPhotos];
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select at least %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Please select at least [number] images"), self.minimumPhotos];
     }
     else if (![self.product isMultipack] && self.selectedAssets.count > self.maximumPhotos && self.maximumPhotos != 0){
-        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select no more than %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.maximumPhotos];
+        errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select no more than %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Please select no more than [number] images"), self.maximumPhotos];
     }
     if (errorMessage) {
         UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];

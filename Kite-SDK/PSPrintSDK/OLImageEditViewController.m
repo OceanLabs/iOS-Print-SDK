@@ -218,7 +218,7 @@ const NSInteger kOLEditTagCrop = 40;
         [self.navigationBar removeFromSuperview];
     }
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit image");
     
     self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor darkGrayColor], [UIColor colorWithRed:0.890 green:0.863 blue:0.761 alpha:1.000], [UIColor colorWithRed:0.765 green:0.678 blue:0.588 alpha:1.000], [UIColor colorWithRed:0.624 green:0.620 blue:0.612 alpha:1.000], [UIColor colorWithRed:0.976 green:0.910 blue:0.933 alpha:1.000], [UIColor colorWithRed:0.604 green:0.522 blue:0.741 alpha:1.000], [UIColor colorWithRed:0.996 green:0.522 blue:0.886 alpha:1.000], [UIColor colorWithRed:0.392 green:0.271 blue:0.576 alpha:1.000], [UIColor colorWithRed:0.906 green:0.573 blue:0.565 alpha:1.000], [UIColor colorWithRed:0.984 green:0.275 blue:0.404 alpha:1.000], [UIColor colorWithRed:0.918 green:0.000 blue:0.200 alpha:1.000], [UIColor colorWithRed:0.776 green:0.176 blue:0.157 alpha:1.000], [UIColor colorWithRed:0.965 green:0.831 blue:0.239 alpha:1.000], [UIColor colorWithRed:0.961 green:0.682 blue:0.118 alpha:1.000], [UIColor colorWithRed:0.945 green:0.482 blue:0.204 alpha:1.000], [UIColor colorWithRed:0.827 green:0.859 blue:0.898 alpha:1.000], [UIColor colorWithRed:0.616 green:0.710 blue:0.851 alpha:1.000], [UIColor colorWithRed:0.400 green:0.541 blue:0.784 alpha:1.000], [UIColor colorWithRed:0.400 green:0.541 blue:0.784 alpha:1.000], [UIColor colorWithRed:0.173 green:0.365 blue:0.725 alpha:1.000], [UIColor colorWithRed:0.102 green:0.247 blue:0.361 alpha:1.000], [UIColor colorWithRed:0.765 green:0.933 blue:0.898 alpha:1.000], [UIColor colorWithRed:0.506 green:0.788 blue:0.643 alpha:1.000], [UIColor colorWithRed:0.345 green:0.502 blue:0.400 alpha:1.000], [UIColor colorWithRed:0.337 green:0.427 blue:0.208 alpha:1.000]];
     
@@ -943,10 +943,10 @@ const NSInteger kOLEditTagCrop = 40;
         self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"FONTS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if (self.editingTools.collectionView.tag == kOLEditTagFilters){
-        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") uppercaseString];
+        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image filters") uppercaseString];
     }
     else if (self.editingTools.collectionView.tag == kOLEditTagCrop){
-        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") uppercaseString];
+        self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image crop") uppercaseString];
     }
 
     [UIView animateWithDuration:0.25 animations:^{
@@ -1473,23 +1473,23 @@ const NSInteger kOLEditTagCrop = 40;
         
         if (indexPath.item == 0){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"filters"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image filters")];
         }
         else if (indexPath.item == 1){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"flip"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Flip", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Flip", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Horizontally flip image")];
         }
         else if (indexPath.item == 2){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"rotate"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Rotate", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Rotate", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Rotate image by 90 degrees")];
         }
         else if (indexPath.item == 3){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Tt"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Add Text", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Add Text", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Add text on image")];
         }
         else if (indexPath.item == 4){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"crop"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Crop image")];
         }
     }
     else if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){

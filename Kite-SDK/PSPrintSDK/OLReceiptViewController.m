@@ -239,7 +239,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     }
     else if (self.printOrder.submitStatus == OLPrintOrderSubmitStatusAccepted || self.printOrder.submitStatus == OLPrintOrderSubmitStatusReceived){
         [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
-        [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+        [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Processing the order")];
         [self.printOrder validateOrderSubmissionWithCompletionHandler:^(NSString *orderReceipt, NSError *error){
             [OLProgressHUD dismiss];
             if (error){

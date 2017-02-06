@@ -67,7 +67,7 @@
     if (font){
         [self.detailsLabel setFont:font];
     }
-    self.detailsLabel.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.detailsLabel.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product Details");
     
     NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     

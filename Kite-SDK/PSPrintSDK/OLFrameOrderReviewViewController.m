@@ -98,7 +98,7 @@ CGFloat innerMargin = 3;
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
 #endif
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering");
 }
 
 - (void)replacePhoto:(id)sender{
@@ -229,7 +229,7 @@ CGFloat innerMargin = 3;
     if (nullCount > 0){
         NSInteger selected = self.framePhotos.count - nullCount;
         NSString *title = selected == 1 ? [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photo.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), selected] : [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), selected];
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please add %d more.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), nullCount] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please add %d more.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Please add [a number] more [photos]"), nullCount] preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
         [self presentViewController:ac animated:YES completion:NULL];
         return NO;
