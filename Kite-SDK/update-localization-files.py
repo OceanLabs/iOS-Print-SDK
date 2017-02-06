@@ -5,6 +5,7 @@ import csv
 file = open(sys.argv[1], 'r')
 untranslated = open(sys.argv[3], 'w')
 untranslatedWriter = csv.writer(untranslated, delimiter=',', quotechar='"')
+untranslatedWriter.writerow(["ENGLISH/INTERNAL","TO TRANSLATE","COMMENT/CONTEXT"])
 
 result = open(sys.argv[4], 'w')
 
@@ -28,6 +29,7 @@ for line in file:
     
     translated = open(sys.argv[2], 'r')
     translatedReader = csv.reader(translated, delimiter=',', quotechar='"')
+    translatedReader.next()
     for translatedLine in translatedReader:
         if len(translatedLine) < 2:
             continue
