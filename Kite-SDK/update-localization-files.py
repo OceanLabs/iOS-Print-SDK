@@ -8,10 +8,15 @@ untranslatedWriter = csv.writer(untranslated, delimiter=',', quotechar='"')
 
 result = open(sys.argv[4], 'w')
 
+comment = ""
 
 for line in file:
-    if (len(line) < 2 or line[0] == """/"""):
+    if line[0] == """/""":
+        comment = line
         continue
+    elif (len(line) < 2):
+        continue
+
     strings = line.split(" = ")
     if len(strings) < 2:
         continue        
@@ -30,7 +35,7 @@ for line in file:
             break
 
     if found == False:
-        untranslatedWriter.writerow([strings[0][1:-1],strings[1][1:-3]])
+        untranslatedWriter.writerow([strings[0][1:-1],strings[1][1:-3], comment[0:-1]])
     
     translated.close()
         
