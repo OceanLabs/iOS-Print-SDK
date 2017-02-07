@@ -62,7 +62,7 @@
 
 - (id)init {
     if (self = [super initWithStyle:UITableViewStylePlain]) {
-        self.title = NSLocalizedStringFromTableInBundle(@"Address Search", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Address Search", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     
     return self;
@@ -91,7 +91,7 @@
     self.countryPickerView = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CountryPickerView"];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 110, 44)];
-    label.text = NSLocalizedStringFromTableInBundle(@"Country", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    label.text = NSLocalizedStringFromTableInBundle(@"Country", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
     self.labelCountry = [[UILabel alloc] initWithFrame:CGRectMake(110, 0, 320 - 110, 44)];
     self.labelCountry.adjustsFontSizeToFitWidth = YES;
@@ -128,9 +128,9 @@
     _country = country;
     self.labelCountry.text = country.name;
     if ([country.codeAlpha3 isEqualToString:@"USA"]) {
-        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by street, address or ZIP code", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by street, address or ZIP code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     } else {
-        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by postcode, street or address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by postcode, street or address", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
 }
 
@@ -277,8 +277,8 @@
         return;
     }
     
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
     [self presentViewController:ac animated:YES completion:NULL];
 }
 

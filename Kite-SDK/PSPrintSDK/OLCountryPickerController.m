@@ -54,10 +54,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = NSLocalizedStringFromTableInBundle(@"Choose Country", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Choose Country", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
     if (self.tableView.allowsMultipleSelection) {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
+        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
         self.navigationItem.rightBarButtonItem = doneButton;
         
         UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
@@ -79,7 +79,7 @@
             }];
         }
         else{
-            UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+            UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
             self.navigationItem.rightBarButtonItem = cancelButton;
         }
     }

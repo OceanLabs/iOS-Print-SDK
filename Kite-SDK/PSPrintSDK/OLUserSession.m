@@ -108,12 +108,14 @@
 
 - (void)clearUserSelectedPhotos{
     for (OLAsset *asset in self.userSelectedPhotos){
+        asset.edits = nil;
         [asset unloadImage];
     }
     
     [self.userSelectedPhotos removeAllObjects];
     
     for (OLAsset *asset in self.recentPhotos){
+        asset.edits = nil;
         [asset unloadImage];
     }
     [self.recentPhotos removeAllObjects];
@@ -149,6 +151,7 @@
     if ((cleanupOptions & OLUserSessionCleanupOptionPhotos) == OLUserSessionCleanupOptionPhotos){
         [self clearUserSelectedPhotos];
         for (OLAsset *asset in self.appAssets){
+            asset.edits = nil;
             [asset unloadImage];
         }
         
@@ -198,8 +201,8 @@
         self.screenScale = scale;
     }
     else{
-        UIImage *ram1GbImage = [UIImage imageNamed:@"ram-1" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:traitCollection];
-        UIImage *ramThisDeviceImage = [UIImage imageNamed:@"ram" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:traitCollection];
+        UIImage *ram1GbImage = [UIImage imageNamed:@"ram-1" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:traitCollection];
+        UIImage *ramThisDeviceImage = [UIImage imageNamed:@"ram" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:traitCollection];
         NSData *ram1Gb = UIImagePNGRepresentation(ram1GbImage);
         NSData *ramThisDevice = UIImagePNGRepresentation(ramThisDeviceImage);
         if ([ram1Gb isEqualToData:ramThisDevice]){

@@ -404,7 +404,7 @@
         "API"
       ],
       "id" : 79819,
-      "description_markdown" : "",
+      "description_markdown" : null,
       "wholesale_cost" : {
         "CAD" : "17.40",
         "KRW" : "15060.00",
