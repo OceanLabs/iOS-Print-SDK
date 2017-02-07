@@ -33,7 +33,7 @@
 @implementation UIImage (ImageNamedInKiteBundle)
 
 + (UIImage*)imageNamedInKiteBundle:(NSString*)name{
-    return [UIImage imageNamed:name inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:nil];
+    return [UIImage imageNamed:name inBundle:[OLKiteUtils kiteResourcesBundle] compatibleWithTraitCollection:nil];
 }
 
 @end

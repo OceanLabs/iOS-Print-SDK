@@ -39,3 +39,5 @@ Done
 -----------
 
 You're now ready to start using the SDK, see the [Quick Integration Guide](https://github.com/OceanLabs/iOS-Print-SDK#quick-integration) for how to be up and running in 5 minutes.
+
+You can find an example project [here](https://github.com/OceanLabs/Example-Kite-iOS-Git-Submodules)

@@ -38,7 +38,8 @@
 
 @interface OLKiteUtils : NSObject
 
-+ (NSBundle *)kiteBundle;
++ (NSBundle *)kiteLocalizationBundle;
++ (NSBundle *)kiteResourcesBundle;
 
 + (NSString *)userEmail:(UIViewController *)topVC;
 
