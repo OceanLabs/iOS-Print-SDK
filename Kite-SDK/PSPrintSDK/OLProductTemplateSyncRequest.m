@@ -213,7 +213,7 @@
                             
                             NSNumber *enabledNumber = productTemplate[@"enabled"];
                             NSString *description = productTemplate[@"description"];
-                            NSString *descriptionMarkdown = productTemplate[@"description_markdown"];
+                            NSString *descriptionMarkdown = [productTemplate[@"description_markdown"] isKindOfClass:[NSString class]] ? productTemplate[@"description_markdown"] : @"";
                             BOOL enabled = enabledNumber == nil ? YES : [enabledNumber boolValue];
                             
                             NSNumber *printInStoreNumber = productTemplate[@"print_in_store"];
