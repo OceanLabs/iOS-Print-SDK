@@ -396,7 +396,7 @@
     if (!(numberOfProducts % 2 == 0) && (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact || size.height < size.width)){
         extras = 1;
     }
-    if (numberOfProducts == 2){
+    if (numberOfProducts == 2 && self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact){
         extras = 1;
     }
     
