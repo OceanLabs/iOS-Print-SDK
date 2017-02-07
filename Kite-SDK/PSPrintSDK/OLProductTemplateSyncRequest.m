@@ -64,7 +64,7 @@
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
     NSAssert(self.req == nil, @"Oops only one template sync request should be in progress at any given time");
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/?limit=100", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/?limit=200", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
     [self fetchTemplatesWithURL:url templateAccumulator:[[NSMutableArray alloc] init] handler:handler];
 }
 
@@ -267,6 +267,7 @@
                                 NSArray *supportedOptions;
                                 NSString *collectionId;
                                 NSString *collectionName;
+                                NSMutableArray *fulfilmentItems;
                                 OLProductRepresentation *productRepresentation;
                                 if (product){
                                     NSArray *coverPhotoDicts = product[@"cover_photo_variants"];
@@ -277,6 +278,21 @@
                                                     coverPhotos[dict[@"variant_id"]] = dict[@"url"];
                                                 }
                                             }
+                                        }
+                                    }
+                                    
+                                    NSArray *fulfilmentFields = product[@"fulfilment_fields"];
+                                    if ([fulfilmentFields isKindOfClass:[NSArray class]]){
+                                        fulfilmentItems = [[NSMutableArray alloc] init];
+                                        for (NSDictionary *dict in fulfilmentFields){
+                                            OLFulfilmentItem *item = [[OLFulfilmentItem alloc] init];
+                                            item.costDict = dict[@"cost"];
+                                            item.itemDescription = dict[@"description"];
+                                            item.name = dict[@"field_name"];
+                                            item.required = dict[@"required"];
+                                            item.name = dict[@"verbose_name"];
+                                            
+                                            [fulfilmentItems addObject:item];
                                         }
                                     }
                                     
@@ -461,6 +477,7 @@
                                     t.collectionName = collectionName;
                                     t.logo = logo;
                                     t.representationAssets = representationAssets;
+                                    t.fulfilmentItems = fulfilmentItems;
                                     
                                     if ([blendMode isEqualToString:@"MULTIPLY"]){
                                         t.blendMode = OLImageBlendModeMultiply;
