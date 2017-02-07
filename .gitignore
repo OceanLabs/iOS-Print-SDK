@@ -27,3 +27,4 @@ Podfile~
 Gemfile.lock
 /Kite-SDK/Archive
 .gitattributes
+/Kite-CI-Deploy.app.dSYM.zip
