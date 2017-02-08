@@ -1,8 +1,11 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+Add a photo\non this side,Add a photo\non this side,/* this side [of the shirt] */
+Back Image Is Too Small,Back Image Is Too Small,
 Crop,Crop,/* Crop image */
 Do you want to log out of %@?,Do you want to log out of %@?,/* Log out of Instagram/Facebook */
 Enter a valid card number,Enter a valid card number,
 Filters,Filters,/* Image filters */
+For only %@ extra,For only %@ extra,/* [Add a photo on this side of the shirt] for only $4.00 extra */
 Great gifts for all the family,Great gifts for all the family,
 Let's pick\nan image!,Let's pick\nan image!,"/* Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half. */"
 Log out,Log out,

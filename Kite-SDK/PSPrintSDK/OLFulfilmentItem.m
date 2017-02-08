@@ -38,12 +38,27 @@ static NSString *const kKeyName = @"co.oceanlabs.pssdk.kKeyName";
 
 @implementation OLFulfilmentItem
 
+- (BOOL)hasCostForCurrency:(NSString *)currencyCode{
+    NSNumber *cost = [self costForCurrency:currencyCode];
+    return cost && [cost doubleValue] > 0;
+}
+
+- (NSDecimalNumber *)costForCurrency:(NSString *)currencyCode{
+    for (NSDictionary *dict in self.costs){
+        if ([dict isKindOfClass:[NSDictionary class]] && [dict[@"currency"] isKindOfClass:[NSString class]] && [dict[@"currency"] isEqualToString:currencyCode] && [dict[@"amount"] isKindOfClass:[NSString class]]){
+            return [NSDecimalNumber decimalNumberWithString:dict[@"amount"]];
+        }
+    }
+    
+    return nil;
+}
+
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]){
         self.name = [aDecoder decodeObjectForKey:kKeyName];
         self.itemDescription = [aDecoder decodeObjectForKey:kKeyDescription];
         self.required = [aDecoder decodeBoolForKey:kKeyRequired];
-        self.costDict = [aDecoder decodeObjectForKey:kKeyCost];
+        self.costs = [aDecoder decodeObjectForKey:kKeyCost];
         self.identifier = [aDecoder decodeObjectForKey:kKeyIdentifier];
     }
     
@@ -51,7 +66,7 @@ static NSString *const kKeyName = @"co.oceanlabs.pssdk.kKeyName";
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.costDict forKey:kKeyCost];
+    [aCoder encodeObject:self.costs forKey:kKeyCost];
     [aCoder encodeObject:self.identifier forKey:kKeyIdentifier];
     [aCoder encodeBool:self.required forKey:kKeyRequired];
     [aCoder encodeObject:self.description forKey:kKeyDescription];

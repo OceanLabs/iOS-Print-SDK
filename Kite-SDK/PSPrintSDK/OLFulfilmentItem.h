@@ -30,9 +30,12 @@
 #import <Foundation/Foundation.h>
 
 @interface OLFulfilmentItem : NSObject <NSCoding>
-@property (strong, nonatomic) NSDictionary *costDict;
+@property (strong, nonatomic) NSArray *costs;
 @property (assign, nonatomic) BOOL required;
 @property (strong, nonatomic) NSString *itemDescription;
 @property (strong, nonatomic) NSString *identifier;
 @property (strong, nonatomic) NSString *name;
+
+- (BOOL)hasCostForCurrency:(NSString *)currencyCode;
+- (NSDecimalNumber *)costForCurrency:(NSString *)currencyCode;
 @end

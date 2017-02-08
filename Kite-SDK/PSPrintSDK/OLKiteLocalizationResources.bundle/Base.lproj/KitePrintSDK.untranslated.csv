@@ -6,6 +6,7 @@ ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
 Add,Add,
 Add %ld %@!,Add %ld %@!,
 Add a %@!,Add a %@!,
+Add a photo\non this side,Add a photo\non this side,/* this side [of the shirt] */
 Add Address,Add Address,
 Add another %@!,Add another %@!,
 Add Credit Card,Add Credit Card,
@@ -26,6 +27,7 @@ Are you sure?,Are you sure?,
 Authorise,Authorise,
 Back,Back,
 BACK,BACK,/* Back of the photo */
+Back Image Is Too Small,Back Image Is Too Small,
 Basket is empty,Basket is empty,
 Cancel,Cancel,
 Card Number,Card Number,
@@ -80,6 +82,7 @@ Filters,Filters,/* Image filters */
 First Name,First Name,
 Flip,Flip,/* Horizontally flip image */
 Fonts,Fonts,
+For only %@ extra,For only %@ extra,/* [Add a photo on this side of the shirt] for only $4.00 extra */
 FREE,FREE,"/* Free, no cost */"
 FRONT,FRONT,/* Front of the photo */
 Great gifts for all the family,Great gifts for all the family,

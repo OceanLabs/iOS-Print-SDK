@@ -286,11 +286,11 @@
                                         fulfilmentItems = [[NSMutableArray alloc] init];
                                         for (NSDictionary *dict in fulfilmentFields){
                                             OLFulfilmentItem *item = [[OLFulfilmentItem alloc] init];
-                                            item.costDict = dict[@"cost"];
-                                            item.itemDescription = dict[@"description"];
-                                            item.identifier = dict[@"field_name"];
-                                            item.required = dict[@"required"];
-                                            item.name = dict[@"verbose_name"];
+                                            item.costs = [dict[@"cost"] isKindOfClass:[NSArray class]] ? dict[@"cost"] : nil;
+                                            item.itemDescription = [dict[@"description"] isKindOfClass:[NSString class]] ? dict[@"description"] : nil;
+                                            item.identifier = [dict[@"field_name"] isKindOfClass:[NSString class]] ? dict[@"field_name"] : nil;
+                                            item.required = [dict[@"required"] isKindOfClass:[NSNumber class]] ? [dict[@"required"] boolValue] : NO;
+                                            item.name = [dict[@"verbose_name"] isKindOfClass:[NSString class]] ? dict[@"verbose_name"] : nil;
                                             
                                             [fulfilmentItems addObject:item];
                                         }
