@@ -41,6 +41,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLKitePrintSDK.h"
 #import "OLImageCachingManager.h"
 #import "OLImagePickerViewController.h"
+#import "OLKiteUtils.h"
 
 @import Photos;
 
@@ -79,7 +80,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
     
-    OLImagePickerViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    OLImagePickerViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     vc.delegate = self;
     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
