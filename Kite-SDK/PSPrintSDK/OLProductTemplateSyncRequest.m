@@ -288,7 +288,7 @@
                                             OLFulfilmentItem *item = [[OLFulfilmentItem alloc] init];
                                             item.costDict = dict[@"cost"];
                                             item.itemDescription = dict[@"description"];
-                                            item.name = dict[@"field_name"];
+                                            item.identifier = dict[@"field_name"];
                                             item.required = dict[@"required"];
                                             item.name = dict[@"verbose_name"];
                                             

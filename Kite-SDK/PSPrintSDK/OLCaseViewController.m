@@ -274,10 +274,10 @@
         if (self.product.productTemplate.fulfilmentItems.count > 0){
             NSMutableDictionary *assetDict = [[NSMutableDictionary alloc] init];
             for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
-                if ([item.identifier isEqualToString:@"front_image"]){
+                if ([item.identifier isEqualToString:@"center_chest"]){
                     [assetDict setObject:asset forKey:item.identifier];
                 }
-                else if ([item.identifier isEqualToString:@"back_image"] && self.backAsset){
+                else if ([item.identifier isEqualToString:@"center_back"] && self.backAsset){
                     [assetDict setObject:[self.backAsset copy] forKey:item.identifier];
                 }
             }
