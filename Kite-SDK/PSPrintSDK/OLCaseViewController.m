@@ -450,7 +450,7 @@
         [self.maskActivityIndicator.superview bringSubviewToFront:self.maskActivityIndicator];
         [self.maskActivityIndicator startAnimating];
         [self.deviceView setAndFadeInImageWithURL:choice.productBackground size:[UIScreen mainScreen].bounds.size placeholder:nil progress:NULL completionHandler:^{
-            self.cropView.hidden = self.asset;
+            self.cropView.hidden = NO;
             [self.maskActivityIndicator stopAnimating];
             [self renderImage];
         }];
@@ -571,9 +571,9 @@
     self.fullImage = nil;
     
     [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
-        
-    }completion:^(BOOL finished){
         [self loadImageFromAsset];
+    }completion:^(BOOL finished){
+        
     }];
 }
 
@@ -621,9 +621,7 @@
     if (self.showingBack){
         self.backAsset = asset;
     }
-    else{
-        self.asset = asset;
-    }
+    self.asset = asset;
     self.edits = [asset.edits copy];
     if (asset){
         if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didReplaceAssetWithAsset:)]){
