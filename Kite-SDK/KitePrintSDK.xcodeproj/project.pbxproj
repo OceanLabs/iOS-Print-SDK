@@ -2143,10 +2143,6 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
-				da,
-				fr,
-				de,
-				es,
 			);
 			mainGroup = CD73BF5F186215790009DE03;
 			productRefGroup = CD73BF69186215790009DE03 /* Products */;
