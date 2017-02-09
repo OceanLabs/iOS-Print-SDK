@@ -38,6 +38,7 @@ for line in file:
 
     if found == False:
         untranslatedWriter.writerow([strings[0][1:-1],strings[1][1:-3], comment[0:-1]])
+        result.write('"' + strings[0][1:-1] + "\" = \"" + strings[1][1:-3] + "\";\n")
     
     translated.close()
         
