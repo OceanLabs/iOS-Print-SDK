@@ -113,6 +113,7 @@
 "OK" = "Accepter";
 "Only registered %d/%d image URLs with the asset endpoint" = "Seules les URL d'image %d/%d enregistrées avec le point d'extrémité d'actif";
 "Oops!" = "Oups!";
+"Or print on a product below ▼" = "Ou imprimer sur un produit ci-dessous ▼";
 "Order Id" = "Numéro de commande";
 "Order Summary" = "Récapitulatif de commande";
 "Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later." = "Notre magasin est actuellement en cours de maintenance donc aucun produit n'est disponible pour l'achat en ce moment. Veuillez réessayer un peu plus tard.";
