@@ -2275,7 +2275,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "command -v iconv >/dev/null 2>&1 || { exit 0; }\n\ncd PSPrintSDK/OLKiteLocalizationResources.bundle/\n\nfind ../ -name \\*.m | xargs genstrings -o .\nrm Localizable.strings\n\nfilename=\"KitePrintSDK.strings\"\ntranslated=\"KitePrintSDK.translated.csv\"\nconverted=\"KitePrintSDK.converted.strings\"\nuntranslated=\"KitePrintSDK.untranslated.csv\"\nresult=\"KitePrintSDK.result.strings\"\n\niconv -f UTF-16 -t UTF-8 $filename > $converted\nif [ ! -f $converted ]; then\ncp $filename $converted\nfi\n\nsed -i -e 's/\\%1\\$/\\%/g' $converted\nsed -i -e 's/\\%2\\$/\\%/g' $converted\nsed -i -e 's/\\%3\\$/\\%/g' $converted\n\nrm $filename\n\nfor lang in `find . -name \\*.lproj`; do\n\ncd $lang\n\ntouch $untranslated\ntouch $result\ntouch $translated\n\npython ../../../update-localization-files.py \"`pwd`/../$converted\" \"`pwd`/$translated\" \"`pwd`/$untranslated\" \"`pwd`/$result\"\n\nmv $result $filename\n\ncd ..\n\ndone\n\nrm $converted\nrm $converted-e";
+			shellScript = "./update-localization-files.sh";
 		};
 		4725309EF80D2315EB50E573 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
