@@ -119,7 +119,7 @@
     button.translatesAutoresizingMaskIntoConstraints = NO;
     
     UILabel *label = [[UILabel alloc] init];
-    label.text = NSLocalizedStringFromTableInBundle(@"Great gifts for all the family", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    label.text = NSLocalizedStringFromTableInBundle(@"Great gifts for all the family", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     self.label = label;
     [self addSubview:label];
     label.translatesAutoresizingMaskIntoConstraints = NO;

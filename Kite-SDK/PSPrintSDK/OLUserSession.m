@@ -201,8 +201,8 @@
         self.screenScale = scale;
     }
     else{
-        UIImage *ram1GbImage = [UIImage imageNamed:@"ram-1" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:traitCollection];
-        UIImage *ramThisDeviceImage = [UIImage imageNamed:@"ram" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:traitCollection];
+        UIImage *ram1GbImage = [UIImage imageNamed:@"ram-1" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:traitCollection];
+        UIImage *ramThisDeviceImage = [UIImage imageNamed:@"ram" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:traitCollection];
         NSData *ram1Gb = UIImagePNGRepresentation(ram1GbImage);
         NSData *ramThisDevice = UIImagePNGRepresentation(ramThisDeviceImage);
         if ([ram1Gb isEqualToData:ramThisDevice]){

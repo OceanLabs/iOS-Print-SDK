@@ -58,7 +58,7 @@ static const NSInteger kRowAddAddressManually = 0;
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = NSLocalizedStringFromTableInBundle(@"Choose Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Choose Address", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         self.selectedAddresses = [[NSMutableSet alloc] init];
     }
     return self;
@@ -74,7 +74,7 @@ static const NSInteger kRowAddAddressManually = 0;
     
     self.tableView.allowsMultipleSelection = self.allowMultipleSelection;
     self.allowMultipleSelection = _allowMultipleSelection;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrinSDK", [OLKiteUtils kiteBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
     
     UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
     if (color1){
@@ -148,9 +148,9 @@ static const NSInteger kRowAddAddressManually = 0;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if ([OLAddress addressBook].count == 0) { ++section; }
     if (section == 0) {
-        return [OLAddress addressBook].count > 0 ? NSLocalizedStringFromTableInBundle(@"Address Book", @"KitePrintSDK", [OLKiteUtils kiteBundle], "") : nil;
+        return [OLAddress addressBook].count > 0 ? NSLocalizedStringFromTableInBundle(@"Address Book", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], "") : nil;
     } else {
-        return NSLocalizedStringFromTableInBundle(@"Add New Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        return NSLocalizedStringFromTableInBundle(@"Add New Address", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
 }
 
@@ -180,9 +180,9 @@ static const NSInteger kRowAddAddressManually = 0;
         }
         
         if (indexPath.row == kRowAddAddressSearch) {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Search for Address", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Search for Address", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         } else {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Enter Address Manually", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Enter Address Manually", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
         
         cell.textLabel.adjustsFontSizeToFitWidth = YES;

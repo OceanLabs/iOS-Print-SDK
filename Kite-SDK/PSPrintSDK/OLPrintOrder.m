@@ -697,7 +697,7 @@ static NSBlockOperation *templateSyncOperation;
 - (void)validateOrderSubmissionWithCompletionHandler:(void(^)(NSString *orderIdReceipt, NSError *error))handler{
     if (self.numberOfTimesPolledForSubmissionStatus > 60){
         self.numberOfTimesPolledForSubmissionStatus = 0;
-        handler(self.receipt, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Error validating the order. Please try again later.", @"")}]);
+        handler(self.receipt, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Error validating the order. Please try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}]);
         return;
     }
     

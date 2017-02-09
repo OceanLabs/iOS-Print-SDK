@@ -105,10 +105,10 @@
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
         if ([self isPushed]){
-            self.parentViewController.title = NSLocalizedString(@"Print Shop", @"");
+            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Print Shop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
         else{
-            self.title = NSLocalizedString(@"Print Shop", @"");
+            self.title = NSLocalizedStringFromTableInBundle(@"Print Shop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
     }
     
@@ -479,7 +479,14 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView bannerSectionCellForIndexPath:(NSIndexPath *)indexPath{
     if ([self printAtHomeAvailable]){
-        return [collectionView dequeueReusableCellWithReuseIdentifier:@"PrintAtHomeCell" forIndexPath:indexPath];
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"PrintAtHomeCell" forIndexPath:indexPath];
+        UILabel *ctaLabel = [cell viewWithTag:300];
+        ctaLabel.text = NSLocalizedStringFromTableInBundle(@"PRINT AT HOME", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        
+        UILabel *orLabel = [cell viewWithTag:400];
+        orLabel.text = NSLocalizedStringFromTableInBundle(@"Or print on a product below ▼", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        
+        return cell;
     }
     else{
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];

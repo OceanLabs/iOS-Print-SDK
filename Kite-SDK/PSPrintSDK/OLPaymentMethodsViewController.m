@@ -64,6 +64,8 @@
 
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
+    
+    self.title = NSLocalizedStringFromTableInBundle(@"Payment Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -120,7 +122,7 @@
     }
     else if (method == kOLPaymentMethodCreditCard){
         imageView.image = [UIImage imageNamedInKiteBundle:@"add-payment"];
-        label.text = NSLocalizedStringFromTableInBundle(@"Add Credit/Debit Card", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        label.text = NSLocalizedStringFromTableInBundle(@"Add Credit/Debit Card", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         [cell viewWithTag:30].hidden = YES;
     }
     else if (method == kOLPaymentMethodApplePay){
