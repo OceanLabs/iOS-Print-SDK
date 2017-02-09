@@ -519,7 +519,7 @@ CGFloat OLImagePickerMargin = 1.5;
                                          preferredStyle:UIAlertControllerStyleAlert];
             
             UIAlertAction *action =
-            [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
+            [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.")
                                      style:UIAlertActionStyleDefault
                                    handler:nil];
             
