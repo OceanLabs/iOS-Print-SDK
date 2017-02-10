@@ -225,7 +225,7 @@
                              @"center_back":[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/2.jpg"]]
                              };
     
-    id<OLPrintJob> tshirt = [OLPrintJob apparelWithTemplateId:@"aa_mens_tshirt" OLAssets:assets];
+    id<OLPrintJob> tshirt = [OLPrintJob apparelWithTemplateId:@"gildan_adult_cotton_tshirt" OLAssets:assets];
     [tshirt setValue:@"M" forOption:@"garment_size"];
     [tshirt setValue:@"white" forOption:@"garment_color"];
     

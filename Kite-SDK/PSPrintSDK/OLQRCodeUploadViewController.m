@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@
 #import "OLQRCodeUploadedImagePoller.h"
 #import "OLURLShortener.h"
 #import "UIImage+MDQRCode.h"
-
+#import "OLKiteUtils.h"
 
 @interface OLQRCodeUploadViewController ()
 @property (nonatomic, retain) IBOutlet UIImageView *qrCodeImageView;
@@ -51,6 +51,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.titleLabel.text = NSLocalizedStringFromTableInBundle(@"Scan QR Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.instructionsLabel.text = NSLocalizedStringFromTableInBundle(@"Please scan the QR code using a QR reader app on your device.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.alternateInstructionsLabel.text = NSLocalizedStringFromTableInBundle(@"Alternatively type the following URL into your mobile browser's address bar", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
     NSString *uuid = [[NSUUID UUID] UUIDString];;
     NSString *uploadURL = [NSString stringWithFormat:@"http://api.kite.ly/public_upload/%@", uuid];
@@ -60,7 +63,9 @@
     [self.urlShortner shortenURL:uploadURL handler:^(NSString *shortenedURL, NSError *error) {
         if (error) {
             [self dismissViewControllerAnimated:YES completion:^{
-                [[[UIAlertView alloc] initWithTitle:@"Oops" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+                [self presentViewController:ac animated:YES completion:NULL];
             }];
         } else {
             self.activityIndicator.hidden = YES;
@@ -100,6 +105,11 @@
     [super viewWillDisappear:animated];
     
     [self.imagePoller stopPolling];
+}
+
+- (void)onBarButtonItemCancelTapped:(id)sender{
+    [self.imagePoller stopPolling];
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -56,8 +56,16 @@
 
 @implementation OLKiteUtils
 
-+ (NSBundle *)kiteBundle{
++ (NSBundle *)kiteLocalizationBundle{
+    return [NSBundle bundleWithPath:[[NSBundle bundleForClass:[OLKiteViewController class]] pathForResource:@"OLKiteLocalizationResources" ofType:@"bundle"]];
+}
+
++ (NSBundle *)kiteResourcesBundle{
+#ifdef COCOAPODS
+    return [NSBundle bundleWithPath:[[NSBundle bundleForClass:[OLKiteViewController class]] pathForResource:@"OLKiteResources" ofType:@"bundle"]];
+#else
     return [NSBundle bundleForClass:[OLKiteViewController class]];
+#endif
 }
 
 + (NSString *)userEmail:(UIViewController *)topVC {

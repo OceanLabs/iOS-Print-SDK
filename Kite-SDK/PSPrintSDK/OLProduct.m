@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -105,7 +105,7 @@ typedef enum {
         _selectedOptions = [[NSMutableDictionary alloc] init];
         
         for (OLProductTemplateOption *option in self.productTemplate.options){
-            if (option.choices.count > 0){
+            if (option.choices.count > 0 && ![option.code isEqualToString:@"garment_size"]){
                 _selectedOptions[option.code] = option.choices.firstObject.code;
             }
         }
@@ -159,31 +159,22 @@ typedef enum {
     }
 }
 
--(void)setClassImageToImageView:(UIImageView *)imageView size:(CGSize)size{
-    UIImage *image;
-    if ([self.coverPhoto isKindOfClass:[NSString class]]){
-        image = [UIImage imageNamedInKiteBundle:self.coverPhoto];
-    }
-    else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
-        image = self.coverPhoto;
-    }
-    
-    if (image){
-        imageView.image = image;
-    }
-    else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
-        [imageView setAndFadeInImageWithURL:self.coverPhoto size:size];
-    }
-    else{
-        OLProductTemplate *productTemplate = self.productTemplate;
-        if (productTemplate.classPhotoURL && ![[productTemplate.classPhotoURL absoluteString] isEqualToString:@""]){
-            [imageView setAndFadeInImageWithURL:self.productTemplate.classPhotoURL size:size];
+-(OLAsset *)classImageAsset{
+        if ([self.coverPhoto isKindOfClass:[NSString class]]){
+            return [OLAsset assetWithImageAsPNG:[UIImage imageNamedInKiteBundle:self.coverPhoto]];
+        }
+        else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
+            return [OLAsset assetWithImageAsPNG:self.coverPhoto];
+        }
+        else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
+            return [OLAsset assetWithURL:self.coverPhoto];
+        }
+        else if (self.productTemplate.classPhotoURL && ![[self.productTemplate.classPhotoURL absoluteString] isEqualToString:@""]){
+            return [OLAsset assetWithURL:self.productTemplate.classPhotoURL];
         }
         else{
-            [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL size:size];
+            return [OLAsset assetWithURL:self.productTemplate.coverPhotoURL];
         }
-        
-    }
 }
 
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView{
@@ -293,8 +284,16 @@ typedef enum {
     if (self.productTemplate.templateUI == OLTemplateUICalendar || self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUIPoster || self.productTemplate.templateUI == OLTemplateUIPostcard || self.productTemplate.templateUI == OLTemplateUIPhotobook || self.quantityToFulfillOrder == 1 || self.quantityToFulfillOrder == 0){
         return @"";
     }
-    NSString* packOfString = NSLocalizedStringFromTableInBundle(NSLocalizedStringFromTableInBundle(@"Pack of", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    NSString* packOfString = NSLocalizedStringFromTableInBundle(@"Pack of", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Pack of [20 square photos]");
     return [packOfString stringByAppendingFormat:@" %lu\n", (unsigned long)self.quantityToFulfillOrder];
+}
+
+- (BOOL)isMultipack{
+    if (self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUICircle || self.productTemplate.templateUI == OLTemplateUIRectagle){
+        return YES;
+    }
+    
+    return NO;
 }
 
 - (CGSize) dimensionsInInches{
@@ -311,14 +310,14 @@ typedef enum {
     switch (sizeUnits) {
         case kSizeUnitsCentimetres:
             dimensions = [self dimensionsInCentimetres];
-            unitsName =  NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+            unitsName =  NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Centimeters");
             break;
         case kSizeUnitsInches:
             dimensions = [self dimensionsInInches];
-            unitsName =  NSLocalizedStringFromTableInBundle(@"inches", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+            unitsName =  NSLocalizedStringFromTableInBundle(@"inches", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
             if (dimensions.width < 0.1 && dimensions.height < 0.1){
                 dimensions = [self dimensionsInCentimetres];
-                unitsName = NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+                unitsName = NSLocalizedStringFromTableInBundle(@"cm", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Centimeters");
             }
             break;
         default:
@@ -360,26 +359,31 @@ typedef enum {
     
     //Fall back to the old field
     NSString *s = @"";
+    NSString *shippingString = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
     //Add description
     if (self.productTemplate.productDescription && ![self.productTemplate.productDescription isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Description**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [self.productTemplate.productDescription stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]]];
+        NSString *descriptionString = NSLocalizedStringFromTableInBundle(@"Description", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product description");
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**%@**\n%@\n\n", descriptionString, [self.productTemplate.productDescription stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"]]];
     }
     
     //Add size info
     OLTemplateUI templateClass = self.productTemplate.templateUI;
     if (templateClass != OLTemplateUICase){
-        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Size**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.dimensions]];
+        NSString *sizeString = NSLocalizedStringFromTableInBundle(@"Size", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Physical size of the product");
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**%@**\n%@\n\n", sizeString, self.dimensions]];
     }
     
     //Add qty info
     if (self.packInfo && ![self.packInfo isEqualToString:@""]){
-        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Quantity**\n%lu\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long)self.quantityToFulfillOrder]];
+        NSString *qtyString = NSLocalizedStringFromTableInBundle(@"Quantity", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Quantity of photos");
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**%@**\n%lu\n\n", qtyString, (unsigned long)self.quantityToFulfillOrder]];
     }
     
     //Add price info
     if ([OLKiteABTesting sharedInstance].hidePrice){
-        s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Price**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), self.unitCost]];
+        NSString *priceString = NSLocalizedStringFromTableInBundle(@"Price", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**%@**\n%@\n\n", priceString, self.unitCost]];
     }
     
     //Add shipping info
@@ -388,17 +392,18 @@ typedef enum {
         if (![OLKiteABTesting sharedInstance].hidePrice){
             NSDecimalNumber *original = [self.productTemplate originalShippingCostForCountry:[OLCountry countryForCurrentLocale]];
             if (original){
-                s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Shipping**\n~%@~ %@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [original formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]], [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
+                s = [s stringByAppendingString: [NSString stringWithFormat:@"**%@**\n~%@~ %@\n\n", shippingString, [original formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]], [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
             }
             else{
-                s = [s stringByAppendingString: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"**Shipping**\n%@\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
+                s = [s stringByAppendingString: [NSString stringWithFormat:@"**%@**\n%@\n\n", shippingString, [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
             }
         }
     }
     else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, don't add any shipping info
     }
     else{
-        s = [s stringByAppendingString:NSLocalizedStringFromTableInBundle(@"**Shipping**\nFREE\n\n", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        NSString *freeString = NSLocalizedStringFromTableInBundle(@"FREE", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Free, no cost");
+        s = [s stringByAppendingString:[NSString stringWithFormat:@"**%@**\n%@\n\n", shippingString, freeString]];
     }
     
     //Add quality guarantee

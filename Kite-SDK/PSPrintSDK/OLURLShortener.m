@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@
 
 #import "OLURLShortener.h"
 #import "OLConstants.h"
+#import "OLKiteUtils.h"
 
 @implementation OLURLShortener
 
@@ -52,7 +53,7 @@
                     handler([dictionary objectForKey:@"shorturl"], nil);
                 }
                 else{
-                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Failed to get upload URL. Try again later.", @"")}];
+                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedStringFromTableInBundle(@"Failed to get upload URL. Try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}];
                     handler(nil, error);
                 }
             }

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -293,7 +293,7 @@ static NSOperationQueue *imageOperationQueue;
         [[self.kiteImageUploadURLSession uploadTaskWithRequest:request fromData:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
             NSInteger httpStatusCode = [(NSHTTPURLResponse *)response statusCode];
             if ((httpStatusCode < 200 || httpStatusCode > 299) && httpStatusCode != 0) {
-                NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Image upload failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) httpStatusCode]);
+                NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Image upload failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (unsigned long) httpStatusCode]);
                 
                 error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
             }
@@ -343,6 +343,11 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
+    if (self.assetType == kOLAssetTypeRemoteImageURL && !self.isEdited){
+        handler(0, nil);
+        return;
+    }
+    
     [self dataWithCompletionHandler:^(NSData *data, NSError *error){
         handler(data.length, error);
     }];
@@ -366,7 +371,7 @@ static NSOperationQueue *imageOperationQueue;
         }
         else{
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error getting one of your photos. Please remove or replace it.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), @"asset" : self}]);
             });
         }
     }];
@@ -405,7 +410,11 @@ static NSOperationQueue *imageOperationQueue;
     }
     
     NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
+    __weak NSBlockOperation *weakBlock = blockOperation;
     [blockOperation addExecutionBlock:^{
+        if (weakBlock.isCancelled){
+            return;
+        }
         if (self.assetType == kOLAssetTypePHAsset) {
             PHImageManager *imageManager = [PHImageManager defaultManager];
             PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
@@ -440,8 +449,8 @@ static NSOperationQueue *imageOperationQueue;
                 }
                 else{
                     self.corrupt = YES;
-                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                    handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+                    NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteResourcesBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+                    handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error getting one of your photos. Please remove or replace it.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), @"asset" : self}]);
                 }
             }];
         }
@@ -462,7 +471,7 @@ static NSOperationQueue *imageOperationQueue;
                 handler(image, nil);
             }];
         }
-        else if (/*self.assetType == kOLAssetTypeFacebookPhoto || self.assetType == kOLAssetTypeInstagramPhoto || */self.assetType == kOLAssetTypeRemoteImageURL) {
+        else if (self.assetType == kOLAssetTypeRemoteImageURL) {
             [[OLImageDownloader sharedInstance] downloadImageAtURL:self.imageURL progress:^(NSInteger currentProgress, NSInteger total){
                 if (progress) {
                     progress(MAX(0.05f, (float)currentProgress / (float) total));
@@ -472,11 +481,20 @@ static NSOperationQueue *imageOperationQueue;
                     if (!error) {
                         if (!fullResolution){
                             self.cachedEditedImage = image;
+                            
+                            // Decompress image to improve performance
+                            // Source: http://stackoverflow.com/questions/10790183/setting-image-property-of-uiimageview-causes-major-lag
+                            if (image) {
+                                UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
+                                [image drawAtPoint:CGPointZero];
+                                image = UIGraphicsGetImageFromCurrentImageContext();
+                                UIGraphicsEndImageContext();
+                            }
                         }
-                        if (progress){
-                            progress(1);
-                        }
-                        handler(image, nil);
+                            if (progress){
+                                progress(1);
+                            }
+                            handler(image, nil);
                     }
                 }];
             }];
@@ -492,12 +510,16 @@ static NSOperationQueue *imageOperationQueue;
             }];
         }
         else if (self.assetType == kOLAssetTypeCorrupt){
-            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-            handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
+            NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteResourcesBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
+            handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error getting one of your photos. Please remove or replace it.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), @"asset" : self}]);
         }
         
     }];
     [[OLAsset imageOperationQueue] addOperation:blockOperation];
+}
+
++ (void)cancelAllImageOperations{
+    [[OLAsset imageOperationQueue] cancelAllOperations];
 }
 
 - (void)resizeImage:(UIImage *)image size:(CGSize)size applyEdits:(BOOL)applyEdits completion:(void(^)(UIImage *image))handler{
@@ -517,6 +539,16 @@ static NSOperationQueue *imageOperationQueue;
         }
         
         blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:self.edits.cropImageFrame andImageRect:self.edits.cropImageRect andImageViewWidth:self.edits.cropImageSize.width andImageViewHeight:self.edits.cropImageSize.height];
+        
+        if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
+            CIImage *filterImage = [CIImage imageWithCGImage:blockImage.CGImage];
+            CIFilter *filter = [CIFilter filterWithName:self.edits.filterName];
+            [filter setValue:filterImage forKey:@"inputImage"];
+            
+            CIContext *context = [CIContext contextWithOptions:nil];
+            CGImageRef cgImage = [context createCGImage:filter.outputImage fromRect:filterImage.extent];
+            blockImage = [UIImage imageWithCGImage:cgImage];
+        }
         
         for (OLTextOnPhoto *textOnPhoto in self.edits.textsOnPhoto){
             CGFloat scaling = MIN(blockImage.size.width, blockImage.size.height) / MIN(self.edits.cropImageFrame.size.width, self.edits.cropImageFrame.size.height);
@@ -563,16 +595,6 @@ static NSOperationQueue *imageOperationQueue;
             [textImage drawInRect:textRect];
             blockImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-        }
-        
-        if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
-            CIImage *filterImage = [CIImage imageWithCGImage:blockImage.CGImage];
-            CIFilter *filter = [CIFilter filterWithName:self.edits.filterName];
-            [filter setValue:filterImage forKey:@"inputImage"];
-            
-            CIContext *context = [CIContext contextWithOptions:nil];
-            CGImageRef cgImage = [context createCGImage:filter.outputImage fromRect:filterImage.extent];
-            blockImage = [UIImage imageWithCGImage:cgImage];
         }
         
         handler(blockImage);

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -64,10 +64,8 @@
 
 + (void)login:(id)login withReadPermissions:(NSArray *)permissions fromViewController:(UIViewController *)vc handler:(void(^)(id result, NSError *error))handler{
     SEL aSelector = NSSelectorFromString(@"logInWithReadPermissions:fromViewController:handler:");
-    IMP imp = [login methodForSelector:aSelector];
-    id (*func)(id, SEL, id, id, id) = (void *)imp;
-    
-    func(login, aSelector, permissions, vc, handler);
+    void (*imp)(id, SEL, id, id, id) = (void(*)(id,SEL,id, id, id))[login methodForSelector:aSelector];
+    if( imp ) imp(login, aSelector, permissions, vc, handler);
 }
 
 + (id)tokenString{
@@ -87,19 +85,9 @@
 + (void)logout{
     id loginManager = [OLFacebookSDKWrapper loginManager];
     SEL aSelector = NSSelectorFromString(@"logOut");
-    IMP imp = [loginManager methodForSelector:aSelector];
-    id (*func)(id, SEL) = (void *)imp;
     
-    func(loginManager, aSelector);
-}
-
-+ (void)clearAccessToken{
-    Class FBSDKAccessTokenClass = NSClassFromString (@"FBSDKAccessToken");
-    SEL aSelector = NSSelectorFromString(@"setCurrentAccessToken:");
-    IMP imp = [FBSDKAccessTokenClass methodForSelector:aSelector];
-    id (*func)(id, SEL, id) = (void *)imp;
-    
-    func(FBSDKAccessTokenClass, aSelector, nil);
+    void (*imp)(id, SEL) = (void(*)(id,SEL))[loginManager methodForSelector:aSelector];
+    if( imp ) imp(loginManager, aSelector);
 }
 
 + (BOOL)isFacebookAvailable{

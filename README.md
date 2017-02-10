@@ -3,6 +3,7 @@
 ![Kite](Kite-SDK/docs/kite.png)
 
 [![Circle CI](https://circleci.com/gh/OceanLabs/iOS-Print-SDK/tree/master.svg?style=shield)](https://circleci.com/gh/OceanLabs/iOS-Print-SDK/tree/master)
+[![codecov](https://codecov.io/gh/OceanLabs/iOS-Print-SDK/branch/master/graph/badge.svg)](https://codecov.io/gh/OceanLabs/iOS-Print-SDK)
 ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey.svg)
 ![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Kite-Print-SDK.svg)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
@@ -71,6 +72,8 @@ You can also provide your own photo source (for example from within your app or 
 
 PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
 
+You can find example projects for [Swift](https://github.com/OceanLabs/Example-Kite-iOS-Cocoapods) and [Objective-C](https://github.com/OceanLabs/Example-Kite-iOS-Cocoapods-Objc).
+
 ### Carthage
 [Carthage](https://github.com/Carthage/Carthage) is another dependency manager for iOS, which automates and simplifies the process of using 3rd-party libraries like the Kite SDK in your projects. If you're using it just add the following to your Cartfile:
 ```ruby
@@ -80,6 +83,8 @@ github "paypal/PayPal-iOS-SDK"
 #Uncomment the following line if you want Apple Pay support
 #github "stripe/stripe-ios" ~> 8.0.6
 ```
+
+You can find an example project [here](https://github.com/OceanLabs/Example-Kite-iOS-Carthage)
 
 ### Git submodules
 

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -66,6 +66,7 @@
     return promoView;
 }
 
+
 + (void)requestPromoViewWithAssets:(NSArray <OLAsset *>*_Nonnull)assets templates:(NSArray <NSString *>*_Nullable)templates completionHandler:(void(^ _Nonnull)(OLPromoView *_Nullable promoView, NSError *_Nullable error))handler{
     OLPromoView *promoView = [OLPromoView promoViewWithAssets:assets templates:templates];
     
@@ -118,7 +119,7 @@
     button.translatesAutoresizingMaskIntoConstraints = NO;
     
     UILabel *label = [[UILabel alloc] init];
-    label.text = NSLocalizedStringFromTableInBundle(@"Great gifts for all the family", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    label.text = NSLocalizedStringFromTableInBundle(@"Great gifts for all the family", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     self.label = label;
     [self addSubview:label];
     label.translatesAutoresizingMaskIntoConstraints = NO;

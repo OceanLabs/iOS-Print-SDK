@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -75,6 +75,7 @@ CGFloat OLImagePickerMargin = 1.5;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
+    [OLAsset cancelAllImageOperations];
     [self.collectionView reloadData];
 }
 
@@ -86,7 +87,7 @@ CGFloat OLImagePickerMargin = 1.5;
     if (!self.logoutButton && (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram)){
         self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(0, -45, self.collectionView.frame.size.width, 45)];
         [self.logoutButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-        [self.logoutButton setTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+        [self.logoutButton setTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         [self.collectionView addSubview:self.logoutButton];
         [self.logoutButton addTarget:self action:@selector(onButtonLogoutTapped) forControlEvents:UIControlEventTouchUpInside];
         
@@ -124,6 +125,7 @@ CGFloat OLImagePickerMargin = 1.5;
     self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
     
     self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
+    self.nextButton.titleLabel.font = self.imagePicker.nextButton.titleLabel.font;
     [self.nextButton setTitle:self.imagePicker.nextButton.currentTitle forState:UIControlStateNormal];
     
     UIVisualEffect *blurEffect;
@@ -187,7 +189,7 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    if (collectionView.tag == 10 && (self.provider.providerType == OLImagePickerProviderTypeQRCode || self.provider.providerType == OLImagePickerProviderTypeViewController)){
+    if (collectionView.tag == 10 && ![self.imagePicker isExclusiveCustomViewControllerProvider] && (self.provider.providerType == OLImagePickerProviderTypeQRCode || self.provider.providerType == OLImagePickerProviderTypeViewController)){
         return 2;
     }
     return 1;
@@ -199,6 +201,7 @@ CGFloat OLImagePickerMargin = 1.5;
     }
     
     if (collectionView.tag == 10){
+        NSInteger numberOfItems = 0;
         if (self.provider.collections.count > self.showingCollectionIndex){
             CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
             NSInteger numberOfCellsToFillHeight = 0;
@@ -206,11 +209,12 @@ CGFloat OLImagePickerMargin = 1.5;
                 numberOfCellsToFillHeight = (NSInteger)ceil((self.collectionView.frame.size.height - self.collectionView.contentInset.top) / (cellSize.height + OLImagePickerMargin));
             }
             
-            return MAX(numberOfCellsToFillHeight * [self numberOfCellsPerRow], [self.provider.collections[self.showingCollectionIndex] count]);
+            numberOfItems = MAX(numberOfCellsToFillHeight * [self numberOfCellsPerRow], [self.provider.collections[self.showingCollectionIndex] count]);
         }
-        else{
-            return 0;
+        if (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram){
+            self.activityIndicator.hidden = numberOfItems > 0;
         }
+        return numberOfItems;
     }
     else{
         return [self.provider.collections count];
@@ -348,15 +352,13 @@ CGFloat OLImagePickerMargin = 1.5;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
         options.resizeMode = PHImageRequestOptionsResizeModeFast;
         
-        options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [imageView setProgress:progress];
-            });
-        };
+        __weak OLRemoteImageView *weakImageView = imageView;
         
         CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [imageView setAndFadeInImageWithPHAsset:asset size:CGSizeMake(cellSize.width * [OLUserSession currentSession].screenScale, cellSize.height * [OLUserSession currentSession].screenScale) options:options];
+            [imageView setAndFadeInImageWithPHAsset:asset size:CGSizeMake(cellSize.width * [OLUserSession currentSession].screenScale, cellSize.height * [OLUserSession currentSession].screenScale) options:options placeholder:nil progress:^(float progress){
+                [weakImageView setProgress:progress];
+            }completionHandler:NULL];
         });
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
@@ -480,22 +482,22 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section > 0){
+    if (indexPath.section > 0){ // + button for external vc
         [self.imagePicker presentExternalViewControllerForProvider:self.provider];
         return;
     }
     
-    if (collectionView.tag == 10){
+    if (collectionView.tag == 10){ //Images collection view
         OLAsset *printPhoto = [self assetForIndexPath:indexPath];
         
-        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
+        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){ //Photo is selected
             if ([printPhoto isEdited]){
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"The image edits, like crop, filters, etc") preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
                     [self.imagePicker.selectedAssets removeObject:printPhoto];
                     [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
                 }]];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
                 [self presentViewController:ac animated:YES completion:NULL];
             }
             else{
@@ -503,21 +505,21 @@ CGFloat OLImagePickerMargin = 1.5;
                 [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
             }
         }
-        else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){
+        else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){ //Maximum reached
             NSString *message;
             if (self.imagePicker.maximumPhotos != self.imagePicker.minimumPhotos && self.imagePicker.maximumPhotos != 1){
-                message = [NSString stringWithFormat:self.imagePicker.maximumPhotos == 1 ? NSLocalizedStringFromTableInBundle(@"Please select only %ld photo", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") : NSLocalizedStringFromTableInBundle(@"Please select up to %ld photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)self.imagePicker.maximumPhotos];
+                message = [NSString stringWithFormat:self.imagePicker.maximumPhotos == 1 ? NSLocalizedStringFromTableInBundle(@"Please select only %ld photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") : NSLocalizedStringFromTableInBundle(@"Please select up to %ld photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (long)self.imagePicker.maximumPhotos];
             }
             else{
-                message = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select %ld photos", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (long)self.imagePicker.maximumPhotos];
+                message = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select %ld photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (long)self.imagePicker.maximumPhotos];
             }
             UIAlertController *alert =
-            [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Maximum Photos Reached", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+            [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Maximum Photos Reached", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
                                                 message:message
                                          preferredStyle:UIAlertControllerStyleAlert];
             
             UIAlertAction *action =
-            [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+            [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.")
                                      style:UIAlertActionStyleDefault
                                    handler:nil];
             
@@ -525,7 +527,7 @@ CGFloat OLImagePickerMargin = 1.5;
             
             [self.imagePicker presentViewController:alert animated:YES completion:nil];
         }
-        else if (printPhoto){
+        else if (printPhoto){ //Add photo
             [self.imagePicker.selectedAssets addObject:printPhoto];
             printPhoto.edits = nil;
             [printPhoto unloadImage];
@@ -543,7 +545,7 @@ CGFloat OLImagePickerMargin = 1.5;
         
         [self.imagePicker updateTitleBasedOnSelectedPhotoQuanitity];
     }
-    else{
+    else{ //Albums collection view
         self.showingCollectionIndex = indexPath.item;
         [self.collectionView reloadData];
         if ([self.collectionView numberOfItemsInSection:0] > 0){
@@ -702,8 +704,8 @@ CGFloat OLImagePickerMargin = 1.5;
         serviceName = @"Instagram";
     }
     
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Do you want to log out of %@?", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), serviceName] preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Do you want to log out of %@?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Log out of Instagram/Facebook"), serviceName] preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
         if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
             [[OLUserSession currentSession] logoutOfFacebook];
         }
@@ -713,7 +715,7 @@ CGFloat OLImagePickerMargin = 1.5;
         
         [self.imagePicker reloadPageController];
     }]];
-     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
     [self.imagePicker presentViewController:ac animated:YES completion:NULL];
 }
 

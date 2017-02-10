@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface OLSelectedEffectButton : UIButton
-
 @property (strong, nonatomic) UIColor *effectColor;
-
+- (void)updateBadge:(NSString *)string;
 @end

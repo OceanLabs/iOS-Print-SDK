@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,7 @@
 #import "OLProductTemplate.h"
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLAnalytics.h"
+#import "OLKiteUtils.h"
 
 @interface OLUpsellViewController ()
 
@@ -48,7 +49,7 @@
 @end
 
 @interface OLProduct ()
--(void)setCoverImageToImageView:(UIImageView *)imageView;
+-(void)setCoverImageToImageView:(UIImageView *)imageView size:(CGSize)size;
 - (NSDecimalNumber*) unitCostDecimalNumber;
 - (NSString *)currencyCode;
 @end
@@ -63,10 +64,13 @@
     self.offerContainerView.transform = CGAffineTransformMakeTranslation(self.view.frame.size.width, 0);
     
     [self.acceptButton makeRoundRectWithRadius:2];
+    [self.acceptButton setTitle:NSLocalizedStringFromTableInBundle(@"Yes Please", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    
     [self.declineButton makeRoundRectWithRadius:2];
+    [self.declineButton setTitle:NSLocalizedStringFromTableInBundle(@"No Thanks", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     self.product = [OLProduct productWithTemplateId:self.offer.offerTemplate];
-    [self.product setCoverImageToImageView:self.imageView];
+    [self.product setCoverImageToImageView:self.imageView size:self.imageView.frame.size];
     
     
     NSDecimalNumber *discountedCost = self.product.unitCostDecimalNumber;
@@ -81,28 +85,28 @@
     
     self.bannerLabel.text = self.offer.bannerText;
     
-    if (self.offer.text){
+    if (self.offer.text && ![self.offer.text isEqualToString:@""]){
         self.headerLabel.text = [self.offer.headerText stringByReplacingOccurrencesOfString:@"[[price]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
         bodyString = [self.offer.text stringByReplacingOccurrencesOfString:@"[[price]]" withString:[NSString stringWithFormat:@"%@ %@", self.product.unitCost, discountedString]];
     }
     else if ([self.triggeredProduct.templateId isEqualToString:self.offer.offerTemplate]){
         if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == OLTemplateUIRectagle || self.product.productTemplate.templateUI == OLTemplateUICircle)){
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add %ld %@!", @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create another pack for\nonly %@ %@", @""), self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add %ld %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create another pack for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.unitCost, discountedString];
         }
         else{
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add another %@!", @""), self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create another %@ for\nonly %@ %@", @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add another %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create another %@ for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
         }
     }
     else{
         if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == OLTemplateUIRectagle || self.product.productTemplate.templateUI == OLTemplateUICircle)){
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add %ld %@!", @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create a pack for\nonly %@ %@", @""), self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add %ld %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create a pack for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.unitCost, discountedString];
         }
         else{
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Add a %@!", @""), self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedString(@"Create a %@ for\nonly %@ %@", @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add a %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create a %@ for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
         }
     }
     

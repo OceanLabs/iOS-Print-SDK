@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -55,7 +55,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    SCNScene *scene = [SCNScene sceneWithURL:[[NSBundle bundleForClass:[OLKiteViewController class]] URLForResource:@"mug" withExtension:@"dae"]
+    SCNScene *scene = [SCNScene sceneWithURL:[[OLKiteUtils kiteResourcesBundle] URLForResource:@"mug" withExtension:@"dae"]
  options:NULL error:nil];
     
     self.tube = [SCNTube tubeWithInnerRadius:1 outerRadius:1 height:1.95];
@@ -65,7 +65,7 @@
     
     self.scene.scene = scene;
     
-    self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Swipe to rotate your mug", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+    self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Swipe to rotate your mug", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     
     [[scene rootNode] enumerateChildNodesUsingBlock:^(SCNNode *node, BOOL *stop){
         if ([node.name isEqualToString:@"mug"]){

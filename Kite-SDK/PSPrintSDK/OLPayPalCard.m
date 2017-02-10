@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -43,9 +43,9 @@ static NSString *const kKeyVaultExpireDate = @"co.oceanlabs.paypal.kKeyVaultExpi
 
 static NSString *const kOLErrorDomainPayPal = @"co.oceanlabs.paypal.kOLErrorDomainPayPal";
 
-#define kErrorMessageGenericPayPalVaultFailure NSLocalizedStringFromTableInBundle(@"Failed to store card details with PayPal. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
-#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
-#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+#define kErrorMessageGenericPayPalVaultFailure NSLocalizedStringFromTableInBundle(@"Failed to store card details with PayPal. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
+#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
+#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
 
 
 static NSString *clientId;
@@ -148,7 +148,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                 if ([accessToken isKindOfClass:[NSString class]] && !JSONError) {
                     handler(accessToken, nil);
                 } else {
-                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Failed to validate card details, please try again.", @"")}];
+                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate card details, please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}];
                     handler(nil, error);
                 }
             }
@@ -311,7 +311,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                             }
                             
                             if (![paymentState isEqualToString:@"approved"]) {
-                                NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Your payment was not approved (transaction state: %@). Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), paymentState]}];
+                                NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Your payment was not approved (transaction state: %@). Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), paymentState]}];
                                 handler(nil, error);
                                 return;
                             }

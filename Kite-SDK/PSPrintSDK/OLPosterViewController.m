@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -98,7 +98,7 @@ CGFloat posterMargin = 2;
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
-    [self setTitle:NSLocalizedString(@"Edit Poster", @"")];
+    [self setTitle:NSLocalizedStringFromTableInBundle(@"Edit Poster", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     
     self.numberOfColumns = self.product.productTemplate.gridCountX;
     self.numberOfRows = self.product.productTemplate.gridCountY;
@@ -321,7 +321,7 @@ CGFloat posterMargin = 2;
         return;
     }
     
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
     cropVc.product = self.product;
@@ -336,7 +336,6 @@ CGFloat posterMargin = 2;
     [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
         cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
     }];
 }
@@ -377,7 +376,7 @@ CGFloat posterMargin = 2;
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
@@ -408,35 +407,36 @@ CGFloat posterMargin = 2;
     
     self.editingPrintPhoto.edits = cropper.edits;
     
+    NSInteger posterQty = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
     //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     for (NSInteger i = 0; i < self.posterPhotos.count; i++){
         if (self.posterPhotos[i] == self.editingPrintPhoto){
-            NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
-
+            NSInteger outerIndex = i / posterQty;
+            
             if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
                 continue;
             }
             
-            NSInteger innerIndex = i - outerIndex * self.product.quantityToFulfillOrder;
+            NSInteger innerIndex = i - outerIndex * posterQty;
             
             UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
             UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
             
-            
-            
             NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
-            [indexPaths addObject:innerIndexPath];
             
-            if (outerIndex != i+1 / self.product.quantityToFulfillOrder){
-                [innerCollectionView reloadItemsAtIndexPaths:indexPaths];
-                [indexPaths removeAllObjects];
+            if (innerIndexPath){
+                [innerCollectionView reloadItemsAtIndexPaths:@[innerIndexPath]];
             }
         }
     }
     
     
-    [cropper dismissViewControllerAnimated:YES completion:^{}];
+    [cropper dismissViewControllerAnimated:YES completion:^{
+        [UIView animateWithDuration:0.25 animations:^{
+            //            self.nextButton.alpha = 1;
+            self.navigationController.navigationBar.alpha = 1;
+        }];
+    }];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];

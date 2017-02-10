@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -86,8 +86,8 @@ static const NSUInteger kTagTextField = 99;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.editingExistingSavedAddress = self.address.isSavedInAddressBook;
-    self.title = self.editingExistingSavedAddress ? NSLocalizedStringFromTableInBundle(@"Edit Address", @"KitePrintSDK", [NSBundle mainBundle], @"") : NSLocalizedStringFromTableInBundle(@"Add Address", @"KitePrintSDK", [NSBundle mainBundle], @"");
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:self.editingExistingSavedAddress ? NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [NSBundle mainBundle], @"") : NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [NSBundle mainBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onSaveButtonClicked)];
+    self.title = self.editingExistingSavedAddress ? NSLocalizedStringFromTableInBundle(@"Edit Address", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") : NSLocalizedStringFromTableInBundle(@"Add Address", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:self.editingExistingSavedAddress ? NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") : NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onSaveButtonClicked)];
     self.navigationItem.rightBarButtonItem = doneButton;
     
     UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
@@ -105,11 +105,13 @@ static const NSUInteger kTagTextField = 99;
         if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
             [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
                 if (error) return;
-                self.navigationItem.leftBarButtonItem= [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(onCancelButtonClicked)];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.navigationItem.leftBarButtonItem= [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(onCancelButtonClicked)];
+                });
             }];
         }
         else{
-            UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [NSBundle mainBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onCancelButtonClicked)];
+            UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onCancelButtonClicked)];
             self.navigationItem.leftBarButtonItem = cancelButton;
         }
     }
@@ -146,23 +148,23 @@ static const NSUInteger kTagTextField = 99;
     NSString *errorMessage;
     if ([self.textFieldFirstName.text isEqualToString:@""] || [self.textFieldLastName.text isEqualToString:@""]){
         flag = NO;
-        errorMessage = NSLocalizedString(@"Please enter your first and last name.", @"");
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please enter your first and last name.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if ([self.textFieldLine1.text isEqualToString:@""]){
         flag = NO;
-        errorMessage = NSLocalizedString(@"Please fill in Line 1 of the address.", @"");
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in Line 1 of the address.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if ([self.textFieldPostCode.text isEqualToString:@""]){
         flag = NO;
-        errorMessage = NSLocalizedString(@"Please fill in your postal code", @"");
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your postal code.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     
     if (!flag){
         UIAlertController *alert= [UIAlertController
-                                   alertControllerWithTitle:NSLocalizedString(@"", @"")
+                                   alertControllerWithTitle:nil
                                    message:errorMessage
                                    preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction * action){}];
         
         [alert addAction:ok];
@@ -256,7 +258,7 @@ static const NSUInteger kTagTextField = 99;
             tf.translatesAutoresizingMaskIntoConstraints = YES;
             tf.text = self.address.recipientFirstName;
             tf.frame = CGRectMake(20, 0, ((cell.frame.size.width - 20) / 2.0)-10, cell.frame.size.height);
-            tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"First Name", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+            tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"First Name", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             self.textFieldFirstName = tf;
             
             if (!self.textFieldLastName){
@@ -272,7 +274,7 @@ static const NSUInteger kTagTextField = 99;
             self.textFieldLastName.tag = kTagTextField;
             self.textFieldLastName.clearButtonMode = UITextFieldViewModeNever;
             self.textFieldLastName.delegate = self;
-            self.textFieldLastName.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Last Name", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+            self.textFieldLastName.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Last Name", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             
             if (YES){
                 UIView *view = self.textFieldLastName;
@@ -303,32 +305,32 @@ static const NSUInteger kTagTextField = 99;
         case 1:
             tf.text = self.address.line1;
             self.textFieldLine1 = tf;
-            tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Line 1", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+            tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Line 1", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             break;
         case 2:
             tf.text = self.address.line2;
             self.textFieldLine2 = tf;
-            tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Line 2", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+            tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Line 2", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             break;
         case 3:
             tf.text = self.address.city;
             self.textFieldCity = tf;
-            tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"City", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+            tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"City", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             break;
         case 4:
             if (self.address.country == [OLCountry countryForCode:@"USA"]) {
                 tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"State" attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             } else {
-                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"County", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"County", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             }
             tf.text = self.address.stateOrCounty;
             self.textFieldCounty = tf;
             break;
         case 5:
             if (self.address.country == [OLCountry countryForCode:@"USA"]) {
-                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"ZIP Code", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"ZIP Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             } else {
-                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Postcode", @"KitePrintSDK", [NSBundle mainBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
+                tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Postcode", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") attributes:@{NSForegroundColorAttributeName : [UIColor colorWithRed:108.0/255.0 green:108.0/255.0 blue:108.0/255.0 alpha:1]}];
             }
             tf.text = self.address.zipOrPostcode;
             tf.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -107,7 +107,7 @@ NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/order/%@", 
             }
             
             self.req = nil;
-            handler(OLPrintOrderSubmitStatusUnknown, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate the order. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}]);
+            handler(OLPrintOrderSubmitStatusUnknown, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate the order. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}]);
         } else {
             id errorObj = json[@"error"];
             if ([errorObj isKindOfClass:[NSDictionary class]]) {
@@ -123,7 +123,7 @@ NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/order/%@", 
             }
             
             self.req = nil;
-            handler(self.printOrder.submitStatus, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate the order. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}]);
+            handler(self.printOrder.submitStatus, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate the order. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}]);
         }
     }];
 }

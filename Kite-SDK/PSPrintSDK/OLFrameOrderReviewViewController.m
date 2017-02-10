@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -41,8 +41,11 @@
 #import "UIImageView+FadeIn.h"
 #import "OLImagePickerViewController.h"
 #import "OLInfoBanner.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "NSObject+Utils.h"
+#import "OLCustomPickerController.h"
 
-@interface OLPackProductViewController (Private) <OLInfoBannerDelegate>
+@interface OLPackProductViewController (Private) <OLInfoBannerDelegate, OLImagePickerViewControllerDelegate>
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;
 - (BOOL) shouldGoToCheckout;
@@ -55,10 +58,16 @@
 
 @end
 
+@interface OLKiteViewController ()
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
+@end
+
 @interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate,UIViewControllerPreviewingDelegate>
 
 @property (strong, nonatomic) NSMutableArray* framePhotos;
 @property (weak, nonatomic) OLAsset *editingPrintPhoto;
+@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
+@property (strong, nonatomic) UIViewController *presentedVc;
 
 @end
 
@@ -89,7 +98,35 @@ CGFloat innerMargin = 3;
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
 #endif
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering");
+}
+
+- (void)replacePhoto:(id)sender{
+    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.delegate = self;
+    vc.selectedAssets = [[NSMutableArray alloc] init];
+    vc.maximumPhotos = 1;
+    vc.product = self.product;
+    
+    if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+        //Skip the image picker and only show the custom vc
+        
+        self.vcDelegateForCustomVc = vc; //Keep strong reference
+        vc.providerForPresentedVc = [OLUserSession currentSession].kiteVc.customImageProviders.firstObject;
+        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
+        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+        [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
+        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
+        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
+            vc.maximumPhotos = 1;
+        }
+        
+        [self presentViewController:customVc animated:YES completion:NULL];
+        self.presentedVc = customVc;
+        return;
+    }
+    
+    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 
 - (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer {
@@ -116,7 +153,7 @@ CGFloat innerMargin = 3;
     
     [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
-        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
         cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
         cropVc.delegate = self;
@@ -191,9 +228,9 @@ CGFloat innerMargin = 3;
     
     if (nullCount > 0){
         NSInteger selected = self.framePhotos.count - nullCount;
-        NSString *title = selected == 1 ? [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photo.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), selected] : [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), selected];
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please add %d more.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), nullCount] preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+        NSString *title = selected == 1 ? [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photo.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), selected] : [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), selected];
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please add %d more.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Please add [a number] more [photos]"), nullCount] preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleCancel handler:NULL]];
         [self presentViewController:ac animated:YES completion:NULL];
         return NO;
 
@@ -203,59 +240,7 @@ CGFloat innerMargin = 3;
 }
 
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        return nil;
-    }
-    
-    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
-    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
-    
-    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
-    
-    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[collectionView convertPoint:location fromView:self.collectionView]];
-    
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
-    
-    OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section]];
-    if (!imageView.image || [printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
-        return nil;
-    }
-    
-    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
-    
-    self.editingPrintPhoto = printPhoto;
-    
-    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
-    __weak OLImagePreviewViewController *weakVc = previewVc;
-    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingPrintPhoto size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
-        [weakVc.imageView setProgress:progress];
-    }completionHandler:NULL];
-    previewVc.providesPresentationContextTransitionStyle = true;
-    previewVc.definesPresentationContext = true;
-    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    return previewVc;
-}
-
-- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
-    cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
-    cropVc.delegate = self;
-    cropVc.aspectRatio = 1;
-    cropVc.product = self.product;
-    
-    [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
-        [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image, NSError *error){
-        [cropVc setFullImage:image];
-        cropVc.edits = self.editingPrintPhoto.edits;
-        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
-        [self presentViewController:cropVc animated:YES completion:NULL];
-    }];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
-#endif
+    return nil;
 }
 
 #pragma mark Button Actions
@@ -356,12 +341,10 @@ CGFloat innerMargin = 3;
         if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
             cell.contentView.backgroundColor = [UIColor whiteColor];
             
-            CGFloat imageViewWidth = size.width - 2 * innerCollectionViewHorizontalMargin * scaleFactor;
-            CGFloat imageViewHeight = size.width - 2 * innerCollectionViewHorizontalMargin * scaleFactor;
-            
+            CGSize imageSize = [self collectionView:innerCollectionView layout:innerCollectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
             UIImageView *imageView = [cell.contentView viewWithTag:1010];
             if (indexPath.item < self.product.productTemplate.representationAssets.count){
-                [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item] size:CGSizeMake(imageViewWidth, imageViewHeight)];
+                [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item] size:CGSizeMake(imageSize.width, imageSize.height)];
             }
             if (self.product.productTemplate.logo){
                 __weak UIImageView *imageView = [cell.contentView viewWithTag:1011];
@@ -412,10 +395,10 @@ CGFloat innerMargin = 3;
 
 - (void)addInfoBanner{
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Change ", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Change", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     }
     else{
-        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit or Hold to Rearrange", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")];
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit or Hold to Rearrange", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     }
     self.infoBanner.delegate = self;
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 50, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
@@ -573,7 +556,15 @@ CGFloat innerMargin = 3;
             }
         }
         
-        [vc dismissViewControllerAnimated:YES completion:NULL];
+        if (self.presentedVc){
+            [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+        }
+        else{
+            [vc dismissViewControllerAnimated:YES completion:NULL];
+        }
+        
+        self.vcDelegateForCustomVc = nil;
+        self.presentedVc = nil;
     }
 }
 

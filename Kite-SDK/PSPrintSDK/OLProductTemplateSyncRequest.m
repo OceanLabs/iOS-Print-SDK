@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -209,11 +209,11 @@
                             id imagesPerSheet = productTemplate[@"images_per_page"];
                             id product = productTemplate[@"product"];
                             
-                            NSDictionary *upsellOffers = [productTemplate[@"upsell_offers"] isKindOfClass:[NSArray class]] ? productTemplate[@"upsell_offers"] : nil;
+                            NSArray *upsellOffers = [productTemplate[@"upsell_offers"] isKindOfClass:[NSArray class]] ? productTemplate[@"upsell_offers"] : nil;
                             
                             NSNumber *enabledNumber = productTemplate[@"enabled"];
                             NSString *description = productTemplate[@"description"];
-                            NSString *descriptionMarkdown = productTemplate[@"description_markdown"];
+                            NSString *descriptionMarkdown = [productTemplate[@"description_markdown"] isKindOfClass:[NSString class]] ? productTemplate[@"description_markdown"] : @"";
                             BOOL enabled = enabledNumber == nil ? YES : [enabledNumber boolValue];
                             
                             NSNumber *printInStoreNumber = productTemplate[@"print_in_store"];
@@ -267,6 +267,8 @@
                                 NSArray *supportedOptions;
                                 NSString *collectionId;
                                 NSString *collectionName;
+                                NSMutableArray *fulfilmentItems;
+                                BOOL supportsTextOnBorder = NO;
                                 OLProductRepresentation *productRepresentation;
                                 if (product){
                                     NSArray *coverPhotoDicts = product[@"cover_photo_variants"];
@@ -277,6 +279,23 @@
                                                     coverPhotos[dict[@"variant_id"]] = dict[@"url"];
                                                 }
                                             }
+                                        }
+                                    }
+                                    
+                                    supportsTextOnBorder = [product[@"supports_text_on_border"] isKindOfClass:[NSNumber class]] ? [product[@"supports_text_on_border"] boolValue] : NO;
+                                    
+                                    NSArray *fulfilmentFields = product[@"fulfilment_fields"];
+                                    if ([fulfilmentFields isKindOfClass:[NSArray class]]){
+                                        fulfilmentItems = [[NSMutableArray alloc] init];
+                                        for (NSDictionary *dict in fulfilmentFields){
+                                            OLFulfilmentItem *item = [[OLFulfilmentItem alloc] init];
+                                            item.costs = [dict[@"cost"] isKindOfClass:[NSArray class]] ? dict[@"cost"] : nil;
+                                            item.itemDescription = [dict[@"description"] isKindOfClass:[NSString class]] ? dict[@"description"] : nil;
+                                            item.identifier = [dict[@"field_name"] isKindOfClass:[NSString class]] ? dict[@"field_name"] : nil;
+                                            item.required = [dict[@"required"] isKindOfClass:[NSNumber class]] ? [dict[@"required"] boolValue] : NO;
+                                            item.name = [dict[@"verbose_name"] isKindOfClass:[NSString class]] ? dict[@"verbose_name"] : nil;
+                                            
+                                            [fulfilmentItems addObject:item];
                                         }
                                     }
                                     
@@ -461,6 +480,8 @@
                                     t.collectionName = collectionName;
                                     t.logo = logo;
                                     t.representationAssets = representationAssets;
+                                    t.fulfilmentItems = fulfilmentItems;
+                                    t.supportsTextOnBorder = supportsTextOnBorder;
                                     
                                     if ([blendMode isEqualToString:@"MULTIPLY"]){
                                         t.blendMode = OLImageBlendModeMultiply;
@@ -518,7 +539,7 @@
                     }
                 }
                 
-                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to synchronize product templates. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")}]);
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to synchronize product templates. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}]);
             }
         }
     }];

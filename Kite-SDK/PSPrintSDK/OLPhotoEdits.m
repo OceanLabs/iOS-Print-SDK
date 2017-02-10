@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -254,7 +254,7 @@ static NSString *const kKeyFilterName = @"co.oceanlabs.psprintstudio.kKeyFilterN
         retVal &= [self.textsOnPhoto isEqualToArray:other.textsOnPhoto];
         retVal &= [self.borderColor isEqual:other.borderColor] || (!self.borderColor && !other.borderColor);
         retVal &= [self.bottomBorderText isEqual:other.bottomBorderText] || (!self.bottomBorderText && !other.bottomBorderText);
-        retVal &= [self.filterName isEqualToString:other.filterName];
+        retVal &= [self.filterName isEqualToString:other.filterName] || (!self.filterName && !other.filterName);
     }
     
     return retVal;

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,14 +29,15 @@
 
 #import "OLStripeCard.h"
 #import "NSString+Formatting.h"
+#import "OLKiteUtils.h"
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.Stripe.kKeyNumberMasked";
 static NSString *const kKeyCustomerId = @"co.oceanlabs.Stripe.kKeyCustomerId";
 
 static NSString *const kOLErrorDomainStripe = @"co.oceanlabs.Stripe.kOLErrorDomainStripe";
 
-#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
-#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
+#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
 
 
 static NSString *clientId;
@@ -130,7 +131,7 @@ static OLStripeCard *lastUsedCard;
                 NSError *error;
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
                 if (error){
-                    handler(nil, [NSError errorWithDomain:@"com.stripe" code:400 userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"There was an error trying to validate the card. Please try again later.", @"")}]);
+                    handler(nil, [NSError errorWithDomain:@"com.stripe" code:400 userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error trying to validate the card. Please try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}]);
                 }
                 else if (json[@"error"]){
                     handler(nil, [NSError errorWithDomain:@"com.stripe" code:400 userInfo:@{NSLocalizedDescriptionKey : json[@"error"][@"message"]}]);

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,7 @@
     self.nextMediaRequest = [[OLInstagramMediaRequest alloc] init];
     self.overflowMedia = @[];
     [self.collectionView reloadData];
-    [self.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedString(@"All Photos", @"")]];
+    [self.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedStringFromTableInBundle(@"All Photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")]];
     [self loadNextInstagramPage];
 }
 
@@ -77,8 +77,8 @@
                 
                 [welf.imagePicker reloadPageController];
             } else {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleDefault handler:NULL]];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.")  style:UIAlertActionStyleDefault handler:NULL]];
                 [self.imagePicker presentViewController:ac animated:YES completion:NULL];
             }
             

@@ -142,7 +142,6 @@
     
     [OLKitePrintSDK setApplePayMerchantID:@"merchant"];
     XCTAssert([[OLKitePrintSDK appleMerchantID] isEqualToString:@"merchant"], @"Merchant fail");
-    XCTAssert([[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite.ly"], @"Pay to test fail");
     
     [OLKitePrintSDK setApplePayPayToString:@"Kite Test"];
     XCTAssert([[OLKitePrintSDK applePayPayToString] isEqualToString:@"Kite Test"], @"Pay to test fail");

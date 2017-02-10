@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -73,7 +73,7 @@
     
     [self.req startWithCompletionHandler:^(NSInteger httpStatusCode, id json, NSError *error) {
         if ((httpStatusCode < 200 || httpStatusCode > 299) && httpStatusCode != 0) { // 0 status code comes through when we didn't even get a response from the server... i.e. no network connectivity
-            NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Print order submission failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteBundle], @""), (unsigned long) httpStatusCode]);
+            NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Print order submission failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (unsigned long) httpStatusCode]);
             id responseError = [json objectForKey:@"error"];
             if ([responseError isKindOfClass:[NSDictionary class]]) {
                 id responseErrorMessage = responseError[@"message"];

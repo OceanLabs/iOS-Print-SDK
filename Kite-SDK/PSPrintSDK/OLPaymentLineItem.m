@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@
 //
 
 #import "OLPaymentLineItem.h"
+#import "OLKiteUtils.h"
 
 static NSString *const kKeyLineItemDescription = @"ly.kite.iossdk.kKeyLineItemDescription";
 static NSString *const kKeyLineItemCosts = @"ly.kite.iossdk.kKeyLineItemCosts";
@@ -65,7 +66,7 @@ static NSString *const kKeyLineItemShippingCosts = @"ly.kite.iossdk.kKeyLineItem
 - (NSString *)costStringInCurrency:(NSString *)currencyCode {
     NSDecimalNumber *cost = [self costInCurrency:currencyCode];
     if ([cost isEqualToNumber:@0]){
-        return NSLocalizedString(@"Free", @"");
+        return NSLocalizedStringFromTableInBundle(@"FREE", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Free, no cost");
     } else {
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
         [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
@@ -77,7 +78,7 @@ static NSString *const kKeyLineItemShippingCosts = @"ly.kite.iossdk.kKeyLineItem
 - (NSString *)discountedCostStringInCurrency:(NSString *)currencyCode {
     NSDecimalNumber *cost = [self discountedCostInCurrency:currencyCode];
     if ([cost isEqualToNumber:@0]){
-        return NSLocalizedString(@"Free", @"");
+        return NSLocalizedStringFromTableInBundle(@"FREE", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Free, no cost");
     } else {
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
         [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];

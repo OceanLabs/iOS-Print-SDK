@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -60,6 +60,7 @@
 - (void)onButtonNextClicked:(UIButton *)sender;
 - (void)onButtonDoneTapped:(UIButton *)sender;
 - (void)presentExternalViewControllerForProvider:(OLImagePickerProvider *)provider;
+- (BOOL)isExclusiveCustomViewControllerProvider;
 
 
 @end

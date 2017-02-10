@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,27 +27,26 @@
 //  THE SOFTWARE.
 //
 
-#import "OLKiteViewController.h"
-#import "OLPrintOrder.h"
-#import "OLProductTemplate.h"
-#import "OLProductHomeViewController.h"
-#import "OLKitePrintSDK.h"
-#import "OLProduct.h"
-#import "OLProductOverviewViewController.h"
-#import "OLProductTypeSelectionViewController.h"
-#import "OLKitePrintSDK.h"
-#import "OLAnalytics.h"
-#import "OLProductGroup.h"
-#import "OLNavigationController.h"
 #import "NSObject+Utils.h"
-#import "OLKiteABTesting.h"
-#import "UIImage+OLUtils.h"
-#import "OLKiteUtils.h"
-#import "OLUserSession.h"
-#import "OLCustomViewControllerPhotoProvider.h"
+#import "OLAnalytics.h"
 #import "OLAsset+Private.h"
+#import "OLCustomViewControllerPhotoProvider.h"
 #import "OLImageDownloader.h"
 #import "OLImagePickerViewController.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
+#import "OLKiteViewController.h"
+#import "OLNavigationController.h"
+#import "OLPrintOrder.h"
+#import "OLProduct.h"
+#import "OLProductGroup.h"
+#import "OLProductHomeViewController.h"
+#import "OLProductOverviewViewController.h"
+#import "OLProductTemplate.h"
+#import "OLProductTypeSelectionViewController.h"
+#import "OLUserSession.h"
+#import "UIImage+OLUtils.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -150,8 +149,7 @@ static CGFloat fadeTime = 0.3;
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info{
     [OLAnalytics setExtraInfo:info];
-    NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
-    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
+    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         [OLUserSession currentSession].appAssets = assets;
         [[OLUserSession currentSession] resetUserSelectedPhotos];
         [OLUserSession currentSession].printOrder.userData = info;
@@ -163,8 +161,7 @@ static CGFloat fadeTime = 0.3;
 
 - (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info{
     [OLAnalytics setExtraInfo:info];
-    NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
-    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
+    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
         [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printOrder != nil;
         [OLUserSession currentSession].appAssets = [[printOrder.jobs firstObject] assetsForUploading];
         [[OLUserSession currentSession] resetUserSelectedPhotos];
@@ -190,6 +187,7 @@ static CGFloat fadeTime = 0.3;
 - (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *> *_Nullable)assets{
     OLCustomViewControllerPhotoProvider *customProvider = [[OLCustomViewControllerPhotoProvider alloc] initWithController:vc name:name icon:icon];
     [customProvider.collections.firstObject addAssets:assets unique:NO];
+    customProvider.preselectedAssets = assets;
     [self.customImageProviders addObject:customProvider];
 }
 
@@ -255,8 +253,9 @@ static CGFloat fadeTime = 0.3;
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
+        self.customNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
     }
-    
+
     if (!self.loadingHandler){
         [self loadRemoteData];
     }
@@ -306,13 +305,12 @@ static CGFloat fadeTime = 0.3;
         // The screen we transition to will depend on what products are available based on the developers filter preferences.
         NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];
         
-        NSBundle *currentBundle = [NSBundle bundleForClass:[OLKiteViewController class]];
-        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:currentBundle];
+        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]];
         NSString *nextVcNavIdentifier;
         OLProduct *product;
         if (groups.count == 0 && !([OLProductTemplate templates].count != 0 && [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Store Maintenance", @"") message:NSLocalizedString(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"") preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Store Maintenance", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                     [welf dismiss];
                 }]];
                 [welf presentViewController:ac animated:YES completion:NULL];
@@ -339,11 +337,13 @@ static CGFloat fadeTime = 0.3;
                         if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
                             [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
                                 if (error) return;
-                                ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                   ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                                });
                             }];
                         }
                         else{
-                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                         }
                         [welf fadeToViewController:nvc];
                     }
@@ -369,11 +369,13 @@ static CGFloat fadeTime = 0.3;
                 if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
                     [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
                         if (error) return;
-                        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                        });
                     }];
                 }
                 else{
-                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                 }
                 [welf fadeToViewController:nvc];
             }
@@ -404,11 +406,13 @@ static CGFloat fadeTime = 0.3;
             if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
                 [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
                     if (error) return;
-                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                    });
                 }];
             }
             else{
-                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:welf action:@selector(dismiss)];
+                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
             }
             [welf fadeToViewController:nvc];
         }
@@ -468,15 +472,15 @@ static CGFloat fadeTime = 0.3;
         }
         
         NSError *error = n.userInfo[kNotificationKeyTemplateSyncError];
-        NSString *message = NSLocalizedString(@"There was a problem getting Print Shop products. Check your Internet connectivity or try again later.", @"");
+        NSString *message = NSLocalizedStringFromTableInBundle(@"There was a problem getting Print Shop products. Check your Internet connectivity or try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         if (error.code == kOLKiteSDKErrorCodeMaintenanceMode) {
             message = kOLKiteSDKErrorMessageMaintenanceMode;
         }
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
             [self dismiss];
         }]];
-        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Retry", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
             [OLProductTemplate sync];
         }]];
         [self presentViewController:alert animated:YES completion:^(void){}];
@@ -516,6 +520,12 @@ static CGFloat fadeTime = 0.3;
     else{
         return @"OLProductOverviewViewController";
     }
+}
+
++ (UIViewController *)orderHistoryViewController{
+    UIViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLOrderHistoryViewController"];
+    
+    return [[OLNavigationController alloc] initWithRootViewController:vc];
 }
 
 - (void)didReceiveMemoryWarning{

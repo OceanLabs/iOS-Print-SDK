@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,34 +27,26 @@
 //  THE SOFTWARE.
 //
 
-#import "NSArray+QueryingExtras.h"
 #import "NSObject+Utils.h"
-#import "OLSingleImageProductReviewViewController.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
-#import "OLProductPrintJob.h"
-#import "OLAsset+Private.h"
 #import "OLImageCachingManager.h"
+#import "OLImagePickerViewController.h"
+#import "OLImagePreviewViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
-#import "OLUserSession.h"
-#import "OLNavigationController.h"
-#import "NSArray+QueryingExtras.h"
 #import "OLKiteViewController.h"
+#import "OLNavigationController.h"
 #import "OLPaymentViewController.h"
 #import "OLProductPrintJob.h"
 #import "OLProductTemplateOption.h"
-#import "OLRemoteImageView.h"
 #import "OLRemoteImageCropper.h"
-#import "OLAsset+Private.h"
-#import "OLProductTemplateOption.h"
-#import "OLPaymentViewController.h"
-#import "UIViewController+OLMethods.h"
+#import "OLRemoteImageView.h"
 #import "OLSingleImageProductReviewViewController.h"
 #import "OLUpsellViewController.h"
-#import "OLImagePreviewViewController.h"
-#import "OLImagePickerViewController.h"
+#import "OLUserSession.h"
+#import "UIViewController+OLMethods.h"
 
 @interface OLPaymentViewController (Private)
 -(void)saveAndDismissReviewController;
@@ -73,6 +65,7 @@
 
 @interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate, OLScrollCropViewControllerDelegate>
 @property (nonatomic, copy) void (^saveJobCompletionHandler)();
+@property (assign, nonatomic) BOOL showingBack;
 @end
 
 @interface OLProduct ()
@@ -91,7 +84,7 @@
 @implementation OLSingleImageProductReviewViewController
 
 - (OLAsset *)asset{
-    if (!super.asset){
+    if (!super.asset && !self.showingBack){
         super.asset = [OLUserSession currentSession].userSelectedPhotos.lastObject;
     }
     
@@ -106,12 +99,13 @@
     [super viewDidLoad];
     
     self.delegate = self;
+    self.view.clipsToBounds = YES;
     
     if (self.navigationController.viewControllers.firstObject == self){
         self.title = self.product.productTemplate.name;
     }
     else{
-        self.title = NSLocalizedStringFromTableInBundle(@"Create Image", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+        self.title = NSLocalizedStringFromTableInBundle(@"Create Image", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     
 #ifndef OL_NO_ANALYTICS
@@ -120,7 +114,7 @@
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         }
         
         if(!self.editingPrintJob){
@@ -129,11 +123,11 @@
         }
     }
     
-    [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+    [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
             [self.ctaButton removeTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
             [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
         }
@@ -146,7 +140,7 @@
         [self.ctaButton.titleLabel setFont:font];
     }
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
@@ -154,21 +148,33 @@
     [self.hintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
     
     self.hintView.layer.masksToBounds = NO;
-    self.hintView.layer.shadowOffset = CGSizeMake(-5, -5);
+    self.hintView.layer.shadowOffset = CGSizeMake(0, 2);
     self.hintView.layer.shadowRadius = 5;
     self.hintView.layer.shadowOpacity = 0.3;
 }
 
-- (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    
-    NSTimeInterval delay = 1;
-    NSTimeInterval duration = 0.3;
-    if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && self.hintView.alpha <= 0.1f) {
-        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.hintView.alpha = 1;
-        } completion:NULL];
+- (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body delay:(BOOL)shouldDelay{
+    for (NSLayoutConstraint *con in self.view.constraints){
+        if ([con.identifier isEqualToString:@"toolBarCon"]){
+            [self.view removeConstraint:con];
+        }
     }
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:[self.hintView viewWithTag:10] attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+    con.identifier = @"toolBarCon";
+    [self.view addConstraint:con];
+    
+    if (header){
+        [(UILabel *)[self.hintView viewWithTag:20] setText:header];
+    }
+    if (body){
+        [(UILabel *)[self.hintView viewWithTag:30] setText:body];
+    }
+    
+    NSTimeInterval delay = shouldDelay ? 1 : 0;
+    NSTimeInterval duration = 0.3;
+    [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.hintView.alpha = 1;
+    } completion:NULL];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -195,12 +201,6 @@
 #endif
 }
 
-- (void)viewDidLayoutSubviews{
-    [super viewDidLayoutSubviews];
-    
-    self.hintView.transform = CGAffineTransformMakeTranslation(self.editingTools.button1.frame.size.width / 2.0, 0);
-}
-
 - (void)orderViews{
     [super orderViews];
     [self.view bringSubviewToFront:self.hintView];
@@ -218,9 +218,9 @@
     OLAsset *asset = [self.asset copy];
     [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
         if (dataLength < 40000){
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Image Is Too Small", @"") message:NSLocalizedString(@"Please zoom out or pick a higher quality image", @"") preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"") style:UIAlertActionStyleDefault handler:NULL]];
-            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Print It Anyway", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Image Is Too Small", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please zoom out or pick a higher quality image", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:NULL]];
+            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print It Anyway", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                 [self saveJobNowWithCompletionHandler:handler];
             }]];
             [self presentViewController:alert animated:YES completion:NULL];
@@ -248,14 +248,7 @@
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLProductPrintJob *job;
-    if (self.product.productTemplate.templateUI == OLTemplateUIApparel && assetArray.firstObject){
-        job = [OLPrintJob apparelWithTemplateId:self.product.templateId OLAssets:@{
-                                                                                   @"center_chest": assetArray.firstObject,
-                                                                                   }];
-    }
-    else{
-        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
-    }
+    job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
@@ -340,20 +333,15 @@
 }
 
 -(void) doCheckout{
-    if (!self.cropView.image) {
-        NSTimeInterval duration = 0.3;
-        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-            self.hintView.alpha = 1;
-        } completion:NULL];
+    if ([OLUserSession currentSession].userSelectedPhotos.count == 0) {
+        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
         return;
     }
-    
     [self saveJobWithCompletionHandler:^{
         if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
             UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
             [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
             [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
-            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
             [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
             [self.navigationController pushViewController:vc animated:YES];
         }
@@ -423,6 +411,21 @@
 }
 
 - (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
+    //Drop previous screens from the navigation stack
+    NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
+    if (navigationStack.count > 1) {
+        NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
+        for (UIViewController *vc in self.navigationController.viewControllers){
+            [viewControllers addObject:vc];
+            if ([vc isKindOfClass:[OLKiteViewController class]]){
+                [viewControllers addObject:self];
+                [self.navigationController setViewControllers:viewControllers animated:YES];
+                break;
+            }
+        }
+        [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
+    }
+    
     [self.product.acceptedOffers addObject:vc.offer];
     [vc dismissViewControllerAnimated:NO completion:^{
         if (vc.offer.prepopulatePhotos){

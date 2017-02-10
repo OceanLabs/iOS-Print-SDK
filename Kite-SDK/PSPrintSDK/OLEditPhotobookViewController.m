@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,6 @@
 //  THE SOFTWARE.
 //
 
-#import "NSArray+QueryingExtras.h"
 #import "OLAnalytics.h"
 #import "OLEditPhotobookViewController.h"
 #import "OLImageCachingManager.h"
@@ -43,6 +42,9 @@
 #import "OLImagePickerViewController.h"
 #import "OLNavigationController.h"
 #import "OLKiteABTesting.h"
+#import "OLCustomPickerController.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "NSObject+Utils.h"
 
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionHelp = 1;
@@ -56,6 +58,10 @@ static const NSInteger kSectionPages = 2;
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
 + (NSString *) instagramClientID;
+@end
+
+@interface OLKiteViewController ()
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate>
@@ -74,6 +80,8 @@ static const NSInteger kSectionPages = 2;
 @property (strong, nonatomic) UIButton *nextButton;
 @property (assign, nonatomic) BOOL autoAddedCover;
 @property (assign, nonatomic) BOOL shownImagePicker;
+@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
+@property (strong, nonatomic) UIViewController *presentedVc;
 
 @end
 
@@ -91,7 +99,7 @@ static const NSInteger kSectionPages = 2;
     [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
 #endif
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Move Pages", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    self.title = NSLocalizedStringFromTableInBundle(@"Move Pages", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen that allows the user to move the pages of a book around");
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
@@ -124,7 +132,7 @@ static const NSInteger kSectionPages = 2;
 - (void)setupCtaButton{
     self.nextButton = [[UIButton alloc] init];
     [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
-    [self.nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+    [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.nextButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
@@ -306,8 +314,8 @@ static const NSInteger kSectionPages = 2;
 
 - (void)addPageShadowsToView:(UIView *)view{
     if (self.product.productTemplate.imageBorder.top == 0 && self.product.productTemplate.imageBorder.left == 0){
-        UIImage *leftImage = [UIImage imageNamed:@"page-shadow-left" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:self.traitCollection];
-        UIImage *rightImage = [UIImage imageNamed:@"page-shadow-right" inBundle:[OLKiteUtils kiteBundle] compatibleWithTraitCollection:self.traitCollection];
+        UIImage *leftImage = [UIImage imageNamed:@"page-shadow-left" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:self.traitCollection];
+        UIImage *rightImage = [UIImage imageNamed:@"page-shadow-right" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:self.traitCollection];
         
         UIImageView *left1 = [[UIImageView alloc] initWithImage:leftImage];
         left1.contentMode = UIViewContentModeScaleToFill;
@@ -361,6 +369,9 @@ static const NSInteger kSectionPages = 2;
 
 - (void)updateUserSelectedPhotos{
     [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
+    if (self.coverPhoto && ![self.coverPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+        [[OLUserSession currentSession].userSelectedPhotos addObject:self.coverPhoto];
+    }
     for (OLAsset *item in self.photobookPhotos){
         if (![item isKindOfClass:[OLPlaceholderAsset class]]){
             [[OLUserSession currentSession].userSelectedPhotos addObject:item];
@@ -385,18 +396,12 @@ static const NSInteger kSectionPages = 2;
     return count;
 }
 
-- (UIModalPresentationStyle) adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller{
-    return UIModalPresentationNone;
-}
-
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller traitCollection:(UITraitCollection *)traitCollection {
-    return UIModalPresentationNone;
-}
-
 #pragma mark - Menu Actions
 
 - (void)deletePage{
     if (self.longPressImageIndex == -1){
+        [self.photobookPhotos removeObjectIdenticalTo:self.coverPhoto];
+        [[OLUserSession currentSession].userSelectedPhotos removeObjectIdenticalTo:self.coverPhoto];
         self.coverPhoto = nil;
         self.interactionPhotobook.coverPhoto = nil;
         [self.interactionPhotobook loadCoverPhoto];
@@ -407,6 +412,7 @@ static const NSInteger kSectionPages = 2;
         [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         self.selectedIndexNumber = nil;
     }
+    [[OLUserSession currentSession].userSelectedPhotos removeObjectIdenticalTo:self.photobookPhotos[self.longPressImageIndex]];
     self.photobookPhotos[self.longPressImageIndex] = [OLPlaceholderAsset asset];
     [self updateUserSelectedPhotos];
     self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
@@ -424,7 +430,7 @@ static const NSInteger kSectionPages = 2;
         cropPhoto = self.photobookPhotos[self.longPressImageIndex];
         imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
     }
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
     cropVc.product = self.product;
@@ -446,27 +452,13 @@ static const NSInteger kSectionPages = 2;
 #endif
 }
 
-- (void)replaceImage{
-    UIImageView *imageView;
-    if (self.longPressImageIndex == -1){
-        imageView = self.interactionPhotobook.coverImageView;
-    }
-    else{
-        imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
-    }
-    
-    self.replacingImageNumber = [NSNumber numberWithInteger:self.longPressImageIndex];
-    [self addMorePhotosFromView:imageView];
-}
-
 #pragma mark - User Actions
 
 - (void)onButtonNextClicked{
     if (self.photobookPhotos.count == 0){
-        
-        NSString *alertTitle = NSLocalizedString(@"No photos", @"");
-        NSString *alertMessage = NSLocalizedString(@"Please add at least one photo", @"");
-        NSString *actionTitle = NSLocalizedString(@"OK", @"");
+        NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"No photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of an alert letting the user know that they selected no photos");
+        NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Please add at least one photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:NULL]];
         [self presentViewController:ac animated:YES completion:NULL];
@@ -474,14 +466,14 @@ static const NSInteger kSectionPages = 2;
     }
     
     if (self.photobookPhotos.count < self.product.quantityToFulfillOrder){
-        NSString *alertTitle = NSLocalizedString(@"You can add more photos", @"");
-        NSString *alertMessage = NSLocalizedString(@"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos", @"");
-        NSString *actionTitle = NSLocalizedString(@"Yes, proceed", @"");
+        NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"You can add more photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"Yes, proceed", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
             [self proceedToBookReview];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No, not yet", @"") style:UIAlertActionStyleCancel handler:NULL]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No, not yet", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
         [self presentViewController:ac animated:YES completion:NULL];
     }
     else{
@@ -686,17 +678,13 @@ static const NSInteger kSectionPages = 2;
     }
     [view becomeFirstResponder];
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Remove", @"") action:@selector(deletePage)];
+    UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Remove", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Remove/clear an image") action:@selector(deletePage)];
     [items addObject:deleteItem];
     
     if (![OLUserSession currentSession].kiteVc.disableEditingTools){
-        UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Edit", @"") action:@selector(editImage)];
+        UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") action:@selector(editImage)];
         [items addObject:cropImageItem];
     }
-    
-    UIMenuItem *replaceImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Replace Photo", @"") action:@selector(replaceImage)];
-    [items addObject:replaceImageItem];
-    
     
     UIMenuController *mc = [UIMenuController sharedMenuController];
     [mc setMenuItems:items];
@@ -714,7 +702,7 @@ static const NSInteger kSectionPages = 2;
     else if (indexPath.section == kSectionHelp){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"helpCell" forIndexPath:indexPath];
         UILabel *label = (UILabel *)[cell viewWithTag:10];
-        label.text = NSLocalizedString(@"Tap to swap pages. Hold for more options.", @"");
+        label.text = NSLocalizedStringFromTableInBundle(@"Tap to swap pages. Hold for more options.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         [[cell viewWithTag:999] removeFromSuperview];
         return cell;
     }
@@ -882,14 +870,35 @@ static const NSInteger kSectionPages = 2;
 #pragma mark - Adding new images
 
 - (void)addMorePhotosFromView:(UIView *)view{
-    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
-    if ([self.photobookPhotos indexOfObject:self.coverPhoto] == NSNotFound){
-        [[OLUserSession currentSession].userSelectedPhotos removeObject:self.coverPhoto];
+    NSInteger max = self.product.quantityToFulfillOrder + 1; //Plus cover photo
+    NSInteger current = [self photobookPhotosCount];
+    if (self.replacingImageNumber){
+        current--;
     }
+    
+    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     vc.selectedAssets = [OLUserSession currentSession].userSelectedPhotos;
     vc.delegate = self;
-    vc.maximumPhotos = self.product.quantityToFulfillOrder;
+    vc.maximumPhotos = max;
     vc.product = self.product;
+    
+    if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+        //Skip the image picker and only show the custom vc
+        
+        self.vcDelegateForCustomVc = vc; //Keep strong reference
+        vc.providerForPresentedVc = [OLUserSession currentSession].kiteVc.customImageProviders.firstObject;
+        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
+        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+        [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
+        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[OLUserSession currentSession].userSelectedPhotos mutableCopy]];
+        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
+            vc.maximumPhotos = self.product.quantityToFulfillOrder;
+        }
+        
+        [self presentViewController:customVc animated:YES completion:NULL];
+        self.presentedVc = customVc;
+        return;
+    }
     
     [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
@@ -913,7 +922,11 @@ static const NSInteger kSectionPages = 2;
     
     if (self.addNewPhotosAtIndex == -1){
             self.coverPhoto = [addedAssets firstObject];
-        addedAssets = [[addedAssets subarrayWithRange:NSMakeRange(1, assets.count - 1)] mutableCopy];
+        if (addedAssets.count > 0){
+            addedAssets = [addedAssets mutableCopy];
+            [(NSMutableArray *)addedAssets removeObjectAtIndex:0];
+            [assets removeObjectIdenticalTo:self.coverPhoto];
+        }
         self.addNewPhotosAtIndex = 0;
         
         for (OLPhotobookViewController *photobook in self.childViewControllers){
@@ -953,7 +966,15 @@ static const NSInteger kSectionPages = 2;
         }
     }
     
-    [vc dismissViewControllerAnimated:YES completion:^(void){}];
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
     
 }
 

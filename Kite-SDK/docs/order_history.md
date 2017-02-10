@@ -13,3 +13,9 @@ NSArray<OLPrintOrder *> orders = [OLPrintOrder printOrderHistory];
 You can read a OLPrintOrder object's `printed` property to see if the submission was successful.
 
 You can also create a OLReceiptViewController with `initWithPrintOrder:` to show the user the receipt of their order. If the order was unsuccessful they can retry from that screen.
+
+
+For your convenience we also offer a basic View Controller that offers this functionality:
+```
+[self presentViewController:[OLKiteViewController orderHistoryViewController] animated:YES completion:NULL];
+```

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -153,6 +153,14 @@
  *  Set an album name to show when the user first sees the photo library section of the image picker. If not set, the image picker will show the "All Photos" album.
  */
 @property (strong, nonatomic) NSString *_Nullable defaultPhotoAlbumName;
+
+
+/**
+ Request a view controller that shows the user's complete order history
+
+ @return A UINavigationController that is ready to be presented
+ */
++ (UIViewController *_Nonnull)orderHistoryViewController;
 
 /**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with

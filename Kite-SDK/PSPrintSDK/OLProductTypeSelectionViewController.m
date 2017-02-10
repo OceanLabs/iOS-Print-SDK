@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,28 +27,25 @@
 //  THE SOFTWARE.
 //
 
-#import "OLProductTypeSelectionViewController.h"
-#import "OLKitePrintSDK.h"
-#import "OLProduct.h"
-#import "OLSingleImageProductReviewViewController.h"
-#import "OLProductOverviewViewController.h"
-#import "OLAnalytics.h"
-#import "UIImageView+FadeIn.h"
-#import "OLKiteABTesting.h"
-#import "OLKiteUtils.h"
-#import "UIViewController+OLMethods.h"
 #import "NSObject+Utils.h"
-#import "UIImage+OLUtils.h"
+#import "OLAnalytics.h"
 #import "OLImageDownloader.h"
+#import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+#import "OLKiteUtils.h"
+#import "OLProduct.h"
+#import "OLProductOverviewViewController.h"
+#import "OLProductTypeSelectionViewController.h"
+#import "OLSingleImageProductReviewViewController.h"
 #import "OLUserSession.h"
+#import "UIImage+OLUtils.h"
+#import "UIImageView+FadeIn.h"
+#import "UIViewController+OLMethods.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 @interface OLProduct (Private)
-
--(void)setCoverImageToImageView:(UIImageView *)imageView size:(CGSize)size;
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
-
+-(OLAsset *)classImageAsset;
 @end
 
 @interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
@@ -130,10 +127,10 @@
     [super viewDidLoad];
     
     if ([self isPushed]){
-        self.parentViewController.title = NSLocalizedString(self.templateClass, @"");
+        self.parentViewController.title = self.templateClass;
     }
     else{
-        self.title = NSLocalizedString(self.templateClass, @"");
+        self.title = self.templateClass;
     }
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
@@ -210,7 +207,6 @@
     
     OLProduct *product = self.products[indexPath.row];
     product.uuid = nil;
-    [[OLUserSession currentSession] resetUserSelectedPhotos];
     
     NSString *identifier;
     NSMutableArray *posters = [[NSMutableArray alloc] init];
@@ -279,8 +275,10 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
-            cellImageView.image = image;
-            cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cellImageView.image = image;
+                cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            });
         }];
         if (self.fromRotation){
             self.fromRotation = NO;
@@ -316,7 +314,7 @@
     OLProduct *product = (OLProduct *)self.products[indexPath.item];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:40];
-    [product setCoverImageToImageView:imageView size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath]];
+    [imageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
     
     UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
@@ -333,14 +331,14 @@
     
     if (product.productTemplate.templateUI == OLTemplateUIPoster && !self.subtypeSelection){
         if (product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
-            textView.text = NSLocalizedString(@"Single Photo Poster", @"");
+            textView.text = NSLocalizedStringFromTableInBundle(@"Single Photo Poster", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
         else{
-            textView.text = [NSString stringWithFormat:@"%ldx%ld Collage", (long)product.productTemplate.gridCountX, (long)product.productTemplate.gridCountY];
+            textView.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%ldx%ld Collage", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"example: 5x7 Collage"), (long)product.productTemplate.gridCountX, (long)product.productTemplate.gridCountY];
         }
     }
     else if (inSizeCollectionFlag){
-        textView.text = [[[[product.productTemplate.templateType stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Small", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") withString:@""] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Medium", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") withString:@""] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Large", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") withString:@""] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+        textView.text = [[[[product.productTemplate.templateType stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Small", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@"Small product size"] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Medium", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@"Medium Product size"] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Large", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@"Large Product Size"] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
     }
     else{
         textView.text = product.productTemplate.templateType;
@@ -398,7 +396,7 @@
     if (!(numberOfProducts % 2 == 0) && (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact || size.height < size.width)){
         extras = 1;
     }
-    if (numberOfProducts == 2){
+    if (numberOfProducts == 2 && self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact){
         extras = 1;
     }
     

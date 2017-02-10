@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -35,12 +35,11 @@
     [super drawRect:rect];
     
     if (self.enableMask){
-        UIImageView *imageView = (UIImageView *)[self.contentView viewWithTag:10];
         CAShapeLayer *aCircle=[CAShapeLayer layer];
-        aCircle.path=[UIBezierPath bezierPathWithRoundedRect:imageView.bounds cornerRadius:imageView.frame.size.height/2].CGPath;
+        aCircle.path=[UIBezierPath bezierPathWithRoundedRect:self.imageView.bounds cornerRadius:self.imageView.frame.size.height/2].CGPath;
         
         aCircle.fillColor=[UIColor blackColor].CGColor;
-        imageView.layer.mask=aCircle;
+        self.imageView.layer.mask=aCircle;
     }
 }
 

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -41,6 +41,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLKitePrintSDK.h"
 #import "OLImageCachingManager.h"
 #import "OLImagePickerViewController.h"
+#import "OLKiteUtils.h"
 
 @import Photos;
 
@@ -79,10 +80,15 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 - (IBAction)onButtonPrintLocalPhotos:(id)sender {
     if (![self isAPIKeySet]) return;
     
-    OLImagePickerViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:nil] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    OLImagePickerViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     vc.delegate = self;
     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
+
+- (IBAction)onButtonPrintOrderHistory:(UIButton *)sender {
+    [self presentViewController:[OLKiteViewController orderHistoryViewController] animated:YES completion:NULL];
+}
+
 
 - (NSString *)apiKey {
     if ([self environment] == OLKitePrintSDKEnvironmentSandbox) {

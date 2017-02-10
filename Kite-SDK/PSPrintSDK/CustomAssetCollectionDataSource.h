@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,13 +26,13 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+#import <Foundation/Foundation.h>
+#import "KITAssetCollectionDataSource.h"
 
-#import "NSArray+QueryingExtras.h"
+@interface CustomAssetCollectionDataSource : NSObject <KITAssetCollectionDataSource>
 
-@implementation NSArray (QueryingExtras)
+- (NSUInteger)count;
+- (id)objectAtIndex:(NSUInteger)index;
 
-- (BOOL)containsObjectIdenticalTo:(id)anObject{
-    return [self indexOfObjectIdenticalTo:anObject] != NSNotFound;
-}
 
 @end

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2015 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,10 +27,25 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
 
-@interface NSArray (QueryingExtras)
+#import "OLTouchTolerantView.h"
 
-- (BOOL)containsObjectIdenticalTo:(id)anObject;
+@implementation OLTouchTolerantView
+
+// Taken from: http://stackoverflow.com/questions/11770743/capturing-touches-on-a-subview-outside-the-frame-of-its-superview-using-hittest
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    if (!self.clipsToBounds && !self.hidden && self.alpha > 0) {
+        for (UIView *subview in self.subviews.reverseObjectEnumerator) {
+            CGPoint subPoint = [subview convertPoint:point fromView:self];
+            UIView *result = [subview hitTest:subPoint withEvent:event];
+            if (result != nil) {
+                return result;
+            }
+        }
+    }
+    
+    return nil;
+}
 
 @end

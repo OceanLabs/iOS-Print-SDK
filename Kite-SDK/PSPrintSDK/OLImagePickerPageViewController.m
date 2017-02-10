@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@
 //
 
 #import "OLImagePickerPageViewController.h"
+#import "OLKiteUtils.h"
 
 @implementation OLImagePickerPageViewController
 
@@ -36,7 +37,7 @@
     
     UIButton *nextButton = [[UIButton alloc] init];
     self.nextButton = nextButton;
-    [nextButton setTitle:NSLocalizedString(@"Next", @"") forState:UIControlStateNormal];
+    [nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     [nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     [nextButton addTarget:self.imagePicker action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
     [nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
@@ -49,8 +50,8 @@
     NSDictionary *views = NSDictionaryOfVariableBindings(nextButton);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-20-[nextButton]-20-|",
-                         @"V:[nextButton(50)]-10-|"];
+    NSArray *visuals = @[@"H:|-5-[nextButton]-5-|",
+                         @"V:[nextButton(50)]-5-|"];
     
     
     for (NSString *visual in visuals) {

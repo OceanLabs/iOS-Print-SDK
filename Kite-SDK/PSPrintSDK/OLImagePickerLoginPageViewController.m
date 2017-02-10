@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -53,13 +53,15 @@
     NSString *providerName;
     if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
         providerName = @"Instagram";
+        [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Login", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
         providerName = @"Facebook";
+        [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Login", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     else if (self.provider.providerType == OLImagePickerProviderTypePhotoLibrary){
         providerName = [UIDevice currentDevice].localizedModel;
-        [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Authorise", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") forState:UIControlStateNormal];
+        [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Authorise", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     self.label.text = [NSString stringWithFormat:@"We need access to your %@ photos", providerName];
     
@@ -82,8 +84,8 @@
     else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
         [OLFacebookSDKWrapper login:[OLFacebookSDKWrapper loginManager] withReadPermissions:@[@"public_profile", @"user_photos"] fromViewController:self handler:^(id result, NSError *error) {
             if (error) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"")  style:UIAlertActionStyleDefault handler:NULL]];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.")  style:UIAlertActionStyleDefault handler:NULL]];
                 [self.imagePicker presentViewController:ac animated:YES completion:NULL];
             } else if ([result isCancelled]) {
                 //Do nothing

@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -168,7 +168,10 @@ static dispatch_once_t srand48OnceToken;
         if (url){
             [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
                 if (!image){
-                    [defaults removeObjectForKey:s];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [defaults removeObjectForKey:s];
+                        [defaults synchronize];
+                    });
                 }
             }];
         }
@@ -185,7 +188,7 @@ static dispatch_once_t srand48OnceToken;
 }
 
 - (NSString *)backButtonText{
-    return self.minimalNavigationBar ? @"" : NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteBundle], @"");
+    return self.minimalNavigationBar ? @"" : NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
 }
 
 - (NSString *)headerLogoURL{

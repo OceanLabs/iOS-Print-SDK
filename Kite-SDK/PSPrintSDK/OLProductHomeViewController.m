@@ -1,7 +1,7 @@
 //
 //  Modified MIT License
 //
-//  Copyright (c) 2010-2016 Kite Tech Ltd. https://www.kite.ly
+//  Copyright (c) 2010-2017 Kite Tech Ltd. https://www.kite.ly
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -28,35 +28,34 @@
 //
 
 
-#import "OLMarkdownParser.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
-#import "OLNavigationController.h"
+#import "OLAsset+Private.h"
+#import "OLHPSDKWrapper.h"
+#import "OLImageDownloader.h"
 #import "OLInfoPageViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
+#import "OLMarkdownParser.h"
+#import "OLNavigationController.h"
 #import "OLProduct.h"
 #import "OLProductGroup.h"
-#import "OLHPSDKWrapper.h"
-#import "OLAsset+Private.h"
 #import "OLProductHomeViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "OLProductTemplate.h"
 #import "OLProductTypeSelectionViewController.h"
-#import "UIImage+OLUtils.h"
+#import "OLUserSession.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIImage+OLUtils.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
-#import "OLImageDownloader.h"
-#import "OLUserSession.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 @interface OLProduct (Private)
--(void)setClassImageToImageView:(UIImageView *)imageView size:(CGSize)size;
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+-(OLAsset *)classImageAsset;
 @end
 
 @interface OLKiteViewController (Private)
@@ -106,10 +105,10 @@
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
         if ([self isPushed]){
-            self.parentViewController.title = NSLocalizedString(@"Print Shop", @"");
+            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Print Shop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
         else{
-            self.title = NSLocalizedString(@"Print Shop", @"");
+            self.title = NSLocalizedStringFromTableInBundle(@"Print Shop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
     }
     
@@ -383,18 +382,20 @@
         [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
             if (error) return;
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
-            UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
-            titleImageView.alpha = 0;
-            if ([self isPushed]){
-                self.parentViewController.navigationItem.titleView = titleImageView;
-            }
-            else{
-                self.navigationItem.titleView = titleImageView;
-            }
-            titleImageView.alpha = 0;
-            [UIView animateWithDuration:0.5 animations:^{
-                titleImageView.alpha = 1;
-            }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
+                titleImageView.alpha = 0;
+                if ([self isPushed]){
+                    self.parentViewController.navigationItem.titleView = titleImageView;
+                }
+                else{
+                    self.navigationItem.titleView = titleImageView;
+                }
+                titleImageView.alpha = 0;
+                [UIView animateWithDuration:0.5 animations:^{
+                    titleImageView.alpha = 1;
+                }];
+            });
         }];
     }
     
@@ -478,7 +479,14 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView bannerSectionCellForIndexPath:(NSIndexPath *)indexPath{
     if ([self printAtHomeAvailable]){
-        return [collectionView dequeueReusableCellWithReuseIdentifier:@"PrintAtHomeCell" forIndexPath:indexPath];
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"PrintAtHomeCell" forIndexPath:indexPath];
+        UILabel *ctaLabel = [cell viewWithTag:300];
+        ctaLabel.text = NSLocalizedStringFromTableInBundle(@"PRINT AT HOME", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        
+        UILabel *orLabel = [cell viewWithTag:400];
+        orLabel.text = NSLocalizedStringFromTableInBundle(@"Or print on a product below ▼", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        
+        return cell;
     }
     else{
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
@@ -603,7 +611,6 @@
     OLProductGroup *group = self.productGroups[indexPath.row];
     OLProduct *product = [group.products firstObject];
     product.uuid = nil;
-    [[OLUserSession currentSession] resetUserSelectedPhotos];
     
     NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
     
@@ -622,7 +629,7 @@
             OLProduct *otherProduct = [[OLProduct alloc] initWithTemplate:template];
             [options addObject:@{
                                  @"code" : otherProduct.productTemplate.identifier,
-                                 @"name" : [NSString stringWithFormat:@"%@\n%@", [otherProduct dimensions], [otherProduct unitCost]],
+                                 @"name" : [NSString stringWithFormat:@"%@", [otherProduct dimensions]],
                                  }];
         }
         
@@ -686,8 +693,10 @@
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
             if (error) return;
-            cellImageView.image = image;
-            cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cellImageView.image = image;
+                cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+            });
         }];
         if (self.fromRotation){
             self.fromRotation = NO;
@@ -707,10 +716,7 @@
     OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
     
-    cellImageView.image = nil;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [product setClassImageToImageView:cellImageView size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath]];
-    });
+    [cellImageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:OLAssetMaximumSize applyEdits:NO placeholder:nil progress:nil completionHandler:NULL];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     

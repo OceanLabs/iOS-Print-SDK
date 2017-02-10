@@ -14,4 +14,5 @@ end
 
 target 'Kite-CI-Deploy' do
     shared_pods
+    pod 'KITAssetsPickerController', :git => 'git@github.com:kkarayannis/KITAssetsPickerController.git'
 end
