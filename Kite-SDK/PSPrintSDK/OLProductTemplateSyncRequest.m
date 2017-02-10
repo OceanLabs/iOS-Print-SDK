@@ -268,6 +268,7 @@
                                 NSString *collectionId;
                                 NSString *collectionName;
                                 NSMutableArray *fulfilmentItems;
+                                BOOL supportsTextOnBorder = NO;
                                 OLProductRepresentation *productRepresentation;
                                 if (product){
                                     NSArray *coverPhotoDicts = product[@"cover_photo_variants"];
@@ -280,6 +281,8 @@
                                             }
                                         }
                                     }
+                                    
+                                    supportsTextOnBorder = [product[@"supports_text_on_border"] isKindOfClass:[NSNumber class]] ? [product[@"supports_text_on_border"] boolValue] : NO;
                                     
                                     NSArray *fulfilmentFields = product[@"fulfilment_fields"];
                                     if ([fulfilmentFields isKindOfClass:[NSArray class]]){
@@ -478,6 +481,7 @@
                                     t.logo = logo;
                                     t.representationAssets = representationAssets;
                                     t.fulfilmentItems = fulfilmentItems;
+                                    t.supportsTextOnBorder = supportsTextOnBorder;
                                     
                                     if ([blendMode isEqualToString:@"MULTIPLY"]){
                                         t.blendMode = OLImageBlendModeMultiply;

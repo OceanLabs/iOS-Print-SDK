@@ -102,6 +102,7 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 @property (strong, nonatomic) NSArray <NSURL *>*_Nullable representationAssets;
 @property (strong, nonatomic) NSURL *_Nullable logo;
 @property (strong, nonatomic) NSMutableArray<OLFulfilmentItem *> *_Nullable fulfilmentItems;
+@property (assign, nonatomic) BOOL supportsTextOnBorder;
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *_Nullable)costPerSheetInCurrencyCode:(NSString *_Nonnull)currencyCode;
