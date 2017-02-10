@@ -32,6 +32,7 @@
 
 @implementation OLTouchTolerantView
 
+// Taken from: http://stackoverflow.com/questions/11770743/capturing-touches-on-a-subview-outside-the-frame-of-its-superview-using-hittest
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
     if (!self.clipsToBounds && !self.hidden && self.alpha > 0) {
