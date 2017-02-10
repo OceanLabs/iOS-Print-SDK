@@ -104,10 +104,10 @@
 
 - (void)setActiveTextField:(OLPhotoTextField *)activeTextField{
     if ([self isUsingMultiplyBlend]){
-        if (self.activeTextField && !activeTextField ){
+        if (self.activeTextField && !activeTextField){
             [self renderImage];
         }
-        else{
+        else if (activeTextField){
             [self disableOverlay];
         }
     }
@@ -671,7 +671,7 @@
 }
 
 - (void)renderImage{
-    if (![self isUsingMultiplyBlend] || [[[UIDevice currentDevice] systemVersion] floatValue] < 10){
+    if (![self isUsingMultiplyBlend]  || self.maskActivityIndicator.isAnimating || [[[UIDevice currentDevice] systemVersion] floatValue] < 10){
         return;
     }
     
