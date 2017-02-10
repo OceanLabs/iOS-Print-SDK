@@ -522,6 +522,12 @@ static CGFloat fadeTime = 0.3;
     }
 }
 
++ (UIViewController *)orderHistoryViewController{
+    UIViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLOrderHistoryViewController"];
+    
+    return [[OLNavigationController alloc] initWithRootViewController:vc];
+}
+
 - (void)didReceiveMemoryWarning{
     for (OLAsset *asset in [OLUserSession currentSession].userSelectedPhotos){
         [asset unloadImage];

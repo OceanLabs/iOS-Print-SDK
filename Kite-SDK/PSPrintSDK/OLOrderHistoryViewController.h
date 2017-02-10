@@ -27,8 +27,9 @@
 //  THE SOFTWARE.
 //
 
+
 #import <UIKit/UIKit.h>
 
-@interface PrintOrderHistoryViewController : UITableViewController
+@interface OLOrderHistoryViewController : UITableViewController
 
 @end

@@ -42,6 +42,7 @@ Choose Photos,Choose Photos,
 City,City,
 Clearing Code,Clearing Code,/* Clearing promo code */
 cm,cm,/* Centimeters */
+Completed Orders,Completed Orders,
 Continue Shopping,Continue Shopping,
 Country,Country,
 County,County,/* Address county */
@@ -117,6 +118,7 @@ OK,OK,/* Acknowledgent to an alert dialog. */
 Only registered %d/%d image URLs with the asset endpoint,Only registered %d/%d image URLs with the asset endpoint,
 Oops!,Oops!,
 Or print on a product below ▼,Or print on a product below ▼,
+Order History,Order History,
 Order Id,Order Id,
 Order Summary,Order Summary,
 Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.,Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.,

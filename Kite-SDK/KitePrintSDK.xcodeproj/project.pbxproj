@@ -198,6 +198,8 @@
 		2E5D13AE1E36238800927D19 /* OLMockPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */; };
 		2E65FEA01E4E058400A301BB /* OLTouchTolerantView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */; };
 		2E65FEA11E4E058400A301BB /* OLTouchTolerantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */; };
+		2E65FEA81E4E143B00A301BB /* OLOrderHistoryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */; };
+		2E65FEA91E4E143B00A301BB /* OLOrderHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65FEA71E4E143B00A301BB /* OLOrderHistoryViewController.m */; };
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
 		2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7483521BCD11F800360550 /* ViewControllerTests.m */; };
 		2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */; };
@@ -228,9 +230,7 @@
 		2E9A772E1DA6839600A50C4D /* KiteSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E9A77321DA683BD00A50C4D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF7B186215790009DE03 /* AppDelegate.m */; };
 		2E9A77331DA683BD00A50C4D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF81186215790009DE03 /* ViewController.m */; };
-		2E9A77341DA683BD00A50C4D /* PrintOrderHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */; };
 		2E9A77351DA683FE00A50C4D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF7B186215790009DE03 /* AppDelegate.m */; };
-		2E9A77361DA683FE00A50C4D /* PrintOrderHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */; };
 		2E9A77371DA683FE00A50C4D /* CI-ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */; };
 		2E9A77381DA684FA00A50C4D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF77186215790009DE03 /* main.m */; };
 		2E9A77391DA684FB00A50C4D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF77186215790009DE03 /* main.m */; };
@@ -645,6 +645,8 @@
 		2E6561111D1C341A0092001C /* OLSelectedEffectButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSelectedEffectButton.m; sourceTree = "<group>"; };
 		2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTouchTolerantView.h; sourceTree = "<group>"; };
 		2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTouchTolerantView.m; sourceTree = "<group>"; };
+		2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOrderHistoryViewController.h; sourceTree = "<group>"; };
+		2E65FEA71E4E143B00A301BB /* OLOrderHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOrderHistoryViewController.m; sourceTree = "<group>"; };
 		2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPopupOptionsImageView.h; sourceTree = "<group>"; };
 		2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPopupOptionsImageView.m; sourceTree = "<group>"; };
 		2E67B9281D267A3E00914D56 /* OLColorSelectionCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLColorSelectionCollectionViewCell.h; sourceTree = "<group>"; };
@@ -906,8 +908,6 @@
 		CD97568D18D8D147007CA090 /* OLProductTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplate.m; sourceTree = "<group>"; };
 		CD97568F18D8FDF4007CA090 /* OLProductTemplateSyncRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateSyncRequest.h; sourceTree = "<group>"; };
 		CD97569018D8FDF4007CA090 /* OLProductTemplateSyncRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateSyncRequest.m; sourceTree = "<group>"; };
-		CD97569318E083E3007CA090 /* PrintOrderHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrintOrderHistoryViewController.h; sourceTree = "<group>"; };
-		CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrintOrderHistoryViewController.m; sourceTree = "<group>"; };
 		CD9CF4A118758BDF00F067B6 /* OLProductPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductPrintJob.h; sourceTree = "<group>"; };
 		CD9CF4A218758BDF00F067B6 /* OLProductPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductPrintJob.m; sourceTree = "<group>"; };
 		CD9CF4A4187592A900F067B6 /* OLPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintJob.m; sourceTree = "<group>"; };
@@ -1306,6 +1306,8 @@
 				2E837D4B1C3C221E004DA682 /* OLCollectionViewController.m */,
 				2E9F13F91DAD048000D8B1EE /* OLPromoView.h */,
 				2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */,
+				2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */,
+				2E65FEA71E4E143B00A301BB /* OLOrderHistoryViewController.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1681,8 +1683,6 @@
 				CD73BF7D186215790009DE03 /* Main.storyboard */,
 				CD73BF80186215790009DE03 /* ViewController.h */,
 				CD73BF81186215790009DE03 /* ViewController.m */,
-				CD97569318E083E3007CA090 /* PrintOrderHistoryViewController.h */,
-				CD97569418E083E3007CA090 /* PrintOrderHistoryViewController.m */,
 				CD73BF83186215790009DE03 /* Images.xcassets */,
 				2E23EB971D50917D00E2BF42 /* Private */,
 				CD73BF72186215790009DE03 /* Supporting Files */,
@@ -1948,6 +1948,7 @@
 				2EB0DC761DC8DB7400B556CE /* OL3DProductViewController.h in Headers */,
 				2EB8FE1B1D95685100E26BDF /* OLIndefiniteAnimatedView.h in Headers */,
 				2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */,
+				2E65FEA81E4E143B00A301BB /* OLOrderHistoryViewController.h in Headers */,
 				2EB8FE131D95685100E26BDF /* OLFlipEnumerations.h in Headers */,
 				2EB8FE5C1D95685100E26BDF /* OLAddressLookupViewController.h in Headers */,
 				2EB8FE2D1D95685100E26BDF /* OLOAuth2PostBodyStream.h in Headers */,
@@ -2473,6 +2474,7 @@
 				2EB8FE851D95692000E26BDF /* NSDecimalNumber+CostFormatter.m in Sources */,
 				2E451DFC1D9555620080F1C1 /* OLConstants.m in Sources */,
 				2E451E491D9555D30080F1C1 /* OLEditPhotobookViewController.m in Sources */,
+				2E65FEA91E4E143B00A301BB /* OLOrderHistoryViewController.m in Sources */,
 				2E451E111D9555870080F1C1 /* OLFlipTransition.m in Sources */,
 				2E451E561D9555D90080F1C1 /* OLAddressEditViewController.m in Sources */,
 				2EB8FE7F1D95692000E26BDF /* UIViewController+OLMethods.m in Sources */,
@@ -2566,7 +2568,6 @@
 			files = (
 				2EE054351E321CC900417DA4 /* OLKiteTestHelper.m in Sources */,
 				2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */,
-				2E9A77361DA683FE00A50C4D /* PrintOrderHistoryViewController.m in Sources */,
 				2EE054321E32177A00417DA4 /* OLBaseRequest+Mock.m in Sources */,
 				2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */,
 				2EE054341E321C7000417DA4 /* OLSwizzler.m in Sources */,
@@ -2580,7 +2581,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E9A77341DA683BD00A50C4D /* PrintOrderHistoryViewController.m in Sources */,
 				2E9A77331DA683BD00A50C4D /* ViewController.m in Sources */,
 				2E9A77381DA684FA00A50C4D /* main.m in Sources */,
 				2E9A77321DA683BD00A50C4D /* AppDelegate.m in Sources */,
