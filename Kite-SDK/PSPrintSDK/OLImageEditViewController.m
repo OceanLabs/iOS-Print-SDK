@@ -44,6 +44,7 @@
 #import "UIImageView+FadeIn.h"
 #import "UIView+RoundRect.h"
 #import "OLCustomPickerController.h"
+#import "OLTouchTolerantView.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -202,12 +203,28 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField hideButtons];
+        [self setButtonsHidden:YES forTextField:self.activeTextField];
     }
     self.activeTextField = nil;
     
     if (self.editingTools.collectionView.tag != kOLEditTagCrop){
         [self dismissDrawerWithCompletionHandler:NULL];
+    }
+}
+
+- (void)setButtonsHidden:(BOOL)hidden forTextField:(OLPhotoTextField *)tf{
+    CGRect frame = tf.frame;
+    if (hidden){
+        [self addTextFieldToView:self.cropView existing:tf];
+        tf.frame = frame;
+        [tf hideButtons];
+        self.textFieldsView.userInteractionEnabled = NO;
+    }
+    else{
+        [self addTextFieldToView:self.textFieldsView existing:tf];
+        tf.frame = frame;
+        [tf showButtons];
+        self.textFieldsView.userInteractionEnabled = YES;
     }
 }
 
@@ -229,9 +246,9 @@ const NSInteger kOLEditTagCrop = 40;
     
     [self setupCropGuides];
     
-    self.textFieldsView = [[UIView alloc] init];
+    self.textFieldsView = [[OLTouchTolerantView alloc] init];
     self.textFieldsView.userInteractionEnabled = NO;
-    [self.view insertSubview:self.textFieldsView aboveSubview:self.cropView];
+    [self.printContainerView insertSubview:self.textFieldsView aboveSubview:self.cropView];
     self.textFieldsView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
     [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
@@ -280,7 +297,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     NSArray *copy = [[NSArray alloc] initWithArray:self.edits.textsOnPhoto copyItems:NO];
     for (OLTextOnPhoto *textOnPhoto in copy){
-        UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
+        UITextField *textField = [self addTextFieldToView:self.textFieldsView existing:nil];
         textField.text = textOnPhoto.text;
         textField.transform = textOnPhoto.transform;
         textField.textColor = textOnPhoto.color;
@@ -511,6 +528,7 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)orderViews{
     [self.view bringSubviewToFront:self.printContainerView];
     [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.textFieldsView];
     [self.view bringSubviewToFront:self.previewView];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
@@ -744,22 +762,30 @@ const NSInteger kOLEditTagCrop = 40;
     }
 }
 
-- (OLPhotoTextField *)addTextFieldToView:(UIView *)view temp:(BOOL)temp{
-    OLPhotoTextField *textField = [[OLPhotoTextField alloc] initWithFrame:CGRectMake(0, 0, 130, 70)];
-    textField.center = self.cropView.center;
-    textField.margins = 10;
-    textField.delegate = self;
-    textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.photoTextFieldDelegate = self;
-    textField.keyboardAppearance = UIKeyboardAppearanceDark;
-    [textField addTarget:self
-                  action:@selector(textFieldDidChange:)
-        forControlEvents:UIControlEventEditingChanged];
-    
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
-    panGesture.delegate = self;
-    [panGesture addTarget:self action:@selector(onTextfieldGesturePanRecognized:)];
-    [textField addGestureRecognizer:panGesture];
+- (OLPhotoTextField *)addTextFieldToView:(UIView *)view existing:(OLPhotoTextField *)existing{
+    OLPhotoTextField *textField;
+    if (existing){
+        textField = existing;
+    }
+    else{
+        textField = [[OLPhotoTextField alloc] initWithFrame:CGRectMake(0, 0, 130, 70)];
+        textField.center = self.cropView.center;
+        textField.margins = 10;
+        textField.delegate = self;
+        textField.autocorrectionType = UITextAutocorrectionTypeNo;
+        textField.photoTextFieldDelegate = self;
+        textField.keyboardAppearance = UIKeyboardAppearanceDark;
+        [textField addTarget:self
+                      action:@selector(textFieldDidChange:)
+            forControlEvents:UIControlEventEditingChanged];
+        
+        UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
+        panGesture.delegate = self;
+        [panGesture addTarget:self action:@selector(onTextfieldGesturePanRecognized:)];
+        [textField addGestureRecognizer:panGesture];
+        
+        [self.textFields addObject:textField];
+    }
     
     [view addSubview:textField];
     [textField.superview addConstraint:[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:textField.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
@@ -776,10 +802,6 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     [textField.superview addConstraints:con];
-    
-    if (!temp){
-        [self.textFields addObject:textField];
-    }
     
     return textField;
 }
@@ -822,11 +844,11 @@ const NSInteger kOLEditTagCrop = 40;
         if (self.activeTextField != textField){
             [self.activeTextField resignFirstResponder];
             if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-                [self.activeTextField hideButtons];
+                [self setButtonsHidden:YES forTextField:self.activeTextField];
             }
             self.activeTextField = (OLPhotoTextField *)textField;
             if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-                [self.activeTextField showButtons];
+                [self setButtonsHidden:NO forTextField:self.activeTextField];
             }
         }
     }
@@ -1192,7 +1214,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField hideButtons];
+        [self setButtonsHidden:YES forTextField:self.activeTextField];
     }
 }
 
@@ -1246,7 +1268,7 @@ const NSInteger kOLEditTagCrop = 40;
     self.animating = YES;
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField hideButtons];
+        [self setButtonsHidden:YES forTextField:self.activeTextField];
     }
     self.activeTextField = nil;
     
@@ -1278,7 +1300,7 @@ const NSInteger kOLEditTagCrop = 40;
     self.animating = YES;
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField hideButtons];
+        [self setButtonsHidden:YES forTextField:self.activeTextField];
     }
     self.activeTextField = nil;
     
@@ -1306,7 +1328,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonAddTextClicked:(UIButton *)sender {
-    OLPhotoTextField *textField = [self addTextFieldToView:self.cropView temp:NO];
+    OLPhotoTextField *textField = [self addTextFieldToView:self.textFieldsView existing:nil];
     [self.view layoutIfNeeded];
     [textField becomeFirstResponder]; //Take focus away from any existing active TF
     [textField becomeFirstResponder]; //Become first responder
@@ -2044,11 +2066,11 @@ const NSInteger kOLEditTagCrop = 40;
     }
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField hideButtons];
+        [self setButtonsHidden:YES forTextField:self.activeTextField];
     }
     self.activeTextField = (OLPhotoTextField *)textField;
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField showButtons];
+        [self setButtonsHidden:NO forTextField:self.activeTextField];
     }
     return NO;
 }
@@ -2172,7 +2194,7 @@ const NSInteger kOLEditTagCrop = 40;
             
             NSArray *copy = [[NSArray alloc] initWithArray:welf.edits.textsOnPhoto copyItems:NO];
             for (OLTextOnPhoto *textOnPhoto in copy){
-                UITextField *textField = [welf addTextFieldToView:welf.cropView temp:NO];
+                UITextField *textField = [welf addTextFieldToView:welf.textFieldsView existing:nil];
                 textField.text = textOnPhoto.text;
                 textField.transform = textOnPhoto.transform;
                 textField.textColor = textOnPhoto.color;

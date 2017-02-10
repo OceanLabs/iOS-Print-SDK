@@ -211,4 +211,8 @@
     self.transform = CGAffineTransformRotate(self.transform, angle);
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    return [super hitTest:point withEvent:event];
+}
+
 @end

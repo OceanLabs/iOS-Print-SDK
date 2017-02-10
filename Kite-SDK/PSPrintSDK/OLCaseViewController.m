@@ -82,6 +82,7 @@
 @property (strong, nonatomic) UIViewController *presentedVc;
 @property (weak, nonatomic) IBOutlet UIView *printContainerView;
 @property (weak, nonatomic) UIView *gestureView;
+@property (strong, nonatomic) UIView *textFieldsView;
 
 @end
 
@@ -400,6 +401,7 @@
     [self.view bringSubviewToFront:self.deviceView];
     [self.view bringSubviewToFront:self.printContainerView];
     [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.textFieldsView];
     
     if (![self isUsingMultiplyBlend]){
         [self.view bringSubviewToFront:self.highlightsView];

@@ -196,6 +196,8 @@
 		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
 		2E4DAB651DE47104002F4A84 /* mug.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2E4DAB641DE47104002F4A84 /* mug.dae */; };
 		2E5D13AE1E36238800927D19 /* OLMockPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */; };
+		2E65FEA01E4E058400A301BB /* OLTouchTolerantView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */; };
+		2E65FEA11E4E058400A301BB /* OLTouchTolerantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */; };
 		2E7483511BCCFB5900360550 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E7483501BCCFB5900360550 /* 2.png */; };
 		2E7483531BCD11F800360550 /* ViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7483521BCD11F800360550 /* ViewControllerTests.m */; };
 		2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */; };
@@ -641,6 +643,8 @@
 		2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLIntegratedCheckoutViewController.m; sourceTree = "<group>"; };
 		2E6561101D1C341A0092001C /* OLSelectedEffectButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSelectedEffectButton.h; sourceTree = "<group>"; };
 		2E6561111D1C341A0092001C /* OLSelectedEffectButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSelectedEffectButton.m; sourceTree = "<group>"; };
+		2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTouchTolerantView.h; sourceTree = "<group>"; };
+		2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTouchTolerantView.m; sourceTree = "<group>"; };
 		2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPopupOptionsImageView.h; sourceTree = "<group>"; };
 		2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPopupOptionsImageView.m; sourceTree = "<group>"; };
 		2E67B9281D267A3E00914D56 /* OLColorSelectionCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLColorSelectionCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1047,6 +1051,8 @@
 				2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */,
 				2EF718321D589DB60036502D /* OLInfoBanner.h */,
 				2EF718331D589DB60036502D /* OLInfoBanner.m */,
+				2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */,
+				2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1962,6 +1968,7 @@
 				2EB8FDF41D95685100E26BDF /* OLPrintOrderCost.h in Headers */,
 				2EB8FE0F1D95685100E26BDF /* OLFacebookPhotosForAlbumRequest.h in Headers */,
 				2EB8FE331D95685100E26BDF /* OLPopupOptionsImageView.h in Headers */,
+				2E65FEA01E4E058400A301BB /* OLTouchTolerantView.h in Headers */,
 				2EB8FDFA1D95685100E26BDF /* OLProductGroup.h in Headers */,
 				2EB8FDFB1D95685100E26BDF /* OLProduct.h in Headers */,
 				2EB8FE0B1D95685100E26BDF /* OLInstagramImage.h in Headers */,
@@ -2483,6 +2490,7 @@
 				2E451DD51D9555540080F1C1 /* OLAssetUploadRequest.m in Sources */,
 				2E451DDB1D9555540080F1C1 /* OLURLShortener.m in Sources */,
 				2E451E531D9555D90080F1C1 /* OLAddressPickerController.m in Sources */,
+				2E65FEA11E4E058400A301BB /* OLTouchTolerantView.m in Sources */,
 				2E451E671D955B1F0080F1C1 /* mask.c in Sources */,
 				2E451E5F1D9555EF0080F1C1 /* OLImagePreviewViewController.m in Sources */,
 				2E451E311D9555870080F1C1 /* OLInfoBanner.m in Sources */,
