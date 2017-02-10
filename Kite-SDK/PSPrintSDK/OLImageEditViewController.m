@@ -1624,7 +1624,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3 || self.product.productTemplate.templateUI == OLTemplateUIApparel){
+    if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3 || (self.product.productTemplate.templateUI == OLTemplateUIApparel && collectionView.tag == 0)){
         return CGSizeMake(self.editingTools.collectionView.frame.size.height, self.editingTools.collectionView.frame.size.height);
     }
     else if (collectionView.tag == kOLEditTagFonts){
@@ -1637,7 +1637,7 @@ const NSInteger kOLEditTagCrop = 40;
         return CGSizeMake(120, self.editingTools.collectionView.frame.size.height);
     }
     
-    return CGSizeMake(self.editingTools.collectionView.frame.size.height * 1.5, self.editingTools.collectionView.frame.size.height);
+    return CGSizeMake(self.editingTools.collectionView.frame.size.height * 1.6, self.editingTools.collectionView.frame.size.height);
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
