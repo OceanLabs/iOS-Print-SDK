@@ -5,6 +5,7 @@
 "Add" = "Tilføj";
 "Add %ld %@!" = "Add %ld %@!";
 "Add a %@!" = "Add a %@!";
+"Add a photo\non this side" = "Add a photo\non this side";
 "Add Address" = "Tilføj adresse";
 "Add another %@!" = "Add another %@!";
 "Add Credit Card" = "Add Credit Card";
@@ -25,6 +26,7 @@
 "Authorise" = "Authorise";
 "Back" = "Tilbage";
 "BACK" = "BACK";
+"Back Image Is Too Small" = "Back Image Is Too Small";
 "Basket is empty" = "Kurven er tom";
 "basket.Edit" = "Rediger";
 "Cancel" = "Annuler";
@@ -80,6 +82,7 @@
 "First Name" = "Fornavn";
 "Flip" = "Flip";
 "Fonts" = "Fonts";
+"For only %@ extra" = "For only %@ extra";
 "FREE" = "FREE";
 "FRONT" = "FRONT";
 "Great gifts for all the family" = "Great gifts for all the family";

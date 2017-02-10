@@ -5,6 +5,7 @@
 "Add" = "Añadir";
 "Add %ld %@!" = "¡Añadir %ld %@!";
 "Add a %@!" = "Añadir una %@!";
+"Add a photo\non this side" = "Add a photo\non this side";
 "Add Address" = "Añadir une dirección";
 "Add another %@!" = "Añadir otra %@!";
 "Add Credit Card" = "Añadir tarjeta de crédito";
@@ -25,6 +26,7 @@
 "Authorise" = "Autorizar";
 "Back" = "Espalda";
 "BACK" = "ESPALDA";
+"Back Image Is Too Small" = "Back Image Is Too Small";
 "Basket is empty" = "La cesta está vacía";
 "basket.Edit" = "Editar";
 "Cancel" = "Cancelar";
@@ -80,6 +82,7 @@
 "First Name" = "Nombre";
 "Flip" = "Girar";
 "Fonts" = "Fuentes";
+"For only %@ extra" = "For only %@ extra";
 "FREE" = "GRATIS";
 "FRONT" = "FRENTE";
 "Great gifts for all the family" = "Grandes regalos para toda la familia";

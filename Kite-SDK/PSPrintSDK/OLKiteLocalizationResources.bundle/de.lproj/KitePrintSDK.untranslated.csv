@@ -3,6 +3,7 @@ ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!","**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!",
 Add %ld %@!,Add %ld %@!,
 Add a %@!,Add a %@!,
+Add a photo\non this side,Add a photo\non this side,/* this side [of the shirt] */
 Add another %@!,Add another %@!,
 Add Credit Card,Add Credit Card,
 Add Credit Card (TEST),Add Credit Card (TEST),
@@ -13,6 +14,7 @@ Are you sure you want to delete this item?,Are you sure you want to delete this 
 "Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos","Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos",
 Authorise,Authorise,
 BACK,BACK,/* Back of the photo */
+Back Image Is Too Small,Back Image Is Too Small,
 Choose Photo,Choose Photo,
 Choose Photos,Choose Photos,
 cm,cm,/* Centimeters */
@@ -38,6 +40,7 @@ Failed to log in to Instagram. Please check your internet connectivity and try a
 Filters,Filters,/* Image filters */
 Flip,Flip,/* Horizontally flip image */
 Fonts,Fonts,
+For only %@ extra,For only %@ extra,/* [Add a photo on this side of the shirt] for only $4.00 extra */
 FREE,FREE,"/* Free, no cost */"
 FRONT,FRONT,/* Front of the photo */
 Great gifts for all the family,Great gifts for all the family,

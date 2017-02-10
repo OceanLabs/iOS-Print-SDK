@@ -267,6 +267,7 @@
                                 NSArray *supportedOptions;
                                 NSString *collectionId;
                                 NSString *collectionName;
+                                NSMutableArray *fulfilmentItems;
                                 OLProductRepresentation *productRepresentation;
                                 if (product){
                                     NSArray *coverPhotoDicts = product[@"cover_photo_variants"];
@@ -277,6 +278,21 @@
                                                     coverPhotos[dict[@"variant_id"]] = dict[@"url"];
                                                 }
                                             }
+                                        }
+                                    }
+                                    
+                                    NSArray *fulfilmentFields = product[@"fulfilment_fields"];
+                                    if ([fulfilmentFields isKindOfClass:[NSArray class]]){
+                                        fulfilmentItems = [[NSMutableArray alloc] init];
+                                        for (NSDictionary *dict in fulfilmentFields){
+                                            OLFulfilmentItem *item = [[OLFulfilmentItem alloc] init];
+                                            item.costs = [dict[@"cost"] isKindOfClass:[NSArray class]] ? dict[@"cost"] : nil;
+                                            item.itemDescription = [dict[@"description"] isKindOfClass:[NSString class]] ? dict[@"description"] : nil;
+                                            item.identifier = [dict[@"field_name"] isKindOfClass:[NSString class]] ? dict[@"field_name"] : nil;
+                                            item.required = [dict[@"required"] isKindOfClass:[NSNumber class]] ? [dict[@"required"] boolValue] : NO;
+                                            item.name = [dict[@"verbose_name"] isKindOfClass:[NSString class]] ? dict[@"verbose_name"] : nil;
+                                            
+                                            [fulfilmentItems addObject:item];
                                         }
                                     }
                                     
@@ -461,6 +477,7 @@
                                     t.collectionName = collectionName;
                                     t.logo = logo;
                                     t.representationAssets = representationAssets;
+                                    t.fulfilmentItems = fulfilmentItems;
                                     
                                     if ([blendMode isEqualToString:@"MULTIPLY"]){
                                         t.blendMode = OLImageBlendModeMultiply;

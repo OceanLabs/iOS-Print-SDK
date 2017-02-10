@@ -67,6 +67,7 @@ static NSString *const kKeyCollectionName = @"co.oceanlabs.pssdk.kKeyCollectionN
 static NSString *const kKeyCollectionId = @"co.oceanlabs.pssdk.kKeyCollectionId";
 static NSString *const kKeyRepresentationAssets = @"co.oceanlabs.pssdk.kKeyRepresentationAssets";
 static NSString *const kKeyLogo = @"co.oceanlabs.pssdk.kKeyLogo";
+static NSString *const kKeyFulfilmentItems = @"co.oceanlabs.pssdk.kKeyFulfilmentItems";
 
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
@@ -428,6 +429,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     [aCoder encodeObject:self.collectionName forKey:kKeyCollectionName];
     [aCoder encodeObject:self.representationAssets forKey:kKeyRepresentationAssets];
     [aCoder encodeObject:self.logo forKey:kKeyLogo];
+    [aCoder encodeObject:self.fulfilmentItems forKey:kKeyFulfilmentItems];
 }
 
 - (NSString *)description{
@@ -470,6 +472,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
         self.collectionId = [aDecoder decodeObjectForKey:kKeyCollectionId];
         self.representationAssets = [aDecoder decodeObjectForKey:kKeyRepresentationAssets];
         self.logo = [aDecoder decodeObjectForKey:kKeyLogo];
+        self.fulfilmentItems = [aDecoder decodeObjectForKey:kKeyFulfilmentItems];
     }
     
     return self;

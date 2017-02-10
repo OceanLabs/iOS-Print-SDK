@@ -5,6 +5,7 @@
 "Add" = "Ajouter";
 "Add %ld %@!" = "Ajouter %ld %@!";
 "Add a %@!" = "Ajouter un %@!";
+"Add a photo\non this side" = "Add a photo\non this side";
 "Add Address" = "Ajouter une adresse";
 "Add another %@!" = "Ajouter un autre %@!";
 "Add Credit Card" = "Ajouter une carte de crédit";
@@ -25,6 +26,7 @@
 "Authorise" = "Autoriser";
 "Back" = "Retour";
 "BACK" = "RETOUR";
+"Back Image Is Too Small" = "Back Image Is Too Small";
 "Basket is empty" = "Le panier est vide";
 "basket.Edit" = "Modifier";
 "Cancel" = "Annuler";
@@ -80,6 +82,7 @@
 "First Name" = "Prénom";
 "Flip" = "Flip";
 "Fonts" = "Polices";
+"For only %@ extra" = "For only %@ extra";
 "FREE" = "GRATUIT";
 "FRONT" = "DEVANT";
 "Great gifts for all the family" = "Supers cadeaux pour toute la famille";

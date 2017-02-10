@@ -65,6 +65,7 @@
 
 @interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate, OLScrollCropViewControllerDelegate>
 @property (nonatomic, copy) void (^saveJobCompletionHandler)();
+@property (assign, nonatomic) BOOL showingBack;
 @end
 
 @interface OLProduct ()
@@ -83,7 +84,7 @@
 @implementation OLSingleImageProductReviewViewController
 
 - (OLAsset *)asset{
-    if (!super.asset){
+    if (!super.asset && !self.showingBack){
         super.asset = [OLUserSession currentSession].userSelectedPhotos.lastObject;
     }
     
@@ -176,14 +177,6 @@
     } completion:NULL];
 }
 
-- (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    
-    if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && self.hintView.alpha <= 0.1f) {
-        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:YES];
-    }
-}
-
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
@@ -255,14 +248,7 @@
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLProductPrintJob *job;
-    if (self.product.productTemplate.templateUI == OLTemplateUIApparel && assetArray.firstObject){
-        job = [OLPrintJob apparelWithTemplateId:self.product.templateId OLAssets:@{
-                                                                                   @"center_chest": assetArray.firstObject,
-                                                                                   }];
-    }
-    else{
-        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
-    }
+    job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
@@ -348,7 +334,7 @@
 
 -(void) doCheckout{
     if ([OLUserSession currentSession].userSelectedPhotos.count == 0) {
-        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:YES];
+        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
         return;
     }
     [self saveJobWithCompletionHandler:^{
@@ -356,7 +342,6 @@
             UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
             [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
             [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
-            [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
             [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
             [self.navigationController pushViewController:vc animated:YES];
         }
