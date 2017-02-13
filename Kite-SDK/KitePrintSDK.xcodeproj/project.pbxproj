@@ -205,7 +205,7 @@
 		2E7D1C8F1BC41C7D009227EE /* OLProductOrderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D1C8E1BC41C7D009227EE /* OLProductOrderTests.m */; };
 		2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */; };
 		2E7D39731DAE39820046D255 /* OLImageRenderOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */; };
-		2E870D3A1E49EF2100623C54 /* OLFulfilmentItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E870D381E49EF2100623C54 /* OLFulfilmentItem.h */; };
+		2E870D3A1E49EF2100623C54 /* OLFulfilmentItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E870D381E49EF2100623C54 /* OLFulfilmentItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E870D3B1E49EF2100623C54 /* OLFulfilmentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E870D391E49EF2100623C54 /* OLFulfilmentItem.m */; };
 		2E898CCB1CC518180041CCD8 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
 		2E898CCC1CC518180041CCD8 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */; };
