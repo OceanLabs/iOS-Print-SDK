@@ -78,7 +78,7 @@
 "Failed to validate the order. Please try again." = "Error al validar el pedido. Por favor, inténtelo de nuevo más tarde.";
 "Filters" = "Filtros";
 "First Name" = "Nombre";
-"Flip" = "Girar";
+"Flip" = "Invertir";
 "Fonts" = "Fuentes";
 "FREE" = "GRATIS";
 "FRONT" = "FRENTE";
@@ -87,7 +87,7 @@
 "IMAGE TOOLS" = "HERRAMIENTAS DE IMAGEN";
 "Image upload failed with a %lu HTTP response status code. Please try again." = "Error de carga de la imagen con un código de estado de respuesta %lu HTTP. Por favor, inténtelo de nuevo más tarde.";
 "inches" = "pulgadas";
-"Invalid Email Address" = "Email inválido";
+"Invalid Email Address" = "Correo electrónico inválido";
 "Invalid Phone Number" = "Numero de telefono inválido";
 "Large" = "Grande";
 "Last Name" = "Apellido";
@@ -135,7 +135,7 @@
 "Please choose an address to have your order shipped to" = "Por favor, elija una dirección para que su pedido sea enviado a";
 "Please enter a card expiry date in the future" = "Por favor, ingrese una fecha de caducidad de la tarjeta en el futuro";
 "Please enter a valid card number" = "Por favor, ingrese un número de tarjeta válido";
-"Please enter a valid email address" = "Por favor, ingrese una correo electrónico válido";
+"Please enter a valid email address" = "Por favor, ingrese un correo electrónico válido";
 "Please enter a valid phone number" = "Por favor, ingrese un número de teléfono válido";
 "Please enter your first and last name." = "Por favor introduce su nombre y apellido.";
 "Please fill in Line 1 of the address." = "Por favor llene la línea 1 de dirección.";
@@ -162,6 +162,7 @@
 "Promo Code" = "Código promocional";
 "Promotional Discount" = "Descuento promocional";
 "Quantity" = "Cantidad";
+"Receipt" = "Recibo";
 "Recents" = "Recientes";
 "Remove" = "Retirar";
 "Remove?" = "¿Retirar?";
@@ -213,7 +214,7 @@
 "You've only selected %d photo." = "Solo ha seleccionado %d foto.";
 "You've only selected %d photos." = "Solo ha seleccionado %d fotos.";
 "You've selected %d photos." = "Solo ha seleccionado %d fotos.";
-"Your 15-16 digit card number" = "N° de tarjeta (15-16 chiffres)";
+"Your 15-16 digit card number" = "N° de tarjeta (15-16 digitos)";
 "Your card expiry date" = "La fecha de caducidad de su tarjeta";
 "Your payment was not approved (transaction state: %@). Please try again." = "Su pago no fue aprobado (estado de la transacción: %@). Por favor, vuelve a intentarlo.";
 "Your Phone" = "Su teléfono";

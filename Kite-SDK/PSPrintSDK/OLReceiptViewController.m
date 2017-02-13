@@ -131,7 +131,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Receipt";
+    self.title = NSLocalizedStringFromTableInBundle(@"Receipt", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
     [self setupHeader];
     
@@ -262,7 +262,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)retrySubmittingOrderForPrinting {
     [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
     [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
-    [OLProgressHUD showWithStatus:@"Processing"];
+    [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Processing the order")];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {

@@ -162,6 +162,7 @@ PRODUCT OPTIONS,PRODUCT OPTIONS,
 Promo Code,Promo Code,
 Promotional Discount,Promotional Discount,
 Quantity,Quantity,/* Quantity of photos */
+Receipt,Receipt,
 Recents,Recents,/* Recent photos used */
 Remove,Remove,/* Remove/clear an image */
 Remove?,Remove?,/* Remove [photo]? */

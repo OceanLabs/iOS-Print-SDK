@@ -504,7 +504,14 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == kSectionDeliveryDetails) {
         return NSLocalizedStringFromTableInBundle(@"Delivery Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-    } else {
+    }
+    else if (section == kSectionEmailAddress){
+        return NSLocalizedStringFromTableInBundle(@"Email", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    }
+    else if (section == kSectionPhoneNumber){
+        return NSLocalizedStringFromTableInBundle(@"Phone", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    }
+    else {
         return nil;
     }
 }
@@ -540,12 +547,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     if (section == kSectionDeliveryDetails){
         return 0;
-    }
-    if (section == kSectionPhoneNumber){
-        return 44;
-    }
-    if (![OLUserSession currentSession].kiteVc.showOptOutOfEmailsCheckbox){
-        return 28;
     }
     return 44;
 }
@@ -630,7 +631,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         static NSString *const TextFieldCell = @"EmailFieldCell";
         cell = [tableView dequeueReusableCellWithIdentifier:TextFieldCell];
         if (cell == nil) {
-            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Email", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")  keyboardType:UIKeyboardTypeEmailAddress];
+            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell keyboardType:UIKeyboardTypeEmailAddress];
             self.textFieldEmail = (UITextField *) [cell viewWithTag:kInputFieldTag];
             self.textFieldEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
             self.textFieldEmail.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -641,7 +642,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         static NSString *const TextFieldCell = @"PhoneFieldCell";
         cell = [tableView dequeueReusableCellWithIdentifier:TextFieldCell];
         if (cell == nil) {
-            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell title:NSLocalizedStringFromTableInBundle(@"Phone", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") keyboardType:UIKeyboardTypePhonePad];
+            cell = [self createTextFieldCellWithReuseIdentifier:TextFieldCell keyboardType:UIKeyboardTypePhonePad];
             self.textFieldPhone = (UITextField *) [cell viewWithTag:kInputFieldTag];
             [self populateDefaultEmailAndPhone];
         }
@@ -650,20 +651,14 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     return cell;
 }
 
-- (UITableViewCell *)createTextFieldCellWithReuseIdentifier:(NSString *)identifier title:(NSString *)title keyboardType:(UIKeyboardType)type {
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 43)];
+- (UITableViewCell *)createTextFieldCellWithReuseIdentifier:(NSString *)identifier keyboardType:(UIKeyboardType)type {
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(20, 0, [UIScreen mainScreen].bounds.size.width, 43)];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 11, 61, 21)];
-    
-    titleLabel.text = title;
-    titleLabel.adjustsFontSizeToFitWidth = YES;
-    titleLabel.tag = kTagInputFieldLabel;
-    UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(86, 0, [UIScreen mainScreen].bounds.size.width - 86, 43)];
+    UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 43)];
     inputField.delegate = self;
     inputField.tag = kInputFieldTag;
     [inputField setKeyboardType:type];
     [inputField setReturnKeyType:UIReturnKeyNext];
-    [cell addSubview:titleLabel];
     [cell addSubview:inputField];
     
     UIView *view = inputField;
@@ -671,7 +666,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     NSDictionary *views = NSDictionaryOfVariableBindings(view);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-86-[view]-0-|", @"V:[view(43)]"];
+    NSArray *visuals = @[@"H:|-20-[view]-0-|", @"V:[view(43)]"];
     
     
     for (NSString *visual in visuals) {
