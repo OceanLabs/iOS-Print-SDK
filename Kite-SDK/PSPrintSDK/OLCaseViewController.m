@@ -62,9 +62,10 @@
 
 @interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
 
-- (void) doCheckout;
+- (BOOL)shouldDoCheckout;
 - (UIEdgeInsets)imageInsetsOnContainer;
 - (void)disableOverlay;
+- (void)doCheckout;
 - (void)loadImageFromAsset;
 - (void)onButtonCropClicked:(UIButton *)sender;
 - (void)onButtonDoneTapped:(id)sender;
@@ -79,10 +80,10 @@
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) OLPhotoTextField *activeTextField;
 @property (strong, nonatomic) UITextField *borderTextField;
+@property (strong, nonatomic) UIView *textFieldsView;
 @property (strong, nonatomic) UIViewController *presentedVc;
 @property (weak, nonatomic) IBOutlet UIView *printContainerView;
 @property (weak, nonatomic) UIView *gestureView;
-@property (strong, nonatomic) UIView *textFieldsView;
 
 @end
 
@@ -265,6 +266,11 @@
         [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
         return;
     }
+    
+    if (![self shouldDoCheckout]){
+        return;
+    }
+    
     [self saveJobWithCompletionHandler:^{
         if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
             UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
