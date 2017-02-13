@@ -46,7 +46,6 @@
 @end
 
 @interface OLAsset ()
-- (void)uploadToKiteWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSError *error))handler;
 - (NSURL *)imageRenderURLWithOptions:(OLImageRenderOptions *)options;
 @end
 
@@ -54,6 +53,12 @@
 
 + (OLPromoView *)promoViewWithAssets:(NSArray <OLAsset *>*_Nonnull)assets templates:(NSArray <NSString *>*_Nullable)templates{
     NSAssert(assets.count != 0 && templates.count != 0, @"Please supply at least one asset and product to render.");
+    
+#ifdef DEBUG
+    for (OLAsset *asset in assets){
+        NSAssert(asset.assetType == kOLAssetTypeRemoteImageURL, @"Only URL assets are supported at this time.");
+    }
+#endif
     
     OLPromoView *promoView = [[OLPromoView alloc] initWithFrame:CGRectMake(0, 0, 200, 60)];
     promoView.assets = assets;

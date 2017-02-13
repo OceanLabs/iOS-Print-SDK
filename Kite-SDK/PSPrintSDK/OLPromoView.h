@@ -79,7 +79,7 @@
 
 
 /**
- Label that shows the lagline on the promo view
+ Label that shows the tagline on the promo view
  */
 @property (strong, nonatomic) UILabel *_Nullable label;
 
