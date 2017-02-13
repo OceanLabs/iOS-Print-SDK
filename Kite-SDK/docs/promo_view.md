@@ -23,6 +23,6 @@ and asynchronously:
 
 ### Considerations
 
-- We recommend showing the Promo View in a `200` point height and full-width frame and using 2 images and/or templates on an iPhone and 4 on an iPad.
+- We recommend showing the Promo View in a `200` point height and full-width frame and using 2 images and/or templates on an iPhone or 4 on an iPad.
 - Not all products are currently supported.
 - Only URL `OLAsset` objects are currently supported.
