@@ -474,7 +474,7 @@ static CGFloat fadeTime = 0.3;
         NSError *error = n.userInfo[kNotificationKeyTemplateSyncError];
         NSString *message = NSLocalizedStringFromTableInBundle(@"There was a problem getting Print Shop products. Check your Internet connectivity or try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         if (error.code == kOLKiteSDKErrorCodeMaintenanceMode) {
-            message = kOLKiteSDKErrorMessageMaintenanceMode;
+            message = NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
