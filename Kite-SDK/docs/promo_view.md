@@ -8,15 +8,15 @@ It is delivered as a `UIView` and you can request to have it delivered synchrono
 
 Here is the code to load it synchronously:
 ```obj-c
-    OLPromoView *view = [OLPromoView promoViewWithAssets:assets templates:@[@"i6s_case", @"i5_case"]];
-    // Show the view here
+OLPromoView *view = [OLPromoView promoViewWithAssets:assets templates:@[@"i6s_case", @"i5_case"]];
+// Show the view here
 ```
 
 and asynchronously:
 ```obj-c
 [OLPromoView requestPromoViewWithAssets:assets templates:@[@"i6s_case", @"i5_case"] completionHandler:^(OLPromoView *view, NSError *error){
         // Show the view here
-    }];
+}];
 ```
 
 **💡Tip💡:** Customize the tagline by setting the `label` property of the `OLPromoView` object.
