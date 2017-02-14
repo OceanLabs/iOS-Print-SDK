@@ -66,6 +66,7 @@
 @property (weak, nonatomic) UIButton *ctaButton;
 @property (weak, nonatomic) IBOutlet OLEditingToolsView *editingTools;
 @property (strong, nonatomic) OLProduct *product;
+@property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 
 
 

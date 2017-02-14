@@ -81,7 +81,7 @@
 "Failed to validate the order. Please try again." = "Nous n'avons pu valider la commande. Veuillez réessayer.";
 "Filters" = "Filtres";
 "First Name" = "Prénom";
-"Flip" = "Flip";
+"Flip" = "Inverser";
 "Fonts" = "Polices";
 "For only %@ extra" = "For only %@ extra";
 "FREE" = "GRATUIT";
@@ -167,13 +167,14 @@
 "Promo Code" = "Code Promo";
 "Promotional Discount" = "Remise promotionnelle";
 "Quantity" = "Quantité";
+"Receipt" = "Reçu";
 "Recents" = "Récents";
 "Remove" = "Retirer";
 "Remove?" = "Retirer ?";
 "Required by the postal service in case there are any issues during delivery." = "Requis par les services postaux en cas de problèmes durant la livraison.";
 "Retry" = "Réessayer";
 "Review" = "Revoir";
-"Rotate" = "Faire pivoter";
+"Rotate" = "Pivoter";
 "Save" = "Sauvegarder";
 "Scan QR Code" = "QR Code";
 "Search by postcode, street or address" = "Recherche par code postal, rue ou adresse";
