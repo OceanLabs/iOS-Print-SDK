@@ -105,6 +105,7 @@
 "Medium" = "Medio";
 "Missing Delivery Address" = "Falta dirección de entrega";
 "MM/YY" = "MM/AA";
+"MORE ITEMS\nCOMING SOON!" = "MORE ITEMS\nCOMING SOON!";
 "Move Pages" = "Mover páginas";
 "New Payment" = "Nuevo Pago";
 "Next" = "Siguiente";
@@ -117,6 +118,7 @@
 "OK" = "Aceptar";
 "Only registered %d/%d image URLs with the asset endpoint" = "Solo se registran las URL de imagen %d/%d con el punto final del recurso";
 "Oops!" = "Oops!";
+"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW" = "OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW";
 "Or print on a product below ▼" = "O imprimir sobre un producto debajo de ▼";
 "Order History" = "Order History";
 "Order Id" = "Número de identificación del pedido";
@@ -207,6 +209,7 @@
 "Uploading book" = "Cargando el libro";
 "Uploading Images \n%lu / %lu" = "Subiendo Imágenes \n%lu / %lu";
 "View Item" = "Ver elemento";
+"WE HAVE RECEIVED\nYOUR ORDER" = "WE HAVE RECEIVED\nYOUR ORDER";
 "We'll send you confirmation and order updates." = "Le enviaremos confirmación y actualizaciones de pedidos.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Le enviaremos confirmación y actualizaciones de pedidos. Desmarca esta casilla para inhabilitar las campañas de correo electrónico.";
 "Yes" = "Sí";

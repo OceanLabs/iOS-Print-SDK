@@ -105,6 +105,7 @@
 "Medium" = "Medium";
 "Missing Delivery Address" = "Leveringsadresse mangler";
 "MM/YY" = "MM/YY";
+"MORE ITEMS\nCOMING SOON!" = "MORE ITEMS\nCOMING SOON!";
 "Move Pages" = "Skift side";
 "New Payment" = "Ny betaling";
 "Next" = "Næste";
@@ -117,6 +118,7 @@
 "OK" = "OK";
 "Only registered %d/%d image URLs with the asset endpoint" = "Only registered %d/%d image URLs with the asset endpoint";
 "Oops!" = "Ups!";
+"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW" = "OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW";
 "Or print on a product below ▼" = "Or print on a product below ▼";
 "Order History" = "Order History";
 "Order Id" = "Ordre Id";
@@ -167,6 +169,7 @@
 "Promo Code" = "Rabatkode";
 "Promotional Discount" = "Promotional Discount";
 "Quantity" = "Antal";
+"Receipt" = "Receipt";
 "Recents" = "Recents";
 "Remove" = "Remove";
 "Remove?" = "Remove?";
@@ -206,6 +209,7 @@
 "Uploading book" = "Uploading book";
 "Uploading Images \n%lu / %lu" = "Uploader billeder \n%lu / %lu";
 "View Item" = "View Item";
+"WE HAVE RECEIVED\nYOUR ORDER" = "WE HAVE RECEIVED\nYOUR ORDER";
 "We'll send you confirmation and order updates." = "Vi sender dig en bekræftelse og en odreopdatering.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Vi sender dig en bekræftelse og en odreopdatering. Afklik denne box, hvis du ikke ønsker at modtage kampagne e-mails.";
 "Yes" = "Yes";
