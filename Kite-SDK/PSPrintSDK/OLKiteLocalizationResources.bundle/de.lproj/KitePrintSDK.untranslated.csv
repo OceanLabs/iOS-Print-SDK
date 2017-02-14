@@ -55,6 +55,7 @@ Login,Login,
 Maximum Photos Reached,Maximum Photos Reached,
 Medium,Medium,
 MM/YY,MM/YY,/* Credit card date format: MonthMonth/YearYear */
+MORE ITEMS\nCOMING SOON!,MORE ITEMS\nCOMING SOON!,
 Move Pages,Move Pages,/* Title of a screen that allows the user to move the pages of a book around */
 No photos,No photos,/* Title of an alert letting the user know that they selected no photos */
 No Thanks,No Thanks,
@@ -63,6 +64,7 @@ No Thanks,No Thanks,
 Not now,Not now,
 OK,OK,/* Acknowledgent to an alert dialog. */
 Oops!,Oops!,
+OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,
 Or print on a product below ▼,Or print on a product below ▼,
 Order History,Order History,
 Pack of,Pack of,/* Pack of [20 square photos] */
@@ -87,6 +89,7 @@ PRINT AT HOME,PRINT AT HOME,
 Print Shop,Print Shop,
 PRODUCT OPTIONS,PRODUCT OPTIONS,
 Promotional Discount,Promotional Discount,
+Receipt,Receipt,
 Recents,Recents,/* Recent photos used */
 Remove,Remove,/* Remove/clear an image */
 Remove?,Remove?,/* Remove [photo]? */
@@ -112,6 +115,7 @@ There was an error trying to validate the card. Please try again later.,There wa
 This will discard your edits.,This will discard your edits.,"/* The image edits, like crop, filters, etc */"
 Uploading book,Uploading book,
 View Item,View Item,/* View [basket] item */
+WE HAVE RECEIVED\nYOUR ORDER,WE HAVE RECEIVED\nYOUR ORDER,
 Yes Please,Yes Please,
 "Yes, proceed","Yes, proceed",
 "Yes, remove it","Yes, remove it","/* Yes, remove [the photo] */"

@@ -81,7 +81,7 @@
 "Failed to validate the order. Please try again." = "Nous n'avons pu valider la commande. Veuillez réessayer.";
 "Filters" = "Filtres";
 "First Name" = "Prénom";
-"Flip" = "Flip";
+"Flip" = "Inverser";
 "Fonts" = "Polices";
 "For only %@ extra" = "For only %@ extra";
 "FREE" = "GRATUIT";
@@ -105,6 +105,7 @@
 "Medium" = "Medium";
 "Missing Delivery Address" = "Adresse de livraison manquante";
 "MM/YY" = "MM/AA";
+"MORE ITEMS\nCOMING SOON!" = "MORE ITEMS\nCOMING SOON!";
 "Move Pages" = "Déplacerles pages";
 "New Payment" = "Nouveau paiement";
 "Next" = "Suivant";
@@ -117,6 +118,7 @@
 "OK" = "Accepter";
 "Only registered %d/%d image URLs with the asset endpoint" = "Seules les URL d'image %d/%d enregistrées avec le point d'extrémité d'actif";
 "Oops!" = "Oups!";
+"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW" = "OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW";
 "Or print on a product below ▼" = "Ou imprimer sur un produit ci-dessous ▼";
 "Order History" = "Order History";
 "Order Id" = "Numéro de commande";
@@ -167,13 +169,14 @@
 "Promo Code" = "Code Promo";
 "Promotional Discount" = "Remise promotionnelle";
 "Quantity" = "Quantité";
+"Receipt" = "Reçu";
 "Recents" = "Récents";
 "Remove" = "Retirer";
 "Remove?" = "Retirer ?";
 "Required by the postal service in case there are any issues during delivery." = "Requis par les services postaux en cas de problèmes durant la livraison.";
 "Retry" = "Réessayer";
 "Review" = "Revoir";
-"Rotate" = "Faire pivoter";
+"Rotate" = "Pivoter";
 "Save" = "Sauvegarder";
 "Scan QR Code" = "QR Code";
 "Search by postcode, street or address" = "Recherche par code postal, rue ou adresse";
@@ -206,6 +209,7 @@
 "Uploading book" = "Chargement du livre";
 "Uploading Images \n%lu / %lu" = "Images en cours de téléchargement \n%lu / %lu";
 "View Item" = "Voir les éléments";
+"WE HAVE RECEIVED\nYOUR ORDER" = "WE HAVE RECEIVED\nYOUR ORDER";
 "We'll send you confirmation and order updates." = "Nous vous enverrons une confirmation et des mises à jour de commande.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Nous vous enverrons une confirmation et des mises à jour de commande. Décochez cette case si vous ne souhaitez pas recevoir d'emails de notre part.";
 "Yes" = "Oui";

@@ -105,6 +105,7 @@
 "Medium" = "Medium";
 "Missing Delivery Address" = "Missing Delivery Address";
 "MM/YY" = "MM/YY";
+"MORE ITEMS\nCOMING SOON!" = "MORE ITEMS\nCOMING SOON!";
 "Move Pages" = "Move Pages";
 "New Payment" = "New Payment";
 "Next" = "Next";
@@ -117,6 +118,7 @@
 "OK" = "OK";
 "Only registered %d/%d image URLs with the asset endpoint" = "Only registered %d/%d image URLs with the asset endpoint";
 "Oops!" = "Oops!";
+"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW" = "OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW";
 "Or print on a product below ▼" = "Or print on a product below ▼";
 "Order History" = "Order History";
 "Order Id" = "Order Id";
@@ -167,6 +169,7 @@
 "Promo Code" = "Promo Code";
 "Promotional Discount" = "Promotional Discount";
 "Quantity" = "Quantity";
+"Receipt" = "Receipt";
 "Recents" = "Recents";
 "Remove" = "Remove";
 "Remove?" = "Remove?";
@@ -206,6 +209,7 @@
 "Uploading book" = "Uploading book";
 "Uploading Images \n%lu / %lu" = "Uploading Images \n%lu / %lu";
 "View Item" = "View Item";
+"WE HAVE RECEIVED\nYOUR ORDER" = "WE HAVE RECEIVED\nYOUR ORDER";
 "We'll send you confirmation and order updates." = "We'll send you confirmation and order updates.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.";
 "Yes" = "Yes";
