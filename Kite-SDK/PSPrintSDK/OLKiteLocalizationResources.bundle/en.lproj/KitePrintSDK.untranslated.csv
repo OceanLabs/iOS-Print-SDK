@@ -127,10 +127,8 @@ Our store is currently undergoing maintence so no products are available for pur
 Pack of,Pack of,/* Pack of [20 square photos] */
 Pay,Pay,
 Pay %@,Pay %@,/* Pay [$10.00] */
-Pay with card ending %@,Pay with card ending %@,
 Pay with Credit Card,Pay with Credit Card,
 Pay with Credit Card (TEST),Pay with Credit Card (TEST),
-Pay with new card,Pay with new card,
 Paying With,Paying With,/* Paying with [PayPal/Credit Card] */
 Payment,Payment,
 Payment (TEST),Payment (TEST),
