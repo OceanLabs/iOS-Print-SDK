@@ -691,7 +691,9 @@
     if (indexPath.item >= self.productGroups.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
+        UILabel *label = [cell.contentView viewWithTag:50];
+        label.text = NSLocalizedStringFromTableInBundle(@"MORE ITEMS\nCOMING SOON!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder-loc.png"] withCompletionHandler:^(UIImage *image, NSError *error){
             if (error) return;
             dispatch_async(dispatch_get_main_queue(), ^{
                 cellImageView.image = image;
