@@ -1658,6 +1658,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     else if (product.productTemplate.templateUI == OLTemplateUIApparel && [printJob isKindOfClass:[OLApparelPrintJob class]]){
         [jobAssets removeAllObjects];
         OLAsset *asset = ((OLApparelPrintJob *)printJob).assets[@"center_chest"];
+        if (!asset) {
+            asset = ((OLApparelPrintJob *)printJob).assets[@"front_image"];
+        }
         if (asset){
             [jobAssets addObject:asset];
         }
@@ -1697,7 +1700,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     else{
         UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
         if ([printJob isKindOfClass:[OLApparelPrintJob class]]){
-            [orvc safePerformSelector:@selector(setBackAsset:) withObject:((OLApparelPrintJob *)printJob).assets[@"center_back"]];
+            OLAsset *asset = ((OLApparelPrintJob *)printJob).assets[@"center_back"];
+            if (!asset){
+                asset = ((OLApparelPrintJob *)printJob).assets[@"back_image"];
+            }
+            [orvc safePerformSelector:@selector(setBackAsset:) withObject:asset];
         }
         else if ([printJob isKindOfClass:[OLPhotobookPrintJob class]] && [(OLPhotobookPrintJob *)printJob frontCover]){
             OLAsset *coverPhoto = [(OLPhotobookPrintJob *)printJob frontCover];
