@@ -209,7 +209,7 @@
 }
 
 - (void)addNewCard {
-    OLCreditCardCaptureViewController *ccCaptureController = [[OLCreditCardCaptureViewController alloc] initWithPrintOrder:nil];
+    OLCreditCardCaptureViewController *ccCaptureController = [[OLCreditCardCaptureViewController alloc] init];
     ccCaptureController.delegate = self;
     ccCaptureController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:ccCaptureController animated:YES completion:nil];
