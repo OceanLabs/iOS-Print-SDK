@@ -62,7 +62,7 @@
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
-@interface OLFrameOrderReviewViewController () <OLScrollCropViewControllerDelegate,UIViewControllerPreviewingDelegate>
+@interface OLFrameOrderReviewViewController () <OLImageEditViewControllerDelegate,UIViewControllerPreviewingDelegate>
 
 @property (strong, nonatomic) NSMutableArray* framePhotos;
 @property (weak, nonatomic) OLAsset *editingPrintPhoto;
@@ -153,7 +153,7 @@ CGFloat innerMargin = 3;
     
     [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
-        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
         cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
         cropVc.delegate = self;

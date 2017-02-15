@@ -63,7 +63,7 @@
 - (void)saveEditsToAsset:(OLAsset *)asset;
 @end
 
-@interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate, OLScrollCropViewControllerDelegate>
+@interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate, OLImageEditViewControllerDelegate>
 @property (nonatomic, copy) void (^saveJobCompletionHandler)();
 @property (assign, nonatomic) BOOL showingBack;
 @end

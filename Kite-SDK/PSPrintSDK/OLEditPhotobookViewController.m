@@ -64,7 +64,7 @@ static const NSInteger kSectionPages = 2;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate>
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL haveCachedCells;
@@ -430,7 +430,7 @@ static const NSInteger kSectionPages = 2;
         cropPhoto = self.photobookPhotos[self.longPressImageIndex];
         imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
     }
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
     cropVc.product = self.product;
@@ -809,7 +809,7 @@ static const NSInteger kSectionPages = 2;
     return MIN((min) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height), (self.view.frame.size.height - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)) * 0.9);
 }
 
-#pragma mark - OLScrollCropView delegate
+#pragma mark - OLImageEditViewController delegate
 
 - (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
     if (self.longPressImageIndex == -1){

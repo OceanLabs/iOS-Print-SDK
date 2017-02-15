@@ -106,7 +106,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate,UIGestureRecognizerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate, UINavigationControllerDelegate, OLUpsellViewControllerDelegate, OLImagePickerViewControllerDelegate>
+@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate,UIGestureRecognizerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate, UINavigationControllerDelegate, OLUpsellViewControllerDelegate, OLImagePickerViewControllerDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL bookClosed;
@@ -680,7 +680,7 @@ static const CGFloat kBookEdgePadding = 38;
     }];
 }
 
-#pragma mark - OLScrollCropView delegate
+#pragma mark - OLImageEditViewController delegate
 
 - (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:YES completion:NULL];
@@ -930,7 +930,7 @@ static const CGFloat kBookEdgePadding = 38;
         }
         self.croppingPrintPhoto = self.coverPhoto;
         UIImageView *imageView = self.coverImageView;
-        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
         cropVc.delegate = self;
         cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
         cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
@@ -998,7 +998,7 @@ static const CGFloat kBookEdgePadding = 38;
         UIImageView *imageView = [page imageView];
         self.croppingPrintPhoto = self.photobookPhotos[index];
         [self.croppingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
-            OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+            OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
             cropVc.delegate = self;
             cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
             
