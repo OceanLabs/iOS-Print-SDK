@@ -73,6 +73,8 @@
 #import "UIView+RoundRect.h"
 #import "UIViewController+OLMethods.h"
 #import "Util.h"
+#import "OLApparelPrintJob.h"
+#import "OLCaseViewController.h"
 
 @import PassKit;
 @import Contacts;
@@ -108,17 +110,17 @@ static OLPaymentMethod selectedPaymentMethod;
 
 
 @interface OLAsset (Private)
-
 @property (strong, nonatomic) id<OLAssetDataSource> dataSource;
 @property (assign, nonatomic) BOOL corrupt;
-
 @end
 
 @interface OLCheckoutViewController (Private)
-
 + (BOOL)validateEmail:(NSString *)candidate;
 - (void)onButtonDoneClicked;
+@end
 
+@interface OLCaseViewController ()
+@property (strong, nonatomic) OLAsset *backAsset;
 @end
 
 @interface OLPrintOrderCost ()
@@ -1653,6 +1655,13 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [addedAssetsUUIDs addObject:printPhoto.uuid];
         }
     }
+    else if (product.productTemplate.templateUI == OLTemplateUIApparel && [printJob isKindOfClass:[OLApparelPrintJob class]]){
+        [jobAssets removeAllObjects];
+        OLAsset *asset = ((OLApparelPrintJob *)printJob).assets[@"center_chest"];
+        if (asset){
+            [jobAssets addObject:asset];
+        }
+    }
     else if (product.productTemplate.templateUI == OLTemplateUIPoster){
         [OLPosterViewController changeOrderOfPhotosInArray:jobAssets forProduct:product];
     }
@@ -1687,7 +1696,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
     else{
         UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
-        if ([printJob isKindOfClass:[OLPhotobookPrintJob class]] && [(OLPhotobookPrintJob *)printJob frontCover]){
+        if ([printJob isKindOfClass:[OLApparelPrintJob class]]){
+            [orvc safePerformSelector:@selector(setBackAsset:) withObject:((OLApparelPrintJob *)printJob).assets[@"center_back"]];
+        }
+        else if ([printJob isKindOfClass:[OLPhotobookPrintJob class]] && [(OLPhotobookPrintJob *)printJob frontCover]){
             OLAsset *coverPhoto = [(OLPhotobookPrintJob *)printJob frontCover];
             [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:coverPhoto];
         }
