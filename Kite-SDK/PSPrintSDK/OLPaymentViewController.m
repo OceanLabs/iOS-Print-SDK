@@ -156,7 +156,7 @@ static OLPaymentMethod selectedPaymentMethod;
 @interface OLPaymentViewController () <
 UITableViewDataSource, UITableViewDelegate,
 PKPaymentAuthorizationViewControllerDelegate,
-UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate, OLPaymentMethodsViewControllerDelegate>
+UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate, OLPaymentMethodsViewControllerDelegate>
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
@@ -992,70 +992,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
     }
 }
 
-- (IBAction)onButtonPayWithCreditCardClicked {
-    if (self.printOrder.jobs.count == 0){
-        return;
-    }
-    if (![self checkForShippingAddress]){
-        return;
-    }
-    
-    self.printOrder.paymentMethod = @"CREDIT_CARD";
-    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
-        if (!cost){
-            [self updateViewsBasedOnCostUpdate];
-            return;
-        }
-        
-#ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
-        
-        NSComparisonResult result = [[cost totalCostInCurrency:self.printOrder.currencyCode] compare:[NSDecimalNumber zero]];
-        if (result == NSOrderedAscending || result == NSOrderedSame) {
-            // The user must have a promo code which reduces this order cost to nothing, lucky user :)
-            [self submitOrderForPrintingWithProofOfPayment:nil paymentMethod:@"Free Checkout" completion:^void(PKPaymentAuthorizationStatus status){}];
-        } else {
-            
-            id card = [OLPayPalCard lastUsedCard];
-            
-            if ([OLKitePrintSDK useStripeForCreditCards]){
-                card = [OLStripeCard lastUsedCard];
-            }
-            
-            if (card == nil) {
-                [self payWithNewCard];
-            } else {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")  style:UIAlertActionStyleCancel handler:NULL]];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Pay with new card", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    [self payWithNewCard];
-                }]];
-                [ac addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Pay with card ending %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), [[card numberMasked] substringFromIndex:[[card numberMasked] length] - 4]]  style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-                    
-                    if ([OLKitePrintSDK useStripeForCreditCards]){
-                        [self payWithExistingStripeCard:[OLStripeCard lastUsedCard]];
-                    }
-                    else {
-                        [self payWithExistingPayPalCard:[OLPayPalCard lastUsedCard]];
-                    }
-                }]];
-                ac.popoverPresentationController.sourceView = self.paymentButton2;
-                ac.popoverPresentationController.sourceRect = self.paymentButton2.frame;
-                [self presentViewController:ac animated:YES completion:NULL];
-            }
-        }
-    }];
-}
-
-
-- (void)payWithNewCard {
-    OLCreditCardCaptureViewController *ccCaptureController = [[OLCreditCardCaptureViewController alloc] initWithPrintOrder:self.printOrder];
-    ccCaptureController.delegate = self;
-    ccCaptureController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
-    [self presentViewController:ccCaptureController animated:YES completion:nil];
-}
-
 - (void)payWithExistingPayPalCard:(OLPayPalCard *)card {
     [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
     [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Processing the order")];
@@ -1763,21 +1699,6 @@ UIActionSheetDelegate, UITextFieldDelegate, OLCreditCardCaptureDelegate, UINavig
         [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
         return [self navViewControllerWithControllers:@[orvc]];
     }
-}
-
-#pragma mark - OLCreditCardCaptureDelegate methods
-
-- (void)creditCardCaptureController:(OLCreditCardCaptureViewController *)vc didFinishWithProofOfPayment:(NSString *)proofOfPayment {
-    [self dismissViewControllerAnimated:YES completion:^{
-        [self submitOrderForPrintingWithProofOfPayment:proofOfPayment paymentMethod:@"Credit Card" completion:^void(PKPaymentAuthorizationStatus status){}];
-    }];
-}
-
-- (void)creditCardCaptureControllerDismissed:(OLCreditCardCaptureViewController *)vc{
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPaymentScreenPaymentMethodDidCancel:@"Credit Card" forOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
-    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method{

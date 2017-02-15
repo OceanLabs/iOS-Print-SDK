@@ -156,7 +156,6 @@
 @end
 
 @interface OLPaymentViewController () <UITableViewDataSource>
-- (IBAction)onButtonPayWithCreditCardClicked;
 - (IBAction)onButtonPayWithPayPalClicked;
 @property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
