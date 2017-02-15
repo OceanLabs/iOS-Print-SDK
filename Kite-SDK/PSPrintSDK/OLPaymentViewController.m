@@ -1032,14 +1032,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }];
 }
 
-- (IBAction)onButtonPayWithPayPalClicked {
+- (void)payWithPayPal{
     if (![OLKiteUtils isPayPalAvailable]){
         return;
     }
     if (self.printOrder.jobs.count == 0){
-        return;
-    }
-    if (![self checkForShippingAddress]){
         return;
     }
     
@@ -1077,11 +1074,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     return paymentRequest;
 }
 
-- (IBAction)onButtonPayWithApplePayClicked{
-    if (self.printOrder.jobs.count == 0){
-        return;
-    }
-    
+- (void)payWithApplePay{
     self.applePayDismissOperation = [[NSBlockOperation alloc] init];
     
     self.printOrder.paymentMethod = @"APPLE_PAY";
@@ -1253,6 +1246,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     if (self.printOrder.jobs.count == 0){
         return;
     }
+    if (![self checkForShippingAddress]){
+        return;
+    }
     
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
         if (error.code == kOLKiteSDKErrorCodeProductNotAvailableInRegion){
@@ -1292,10 +1288,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             }
         }
         else if (selectedPaymentMethod == kOLPaymentMethodApplePay){
-            [self onButtonPayWithApplePayClicked];
+            [self payWithApplePay];
         }
         else if (selectedPaymentMethod == kOLPaymentMethodPayPal){
-            [self onButtonPayWithPayPalClicked];
+            [self payWithPayPal];
         }
     }];
 }

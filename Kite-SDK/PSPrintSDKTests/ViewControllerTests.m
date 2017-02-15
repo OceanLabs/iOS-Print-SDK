@@ -271,8 +271,21 @@
         [(OLNavigationController *)vc.navigationController popViewControllerAnimated:YES];
     }];
     
-    [self performUIActionWithDelay:5 action:^{
-        [vc onButtonPayWithApplePayClicked];
+    [self performUIAction:^{
+        [vc onButtonAddPaymentMethodClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)vc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:1]];
+        
+        [paymentMethodsVc.navigationController popViewControllerAnimated:YES];
+    }];
+    
+    [self performUIAction:^{
+        [vc onButtonPayClicked:nil];
     }];
     
     [self performUIAction:^{
@@ -311,17 +324,12 @@
         XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
         
         [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:2]];
-    }];
-    
-    [self performUIAction:^{
-        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)vc.navigationController topViewController];
-        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:1]];
         
         [paymentMethodsVc.navigationController popViewControllerAnimated:YES];
     }];
     
     [self performUIAction:^{
-        [vc onButtonPayWithPayPalClicked];
+        [vc onButtonPayClicked:nil];
     }];
     
     [self performUIAction:^{
