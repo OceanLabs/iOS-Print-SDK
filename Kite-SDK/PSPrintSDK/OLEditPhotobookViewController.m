@@ -510,7 +510,7 @@ static const NSInteger kSectionPages = 2;
     }
     else if (self.selectedIndexNumber){ //swap
         OLPhotobookPageContentViewController *selectedPage = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]];
-        OLAsset *printPhoto = [self.photobookPhotos objectAtIndex:tappedImageIndex];
+        OLAsset *asset = [self.photobookPhotos objectAtIndex:tappedImageIndex];
         
         [page unhighlightImageAtIndex:tappedImageIndex];
         [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
@@ -534,7 +534,7 @@ static const NSInteger kSectionPages = 2;
             [self.view addSubview:selectedPageCopy];
             
             CGRect tempFrame = pageCopy.frame;
-            if ([printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+            if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
                 [pageCopy removeFromSuperview];
             }
             [UIView animateWithDuration:0.05 animations:^{
@@ -544,7 +544,7 @@ static const NSInteger kSectionPages = 2;
             [UIView animateWithDuration:0.5 animations:^{
                 [self setPageShadowAlpha:selectedPageCopy forIndex:page.pageIndex];
                 
-                if (![printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+                if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
                     [self setPageShadowAlpha:pageCopy forIndex:selectedPage.pageIndex];
                     pageCopy.frame = selectedPageCopy.frame;
                 }
@@ -612,7 +612,7 @@ static const NSInteger kSectionPages = 2;
                 [UIView animateWithDuration:0.5 animations:^{
                     [self setPageShadowAlpha:selectedPageCopy forIndex:page.pageIndex];
                     
-                    if (![printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+                    if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
                         pageCopy.transform = selectedPageCopy.transform;
                     }
                     selectedPageCopy.transform = CGAffineTransformIdentity;

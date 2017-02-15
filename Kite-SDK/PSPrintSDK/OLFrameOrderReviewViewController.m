@@ -65,7 +65,7 @@
 @interface OLFrameOrderReviewViewController () <OLImageEditViewControllerDelegate,UIViewControllerPreviewingDelegate>
 
 @property (strong, nonatomic) NSMutableArray* framePhotos;
-@property (weak, nonatomic) OLAsset *editingPrintPhoto;
+@property (weak, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
 
@@ -144,14 +144,14 @@ CGFloat innerMargin = 3;
         return;
     }
     
-    self.editingPrintPhoto = self.framePhotos[(outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section] + indexPath.row];
+    self.editingAsset = self.framePhotos[(outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section] + indexPath.row];
     
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools || [self.editingPrintPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools || [self.editingAsset isKindOfClass:[OLPlaceholderAsset class]]){
         [self replacePhoto:nil];
         return;
     }
     
-    [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+    [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
         OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
@@ -167,7 +167,7 @@ CGFloat innerMargin = 3;
         cropVc.definesPresentationContext = true;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         [cropVc setFullImage:image];
-        cropVc.edits = self.editingPrintPhoto.edits;
+        cropVc.edits = self.editingAsset.edits;
         [self presentViewController:cropVc animated:NO completion:NULL];
         
         [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
@@ -381,8 +381,8 @@ CGFloat innerMargin = 3;
         
         NSInteger numberOfPhotosPerFrame = self.product.productTemplate.templateUI == OLTemplateUIFrame ? self.product.quantityToFulfillOrder : (self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY != 0 ? self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY : 4);
         
-        OLAsset *printPhoto =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * numberOfPhotosPerFrame];
-        [cellImage setAndFadeInImageWithOLAsset:printPhoto size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES placeholder:nil progress:^(float progress){
+        OLAsset *asset =(OLAsset*)[self.framePhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * numberOfPhotosPerFrame];
+        [cellImage setAndFadeInImageWithOLAsset:asset size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES placeholder:nil progress:^(float progress){
                         [cellImage setProgress:progress];
         } completionHandler:NULL];
         
@@ -477,14 +477,14 @@ CGFloat innerMargin = 3;
 }
 
 -(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
-    [self.editingPrintPhoto unloadImage];
+    [self.editingAsset unloadImage];
     
-    self.editingPrintPhoto.edits = cropper.edits;
+    self.editingAsset.edits = cropper.edits;
     
     NSInteger frameQty = [self numberOfPhotosPerFrame];
     //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
     for (NSInteger i = 0; i < self.framePhotos.count; i++){
-        if (self.framePhotos[i] == self.editingPrintPhoto){
+        if (self.framePhotos[i] == self.editingAsset){
             NSInteger outerIndex = i / frameQty;
             
             if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
@@ -518,16 +518,16 @@ CGFloat innerMargin = 3;
 }
 
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
+    NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingAsset];
     if (index != NSNotFound){
         [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
     }
-    else if ([self.editingPrintPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+    else if ([self.editingAsset isKindOfClass:[OLPlaceholderAsset class]]){
         [[OLUserSession currentSession].userSelectedPhotos addObject:asset];
     }
-    index = [self.framePhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
+    index = [self.framePhotos indexOfObjectIdenticalTo:self.editingAsset];
     [self.framePhotos replaceObjectAtIndex:index withObject:asset];
-    self.editingPrintPhoto = asset;
+    self.editingAsset = asset;
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
@@ -538,7 +538,7 @@ CGFloat innerMargin = 3;
         NSInteger frameQty = [self numberOfPhotosPerFrame];
         //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
         for (NSInteger i = 0; i < self.framePhotos.count; i++){
-            if (self.framePhotos[i] == self.editingPrintPhoto){
+            if (self.framePhotos[i] == self.editingAsset){
                 NSInteger outerIndex = i / frameQty;
                 
                 if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){

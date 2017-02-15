@@ -1641,14 +1641,14 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     //Special handling of products
     if (product.productTemplate.templateUI == OLTemplateUIPhotobook && [(OLPhotobookPrintJob *)printJob frontCover]){
         //Make sure we don't add the cover photo asset in the book photos
-        OLAsset *asset = [(OLPhotobookPrintJob *)printJob frontCover];
-        OLAsset *printPhoto = asset;
+        OLAsset *potentialAsset = [(OLPhotobookPrintJob *)printJob frontCover];
+        OLAsset *asset = potentialAsset;
         
-        if ([asset.dataSource isKindOfClass:[OLAsset class]]){
-            printPhoto = (OLAsset *)asset.dataSource;
+        if ([potentialAsset.dataSource isKindOfClass:[OLAsset class]]){
+            asset = (OLAsset *)potentialAsset.dataSource;
         }
-        if (printPhoto.uuid){
-            [addedAssetsUUIDs addObject:printPhoto.uuid];
+        if (asset.uuid){
+            [addedAssetsUUIDs addObject:asset.uuid];
         }
     }
     else if (product.productTemplate.templateUI == OLTemplateUIApparel && [printJob isKindOfClass:[OLApparelPrintJob class]]){
@@ -1665,19 +1665,19 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:jobAssets forProduct:product];
     }
     
-    for (OLAsset *asset in jobAssets){
-        if ([asset corrupt]){
+    for (OLAsset *jobAsset in jobAssets){
+        if ([jobAsset corrupt]){
             continue;
         }
-        OLAsset *printPhoto = asset;
+        OLAsset *asset = jobAsset;
         
-        if ([asset.dataSource isKindOfClass:[OLAsset class]]){
-            printPhoto = (OLAsset *)asset.dataSource;
+        if ([jobAsset.dataSource isKindOfClass:[OLAsset class]]){
+            asset = (OLAsset *)jobAsset.dataSource;
         }
-        [printPhoto unloadImage];
-        if (![addedAssetsUUIDs containsObject:printPhoto.uuid]){
-            [addedAssetsUUIDs addObject:printPhoto.uuid];
-            [userSelectedPhotos addObject:printPhoto];
+        [asset unloadImage];
+        if (![addedAssetsUUIDs containsObject:asset.uuid]){
+            [addedAssetsUUIDs addObject:asset.uuid];
+            [userSelectedPhotos addObject:asset];
         }
         
     }

@@ -205,31 +205,6 @@
     [self submitJobs:@[job]];
 }
 
-- (void)testSquaresOrderWithURLOLAssetPrintPhotos{
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper urlAssets].firstObject]];
-    [self submitJobs:@[job]];
-}
-
-- (void)testSquaresOrderWithImageOLAssetPrintPhotos{
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper imageAssets].firstObject]];
-    [self submitJobs:@[job]];
-}
-
-- (void)testSquaresOrderWithImageOLAssetPrintPhotoOLAsset{
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLKiteTestHelper imageAssets].firstObject]];
-    [self submitJobs:@[job]];
-}
-
-- (void)testSquaresOrderWithPHAssetPrintPhotos{
-    PHFetchResult *fetchResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
-    XCTAssert(fetchResult.count > 0, @"There are no assets available");
-    
-    PHAsset *asset = [fetchResult objectAtIndex:arc4random() % fetchResult.count];
-    
-    OLProductPrintJob *job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[[OLAsset assetWithPHAsset:asset]]];
-    [self submitJobs:@[job]];
-}
-
 - (void)testPhotobookOrderWithURLOLAssets{
     OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_210x210_sm" OLAssets:[OLKiteTestHelper urlAssets] frontCoverOLAsset:[OLKiteTestHelper urlAssets].firstObject backCoverOLAsset:[OLKiteTestHelper urlAssets].lastObject];
     [self submitJobs:@[job]];

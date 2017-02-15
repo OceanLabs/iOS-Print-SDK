@@ -30,6 +30,8 @@
 
 __deprecated_msg("Use OLAsset")
 
+// DO NOT DELETE THIS CLASS. People with older orders in their history won't be able to unarchive them and the app will crash.
+
 @interface OLPrintPhoto : NSObject
 
 

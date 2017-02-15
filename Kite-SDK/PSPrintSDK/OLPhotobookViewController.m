@@ -121,7 +121,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) NSLayoutConstraint *centerYCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon2;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon;
-@property (strong, nonatomic) OLAsset *croppingPrintPhoto;
+@property (strong, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
@@ -691,9 +691,9 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 -(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
-    [self.croppingPrintPhoto unloadImage];
-    self.croppingPrintPhoto.edits = cropper.edits;
-    if (self.croppingPrintPhoto == self.coverPhoto){
+    [self.editingAsset unloadImage];
+    self.editingAsset.edits = cropper.edits;
+    if (self.editingAsset == self.coverPhoto){
         [self loadCoverPhoto];
     }
     
@@ -703,19 +703,19 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    if (self.croppingPrintPhoto == self.coverPhoto){
+    if (self.editingAsset == self.coverPhoto){
         self.coverPhoto = asset;
         [self loadCoverPhoto];
     }
     else{
-        NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.croppingPrintPhoto];
+        NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingAsset];
         [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
-        index = [self.photobookPhotos indexOfObjectIdenticalTo:self.croppingPrintPhoto];
+        index = [self.photobookPhotos indexOfObjectIdenticalTo:self.editingAsset];
         [self.photobookPhotos replaceObjectAtIndex:index withObject:asset];
         
          [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
     }
-    self.croppingPrintPhoto = asset;
+    self.editingAsset = asset;
 }
 
 #pragma mark - UIPageViewControllerDataSource and delegate
@@ -928,7 +928,7 @@ static const CGFloat kBookEdgePadding = 38;
         if ([OLUserSession currentSession].kiteVc.disableEditingTools){
             return;
         }
-        self.croppingPrintPhoto = self.coverPhoto;
+        self.editingAsset = self.coverPhoto;
         UIImageView *imageView = self.coverImageView;
         OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
         cropVc.delegate = self;
@@ -941,9 +941,9 @@ static const CGFloat kBookEdgePadding = 38;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         cropVc.product = self.product;
         
-        [self.croppingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+        [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             [cropVc setFullImage:image];
-            cropVc.edits = self.croppingPrintPhoto.edits;
+            cropVc.edits = self.editingAsset.edits;
             [self presentViewController:cropVc animated:NO completion:NULL];
         }];
     }
@@ -996,8 +996,8 @@ static const CGFloat kBookEdgePadding = 38;
             return;
         }
         UIImageView *imageView = [page imageView];
-        self.croppingPrintPhoto = self.photobookPhotos[index];
-        [self.croppingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+        self.editingAsset = self.photobookPhotos[index];
+        [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
             cropVc.delegate = self;
             cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
@@ -1009,7 +1009,7 @@ static const CGFloat kBookEdgePadding = 38;
             cropVc.definesPresentationContext = true;
             cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
             [cropVc setFullImage:image];
-            cropVc.edits = self.croppingPrintPhoto.edits;
+            cropVc.edits = self.editingAsset.edits;
             cropVc.product = self.product;
             
             [self presentViewController:cropVc animated:NO completion:NULL];
