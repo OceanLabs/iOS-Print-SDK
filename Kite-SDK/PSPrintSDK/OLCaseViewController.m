@@ -348,10 +348,10 @@
         if (self.product.productTemplate.fulfilmentItems.count > 0){
             NSMutableDictionary *assetDict = [[NSMutableDictionary alloc] init];
             for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
-                if ([item.identifier isEqualToString:@"center_chest"] && asset){
+                if (([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]) && asset){
                     [assetDict setObject:asset forKey:item.identifier];
                 }
-                else if ([item.identifier isEqualToString:@"center_back"] && self.backAsset){
+                else if (([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]) && self.backAsset){
                     [assetDict setObject:[self.backAsset copy] forKey:item.identifier];
                 }
             }
@@ -633,7 +633,7 @@
     if (self.product.productTemplate.fulfilmentItems.count > 1){
         if ((self.showingBack && [OLUserSession currentSession].userSelectedPhotos.lastObject && !self.backAsset) || (!self.showingBack && self.backAsset && ![OLUserSession currentSession].userSelectedPhotos.lastObject)){
             for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
-                if ((([item.identifier isEqualToString:@"center_back"] && self.showingBack) || ([item.identifier isEqualToString:@"center_chest"] && !self.showingBack)) && [item hasCostForCurrency:[self.product currencyCode]]){
+                if (((([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]) && self.showingBack) || (([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]) && !self.showingBack)) && [item hasCostForCurrency:[self.product currencyCode]]){
                     [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Add a photo\non this side", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"this side [of the shirt]") body:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"For only %@ extra", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"[Add a photo on this side of the shirt] for only $4.00 extra"), [[item costForCurrency:self.product.currencyCode] formatCostForCurrencyCode:self.product.currencyCode]] delay:NO];
                 }
             }
