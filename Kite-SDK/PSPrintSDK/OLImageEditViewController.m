@@ -545,7 +545,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (BOOL)cropIsInImageEditingTools{
-    return self.product.productTemplate.templateUI == OLTemplateUIApparel;
+    return self.product.productTemplate.templateUI == OLTemplateUIApparel && self.product.productTemplate.options.count > 1;
 }
 
 - (UIEdgeInsets)imageInsetsOnContainer{
