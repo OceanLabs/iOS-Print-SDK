@@ -45,7 +45,7 @@
 
 - (void)updateBadge:(NSString *)string{
     if (!self.badgeLabel){
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(40, 7, 13, 13)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.size.width / 2.0 + 6, 7, 13, 13)];
         label.font = [UIFont systemFontOfSize:9];
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [UIColor blackColor];
