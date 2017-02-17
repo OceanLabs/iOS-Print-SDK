@@ -1660,7 +1660,7 @@ const NSInteger kOLEditTagCrop = 40;
         return CGSizeMake(120, self.editingTools.collectionView.frame.size.height);
     }
     
-    return CGSizeMake(self.editingTools.collectionView.frame.size.height * 1.6, self.editingTools.collectionView.frame.size.height);
+    return CGSizeMake(self.editingTools.collectionView.frame.size.height * 1.65, self.editingTools.collectionView.frame.size.height);
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
