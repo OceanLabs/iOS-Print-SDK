@@ -570,6 +570,8 @@
     self.editingTools.halfWidthDrawerDoneButton.hidden = NO;
     self.editingTools.halfWidthDrawerCancelButton.hidden = NO;
     
+    self.productFlipButton.enabled = NO;
+    
     if ([self isUsingMultiplyBlend]){
         [self.cropView setGesturesEnabled:YES];
     }
@@ -613,6 +615,7 @@
         [self.printContainerView bringSubviewToFront:view];
     }
     self.gestureView.userInteractionEnabled = NO;
+    self.productFlipButton.enabled = YES;
     [UIView animateWithDuration:0.2 animations:^{
         for (UIView *textField in self.textFields){
             textField.alpha = 1;
