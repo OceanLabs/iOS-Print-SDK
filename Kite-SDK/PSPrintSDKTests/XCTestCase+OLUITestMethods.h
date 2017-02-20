@@ -156,14 +156,12 @@
 @end
 
 @interface OLPaymentViewController () <UITableViewDataSource>
-- (IBAction)onButtonPayWithPayPalClicked;
 @property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 - (void)onBackgroundClicked;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (IBAction)onButtonEditClicked:(UIButton *)sender;
 - (IBAction)onShippingDetailsGestureRecognized:(id)sender;
-- (IBAction)onButtonPayWithApplePayClicked;
 - (IBAction)onButtonAddPaymentMethodClicked:(id)sender;
 - (void)payPalPaymentDidCancel:(id)paymentViewController;
 - (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender;

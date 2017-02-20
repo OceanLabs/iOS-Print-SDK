@@ -245,25 +245,25 @@ CGFloat OLImagePickerMargin = 1.5;
         [self setAssetOfCollection:self.provider.collections[self.showingCollectionIndex] withIndex:indexPath.item toImageView:imageView forCollectionView:collectionView];
         
         UIView *checkmark = [cell viewWithTag:20];
-        id asset = [self assetForIndexPath:indexPath];
-        OLAsset *printPhoto;
-        if ([asset isKindOfClass:[PHAsset class]]){
-            printPhoto = [OLAsset assetWithPHAsset:asset];
+        id potentialAsset = [self assetForIndexPath:indexPath];
+        OLAsset *asset;
+        if ([potentialAsset isKindOfClass:[PHAsset class]]){
+            asset = [OLAsset assetWithPHAsset:potentialAsset];
             
             //If it's already selected use the existing OLAsset instead of the newly created one
-            if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
-                printPhoto = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:printPhoto]];
+            if ([self.imagePicker.selectedAssets containsObject:asset]){
+                asset = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:asset]];
             }
         }
-        else if ([asset isKindOfClass:[OLAsset class]]){
-            printPhoto = asset;
+        else if ([potentialAsset isKindOfClass:[OLAsset class]]){
+            asset = potentialAsset;
         }
         
         if ([OLKiteABTesting sharedInstance].lightThemeColor1){
             checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
         }
         
-        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
+        if ([self.imagePicker.selectedAssets containsObject:asset]){
             checkmark.hidden = NO;
         }
         else{
@@ -297,9 +297,9 @@ CGFloat OLImagePickerMargin = 1.5;
             [qtyLabel makeRoundRectWithRadius:11];
         }
         
-        if (printPhoto.extraCopies > 0){
+        if (asset.extraCopies > 0){
             qtyLabel.hidden = NO;
-            qtyLabel.text = [NSString stringWithFormat:@"%d", (int)printPhoto.extraCopies+1];
+            qtyLabel.text = [NSString stringWithFormat:@"%d", (int)asset.extraCopies+1];
         }
         else{
             qtyLabel.hidden = YES;
@@ -467,26 +467,26 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (OLAsset *)assetForIndexPath:(NSIndexPath *)indexPath{
-    id asset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
-    OLAsset *printPhoto;
-    if ([asset isKindOfClass:[PHAsset class]]){
-        printPhoto = [OLAsset assetWithPHAsset:asset];
-        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){
-            printPhoto = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:printPhoto]];
+    id potentialAsset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
+    OLAsset *asset;
+    if ([potentialAsset isKindOfClass:[PHAsset class]]){
+        asset = [OLAsset assetWithPHAsset:potentialAsset];
+        if ([self.imagePicker.selectedAssets containsObject:asset]){
+            asset = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:asset]];
         }
     }
-    else if ([asset isKindOfClass:[OLAsset class]]){
-        printPhoto = asset;
+    else if ([potentialAsset isKindOfClass:[OLAsset class]]){
+        asset = potentialAsset;
     }
     
-    for (OLAsset *asset in self.imagePicker.selectedAssets){
-        if ([printPhoto isEqual:asset ignoreEdits:YES]){
-            printPhoto = asset;
+    for (OLAsset *potentialAsset in self.imagePicker.selectedAssets){
+        if ([asset isEqual:potentialAsset ignoreEdits:YES]){
+            asset = potentialAsset;
             break;
         }
     }
     
-    return printPhoto;
+    return asset;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -496,21 +496,25 @@ CGFloat OLImagePickerMargin = 1.5;
     }
     
     if (collectionView.tag == 10){ //Images collection view
-        OLAsset *printPhoto = [self assetForIndexPath:indexPath];
+        OLAsset *asset = [self assetForIndexPath:indexPath];
         
-        if ([self.imagePicker.selectedAssets containsObject:printPhoto]){ //Photo is selected
-            if ([printPhoto isEdited]){
+        if ([self.imagePicker.selectedAssets containsObject:asset]){ //Photo is selected
+            if ([asset isEdited]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"The image edits, like crop, filters, etc") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
-                    [self.imagePicker.selectedAssets removeObject:printPhoto];
-                    [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+                    [self.imagePicker.selectedAssets removeObject:asset];
+                    asset.edits = nil;
+                    asset.extraCopies = 0;
+                    [collectionView reloadItemsAtIndexPaths:@[indexPath]];
                 }]];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
                 [self presentViewController:ac animated:YES completion:NULL];
             }
             else{
-                [self.imagePicker.selectedAssets removeObject:printPhoto];
-                [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+                [self.imagePicker.selectedAssets removeObject:asset];
+                asset.edits = nil;
+                asset.extraCopies = 0;
+                [collectionView reloadItemsAtIndexPaths:@[indexPath]];
             }
         }
         else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){ //Maximum reached
@@ -535,10 +539,10 @@ CGFloat OLImagePickerMargin = 1.5;
             
             [self.imagePicker presentViewController:alert animated:YES completion:nil];
         }
-        else if (printPhoto){ //Add photo
-            [self.imagePicker.selectedAssets addObject:printPhoto];
-            printPhoto.edits = nil;
-            [printPhoto unloadImage];
+        else if (asset){ //Add photo
+            [self.imagePicker.selectedAssets addObject:asset];
+            asset.edits = nil;
+            [asset unloadImage];
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
             
             if (self.imagePicker.maximumPhotos == 1){
