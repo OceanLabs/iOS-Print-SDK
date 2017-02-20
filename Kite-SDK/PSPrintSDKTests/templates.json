@@ -21,6 +21,7 @@
   "user_config" : {
     "user_type" : "KITE_TEST",
     "theme" : "unittest",
+    "banner_message" : "<header>Hello Inspector!</header><para>This message will self-destruct in [[2025-02-16 10:53 GMT+1]]</para>",
     "banner_carousel_images" : [
 
     ]

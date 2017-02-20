@@ -82,7 +82,7 @@
 @interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout,
 UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoBannerDelegate>
 
-@property (weak, nonatomic) OLAsset *editingPrintPhoto;
+@property (weak, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) UIView *addMorePhotosView;
 @property (strong, nonatomic) UIButton *addMorePhotosButton;
 @property (strong, nonatomic) UIButton *nextButton;
@@ -394,11 +394,11 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     
     [previewingContext setSourceRect:[cell convertRect:cell.imageView.frame toView:self.collectionView]];
     
-    self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
+    self.editingAsset = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
     
     OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
     __weak OLImagePreviewViewController *weakVc = previewVc;
-    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingPrintPhoto size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingAsset size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
         [weakVc.imageView setProgress:progress];
     }completionHandler:NULL];
     previewVc.providesPresentationContextTransitionStyle = true;
@@ -408,17 +408,17 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
     cropVc.product = self.product;
     
-    [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
+    [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
         [cropVc.cropView setProgress:progress];
     }completion:^(UIImage *image, NSError *error){
         [cropVc setFullImage:image];
-        cropVc.edits = self.editingPrintPhoto.edits;
+        cropVc.edits = self.editingAsset.edits;
         cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         [self presentViewController:cropVc animated:NO completion:NULL];
     }];
@@ -535,16 +535,16 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     UIView *printView = [(OLCircleMaskCollectionViewCell *)cell printContainerView];
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    self.editingPrintPhoto = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
+    self.editingAsset = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
     
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
         [self replacePhoto:sender];
         return;
     }
     
-    [self.editingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+    [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
-        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
         cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
         cropVc.delegate = self;
@@ -558,7 +558,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         cropVc.definesPresentationContext = true;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         [cropVc setFullImage:image];
-        cropVc.edits = self.editingPrintPhoto.edits;
+        cropVc.edits = self.editingAsset.edits;
         [self presentViewController:cropVc animated:NO completion:NULL];
         
         [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
@@ -664,7 +664,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [downButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
     }
     
-    OLAsset *printPhoto = (OLAsset*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
+    OLAsset *asset = (OLAsset*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
     CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
     
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
@@ -677,7 +677,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     [cell setNeedsLayout];
     [cell layoutIfNeeded];
     
-    [cell.imageView setAndFadeInImageWithOLAsset:printPhoto size:cell.imageView.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+    [cell.imageView setAndFadeInImageWithOLAsset:asset size:cell.imageView.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
         [cell.imageView setProgress:progress];
     } completionHandler:^(){
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -690,12 +690,12 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [cell setNeedsDisplay];
     }
     
-    cell.printContainerView.backgroundColor = printPhoto.edits.borderColor ? printPhoto.edits.borderColor : [UIColor whiteColor];
+    cell.printContainerView.backgroundColor = asset.edits.borderColor ? asset.edits.borderColor : [UIColor whiteColor];
     
     [[cell.imageView.superview viewWithTag:1556] removeFromSuperview];
-    if (printPhoto.edits.bottomBorderText.text){
+    if (asset.edits.bottomBorderText.text){
         [self setupBottomBorderTextFieldOnView:cell];
-        [(UITextView *)[cell.imageView.superview viewWithTag:1556] setText:printPhoto.edits.bottomBorderText.text];
+        [(UITextView *)[cell.imageView.superview viewWithTag:1556] setText:asset.edits.bottomBorderText.text];
     }
     
     return cell;
@@ -754,7 +754,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
 - (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
-    [self.editingPrintPhoto unloadImage];
+    [self.editingAsset unloadImage];
     [cropper dismissViewControllerAnimated:YES completion:^{
         [UIView animateWithDuration:0.25 animations:^{
             self.nextButton.alpha = 1;
@@ -764,7 +764,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 - (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
-    [self.editingPrintPhoto unloadImage];
+    [self.editingAsset unloadImage];
     [UIView animateWithDuration:0.25 animations:^{
         self.nextButton.alpha = 1;
         self.navigationController.navigationBar.alpha = 1;
@@ -773,12 +773,12 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 -(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
-    [self.editingPrintPhoto unloadImage];
-    self.editingPrintPhoto.edits = cropper.edits;
+    [self.editingAsset unloadImage];
+    self.editingAsset.edits = cropper.edits;
     
     //Find the new previewSourceView for the dismiss animation
     for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++){
-        if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingPrintPhoto){
+        if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingAsset){
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (indexPath){
                 [UIView animateWithDuration:0 animations:^{
@@ -808,9 +808,9 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingPrintPhoto];
+    NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingAsset];
     [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
-    self.editingPrintPhoto = asset;
+    self.editingAsset = asset;
 }
 
 #pragma mark Image Picker Delegate
@@ -826,7 +826,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         
         //Find the new previewSourceView for the dismiss animation
         for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++){
-            if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingPrintPhoto){
+            if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingAsset){
                 NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
                 if (indexPath){
                     [UIView animateWithDuration:0 animations:^{

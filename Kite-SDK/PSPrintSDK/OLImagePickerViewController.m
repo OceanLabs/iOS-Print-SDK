@@ -637,6 +637,7 @@
     self.nextButton.hidden = NO;
     ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).nextButton.hidden = YES;
     [self positionSelectedProviderIndicator];
+    self.indicatorDestFrame = CGRectZero;
 }
 
 #pragma mark Custom VC
