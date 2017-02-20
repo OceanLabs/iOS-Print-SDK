@@ -36,6 +36,10 @@
 @property (strong, nonatomic) NSString *identifier;
 @property (strong, nonatomic) NSString *name;
 
+@property (strong, nonatomic) NSURL *productBackGroundImageURL;
+@property (strong, nonatomic) NSURL *productHighlightsUrl;
+@property (strong, nonatomic) NSURL *maskUrl;
+
 - (BOOL)hasCostForCurrency:(NSString *)currencyCode;
 - (NSDecimalNumber *)costForCurrency:(NSString *)currencyCode;
 @end

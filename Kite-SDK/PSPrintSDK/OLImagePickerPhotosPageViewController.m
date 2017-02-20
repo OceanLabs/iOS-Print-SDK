@@ -47,6 +47,7 @@
 @property (weak, nonatomic) IBOutlet UIView *albumsCollectionViewContainerView;
 @property (strong, nonatomic) UIButton *logoutButton;
 @property (assign, nonatomic) CGFloat topInset;
+@property (assign, nonatomic) BOOL reloadOnViewWillAppear;
 
 @end
 
@@ -70,13 +71,18 @@ CGFloat OLImagePickerMargin = 1.5;
     self.nextMediaRequest = nil;
     self.nextPageRequest = nil;
     self.inProgressPhotosRequest = nil;
+    
+    self.reloadOnViewWillAppear = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
     [OLAsset cancelAllImageOperations];
-    [self.collectionView reloadData];
+    if (self.reloadOnViewWillAppear){
+        [self.collectionView reloadData];
+        self.reloadOnViewWillAppear = NO;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -168,6 +174,8 @@ CGFloat OLImagePickerMargin = 1.5;
     
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];
+    
+    self.reloadOnViewWillAppear = YES;
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
