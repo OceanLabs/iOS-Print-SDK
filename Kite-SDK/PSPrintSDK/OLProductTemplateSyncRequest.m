@@ -295,6 +295,13 @@
                                             item.required = [dict[@"required"] isKindOfClass:[NSNumber class]] ? [dict[@"required"] boolValue] : NO;
                                             item.name = [dict[@"verbose_name"] isKindOfClass:[NSString class]] ? dict[@"verbose_name"] : nil;
                                             
+                                            id s = dict[@"product_highlights_url"];
+                                            item.productHighlightsUrl = [s isKindOfClass:[NSString class]] && ![s isEqualToString:@""] ? [NSURL URLWithString:s] : nil;
+                                            s = dict[@"mask_url"];
+                                            item.maskUrl = [s isKindOfClass:[NSString class]] && ![s isEqualToString:@""] ? [NSURL URLWithString:s] : nil;
+                                            s = dict[@"product_background_image_url"];
+                                            item.productBackGroundImageURL = [s isKindOfClass:[NSString class]] && ![s isEqualToString:@""] ? [NSURL URLWithString:s] : nil;
+                                            
                                             [fulfilmentItems addObject:item];
                                         }
                                     }

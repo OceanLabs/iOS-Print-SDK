@@ -157,16 +157,61 @@
     return self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width;
 }
 
+- (NSURL *)maskURL{
+    if (!self.showingBack){
+        return self.product.productTemplate.maskImageURL;
+    }
+    else{
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]){
+                return item.maskUrl;
+            }
+        }
+    }
+    
+    return nil;
+}
+
+- (NSURL *)productBackgroundURL{
+    if (!self.showingBack){
+        return self.product.productTemplate.productBackgroundImageURL;
+    }
+    else{
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]){
+                return item.productBackGroundImageURL;
+            }
+        }
+    }
+    
+    return nil;
+}
+
+- (NSURL *)productHighlightsURL{
+    if (!self.showingBack){
+        return self.product.productTemplate.productHighlightsImageURL;
+    }
+    else{
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]){
+                return item.productHighlightsUrl;
+            }
+        }
+    }
+    
+    return nil;
+}
+
 - (void)setupProductRepresentation{
     self.downloadedMask = NO;
     
     self.downloadImagesOperation = [NSBlockOperation blockOperationWithBlock:^{}];
     
-    if (self.product.productTemplate.maskImageURL){
+    if ([self maskURL]){
         NSOperation *op1 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op1];
         
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.maskImageURL withCompletionHandler:^(UIImage *image, NSError *error){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[self maskURL] withCompletionHandler:^(UIImage *image, NSError *error){
             [[NSOperationQueue mainQueue] addOperation:op1];
         }];
     }
@@ -174,11 +219,11 @@
         [self.caseVisualEffectView removeFromSuperview];
         [self.maskActivityIndicator stopAnimating];
     }
-    if (self.product.productTemplate.productHighlightsImageURL){
+    if ([self productHighlightsURL]){
         NSOperation *op2 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op2];
         
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL withCompletionHandler:^(UIImage *image, NSError *error){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productHighlightsURL] withCompletionHandler:^(UIImage *image, NSError *error){
             [[NSOperationQueue mainQueue] addOperation:op2];
         }];
     }
@@ -186,11 +231,11 @@
         [self.highlightsView removeFromSuperview];
     }
     
-    if (self.product.productTemplate.productBackgroundImageURL){
+    if ([self productBackgroundURL]){
         NSOperation *op3 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op3];
         
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL withCompletionHandler:^(UIImage *image, NSError *error){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] withCompletionHandler:^(UIImage *image, NSError *error){
             [[NSOperationQueue mainQueue] addOperation:op3];
         }];
     }
@@ -667,8 +712,10 @@
     self.fullImage = nil;
     
     [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+        [self setupProductRepresentation];
         [self loadImageFromAsset];
     }completion:^(BOOL finished){
+        [self renderImage];
         [self showExtraChargeHint];
     }];
 }

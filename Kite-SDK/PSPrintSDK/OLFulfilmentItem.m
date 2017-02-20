@@ -34,6 +34,9 @@ static NSString *const kKeyCost = @"co.oceanlabs.pssdk.kKeyCost";
 static NSString *const kKeyRequired = @"co.oceanlabs.pssdk.kKeyRequired";
 static NSString *const kKeyDescription = @"co.oceanlabs.pssdk.kKeyDescription";
 static NSString *const kKeyName = @"co.oceanlabs.pssdk.kKeyName";
+static NSString *const kKeyProductBackGroundImageURL = @"co.oceanlabs.pssdk.kKeyProductBackGroundImageURL";
+static NSString *const kKeyProductHighlightsUrl = @"co.oceanlabs.pssdk.kKeyProductHighlightsUrl";
+static NSString *const kKeyMaskUrl = @"co.oceanlabs.pssdk.kKeyMaskUrl";
 
 
 @implementation OLFulfilmentItem
@@ -60,6 +63,9 @@ static NSString *const kKeyName = @"co.oceanlabs.pssdk.kKeyName";
         self.required = [aDecoder decodeBoolForKey:kKeyRequired];
         self.costs = [aDecoder decodeObjectForKey:kKeyCost];
         self.identifier = [aDecoder decodeObjectForKey:kKeyIdentifier];
+        self.productHighlightsUrl = [aDecoder decodeObjectForKey:kKeyProductHighlightsUrl];
+        self.productBackGroundImageURL = [aDecoder decodeObjectForKey:kKeyProductBackGroundImageURL];
+        self.maskUrl = [aDecoder decodeObjectForKey:kKeyMaskUrl];
     }
     
     return self;
@@ -71,6 +77,9 @@ static NSString *const kKeyName = @"co.oceanlabs.pssdk.kKeyName";
     [aCoder encodeBool:self.required forKey:kKeyRequired];
     [aCoder encodeObject:self.description forKey:kKeyDescription];
     [aCoder encodeObject:self.name forKey:kKeyName];
+    [aCoder encodeObject:self.maskUrl forKey:kKeyMaskUrl];
+    [aCoder encodeObject:self.productBackGroundImageURL forKey:kKeyProductBackGroundImageURL];
+    [aCoder encodeObject:self.productHighlightsUrl forKey:kKeyProductHighlightsUrl];
 }
 
 
