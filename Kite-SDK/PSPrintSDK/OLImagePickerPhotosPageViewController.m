@@ -48,6 +48,7 @@
 @property (strong, nonatomic) UIButton *logoutButton;
 @property (assign, nonatomic) CGFloat topInset;
 @property (assign, nonatomic) BOOL reloadOnViewWillAppear;
+@property (assign, nonatomic) NSUInteger numberOfCellsPerRow;
 
 @end
 
@@ -180,6 +181,7 @@ CGFloat OLImagePickerMargin = 1.5;
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    self.numberOfCellsPerRow = 0;
     self.rotationSize = size;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
@@ -378,27 +380,31 @@ CGFloat OLImagePickerMargin = 1.5;
 }
 
 - (NSUInteger)numberOfCellsPerRow{
-    CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
-    if (self.quantityPerItem == 3){
-        return 3;
+    if (_numberOfCellsPerRow == 0){
+        CGSize size = self.rotationSize.width != 0 ? self.rotationSize : self.view.frame.size;
+        if (self.quantityPerItem == 3){
+            _numberOfCellsPerRow = 3;
+        }
+        
+        if (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact){
+            if (size.height > size.width){
+                _numberOfCellsPerRow = [self findFactorOf:self.quantityPerItem maximum:6 minimum:6];
+            }
+            else{
+                _numberOfCellsPerRow = [self findFactorOf:self.quantityPerItem maximum:6 minimum:6];
+            }
+        }
+        else{
+            if (size.height > size.width){
+                _numberOfCellsPerRow = [self findFactorOf:self.quantityPerItem maximum:3 minimum:3];
+            }
+            else{
+                _numberOfCellsPerRow = [self findFactorOf:self.quantityPerItem maximum:6 minimum:6];
+            }
+        }
     }
     
-    if (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact){
-        if (size.height > size.width){
-            return [self findFactorOf:self.quantityPerItem maximum:6 minimum:6];
-        }
-        else{
-            return [self findFactorOf:self.quantityPerItem maximum:6 minimum:6];
-        }
-    }
-    else{
-        if (size.height > size.width){
-            return [self findFactorOf:self.quantityPerItem maximum:3 minimum:3];
-        }
-        else{
-            return [self findFactorOf:self.quantityPerItem maximum:6 minimum:6];
-        }
-    }
+    return _numberOfCellsPerRow;
 }
 
 - (NSInteger) findFactorOf:(NSInteger)qty maximum:(NSInteger)max minimum:(NSInteger)min{
