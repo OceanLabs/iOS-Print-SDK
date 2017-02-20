@@ -495,14 +495,18 @@ CGFloat OLImagePickerMargin = 1.5;
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"The image edits, like crop, filters, etc") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
                     [self.imagePicker.selectedAssets removeObject:asset];
-                    [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+                    asset.edits = nil;
+                    asset.extraCopies = 0;
+                    [collectionView reloadItemsAtIndexPaths:@[indexPath]];
                 }]];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
                 [self presentViewController:ac animated:YES completion:NULL];
             }
             else{
                 [self.imagePicker.selectedAssets removeObject:asset];
-                [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
+                asset.edits = nil;
+                asset.extraCopies = 0;
+                [collectionView reloadItemsAtIndexPaths:@[indexPath]];
             }
         }
         else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){ //Maximum reached
