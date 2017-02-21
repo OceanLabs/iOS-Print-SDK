@@ -469,6 +469,20 @@
         [expectation fulfill];
     });
     
+    [self performUIAction:^{
+        [caseVc onButtonCropClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc exitCropMode];
+    }];
+    
+    if (caseVc.productFlipButton){
+        [self performUIAction:^{
+            [caseVc onButtonProductFlipClicked:nil];
+        }];
+    }
+    
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
     printOrder.email = @"ios_unit_test@kite.ly";

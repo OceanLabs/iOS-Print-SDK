@@ -49,17 +49,16 @@
 #import "OLAddressSelectionViewController.h"
 
 @interface XCTestCase (OLUITestMethods)
+- (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;
 - (OLProductHomeViewController *)loadKiteViewController;
+- (void)chooseClass:(NSString *)class onOLProductHomeViewController:(OLProductHomeViewController *)productHome;
+- (void)chooseProduct:(NSString *)name onOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)productTypeVc;
 - (void)performUIAction:(void(^)())action;
 - (void)performUIActionWithDelay:(double)delay action:(void(^)())action;
-- (void)tapNextOnViewController:(UIViewController *)vc;
-- (void)chooseProduct:(NSString *)name onOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)productTypeVc;
-- (void)chooseClass:(NSString *)class onOLProductHomeViewController:(OLProductHomeViewController *)productHome;
-- (void)templateSyncWithSuccessHandler:(void(^)())handler;
-- (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;
-- (void)tearDownHelper;
 - (void)setUpHelper;
-
+- (void)tapNextOnViewController:(UIViewController *)vc;
+- (void)tearDownHelper;
+- (void)templateSyncWithSuccessHandler:(void(^)())handler;
 @end
 
 @interface UIViewController ()
@@ -152,21 +151,25 @@
 @end
 
 @interface OLCaseViewController ()
+- (IBAction)onButtonProductFlipClicked:(UIButton *)sender;
+- (void)exitCropMode;
+- (void)onButtonCropClicked:(UIButton *)sender;
 @property (assign, nonatomic) BOOL downloadedMask;
+@property (weak, nonatomic) IBOutlet UIButton *productFlipButton;
 @end
 
 @interface OLPaymentViewController () <UITableViewDataSource>
-@property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-- (void)onBackgroundClicked;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
-- (IBAction)onButtonEditClicked:(UIButton *)sender;
-- (IBAction)onShippingDetailsGestureRecognized:(id)sender;
 - (IBAction)onButtonAddPaymentMethodClicked:(id)sender;
-- (void)payPalPaymentDidCancel:(id)paymentViewController;
 - (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender;
+- (IBAction)onButtonEditClicked:(UIButton *)sender;
 - (IBAction)onButtonPayClicked:(UIButton *)sender;
+- (IBAction)onShippingDetailsGestureRecognized:(id)sender;
+- (void)onBackgroundClicked;
+- (void)payPalPaymentDidCancel:(id)paymentViewController;
 - (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method;
+@property (strong, nonatomic) OLPrintOrder *printOrder;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
 @end
 
 
