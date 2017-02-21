@@ -465,6 +465,22 @@
     }];
 }
 
+- (void)templateSyncDidUpdate{
+    self.productGroups = nil;
+    
+    NSUInteger section = 0;
+    if ([self includeBannerSection]){
+        section++;
+    }
+    
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    for (NSInteger i = [self.collectionView numberOfItemsInSection:section]; i < [self collectionView:self.collectionView numberOfItemsInSection:section]; i++){
+        [array addObject:[NSIndexPath indexPathForItem:i inSection:section]];
+    }
+    
+    [self.collectionView insertItemsAtIndexPaths:array];
+}
+
 #pragma mark Banner Section
 
 - (BOOL)printAtHomeAvailable{

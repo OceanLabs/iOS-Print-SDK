@@ -36,6 +36,7 @@
 typedef void (^TemplateSyncHandler)(NSError *_Nullable error);
 
 extern NSString *_Nonnull const kNotificationTemplateSyncComplete;
+extern NSString *_Nonnull const kNotificationTemplateSyncPartialComplete;
 extern NSString *_Nonnull const kNotificationKeyTemplateSyncError;
 
 typedef NS_ENUM(NSInteger, OLTemplateUI) {
