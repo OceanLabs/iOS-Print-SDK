@@ -774,9 +774,6 @@
         CGFloat percentMoved = (scrollView.contentOffset.x - scrollView.frame.size.width) / scrollView.frame.size.width;
         if (!CGRectIsNull(self.indicatorDestFrame) && CGSizeEqualToSize(self.indicatorDestFrame.size, CGSizeZero)){
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0];
-            if (percentMoved < 0 && indexPath.item > 0){
-                indexPath = [NSIndexPath indexPathForItem:indexPath.item-1 inSection:indexPath.section];
-            }
             self.indicatorDestFrame = [self.sourcesCollectionView cellForItemAtIndexPath:indexPath].frame;
         }
         if (!CGRectIsNull(self.indicatorDestFrame)){
