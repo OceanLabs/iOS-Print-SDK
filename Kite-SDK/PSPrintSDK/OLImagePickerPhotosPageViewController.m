@@ -386,7 +386,7 @@ CGFloat OLImagePickerMargin = 1.5;
             _numberOfCellsPerRow = 3;
         }
         
-        if (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact){
+        if (self.imagePicker.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact){
             if (size.height > size.width){
                 _numberOfCellsPerRow = [self findFactorOf:self.quantityPerItem maximum:6 minimum:6];
             }
