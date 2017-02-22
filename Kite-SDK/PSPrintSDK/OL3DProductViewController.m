@@ -76,7 +76,7 @@
 }
 
 - (CGFloat)aspectRatio{
-    return 1.0/2.415;
+    return 1.110/2.685;
 }
 
 - (void)orderViews{
