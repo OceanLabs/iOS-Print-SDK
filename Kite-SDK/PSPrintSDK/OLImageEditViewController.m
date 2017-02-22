@@ -1129,7 +1129,7 @@ const NSInteger kOLEditTagCrop = 40;
             }
         } completion:^(BOOL finished){
             [UIView animateWithDuration:0.7 animations:^{
-                self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), -M_PI_4);
+                self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height * 1.2), -M_PI_4);
             }completion:^(BOOL finished){
                 if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){
                     [self.delegate scrollCropViewControllerDidDropChanges:self];
