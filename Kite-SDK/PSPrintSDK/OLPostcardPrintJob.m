@@ -172,6 +172,8 @@ static id stringOrEmptyString(NSString *str) {
     json[@"assets"] = assets;
     json[@"options"] = self.options;
     
+    json[@"job_id"] = [self uuid];
+    
     if (self.address) {
         NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
                                           @"recipient_first_name": stringOrEmptyString(self.address.recipientFirstName),

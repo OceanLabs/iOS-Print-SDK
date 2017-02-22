@@ -168,6 +168,8 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
         json[@"options"] = self.options;
     }
     
+    json[@"job_id"] = [self uuid];
+    
     return json;
 }
 

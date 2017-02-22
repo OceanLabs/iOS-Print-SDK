@@ -4,8 +4,8 @@
   <contributor>
    <authoring_tool>SceneKit Collada Exporter v1.0</authoring_tool>
   </contributor>
-  <created>2016-11-29T4:01:49 pmZ</created>
-  <modified>2016-11-29T4:01:49 pmZ</modified>
+  <created>2017-02-22T10:51:38 amZ</created>
+  <modified>2017-02-22T10:51:38 amZ</modified>
   <unit meter="1.000000"/>
   <up_axis>Z_UP</up_axis>
  </asset>
@@ -310,7 +310,7 @@
  <library_visual_scenes>
   <visual_scene id="scene7">
    <node id="Camera" name="Camera">
-    <matrix>-0.9999965 8.742248e-08 0 0 0 5.960464e-08 1.000007 4.2 8.742248e-08 0.9999965 1.192093e-07 0 0 0 0 1 </matrix>
+    <matrix>-0.9999965 8.742248e-08 0 0 0 5.960464e-08 1.000007 5 8.742248e-08 0.9999965 1.192093e-07 0 0 0 0 1 </matrix>
     <instance_camera url="#Camera-camera"/>
    </node>
    <node id="Cylinder" name="mug">

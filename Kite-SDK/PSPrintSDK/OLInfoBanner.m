@@ -30,6 +30,7 @@
 
 #import "OLInfoBanner.h"
 #import "OLKiteABTesting.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 @implementation OLInfoBanner
 
@@ -44,7 +45,7 @@
     label.adjustsFontSizeToFitWidth = YES;
     [banner addSubview:label];
     
-    UIImageView *x = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"x"]];
+    UIImageView *x = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x"]];
     [banner addSubview:x];
     
     if ([OLKiteABTesting sharedInstance].lightThemeColor4){
