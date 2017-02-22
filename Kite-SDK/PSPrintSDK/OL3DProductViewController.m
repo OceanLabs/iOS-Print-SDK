@@ -48,6 +48,7 @@
 @property (strong, nonatomic) SCNGeometry *tube;
 @property (strong, nonatomic) SCNNode *tubeNode;
 @property (strong, nonatomic) SCNNode *mug;
+@property (strong, nonatomic) SCNNode *camera;
 @end
 
 @implementation OL3DProductViewController
@@ -70,9 +71,31 @@
     [[scene rootNode] enumerateChildNodesUsingBlock:^(SCNNode *node, BOOL *stop){
         if ([node.name isEqualToString:@"mug"]){
             self.mug = node;
-            *stop = YES;
+        }
+        if ([node.name isEqualToString:@"Camera"]){
+            self.camera = node;
         }
     }];
+    
+    if (self.view.frame.size.width > self.view.frame.size.height){
+        self.camera.position = SCNVector3Make(0, 6.5, 0);
+    }
+    else{
+        self.camera.position = SCNVector3Make(0, 4.2, 0);
+    }
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    [coordinator animateAlongsideTransition:^(id cotext){
+        if (size.width > size.height){
+            self.camera.position = SCNVector3Make(0, 6.5, 0);
+        }
+        else{
+            self.camera.position = SCNVector3Make(0, 4.2, 0);
+        }
+    }completion:NULL];
 }
 
 - (CGFloat)aspectRatio{
