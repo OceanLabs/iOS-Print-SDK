@@ -286,8 +286,8 @@
     });
     [self waitForExpectationsWithTimeout:120 handler:NULL];
     
+    XCTAssert([[caseVc product].selectedOptions[(NSString *)[[caseVc product].productTemplate.options.firstObject code]] isEqualToString:(NSString *)[[[[caseVc product].productTemplate.options.firstObject choices] firstObject] code]], @"Default option not set");
     
-    //TODO: Check product option that default selected is first option
     [self performUIAction:^{
         [caseVc.editingTools.button2 sendActionsForControlEvents:UIControlEventTouchUpInside];
     }];
@@ -297,8 +297,9 @@
     [self performUIAction:^{
         [caseVc collectionView:caseVc.editingTools.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
     }];
-    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option  should selected");
-    //TODO: Check product option that second is selected
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option should be selected");
+    
+    XCTAssert([[caseVc product].selectedOptions[(NSString *)[[caseVc product].productTemplate.options.firstObject code]] isEqualToString:(NSString *)[[[[caseVc product].productTemplate.options.firstObject choices] lastObject] code]], @"Second option not set");
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
@@ -360,7 +361,7 @@
     
 }
 
-- (void)DISABLED_testCompleteMugJourney{
+- (void)testCompleteMugJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     [self chooseClass:@"Mugs" onOLProductHomeViewController:productHomeVc];
     
@@ -450,7 +451,8 @@
     [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     
-    //TODO: Check product option that default selected is first option
+    XCTAssert(![caseVc product].selectedOptions[(NSString *)[[caseVc product].productTemplate.options.firstObject code]] , @"Default option should not set");
+    
     [self performUIAction:^{
         [caseVc.editingTools.button2 sendActionsForControlEvents:UIControlEventTouchUpInside];
     }];
@@ -460,8 +462,9 @@
     [self performUIAction:^{
         [caseVc collectionView:caseVc.editingTools.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
     }];
-    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option  should selected");
-    //TODO: Check product option that second is selected
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option should be selected");
+    
+    XCTAssert([[caseVc product].selectedOptions[(NSString *)[[caseVc product].productTemplate.options.firstObject code]] isEqualToString:(NSString *)[[[[caseVc product].productTemplate.options.firstObject choices] objectAtIndex:1] code]], @"Second option not set");
     
     //Wait for the overlay to finish rendering. Can be slow in simulators.
     expectation = [self expectationWithDescription:@"Wait for Payment VC"];
