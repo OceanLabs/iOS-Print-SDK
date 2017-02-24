@@ -315,18 +315,21 @@ static NSString *nonNilStr(NSString *str) {
     }
 }
 
+#pragma mark Track Main Events - Sent to MixPanel
+
 + (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint {
     [OLAnalytics incrementLaunchSDKCount];
     
-    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:@"Kite Loaded"];
+    NSString *eventName = kOLAnalyticsEventNameKiteLoaded;
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [dict[@"properties"] setObject:nonNilStr(entryPoint) forKey:@"Entry Point"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
     
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Kite Loaded" job:nil printOrder:nil extraInfo:nil];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:nil];
 }
 
 + (void)trackProductSelectionScreenViewed{
-    NSString *eventName = @"Product Categories Screen Viewed";
+    NSString *eventName = kOLAnalyticsEventNameCategoryListScreenViewed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].qualityBannerType) forKey:@"Quality Banner Type"];
     [dict[@"properties"] setObject:nonNilStr([OLKiteABTesting sharedInstance].productTileStyle) forKey:@"Product Tile Style"];
@@ -337,7 +340,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackQualityInfoScreenViewed{
-    NSString *eventName = @"Quality Info Screen Viewed";
+    NSString *eventName = kOLAnalyticsEventNameQualityInfoScreenViewed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [dict[@"properties"] setObject:[OLKiteABTesting sharedInstance].qualityBannerType forKey:@"Quality Banner Type"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
@@ -346,7 +349,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackPrintAtHomeTapped{
-    NSString *eventName = @"Print At Home Tapped";
+    NSString *eventName = kOLAnalyticsEventNamePrintAtHomeTapped;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
     
@@ -354,7 +357,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackProductDescriptionScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice{
-    NSString *eventName = @"Product Description Screen Viewed";
+    NSString *eventName = kOLAnalyticsEventNameProductDetailsScreenViewed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];
     [dict[@"properties"] setObject:hidePrice ? @"YES" : @"NO" forKey:@"Hide Price on Product Description"];
@@ -364,7 +367,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackProductTypeSelectionScreenViewedWithTemplateClass:(NSString *)templateClassString{
-    NSString *eventName = @"Product Category Screen Viewed";
+    NSString *eventName = kOLAnalyticsEventNameProductListScreenViewed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [dict[@"properties"] setObject:nonNilStr(templateClassString) forKey:@"Product Class"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
@@ -373,7 +376,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackPhotoSelectionScreenViewed:(NSString *)productName{
-    NSString *eventName = @"Photo Selection Screen Viewed";
+    NSString *eventName = kOLAnalyticsEventNameImagePickerScreenViewed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
@@ -382,7 +385,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackReviewScreenViewed:(NSString *)productName{
-    NSString *eventName = @"Review Screen Viewed";
+    NSString *eventName = kOLAnalyticsEventNameReviewScreenViewed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [dict[@"properties"] setObject:productName forKey:@"Product Name"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
@@ -391,7 +394,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackContinueShoppingButtonPressed:(OLPrintOrder *)printOrder{
-    NSString *eventName = @"Continue Shopping Button Pressed";
+    NSString *eventName = kOLAnalyticsEventNameContinueShoppingButtonTapped;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     [dict[@"properties"] setObject:[NSNumber numberWithInteger:printOrder.jobs.count] forKey:@"Number of Jobs in Basket"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
@@ -400,7 +403,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant showPhoneEntryField:(BOOL)showPhoneEntryField {
-    NSString *eventName = @"Shipping Screen Viewed";
+    NSString *eventName = kOLAnalyticsEventNameDeliveryDetailsScreenViewed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     [dict[@"properties"] addEntriesFromDictionary:p];
@@ -412,19 +415,19 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackChooseAddressScreenViewed {
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Choose Address Screen Viewed" job:nil printOrder:nil extraInfo:nil];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameAddressSelectionScreenViewed job:nil printOrder:nil extraInfo:nil];
 }
 
 + (void)trackAddAddressScreenViewed {
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Add Address Screen Viewed" job:nil printOrder:nil extraInfo:nil];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameAddEditAddressScreenViewed job:nil printOrder:nil extraInfo:nil];
 }
 
 + (void)trackSearchAddressScreenViewed {
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Search Address Screen Viewed" job:nil printOrder:nil extraInfo:nil];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameSearchAddressScreenViewed job:nil printOrder:nil extraInfo:nil];
 }
 
 + (void)trackPaymentScreenViewedForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = @"Payment Screen Viewed";
+    NSString *eventName = kOLAnalyticsEventNameBasketScreenViewed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     [dict[@"properties"] addEntriesFromDictionary:p];
@@ -436,7 +439,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = @"Payment Completed";
+    NSString *eventName = kOLAnalyticsEventNamePaymentCompleted;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     p[@"Payment Method"] = method;
@@ -448,7 +451,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder{
-    NSString *eventName = @"Print Order Submission";
+    NSString *eventName = kOLAnalyticsEventNamePrintOrderSubmission;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
     [dict[@"properties"] addEntriesFromDictionary:p];
@@ -457,183 +460,145 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:nil];
 }
 
-#pragma mark Analytics overload - Don't send these to Mixpanel.
+#pragma mark Track Secondary Events - Not Sent to MixPanel
 
 + (void)trackProductTypeSelectionScreenHitBackTemplateClass:(NSString *)templateClassString{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Product Category Screen Hit Back" job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductCategory : templateClassString}];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameProductTypesScreenHitBack job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductCategory : templateClassString}];
 }
 
 + (void)trackKiteDismissed{
-    NSString *eventName = @"Kite Dismissed";
+    NSString *eventName = kOLAnalyticsEventNameKiteDismissed;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:nil];
 }
 
 + (void)trackPhotoProviderPicked:(NSString *)provider forProductName:(NSString *)productName{
-    NSString *eventName = @"Photo Provider Selected";
+    NSString *eventName = kOLAnalyticsEventNameKitePhotoProviderSelected;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsPhotoSource : nonNilStr(provider)}];
 }
 
 + (void)trackQualityScreenHitBack{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Quality Info Screen Hit Back" job:nil printOrder:nil extraInfo:nil];
-}
-
-+ (void)trackFeedbackScreenFinishedWithResult:(NSInteger)result{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Feedback Button" job:nil printOrder:nil extraInfo:@{kOLAnalyticsFeedbackResult : [NSNumber numberWithInteger:result]}];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameKiteQualityInfoScreenHitBack job:nil printOrder:nil extraInfo:nil];
 }
 
 + (void)trackOrderHistoryScreenViewed{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Order History Viewed" job:nil printOrder:nil extraInfo:nil];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameOrderHistoryViewed job:nil printOrder:nil extraInfo:nil];
 }
 
 + (void)trackOrderHistoryScreenDismissed{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Order History Dismissed" job:nil printOrder:nil extraInfo:nil];
-}
-
-+ (void)trackFeedbackButtonTapped{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Feedback Button Tapped" job:nil printOrder:nil extraInfo:nil];
-}
-
-+ (void)trackDetailsViewProductOptionsTappedForProductName:(NSString *)productName{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Details View Product Options Tapped" job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
-}
-
-+ (void)trackDetailsViewProductOptionsHitBackForProductName:(NSString *)productName{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Details View Product Options Hit Back" job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
-}
-
-+ (void)trackDetailsViewProductOptionsSelectedOption:(NSString *)option forProductName:(NSString *)productName{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Details View Product Options Selected Option" job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsSelectedOption : nonNilStr(option)}];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameOrderHistoryDismissed job:nil printOrder:nil extraInfo:nil];
 }
 
 + (void)trackPaymentScreenHitItemQtyDownForItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = @"Payment Screen Item Quantity Down";
+    NSString *eventName = kOLAnalyticsEventNameBasketItemQuantityDown;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:nil];
 }
 
 + (void)trackReviewScreenHitBack:(NSString *)productName numberOfPhotos:(NSInteger)numberOfPhotos{
-    NSString *eventName = @"Review Screen Hit Back";
+    NSString *eventName = kOLAnalyticsEventNameReviewScreenHitBack;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsNumberOfPhotos : [NSNumber numberWithInteger:numberOfPhotos]}];
 }
 
 + (void)trackPaymentScreenHitItemQtyUpForItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = @"Payment Screen Item Quantity Up";
+    NSString *eventName = kOLAnalyticsEventNamePaymentScreenItemQuantityUp;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:nil];
 }
 
 + (void)trackReviewScreenDidCropPhotoForProductName:(NSString *)productName{
-    NSString *eventName = @"Review Screen Did Crop Photo";
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
-}
-
-+ (void)trackReviewScreenDecrementedPhotoQtyForProductName:(NSString *)productName{
-    NSString *eventName = @"Review Screen Decremented Photo Quantity";
+    NSString *eventName = kOLAnalyticsEventNameEditScreenDidEditPhoto;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
 + (void)trackReviewScreenEnteredCropScreenForProductName:(NSString *)productName{
-    NSString *eventName = @"Review Screen Did Enter Crop Screen";
+    NSString *eventName = kOLAnalyticsEventNameReviewScreenEditPhotoTapped;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
-+ (void)trackPhotoSelectionScreenNumberOfPhotosRemoved:(NSUInteger)number forProductName:(NSString *)productName{
-    NSString *eventName = @"Photo Selection Screen Removed Photos";
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsNumberOfPhotos : [NSNumber numberWithInteger:number]}];
++ (void)trackReviewScreenDecrementedPhotoQtyForProductName:(NSString *)productName{
+    NSString *eventName = kOLAnalyticsEventNameReviewScreenDecrementedPhotoQuantity;
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
 + (void)trackPaymentScreenDidDeleteItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = @"Payment Screen Delete Item";
+    NSString *eventName = kOLAnalyticsEventNameBasketScreenDeleteItem;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:nil];
 }
 
 + (void)trackPaymentScreenHitEditItemDone:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = @"Payment Screen Did Edit Item";
+    NSString *eventName = kOLAnalyticsEventNameBasketScreenDidEditItem;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:nil];
 }
 
 + (void)trackProductDetailsViewOpened:(NSString *)productName hidePrice:(BOOL)hidePrice{
-    NSString *eventName = @"Product Details Opened";
+    NSString *eventName = kOLAnalyticsEventNameProductDetailsOpened;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
 + (void)trackProductDetailsViewClosed:(NSString *)productName hidePrice:(BOOL)hidePrice{
-    NSString *eventName = @"Product Details Closed";
+    NSString *eventName = kOLAnalyticsEventNameProductDetailsClosed;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
 + (void)trackPaymentScreenHitBackForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = @"Payment Screen Hit Back";
+    NSString *eventName = kOLAnalyticsEventNameBasketScreenHitBack;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:nil];
 }
 
 + (void)trackBasketScreenHitBackForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = @"Basket Screen Hit Cancel";
+    NSString *eventName = kOLAnalyticsEventNameBasketScreenHitCancel;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:nil];
 }
 
 + (void)trackPaymentScreenSuccessfullyAppliedPromoCode:(NSString *)code forOrder:(OLPrintOrder *)order{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Successfully Applied Promo Code" job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code)}];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenSuccessfullyAppliedPromoCode job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code)}];
 }
 
 + (void)trackPaymentScreenUnsuccessfullyAppliedPromoCode:(NSString *)code withError:(NSError *)error forOrder:(OLPrintOrder *)order{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Promo Code Failed" job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code), kOLAnalyticsError : error ? error : @""}];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenPromoCodeFailed job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code), kOLAnalyticsError : error ? error : @""}];
 }
 
 + (void)trackPaymentScreenDidTapOnPromoCodeBoxforOrder:(OLPrintOrder *)order{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Did Tap on Promo Code Box" job:nil printOrder:order extraInfo:nil];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenDidTaponPromoCodeBox job:nil printOrder:order extraInfo:nil];
 }
 
 + (void)trackPaymentScreenPaymentMethodHit:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Payment Method Tapped" job:nil printOrder:order extraInfo:@{kOLAnalyticsPaymentMethod : method}];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenPaymentMethodTapped job:nil printOrder:order extraInfo:@{kOLAnalyticsPaymentMethod : method}];
 }
 
 + (void)trackPaymentScreenPaymentMethodDidCancel:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Payment Method Did Cancel" job:nil printOrder:order extraInfo:@{kOLAnalyticsPaymentMethod : method}];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenPaymentMethodHitBack job:nil printOrder:order extraInfo:@{kOLAnalyticsPaymentMethod : method}];
 }
 
 + (void)trackReviewScreenIncrementedPhotoQtyForProductName:(NSString *)productName{
-    NSString *eventName = @"Review Screen Incremented Photo Quantity";
+    NSString *eventName = kOLAnalyticsEventNameReviewScreenIncrementedPhotoQuantity;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
 + (void)trackPaymentScreenHitEditItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = @"Payment Screen Hit Edit Item";
+    NSString *eventName = kOLAnalyticsEventNameBasketScreenHitEditItem;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:nil];
 }
 
-+ (void)trackPaymentScreenHitCheckoutForOrder:(OLPrintOrder *)printOrder{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Hit Checkout" job:nil printOrder:printOrder extraInfo:nil];
-}
-
-+ (void)trackPaymentScreenHitBackToApplePayForOrder:(OLPrintOrder *)printOrder{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Payment Screen Hit Back to Apple Pay" job:nil printOrder:printOrder extraInfo:nil];
-}
-
 + (void)trackShippingScreenHitBackForOrder:(OLPrintOrder *)printOrder{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Shipping Screen Hit Back" job:nil printOrder:printOrder extraInfo:nil];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameShippingScreenHitBack job:nil printOrder:printOrder extraInfo:nil];
 }
 
 + (void)trackReviewScreenDeletedPhotoForProductName:(NSString *)productName{
-    NSString *eventName = @"Review Screen Deleted Photo";
+    NSString *eventName = kOLAnalyticsEventNameReviewScreenDeletedPhoto;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
-+ (void)trackPhotoProvider:(NSString *)provider numberOfPhotosAdded:(NSInteger)number forProductName:(NSString *)productName{
-    NSString *eventName = @"Photo Provider Added Photos";
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsNumberOfPhotos : [NSNumber numberWithInteger:number], kOLAnalyticsPhotoSource : nonNilStr(provider)}];
-}
-
 + (void)trackProductDescriptionScreenHitBack:(NSString *)productName hidePrice:(BOOL)hidePrice{
-    NSString *eventName = @"Product Description Screen Hit Back";
+    NSString *eventName = kOLAnalyticsEventNameProductDescriptionScreenHitBack;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
 + (void)trackPhotoSelectionScreenHitBack:(NSString *)productName{
-    NSString *eventName = @"Photo Selection Screen Hit Back";  
+    NSString *eventName = kOLAnalyticsEventNameImagePickerScreenHitBack;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName}];
 }
 
 + (void)trackUpsellShown:(BOOL)shown {
-    NSString *eventName = @"Upsell Screen Viewed";
+    NSString *eventName = kOLAnalyticsEventNameUpsellScreenViewed;
     if (shown) {
         NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
         [OLAnalytics sendToMixPanelWithDictionary:dict];
@@ -642,7 +607,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackUpsellDismissed:(BOOL)optedIn {
-    NSString *eventName = @"Upsell Screen Dismissed";
+    NSString *eventName = kOLAnalyticsEventNameUpsellScreenDismissed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
     NSString *how = optedIn ? @"Yes Please" : @"Not Thanks";
     [dict[@"properties"] setObject:how forKey:@"How"];
@@ -651,7 +616,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackBasketIconTappedWithNumberBadged:(NSInteger)number{
-    [OLAnalytics reportAnalyticsEventToDelegate:@"Basket Icon Tapped" job:nil printOrder:nil extraInfo:@{kOLAnalyticsNumberOnBadge : [NSNumber numberWithInteger:number]}];
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketIconTapped job:nil printOrder:nil extraInfo:@{kOLAnalyticsNumberOnBadge : [NSNumber numberWithInteger:number]}];
 }
 
 + (NSMutableDictionary *)propertiesForPrintOrder:(OLPrintOrder *)printOrder {
