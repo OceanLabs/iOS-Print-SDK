@@ -49,7 +49,7 @@ NSString *const JDStatusBarStyleDark    = @"JDStatusBarStyleDark";
   style.progressBarPosition = JDStatusBarProgressBarPositionBottom;
   style.textColor = [UIColor grayColor];
   style.font = [UIFont systemFontOfSize:12.0];
-  style.animationType = JDStatusBarAnimationTypeMove;
+  style.animationType = JDStatusBarAnimationTypeNone;
 
   // JDStatusBarStyleDefault
   if ([styleName isEqualToString:JDStatusBarStyleDefault]) {
