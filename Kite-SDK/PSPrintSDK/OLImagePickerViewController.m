@@ -265,15 +265,18 @@
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
-- (void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
     }
 #endif
-    
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     self.viewWillDisappear = YES;
 }
 
