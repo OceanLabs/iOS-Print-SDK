@@ -575,7 +575,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)trackReviewScreenDidCropPhotoForProductName:(NSString *)productName{
-    NSString *eventName = kOLAnalyticsEventNameEditScreenDidEditPhoto;
+    NSString *eventName = kOLAnalyticsEventNameEditScreenFinishedEditingPhoto;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @2}];
 }
 
@@ -675,6 +675,10 @@ static NSString *nonNilStr(NSString *str) {
 
 + (void)trackPaymentMethodScreenHitBack:(OLPrintOrder *)printOrder{
     [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNamePaymentMethodScreenHitBack job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
+}
+
++ (void)trackEditScreenDidCancel{
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameEditScreenFinishedEditingPhoto job:nil printOrder:nil extraInfo:@{kOLAnalyticsEventLevel : @2}];
 }
 
 + (NSMutableDictionary *)propertiesForPrintOrder:(OLPrintOrder *)printOrder {

@@ -64,7 +64,7 @@ static NSString *const kOLAnalyticsEventNameBasketItemQuantityDown = @"Basket It
 static NSString *const kOLAnalyticsEventNameReviewScreenHitBack = @"Review Screen Hit Back";
 static NSString *const kOLAnalyticsEventNamePaymentScreenItemQuantityUp = @"Payment Screen Item Quantity Up";
 static NSString *const kOLAnalyticsEventNameReviewScreenEditPhotoTapped = @"Review Screen Edit Photo Tapped";
-static NSString *const kOLAnalyticsEventNameEditScreenDidEditPhoto = @"Edit Screen Did Edit Photo";
+static NSString *const kOLAnalyticsEventNameEditScreenFinishedEditingPhoto = @"Edit Screen Finished Editing Photo";
 static NSString *const kOLAnalyticsEventNameReviewScreenDecrementedPhotoQuantity = @"Review Screen Decremented Photo Quantity";
 static NSString *const kOLAnalyticsEventNameBasketScreenDeleteItem = @"Basket Screen Delete Item";
 static NSString *const kOLAnalyticsEventNameBasketScreenDidEditItem = @"Basket Screen Did Edit Item";
@@ -87,6 +87,7 @@ static NSString *const kOLAnalyticsEventNameUpsellScreenViewed = @"Upsell Screen
 static NSString *const kOLAnalyticsEventNameUpsellScreenDismissed = @"Upsell Screen Dismissed";
 static NSString *const kOLAnalyticsEventNameBasketIconTapped = @"Basket Icon Tapped";
 static NSString *const kOLAnalyticsEventNamePaymentMethodScreenHitBack = @"Payment Method Screen Hit Back";
+static NSString *const kOLAnalyticsEventNameEditScreenDidCancel = @"Edit Screen Did Cancel";
 
 // Property Names
 static NSString *const kOLAnalyticsEventName = @"Event Name";
@@ -163,6 +164,7 @@ static NSString *const kOLAnalyticsEventLevel = @"Event Level";
 + (void)trackPaymentMethodScreenViewed:(OLPrintOrder *)printOrder;
 + (void)trackPaymentMethodSelected:(OLPrintOrder *)printOrder methodName:(NSString *)methodName;
 + (void)trackPaymentMethodScreenHitBack:(OLPrintOrder *)printOrder;
++ (void)trackEditScreenDidCancel;
 
 // upsell events
 + (void)trackUpsellShown:(BOOL)shown;

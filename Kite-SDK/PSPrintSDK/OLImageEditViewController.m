@@ -45,6 +45,7 @@
 #import "UIView+RoundRect.h"
 #import "OLCustomPickerController.h"
 #import "OLTouchTolerantView.h"
+#import "OLAnalytics.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -1146,6 +1147,9 @@ const NSInteger kOLEditTagCrop = 40;
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackEditScreenDidCancel];
+#endif
 }
 
 - (void)selectButton:(UIButton *)sender{
