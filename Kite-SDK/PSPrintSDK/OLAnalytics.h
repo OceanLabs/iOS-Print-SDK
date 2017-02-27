@@ -41,6 +41,7 @@ static NSString *const kOLAnalyticsEventNameProductDetailsScreenViewed = @"Produ
 static NSString *const kOLAnalyticsEventNameProductListScreenViewed = @"Product List Screen Viewed";
 static NSString *const kOLAnalyticsEventNameImagePickerScreenViewed = @"Image Picker Screen Viewed";
 static NSString *const kOLAnalyticsEventNameReviewScreenViewed = @"Review Screen Viewed";
+static NSString *const kOLAnalyticsEventNamePhotobookEditScreenViewed = @"Photobook Edit Screen Viewed";
 static NSString *const kOLAnalyticsEventNameContinueShoppingButtonTapped = @"Continue Shopping Button Tapped";
 static NSString *const kOLAnalyticsEventNameDeliveryDetailsScreenViewed = @"Delivery Details Screen Viewed";
 static NSString *const kOLAnalyticsEventNameAddressSelectionScreenViewed = @"Address Selection Screen Viewed";
@@ -81,6 +82,7 @@ static NSString *const kOLAnalyticsEventNameShippingScreenHitBack = @"Shipping S
 static NSString *const kOLAnalyticsEventNameReviewScreenDeletedPhoto = @"Review Screen Deleted Photo";
 static NSString *const kOLAnalyticsEventNameProductDescriptionScreenHitBack = @"Product Description Screen Hit Back";
 static NSString *const kOLAnalyticsEventNameImagePickerScreenHitBack = @"Image Picker Screen Hit Back";
+static NSString *const kOLAnalyticsEventNamePhotobookEditScreenHitBack = @"Photobook Edit Screen Hit Back";
 static NSString *const kOLAnalyticsEventNameUpsellScreenViewed = @"Upsell Screen Viewed";
 static NSString *const kOLAnalyticsEventNameUpsellScreenDismissed = @"Upsell Screen Dismissed";
 static NSString *const kOLAnalyticsEventNameBasketIconTapped = @"Basket Icon Tapped";
@@ -124,7 +126,9 @@ static NSString *const kOLAnalyticsEventLevel = @"Event Level";
 + (void)trackPhotoSelectionScreenHitBack:(NSString *)productName;
 + (void)trackPhotoProviderPicked:(NSString *)provider forProductName:(NSString *)productName;
 + (void)trackReviewScreenViewed:(NSString *)productName;
++ (void)trackPhotobookEditScreenViewed:(NSString *)productName;
 + (void)trackReviewScreenHitBack:(NSString *)productName numberOfPhotos:(NSInteger)numberOfPhotos;
++ (void)trackPhotobookEditScreenHitBack:(NSString *)productName;
 + (void)trackReviewScreenDeletedPhotoForProductName:(NSString *)productName;
 + (void)trackReviewScreenDidCropPhotoForProductName:(NSString *)productName;
 + (void)trackReviewScreenIncrementedPhotoQtyForProductName:(NSString *)productName;

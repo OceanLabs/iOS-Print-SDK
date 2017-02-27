@@ -385,6 +385,15 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @1}];
 }
 
++ (void)trackPhotobookEditScreenViewed:(NSString *)productName{
+    NSString *eventName = kOLAnalyticsEventNamePhotobookEditScreenViewed;
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
+    [dict[@"properties"] setObject:productName forKey:@"Product Name"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+    
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @1}];
+}
+
 + (void)trackReviewScreenViewed:(NSString *)productName{
     NSString *eventName = kOLAnalyticsEventNameReviewScreenViewed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
@@ -647,6 +656,11 @@ static NSString *nonNilStr(NSString *str) {
 
 + (void)trackPhotoSelectionScreenHitBack:(NSString *)productName{
     NSString *eventName = kOLAnalyticsEventNameImagePickerScreenHitBack;
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @2}];
+}
+
++ (void)trackPhotobookEditScreenHitBack:(NSString *)productName{
+    NSString *eventName = kOLAnalyticsEventNamePhotobookEditScreenHitBack;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @2}];
 }
 
