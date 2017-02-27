@@ -261,7 +261,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     NSLog(@"%@", info);
 //#endif
     
-    [JDStatusBarNotification showWithStatus:info[kOLAnalyticsEventName] dismissAfter:2];
+    NSString *status = info[kOLAnalyticsEventName];
+    if ([info[kOLAnalyticsEventLevel] integerValue] != 1){
+        status = [@"*" stringByAppendingString:status];
+    }
+    [JDStatusBarNotification showWithStatus:status dismissAfter:2];
 }
 
 - (void)setupCIDeploymentWithAssets:(NSArray *)assets{

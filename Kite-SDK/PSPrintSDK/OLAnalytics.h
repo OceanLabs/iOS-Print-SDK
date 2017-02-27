@@ -104,6 +104,7 @@ static NSString *const kOLAnalyticsCurrencyCode = @"Currency Code";
 static NSString *const kOLAnalyticsItemPrice = @"Item Price";
 static NSString *const kOLAnalyticsPromoCode = @"Promo Code";
 static NSString *const kOLAnalyticsError = @"Error";
+static NSString *const kOLAnalyticsEventLevel = @"Event Level";
 
 @interface OLAnalytics : NSObject
 
