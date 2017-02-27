@@ -638,6 +638,11 @@
     ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).nextButton.hidden = YES;
     [self positionSelectedProviderIndicator];
     self.indicatorDestFrame = CGRectZero;
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:self.providers[[self.pageController.viewControllers[0] pageIndex]].name forProductName:self.product.productTemplate.name];
+#endif
+
 }
 
 #pragma mark Custom VC
@@ -763,6 +768,10 @@
     [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished){
         welf.indicatorDestFrame = CGRectZero;
         [welf positionSelectedProviderIndicator];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackPhotoProviderPicked:welf.providers[[welf.pageController.viewControllers[0] pageIndex]].name forProductName:welf.product.productTemplate.name];
+#endif
     }];
 }
 
@@ -851,7 +860,9 @@
             shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
         }
         
+#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackUpsellShown:shouldShowOffer];
+#endif
         if (shouldShowOffer){
             OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
             c.providesPresentationContextTransitionStyle = true;

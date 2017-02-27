@@ -51,7 +51,7 @@ static NSString *const kOLAnalyticsEventNamePaymentCompleted = @"Payment Complet
 static NSString *const kOLAnalyticsEventNamePrintOrderSubmission = @"Print Order Submission";
 
 // Secondary Events - Not Sent to MixPanel
-static NSString *const kOLAnalyticsEventNameProductTypesScreenHitBack = @"Product Types Screen Hit Back";
+static NSString *const kOLAnalyticsEventNameProductTypesScreenHitBack = @"Product List Screen Hit Back";
 static NSString *const kOLAnalyticsEventNameKiteDismissed = @"Kite Dismissed";
 static NSString *const kOLAnalyticsEventNameKitePhotoProviderSelected = @"Photo Provider Selected";
 static NSString *const kOLAnalyticsEventNameKiteQualityInfoScreenHitBack = @"Quality Info Screen Hit Back";
