@@ -237,10 +237,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
 }
 
--(BOOL)shouldShowApplePay{
-    return [OLKiteUtils isApplePayAvailable] && !self.showOtherOptions;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -282,12 +278,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     self.promoCodeTextField.placeholder = NSLocalizedStringFromTableInBundle(@"Promo Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     self.promoCodeTextField.text = self.printOrder.promoCode;
     
-    NSString *applePayAvailableStr = @"N/A";
-    if ([OLKiteUtils isApplePayAvailable] && [self shouldShowApplePay]){
+    NSString *applePayAvailableStr;
+    if ([OLKiteUtils isApplePayAvailable]){
         applePayAvailableStr = @"Yes";
-    }
-    else if ([OLKiteUtils isApplePayAvailable] && ![self shouldShowApplePay]){
-        applePayAvailableStr = @"Other Options";
     }
     else{
         applePayAvailableStr = @"No";
@@ -311,7 +304,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
     
     
-    if (![self shouldShowApplePay]){
+    if (![OLKiteUtils isApplePayAvailable]){
         self.shippingDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
@@ -1046,9 +1039,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [self updateViewsBasedOnCostUpdate];
             return;
         }
-#ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
         
         // Create a PayPalPayment
         id paypalShippingAddress = [OLPayPalWrapper payPalShippingAddressWithRecipientName:[NSString stringWithFormat:@"%@ %@", self.printOrder.shippingAddress.recipientFirstName, self.printOrder.shippingAddress.recipientLastName] withLine1:self.printOrder.shippingAddress.line1 withLine2:self.printOrder.shippingAddress.line2 withCity:self.printOrder.shippingAddress.city withState:self.printOrder.shippingAddress.stateOrCounty withPostalCode:self.printOrder.shippingAddress.zipOrPostcode withCountryCode:self.printOrder.shippingAddress.country.codeAlpha2];
@@ -1085,9 +1075,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [self updateViewsBasedOnCostUpdate];
             return;
         }
-#ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPaymentScreenPaymentMethodHit:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
         
         NSMutableArray *lineItems = [[NSMutableArray alloc] init];
         for (OLPaymentLineItem *item in cost.lineItems){
@@ -1719,6 +1706,27 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 - (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method{
     selectedPaymentMethod = method;
     [self updateSelectedPaymentMethodView];
+#ifndef OL_NO_ANALYTICS
+    NSString *methodName;
+    switch (method) {
+        case kOLPaymentMethodPayPal:
+            methodName = @"PayPal";
+            break;
+        case kOLPaymentMethodApplePay:
+            methodName = @"Apple Pay";
+            break;
+        case kOLPaymentMethodCreditCard:
+            methodName = @"Credit Card";
+            break;
+        case kOLPaymentMethodNone:
+            methodName = @"None";
+            break;
+            
+        default:
+            break;
+    }
+    [OLAnalytics trackPaymentMethodSelected:self.printOrder methodName:methodName];
+#endif
 }
 
 @end

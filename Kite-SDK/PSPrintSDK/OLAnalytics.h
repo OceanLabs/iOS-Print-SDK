@@ -49,6 +49,8 @@ static NSString *const kOLAnalyticsEventNameSearchAddressScreenViewed = @"Search
 static NSString *const kOLAnalyticsEventNameBasketScreenViewed = @"Basket Screen Viewed";
 static NSString *const kOLAnalyticsEventNamePaymentCompleted = @"Payment Completed";
 static NSString *const kOLAnalyticsEventNamePrintOrderSubmission = @"Print Order Submission";
+static NSString *const kOLAnalyticsEventNamePaymentMethodScreenViewed = @"Payment Method Screen Viewed";
+static NSString *const kOLAnalyticsEventNamePaymentMethodSelected = @"Payment Method Selected";
 
 // Secondary Events - Not Sent to MixPanel
 static NSString *const kOLAnalyticsEventNameProductTypesScreenHitBack = @"Product List Screen Hit Back";
@@ -72,7 +74,6 @@ static NSString *const kOLAnalyticsEventNameBasketScreenHitCancel = @"Basket Scr
 static NSString *const kOLAnalyticsEventNameBasketScreenSuccessfullyAppliedPromoCode = @"Basket Screen Successfully Applied Promo Code";
 static NSString *const kOLAnalyticsEventNameBasketScreenPromoCodeFailed = @"Basket Screen Promo Code Failed";
 static NSString *const kOLAnalyticsEventNameBasketScreenDidTaponPromoCodeBox = @"Basket Screen Did Tap on Promo Code Box";
-static NSString *const kOLAnalyticsEventNameBasketScreenPaymentMethodTapped = @"Basket Screen Payment Method Tapped";
 static NSString *const kOLAnalyticsEventNameBasketScreenPaymentMethodHitBack = @"Basket Screen Payment Method Hit Back";
 static NSString *const kOLAnalyticsEventNameReviewScreenIncrementedPhotoQuantity= @"Review Screen Incremented Photo Quantity";
 static NSString *const kOLAnalyticsEventNameBasketScreenHitEditItem = @"Basket Screen Hit Edit Item";
@@ -83,6 +84,7 @@ static NSString *const kOLAnalyticsEventNameImagePickerScreenHitBack = @"Image P
 static NSString *const kOLAnalyticsEventNameUpsellScreenViewed = @"Upsell Screen Viewed";
 static NSString *const kOLAnalyticsEventNameUpsellScreenDismissed = @"Upsell Screen Dismissed";
 static NSString *const kOLAnalyticsEventNameBasketIconTapped = @"Basket Icon Tapped";
+static NSString *const kOLAnalyticsEventNamePaymentMethodScreenHitBack = @"Payment Method Screen Hit Back";
 
 // Property Names
 static NSString *const kOLAnalyticsEventName = @"Event Name";
@@ -146,7 +148,6 @@ static NSString *const kOLAnalyticsEventLevel = @"Event Level";
 + (void)trackPaymentScreenSuccessfullyAppliedPromoCode:(NSString *)code forOrder:(OLPrintOrder *)order;
 + (void)trackPaymentScreenUnsuccessfullyAppliedPromoCode:(NSString *)code withError:(NSError *)error forOrder:(OLPrintOrder *)order;
 + (void)trackPaymentScreenDidTapOnPromoCodeBoxforOrder:(OLPrintOrder *)order;
-+ (void)trackPaymentScreenPaymentMethodHit:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenPaymentMethodDidCancel:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenHitEditItemDone:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenDidDeleteItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
@@ -155,6 +156,9 @@ static NSString *const kOLAnalyticsEventLevel = @"Event Level";
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
 + (void)trackQualityInfoScreenViewed;
 + (void)trackPrintAtHomeTapped;
++ (void)trackPaymentMethodScreenViewed:(OLPrintOrder *)printOrder;
++ (void)trackPaymentMethodSelected:(OLPrintOrder *)printOrder methodName:(NSString *)methodName;
++ (void)trackPaymentMethodScreenHitBack:(OLPrintOrder *)printOrder;
 
 // upsell events
 + (void)trackUpsellShown:(BOOL)shown;
