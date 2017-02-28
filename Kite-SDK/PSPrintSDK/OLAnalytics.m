@@ -681,6 +681,13 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameEditScreenFinishedEditingPhoto job:nil printOrder:nil extraInfo:@{kOLAnalyticsEventLevel : @2}];
 }
 
++ (void)trackEditScreenButtonTapped:(NSString *)buttonName{
+    if (!buttonName){
+        return;
+    }
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameEditScreenButtonTapped job:nil printOrder:nil extraInfo:@{kOLAnalyticsButtonName : buttonName, kOLAnalyticsEventLevel : @2}];
+}
+
 + (NSMutableDictionary *)propertiesForPrintOrder:(OLPrintOrder *)printOrder {
     NSMutableDictionary *p = [[NSMutableDictionary alloc] init];
     

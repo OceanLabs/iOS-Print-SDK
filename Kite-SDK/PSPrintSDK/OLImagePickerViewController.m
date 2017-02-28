@@ -904,6 +904,9 @@
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
+#endif
 }
 
 - (void)onButtonDoneTapped:(UIButton *)sender{

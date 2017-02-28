@@ -718,6 +718,10 @@
         [self renderImage];
         [self showExtraChargeHint];
     }];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackEditScreenButtonTapped:@"Product Flip"];
+#endif
 }
 
 
