@@ -711,9 +711,9 @@
                           [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
                           [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
                           [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
-                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
-                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
-                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+//                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+//                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+//                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
                           [OLAsset assetWithDataAsJPEG:data1],
                           [OLAsset assetWithDataAsPNG:data2],
                           [OLAsset assetWithPHAsset:phAsset]
@@ -724,12 +724,12 @@
     [OLUserSession currentSession].appAssets = [olAssets mutableCopy];
     [[OLUserSession currentSession] resetUserSelectedPhotos];
     
-    [self chooseClass:@"Frames" onOLProductHomeViewController:productHomeVc];
+    [self chooseClass:@"Magnet Wall Frames" onOLProductHomeViewController:productHomeVc];
     
-    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
-    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
-    
-    [self chooseProduct:@"Frames 50cm (2x2)" onOLProductTypeSelectionViewController:productTypeVc];
+//    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+//    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+//    
+//    [self chooseProduct:@"Frames 50cm (2x2)" onOLProductTypeSelectionViewController:productTypeVc];
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
