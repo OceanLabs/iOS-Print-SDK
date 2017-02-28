@@ -981,18 +981,19 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="65G-jP-BFB">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <gestureRecognizers/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="2" minimumInteritemSpacing="0.0" id="kbq-n6-SKF">
-                                    <size key="itemSize" width="486" height="50"/>
+                                    <size key="itemSize" width="336" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="20" maxX="0.0" maxY="20"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="paymentMethodCell" id="gW4-CV-EdQ">
-                                        <rect key="frame" x="-55.5" y="20" width="486" height="50"/>
+                                        <rect key="frame" x="13" y="20" width="336" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="486" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="336" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="•••• •••• •••• Lorem Ipsum " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PTs-gc-3ib">
@@ -1009,25 +1010,51 @@
                                                     </constraints>
                                                 </imageView>
                                                 <imageView hidden="YES" userInteractionEnabled="NO" tag="30" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OL-tick" translatesAutoresizingMaskIntoConstraints="NO" id="9Ko-p3-0ar">
-                                                    <rect key="frame" x="464" y="20.5" width="12" height="9"/>
+                                                    <rect key="frame" x="314" y="20.5" width="12" height="9"/>
                                                 </imageView>
+                                                <view tag="100" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="fBr-2Q-YSM">
+                                                    <rect key="frame" x="336" y="0.0" width="65" height="50"/>
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FVg-58-f4S">
+                                                            <rect key="frame" x="10" y="0.0" width="45" height="50"/>
+                                                            <state key="normal" title="Delete">
+                                                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            </state>
+                                                            <connections>
+                                                                <action selector="onButtonDeleteCardTapped:" destination="UZd-jB-H9g" eventType="touchUpInside" id="Rz1-eH-XpA"/>
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
+                                                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="FVg-58-f4S" secondAttribute="trailing" constant="10" id="3C5-nS-Iog"/>
+                                                        <constraint firstItem="FVg-58-f4S" firstAttribute="top" secondItem="fBr-2Q-YSM" secondAttribute="top" id="Bw6-ag-Uhm"/>
+                                                        <constraint firstAttribute="bottom" secondItem="FVg-58-f4S" secondAttribute="bottom" id="gUv-xE-BDc"/>
+                                                        <constraint firstItem="FVg-58-f4S" firstAttribute="leading" secondItem="fBr-2Q-YSM" secondAttribute="leading" constant="10" id="mcA-db-hP3"/>
+                                                    </constraints>
+                                                </view>
                                             </subviews>
                                         </view>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstItem="PTs-gc-3ib" firstAttribute="centerY" secondItem="s5d-KI-8HO" secondAttribute="centerY" id="Hy4-kF-Vus"/>
+                                            <constraint firstItem="fBr-2Q-YSM" firstAttribute="leading" secondItem="gW4-CV-EdQ" secondAttribute="trailing" id="Oji-En-gBo"/>
+                                            <constraint firstItem="fBr-2Q-YSM" firstAttribute="top" secondItem="gW4-CV-EdQ" secondAttribute="top" id="Pvg-Ln-B3K"/>
+                                            <constraint firstAttribute="bottom" secondItem="fBr-2Q-YSM" secondAttribute="bottom" id="Vgf-z0-fHT"/>
                                             <constraint firstItem="9Ko-p3-0ar" firstAttribute="centerY" secondItem="PTs-gc-3ib" secondAttribute="centerY" id="Yvh-mU-aTc"/>
                                             <constraint firstItem="PTs-gc-3ib" firstAttribute="leading" secondItem="s5d-KI-8HO" secondAttribute="trailing" constant="10" id="eAQ-Gx-fnC"/>
                                             <constraint firstItem="s5d-KI-8HO" firstAttribute="centerY" secondItem="gW4-CV-EdQ" secondAttribute="centerY" id="mgA-da-BPm"/>
                                             <constraint firstItem="s5d-KI-8HO" firstAttribute="leading" secondItem="gW4-CV-EdQ" secondAttribute="leading" constant="5" id="r7h-JN-c4n"/>
                                             <constraint firstAttribute="trailing" secondItem="9Ko-p3-0ar" secondAttribute="trailing" constant="10" id="sve-E2-4wp"/>
                                         </constraints>
-                                        <size key="customSize" width="486" height="50"/>
+                                        <size key="customSize" width="336" height="50"/>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="65G-jP-BFB" firstAttribute="top" secondItem="he4-TS-p98" secondAttribute="topMargin" id="2VS-Bf-wAc"/>
                             <constraint firstItem="nDK-lC-Q1g" firstAttribute="top" secondItem="65G-jP-BFB" secondAttribute="bottom" id="Fcr-Si-t8i"/>
@@ -1052,7 +1079,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SeA-xU-bXt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5337" y="-581"/>
+            <point key="canvasLocation" x="5336.8000000000002" y="-581.55922038980509"/>
         </scene>
         <!--Edit Photobook View Controller-->
         <scene sceneID="HfJ-UO-EWf">
@@ -2012,7 +2039,7 @@
         <scene sceneID="dR2-z7-yB6">
             <objects>
                 <collectionViewController storyboardIdentifier="OrderReviewViewController" id="7wc-Kp-jtQ" customClass="OLPackProductViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2245,7 +2272,7 @@
         <scene sceneID="VME-6Y-RI6">
             <objects>
                 <collectionViewController storyboardIdentifier="OLTypeSelectionViewController" id="IOx-76-Eqt" customClass="OLProductTypeSelectionViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="w1o-j0-lQ5">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="w1o-j0-lQ5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2945,7 +2972,7 @@
         <scene sceneID="kFc-fy-yh6">
             <objects>
                 <collectionViewController storyboardIdentifier="OLPosterViewController" id="AaA-7l-tb4" customClass="OLPosterViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" dataMode="prototypes" id="LuI-LA-fpj">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="LuI-LA-fpj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -127,6 +127,13 @@
     UIImageView *imageView = [cell viewWithTag:10];
     UILabel *label = [cell viewWithTag:20];
     
+    UIView *view = [cell viewWithTag:100];
+    view.transform = CGAffineTransformIdentity;
+    
+    for (UIGestureRecognizer *gesture in cell.gestureRecognizers){
+        [cell removeGestureRecognizer:gesture];
+    }
+    
     OLPaymentMethod method = [self paymentMethodForSection:indexPath.section];
     id existingCard = [OLKitePrintSDK useStripeForCreditCards] ? [OLStripeCard lastUsedCard] : [OLPayPalCard lastUsedCard];
     if (method == kOLPaymentMethodCreditCard && indexPath.row == 0 && existingCard){
@@ -138,6 +145,10 @@
         else{
             [cell viewWithTag:30].hidden = YES;
         }
+        
+        UISwipeGestureRecognizer *gesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeftGestureRecognized:)];
+        gesture.direction = UISwipeGestureRecognizerDirectionLeft;
+        [cell addGestureRecognizer:gesture];
     }
     else if (method == kOLPaymentMethodCreditCard){
         imageView.image = [UIImage imageNamedInKiteBundle:@"add-payment"];
@@ -167,7 +178,7 @@
         }
         else{
             [cell viewWithTag:30].hidden = YES;
-        }
+        }        
     }
     else{
         NSAssert(NO, @"Too many cells?");
@@ -183,9 +194,13 @@
     if (method == kOLPaymentMethodCreditCard && (indexPath.item > 0 || !existingCard)){
         [self addNewCard];
     }
-    else{
+    else if (self.selectedPaymentMethod != method){
         self.selectedPaymentMethod = method;
         [self.collectionView reloadData];
+    }
+    else{
+        UIView *view = [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:100];
+        view.transform = CGAffineTransformIdentity;
     }
 }
 
@@ -233,6 +248,22 @@
     ccCaptureController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:ccCaptureController animated:YES completion:nil];
 }
+- (IBAction)swipeLeftGestureRecognized:(UISwipeGestureRecognizer *)sender {
+    UIView *view = [sender.view viewWithTag:100];
+    [UIView animateWithDuration:0.25 animations:^{
+        view.transform = CGAffineTransformMakeTranslation(-view.frame.size.width, 0);
+    }];
+}
 
+- (IBAction)onButtonDeleteCardTapped:(UIButton *)sender {
+    [OLStripeCard clearLastUsedCard];
+    [OLPayPalCard clearLastUsedCard];
+    
+    if (self.selectedPaymentMethod == kOLPaymentMethodCreditCard){
+        self.selectedPaymentMethod = kOLPaymentMethodNone;
+    }
+    
+    [self.collectionView reloadData];
+}
 
 @end
