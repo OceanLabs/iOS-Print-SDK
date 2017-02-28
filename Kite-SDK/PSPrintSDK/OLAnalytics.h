@@ -32,13 +32,70 @@
 @class OLPrintOrder;
 @protocol OLPrintJob;
 
+// Main Events - Sent to MixPanel
+static NSString *const kOLAnalyticsEventNameKiteLoaded = @"Kite Loaded";
+static NSString *const kOLAnalyticsEventNameCategoryListScreenViewed = @"Category List Screen Viewed";
+static NSString *const kOLAnalyticsEventNameQualityInfoScreenViewed = @"Quality Info Screen Viewed";
+static NSString *const kOLAnalyticsEventNamePrintAtHomeTapped = @"Print At Home Tapped";
+static NSString *const kOLAnalyticsEventNameProductDetailsScreenViewed = @"Product Details Screen Viewed";
+static NSString *const kOLAnalyticsEventNameProductListScreenViewed = @"Product List Screen Viewed";
+static NSString *const kOLAnalyticsEventNameImagePickerScreenViewed = @"Image Picker Screen Viewed";
+static NSString *const kOLAnalyticsEventNameReviewScreenViewed = @"Review Screen Viewed";
+static NSString *const kOLAnalyticsEventNamePhotobookEditScreenViewed = @"Photobook Edit Screen Viewed";
+static NSString *const kOLAnalyticsEventNameContinueShoppingButtonTapped = @"Continue Shopping Button Tapped";
+static NSString *const kOLAnalyticsEventNameDeliveryDetailsScreenViewed = @"Delivery Details Screen Viewed";
+static NSString *const kOLAnalyticsEventNameAddressSelectionScreenViewed = @"Address Selection Screen Viewed";
+static NSString *const kOLAnalyticsEventNameAddEditAddressScreenViewed = @"Add/Edit Address Screen Viewed";
+static NSString *const kOLAnalyticsEventNameSearchAddressScreenViewed = @"Search Address Screen Viewed";
+static NSString *const kOLAnalyticsEventNameBasketScreenViewed = @"Basket Screen Viewed";
+static NSString *const kOLAnalyticsEventNamePaymentCompleted = @"Payment Completed";
+static NSString *const kOLAnalyticsEventNamePrintOrderSubmission = @"Print Order Submission";
+static NSString *const kOLAnalyticsEventNamePaymentMethodScreenViewed = @"Payment Method Screen Viewed";
+static NSString *const kOLAnalyticsEventNamePaymentMethodSelected = @"Payment Method Selected";
+
+// Secondary Events - Not Sent to MixPanel
+static NSString *const kOLAnalyticsEventNameProductTypesScreenHitBack = @"Product List Screen Hit Back";
+static NSString *const kOLAnalyticsEventNameKiteDismissed = @"Kite Dismissed";
+static NSString *const kOLAnalyticsEventNameKitePhotoProviderSelected = @"Photo Provider Selected";
+static NSString *const kOLAnalyticsEventNameKiteQualityInfoScreenHitBack = @"Quality Info Screen Hit Back";
+static NSString *const kOLAnalyticsEventNameOrderHistoryViewed = @"Order History Viewed";
+static NSString *const kOLAnalyticsEventNameOrderHistoryDismissed = @"Order History Dismissed";
+static NSString *const kOLAnalyticsEventNameBasketItemQuantityDown = @"Basket Item Quantity Down";
+static NSString *const kOLAnalyticsEventNameReviewScreenHitBack = @"Review Screen Hit Back";
+static NSString *const kOLAnalyticsEventNamePaymentScreenItemQuantityUp = @"Payment Screen Item Quantity Up";
+static NSString *const kOLAnalyticsEventNameReviewScreenEditPhotoTapped = @"Review Screen Edit Photo Tapped";
+static NSString *const kOLAnalyticsEventNameEditScreenFinishedEditingPhoto = @"Edit Screen Finished Editing Photo";
+static NSString *const kOLAnalyticsEventNameReviewScreenDecrementedPhotoQuantity = @"Review Screen Decremented Photo Quantity";
+static NSString *const kOLAnalyticsEventNameBasketScreenDeleteItem = @"Basket Screen Delete Item";
+static NSString *const kOLAnalyticsEventNameBasketScreenDidEditItem = @"Basket Screen Did Edit Item";
+static NSString *const kOLAnalyticsEventNameProductDetailsOpened = @"Product Details Opened";
+static NSString *const kOLAnalyticsEventNameProductDetailsClosed = @"Product Details Closed";
+static NSString *const kOLAnalyticsEventNameBasketScreenHitBack = @"Basket Screen Hit Back";
+static NSString *const kOLAnalyticsEventNameBasketScreenHitCancel = @"Basket Screen Hit Cancel";
+static NSString *const kOLAnalyticsEventNameBasketScreenSuccessfullyAppliedPromoCode = @"Basket Screen Successfully Applied Promo Code";
+static NSString *const kOLAnalyticsEventNameBasketScreenPromoCodeFailed = @"Basket Screen Promo Code Failed";
+static NSString *const kOLAnalyticsEventNameBasketScreenDidTaponPromoCodeBox = @"Basket Screen Did Tap on Promo Code Box";
+static NSString *const kOLAnalyticsEventNameBasketScreenPaymentMethodHitBack = @"Basket Screen Payment Method Hit Back";
+static NSString *const kOLAnalyticsEventNameReviewScreenIncrementedPhotoQuantity= @"Review Screen Incremented Photo Quantity";
+static NSString *const kOLAnalyticsEventNameBasketScreenHitEditItem = @"Basket Screen Hit Edit Item";
+static NSString *const kOLAnalyticsEventNameShippingScreenHitBack = @"Shipping Screen Hit Back";
+static NSString *const kOLAnalyticsEventNameReviewScreenDeletedPhoto = @"Review Screen Deleted Photo";
+static NSString *const kOLAnalyticsEventNameProductDescriptionScreenHitBack = @"Product Description Screen Hit Back";
+static NSString *const kOLAnalyticsEventNameImagePickerScreenHitBack = @"Image Picker Screen Hit Back";
+static NSString *const kOLAnalyticsEventNamePhotobookEditScreenHitBack = @"Photobook Edit Screen Hit Back";
+static NSString *const kOLAnalyticsEventNameUpsellScreenViewed = @"Upsell Screen Viewed";
+static NSString *const kOLAnalyticsEventNameUpsellScreenDismissed = @"Upsell Screen Dismissed";
+static NSString *const kOLAnalyticsEventNameBasketIconTapped = @"Basket Icon Tapped";
+static NSString *const kOLAnalyticsEventNamePaymentMethodScreenHitBack = @"Payment Method Screen Hit Back";
+static NSString *const kOLAnalyticsEventNameEditScreenDidCancel = @"Edit Screen Did Cancel";
+
+// Property Names
 static NSString *const kOLAnalyticsEventName = @"Event Name";
 static NSString *const kOLAnalyticsProductCategory = @"Product Category";
 static NSString *const kOLAnalyticsProductName = @"Product Name";
 static NSString *const kOLAnalyticsApplePayAvailable = @"Apple Pay Available";
 static NSString *const kOLAnalyticsPaymentMethod = @"Payment Method";
 static NSString *const kOLAnalyticsPhotoSource = @"Photo Source";
-static NSString *const kOLAnalyticsFeedbackResult = @"Feedback Result";
 static NSString *const kOLAnalyticsSelectedOption = @"Selected Option";
 static NSString *const kOLAnalyticsNumberOfPhotos = @"Number of Photos";
 static NSString *const kOLAnalyticsNumberOfPhotosInItem = @"Number of Photos in Item";
@@ -52,6 +109,7 @@ static NSString *const kOLAnalyticsCurrencyCode = @"Currency Code";
 static NSString *const kOLAnalyticsItemPrice = @"Item Price";
 static NSString *const kOLAnalyticsPromoCode = @"Promo Code";
 static NSString *const kOLAnalyticsError = @"Error";
+static NSString *const kOLAnalyticsEventLevel = @"Event Level";
 
 @interface OLAnalytics : NSObject
 
@@ -68,23 +126,18 @@ static NSString *const kOLAnalyticsError = @"Error";
 + (void)trackPhotoSelectionScreenViewed:(NSString *)productName;
 + (void)trackPhotoSelectionScreenHitBack:(NSString *)productName;
 + (void)trackPhotoProviderPicked:(NSString *)provider forProductName:(NSString *)productName;
-+ (void)trackPhotoProvider:(NSString *)provider numberOfPhotosAdded:(NSInteger)number forProductName:(NSString *)productName;
-+ (void)trackPhotoSelectionScreenNumberOfPhotosRemoved:(NSUInteger)number forProductName:(NSString *)productName;
 + (void)trackReviewScreenViewed:(NSString *)productName;
++ (void)trackPhotobookEditScreenViewed:(NSString *)productName;
 + (void)trackReviewScreenHitBack:(NSString *)productName numberOfPhotos:(NSInteger)numberOfPhotos;
++ (void)trackPhotobookEditScreenHitBack:(NSString *)productName;
 + (void)trackReviewScreenDeletedPhotoForProductName:(NSString *)productName;
 + (void)trackReviewScreenDidCropPhotoForProductName:(NSString *)productName;
-+ (void)trackReviewScreenEnteredCropScreenForProductName:(NSString *)productName;
 + (void)trackReviewScreenIncrementedPhotoQtyForProductName:(NSString *)productName;
 + (void)trackReviewScreenDecrementedPhotoQtyForProductName:(NSString *)productName;
-+ (void)trackDetailsViewProductOptionsTappedForProductName:(NSString *)productName;
-+ (void)trackDetailsViewProductOptionsHitBackForProductName:(NSString *)productName;
-+ (void)trackDetailsViewProductOptionsSelectedOption:(NSString *)option forProductName:(NSString *)productName;
++ (void)trackReviewScreenEnteredCropScreenForProductName:(NSString *)productName;
 + (void)trackOrderHistoryScreenViewed;
 + (void)trackOrderHistoryScreenDismissed;
 + (void)trackQualityScreenHitBack;
-+ (void)trackFeedbackButtonTapped;
-+ (void)trackFeedbackScreenFinishedWithResult:(NSInteger)result;
 + (void)trackContinueShoppingButtonPressed:(OLPrintOrder *)printOrder;
 + (void)trackShippingScreenHitBackForOrder:(OLPrintOrder *)printOrder;
 + (void)trackShippingScreenViewedForOrder:(OLPrintOrder *)printOrder variant:(NSString *)variant showPhoneEntryField:(BOOL)showPhoneEntryField;
@@ -100,17 +153,18 @@ static NSString *const kOLAnalyticsError = @"Error";
 + (void)trackPaymentScreenSuccessfullyAppliedPromoCode:(NSString *)code forOrder:(OLPrintOrder *)order;
 + (void)trackPaymentScreenUnsuccessfullyAppliedPromoCode:(NSString *)code withError:(NSError *)error forOrder:(OLPrintOrder *)order;
 + (void)trackPaymentScreenDidTapOnPromoCodeBoxforOrder:(OLPrintOrder *)order;
-+ (void)trackPaymentScreenPaymentMethodHit:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenPaymentMethodDidCancel:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenHitEditItemDone:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackPaymentScreenDidDeleteItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable;
-+ (void)trackPaymentScreenHitCheckoutForOrder:(OLPrintOrder *)printOrder;
-+ (void)trackPaymentScreenHitBackToApplePayForOrder:(OLPrintOrder *)printOrder;
 + (void)trackPaymentCompletedForOrder:(OLPrintOrder *)printOrder paymentMethod:(NSString *)method applePayIsAvailable:(NSString *)applePayIsAvailable;
 + (void)trackBasketIconTappedWithNumberBadged:(NSInteger)number;
 + (void)trackOrderSubmission:(OLPrintOrder *)printOrder;
 + (void)trackQualityInfoScreenViewed;
 + (void)trackPrintAtHomeTapped;
++ (void)trackPaymentMethodScreenViewed:(OLPrintOrder *)printOrder;
++ (void)trackPaymentMethodSelected:(OLPrintOrder *)printOrder methodName:(NSString *)methodName;
++ (void)trackPaymentMethodScreenHitBack:(OLPrintOrder *)printOrder;
++ (void)trackEditScreenDidCancel;
 
 // upsell events
 + (void)trackUpsellShown:(BOOL)shown;

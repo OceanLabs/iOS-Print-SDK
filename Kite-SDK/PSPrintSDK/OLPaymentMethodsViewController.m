@@ -38,11 +38,16 @@
 #import "OLStripeCard+OLCardIcon.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLUserSession.h"
+#import "OLPaymentViewController.h"
 
 @interface OLPaymentMethodsViewController () <UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLCreditCardCaptureDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (assign, nonatomic) CGSize rotationSize;
 
+@end
+
+@interface OLPaymentViewController ()
+@property (strong, nonatomic) OLPrintOrder *printOrder;
 @end
 
 @interface OLKitePrintSDK ()
@@ -66,6 +71,20 @@
     self.collectionView.delegate = self;
     
     self.title = NSLocalizedStringFromTableInBundle(@"Payment Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentMethodScreenViewed:[(OLPaymentViewController *)self.delegate printOrder]];
+#endif
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackPaymentMethodScreenHitBack:[(OLPaymentViewController *)self.delegate printOrder]];
+    }
+#endif
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {

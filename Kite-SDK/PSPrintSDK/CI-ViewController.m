@@ -48,6 +48,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "AssetDataSource.h"
 #import "OLKiteTestHelper.h"
 #import "OLKiteUtils.h"
+#import "JDStatusBarNotification/JDStatusBarNotification.h"
 
 @import Photos;
 
@@ -256,9 +257,15 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
-#ifdef OL_KITE_VERBOSE
+//#ifdef OL_KITE_VERBOSE
     NSLog(@"%@", info);
-#endif
+//#endif
+    
+    NSString *status = info[kOLAnalyticsEventName];
+    if ([info[kOLAnalyticsEventLevel] integerValue] != 1){
+        status = [@"*" stringByAppendingString:status];
+    }
+    [JDStatusBarNotification showWithStatus:status dismissAfter:2];
 }
 
 - (void)setupCIDeploymentWithAssets:(NSArray *)assets{

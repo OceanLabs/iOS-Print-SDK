@@ -196,6 +196,9 @@
 		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
 		2E4DAB651DE47104002F4A84 /* mug.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2E4DAB641DE47104002F4A84 /* mug.dae */; };
 		2E5D13AE1E36238800927D19 /* OLMockPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D13AD1E36238800927D19 /* OLMockPanGestureRecognizer.m */; };
+		2E65A33D1E6438F500DBE418 /* JDStatusBarNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65A3381E6438F500DBE418 /* JDStatusBarNotification.m */; };
+		2E65A33E1E6438F500DBE418 /* JDStatusBarStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65A33A1E6438F500DBE418 /* JDStatusBarStyle.m */; };
+		2E65A33F1E6438F500DBE418 /* JDStatusBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65A33C1E6438F500DBE418 /* JDStatusBarView.m */; };
 		2E65FEA01E4E058400A301BB /* OLTouchTolerantView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */; };
 		2E65FEA11E4E058400A301BB /* OLTouchTolerantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */; };
 		2E65FEA81E4E143B00A301BB /* OLOrderHistoryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */; };
@@ -643,6 +646,12 @@
 		2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLIntegratedCheckoutViewController.m; sourceTree = "<group>"; };
 		2E6561101D1C341A0092001C /* OLSelectedEffectButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSelectedEffectButton.h; sourceTree = "<group>"; };
 		2E6561111D1C341A0092001C /* OLSelectedEffectButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSelectedEffectButton.m; sourceTree = "<group>"; };
+		2E65A3371E6438F500DBE418 /* JDStatusBarNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JDStatusBarNotification.h; path = JDStatusBarNotification/JDStatusBarNotification.h; sourceTree = "<group>"; };
+		2E65A3381E6438F500DBE418 /* JDStatusBarNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JDStatusBarNotification.m; path = JDStatusBarNotification/JDStatusBarNotification.m; sourceTree = "<group>"; };
+		2E65A3391E6438F500DBE418 /* JDStatusBarStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JDStatusBarStyle.h; path = JDStatusBarNotification/JDStatusBarStyle.h; sourceTree = "<group>"; };
+		2E65A33A1E6438F500DBE418 /* JDStatusBarStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JDStatusBarStyle.m; path = JDStatusBarNotification/JDStatusBarStyle.m; sourceTree = "<group>"; };
+		2E65A33B1E6438F500DBE418 /* JDStatusBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JDStatusBarView.h; path = JDStatusBarNotification/JDStatusBarView.h; sourceTree = "<group>"; };
+		2E65A33C1E6438F500DBE418 /* JDStatusBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JDStatusBarView.m; path = JDStatusBarNotification/JDStatusBarView.m; sourceTree = "<group>"; };
 		2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTouchTolerantView.h; sourceTree = "<group>"; };
 		2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTouchTolerantView.m; sourceTree = "<group>"; };
 		2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOrderHistoryViewController.h; sourceTree = "<group>"; };
@@ -1156,6 +1165,7 @@
 		2E23EB971D50917D00E2BF42 /* Private */ = {
 			isa = PBXGroup;
 			children = (
+				2E65A3401E64390500DBE418 /* JDStatusBarNotification */,
 				2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */,
 				2E23EB991D5091FC00E2BF42 /* CI-ViewController.h */,
 				2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */,
@@ -1323,6 +1333,19 @@
 				3DE2B0C01A77D2290092D97F /* Util */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		2E65A3401E64390500DBE418 /* JDStatusBarNotification */ = {
+			isa = PBXGroup;
+			children = (
+				2E65A3371E6438F500DBE418 /* JDStatusBarNotification.h */,
+				2E65A3381E6438F500DBE418 /* JDStatusBarNotification.m */,
+				2E65A3391E6438F500DBE418 /* JDStatusBarStyle.h */,
+				2E65A33A1E6438F500DBE418 /* JDStatusBarStyle.m */,
+				2E65A33B1E6438F500DBE418 /* JDStatusBarView.h */,
+				2E65A33C1E6438F500DBE418 /* JDStatusBarView.m */,
+			);
+			name = JDStatusBarNotification;
 			sourceTree = "<group>";
 		};
 		2E67B7C01E2645F400E70805 /* Wrappers */ = {
@@ -2567,7 +2590,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EE054351E321CC900417DA4 /* OLKiteTestHelper.m in Sources */,
+				2E65A33D1E6438F500DBE418 /* JDStatusBarNotification.m in Sources */,
 				2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */,
+				2E65A33E1E6438F500DBE418 /* JDStatusBarStyle.m in Sources */,
+				2E65A33F1E6438F500DBE418 /* JDStatusBarView.m in Sources */,
 				2EE054321E32177A00417DA4 /* OLBaseRequest+Mock.m in Sources */,
 				2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */,
 				2EE054341E321C7000417DA4 /* OLSwizzler.m in Sources */,
