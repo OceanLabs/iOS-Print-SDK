@@ -1047,7 +1047,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         id payPalConfiguration = [OLPayPalWrapper payPalConfigurationWithShippingAddressOption:1/*PayPalShippingAddressOptionProvided*/ acceptCreditCards:NO];
         id paymentViewController = [OLPayPalWrapper payPalPaymentViewControllerWithPayment:payment configuration:payPalConfiguration delegate:self];
         ((UIViewController *)paymentViewController).modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
-        [self presentViewController:paymentViewController animated:YES completion:nil];
+        
+        if (paymentViewController){
+            [self presentViewController:paymentViewController animated:YES completion:nil];
+        }
     }];
 }
 
