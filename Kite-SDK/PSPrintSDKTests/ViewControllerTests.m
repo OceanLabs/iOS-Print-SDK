@@ -1057,4 +1057,12 @@
     XCTAssert([OLUserSession currentSession].userSelectedPhotos.count == 2, @"Did not pick 2 images");
 }
 
+- (void)testCountryPicker{
+    OLCountryPickerController *vc = [[OLCountryPickerController alloc] init];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
+    }];
+}
 @end
