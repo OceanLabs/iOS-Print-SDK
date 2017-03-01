@@ -1065,4 +1065,14 @@
         [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
     }];
 }
+
+- (void)testPrintOrderHistory{
+    UINavigationController *nvc = [OLKiteViewController orderHistoryViewController];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
+    }];
+}
+
 @end

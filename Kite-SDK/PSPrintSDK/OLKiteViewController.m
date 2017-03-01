@@ -522,7 +522,7 @@ static CGFloat fadeTime = 0.3;
     }
 }
 
-+ (UIViewController *)orderHistoryViewController{
++ (UINavigationController *)orderHistoryViewController{
     UIViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLOrderHistoryViewController"];
     
     return [[OLNavigationController alloc] initWithRootViewController:vc];
