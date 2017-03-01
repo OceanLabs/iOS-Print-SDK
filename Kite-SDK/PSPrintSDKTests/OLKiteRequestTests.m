@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "OLKitePrintSDK.h"
 #import "OLKiteTestHelper.h"
+#import "OLAsset+Private.h"
 
 @interface OLKiteRequestTests : XCTestCase <OLAssetUploadRequestDelegate>
 
@@ -87,6 +88,21 @@
     [req uploadOLAssets:[OLKiteTestHelper imageAssets]];
     
     [req cancelUpload];
+}
+
+- (void)testGetAssetURL{
+    NSData *data = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"2" ofType:@"png"]];
+    
+    OLAsset *asset = [OLAsset assetWithDataAsPNG:data];
+    
+    self.expectation = [self expectationWithDescription:@"Upload OLAssets Completed"];
+    [asset getImageURLWithProgress:NULL completionHandler:^(NSURL *url, NSError *error){
+        XCTAssert(url && !error, @"Failed to get image URL");
+        
+        [self.expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:60 handler:nil];
 }
 
 @end
