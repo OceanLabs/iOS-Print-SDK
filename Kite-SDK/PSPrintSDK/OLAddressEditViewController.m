@@ -154,6 +154,10 @@ static const NSUInteger kTagTextField = 99;
         flag = NO;
         errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in Line 1 of the address.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
+    else if ([self.textFieldCity.text isEqualToString:@""]){
+        flag = NO;
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your city.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    }
     else if ([self.textFieldPostCode.text isEqualToString:@""]){
         flag = NO;
         errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your postal code.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
