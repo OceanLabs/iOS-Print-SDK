@@ -262,9 +262,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 - (void)trackViewed{
 #ifndef OL_NO_ANALYTICS
     if ([OLKiteABTesting sharedInstance].offerAddressSearch) {
-        [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic + Address Search" showPhoneEntryField:[self showPhoneEntryField]];
+        [OLAnalytics trackDeliveryDetailsScreenViewedForOrder:self.printOrder variant:@"Classic + Address Search" showPhoneEntryField:[self showPhoneEntryField]];
     } else {
-        [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Classic" showPhoneEntryField:[self showPhoneEntryField]];
+        [OLAnalytics trackDeliveryDetailsScreenViewedForOrder:self.printOrder variant:@"Classic" showPhoneEntryField:[self showPhoneEntryField]];
     }
 #endif
 }

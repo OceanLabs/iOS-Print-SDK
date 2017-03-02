@@ -95,7 +95,7 @@
     [super viewDidLoad];
 
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductSelectionScreenViewed];
+    [OLAnalytics trackCategoryListScreenViewed];
 #endif
 
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText

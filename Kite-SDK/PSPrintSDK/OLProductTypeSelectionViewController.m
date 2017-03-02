@@ -143,7 +143,7 @@
     }
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductTypeSelectionScreenViewedWithTemplateClass:self.templateClass];
+    [OLAnalytics trackProductListScreenViewedWithTemplateClass:self.templateClass];
 #endif
 }
 
@@ -152,7 +152,7 @@
 
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackProductTypeSelectionScreenHitBackTemplateClass:self.templateClass];
+        [OLAnalytics trackProductListScreenHitBackTemplateClass:self.templateClass];
     }
 #endif
 }

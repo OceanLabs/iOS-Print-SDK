@@ -424,7 +424,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     }];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+    [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
 #endif
 }
 
@@ -571,7 +571,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         }];
         
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+        [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
 #endif
     }];
     
@@ -803,7 +803,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     }];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:self.product.productTemplate.name];
 #endif
 }
 

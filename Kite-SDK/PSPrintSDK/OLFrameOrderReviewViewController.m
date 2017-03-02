@@ -180,7 +180,7 @@ CGFloat innerMargin = 3;
         }];
         
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+        [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
 #endif
     }];
 }
@@ -513,7 +513,7 @@ CGFloat innerMargin = 3;
     }];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:self.product.productTemplate.name];
 #endif
 }
 

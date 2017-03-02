@@ -120,7 +120,7 @@
     
 #ifndef OL_NO_ANALYTICS
     if (self.product){
-        [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+        [OLAnalytics trackImagePickerScreenViewed:self.product.productTemplate.name];
     }
 #endif
     
@@ -270,7 +270,7 @@
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
+        [OLAnalytics trackImagePickerScreenHitBack:self.product.productTemplate.name];
     }
 #endif
 }
@@ -905,7 +905,7 @@
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
+    [OLAnalytics trackImagePickerScreenHitBack:self.product.productTemplate.name];
 #endif
 }
 

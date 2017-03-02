@@ -165,7 +165,7 @@
     }
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
+    [OLAnalytics trackProductDetailsScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
     
     self.originalBoxConstraint = self.detailsBoxTopCon.constant;

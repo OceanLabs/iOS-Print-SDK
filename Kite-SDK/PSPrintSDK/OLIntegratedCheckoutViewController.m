@@ -111,7 +111,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
 - (void)trackViewed{
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Integrated" showPhoneEntryField:[self showPhoneEntryField]];
+    [OLAnalytics trackDeliveryDetailsScreenViewedForOrder:self.printOrder variant:@"Integrated" showPhoneEntryField:[self showPhoneEntryField]];
 #endif
 }
 

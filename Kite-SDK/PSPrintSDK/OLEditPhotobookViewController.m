@@ -448,7 +448,7 @@ static const NSInteger kSectionPages = 2;
     }];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+    [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
 #endif
 }
 
@@ -847,6 +847,9 @@ static const NSInteger kSectionPages = 2;
     }
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
