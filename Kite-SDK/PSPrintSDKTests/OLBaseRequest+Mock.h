@@ -9,5 +9,8 @@
 #import "OLBaseRequest.h"
 
 @interface OLBaseRequest (Mock)
-- (void)mockTemplateStartStartWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler;
+- (void)mockTemplateStartWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler;
+- (void)mockTemplateServerErrorWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler;
+- (void)mockCostServerErrorWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler;
+- (void)mockCostRequestWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler;
 @end

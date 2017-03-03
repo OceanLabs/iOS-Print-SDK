@@ -42,10 +42,35 @@
 }
 
 + (void)mockTemplateRequest{
-    static dispatch_once_t predicate;
-    dispatch_once(&predicate, ^{
-        OLSwizzleInstanceMethods([OLBaseRequest class], @selector(startWithCompletionHandler:), @selector(mockTemplateStartStartWithCompletionHandler:));
-    });
+    OLSwizzleInstanceMethods([OLBaseRequest class], @selector(startWithCompletionHandler:), @selector(mockTemplateStartWithCompletionHandler:));
+}
+
++ (void)undoMockTemplateRequest{
+    OLSwizzleInstanceMethods([OLBaseRequest class], @selector(mockTemplateStartWithCompletionHandler:), @selector(startWithCompletionHandler:));
+}
+
++ (void)mockTemplateServerErrorRequest{
+    OLSwizzleInstanceMethods([OLBaseRequest class], @selector(startWithCompletionHandler:), @selector(mockTemplateServerErrorWithCompletionHandler:));
+}
+
++ (void)undoMockTemplateServerErrorRequest{
+    OLSwizzleInstanceMethods([OLBaseRequest class], @selector(mockTemplateServerErrorWithCompletionHandler:), @selector(startWithCompletionHandler:));
+}
+
++ (void)mockCostRequest{
+    OLSwizzleInstanceMethods([OLBaseRequest class], @selector(mockCostRequestWithCompletionHandler:), @selector(startWithCompletionHandler:));
+}
+
++ (void)undoMockCostRequest{
+    OLSwizzleInstanceMethods([OLBaseRequest class], @selector(startWithCompletionHandler:), @selector(mockCostRequestWithCompletionHandler:));
+}
+
++ (void)mockCostServerErrorRequest{
+    OLSwizzleInstanceMethods([OLBaseRequest class], @selector(mockCostServerErrorWithCompletionHandler:), @selector(startWithCompletionHandler:));
+}
+
++ (void)undoMockCostServerErrorRequest{
+    OLSwizzleInstanceMethods([OLBaseRequest class], @selector(startWithCompletionHandler:), @selector(mockCostServerErrorWithCompletionHandler:));
 }
 
 @end

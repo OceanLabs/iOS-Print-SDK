@@ -988,6 +988,8 @@
     [self performUIActionWithDelay:7 action:^{
         //Just wait for the video to load
     }];
+    
+    
 }
 
 - (void)testBasket{
@@ -1073,6 +1075,56 @@
     [self performUIAction:^{
         [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
     }];
+}
+
+#pragma mark Failing requests
+
+-(void)testFailedTemplateSync{
+    [OLKiteTestHelper mockTemplateServerErrorRequest];
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]]]];
+    vc.delegate = (id<OLKiteDelegate>)self;
+    
+    OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]]] name:@"Dogs"];
+    OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]] name:@"Cats"];
+    [vc addCustomPhotoProviderWithCollections:@[catsCollection, dogsCollection] name:@"Pets" icon:[UIImage imageNamed:@"dog"]];
+    [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
+    }];
+    
+    XCTAssert([vc.presentedViewController isKindOfClass:[UIAlertController class]], @"Did not show alert");
+    
+    [OLKiteTestHelper undoMockTemplateRequest];
+}
+
+- (void)testFailedCostRequest{
+    [OLKiteTestHelper mockCostServerErrorRequest];
+    [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
+        [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Checkout";
+    }];
+    
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
+    }];
+    
+    XCTAssert([vc.presentedViewController isKindOfClass:[UIAlertController class]], @"Did not show alert");
+    
+    [OLKiteTestHelper undoMockCostServerErrorRequest];
 }
 
 @end
