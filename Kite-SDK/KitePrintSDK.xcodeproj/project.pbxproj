@@ -192,6 +192,7 @@
 		2E451E951D9564620080F1C1 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E451E961D9564680080F1C1 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
 		2E451E9A1D9565D40080F1C1 /* OLKitePrintSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFB218635F170009DE03 /* OLKitePrintSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E45DE591E69B857007AA519 /* cost.json in Resources */ = {isa = PBXBuildFile; fileRef = 2E45DE581E69B857007AA519 /* cost.json */; };
 		2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */; };
 		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
 		2E4DAB651DE47104002F4A84 /* mug.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2E4DAB641DE47104002F4A84 /* mug.dae */; };
@@ -592,6 +593,7 @@
 		2E451DCB1D9554B40080F1C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E455DFE1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDecimalNumber+CostFormatter.h"; path = "PSPrintSDK/Categories/NSDecimalNumber+CostFormatter.h"; sourceTree = "<group>"; };
 		2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDecimalNumber+CostFormatter.m"; path = "PSPrintSDK/Categories/NSDecimalNumber+CostFormatter.m"; sourceTree = "<group>"; };
+		2E45DE581E69B857007AA519 /* cost.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = cost.json; sourceTree = "<group>"; };
 		2E480A8D1D92D060006C0EE6 /* OLOAuth2Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2Constants.m; sourceTree = "<group>"; };
 		2E480A8E1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2FileStreamWrapper.h; sourceTree = "<group>"; };
 		2E480A8F1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2FileStreamWrapper.m; sourceTree = "<group>"; };
@@ -1689,6 +1691,7 @@
 			isa = PBXGroup;
 			children = (
 				2E8CAA211E44C469000E6FD2 /* KitePrintSDKTests-Info.plist */,
+				2E45DE581E69B857007AA519 /* cost.json */,
 				2EE054291E31084200417DA4 /* templates.json */,
 				2EDBFAAF1BC698F2007BDB83 /* 1.jpg */,
 				2E7483501BCCFB5900360550 /* 2.png */,
@@ -2235,6 +2238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2EAB0AEE1CDB835700625BD6 /* 3.pdf in Resources */,
+				2E45DE591E69B857007AA519 /* cost.json in Resources */,
 				2EE0542A1E31084200417DA4 /* templates.json in Resources */,
 				2E7483511BCCFB5900360550 /* 2.png in Resources */,
 				2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */,

@@ -12,6 +12,7 @@
 
 @interface OLBaseRequest ()
 @property (nonatomic, strong) NSURL *url;
+@property (strong, nonatomic) NSString *requestBody;
 @end
 
 @interface OLKitePrintSDK ()
@@ -49,7 +50,12 @@
         return;
     }
     
-    NSDictionary *response = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"" ofType:@"json"]] options:0 error:nil]; //TODO add canned response
+    NSMutableDictionary *response = [[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"cost" ofType:@"json"]] options:0 error:nil] mutableCopy];
+    NSMutableArray *lineItems = [response[@"line_items"] mutableCopy];
+    NSMutableDictionary *dict = [[lineItems firstObject] mutableCopy];
+    dict[@"job_id"] = [[[[NSJSONSerialization JSONObjectWithData:[self.requestBody dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil] objectForKey:@"basket"] firstObject] objectForKey:@"job_id"];
+    [lineItems replaceObjectAtIndex:0 withObject:dict];
+    [response setObject:lineItems forKey:@"line_items"];
     handler(200, response, nil);
 }
 
