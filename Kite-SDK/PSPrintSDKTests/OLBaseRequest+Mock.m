@@ -71,4 +71,18 @@
     
 }
 
+- (void)mockPrintOrderRequestWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler{
+    if ([self.url.absoluteString isEqualToString:[NSString stringWithFormat:@"%@/%@/print", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]]){
+        handler(200, @{@"print_order_id" : @"PSMOCK-RECEIPT"}, nil);
+    }
+    else if ([self.url.absoluteString isEqualToString:[NSString stringWithFormat:@"%@/%@/order/PSMOCK-RECEIPT", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]]){
+        handler(200, @{@"status" : @"Processed"}, nil);
+    }
+    else{
+        [self mockPrintOrderRequestWithCompletionHandler:handler];
+    }
+    
+    
+}
+
 @end

@@ -73,4 +73,12 @@
     OLSwizzleInstanceMethods([OLBaseRequest class], @selector(startWithCompletionHandler:), @selector(mockCostServerErrorWithCompletionHandler:));
 }
 
++ (void)mockPrintOrderRequest{
+    OLSwizzleInstanceMethods([OLBaseRequest class], @selector(mockPrintOrderRequestWithCompletionHandler:), @selector(startWithCompletionHandler:));
+}
+
++ (void)undoMockPrintOrderCostRequest{
+    OLSwizzleInstanceMethods([OLBaseRequest class], @selector(startWithCompletionHandler:), @selector(mockPrintOrderRequestWithCompletionHandler:));
+}
+
 @end

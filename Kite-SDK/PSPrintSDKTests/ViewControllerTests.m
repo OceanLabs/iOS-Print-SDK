@@ -1114,6 +1114,55 @@
     [OLKiteTestHelper undoMockCostRequest];
 }
 
+- (void)testMockPrintOrderRequest{
+    [OLKiteTestHelper mockPrintOrderRequest];
+    [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
+        [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Checkout";
+    }];
+    
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Load KiteViewController"];
+    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while (vc.childViewControllers.count == 0) {
+                sleep(1);
+            }
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [expectation fulfill];
+            });
+            
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)nav.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+    
+    [self performUIAction:^{
+        [paymentVc submitOrderForPrintingWithProofOfPayment:@"PAUTH-🤑" paymentMethod:@"😉" completion:^(NSInteger i){}];
+    }];
+    
+    [self performUIAction:^{
+        NSLog(@"Done");
+    }];
+    
+    [OLKiteTestHelper undoMockPrintOrderCostRequest];
+}
+
 #pragma mark Failing requests
 
 -(void)testFailedTemplateSync{
