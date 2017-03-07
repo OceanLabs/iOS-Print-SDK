@@ -1098,7 +1098,7 @@
         NSLog(@"Done");
     }];
     
-    [OLKiteTestHelper undoMockPrintOrderCostRequest];
+    [OLKiteTestHelper undoMockPrintOrderRequest];
 }
 
 #pragma mark Failing requests
@@ -1147,7 +1147,23 @@
         NSLog(@"Done");
     }];
     
-    [OLKiteTestHelper undoMockPrintOrderCostServerErrorRequest];
+    [OLKiteTestHelper undoMockPrintOrderServerErrorRequest];
+}
+
+- (void)testFailedPrintOrderValidationRequest{
+    [OLKiteTestHelper mockPrintOrderValidationServerErrorRequest];
+    
+    OLPaymentViewController *paymentVc = [self launchKiteToBasket];
+    
+    [self performUIAction:^{
+        [paymentVc submitOrderForPrintingWithProofOfPayment:@"PAUTH-🤑" paymentMethod:@"😉" completion:^(NSInteger i){}];
+    }];
+    
+    [self performUIAction:^{
+        NSLog(@"Done");
+    }];
+    
+    [OLKiteTestHelper undoMockPrintOrderValidationServerErrorRequest];
 }
 
 #pragma mark Helper

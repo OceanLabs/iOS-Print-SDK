@@ -87,10 +87,22 @@
 
 - (void)mockPrintOrderServerErrorRequestWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler{
     if ([self.url.absoluteString isEqualToString:[NSString stringWithFormat:@"%@/%@/print", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]]){
-        handler(kOLKiteSDKErrorCodeServerFault, @{}, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey : @"🎃"}]);
+        handler(kOLKiteSDKErrorCodeServerFault, @{}, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey : @"You can't see this 😞"}]);
     }
     else{
         [self mockPrintOrderServerErrorRequestWithCompletionHandler:handler];
+    }
+}
+
+- (void)mockPrintOrderValidationServerErrorRequestWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler{
+    if ([self.url.absoluteString isEqualToString:[NSString stringWithFormat:@"%@/%@/print", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]]){
+        handler(200, @{@"print_order_id" : @"PSMOCK-RECEIPT"}, nil);
+    }
+    else if ([self.url.absoluteString isEqualToString:[NSString stringWithFormat:@"%@/%@/order/PSMOCK-RECEIPT", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]]){
+        handler(kOLKiteSDKErrorCodeServerFault, @{}, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey : @"🎃"}]);
+    }
+    else{
+        [self mockPrintOrderValidationServerErrorRequestWithCompletionHandler:handler];
     }
 }
 
