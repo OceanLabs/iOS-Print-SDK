@@ -1134,6 +1134,22 @@
     [OLKiteTestHelper undoMockCostServerErrorRequest];
 }
 
+- (void)testFailedPrintOrderRequest{
+    [OLKiteTestHelper mockPrintOrderServerErrorRequest];
+    
+    OLPaymentViewController *paymentVc = [self launchKiteToBasket];
+    
+    [self performUIAction:^{
+        [paymentVc submitOrderForPrintingWithProofOfPayment:@"PAUTH-🤑" paymentMethod:@"😉" completion:^(NSInteger i){}];
+    }];
+    
+    [self performUIAction:^{
+        NSLog(@"Done");
+    }];
+    
+    [OLKiteTestHelper undoMockPrintOrderCostServerErrorRequest];
+}
+
 #pragma mark Helper
 
 - (OLPaymentViewController *)launchKiteToBasket{

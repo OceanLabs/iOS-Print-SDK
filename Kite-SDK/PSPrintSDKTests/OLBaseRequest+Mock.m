@@ -85,4 +85,13 @@
     
 }
 
+- (void)mockPrintOrderServerErrorRequestWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler{
+    if ([self.url.absoluteString isEqualToString:[NSString stringWithFormat:@"%@/%@/print", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]]){
+        handler(kOLKiteSDKErrorCodeServerFault, @{}, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey : @"🎃"}]);
+    }
+    else{
+        [self mockPrintOrderServerErrorRequestWithCompletionHandler:handler];
+    }
+}
+
 @end

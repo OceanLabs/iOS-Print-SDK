@@ -27,5 +27,7 @@
 + (void)undoMockCostServerErrorRequest;
 + (void)mockPrintOrderRequest;
 + (void)undoMockPrintOrderCostRequest;
++ (void)mockPrintOrderServerErrorRequest;
++ (void)undoMockPrintOrderCostServerErrorRequest;
 
 @end
