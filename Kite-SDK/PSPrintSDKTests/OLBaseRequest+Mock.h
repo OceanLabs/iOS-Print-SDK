@@ -16,4 +16,5 @@
 - (void)mockPrintOrderRequestWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler;
 - (void)mockPrintOrderServerErrorRequestWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler;
 - (void)mockPrintOrderValidationServerErrorRequestWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler;
+- (void)mockPrintOrderValidationRejectedErrorRequestWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler;
 @end

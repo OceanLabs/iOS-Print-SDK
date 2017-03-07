@@ -288,7 +288,7 @@
         [vc onButtonPayClicked:nil];
     }];
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:3 action:^{
         [vc.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
     }];
     
@@ -989,7 +989,7 @@
         //Just wait for the video to load
     }];
     
-    
+    [OLKiteTestHelper undoMockTemplateRequest];
 }
 
 - (void)testBasket{
@@ -1121,7 +1121,7 @@
     
     XCTAssert([vc.presentedViewController isKindOfClass:[UIAlertController class]], @"Did not show alert");
     
-    [OLKiteTestHelper undoMockTemplateRequest];
+    [OLKiteTestHelper undoMockTemplateServerErrorRequest];
 }
 
 - (void)testFailedCostRequest{
@@ -1164,6 +1164,22 @@
     }];
     
     [OLKiteTestHelper undoMockPrintOrderValidationServerErrorRequest];
+}
+
+- (void)testRejectedPrintOrderValidationRequest{
+    [OLKiteTestHelper mockPrintOrderValidationRejectedErrorRequest];
+    
+    OLPaymentViewController *paymentVc = [self launchKiteToBasket];
+    
+    [self performUIAction:^{
+        [paymentVc submitOrderForPrintingWithProofOfPayment:@"PAUTH-🤑" paymentMethod:@"😉" completion:^(NSInteger i){}];
+    }];
+    
+    [self performUIAction:^{
+        NSLog(@"Done");
+    }];
+    
+    [OLKiteTestHelper undoMockPrintOrderValidationRejectedErrorRequest];
 }
 
 #pragma mark Helper

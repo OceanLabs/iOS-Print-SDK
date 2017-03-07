@@ -31,5 +31,7 @@
 + (void)undoMockPrintOrderServerErrorRequest;
 + (void)mockPrintOrderValidationServerErrorRequest;
 + (void)undoMockPrintOrderValidationServerErrorRequest;
++ (void)mockPrintOrderValidationRejectedErrorRequest;
++ (void)undoMockPrintOrderValidationRejectedErrorRequest;
 
 @end
