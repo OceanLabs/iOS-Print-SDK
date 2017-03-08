@@ -19,14 +19,14 @@ test:
   post:
     - bash <(curl -s https://codecov.io/bash)
 
-deployment:
-  beta_distribution:
-    branch: beta
-    commands:
-      - gym --use_legacy_build_api -w Kite-SDK/KitePrintSDK.xcworkspace -s Kite-CI-Deploy
-      - ipa distribute:crashlytics
-          --crashlytics_path Kite-SDK/Crashlytics.framework
-          --api_token    "$CRASHLYTICS_API_KEY"
-          --build_secret "$CRASHLYTICS_SECRET"
-          --groups "kite-testers"
-          --notifications YES
+# deployment:
+#   beta_distribution:
+#     branch: beta
+#     commands:
+#       - gym --use_legacy_build_api -w Kite-SDK/KitePrintSDK.xcworkspace -s Kite-CI-Deploy
+#       - ipa distribute:crashlytics
+#           --crashlytics_path Kite-SDK/Crashlytics.framework
+#           --api_token    "$CRASHLYTICS_API_KEY"
+#           --build_secret "$CRASHLYTICS_SECRET"
+#           --groups "kite-testers"
+#           --notifications YES
