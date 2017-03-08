@@ -475,13 +475,9 @@
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            if ([existingJob extraCopies] > 0){
-                [existingJob setExtraCopies:[existingJob extraCopies]-1];
-            }
-            else{
-                [printOrder removePrintJob:existingJob];
-            }
+            job.extraCopies = existingJob.extraCopies;
             job.uuid = self.product.uuid;
+            [printOrder removePrintJob:existingJob];
         }
     }
     self.product.uuid = job.uuid;
