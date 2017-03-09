@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-@import UIKit;
+#import <UIKit/UIKit.h>
 
 @class OLProductTemplateOption;
 

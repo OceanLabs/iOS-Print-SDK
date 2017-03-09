@@ -28,7 +28,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@import Photos;
+#import <Photos/Photos.h>
 #import "OLAsset.h"
 
 @interface OLImagePickerProviderCollection : NSObject <NSFastEnumeration, NSCopying>

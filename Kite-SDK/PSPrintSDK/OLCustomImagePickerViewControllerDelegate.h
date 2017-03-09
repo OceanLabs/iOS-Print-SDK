@@ -28,7 +28,7 @@
 //
 
 @class OLAsset;
-@import UIKit;
+#import <UIKit/UIKit.h>
 
 /**
  *
