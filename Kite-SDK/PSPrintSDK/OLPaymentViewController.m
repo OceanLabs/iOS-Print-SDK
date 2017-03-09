@@ -1498,7 +1498,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         
         CGFloat rowHeight = [self tableView:self.tableView heightForRowAtIndexPath:indexPath];
         
-        [imageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:CGSizeMake(rowHeight, rowHeight) applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
+        [imageView setAndFadeInImageWithOLAsset:[product coverPhotoAsset] size:CGSizeMake(rowHeight, rowHeight) applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
         
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
         

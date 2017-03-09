@@ -54,10 +54,6 @@
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
-@interface OLProduct (Private)
--(OLAsset *)classImageAsset;
-@end
-
 @interface OLKiteViewController (Private)
 
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;

@@ -139,42 +139,28 @@ typedef enum {
     return [[OLProduct alloc] initWithTemplate:[OLProductTemplate templateWithId:templateId]];
 }
 
--(void)setCoverImageToImageView:(UIImageView *)imageView size:(CGSize)size{
-    UIImage *image;
-    if ([self.coverPhoto isKindOfClass:[NSString class]]){
-        image = [UIImage imageNamedInKiteBundle:self.coverPhoto];
+-(OLAsset *)coverPhotoAsset{
+    if ([_coverPhoto isKindOfClass:[NSString class]]){
+        return [OLAsset assetWithImageAsPNG:[UIImage imageNamedInKiteBundle:_coverPhoto]];
     }
-    else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
-        image = self.coverPhoto;
+    else if ([_coverPhoto isKindOfClass:[UIImage class]]){
+        return [OLAsset assetWithImageAsPNG:_coverPhoto];
     }
-    
-    if (image){
-        imageView.image = image;
-    }
-    else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
-        [imageView setAndFadeInImageWithURL:self.coverPhoto];
+    else if ([_coverPhoto isKindOfClass:[NSURL class]]){
+        return [OLAsset assetWithURL:_coverPhoto];
     }
     else{
-        [imageView setAndFadeInImageWithURL:self.productTemplate.coverPhotoURL size:size];
+        return [OLAsset assetWithURL:self.productTemplate.coverPhotoURL];
     }
 }
 
 -(OLAsset *)classImageAsset{
-        if ([self.coverPhoto isKindOfClass:[NSString class]]){
-            return [OLAsset assetWithImageAsPNG:[UIImage imageNamedInKiteBundle:self.coverPhoto]];
-        }
-        else if ([self.coverPhoto isKindOfClass:[UIImage class]]){
-            return [OLAsset assetWithImageAsPNG:self.coverPhoto];
-        }
-        else if ([self.coverPhoto isKindOfClass:[NSURL class]]){
-            return [OLAsset assetWithURL:self.coverPhoto];
-        }
-        else if (self.productTemplate.classPhotoURL && ![[self.productTemplate.classPhotoURL absoluteString] isEqualToString:@""]){
-            return [OLAsset assetWithURL:self.productTemplate.classPhotoURL];
-        }
-        else{
-            return [OLAsset assetWithURL:self.productTemplate.coverPhotoURL];
-        }
+    if (self.productTemplate.classPhotoURL && ![[self.productTemplate.classPhotoURL absoluteString] isEqualToString:@""]){
+        return [OLAsset assetWithURL:self.productTemplate.classPhotoURL];
+    }
+    else{
+        return self.coverPhotoAsset;
+    }
 }
 
 -(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView{

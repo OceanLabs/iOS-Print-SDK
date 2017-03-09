@@ -44,10 +44,6 @@
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
-@interface OLProduct (Private)
--(OLAsset *)classImageAsset;
-@end
-
 @interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
 
 @property (strong, nonatomic) NSMutableArray *products;
@@ -316,7 +312,7 @@
     OLProduct *product = (OLProduct *)self.products[indexPath.item];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:40];
-    [imageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
+    [imageView setAndFadeInImageWithOLAsset:[product coverPhotoAsset] size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
     
     UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
