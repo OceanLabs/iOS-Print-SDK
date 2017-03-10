@@ -112,7 +112,7 @@ static char tasksKey;
 
 - (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
     for (id key in self.tasks.allKeys){
-        if (![key isEqual:asset.uuid]){
+        if (![asset isKindOfClass:[OLAsset class]] || ![key isEqual:asset.uuid]){
             [self.tasks removeObjectForKey:key];
         }
     }

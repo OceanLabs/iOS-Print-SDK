@@ -114,6 +114,10 @@ static OLPaymentMethod selectedPaymentMethod;
 @property (assign, nonatomic) BOOL corrupt;
 @end
 
+@interface OLPackProductViewController ()
+-(BOOL) shouldGoToCheckout;
+@end
+
 @interface OLCheckoutViewController (Private)
 + (BOOL)validateEmail:(NSString *)candidate;
 - (void)onButtonDoneClicked;
@@ -897,6 +901,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
     
     OLPackProductViewController *editingVc = nvc.viewControllers.lastObject;
+    if ([editingVc respondsToSelector:@selector(shouldGoToCheckout)]){
+        if (![editingVc shouldGoToCheckout]){
+            return;
+        }
+    }
     if ([editingVc respondsToSelector:@selector(saveJobWithCompletionHandler:)]){
         [editingVc saveJobWithCompletionHandler:^{
             [self.tableView reloadData];
