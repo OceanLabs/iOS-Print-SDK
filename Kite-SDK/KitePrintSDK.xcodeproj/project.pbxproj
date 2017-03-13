@@ -24,6 +24,7 @@
 			buildPhases = (
 				2EDB7BD21E76D07A009B30F0 /* CopyFiles */,
 				2EDB7BDE1E76D4A0009B30F0 /* CopyFiles */,
+				2EDB7BF51E76E476009B30F0 /* ShellScript */,
 			);
 			dependencies = (
 				2EDB7BDC1E76D48C009B30F0 /* PBXTargetDependency */,
@@ -2432,6 +2433,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "./update-localization-files.sh";
+		};
+		2EDB7BF51E76E476009B30F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp ${PROJECT_DIR}/docs/unity.md ${PROJECT_DIR}/Unity-Plugin/README.md";
 		};
 		4725309EF80D2315EB50E573 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
