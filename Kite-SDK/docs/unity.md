@@ -2,7 +2,7 @@
 
 ## Installation & Usage
 
- - Download Kite SDK from the Unity Asset Store
+ - Download Kite SDK from the [Unity Asset Store](https://www.assetstore.unity3d.com/#!/content/85396)
  - When you want to show the Kite Shop, call this method from your C# code:
  ```cs
  KiteSDK.PresentKiteShop("YOUR KITE API KEY", KiteSDK.KiteEnvironment.Live);
