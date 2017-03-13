@@ -862,6 +862,26 @@
 		2EDB7BD41E76D149009B30F0 /* KiteSDK.cs */ = {isa = PBXFileReference; lastKnownFileType = text; name = KiteSDK.cs; path = Assets/Plugins/iOS/KiteSDK/KiteSDK.cs; sourceTree = "<group>"; };
 		2EDB7BD51E76D149009B30F0 /* KiteSDKLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = KiteSDKLoader.m; path = Assets/Plugins/iOS/KiteSDK/KiteSDKLoader.m; sourceTree = "<group>"; };
 		2EDB7BD61E76D149009B30F0 /* KiteSDKLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KiteSDKLoader.h; path = Assets/Plugins/iOS/KiteSDK/KiteSDKLoader.h; sourceTree = "<group>"; };
+		2EDB7BE11E76E3A6009B30F0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+		2EDB7BE21E76E3C1009B30F0 /* appledoc-intro.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = "appledoc-intro.md"; path = "docs/appledoc-intro.md"; sourceTree = SOURCE_ROOT; };
+		2EDB7BE31E76E3C1009B30F0 /* applepay.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = applepay.md; path = docs/applepay.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BE41E76E3C1009B30F0 /* create_print_order.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = create_print_order.md; path = docs/create_print_order.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BE51E76E3C1009B30F0 /* custom_photo_sources.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = custom_photo_sources.md; path = docs/custom_photo_sources.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BE61E76E3C1009B30F0 /* entry_points.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = entry_points.md; path = docs/entry_points.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BE71E76E3C1009B30F0 /* hp_sdk.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = hp_sdk.md; path = docs/hp_sdk.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BE81E76E3C1009B30F0 /* localization.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = localization.md; path = docs/localization.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BE91E76E3C1009B30F0 /* migration.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = migration.md; path = docs/migration.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BEA1E76E3C1009B30F0 /* OLKitePrintSDK.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = OLKitePrintSDK.md; path = docs/OLKitePrintSDK.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BEB1E76E3C1009B30F0 /* order_history.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = order_history.md; path = docs/order_history.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BEC1E76E3C1009B30F0 /* payment.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = payment.md; path = docs/payment.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BED1E76E3C1009B30F0 /* print_shop.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = print_shop.md; path = docs/print_shop.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BEE1E76E3C1009B30F0 /* promo_view.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = promo_view.md; path = docs/promo_view.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BEF1E76E3C1009B30F0 /* push_notifications.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = push_notifications.md; path = docs/push_notifications.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BF01E76E3C1009B30F0 /* shipping.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = shipping.md; path = docs/shipping.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BF11E76E3C1009B30F0 /* social_photo_sources.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = social_photo_sources.md; path = docs/social_photo_sources.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BF21E76E3C1009B30F0 /* submodules.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = submodules.md; path = docs/submodules.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BF31E76E3C1009B30F0 /* unity.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = unity.md; path = docs/unity.md; sourceTree = SOURCE_ROOT; };
+		2EDB7BF41E76E42E009B30F0 /* Kite-Print-SDK.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = "Kite-Print-SDK.podspec"; path = "../Kite-Print-SDK.podspec"; sourceTree = "<group>"; };
 		2EDBFAAF1BC698F2007BDB83 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
 		2EE054291E31084200417DA4 /* templates.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = templates.json; sourceTree = "<group>"; };
 		2EE0542C1E3201F400417DA4 /* OLSwizzler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSwizzler.h; sourceTree = "<group>"; };
@@ -1078,6 +1098,7 @@
 		01A3969341E0D10D83284FD0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				2EDB7BF41E76E42E009B30F0 /* Kite-Print-SDK.podspec */,
 				8B41929BCC906276818C848C /* Pods-Kite-CI-Deploy.debug.xcconfig */,
 				48EA1821F95A31ABAF57DA36 /* Pods-Kite-CI-Deploy.release.xcconfig */,
 				321E56D8BE2D006816AACDED /* Pods-KiteSDK-Demo.debug.xcconfig */,
@@ -1581,6 +1602,32 @@
 			name = "Unity Plugin";
 			sourceTree = "<group>";
 		};
+		2EDB7BE01E76E33B009B30F0 /* Docs */ = {
+			isa = PBXGroup;
+			children = (
+				2EDB7BE11E76E3A6009B30F0 /* README.md */,
+				2EDB7BE21E76E3C1009B30F0 /* appledoc-intro.md */,
+				2EDB7BE31E76E3C1009B30F0 /* applepay.md */,
+				2EDB7BE41E76E3C1009B30F0 /* create_print_order.md */,
+				2EDB7BE51E76E3C1009B30F0 /* custom_photo_sources.md */,
+				2EDB7BE61E76E3C1009B30F0 /* entry_points.md */,
+				2EDB7BE71E76E3C1009B30F0 /* hp_sdk.md */,
+				2EDB7BE81E76E3C1009B30F0 /* localization.md */,
+				2EDB7BE91E76E3C1009B30F0 /* migration.md */,
+				2EDB7BEA1E76E3C1009B30F0 /* OLKitePrintSDK.md */,
+				2EDB7BEB1E76E3C1009B30F0 /* order_history.md */,
+				2EDB7BEC1E76E3C1009B30F0 /* payment.md */,
+				2EDB7BED1E76E3C1009B30F0 /* print_shop.md */,
+				2EDB7BEE1E76E3C1009B30F0 /* promo_view.md */,
+				2EDB7BEF1E76E3C1009B30F0 /* push_notifications.md */,
+				2EDB7BF01E76E3C1009B30F0 /* shipping.md */,
+				2EDB7BF11E76E3C1009B30F0 /* social_photo_sources.md */,
+				2EDB7BF21E76E3C1009B30F0 /* submodules.md */,
+				2EDB7BF31E76E3C1009B30F0 /* unity.md */,
+			);
+			name = Docs;
+			sourceTree = "<group>";
+		};
 		2EFDD4211E3781E6001B4E83 /* UI Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1908,6 +1955,7 @@
 		E29C862E1BE3C4640041D4CF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2EDB7BE01E76E33B009B30F0 /* Docs */,
 				2E582DA41E714FDA00A6DF4E /* mug.scn */,
 				2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */,
 				2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */,
@@ -3406,6 +3454,7 @@
 				2EDB7BCE1E76D05D009B30F0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CD73BF63186215790009DE03 /* Build configuration list for PBXProject "KitePrintSDK" */ = {
 			isa = XCConfigurationList;
