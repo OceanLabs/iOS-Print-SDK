@@ -23,7 +23,6 @@
 			buildConfigurationList = 2EDB7BCF1E76D05D009B30F0 /* Build configuration list for PBXAggregateTarget "Unity-Plugin" */;
 			buildPhases = (
 				2EDB7BD21E76D07A009B30F0 /* CopyFiles */,
-				2EDB7BDE1E76D4A0009B30F0 /* CopyFiles */,
 				2EDB7BF51E76E476009B30F0 /* ShellScript */,
 			);
 			dependencies = (
@@ -455,7 +454,7 @@
 		2EDB7BD71E76D153009B30F0 /* KiteSDK.cs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EDB7BD41E76D149009B30F0 /* KiteSDK.cs */; };
 		2EDB7BD81E76D155009B30F0 /* KiteSDKLoader.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EDB7BD51E76D149009B30F0 /* KiteSDKLoader.m */; };
 		2EDB7BD91E76D157009B30F0 /* KiteSDKLoader.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EDB7BD61E76D149009B30F0 /* KiteSDKLoader.h */; };
-		2EDB7BDF1E76D51D009B30F0 /* KiteSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; };
+		2EDB7BF61E76E918009B30F0 /* KiteSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
 		2EE0542A1E31084200417DA4 /* templates.json in Resources */ = {isa = PBXBuildFile; fileRef = 2EE054291E31084200417DA4 /* templates.json */; };
 		2EE0542E1E3201F400417DA4 /* OLSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE0542D1E3201F400417DA4 /* OLSwizzler.m */; };
@@ -541,16 +540,7 @@
 				2EDB7BD71E76D153009B30F0 /* KiteSDK.cs in CopyFiles */,
 				2EDB7BD81E76D155009B30F0 /* KiteSDKLoader.m in CopyFiles */,
 				2EDB7BD91E76D157009B30F0 /* KiteSDKLoader.h in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2EDB7BDE1E76D4A0009B30F0 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = "${PROJECT_DIR}/Unity-Plugin";
-			dstSubfolderSpec = 0;
-			files = (
-				2EDB7BDF1E76D51D009B30F0 /* KiteSDK.framework in CopyFiles */,
+				2EDB7BF61E76E918009B30F0 /* KiteSDK.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2445,7 +2435,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp ${PROJECT_DIR}/docs/unity.md ${PROJECT_DIR}/Unity-Plugin/README.md";
+			shellScript = "cp ${PROJECT_DIR}/docs/unity.md ${PROJECT_DIR}/Unity-Plugin/Assets/Plugins/iOS/KiteSDK/README.md";
 		};
 		4725309EF80D2315EB50E573 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
