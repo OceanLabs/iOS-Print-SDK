@@ -361,7 +361,7 @@
     
 }
 
-- (void)DISABLED_testCompleteMugJourney{
+- (void)testCompleteMugJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     [self chooseClass:@"Mugs" onOLProductHomeViewController:productHomeVc];
     
