@@ -71,13 +71,6 @@ static CGFloat fadeTime = 0.3;
 
 @end
 
-@interface OLKitePrintSDK (Private)
-
-+ (void)setCacheTemplates:(BOOL)cache;
-+ (BOOL)cacheTemplates;
-
-@end
-
 @protocol OLCustomPickerController;
 
 @implementation OLKiteViewController
@@ -227,10 +220,7 @@ static CGFloat fadeTime = 0.3;
         [self.operationQueue addOperation:loadingHandlerOperation];
     }
     
-    if (![OLKitePrintSDK cacheTemplates]) {
-        [OLProductTemplate deleteCachedTemplates];
-        [OLProductTemplate resetTemplates];
-    }
+    [OLProductTemplate resetTemplates];
     
     if ([OLProductTemplate templates].count > 0){
         fadeTime = 0;

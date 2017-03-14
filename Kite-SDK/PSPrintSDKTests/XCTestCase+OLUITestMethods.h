@@ -90,7 +90,6 @@
 @interface OLKitePrintSDK ()
 + (BOOL)setUseStripeForCreditCards:(BOOL)use;
 + (void)setUseStaging:(BOOL)staging;
-+ (void)setCacheTemplates:(BOOL)cache;
 @end
 
 @interface OLProductTypeSelectionViewController (Private)

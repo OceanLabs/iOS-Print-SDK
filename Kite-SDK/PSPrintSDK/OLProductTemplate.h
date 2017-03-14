@@ -120,6 +120,5 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 + (NSArray *_Nullable)templates;
 + (NSDate *_Nullable)lastSyncDate;
 + (void) resetTemplates;
-+ (void) deleteCachedTemplates;
 
 @end

@@ -18,8 +18,6 @@
 @end
 
 @interface OLKitePrintSDK (Private)
-+ (void)setCacheTemplates:(BOOL)cache;
-+ (BOOL)cacheTemplates;
 + (NSString *_Nonnull)paypalEnvironment;
 + (NSString *_Nonnull)paypalClientId;
 + (NSString *_Nonnull)stripePublishableKey;
@@ -136,9 +134,6 @@
     }];
     
     [self waitForExpectationsWithTimeout:120 handler:nil];
-    
-    [OLKitePrintSDK setCacheTemplates:NO];
-    XCTAssert(![OLKitePrintSDK cacheTemplates], @"Cache templates fail");
     
     [OLKitePrintSDK setApplePayMerchantID:@"merchant"];
     XCTAssert([[OLKitePrintSDK appleMerchantID] isEqualToString:@"merchant"], @"Merchant fail");
