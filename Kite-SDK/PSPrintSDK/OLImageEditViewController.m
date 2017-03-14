@@ -1760,7 +1760,7 @@ const NSInteger kOLEditTagCrop = 40;
 #endif
         }
     }
-    else if ((collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3) && !self.selectedOption.choices[indexPath.item].productBackground){
+    else if ((collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3) && self.product.productTemplate.templateUI != OLTemplateUIApparel){
         self.printContainerView.backgroundColor = self.availableColors[indexPath.item];
         self.edits.borderColor = self.availableColors[indexPath.item];
         self.ctaButton.enabled = YES;

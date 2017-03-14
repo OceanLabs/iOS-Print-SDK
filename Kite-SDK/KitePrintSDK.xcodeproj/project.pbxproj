@@ -438,6 +438,8 @@
 		2ED2B7B41DB8B4D90036B536 /* OLHPSDKWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2ED2B7B21DB8B4D90036B536 /* OLHPSDKWrapper.h */; };
 		2ED2B7B51DB8B4D90036B536 /* OLHPSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED2B7B31DB8B4D90036B536 /* OLHPSDKWrapper.m */; };
 		2ED42EC11D9D79E3003B9AD0 /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC41D2FC109002F5F74 /* bitstream.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2EDB7BF91E783689009B30F0 /* OLAutolayoutHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EDB7BF71E783689009B30F0 /* OLAutolayoutHelper.h */; };
+		2EDB7BFA1E783689009B30F0 /* OLAutolayoutHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EDB7BF81E783689009B30F0 /* OLAutolayoutHelper.m */; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
 		2EE0542A1E31084200417DA4 /* templates.json in Resources */ = {isa = PBXBuildFile; fileRef = 2EE054291E31084200417DA4 /* templates.json */; };
 		2EE0542E1E3201F400417DA4 /* OLSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE0542D1E3201F400417DA4 /* OLSwizzler.m */; };
@@ -813,6 +815,8 @@
 		2ED3EBB91B996ED3005C1E9F /* OLRemoteImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLRemoteImageView.m; sourceTree = "<group>"; };
 		2ED5DEBD1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LXReorderableCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LXReorderableCollectionViewFlowLayout.m; sourceTree = "<group>"; };
+		2EDB7BF71E783689009B30F0 /* OLAutolayoutHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAutolayoutHelper.h; sourceTree = "<group>"; };
+		2EDB7BF81E783689009B30F0 /* OLAutolayoutHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAutolayoutHelper.m; sourceTree = "<group>"; };
 		2EDBFAAF1BC698F2007BDB83 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
 		2EE054291E31084200417DA4 /* templates.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = templates.json; sourceTree = "<group>"; };
 		2EE0542C1E3201F400417DA4 /* OLSwizzler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSwizzler.h; sourceTree = "<group>"; };
@@ -1557,6 +1561,8 @@
 		3DE2B0C01A77D2290092D97F /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				2EDB7BF71E783689009B30F0 /* OLAutolayoutHelper.h */,
+				2EDB7BF81E783689009B30F0 /* OLAutolayoutHelper.m */,
 				CD73BFAF18634ED50009DE03 /* OLConstants.h */,
 				CD73BFB018634ED50009DE03 /* OLConstants.m */,
 				2E0E250D1A77997E00808ED8 /* OLAnalytics.h */,
@@ -1922,6 +1928,7 @@
 				2EB8FE6A1D95685100E26BDF /* OLKiteViewController.h in Headers */,
 				2EB8FE2E1D95685100E26BDF /* OLOAuth2Request.h in Headers */,
 				2EB8FE3B1D95685100E26BDF /* OLProductHomeViewController.h in Headers */,
+				2EDB7BF91E783689009B30F0 /* OLAutolayoutHelper.h in Headers */,
 				2EB8FDEE1D95685100E26BDF /* OLPostcardPrintJob.h in Headers */,
 				2EB8FE171D95685100E26BDF /* OLTransitionEnumerations.h in Headers */,
 				2EB8FE281D95685100E26BDF /* OLOAuth2Connection.h in Headers */,
@@ -2429,6 +2436,7 @@
 				2E451E4B1D9555D30080F1C1 /* OLPhotobookPageContentViewController.m in Sources */,
 				2E451E1C1D9555870080F1C1 /* NSData+OLOAuth2.m in Sources */,
 				2E451DED1D95555C0080F1C1 /* OLApparelPrintJob.m in Sources */,
+				2EDB7BFA1E783689009B30F0 /* OLAutolayoutHelper.m in Sources */,
 				2E451E3B1D9555870080F1C1 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */,
 				2E451DFF1D9555620080F1C1 /* OLKiteTheme.m in Sources */,
 				2E451DFE1D9555620080F1C1 /* OLKiteABTesting.m in Sources */,

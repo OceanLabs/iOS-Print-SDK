@@ -41,6 +41,7 @@
 #import "NSDecimalNumber+CostFormatter.h"
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
+#import "OLAutolayoutHelper.h"
 
 @interface OLProduct ()
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
@@ -100,6 +101,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *productFlipButton;
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
+@property (strong, nonatomic) UIView *backgroundColorView;
 @end
 
 @implementation OLCaseViewController
@@ -125,6 +127,12 @@
     
     if (self.product.productTemplate.fulfilmentItems.count < 2){
         [self.productFlipButton removeFromSuperview];
+    }
+    
+    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+        self.backgroundColorView = [[UIView alloc] init];
+        [self.printContainerView insertSubview:self.backgroundColorView aboveSubview:self.deviceView];
+        [OLAutolayoutHelper fillSuperView:self.backgroundColorView];
     }
     
     [super viewDidLoad];
@@ -561,15 +569,10 @@
 
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
     self.renderedImageView.image = nil;
-    if (choice.productBackground){
-        self.cropView.hidden = YES;
-        [self.maskActivityIndicator.superview bringSubviewToFront:self.maskActivityIndicator];
-        [self.maskActivityIndicator startAnimating];
-        [self.deviceView setAndFadeInImageWithURL:choice.productBackground size:[UIScreen mainScreen].bounds.size placeholder:nil progress:NULL completionHandler:^{
-            self.cropView.hidden = NO;
-            [self.maskActivityIndicator stopAnimating];
-            [self renderImage];
-        }];
+    if (choice.color){
+        self.cropView.hidden = NO;
+        self.backgroundColorView.backgroundColor = choice.color;
+        [self renderImage];
     }
     else{
         [self renderImage];

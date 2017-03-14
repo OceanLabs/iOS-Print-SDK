@@ -27,12 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-//! Project version number for KiteSDK.
-FOUNDATION_EXPORT double KiteVersionNumber;
-
-//! Project version string for KiteSDK.
-FOUNDATION_EXPORT const unsigned char KiteVersionString[];
-
-#import <KiteSDK/OLKitePrintSDK.h>
+@interface OLAutolayoutHelper : NSObject
++ (void)fillSuperView:(UIView *)view;
+@end
