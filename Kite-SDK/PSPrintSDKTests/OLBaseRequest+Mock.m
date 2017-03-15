@@ -23,7 +23,7 @@
 @implementation OLBaseRequest (Mock)
 
 - (void)mockTemplateStartWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler{
-    if (![self.url.absoluteString isEqualToString:[NSString stringWithFormat:@"%@/%@/template/?limit=100", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]]){
+    if (![self.url.absoluteString hasPrefix:[NSString stringWithFormat:@"%@/%@/template/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]]){
         [self mockTemplateStartWithCompletionHandler:handler];
         return;
     }
@@ -33,7 +33,7 @@
 }
 
 - (void)mockTemplateServerErrorWithCompletionHandler:(void(^)(NSInteger httpStatusCode, id json, NSError *error))handler{
-    if (![self.url.absoluteString isEqualToString:[NSString stringWithFormat:@"%@/%@/template/?limit=100", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]]){
+    if (![self.url.absoluteString hasPrefix:[NSString stringWithFormat:@"%@/%@/template/", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]]){
         [self mockTemplateServerErrorWithCompletionHandler:handler];
         return;
     }

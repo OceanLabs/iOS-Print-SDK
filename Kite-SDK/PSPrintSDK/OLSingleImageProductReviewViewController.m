@@ -145,6 +145,17 @@
                                                                             target:nil
                                                                             action:nil];
     
+    self.hintView = [[[OLKiteUtils kiteResourcesBundle] loadNibNamed:@"OLHintView" owner:self options:nil] objectAtIndex:0];
+    self.hintView.alpha = 0;
+    self.hintView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.hintView];
+    
+    [self.hintView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.hintView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.hintView.superview attribute:NSLayoutAttributeLeading multiplier:1 constant:5]];
+    [self.hintView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.hintView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationLessThanOrEqual toItem:self.hintView.superview attribute:NSLayoutAttributeTrailing multiplier:1 constant:-5]];
+    [self.hintView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.hintView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.editingTools attribute:NSLayoutAttributeTop multiplier:1 constant:-15]];
+    [self.hintView setContentHuggingPriority:1000 forAxis:UILayoutConstraintAxisHorizontal];
+    [self.hintView setContentCompressionResistancePriority:1000 forAxis:UILayoutConstraintAxisHorizontal];
+    
     [self.hintView viewWithTag:10].transform = CGAffineTransformMakeRotation(M_PI_4);
     
     self.hintView.layer.masksToBounds = NO;
@@ -188,6 +199,18 @@
     }
     else{
         [self addBasketIconToTopRight];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    [self showHintViewIfNeeded];
+}
+
+- (void)showHintViewIfNeeded{
+    if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && self.hintView.alpha <= 0.1f) {
+        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:YES];
     }
 }
 

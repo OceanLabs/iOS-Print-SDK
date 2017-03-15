@@ -257,9 +257,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
-//#ifdef OL_KITE_VERBOSE
+#ifdef OL_KITE_VERBOSE
     NSLog(@"%@", info);
-//#endif
+#endif
     
     NSString *status = info[kOLAnalyticsEventName];
     if ([info[kOLAnalyticsEventLevel] integerValue] != 1){
@@ -346,7 +346,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
     
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[]];
     vc.userEmail = @"";
     vc.userPhone = @"";
     vc.delegate = self;

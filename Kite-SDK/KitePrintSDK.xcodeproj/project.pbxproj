@@ -440,6 +440,7 @@
 		2ED42EC11D9D79E3003B9AD0 /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC41D2FC109002F5F74 /* bitstream.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EDB7BF91E783689009B30F0 /* OLAutolayoutHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EDB7BF71E783689009B30F0 /* OLAutolayoutHelper.h */; };
 		2EDB7BFA1E783689009B30F0 /* OLAutolayoutHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EDB7BF81E783689009B30F0 /* OLAutolayoutHelper.m */; };
+		2EDB7BFC1E783BA7009B30F0 /* OLHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EDB7BFB1E783BA7009B30F0 /* OLHintView.xib */; };
 		2EDBFAB01BC698F2007BDB83 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2EDBFAAF1BC698F2007BDB83 /* 1.jpg */; };
 		2EE0542A1E31084200417DA4 /* templates.json in Resources */ = {isa = PBXBuildFile; fileRef = 2EE054291E31084200417DA4 /* templates.json */; };
 		2EE0542E1E3201F400417DA4 /* OLSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE0542D1E3201F400417DA4 /* OLSwizzler.m */; };
@@ -817,6 +818,7 @@
 		2ED5DEBE1AC948C1003301A8 /* LXReorderableCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LXReorderableCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		2EDB7BF71E783689009B30F0 /* OLAutolayoutHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAutolayoutHelper.h; sourceTree = "<group>"; };
 		2EDB7BF81E783689009B30F0 /* OLAutolayoutHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAutolayoutHelper.m; sourceTree = "<group>"; };
+		2EDB7BFB1E783BA7009B30F0 /* OLHintView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OLHintView.xib; sourceTree = "<group>"; };
 		2EDBFAAF1BC698F2007BDB83 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
 		2EE054291E31084200417DA4 /* templates.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = templates.json; sourceTree = "<group>"; };
 		2EE0542C1E3201F400417DA4 /* OLSwizzler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSwizzler.h; sourceTree = "<group>"; };
@@ -1860,6 +1862,7 @@
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
 				2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */,
 				2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */,
+				2EDB7BFB1E783BA7009B30F0 /* OLHintView.xib */,
 				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
 			);
 			name = Resources;
@@ -2211,6 +2214,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EDB7BFC1E783BA7009B30F0 /* OLHintView.xib in Resources */,
 				2EBDF4CE1E434A0B004775BD /* OLKiteLocalizationResources.bundle in Resources */,
 				2E451E931D9564140080F1C1 /* kite_corrupt.jpg in Resources */,
 				2E582DA51E714FDA00A6DF4E /* mug.scn in Resources */,
