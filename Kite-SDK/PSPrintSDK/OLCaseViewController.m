@@ -519,6 +519,8 @@
                 [self.view setNeedsLayout];
                 [self.view layoutIfNeeded];
                 
+                self.cropView.imageView.transform = self.edits.cropTransform;
+                
                 self.maskImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
                 [self maskWithImage:self.maskImage targetView:self.cropView];
                 

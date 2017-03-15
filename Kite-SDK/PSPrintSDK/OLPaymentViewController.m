@@ -1679,7 +1679,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [asset unloadImage];
         if (![addedAssetsUUIDs containsObject:asset.uuid]){
             [addedAssetsUUIDs addObject:asset.uuid];
-            [userSelectedPhotos addObject:asset];
+            [userSelectedPhotos addObject:[asset copy]];
         }
         
     }
