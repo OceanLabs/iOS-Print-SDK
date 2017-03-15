@@ -219,6 +219,7 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
     }
     
     val = 40 * val + [self.address hash];
+    val = 41 * val + [self.uuid hash];
     
     return val;
 }
