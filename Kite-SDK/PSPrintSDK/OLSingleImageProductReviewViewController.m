@@ -47,6 +47,8 @@
 #import "OLUpsellViewController.h"
 #import "OLUserSession.h"
 #import "UIViewController+OLMethods.h"
+#import "UIView+AutoLayoutHelper.h"
+#import "UIColor+OLHexString.h"
 
 @interface OLPaymentViewController (Private)
 -(void)saveAndDismissReviewController;
@@ -61,6 +63,7 @@
 - (void)orderViews;
 - (void)onButtonClicked:(UIButton *)sender;
 - (void)saveEditsToAsset:(OLAsset *)asset;
+@property (strong, nonatomic) UIView *printContainerView;
 @end
 
 @interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate, OLImageEditViewControllerDelegate>

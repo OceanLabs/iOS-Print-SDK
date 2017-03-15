@@ -64,7 +64,7 @@
 @property (assign, nonatomic) UIEdgeInsets borderInsets;
 @property (strong, nonatomic) OLAsset *asset;
 @property (weak, nonatomic) UIButton *ctaButton;
-@property (weak, nonatomic) IBOutlet OLEditingToolsView *editingTools;
+@property (strong, nonatomic) OLEditingToolsView *editingTools;
 @property (strong, nonatomic) OLProduct *product;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 

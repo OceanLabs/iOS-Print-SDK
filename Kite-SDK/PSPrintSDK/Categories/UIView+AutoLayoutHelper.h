@@ -31,4 +31,12 @@
 
 @interface UIView (AutoLayoutHelper)
 - (void)fillSuperView;
+- (void)leadingFromSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (void)trailingToSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (void)bottomToSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (void)topFromSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (void)verticalSpacingToView:(UIView *)view constant:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (void)horizontalSpacingToView:(UIView *)view constant:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (void)heightConstraint:(CGFloat)constant;
+- (void)widthConstraint:(CGFloat)constant;
 @end

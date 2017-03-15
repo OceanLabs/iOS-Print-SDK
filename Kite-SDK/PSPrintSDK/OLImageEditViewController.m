@@ -46,6 +46,8 @@
 #import "OLCustomPickerController.h"
 #import "OLTouchTolerantView.h"
 #import "OLAnalytics.h"
+#import "UIView+AutoLayoutHelper.h"
+#import "UIColor+OLHexString.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -232,6 +234,8 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self setupEditingToolsView];
+    
     if (self.navigationController){
         [self.navigationBar removeFromSuperview];
     }
@@ -379,6 +383,20 @@ const NSInteger kOLEditTagCrop = 40;
     [gestureView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.cropView action:@selector(pinchRecognized:)]];
     gestureView.userInteractionEnabled = NO;
 
+}
+
+- (void)setupEditingToolsView{
+    self.editingTools = [[OLEditingToolsView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:self.editingTools];
+    
+    [self.editingTools leadingFromSuperview:0 relation:NSLayoutRelationEqual];
+    [self.editingTools trailingToSuperview:0 relation:NSLayoutRelationEqual];
+    [self.editingTools bottomToSuperview:0 relation:NSLayoutRelationEqual];
+    [self.editingTools heightConstraint:45];
+    
+    [self.printContainerView verticalSpacingToView:self.editingTools constant:20 relation:NSLayoutRelationGreaterThanOrEqual];
+    
+    self.editingTools.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
 }
 
 - (void)setupProductRepresentation{

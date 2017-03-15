@@ -32,6 +32,8 @@
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
 #import "OLInfoBanner.h"
+#import "UIView+AutoLayoutHelper.h"
+#import "UIColor+OLHexString.h"
 
 @import SceneKit;
 

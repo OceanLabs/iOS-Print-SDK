@@ -417,30 +417,20 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OUY-aN-rJm" customClass="OLEditingToolsView">
-                                <rect key="frame" x="0.0" y="622" width="375" height="45"/>
-                                <color key="backgroundColor" red="0.89411764705882346" green="0.89411764705882346" blue="0.89411764705882346" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="Ibq-f9-cqr"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.22745098039215686" green="0.22745098039215686" blue="0.22745098039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="dhm-If-ZBZ" secondAttribute="bottom" constant="244.5" placeholder="YES" id="2Bp-mc-kwa"/>
                             <constraint firstItem="uNG-6s-nO8" firstAttribute="top" secondItem="dhm-If-ZBZ" secondAttribute="bottom" constant="155" id="AEy-w7-AMa"/>
                             <constraint firstItem="UnN-26-ErI" firstAttribute="leading" secondItem="onG-Z7-5X1" secondAttribute="leading" id="EYt-zk-s49"/>
                             <constraint firstItem="dhm-If-ZBZ" firstAttribute="leading" secondItem="onG-Z7-5X1" secondAttribute="leading" priority="750" constant="10" id="Gmo-kA-bJC"/>
                             <constraint firstItem="dhm-If-ZBZ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="UnN-26-ErI" secondAttribute="bottom" constant="10" id="HBC-7G-iNR"/>
                             <constraint firstItem="dhm-If-ZBZ" firstAttribute="centerY" secondItem="onG-Z7-5X1" secondAttribute="centerY" id="NK4-t1-22R"/>
-                            <constraint firstItem="OUY-aN-rJm" firstAttribute="top" relation="greaterThanOrEqual" secondItem="dhm-If-ZBZ" secondAttribute="bottom" constant="10" id="Q5Q-fu-dc8"/>
                             <constraint firstItem="dhm-If-ZBZ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="onG-Z7-5X1" secondAttribute="leading" constant="10" id="S4E-iW-fcD"/>
                             <constraint firstAttribute="trailing" secondItem="dhm-If-ZBZ" secondAttribute="trailing" priority="750" constant="10" id="Wrb-pT-i8h"/>
                             <constraint firstItem="dhm-If-ZBZ" firstAttribute="centerX" secondItem="onG-Z7-5X1" secondAttribute="centerX" id="Yua-iJ-7uH"/>
                             <constraint firstItem="UnN-26-ErI" firstAttribute="top" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" constant="-20" id="eQx-5U-8zb"/>
                             <constraint firstAttribute="trailing" secondItem="UnN-26-ErI" secondAttribute="trailing" id="eZc-Fv-OxM"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="OUY-aN-rJm" secondAttribute="bottom" id="hoC-oV-ITz"/>
-                            <constraint firstItem="OUY-aN-rJm" firstAttribute="leading" secondItem="onG-Z7-5X1" secondAttribute="leading" id="idT-b8-MP1"/>
-                            <constraint firstAttribute="trailing" secondItem="OUY-aN-rJm" secondAttribute="trailing" id="kfm-dx-esl"/>
                             <constraint firstItem="dhm-If-ZBZ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="hcp-Sa-ZAv" secondAttribute="bottom" constant="10" id="pfb-GZ-ZYC"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="dhm-If-ZBZ" secondAttribute="trailing" constant="10" id="rER-IP-UJw"/>
                         </constraints>
@@ -459,10 +449,8 @@
                         <outlet property="cropViewRightCon" destination="8A6-cc-Hjv" id="7Cf-yc-FbV"/>
                         <outlet property="cropViewTopCon" destination="4cV-7x-HBI" id="ust-z0-nh5"/>
                         <outlet property="customNavigationItem" destination="R8i-4O-CVl" id="cjH-Ko-VjF"/>
-                        <outlet property="editingTools" destination="OUY-aN-rJm" id="PpN-0V-7Ub"/>
                         <outlet property="navigationBar" destination="UnN-26-ErI" id="HEv-KT-eWW"/>
                         <outlet property="printContainerView" destination="dhm-If-ZBZ" id="271-aT-k0Q"/>
-                        <outletCollection property="allViews" destination="OUY-aN-rJm" id="t8I-9A-T6U"/>
                         <outletCollection property="allViews" destination="dhm-If-ZBZ" id="Isy-Lb-Scj"/>
                         <outletCollection property="allViews" destination="nok-mW-saD" id="hDJ-K2-Sde"/>
                     </connections>
@@ -1923,13 +1911,6 @@
                                     <constraint firstAttribute="trailing" secondItem="ulu-rb-y7r" secondAttribute="trailing" id="uio-4v-c6W"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QM0-Ve-Vzs" customClass="OLEditingToolsView">
-                                <rect key="frame" x="0.0" y="622" width="375" height="45"/>
-                                <color key="backgroundColor" red="0.89411764709999997" green="0.89411764709999997" blue="0.89411764709999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="rcB-6U-gch"/>
-                                </constraints>
-                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zSi-VT-4hb">
                                 <rect key="frame" x="15" y="79" width="35" height="35"/>
                                 <state key="normal" image="flip-black"/>
@@ -1942,8 +1923,8 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nF0-F4-GDd" secondAttribute="trailing" constant="20" id="5nb-zZ-1qv"/>
+                            <constraint firstItem="Mvu-z2-gQf" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="bottom" constant="93" placeholder="YES" id="9eA-51-4xP"/>
                             <constraint firstAttribute="centerY" secondItem="nF0-F4-GDd" secondAttribute="centerY" id="9iD-gI-xqw"/>
-                            <constraint firstItem="QM0-Ve-Vzs" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" id="Aha-9J-sho"/>
                             <constraint firstAttribute="centerX" secondItem="nF0-F4-GDd" secondAttribute="centerX" id="CvE-yA-mWQ"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="top" relation="greaterThanOrEqual" secondItem="xRf-1g-got" secondAttribute="bottom" constant="20" id="OhO-Pg-eUE"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" priority="750" constant="20" id="Pqp-YU-I7m"/>
@@ -1951,10 +1932,7 @@
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="centerY" secondItem="b43-Nd-ulU" secondAttribute="centerY" priority="750" id="WJO-0d-onl"/>
                             <constraint firstItem="zSi-VT-4hb" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="15" id="ayw-nc-fYb"/>
                             <constraint firstItem="zSi-VT-4hb" firstAttribute="top" secondItem="xRf-1g-got" secondAttribute="bottom" constant="15" id="kdo-wB-Pd1"/>
-                            <constraint firstItem="QM0-Ve-Vzs" firstAttribute="top" relation="greaterThanOrEqual" secondItem="nF0-F4-GDd" secondAttribute="bottom" constant="35" id="mT9-vx-pwa"/>
-                            <constraint firstItem="Mvu-z2-gQf" firstAttribute="top" secondItem="QM0-Ve-Vzs" secondAttribute="bottom" id="rWF-QN-zW2"/>
                             <constraint firstAttribute="trailing" secondItem="nF0-F4-GDd" secondAttribute="trailing" priority="750" constant="20" id="t3Q-8z-ksk"/>
-                            <constraint firstAttribute="trailing" secondItem="QM0-Ve-Vzs" secondAttribute="trailing" id="yDO-C0-fU9"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -1975,7 +1953,6 @@
                         <outlet property="cropViewRightCon" destination="cva-WG-Dzs" id="W5l-rl-AoX"/>
                         <outlet property="cropViewTopCon" destination="Kmr-Pi-DIN" id="T08-fO-jzs"/>
                         <outlet property="deviceView" destination="aRb-s3-73M" id="X1y-eV-i8F"/>
-                        <outlet property="editingTools" destination="QM0-Ve-Vzs" id="pit-0k-Cbn"/>
                         <outlet property="highlightsView" destination="ulu-rb-y7r" id="382-NC-flT"/>
                         <outlet property="maskActivityIndicator" destination="3eC-J9-SCj" id="qxu-Q4-fT7"/>
                         <outlet property="printContainerView" destination="nF0-F4-GDd" id="8Gz-CG-XXG"/>
@@ -2753,16 +2730,16 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="poster_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="EZK-44-nsD">
-                                <rect key="frame" x="-0.5" y="72.5" width="376" height="521.5"/>
+                                <rect key="frame" x="-0.5" y="75.5" width="376" height="521.5"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F6s-yG-aS1" userLabel="Container View">
-                                <rect key="frame" x="20" y="90.5" width="335" height="480.5"/>
+                                <rect key="frame" x="20" y="93.5" width="335" height="480.5"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="AH0-Gr-t3X">
-                                        <rect key="frame" x="157.5" y="230" width="20" height="20"/>
+                                        <rect key="frame" x="157.5" y="230.5" width="20" height="20"/>
                                     </activityIndicatorView>
                                     <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N6g-QY-BTJ" customClass="OLRemoteImageCropper">
-                                        <rect key="frame" x="0.0" y="0.0" width="335" height="480.5"/>
+                                        <rect key="frame" x="0.0" y="0.5" width="335" height="480.5"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
                                 </subviews>
@@ -2776,20 +2753,11 @@
                                     <constraint firstItem="AH0-Gr-t3X" firstAttribute="centerX" secondItem="N6g-QY-BTJ" secondAttribute="centerX" id="xO1-q3-ueM"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7ME-5X-tJJ" customClass="OLEditingToolsView">
-                                <rect key="frame" x="0.0" y="622" width="375" height="45"/>
-                                <color key="backgroundColor" red="0.89411764709999997" green="0.89411764709999997" blue="0.89411764709999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="emz-Tu-HqJ"/>
-                                </constraints>
-                            </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.90588235294117647" green="0.92156862745098034" blue="0.93725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="F6s-yG-aS1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OdO-qS-nBf" secondAttribute="leading" constant="20" id="9EE-6I-Yxr"/>
-                            <constraint firstItem="7ME-5X-tJJ" firstAttribute="leading" secondItem="OdO-qS-nBf" secondAttribute="leading" id="DuU-wv-ZAv"/>
-                            <constraint firstItem="VhG-fc-Saa" firstAttribute="top" secondItem="7ME-5X-tJJ" secondAttribute="bottom" id="N41-Y4-DXv"/>
                             <constraint firstAttribute="trailing" secondItem="F6s-yG-aS1" secondAttribute="trailing" priority="750" constant="20" id="VJw-dp-XsZ"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="F6s-yG-aS1" secondAttribute="trailing" constant="20" id="Z6x-Y2-HyB"/>
                             <constraint firstItem="F6s-yG-aS1" firstAttribute="leading" secondItem="OdO-qS-nBf" secondAttribute="leading" priority="750" constant="20" id="a1V-1G-eMi"/>
@@ -2798,10 +2766,8 @@
                             <constraint firstItem="EZK-44-nsD" firstAttribute="width" secondItem="F6s-yG-aS1" secondAttribute="width" multiplier="1.12121" id="fPc-6C-i9h"/>
                             <constraint firstItem="EZK-44-nsD" firstAttribute="centerY" secondItem="F6s-yG-aS1" secondAttribute="centerY" multiplier="1.00743" id="mxl-RY-yMV"/>
                             <constraint firstItem="F6s-yG-aS1" firstAttribute="centerX" secondItem="EZK-44-nsD" secondAttribute="centerX" id="oHK-3f-In4"/>
-                            <constraint firstItem="7ME-5X-tJJ" firstAttribute="top" secondItem="F6s-yG-aS1" secondAttribute="bottom" constant="51" id="ot1-uM-pgp"/>
                             <constraint firstAttribute="centerX" secondItem="F6s-yG-aS1" secondAttribute="centerX" id="sPn-1Z-8Ts"/>
                             <constraint firstItem="EZK-44-nsD" firstAttribute="height" secondItem="F6s-yG-aS1" secondAttribute="height" multiplier="1.08439" id="wjT-hq-a64"/>
-                            <constraint firstAttribute="trailing" secondItem="7ME-5X-tJJ" secondAttribute="trailing" id="z1F-9i-BqW"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
@@ -2813,7 +2779,6 @@
                         <outlet property="cropViewLeftCon" destination="ndT-jO-LCu" id="c7b-zy-2hb"/>
                         <outlet property="cropViewRightCon" destination="GoU-7K-AQd" id="uMZ-2o-lZi"/>
                         <outlet property="cropViewTopCon" destination="i2w-8Z-HUu" id="hji-nH-Nhk"/>
-                        <outlet property="editingTools" destination="7ME-5X-tJJ" id="1VL-Rx-4PX"/>
                         <outlet property="printContainerView" destination="F6s-yG-aS1" id="3z2-Tg-Hbe"/>
                     </connections>
                 </viewController>
@@ -3836,13 +3801,6 @@ only Lorem Ipsum</string>
                                     <constraint firstAttribute="bottom" secondItem="uRR-fh-9gf" secondAttribute="bottom" id="nwc-UP-zdh"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="St1-GK-EN2" customClass="OLEditingToolsView">
-                                <rect key="frame" x="0.0" y="622" width="375" height="45"/>
-                                <color key="backgroundColor" red="0.89411764709999997" green="0.89411764709999997" blue="0.89411764709999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="RZI-RS-gBj"/>
-                                </constraints>
-                            </view>
                             <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" wantsMultisampling="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d8r-pu-gfJ">
                                 <rect key="frame" x="0.0" y="64" width="375" height="558"/>
                                 <color key="backgroundColor" red="0.90729904169999998" green="0.92126071450000002" blue="0.93601524830000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3865,17 +3823,14 @@ only Lorem Ipsum</string>
                             <constraint firstItem="twf-kq-tRY" firstAttribute="centerX" secondItem="d8r-pu-gfJ" secondAttribute="centerX" id="LcI-SR-gLq"/>
                             <constraint firstItem="5FW-C9-0CJ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="EFW-f6-7H0" secondAttribute="bottom" constant="20" id="NIV-CQ-v51"/>
                             <constraint firstAttribute="centerX" secondItem="5FW-C9-0CJ" secondAttribute="centerX" id="PEl-QH-wr0"/>
-                            <constraint firstItem="St1-GK-EN2" firstAttribute="top" relation="greaterThanOrEqual" secondItem="5FW-C9-0CJ" secondAttribute="bottom" constant="20" id="Yvn-HK-Btp"/>
-                            <constraint firstItem="QwL-Kt-qWP" firstAttribute="top" secondItem="St1-GK-EN2" secondAttribute="bottom" id="jvX-pT-7XK"/>
+                            <constraint firstItem="QwL-Kt-qWP" firstAttribute="top" secondItem="5FW-C9-0CJ" secondAttribute="bottom" constant="93.5" placeholder="YES" id="QjC-U3-1qv"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5FW-C9-0CJ" secondAttribute="trailing" constant="20" id="k2b-ap-lkm"/>
+                            <constraint firstItem="QwL-Kt-qWP" firstAttribute="top" secondItem="d8r-pu-gfJ" secondAttribute="bottom" constant="45" id="kF9-O8-WZF"/>
                             <constraint firstItem="d8r-pu-gfJ" firstAttribute="top" secondItem="EFW-f6-7H0" secondAttribute="bottom" id="lQG-Ax-krp"/>
-                            <constraint firstAttribute="trailing" secondItem="St1-GK-EN2" secondAttribute="trailing" id="q4c-UI-Tvl"/>
                             <constraint firstAttribute="centerY" secondItem="5FW-C9-0CJ" secondAttribute="centerY" id="seg-U6-E1W"/>
                             <constraint firstItem="5FW-C9-0CJ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nia-Qf-PdV" secondAttribute="leading" constant="20" id="t5U-Tl-dgQ"/>
                             <constraint firstAttribute="trailing" secondItem="d8r-pu-gfJ" secondAttribute="trailing" id="uy0-RU-ume"/>
                             <constraint firstItem="5FW-C9-0CJ" firstAttribute="leading" secondItem="nia-Qf-PdV" secondAttribute="leading" priority="750" constant="20" id="wfj-o3-eOU"/>
-                            <constraint firstItem="St1-GK-EN2" firstAttribute="top" secondItem="d8r-pu-gfJ" secondAttribute="bottom" id="ybE-xI-FQo"/>
-                            <constraint firstItem="St1-GK-EN2" firstAttribute="leading" secondItem="nia-Qf-PdV" secondAttribute="leading" id="zdV-8b-XLO"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -3894,7 +3849,6 @@ only Lorem Ipsum</string>
                         <outlet property="cropViewLeftCon" destination="JV4-MJ-h9p" id="Zr7-bf-UVD"/>
                         <outlet property="cropViewRightCon" destination="5o6-80-3yT" id="rLx-CQ-YIZ"/>
                         <outlet property="cropViewTopCon" destination="GFu-MI-en3" id="fn0-J5-QgC"/>
-                        <outlet property="editingTools" destination="St1-GK-EN2" id="Ujw-DB-x7J"/>
                         <outlet property="printContainerView" destination="5FW-C9-0CJ" id="hKj-Hb-ugv"/>
                         <outlet property="scene" destination="d8r-pu-gfJ" id="CvL-Mh-hl3"/>
                     </connections>
