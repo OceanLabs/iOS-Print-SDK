@@ -28,25 +28,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLAutolayoutHelper.h"
 
-@implementation OLAutolayoutHelper
-
-+ (void)fillSuperView:(UIView *)view{
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                         @"V:|-0-[view]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [view.superview addConstraints:con];
-
-}
-
+@interface UIView (AutoLayoutHelper)
+- (void)fillSuperView;
 @end

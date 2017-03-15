@@ -41,7 +41,7 @@
 #import "NSDecimalNumber+CostFormatter.h"
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
-#import "OLAutolayoutHelper.h"
+#import "UIView+AutoLayoutHelper.h"
 
 @interface OLProduct ()
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
@@ -132,7 +132,7 @@
     if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
         self.backgroundColorView = [[UIView alloc] init];
         [self.printContainerView insertSubview:self.backgroundColorView aboveSubview:self.deviceView];
-        [OLAutolayoutHelper fillSuperView:self.backgroundColorView];
+        [self.backgroundColorView fillSuperView];
     }
     
     [super viewDidLoad];

@@ -27,8 +27,24 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+#import "UIView+AutoLayoutHelper.h"
 
-@interface OLAutolayoutHelper : NSObject
-+ (void)fillSuperView:(UIView *)view;
+@implementation UIView (AutoLayoutHelper)
+
+- (void)fillSuperView{
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(self);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[self]-0-|",
+                         @"V:|-0-[self]-0-|"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [self.superview addConstraints:con];
+}
+
 @end
