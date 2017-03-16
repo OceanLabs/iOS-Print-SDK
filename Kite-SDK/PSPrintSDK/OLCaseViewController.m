@@ -102,7 +102,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *productFlipButton;
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
-@property (strong, nonatomic) UIView *backgroundColorView;
 @end
 
 @implementation OLCaseViewController
@@ -128,12 +127,6 @@
     
     if (self.product.productTemplate.fulfilmentItems.count < 2){
         [self.productFlipButton removeFromSuperview];
-    }
-    
-    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
-        self.backgroundColorView = [[UIView alloc] init];
-        [self.printContainerView insertSubview:self.backgroundColorView aboveSubview:self.deviceView];
-        [self.backgroundColorView fillSuperView];
     }
     
     [super viewDidLoad];
@@ -576,7 +569,8 @@
     self.renderedImageView.image = nil;
     if (choice.color){
         self.cropView.hidden = NO;
-        self.backgroundColorView.backgroundColor = choice.color;
+        self.deviceView.tintColor = choice.color;
+        self.deviceView.image = [self.deviceView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         [self renderImage];
     }
     else{
