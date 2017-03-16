@@ -236,6 +236,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         }];
 
     }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"Clear Cache" style:UIAlertActionStyleDefault handler:^(id action){
+        [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:NULL]];
     ac.popoverPresentationController.sourceRect = sender.frame;
     ac.popoverPresentationController.sourceView = self.view;
