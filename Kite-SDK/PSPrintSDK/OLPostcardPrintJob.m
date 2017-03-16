@@ -205,6 +205,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self.address) result *= [self.address hash];
     if (self.extraCopies) result *= self.extraCopies+1;
     result = 18 * result + [self.options hash];
+    result = 41 * result + [self.uuid hash];
     return result;
 }
 

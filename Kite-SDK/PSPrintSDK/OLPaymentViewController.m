@@ -194,6 +194,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 @property (weak, nonatomic) IBOutlet UIImageView *payingWithImageView;
 @property (weak, nonatomic) IBOutlet UIView *addPaymentBox;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *paymentMethodBottomCon;
+@property (strong, nonatomic) NSArray *currentUserSelectedPhotos;
 
 @property (strong, nonatomic) NSOperation *viewDidAppearOperation;
 @property (strong, nonatomic) NSOperation *costCalculationOperation;
@@ -410,6 +411,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (void)dismiss{
+    if (self.currentUserSelectedPhotos){
+        [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
+        [[OLUserSession currentSession].userSelectedPhotos addObjectsFromArray:self.currentUserSelectedPhotos];
+    }
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
     if (!self.usedContinueShoppingButton){
@@ -1679,7 +1684,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [asset unloadImage];
         if (![addedAssetsUUIDs containsObject:asset.uuid]){
             [addedAssetsUUIDs addObject:asset.uuid];
-            [userSelectedPhotos addObject:asset];
+            [userSelectedPhotos addObject:[asset copy]];
         }
         
     }
