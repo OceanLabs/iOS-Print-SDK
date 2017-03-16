@@ -2250,10 +2250,6 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)loadImageFromAsset{
-    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
-        self.cropView.hidden = !self.asset;
-    }
-    
     self.cropView.imageView.image = nil;
     __weak OLImageEditViewController *welf = self;
     [self.asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){

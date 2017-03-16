@@ -129,6 +129,10 @@
         [self.productFlipButton removeFromSuperview];
     }
     
+    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+        self.cropView.backgroundColor = [UIColor clearColor];
+    }
+    
     [super viewDidLoad];
 }
 
@@ -568,7 +572,6 @@
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
     self.renderedImageView.image = nil;
     if (choice.color){
-        self.cropView.hidden = NO;
         self.deviceView.tintColor = choice.color;
         self.deviceView.image = [self.deviceView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         [self renderImage];
