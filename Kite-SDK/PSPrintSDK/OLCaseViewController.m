@@ -99,7 +99,7 @@
 @property (strong, nonatomic) UIImageView *renderedImageView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
-@property (weak, nonatomic) IBOutlet UIButton *productFlipButton;
+@property (strong, nonatomic) UIButton *productFlipButton;
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
 @end
@@ -131,6 +131,14 @@
     
     if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
         self.cropView.backgroundColor = [UIColor clearColor];
+        
+        self.productFlipButton = [[UIButton alloc] init];
+        [self.view addSubview:self.productFlipButton];
+        [self.productFlipButton setImage:[UIImage imageNamedInKiteBundle:@"flip-black"] forState:UIControlStateNormal];
+        [self.productFlipButton addTarget:self action:@selector(onButtonProductFlipClicked:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.productFlipButton.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.productFlipButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeBottom multiplier:1 constant:15]];
+        [self.productFlipButton leadingFromSuperview:15 relation:NSLayoutRelationEqual];
     }
     
     [super viewDidLoad];

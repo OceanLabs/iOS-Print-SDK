@@ -226,7 +226,7 @@
         <scene sceneID="6Dd-YI-JlP">
             <objects>
                 <collectionViewController storyboardIdentifier="FrameOrderReviewViewController" id="Vt9-y8-Spq" customClass="OLFrameOrderReviewViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="J2q-v3-sGg">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="J2q-v3-sGg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1333,7 +1333,7 @@
         <scene sceneID="utb-1P-DTs">
             <objects>
                 <collectionViewController storyboardIdentifier="ProductHomeViewController" id="U81-HI-b1P" customClass="OLProductHomeViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="a6K-tv-eGU">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="a6K-tv-eGU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1911,13 +1911,6 @@
                                     <constraint firstAttribute="trailing" secondItem="ulu-rb-y7r" secondAttribute="trailing" id="uio-4v-c6W"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zSi-VT-4hb">
-                                <rect key="frame" x="15" y="79" width="35" height="35"/>
-                                <state key="normal" image="flip-black"/>
-                                <connections>
-                                    <action selector="onButtonProductFlipClicked:" destination="B6a-B5-3aL" eventType="touchUpInside" id="Ta2-nL-skW"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -1930,8 +1923,6 @@
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" priority="750" constant="20" id="Pqp-YU-I7m"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="20" id="QHW-0P-dKc"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="centerY" secondItem="b43-Nd-ulU" secondAttribute="centerY" priority="750" id="WJO-0d-onl"/>
-                            <constraint firstItem="zSi-VT-4hb" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" constant="15" id="ayw-nc-fYb"/>
-                            <constraint firstItem="zSi-VT-4hb" firstAttribute="top" secondItem="xRf-1g-got" secondAttribute="bottom" constant="15" id="kdo-wB-Pd1"/>
                             <constraint firstAttribute="trailing" secondItem="nF0-F4-GDd" secondAttribute="trailing" priority="750" constant="20" id="t3Q-8z-ksk"/>
                         </constraints>
                         <variation key="default">
@@ -1956,7 +1947,6 @@
                         <outlet property="highlightsView" destination="ulu-rb-y7r" id="382-NC-flT"/>
                         <outlet property="maskActivityIndicator" destination="3eC-J9-SCj" id="qxu-Q4-fT7"/>
                         <outlet property="printContainerView" destination="nF0-F4-GDd" id="8Gz-CG-XXG"/>
-                        <outlet property="productFlipButton" destination="zSi-VT-4hb" id="zaS-KT-hfs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="amW-38-PIq" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1972,7 +1962,7 @@
         <scene sceneID="dR2-z7-yB6">
             <objects>
                 <collectionViewController storyboardIdentifier="OrderReviewViewController" id="7wc-Kp-jtQ" customClass="OLPackProductViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3965,7 +3955,6 @@ only Lorem Ipsum</string>
         <image name="details-arrow" width="8" height="5"/>
         <image name="dropshadow" width="375" height="3"/>
         <image name="envelope" width="14" height="9"/>
-        <image name="flip-black" width="35" height="35"/>
         <image name="frame_border" width="290" height="313"/>
         <image name="grey-chevron" width="7" height="11"/>
         <image name="line" width="1" height="1"/>
