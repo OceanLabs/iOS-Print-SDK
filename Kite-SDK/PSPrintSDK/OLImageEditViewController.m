@@ -963,6 +963,8 @@ const NSInteger kOLEditTagCrop = 40;
     [UIView animateWithDuration:0.25 animations:^{
         self.editingTools.drawerView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished){
+        [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+        
         self.editingTools.collectionView.tag = -1;
         [self.editingTools.collectionView reloadData];
         [self.view bringSubviewToFront:self.editingTools];
