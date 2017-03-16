@@ -1917,7 +1917,6 @@
                         <constraints>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nF0-F4-GDd" secondAttribute="trailing" constant="20" id="5nb-zZ-1qv"/>
                             <constraint firstItem="Mvu-z2-gQf" firstAttribute="top" secondItem="nF0-F4-GDd" secondAttribute="bottom" constant="93" placeholder="YES" id="9eA-51-4xP"/>
-                            <constraint firstAttribute="centerY" secondItem="nF0-F4-GDd" secondAttribute="centerY" id="9iD-gI-xqw"/>
                             <constraint firstAttribute="centerX" secondItem="nF0-F4-GDd" secondAttribute="centerX" id="CvE-yA-mWQ"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="top" relation="greaterThanOrEqual" secondItem="xRf-1g-got" secondAttribute="bottom" constant="20" id="OhO-Pg-eUE"/>
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="leading" secondItem="b43-Nd-ulU" secondAttribute="leading" priority="750" constant="20" id="Pqp-YU-I7m"/>
@@ -1925,11 +1924,6 @@
                             <constraint firstItem="nF0-F4-GDd" firstAttribute="centerY" secondItem="b43-Nd-ulU" secondAttribute="centerY" priority="750" id="WJO-0d-onl"/>
                             <constraint firstAttribute="trailing" secondItem="nF0-F4-GDd" secondAttribute="trailing" priority="750" constant="20" id="t3Q-8z-ksk"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="9iD-gI-xqw"/>
-                            </mask>
-                        </variation>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="MzK-fr-8PT"/>
@@ -1937,7 +1931,6 @@
                     <connections>
                         <outlet property="aspectRatioConstraint" destination="8RF-d6-5TS" id="9IE-Ou-Gdz"/>
                         <outlet property="caseVisualEffectView" destination="QG3-xs-Ep4" id="zII-hH-CCp"/>
-                        <outlet property="centerYCon" destination="9iD-gI-xqw" id="Vs7-Em-I3Q"/>
                         <outlet property="cropView" destination="33O-65-cUP" id="2N3-8M-KbO"/>
                         <outlet property="cropViewBottomCon" destination="RKT-ZU-vV9" id="vl4-bu-iDs"/>
                         <outlet property="cropViewLeftCon" destination="q40-hk-iMm" id="xHh-tD-vdZ"/>

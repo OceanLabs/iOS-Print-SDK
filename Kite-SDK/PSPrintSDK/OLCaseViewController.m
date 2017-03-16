@@ -97,7 +97,6 @@
 @property (strong, nonatomic) OLAsset *backAsset;
 @property (strong, nonatomic) UIImage *maskImage;
 @property (strong, nonatomic) UIImageView *renderedImageView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 @property (strong, nonatomic) UIButton *productFlipButton;
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
@@ -284,8 +283,6 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
-    self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
     
     if (!self.downloadedMask && self.product.productTemplate.maskImageURL){
         UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
@@ -504,7 +501,6 @@
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
-        self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
         [self.view layoutIfNeeded];
         [self maskWithImage:self.maskImage targetView:self.cropView];
     }completion:^(id <UIViewControllerTransitionCoordinatorContext> context){}];
