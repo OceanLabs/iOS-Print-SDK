@@ -45,6 +45,7 @@
 #import "OLAsset+Private.h"
 #import "UIImageView+FadeIn.h"
 #import "OLImagePickerViewController.h"
+#import "OLKiteViewController+Private.h"
 
 CGFloat posterMargin = 2;
 
@@ -62,10 +63,6 @@ CGFloat posterMargin = 2;
 @property (weak, nonatomic) OLAsset *editingAsset;
 @property (assign, nonatomic) CGSize rotationSize;
 
-@end
-
-@interface OLKiteViewController ()
-- (void)dismiss;
 @end
 
 @interface OLPackProductViewController (Private) <UICollectionViewDelegateFlowLayout>

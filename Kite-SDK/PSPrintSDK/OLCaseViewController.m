@@ -84,7 +84,6 @@
 @property (strong, nonatomic) UITextField *borderTextField;
 @property (strong, nonatomic) UIView *textFieldsView;
 @property (strong, nonatomic) UIViewController *presentedVc;
-@property (weak, nonatomic) IBOutlet UIView *printContainerView;
 @property (weak, nonatomic) UIView *gestureView;
 
 @end
@@ -99,8 +98,6 @@
 @property (strong, nonatomic) UIImageView *renderedImageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
 @property (strong, nonatomic) UIButton *productFlipButton;
-@property (weak, nonatomic) IBOutlet UIImageView *deviceView;
-@property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
 @end
 
 @implementation OLCaseViewController
@@ -120,15 +117,18 @@
 
 - (void)viewDidLoad{
     if ([self isUsingMultiplyBlend]){
-        [self.cropView setGesturesEnabled:NO];
         self.viewDidAppearOperation = [NSBlockOperation blockOperationWithBlock:^{}];
     }
     
-    if (self.product.productTemplate.fulfilmentItems.count < 2){
-        [self.productFlipButton removeFromSuperview];
+    [super viewDidLoad];
+    
+    if ([self isUsingMultiplyBlend]){
+        [self.cropView setGesturesEnabled:NO];
     }
     
-    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+    self.view.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
+    
+    if (self.product.productTemplate.fulfilmentItems.count > 1){
         self.cropView.backgroundColor = [UIColor clearColor];
         
         self.productFlipButton = [[UIButton alloc] init];
@@ -139,8 +139,6 @@
         [self.productFlipButton.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.productFlipButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeBottom multiplier:1 constant:15]];
         [self.productFlipButton leadingFromSuperview:15 relation:NSLayoutRelationEqual];
     }
-    
-    [super viewDidLoad];
 }
 
 - (void)onTapGestureRecognized:(id)sender{

@@ -59,6 +59,7 @@
 #import "OLCustomPickerController.h"
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "NSObject+Utils.h"
+#import "OLKiteViewController+Private.h"
 
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;
@@ -71,17 +72,9 @@ static const CGFloat kBookEdgePadding = 38;
 
 @end
 
-@interface OLKiteViewController ()
-- (void)dismiss;
-@end
-
 @interface OLPrintOrder (Private)
 - (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 - (void)saveOrder;
-@end
-
-@interface OLKiteViewController ()
-@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @interface OLFlipTransition (Private)
@@ -668,7 +661,7 @@ static const CGFloat kBookEdgePadding = 38;
         else{
             [self saveJobWithCompletionHandler:^{
                 OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-                UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+                UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[[OLUserSession currentSession].kiteVc reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
                 [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
                 [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
                 NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];

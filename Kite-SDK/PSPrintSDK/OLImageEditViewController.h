@@ -49,25 +49,26 @@
 
 @interface OLImageEditViewController : OLViewController
 
-@property (strong, nonatomic) UIImage *fullImage;
-@property (copy, nonatomic) OLPhotoEdits *edits;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
-@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *cropView;
-@property (assign, nonatomic) CGFloat aspectRatio;
-@property (strong, nonatomic) NSNumber *centerYConConstant;
-@property (weak, nonatomic) id<OLImageEditViewControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL enableCircleMask;
-@property (strong, nonatomic) UIView *previewView;
-@property (strong, nonatomic) UIView *previewSourceView;
 @property (assign, nonatomic) BOOL forceSourceViewDimensions;
 @property (assign, nonatomic) BOOL skipPresentAnimation;
+@property (assign, nonatomic) CGFloat aspectRatio;
 @property (assign, nonatomic) UIEdgeInsets borderInsets;
+@property (copy, nonatomic) OLPhotoEdits *edits;
+@property (strong, nonatomic) NSLayoutConstraint *aspectRatioConstraint;
+@property (strong, nonatomic) NSNumber *centerYConConstant;
 @property (strong, nonatomic) OLAsset *asset;
-@property (weak, nonatomic) UIButton *ctaButton;
 @property (strong, nonatomic) OLEditingToolsView *editingTools;
 @property (strong, nonatomic) OLProduct *product;
+@property (strong, nonatomic) OLRemoteImageCropper *cropView;
+@property (strong, nonatomic) UIImage *fullImage;
+@property (strong, nonatomic) UIImageView *deviceView;
+@property (strong, nonatomic) UIImageView *highlightsView;
+@property (strong, nonatomic) UIView *previewSourceView;
+@property (strong, nonatomic) UIView *previewView;
+@property (strong, nonatomic) UIView *printContainerView;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
-
-
+@property (weak, nonatomic) UIButton *ctaButton;
+@property (weak, nonatomic) id<OLImageEditViewControllerDelegate> delegate;
 
 @end

@@ -50,15 +50,12 @@
 #import "OLUserSession.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
+#import "OLKiteViewController+Private.h"
 
 @interface OLPaymentViewController (Private)
 
 -(void)saveAndDismissReviewController;
 
-@end
-
-@interface OLKiteViewController ()
-- (void)dismiss;
 @end
 
 @interface OLPrintOrder (Private)

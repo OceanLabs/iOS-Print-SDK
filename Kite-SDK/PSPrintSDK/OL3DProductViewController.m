@@ -38,7 +38,6 @@
 @import SceneKit;
 
 @interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
-@property (weak, nonatomic) IBOutlet UIView *printContainerView;
 - (void)setupImage;
 - (void)onButtonCropClicked:(UIButton *)sender;
 - (void)exitCropMode;

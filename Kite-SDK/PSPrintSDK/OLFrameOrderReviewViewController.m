@@ -44,6 +44,7 @@
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "NSObject+Utils.h"
 #import "OLCustomPickerController.h"
+#import "OLKiteViewController+Private.h"
 
 @interface OLPackProductViewController (Private) <OLInfoBannerDelegate, OLImagePickerViewControllerDelegate>
 
@@ -56,10 +57,6 @@
 @property (strong, nonatomic) UIButton *nextButton;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
 
-@end
-
-@interface OLKiteViewController ()
-@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @interface OLFrameOrderReviewViewController () <OLImageEditViewControllerDelegate,UIViewControllerPreviewingDelegate>

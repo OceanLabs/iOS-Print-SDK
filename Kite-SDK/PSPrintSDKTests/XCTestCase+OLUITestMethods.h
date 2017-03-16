@@ -47,6 +47,7 @@
 #import "OL3DProductViewController.h"
 #import "OLAddressLookupViewController.h"
 #import "OLAddressSelectionViewController.h"
+#import "OLKiteViewController+Private.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;
@@ -99,11 +100,6 @@
 
 @interface OLButtonCollectionViewCell ()
 - (void)onButtonTouchUpInside;
-@end
-
-@interface OLKiteViewController ()
-- (void)dismiss;
-@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @interface OLProductHomeViewController (Private)

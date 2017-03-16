@@ -75,6 +75,7 @@
 #import "Util.h"
 #import "OLApparelPrintJob.h"
 #import "OLCaseViewController.h"
+#import "OLKiteViewController+Private.h"
 
 @import PassKit;
 @import Contacts;
@@ -106,12 +107,6 @@ static OLPaymentMethod selectedPaymentMethod;
 @property (strong, nonatomic) NSMutableArray *declinedOffers;
 @property (strong, nonatomic) NSMutableArray *acceptedOffers;
 @property (strong, nonatomic) NSDictionary *redeemedOffer;
-@end
-
-
-@interface OLAsset (Private)
-@property (strong, nonatomic) id<OLAssetDataSource> dataSource;
-@property (assign, nonatomic) BOOL corrupt;
 @end
 
 @interface OLPackProductViewController ()
@@ -1698,7 +1693,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         return [self navViewControllerWithControllers:@[photoVc]];
     }
     else{
-        UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
+        UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[[OLUserSession currentSession].kiteVc reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
         if ([printJob isKindOfClass:[OLApparelPrintJob class]]){
             OLAsset *asset = ((OLApparelPrintJob *)printJob).assets[@"center_back"];
             if (!asset){

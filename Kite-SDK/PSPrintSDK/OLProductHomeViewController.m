@@ -51,15 +51,7 @@
 #import "UIImage+OLUtils.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
-
-#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-
-@interface OLKiteViewController (Private)
-
-+ (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
-- (void)dismiss;
-
-@end
+#import "OLKiteViewController+Private.h"
 
 @interface OLProductTypeSelectionViewController ()
 -(NSMutableArray *) products;

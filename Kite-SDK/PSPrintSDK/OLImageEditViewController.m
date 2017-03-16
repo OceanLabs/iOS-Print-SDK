@@ -48,6 +48,7 @@
 #import "OLAnalytics.h"
 #import "UIView+AutoLayoutHelper.h"
 #import "UIColor+OLHexString.h"
+#import "OLKiteViewController+Private.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -57,11 +58,6 @@ const NSInteger kOLEditTagImageTools = 30;
 /**/const NSInteger kOLEditTagFonts = 33;
 /**/const NSInteger kOLEditTagFilters = 34;
 const NSInteger kOLEditTagCrop = 40;
-
-@interface OLKiteViewController ()
-@property (strong, nonatomic) NSArray *fontNames;
-@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
-@end
 
 @interface OLProductOverviewViewController ()
 - (void)setupProductRepresentation;
@@ -96,7 +92,6 @@ const NSInteger kOLEditTagCrop = 40;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewLeftCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewBottomCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewRightCon;
-@property (weak, nonatomic) IBOutlet UIView *printContainerView;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) UIView *gestureView;
 
@@ -234,6 +229,7 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self setupContainerView];
     [self setupEditingToolsView];
     
     if (self.navigationController){
@@ -385,6 +381,58 @@ const NSInteger kOLEditTagCrop = 40;
 
 }
 
+- (CGFloat)containerViewMargin{
+    return 20;
+}
+
+- (void)setupContainerView{
+    self.printContainerView = [[UIView alloc] init];
+    [self.view addSubview:self.printContainerView];
+    
+    [self.printContainerView trailingToSuperview:[self containerViewMargin] relation:NSLayoutRelationGreaterThanOrEqual];
+    [self.printContainerView leadingFromSuperview:[self containerViewMargin] relation:NSLayoutRelationGreaterThanOrEqual];
+    
+    [self.printContainerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.printContainerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.printContainerView.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [self.printContainerView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.printContainerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeBottom multiplier:1 constant:[self containerViewMargin]]];
+    
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.printContainerView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.printContainerView.superview attribute:NSLayoutAttributeLeading multiplier:1 constant:[self containerViewMargin]];
+    con.priority = 750;
+    [self.printContainerView.superview addConstraint:con];
+    
+    con = [NSLayoutConstraint constraintWithItem:self.printContainerView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.printContainerView.superview attribute:NSLayoutAttributeTrailing multiplier:1 constant:[self containerViewMargin]];
+    con.priority = 750;
+    [self.printContainerView.superview addConstraint:con];
+    
+    con = [NSLayoutConstraint constraintWithItem:self.printContainerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.printContainerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+    con.priority = 750;
+    [self.printContainerView.superview addConstraint:con];
+    
+    if ([self productBackgroundURL]){
+        self.deviceView = [[UIImageView alloc] init];
+        self.deviceView.contentMode = UIViewContentModeScaleToFill;
+        [self.printContainerView addSubview:self.deviceView];
+        [self.deviceView fillSuperView];
+    }
+    
+    self.cropView = [[OLRemoteImageCropper alloc] init];
+    [self.printContainerView addSubview:self.cropView];
+    NSArray *cons = [self.cropView fillSuperView];
+    self.cropViewTopCon = cons[0];
+    self.cropViewLeftCon = cons[1];
+    self.cropViewBottomCon = cons[2];
+    self.cropViewRightCon= cons[3];
+    
+    self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
+    [self.cropView addConstraint:self.aspectRatioConstraint];
+    
+    if ([self productHighlightsURL]){
+        self.highlightsView = [[UIImageView alloc] init];
+        self.highlightsView.contentMode = UIViewContentModeScaleToFill;
+        [self.printContainerView addSubview:self.highlightsView];
+        [self.highlightsView fillSuperView];
+    }
+}
+
 - (void)setupEditingToolsView{
     self.editingTools = [[OLEditingToolsView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.editingTools];
@@ -397,6 +445,14 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView verticalSpacingToView:self.editingTools constant:20 relation:NSLayoutRelationGreaterThanOrEqual];
     
     self.editingTools.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
+}
+
+- (NSURL *)productBackgroundURL{
+    return self.product.productTemplate.productBackgroundImageURL;
+}
+
+- (NSURL *)productHighlightsURL{
+    return self.product.productTemplate.productHighlightsImageURL;
 }
 
 - (void)setupProductRepresentation{
@@ -1827,7 +1883,7 @@ const NSInteger kOLEditTagCrop = 40;
         
         [self saveEditsToAsset:self.asset];
         
-        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
+        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[[OLUserSession currentSession].kiteVc reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
         NSMutableArray *vcs = [self.navigationController.viewControllers mutableCopy];
         [vcs replaceObjectAtIndex:vcs.count-1 withObject:vc];
@@ -2178,7 +2234,7 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Image Picker
 
 - (void)showImagePicker{
-    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    OLImagePickerViewController *vc = [[OLUserSession currentSession].kiteVc.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     vc.delegate = self;
     vc.selectedAssets = [[NSMutableArray alloc] init];
     vc.maximumPhotos = 1;

@@ -39,6 +39,7 @@
 #import "OLImagePickerProvider.h"
 #import "OLKiteViewController.h"
 #import "OLCustomViewControllerPhotoProvider.h"
+#import "OLKiteViewController+Private.h"
 
 @interface OLPrintOrder (Private)
 @property (weak, nonatomic) NSArray *userSelectedPhotos;
@@ -48,10 +49,6 @@
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
-@end
-
-@interface OLKiteViewController ()
-@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @implementation OLUserSession

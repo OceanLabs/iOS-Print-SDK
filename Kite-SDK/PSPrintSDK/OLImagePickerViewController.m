@@ -51,10 +51,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIViewController+OLMethods.h"
 #import <Photos/Photos.h>
-
-@interface OLKiteViewController ()
-@property (strong, nonatomic) NSMutableArray <OLCustomViewControllerPhotoProvider *> *customImageProviders;
-@end
+#import "OLKiteViewController+Private.h"
 
 @interface OLKitePrintSDK ()
 + (NSString *)instagramRedirectURI;
@@ -888,7 +885,7 @@
 }
 
 -(void)showOrderPreview{
-    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
+    UIViewController* orvc = [self.storyboard instantiateViewControllerWithIdentifier:[[OLUserSession currentSession].kiteVc reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:NO]];
     
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];
     [self.navigationController pushViewController:orvc animated:YES];
@@ -994,7 +991,7 @@
             [[(OLProductPrintJob *)job acceptedOffers] addObject:vc.offer];
             
             OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[[OLUserSession currentSession].kiteVc reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
             [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
             NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
             [stack removeObject:self];
