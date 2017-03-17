@@ -90,14 +90,14 @@
 
 @interface OLCaseViewController ()
 @property (assign, nonatomic) BOOL downloadedMask;
-@property (strong, nonatomic) IBOutlet UIVisualEffectView *caseVisualEffectView;
 @property (strong, nonatomic) NSBlockOperation *viewDidAppearOperation;
 @property (strong, nonatomic) NSOperation *downloadImagesOperation;
 @property (strong, nonatomic) OLAsset *backAsset;
+@property (strong, nonatomic) UIActivityIndicatorView *maskActivityIndicator;
+@property (strong, nonatomic) UIButton *productFlipButton;
 @property (strong, nonatomic) UIImage *maskImage;
 @property (strong, nonatomic) UIImageView *renderedImageView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
-@property (strong, nonatomic) UIButton *productFlipButton;
+@property (strong, nonatomic) UIVisualEffectView *caseVisualEffectView;
 @end
 
 @implementation OLCaseViewController
@@ -139,6 +139,25 @@
         [self.productFlipButton.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.productFlipButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeBottom multiplier:1 constant:15]];
         [self.productFlipButton leadingFromSuperview:15 relation:NSLayoutRelationEqual];
     }
+}
+
+- (void)setupContainerView{
+    [super setupContainerView];
+    
+    UIVisualEffect *blurEffect;
+    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+    
+    self.caseVisualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    [self.printContainerView insertSubview:self.caseVisualEffectView aboveSubview:self.cropView];
+    
+    [self.caseVisualEffectView fillSuperView];
+    
+    self.maskActivityIndicator = [[UIActivityIndicatorView alloc] init];
+    self.maskActivityIndicator.color = [UIColor blackColor];
+    [self.maskActivityIndicator startAnimating];
+    self.maskActivityIndicator.hidesWhenStopped = YES;
+    [self.printContainerView insertSubview:self.maskActivityIndicator aboveSubview:self.caseVisualEffectView];
+    [self.maskActivityIndicator centerInSuperview];
 }
 
 - (void)onTapGestureRecognized:(id)sender{

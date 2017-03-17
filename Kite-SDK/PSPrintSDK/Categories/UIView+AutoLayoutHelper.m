@@ -97,4 +97,23 @@
     return con;
 }
 
+- (NSLayoutConstraint *)centerXInSuperview{
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+    [self.superview addConstraint:con];
+    return con;
+}
+
+- (NSLayoutConstraint *)centerYInSuperview{
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+    [self.superview addConstraint:con];
+    return con;
+}
+
+- (void)centerInSuperview{
+    [self centerXInSuperview];
+    [self centerYInSuperview];
+}
+
 @end

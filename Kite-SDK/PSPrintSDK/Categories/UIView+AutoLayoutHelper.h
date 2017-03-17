@@ -39,4 +39,7 @@
 - (NSLayoutConstraint *)horizontalSpacingToView:(UIView *)view constant:(CGFloat)constant relation:(NSLayoutRelation)relation;
 - (NSLayoutConstraint *)heightConstraint:(CGFloat)constant;
 - (NSLayoutConstraint *)widthConstraint:(CGFloat)constant;
+- (void)centerInSuperview;
+- (NSLayoutConstraint *)centerYInSuperview;
+- (NSLayoutConstraint *)centerXInSuperview;
 @end

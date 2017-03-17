@@ -414,6 +414,18 @@ const NSInteger kOLEditTagCrop = 40;
         [self.deviceView fillSuperView];
     }
     
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] init];
+    activityIndicator.color = [UIColor blackColor];
+    activityIndicator.tag = 1010;
+    activityIndicator.hidesWhenStopped = YES;
+    if (self.deviceView){
+        [self.printContainerView insertSubview:activityIndicator aboveSubview:self.deviceView];
+    }
+    else{
+        [self.printContainerView insertSubview:activityIndicator atIndex:0];
+    }
+    [activityIndicator centerInSuperview];
+    
     self.cropView = [[OLRemoteImageCropper alloc] init];
     [self.printContainerView addSubview:self.cropView];
     NSArray *cons = [self.cropView fillSuperView];
@@ -2306,6 +2318,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)loadImageFromAsset{
+    self.fullImage = nil;
     self.cropView.imageView.image = nil;
     __weak OLImageEditViewController *welf = self;
     [self.asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){

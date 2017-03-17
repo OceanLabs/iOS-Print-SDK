@@ -236,7 +236,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         }];
 
     }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"Clear Cache" style:UIAlertActionStyleDefault handler:^(id action){
+    [ac addAction:[UIAlertAction actionWithTitle:@"Clear Web Image Cache" style:UIAlertActionStyleDefault handler:^(id action){
         [[NSURLCache sharedURLCache] removeAllCachedResponses];
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:NULL]];

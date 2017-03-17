@@ -71,4 +71,6 @@
 @property (weak, nonatomic) UIButton *ctaButton;
 @property (weak, nonatomic) id<OLImageEditViewControllerDelegate> delegate;
 
+- (void)setupContainerView;
+
 @end
