@@ -906,11 +906,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
     
     OLPackProductViewController *editingVc = nvc.viewControllers.lastObject;
-    if ([editingVc respondsToSelector:@selector(shouldGoToCheckout)]){
-        if (![editingVc shouldGoToCheckout]){
-            return;
-        }
-    }
     if ([editingVc respondsToSelector:@selector(saveJobWithCompletionHandler:)]){
         [editingVc saveJobWithCompletionHandler:^{
             [self.tableView reloadData];
