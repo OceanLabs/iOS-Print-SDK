@@ -101,6 +101,9 @@
 -(void)viewDidLoad{
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
+    self.printContainerView.backgroundColor = [UIColor clearColor];
+    
     self.delegate = self;
     self.view.clipsToBounds = YES;
     

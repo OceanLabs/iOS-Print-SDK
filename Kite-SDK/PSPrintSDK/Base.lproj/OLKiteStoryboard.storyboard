@@ -106,7 +106,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oYN-uJ-Rfi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-250" y="913"/>
+            <point key="canvasLocation" x="1300" y="-2034"/>
         </scene>
         <!--Product Overview Page Content View Controller-->
         <scene sceneID="0If-qa-Bx3">
@@ -153,7 +153,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="493" y="905"/>
+            <point key="canvasLocation" x="532" y="-2034"/>
         </scene>
         <!--Kite View Controller-->
         <scene sceneID="Ayk-NT-sQ7">
@@ -220,7 +220,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hQe-al-rzP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-247" y="-1338"/>
+            <point key="canvasLocation" x="-1063" y="-1338"/>
         </scene>
         <!--Frame Order Review View Controller-->
         <scene sceneID="6Dd-YI-JlP">
@@ -457,7 +457,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qG7-3J-9cO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2188" y="913"/>
+            <point key="canvasLocation" x="2193" y="152"/>
         </scene>
         <!--Payment View Controller-->
         <scene sceneID="6kq-BL-dwu">
@@ -1842,7 +1842,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bnp-ON-2Gu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-249" y="-581"/>
+            <point key="canvasLocation" x="-1066" y="-582"/>
         </scene>
         <!--Pack Product View Controller-->
         <scene sceneID="dR2-z7-yB6">
@@ -2452,7 +2452,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vsq-oC-uOo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="529" y="-580"/>
+            <point key="canvasLocation" x="-287" y="-581"/>
         </scene>
         <!--Photobook View Controller-->
         <scene sceneID="VAM-9o-3tT">
@@ -2593,80 +2593,6 @@
             </objects>
             <point key="canvasLocation" x="2985" y="-1338"/>
         </scene>
-        <!--Single Image Product Review View Controller-->
-        <scene sceneID="Wbo-3y-qdz">
-            <objects>
-                <viewController storyboardIdentifier="OLSingleImageProductReviewViewController" id="ghc-A8-ltu" customClass="OLSingleImageProductReviewViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Na0-YI-rwD"/>
-                        <viewControllerLayoutGuide type="bottom" id="VhG-fc-Saa"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="OdO-qS-nBf">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="poster_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="EZK-44-nsD">
-                                <rect key="frame" x="-0.5" y="75.5" width="376" height="521.5"/>
-                            </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F6s-yG-aS1" userLabel="Container View">
-                                <rect key="frame" x="20" y="93.5" width="335" height="480.5"/>
-                                <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="AH0-Gr-t3X">
-                                        <rect key="frame" x="157.5" y="230.5" width="20" height="20"/>
-                                    </activityIndicatorView>
-                                    <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N6g-QY-BTJ" customClass="OLRemoteImageCropper">
-                                        <rect key="frame" x="0.0" y="0.5" width="335" height="480.5"/>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </view>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="N6g-QY-BTJ" secondAttribute="trailing" id="GoU-7K-AQd"/>
-                                    <constraint firstAttribute="bottom" secondItem="N6g-QY-BTJ" secondAttribute="bottom" id="ZYe-Yb-p9T"/>
-                                    <constraint firstItem="AH0-Gr-t3X" firstAttribute="centerY" secondItem="N6g-QY-BTJ" secondAttribute="centerY" id="h13-Ub-rM6"/>
-                                    <constraint firstItem="N6g-QY-BTJ" firstAttribute="top" secondItem="F6s-yG-aS1" secondAttribute="top" id="i2w-8Z-HUu"/>
-                                    <constraint firstItem="N6g-QY-BTJ" firstAttribute="leading" secondItem="F6s-yG-aS1" secondAttribute="leading" id="ndT-jO-LCu"/>
-                                    <constraint firstAttribute="width" secondItem="F6s-yG-aS1" secondAttribute="height" multiplier="140:201" id="s04-2s-DNA"/>
-                                    <constraint firstItem="AH0-Gr-t3X" firstAttribute="centerX" secondItem="N6g-QY-BTJ" secondAttribute="centerX" id="xO1-q3-ueM"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" red="0.90588235294117647" green="0.92156862745098034" blue="0.93725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <gestureRecognizers/>
-                        <constraints>
-                            <constraint firstItem="F6s-yG-aS1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OdO-qS-nBf" secondAttribute="leading" constant="20" id="9EE-6I-Yxr"/>
-                            <constraint firstAttribute="trailing" secondItem="F6s-yG-aS1" secondAttribute="trailing" priority="750" constant="20" id="VJw-dp-XsZ"/>
-                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="F6s-yG-aS1" secondAttribute="trailing" constant="20" id="Z6x-Y2-HyB"/>
-                            <constraint firstItem="F6s-yG-aS1" firstAttribute="leading" secondItem="OdO-qS-nBf" secondAttribute="leading" priority="750" constant="20" id="a1V-1G-eMi"/>
-                            <constraint firstAttribute="centerY" secondItem="F6s-yG-aS1" secondAttribute="centerY" priority="750" id="b0D-Tn-EZA"/>
-                            <constraint firstItem="EZK-44-nsD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Na0-YI-rwD" secondAttribute="bottom" constant="2" id="bBA-Tf-NdN"/>
-                            <constraint firstItem="EZK-44-nsD" firstAttribute="width" secondItem="F6s-yG-aS1" secondAttribute="width" multiplier="1.12121" id="fPc-6C-i9h"/>
-                            <constraint firstItem="EZK-44-nsD" firstAttribute="centerY" secondItem="F6s-yG-aS1" secondAttribute="centerY" multiplier="1.00743" id="mxl-RY-yMV"/>
-                            <constraint firstItem="F6s-yG-aS1" firstAttribute="centerX" secondItem="EZK-44-nsD" secondAttribute="centerX" id="oHK-3f-In4"/>
-                            <constraint firstAttribute="centerX" secondItem="F6s-yG-aS1" secondAttribute="centerX" id="sPn-1Z-8Ts"/>
-                            <constraint firstItem="EZK-44-nsD" firstAttribute="height" secondItem="F6s-yG-aS1" secondAttribute="height" multiplier="1.08439" id="wjT-hq-a64"/>
-                        </constraints>
-                    </view>
-                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
-                    <navigationItem key="navigationItem" id="sGX-Vh-ezf"/>
-                    <connections>
-                        <outlet property="aspectRatioConstraint" destination="s04-2s-DNA" id="E7h-28-cBf"/>
-                        <outlet property="cropView" destination="N6g-QY-BTJ" id="Gj5-vz-Zp0"/>
-                        <outlet property="cropViewBottomCon" destination="ZYe-Yb-p9T" id="hEU-jB-ENH"/>
-                        <outlet property="cropViewLeftCon" destination="ndT-jO-LCu" id="c7b-zy-2hb"/>
-                        <outlet property="cropViewRightCon" destination="GoU-7K-AQd" id="uMZ-2o-lZi"/>
-                        <outlet property="cropViewTopCon" destination="i2w-8Z-HUu" id="hji-nH-Nhk"/>
-                        <outlet property="printContainerView" destination="F6s-yG-aS1" id="3z2-Tg-Hbe"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="bEK-fD-Xxi" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="hCt-QT-5vl">
-                    <connections>
-                        <action selector="onGestureRecognizerTapped:" destination="ghc-A8-ltu" id="fMZ-er-HTj"/>
-                    </connections>
-                </tapGestureRecognizer>
-            </objects>
-            <point key="canvasLocation" x="2189" y="162"/>
-        </scene>
         <!--Info Page View Controller-->
         <scene sceneID="o1Q-eq-bep">
             <objects>
@@ -2719,7 +2645,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nh6-Mc-HHO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="540" y="-2034.3328335832086"/>
+            <point key="canvasLocation" x="-276" y="-2034"/>
         </scene>
         <!--Poster View Controller-->
         <scene sceneID="kFc-fy-yh6">
@@ -2940,7 +2866,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1364" y="914"/>
+            <point key="canvasLocation" x="532" y="-581"/>
         </scene>
         <!--Upsell View Controller-->
         <scene sceneID="OR9-ac-Lsw">
@@ -3071,7 +2997,7 @@ only Lorem Ipsum</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iQ8-0f-KPs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="530" y="-1338"/>
+            <point key="canvasLocation" x="2193" y="-2034"/>
         </scene>
         <!--Image Picker Login Page View Controller-->
         <scene sceneID="bOS-mN-cdO">
@@ -3125,7 +3051,7 @@ only Lorem Ipsum</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u6S-70-uku" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1364" y="-2034"/>
+            <point key="canvasLocation" x="1300" y="-1299"/>
         </scene>
         <!--Image Picker Photos Page View Controller-->
         <scene sceneID="dJj-UV-A6G">
@@ -3388,7 +3314,7 @@ only Lorem Ipsum</string>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1364" y="-1338"/>
+            <point key="canvasLocation" x="1300" y="-581"/>
         </scene>
         <!--Pick Your Images-->
         <scene sceneID="4yn-Zk-3xA">
@@ -3526,7 +3452,7 @@ only Lorem Ipsum</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="il2-d3-2zV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1357" y="-580"/>
+            <point key="canvasLocation" x="1300" y="152"/>
         </scene>
         <!--Product Overview View Controller-->
         <scene sceneID="mjB-Xv-Dpy">
@@ -3645,7 +3571,7 @@ only Lorem Ipsum</string>
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1364" y="161"/>
+            <point key="canvasLocation" x="532" y="-1322"/>
         </scene>
         <!--Product View Controller-->
         <scene sceneID="9ht-5O-urf">
@@ -3741,7 +3667,7 @@ only Lorem Ipsum</string>
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3729" y="161"/>
+            <point key="canvasLocation" x="2988" y="152"/>
         </scene>
         <!--Orders-->
         <scene sceneID="hWb-jU-mLV">
@@ -3824,7 +3750,7 @@ only Lorem Ipsum</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fqp-Ug-JgB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-251" y="1678"/>
+            <point key="canvasLocation" x="-1066" y="-2034"/>
         </scene>
     </scenes>
     <resources>

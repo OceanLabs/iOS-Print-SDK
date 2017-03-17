@@ -36,7 +36,6 @@
 #import "OLKiteViewController.h"
 #import "OLPackProductViewController.h"
 #import "OLPaymentViewController.h"
-#import "OLPostcardViewController.h"
 #import "OLProduct.h"
 #import "OLProductDetailsViewController.h"
 #import "OLProductOverviewPageContentViewController.h"

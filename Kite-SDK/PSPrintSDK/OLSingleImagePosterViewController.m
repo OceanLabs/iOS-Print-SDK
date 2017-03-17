@@ -27,8 +27,27 @@
 //  THE SOFTWARE.
 //
 
-#import "OLSingleImageProductReviewViewController.h"
+#import "OLSingleImagePosterViewController.h"
 
-@interface OLPostcardViewController : OLSingleImageProductReviewViewController
+@interface OLSingleImagePosterViewController ()
+
+@end
+
+@implementation OLSingleImagePosterViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+}
+
+- (NSURL *)productBackgroundURL{
+    return [NSURL URLWithString:@"http://sdk-static.s3.amazonaws.com/poster_shadow.png"];
+}
+
+- (UIEdgeInsets)borderInsets{
+    return UIEdgeInsetsMake(0.042195, 0.060605, 0.042195, 0.060605);
+}
+
+
 
 @end

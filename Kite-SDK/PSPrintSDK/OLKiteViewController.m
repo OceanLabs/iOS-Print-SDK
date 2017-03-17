@@ -48,6 +48,7 @@
 #import "OLUserSession.h"
 #import "UIImage+OLUtils.h"
 #import "OLCaseViewController.h"
+#import "OLSingleImagePosterViewController.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -274,6 +275,9 @@ static CGFloat fadeTime = 0.3;
     if (templateUI == OLTemplateUICase || templateUI == OLTemplateUIApparel){
         return [[OLCaseViewController alloc] init];
     }
+    else if (templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
+        return [[OLSingleImagePosterViewController alloc] init];
+    }
     
     return [self.storyboard instantiateViewControllerWithIdentifier:[self reviewViewControllerIdentifierForProduct:product photoSelectionScreen:photoSelectionScreen]];
     
@@ -281,13 +285,7 @@ static CGFloat fadeTime = 0.3;
 
 - (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
     OLTemplateUI templateUI = product.productTemplate.templateUI;
-    if (templateUI == OLTemplateUIPostcard){
-        return @"OLPostcardViewController";
-    }
-    else if (templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
-        return @"OLSingleImageProductReviewViewController";
-    }
-    else if (templateUI == OLTemplateUIPhotobook){
+    if (templateUI == OLTemplateUIPhotobook){
         return @"OLEditPhotobookViewController";
     }
     else if (templateUI == OLTemplateUINonCustomizable){

@@ -49,6 +49,8 @@
 #import "UIView+AutoLayoutHelper.h"
 #import "UIColor+OLHexString.h"
 #import "OLKiteViewController+Private.h"
+#import "OLImageDownloader.h"
+#import "UIImage+OLUtils.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -459,6 +461,33 @@ const NSInteger kOLEditTagCrop = 40;
     self.editingTools.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
 }
 
+- (void)applyProductImageLayers{
+    if (!self.deviceView.image){
+        self.deviceView.alpha = 0;
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+                [UIView animateWithDuration:0.1 animations:^{
+                    self.deviceView.alpha = 1;
+                } completion:^(BOOL finished){
+                    [self updateProductRepresentationForChoice:nil];
+                }];
+            });
+        }];
+    }
+    if (!self.highlightsView.image){
+        self.highlightsView.alpha = 0;
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productHighlightsURL] priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+                [UIView animateWithDuration:0.1 animations:^{
+                    self.highlightsView.alpha = 1;
+                }];
+            });
+        }];
+    }
+}
+
 - (NSURL *)productBackgroundURL{
     return self.product.productTemplate.productBackgroundImageURL;
 }
@@ -770,6 +799,10 @@ const NSInteger kOLEditTagCrop = 40;
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
         self.cropView.imageView.transform = self.edits.cropTransform;
+    }
+    
+    if (!self.product.productTemplate.maskImageURL){
+        [self applyProductImageLayers];
     }
 }
 

@@ -72,5 +72,6 @@
 @property (weak, nonatomic) id<OLImageEditViewControllerDelegate> delegate;
 
 - (void)setupContainerView;
+- (void)applyProductImageLayers;
 
 @end

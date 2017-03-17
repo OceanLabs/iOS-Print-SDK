@@ -28,6 +28,8 @@
 		2E149AE81DB7B00D000E5849 /* OLProductTemplateCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E149AE61DB7B00D000E5849 /* OLProductTemplateCollection.h */; };
 		2E149AE91DB7B00D000E5849 /* OLProductTemplateCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E149AE71DB7B00D000E5849 /* OLProductTemplateCollection.m */; };
 		2E18C5FD1E7ADB4100B06075 /* OLKiteViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E18C5FC1E7ADABA00B06075 /* OLKiteViewController+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2E1BB37D1E7C2A25008F7217 /* OLSingleImagePosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1BB37B1E7C2A25008F7217 /* OLSingleImagePosterViewController.h */; };
+		2E1BB37E1E7C2A25008F7217 /* OLSingleImagePosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1BB37C1E7C2A25008F7217 /* OLSingleImagePosterViewController.m */; };
 		2E23EB9B1D5091FC00E2BF42 /* CI-Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */; };
 		2E31C00B1C7B2128009C1E42 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E24453101BFD2C460086BF03 /* Accelerate.framework */; };
 		2E31C00D1C7B2139009C1E42 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C00C1C7B2139009C1E42 /* CoreData.framework */; };
@@ -541,6 +543,8 @@
 		2E18C5FC1E7ADABA00B06075 /* OLKiteViewController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OLKiteViewController+Private.h"; sourceTree = "<group>"; };
 		2E18DC4F1D913DB1004752D2 /* OLPrintPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPrintPhoto.h; sourceTree = "<group>"; };
 		2E18DC501D913DB1004752D2 /* OLPrintPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPrintPhoto.m; sourceTree = "<group>"; };
+		2E1BB37B1E7C2A25008F7217 /* OLSingleImagePosterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSingleImagePosterViewController.h; sourceTree = "<group>"; };
+		2E1BB37C1E7C2A25008F7217 /* OLSingleImagePosterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSingleImagePosterViewController.m; sourceTree = "<group>"; };
 		2E1E66CD1D477B78002524A4 /* OLImagePickerPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerPageViewController.h; sourceTree = "<group>"; };
 		2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerPageViewController.m; sourceTree = "<group>"; };
 		2E1E66D31D478052002524A4 /* OLImagePickerLoginPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerLoginPageViewController.h; sourceTree = "<group>"; };
@@ -1256,6 +1260,8 @@
 				2E0A72651A6FB07000BC5AE7 /* OLImageEditViewController.m */,
 				2E5258FF1A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.h */,
 				2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */,
+				2E1BB37B1E7C2A25008F7217 /* OLSingleImagePosterViewController.h */,
+				2E1BB37C1E7C2A25008F7217 /* OLSingleImagePosterViewController.m */,
 				2E20BD841AD4229700FB2446 /* OLCaseViewController.h */,
 				2E20BD851AD4229700FB2446 /* OLCaseViewController.m */,
 				2EB0DC741DC8DB7400B556CE /* OL3DProductViewController.h */,
@@ -1972,6 +1978,7 @@
 				2EB8FE291D95685100E26BDF /* OLOAuth2ConnectionDelegate.h in Headers */,
 				2EB8FE301D95685100E26BDF /* OLColorSelectionCollectionViewCell.h in Headers */,
 				2EB8FE1E1D95685100E26BDF /* NSURL+OLOAuth2.h in Headers */,
+				2E1BB37D1E7C2A25008F7217 /* OLSingleImagePosterViewController.h in Headers */,
 				2EB8FDE41D95685100E26BDF /* OLImagePickerProviderCollection.h in Headers */,
 				2EB8FDF31D95685100E26BDF /* OLPrintOrder.h in Headers */,
 				2EB8FE361D95685100E26BDF /* OLPhotoTextField.h in Headers */,
@@ -2517,6 +2524,7 @@
 				2E451DFC1D9555620080F1C1 /* OLConstants.m in Sources */,
 				2E451E491D9555D30080F1C1 /* OLEditPhotobookViewController.m in Sources */,
 				2E65FEA91E4E143B00A301BB /* OLOrderHistoryViewController.m in Sources */,
+				2E1BB37E1E7C2A25008F7217 /* OLSingleImagePosterViewController.m in Sources */,
 				2E451E111D9555870080F1C1 /* OLFlipTransition.m in Sources */,
 				2E451E561D9555D90080F1C1 /* OLAddressEditViewController.m in Sources */,
 				2EB8FE7F1D95692000E26BDF /* UIViewController+OLMethods.m in Sources */,

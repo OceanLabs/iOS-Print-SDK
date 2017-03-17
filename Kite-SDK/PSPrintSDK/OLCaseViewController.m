@@ -126,8 +126,6 @@
         [self.cropView setGesturesEnabled:NO];
     }
     
-    self.view.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
-    
     if (self.product.productTemplate.fulfilmentItems.count > 1){
         self.cropView.backgroundColor = [UIColor clearColor];
         
@@ -245,10 +243,6 @@
             [[NSOperationQueue mainQueue] addOperation:op1];
         }];
     }
-    else{
-        [self.caseVisualEffectView removeFromSuperview];
-        [self.maskActivityIndicator stopAnimating];
-    }
     if ([self productHighlightsURL]){
         NSOperation *op2 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op2];
@@ -256,9 +250,6 @@
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productHighlightsURL] withCompletionHandler:^(UIImage *image, NSError *error){
             [[NSOperationQueue mainQueue] addOperation:op2];
         }];
-    }
-    else{
-        [self.highlightsView removeFromSuperview];
     }
     
     if ([self productBackgroundURL]){
@@ -268,9 +259,6 @@
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] withCompletionHandler:^(UIImage *image, NSError *error){
             [[NSOperationQueue mainQueue] addOperation:op3];
         }];
-    }
-    else{
-        [self.deviceView removeFromSuperview];
     }
     
     [[NSOperationQueue mainQueue] addOperation:self.downloadImagesOperation];
@@ -509,9 +497,6 @@
         }
         [[NSOperationQueue mainQueue] addOperation:block];
     }
-    else{
-        [self applyProductImageLayers];
-    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -561,33 +546,6 @@
             }
         });
     }];
-}
-
-- (void)applyProductImageLayers{
-    if (!self.deviceView.image){
-        self.deviceView.alpha = 0;
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-                [UIView animateWithDuration:0.1 animations:^{
-                    self.deviceView.alpha = 1;
-                } completion:^(BOOL finished){
-                    [self renderImage];
-                }];
-            });
-        }];
-    }
-    if (!self.highlightsView.image){
-        self.highlightsView.alpha = 0;
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-                [UIView animateWithDuration:0.1 animations:^{
-                    self.highlightsView.alpha = 1;
-                }];
-            });
-        }];
-    }
 }
 
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
