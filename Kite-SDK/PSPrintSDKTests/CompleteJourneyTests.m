@@ -433,7 +433,7 @@
 
 - (void)testCompleteApparelJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
-    [self chooseClass:@"T-shirts" onOLProductHomeViewController:productHomeVc];
+    [self chooseClass:@"Apparel" onOLProductHomeViewController:productHomeVc];
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
