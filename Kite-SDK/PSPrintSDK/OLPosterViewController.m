@@ -318,7 +318,7 @@ CGFloat posterMargin = 2;
         return;
     }
     
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
+    OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;
     cropVc.product = self.product;
@@ -373,7 +373,7 @@ CGFloat posterMargin = 2;
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
+    OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = 1;

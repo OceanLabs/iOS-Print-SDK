@@ -427,7 +427,7 @@ static const NSInteger kSectionPages = 2;
         cropPhoto = self.photobookPhotos[self.longPressImageIndex];
         imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
     }
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
+    OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
     cropVc.delegate = self;
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
     cropVc.product = self.product;

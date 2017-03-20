@@ -150,7 +150,7 @@ CGFloat innerMargin = 3;
     
     [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
-        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
+        OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
         cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
         cropVc.delegate = self;

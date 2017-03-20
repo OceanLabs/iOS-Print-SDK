@@ -922,7 +922,7 @@ static const CGFloat kBookEdgePadding = 38;
         }
         self.editingAsset = self.coverPhoto;
         UIImageView *imageView = self.coverImageView;
-        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
+        OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
         cropVc.delegate = self;
         cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
         cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
@@ -990,7 +990,7 @@ static const CGFloat kBookEdgePadding = 38;
         UIImageView *imageView = [page imageView];
         self.editingAsset = self.photobookPhotos[index];
         [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
-            OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
+            OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
             cropVc.delegate = self;
             cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
             

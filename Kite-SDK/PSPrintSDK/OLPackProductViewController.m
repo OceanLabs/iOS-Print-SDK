@@ -401,7 +401,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
+    OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
     cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
     cropVc.delegate = self;
     cropVc.aspectRatio = [self productAspectRatio];
@@ -537,7 +537,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     
     [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
         
-        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
+        OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
         cropVc.borderInsets = self.product.productTemplate.imageBorder;
         cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
         cropVc.delegate = self;

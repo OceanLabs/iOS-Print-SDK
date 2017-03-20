@@ -87,14 +87,14 @@ const NSInteger kOLEditTagCrop = 40;
 @property (strong, nonatomic) OLPhotoTextField *activeTextField;
 @property (assign, nonatomic) CGFloat originalDrawerHeight;
 
-@property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
+@property (strong, nonatomic) NSMutableArray *allViews;
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewTopCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewLeftCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewBottomCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewRightCon;
-@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (strong, nonatomic) UINavigationBar *navigationBar;
 @property (weak, nonatomic) UIView *gestureView;
 
 @property (weak, nonatomic) OLProductTemplateOption *selectedOption;
@@ -110,6 +110,13 @@ const NSInteger kOLEditTagCrop = 40;
 @end
 
 @implementation OLImageEditViewController
+
+-(NSMutableArray *) allViews{
+    if (!_allViews){
+        _allViews = [[NSMutableArray alloc] init];
+    }
+    return _allViews;
+}
 
 -(NSArray<NSString *> *) fonts{
     if (!_fonts){
@@ -234,12 +241,23 @@ const NSInteger kOLEditTagCrop = 40;
     [self setupContainerView];
     [self setupEditingToolsView];
     
-    if (self.navigationController){
-        [self.navigationBar removeFromSuperview];
+    if (!self.navigationController){
+        self.navigationBar = [[UINavigationBar alloc] init];
+        self.customNavigationItem = [[UINavigationItem alloc] init];
+        self.navigationBar.items = @[self.customNavigationItem];
+        [self.view addSubview:self.navigationBar];
+        
+        [self.navigationBar leadingFromSuperview:0 relation:NSLayoutRelationEqual];
+        [self.navigationBar trailingToSuperview:0 relation:NSLayoutRelationEqual];
+        [self.navigationBar heightConstraint:64];
+        [self.navigationBar verticalSpacingToView:self.printContainerView constant:10 relation:NSLayoutRelationGreaterThanOrEqual];
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.navigationBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+        
+        self.customNavigationItem.title = NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit image");
+        self.customNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onBarButtonCancelTapped:)];
+        [self.customNavigationItem.leftBarButtonItem setTintColor:[UIColor blackColor]];
+        [self.allViews addObject:self.navigationBar];
     }
-    
-    self.customNavigationItem.title = NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit image");
-    [self.customNavigationItem.leftBarButtonItem setTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     
     self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor darkGrayColor], [UIColor colorWithRed:0.890 green:0.863 blue:0.761 alpha:1.000], [UIColor colorWithRed:0.765 green:0.678 blue:0.588 alpha:1.000], [UIColor colorWithRed:0.624 green:0.620 blue:0.612 alpha:1.000], [UIColor colorWithRed:0.976 green:0.910 blue:0.933 alpha:1.000], [UIColor colorWithRed:0.604 green:0.522 blue:0.741 alpha:1.000], [UIColor colorWithRed:0.996 green:0.522 blue:0.886 alpha:1.000], [UIColor colorWithRed:0.392 green:0.271 blue:0.576 alpha:1.000], [UIColor colorWithRed:0.906 green:0.573 blue:0.565 alpha:1.000], [UIColor colorWithRed:0.984 green:0.275 blue:0.404 alpha:1.000], [UIColor colorWithRed:0.918 green:0.000 blue:0.200 alpha:1.000], [UIColor colorWithRed:0.776 green:0.176 blue:0.157 alpha:1.000], [UIColor colorWithRed:0.965 green:0.831 blue:0.239 alpha:1.000], [UIColor colorWithRed:0.961 green:0.682 blue:0.118 alpha:1.000], [UIColor colorWithRed:0.945 green:0.482 blue:0.204 alpha:1.000], [UIColor colorWithRed:0.827 green:0.859 blue:0.898 alpha:1.000], [UIColor colorWithRed:0.616 green:0.710 blue:0.851 alpha:1.000], [UIColor colorWithRed:0.400 green:0.541 blue:0.784 alpha:1.000], [UIColor colorWithRed:0.400 green:0.541 blue:0.784 alpha:1.000], [UIColor colorWithRed:0.173 green:0.365 blue:0.725 alpha:1.000], [UIColor colorWithRed:0.102 green:0.247 blue:0.361 alpha:1.000], [UIColor colorWithRed:0.765 green:0.933 blue:0.898 alpha:1.000], [UIColor colorWithRed:0.506 green:0.788 blue:0.643 alpha:1.000], [UIColor colorWithRed:0.345 green:0.502 blue:0.400 alpha:1.000], [UIColor colorWithRed:0.337 green:0.427 blue:0.208 alpha:1.000]];
     
@@ -380,7 +398,6 @@ const NSInteger kOLEditTagCrop = 40;
     [gestureView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self.cropView action:@selector(panRecognized:)]];
     [gestureView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.cropView action:@selector(pinchRecognized:)]];
     gestureView.userInteractionEnabled = NO;
-
 }
 
 - (CGFloat)containerViewMargin{
@@ -445,6 +462,8 @@ const NSInteger kOLEditTagCrop = 40;
         [self.printContainerView addSubview:self.highlightsView];
         [self.highlightsView fillSuperView];
     }
+    
+    [self.allViews addObject:self.printContainerView];
 }
 
 - (void)setupEditingToolsView{
@@ -459,6 +478,8 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView verticalSpacingToView:self.editingTools constant:20 relation:NSLayoutRelationGreaterThanOrEqual];
     
     self.editingTools.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
+    
+    [self.allViews addObject:self.editingTools];
 }
 
 - (void)applyProductImageLayers{
