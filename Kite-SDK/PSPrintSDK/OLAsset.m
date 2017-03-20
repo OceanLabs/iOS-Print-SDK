@@ -548,6 +548,7 @@ static NSOperationQueue *imageOperationQueue;
             CIContext *context = [CIContext contextWithOptions:nil];
             CGImageRef cgImage = [context createCGImage:filter.outputImage fromRect:filterImage.extent];
             blockImage = [UIImage imageWithCGImage:cgImage];
+            CGImageRelease(cgImage);
         }
         
         for (OLTextOnPhoto *textOnPhoto in self.edits.textsOnPhoto){
