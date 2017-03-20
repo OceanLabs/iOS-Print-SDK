@@ -81,29 +81,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 - (NSDictionary *)jsonFromOrder:(OLPrintOrder *)order {
     NSMutableArray *basket = [[NSMutableArray alloc] initWithCapacity:order.jobs.count];
     for (id<OLPrintJob> job in order.jobs){
-        NSMutableDictionary *jobDict = [[NSMutableDictionary alloc] init];
-        NSSet <OLUpsellOffer *>*offers = [(NSObject *)job safePerformSelectorWithReturn:@selector(acceptedOffers) withObject:nil];
-        if (offers.count > 0 && [offers.allObjects.firstObject identifier]){
-            jobDict[@"triggered_upsell"] = [NSNumber numberWithUnsignedInteger:[offers.allObjects.firstObject identifier]];
-        }
-        if ([job respondsToSelector:@selector(redeemedOffer)]){
-            NSUInteger redeemed = [(OLProductPrintJob *)job redeemedOffer].identifier;
-            if (redeemed){
-                jobDict[@"redeemed_upsell"] = [NSNumber numberWithUnsignedInteger:redeemed];
-            }
-        }
-        if (job.address.country){
-            jobDict[@"country_code"] = job.address.country.codeAlpha3;
-        }
-        else{
-            jobDict[@"country_code"] = order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
-        }
-        
-        jobDict[@"template_id"] = job.templateId;
-        jobDict[@"quantity"] = [NSNumber numberWithInteger:[job quantity] * ([job extraCopies]+1)];
-        jobDict[@"job_id"] = [job uuid];
-        jobDict[@"options"] = [(OLProductPrintJob *)job options];
-        [basket addObject:jobDict];
+        [basket addObject:[job jsonRepresentation]];
     }
 
     NSDictionary *dict = @{@"basket" : basket,

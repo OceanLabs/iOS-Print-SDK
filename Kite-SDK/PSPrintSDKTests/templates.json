@@ -21,6 +21,7 @@
   "user_config" : {
     "user_type" : "KITE_TEST",
     "theme" : "unittest",
+    "banner_message" : "<header>Hello Inspector!</header><para>This message will self-destruct in [[2025-02-16 10:53 GMT+1]]</para>",
     "banner_carousel_images" : [
 
     ]
@@ -76659,7 +76660,563 @@
       "default_description" : "",
       "product_category" : "T-shirts",
       "description" : ""
-    }
+    },
+               {
+               "active": true,
+               "available_platforms": [
+                                       "iOS",
+                                       "Shopify",
+                                       "API"
+                                       ],
+               "order": 45,
+               "resource_uri": "/v3.0/template/roly_sublimation_tshirt/",
+               "product_category": "Sublimation",
+               "id": 692507,
+               "upsell_offers": [],
+               "product_active": true,
+               "product": {
+               "ios_sdk_product_shots": [
+                                         "https://s3.amazonaws.com/sdk-static/product_photography/apparel/sublimation/roly_tshirt.1.jpg",
+                                         "https://s3.amazonaws.com/sdk-static/product_photography/apparel/sublimation/roly_tshirt.2.jpg"
+                                         ],
+               "size": {
+               "px": {
+               "height": 3985.0,
+               "width": 4500.0
+               },
+               "cm": {
+               "height": 89.75,
+               "width": 101.6
+               },
+               "inch": {
+               "height": 35.33,
+               "width": 40.0
+               }
+               },
+               "ios_sdk_class_photo": "https://s3.amazonaws.com/sdk-static/product_photography/apparel/sublimation/top_level.jpg",
+               "product_code": "SUB-MFT-7129",
+               "mask_blend_mode": "",
+               "fulfilment_fields": [
+                                     {
+                                     "required": false,
+                                     "product_highlights_url": "https://s3.amazonaws.com/sdk-static/apparel_masks/sublimation/roly_sublimation_tshirt/front/foreground.png",
+                                     "field_name": "back_image",
+                                     "description": "Image printed on back of product",
+                                     "cost": [
+                                              {
+                                              "formatted": "$0.00",
+                                              "amount": "0.0000",
+                                              "currency": "USD"
+                                              },
+                                              {
+                                              "formatted": "€0.00",
+                                              "amount": "0.0000",
+                                              "currency": "EUR"
+                                              },
+                                              {
+                                              "formatted": "£0.00",
+                                              "amount": "0.0000",
+                                              "currency": "GBP"
+                                              }
+                                              ],
+                                     "product_background_image_url": "https://s3.amazonaws.com/sdk-static/apparel_masks/sublimation/roly_sublimation_tshirt/front/background.png",
+                                     "mask_url": "https://s3.amazonaws.com/sdk-static/apparel_masks/sublimation/roly_sublimation_tshirt/front/mask.png",
+                                     "verbose_name": "Back"
+                                     },
+                                     {
+                                     "required": true,
+                                     "product_highlights_url": "https://s3.amazonaws.com/sdk-static/apparel_masks/sublimation/roly_sublimation_tshirt/front/foreground.png",
+                                     "field_name": "front_image",
+                                     "description": "Front image on product",
+                                     "cost": [
+                                              {
+                                              "formatted": "$0.00",
+                                              "amount": "0.0000",
+                                              "currency": "USD"
+                                              },
+                                              {
+                                              "formatted": "€0.00",
+                                              "amount": "0.0000",
+                                              "currency": "EUR"
+                                              },
+                                              {
+                                              "formatted": "£0.00",
+                                              "amount": "0.0000",
+                                              "currency": "GBP"
+                                              }
+                                              ],
+                                     "product_background_image_url": "https://s3.amazonaws.com/sdk-static/apparel_masks/sublimation/roly_sublimation_tshirt/front/background.png",
+                                     "mask_url": "https://s3.amazonaws.com/sdk-static/apparel_masks/sublimation/roly_sublimation_tshirt/front/mask.png",
+                                     "verbose_name": "Front"
+                                     }
+                                     ],
+               "ios_sdk_product_class": "Sublimation",
+               "product_highlights_url": "https://s3.amazonaws.com/sdk-static/apparel_masks/sublimation/roly_sublimation_tshirt/front/foreground.png",
+               "cover_photo_variants": [
+                                        {
+                                        "variant_id": "default",
+                                        "url": "https://s3.amazonaws.com/sdk-static/product_photography/apparel/sublimation/cover_roly_tshirt.jpg"
+                                        }
+                                        ],
+               "ios_sdk_label_color": [
+                                       203,
+                                       86,
+                                       157
+                                       ],
+               "supported_options": [
+                                     {
+                                     "code": "garment_size",
+                                     "options": [
+                                                 {
+                                                 "code": "s",
+                                                 "color_hex_code": "",
+                                                 "override_mask": null,
+                                                 "short_name": "S",
+                                                 "name": "Small"
+                                                 },
+                                                 {
+                                                 "code": "m",
+                                                 "color_hex_code": "",
+                                                 "override_mask": null,
+                                                 "short_name": "M",
+                                                 "name": "Medium"
+                                                 },
+                                                 {
+                                                 "code": "l",
+                                                 "color_hex_code": "",
+                                                 "override_mask": null,
+                                                 "short_name": "L",
+                                                 "name": "Large"
+                                                 },
+                                                 {
+                                                 "code": "xl",
+                                                 "color_hex_code": "",
+                                                 "override_mask": null,
+                                                 "short_name": "XL",
+                                                 "name": "Extra Large"
+                                                 },
+                                                 {
+                                                 "code": "2xl",
+                                                 "color_hex_code": "",
+                                                 "override_mask": null,
+                                                 "short_name": "2XL",
+                                                 "name": "XX Large"
+                                                 }
+                                                 ],
+                                     "name": "Size"
+                                     }
+                                     ],
+               "ios_sdk_ui_class": "APPAREL",
+               "product_background_image_url": "https://s3.amazonaws.com/sdk-static/apparel_masks/sublimation/roly_sublimation_tshirt/front/background.png",
+               "mask_url": "https://s3.amazonaws.com/sdk-static/apparel_masks/sublimation/roly_sublimation_tshirt/front/mask.png",
+               "ios_sdk_product_type": "Shirt",
+               "vat_exempt": false
+               },
+               "cost": [
+                        {
+                        "formatted": "£25.00",
+                        "amount": "25.0000",
+                        "currency": "GBP",
+                        "id": 2875307,
+                        "template": "/v2.1/template/roly_sublimation_tshirt/"
+                        },
+                        {
+                        "formatted": "$38.00",
+                        "amount": "38.0000",
+                        "currency": "USD",
+                        "id": 2875308,
+                        "template": "/v2.1/template/roly_sublimation_tshirt/"
+                        },
+                        {
+                        "formatted": "€31.00",
+                        "amount": "31.0000",
+                        "currency": "EUR",
+                        "id": 2875309,
+                        "template": "/v2.1/template/roly_sublimation_tshirt/"
+                        }
+                        ],
+               "shipping_costs": {
+               "GBR": {
+               "DKK": {
+               "amount": "26.28948"
+               },
+               "USD": {
+               "amount": "3.97092"
+               },
+               "EUR": {
+               "amount": "3.52992"
+               },
+               "CHF": {
+               "amount": "3.86580"
+               },
+               "NZD": {
+               "amount": "5.45280"
+               },
+               "ILS": {
+               "amount": "15.02244"
+               },
+               "CAD": {
+               "amount": "5.23284"
+               },
+               "SGD": {
+               "amount": "5.41092"
+               },
+               "INR": {
+               "amount": "265.50612"
+               },
+               "NGN": {
+               "amount": "1247.81196"
+               },
+               "KRW": {
+               "amount": "4458.10944"
+               },
+               "GBP": {
+               "amount": "3.00000"
+               },
+               "AUD": {
+               "amount": "5.31528"
+               },
+               "ZAR": {
+               "amount": "50.40000"
+               }
+               },
+               "europe": {
+               "DKK": {
+               "amount": "42.06312"
+               },
+               "USD": {
+               "amount": "6.35340"
+               },
+               "EUR": {
+               "amount": "5.64780"
+               },
+               "CHF": {
+               "amount": "6.18516"
+               },
+               "NZD": {
+               "amount": "8.72460"
+               },
+               "ILS": {
+               "amount": "24.03600"
+               },
+               "CAD": {
+               "amount": "8.37264"
+               },
+               "SGD": {
+               "amount": "8.65740"
+               },
+               "INR": {
+               "amount": "424.80984"
+               },
+               "NGN": {
+               "amount": "1996.49916"
+               },
+               "KRW": {
+               "amount": "7132.97508"
+               },
+               "GBP": {
+               "amount": "4.80000"
+               },
+               "AUD": {
+               "amount": "8.50440"
+               },
+               "ZAR": {
+               "amount": "80.40000"
+               }
+               },
+               "USA": {
+               "DKK": {
+               "amount": "42.06312"
+               },
+               "USD": {
+               "amount": "6.35340"
+               },
+               "EUR": {
+               "amount": "5.64780"
+               },
+               "CHF": {
+               "amount": "6.18516"
+               },
+               "NZD": {
+               "amount": "8.72460"
+               },
+               "ILS": {
+               "amount": "24.03600"
+               },
+               "CAD": {
+               "amount": "8.37264"
+               },
+               "SGD": {
+               "amount": "8.65740"
+               },
+               "INR": {
+               "amount": "424.80984"
+               },
+               "NGN": {
+               "amount": "1996.49916"
+               },
+               "KRW": {
+               "amount": "7132.97508"
+               },
+               "GBP": {
+               "amount": "4.80000"
+               },
+               "AUD": {
+               "amount": "8.50440"
+               },
+               "ZAR": {
+               "amount": "80.40000"
+               }
+               },
+               "rest_of_world": {
+               "DKK": {
+               "amount": "52.57896"
+               },
+               "USD": {
+               "amount": "7.94172"
+               },
+               "EUR": {
+               "amount": "7.05984"
+               },
+               "CHF": {
+               "amount": "7.73148"
+               },
+               "NZD": {
+               "amount": "10.90572"
+               },
+               "ILS": {
+               "amount": "30.04488"
+               },
+               "CAD": {
+               "amount": "10.46580"
+               },
+               "SGD": {
+               "amount": "10.82184"
+               },
+               "INR": {
+               "amount": "531.01236"
+               },
+               "NGN": {
+               "amount": "2495.62404"
+               },
+               "KRW": {
+               "amount": "8916.21888"
+               },
+               "GBP": {
+               "amount": "6.00000"
+               },
+               "AUD": {
+               "amount": "10.63056"
+               },
+               "ZAR": {
+               "amount": "100.80000"
+               }
+               }
+               },
+               "template_id": "roly_sublimation_tshirt",
+               "wholesale_shipping_costs": {
+               "GBR": {
+               "DKK": {
+               "amount": "26.28948"
+               },
+               "USD": {
+               "amount": "3.97092"
+               },
+               "EUR": {
+               "amount": "3.52992"
+               },
+               "CHF": {
+               "amount": "3.86580"
+               },
+               "NZD": {
+               "amount": "5.45280"
+               },
+               "ILS": {
+               "amount": "15.02244"
+               },
+               "CAD": {
+               "amount": "5.23284"
+               },
+               "SGD": {
+               "amount": "5.41092"
+               },
+               "INR": {
+               "amount": "265.50612"
+               },
+               "NGN": {
+               "amount": "1247.81196"
+               },
+               "KRW": {
+               "amount": "4458.10944"
+               },
+               "GBP": {
+               "amount": "3.00000"
+               },
+               "AUD": {
+               "amount": "5.31528"
+               },
+               "ZAR": {
+               "amount": "50.40000"
+               }
+               },
+               "europe": {
+               "DKK": {
+               "amount": "42.06312"
+               },
+               "USD": {
+               "amount": "6.35340"
+               },
+               "EUR": {
+               "amount": "5.64780"
+               },
+               "CHF": {
+               "amount": "6.18516"
+               },
+               "NZD": {
+               "amount": "8.72460"
+               },
+               "ILS": {
+               "amount": "24.03600"
+               },
+               "CAD": {
+               "amount": "8.37264"
+               },
+               "SGD": {
+               "amount": "8.65740"
+               },
+               "INR": {
+               "amount": "424.80984"
+               },
+               "NGN": {
+               "amount": "1996.49916"
+               },
+               "KRW": {
+               "amount": "7132.97508"
+               },
+               "GBP": {
+               "amount": "4.80000"
+               },
+               "AUD": {
+               "amount": "8.50440"
+               },
+               "ZAR": {
+               "amount": "80.40000"
+               }
+               },
+               "USA": {
+               "DKK": {
+               "amount": "42.06312"
+               },
+               "USD": {
+               "amount": "6.35340"
+               },
+               "EUR": {
+               "amount": "5.64780"
+               },
+               "CHF": {
+               "amount": "6.18516"
+               },
+               "NZD": {
+               "amount": "8.72460"
+               },
+               "ILS": {
+               "amount": "24.03600"
+               },
+               "CAD": {
+               "amount": "8.37264"
+               },
+               "SGD": {
+               "amount": "8.65740"
+               },
+               "INR": {
+               "amount": "424.80984"
+               },
+               "NGN": {
+               "amount": "1996.49916"
+               },
+               "KRW": {
+               "amount": "7132.97508"
+               },
+               "GBP": {
+               "amount": "4.80000"
+               },
+               "AUD": {
+               "amount": "8.50440"
+               },
+               "ZAR": {
+               "amount": "80.40000"
+               }
+               },
+               "rest_of_world": {
+               "DKK": {
+               "amount": "52.57896"
+               },
+               "USD": {
+               "amount": "7.94172"
+               },
+               "EUR": {
+               "amount": "7.05984"
+               },
+               "CHF": {
+               "amount": "7.73148"
+               },
+               "NZD": {
+               "amount": "10.90572"
+               },
+               "ILS": {
+               "amount": "30.04488"
+               },
+               "CAD": {
+               "amount": "10.46580"
+               },
+               "SGD": {
+               "amount": "10.82184"
+               },
+               "INR": {
+               "amount": "531.01236"
+               },
+               "NGN": {
+               "amount": "2495.62404"
+               },
+               "KRW": {
+               "amount": "8916.21888"
+               },
+               "GBP": {
+               "amount": "6.00000"
+               },
+               "AUD": {
+               "amount": "10.63056"
+               },
+               "ZAR": {
+               "amount": "100.80000"
+               }
+               }
+               },
+               "name": "Roly Sublimation T-Shirt",
+               "description": "",
+               "description_markdown": "",
+               "order_android": 45,
+               "images_required": 1,
+               "wholesale_cost": {
+               "DKK": "94.80",
+               "USD": "13.80",
+               "EUR": "13.20",
+               "CHF": "14.40",
+               "NZD": "19.80",
+               "ILS": "54.00",
+               "CAD": "19.20",
+               "SGD": "19.80",
+               "INR": "954.00",
+               "NGN": "4476.00",
+               "KRW": "15984.00",
+               "GBP": "10.75",
+               "AUD": "19.20",
+               "ZAR": "186.00"
+               },
+               "default_description": "",
+               "sandbox_active": true,
+               "print_in_store": false
+               }
   ],
   "payment_keys" : {
     "paypal" : {

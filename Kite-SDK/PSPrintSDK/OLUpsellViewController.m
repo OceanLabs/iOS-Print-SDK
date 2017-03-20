@@ -34,6 +34,8 @@
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLAnalytics.h"
 #import "OLKiteUtils.h"
+#import "UIImageView+FadeIn.h"
+#import "OLAsset.h"
 
 @interface OLUpsellViewController ()
 
@@ -49,7 +51,6 @@
 @end
 
 @interface OLProduct ()
--(void)setCoverImageToImageView:(UIImageView *)imageView size:(CGSize)size;
 - (NSDecimalNumber*) unitCostDecimalNumber;
 - (NSString *)currencyCode;
 @end
@@ -70,8 +71,7 @@
     [self.declineButton setTitle:NSLocalizedStringFromTableInBundle(@"No Thanks", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     self.product = [OLProduct productWithTemplateId:self.offer.offerTemplate];
-    [self.product setCoverImageToImageView:self.imageView size:self.imageView.frame.size];
-    
+    [self.imageView setAndFadeInImageWithOLAsset:[self.product coverPhotoAsset] size:OLAssetMaximumSize applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
     
     NSDecimalNumber *discountedCost = self.product.unitCostDecimalNumber;
     

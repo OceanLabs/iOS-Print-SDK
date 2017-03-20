@@ -85,6 +85,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
 
+- (IBAction)onButtonPrintOrderHistory:(UIButton *)sender {
+    [self presentViewController:[OLKiteViewController orderHistoryViewController] animated:YES completion:NULL];
+}
+
+
 - (NSString *)apiKey {
     if ([self environment] == OLKitePrintSDKEnvironmentSandbox) {
         return kAPIKeySandbox;

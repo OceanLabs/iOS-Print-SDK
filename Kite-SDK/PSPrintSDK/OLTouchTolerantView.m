@@ -27,8 +27,25 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
 
-@interface PrintOrderHistoryViewController : UITableViewController
+#import "OLTouchTolerantView.h"
+
+@implementation OLTouchTolerantView
+
+// Taken from: http://stackoverflow.com/questions/11770743/capturing-touches-on-a-subview-outside-the-frame-of-its-superview-using-hittest
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    if (!self.clipsToBounds && !self.hidden && self.alpha > 0) {
+        for (UIView *subview in self.subviews.reverseObjectEnumerator) {
+            CGPoint subPoint = [subview convertPoint:point fromView:self];
+            UIView *result = [subview hitTest:subPoint withEvent:event];
+            if (result != nil) {
+                return result;
+            }
+        }
+    }
+    
+    return nil;
+}
 
 @end

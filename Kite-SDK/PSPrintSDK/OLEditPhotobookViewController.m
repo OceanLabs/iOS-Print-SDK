@@ -64,7 +64,7 @@ static const NSInteger kSectionPages = 2;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate>
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL haveCachedCells;
@@ -96,7 +96,7 @@ static const NSInteger kSectionPages = 2;
     [super viewDidLoad];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+    [OLAnalytics trackPhotobookEditScreenViewed:self.product.productTemplate.name];
 #endif
     
     self.title = NSLocalizedStringFromTableInBundle(@"Move Pages", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen that allows the user to move the pages of a book around");
@@ -180,7 +180,7 @@ static const NSInteger kSectionPages = 2;
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
+        [OLAnalytics trackPhotobookEditScreenHitBack:self.product.productTemplate.name];
     }
 #endif
 }
@@ -430,7 +430,7 @@ static const NSInteger kSectionPages = 2;
         cropPhoto = self.photobookPhotos[self.longPressImageIndex];
         imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
     }
-    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+    OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
     cropVc.delegate = self;
     cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
     cropVc.product = self.product;
@@ -448,7 +448,7 @@ static const NSInteger kSectionPages = 2;
     }];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+    [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
 #endif
 }
 
@@ -458,7 +458,7 @@ static const NSInteger kSectionPages = 2;
     if (self.photobookPhotos.count == 0){
         NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"No photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of an alert letting the user know that they selected no photos");
         NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Please add at least one photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:NULL]];
         [self presentViewController:ac animated:YES completion:NULL];
@@ -510,7 +510,7 @@ static const NSInteger kSectionPages = 2;
     }
     else if (self.selectedIndexNumber){ //swap
         OLPhotobookPageContentViewController *selectedPage = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]];
-        OLAsset *printPhoto = [self.photobookPhotos objectAtIndex:tappedImageIndex];
+        OLAsset *asset = [self.photobookPhotos objectAtIndex:tappedImageIndex];
         
         [page unhighlightImageAtIndex:tappedImageIndex];
         [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
@@ -534,7 +534,7 @@ static const NSInteger kSectionPages = 2;
             [self.view addSubview:selectedPageCopy];
             
             CGRect tempFrame = pageCopy.frame;
-            if ([printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+            if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
                 [pageCopy removeFromSuperview];
             }
             [UIView animateWithDuration:0.05 animations:^{
@@ -544,7 +544,7 @@ static const NSInteger kSectionPages = 2;
             [UIView animateWithDuration:0.5 animations:^{
                 [self setPageShadowAlpha:selectedPageCopy forIndex:page.pageIndex];
                 
-                if (![printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+                if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
                     [self setPageShadowAlpha:pageCopy forIndex:selectedPage.pageIndex];
                     pageCopy.frame = selectedPageCopy.frame;
                 }
@@ -612,7 +612,7 @@ static const NSInteger kSectionPages = 2;
                 [UIView animateWithDuration:0.5 animations:^{
                     [self setPageShadowAlpha:selectedPageCopy forIndex:page.pageIndex];
                     
-                    if (![printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+                    if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
                         pageCopy.transform = selectedPageCopy.transform;
                     }
                     selectedPageCopy.transform = CGAffineTransformIdentity;
@@ -809,7 +809,7 @@ static const NSInteger kSectionPages = 2;
     return MIN((min) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height), (self.view.frame.size.height - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)) * 0.9);
 }
 
-#pragma mark - OLScrollCropView delegate
+#pragma mark - OLImageEditViewController delegate
 
 - (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
     if (self.longPressImageIndex == -1){
@@ -847,6 +847,9 @@ static const NSInteger kSectionPages = 2;
     }
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{

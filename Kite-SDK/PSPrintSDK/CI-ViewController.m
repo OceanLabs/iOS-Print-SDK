@@ -48,6 +48,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "AssetDataSource.h"
 #import "OLKiteTestHelper.h"
 #import "OLKiteUtils.h"
+#import "JDStatusBarNotification/JDStatusBarNotification.h"
 
 @import Photos;
 
@@ -138,7 +139,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 - (IBAction)onButtonExtraTapped:(UIButton *)sender {
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Extras" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     [ac addAction:[UIAlertAction actionWithTitle:@"Print Order History" style:UIAlertActionStyleDefault handler:^(id action){
-        [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"PrintOrderHistoryViewController"] animated:YES];
+        [self presentViewController:[OLKiteViewController orderHistoryViewController] animated:YES completion:NULL];
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"PDF Photobook" style:UIAlertActionStyleDefault handler:^(id action){
         [OLProgressHUD showWithStatus:@"Downloading PDF 1/2"];
@@ -259,6 +260,12 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #ifdef OL_KITE_VERBOSE
     NSLog(@"%@", info);
 #endif
+    
+    NSString *status = info[kOLAnalyticsEventName];
+    if ([info[kOLAnalyticsEventLevel] integerValue] != 1){
+        status = [@"*" stringByAppendingString:status];
+    }
+    [JDStatusBarNotification showWithStatus:status dismissAfter:2];
 }
 
 - (void)setupCIDeploymentWithAssets:(NSArray *)assets{

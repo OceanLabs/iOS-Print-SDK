@@ -48,6 +48,7 @@ typedef enum {
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler;
 - (void)dataWithCompletionHandler:(GetDataHandler)handler;
 - (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler;
+- (void)getImageURLWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSURL *url, NSError *error))handler;
 - (void)unloadImage;
 - (BOOL)isEdited;
 - (BOOL)isEqual:(id)object ignoreEdits:(BOOL)ignoreEdits;

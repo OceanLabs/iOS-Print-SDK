@@ -110,20 +110,17 @@ static CardType getCardType(NSString *cardNumber) {
 @interface OLCreditCardCaptureRootController : UITableViewController <UITableViewDelegate,
 UITableViewDataSource, UITextFieldDelegate>
 @property (nonatomic, strong) UITextField *textFieldCardNumber, *textFieldExpiryDate, *textFieldCVV;
-@property (nonatomic, strong) OLPrintOrder *printOrder;
 @property (nonatomic, weak) id <UINavigationControllerDelegate, OLCreditCardCaptureDelegate> delegate;
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 @end
 
 @interface OLCreditCardCaptureViewController ()
 @property (nonatomic, strong) OLCreditCardCaptureRootController *rootVC;
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 @end
 
 @implementation OLCreditCardCaptureViewController
 
-- (instancetype)initWithPrintOrder:(OLPrintOrder *)printOrder {
-    self.rootVC = [[OLCreditCardCaptureRootController alloc] initWithPrintOrder:printOrder];
+- (instancetype)init{
+    self.rootVC = [[OLCreditCardCaptureRootController alloc] initWithStyle:UITableViewStyleGrouped];
     if (self = [super initWithRootViewController:self.rootVC]) {
 
     }
@@ -147,54 +144,34 @@ UITableViewDataSource, UITextFieldDelegate>
 
 @implementation OLCreditCardCaptureRootController
 
-- (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
-    if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-        self.printOrder = printOrder;
-        
-        if (printOrder){
-            if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox) {
-                self.title = NSLocalizedStringFromTableInBundle(@"Pay with Credit Card (TEST)", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-            } else {
-                self.title = NSLocalizedStringFromTableInBundle(@"Pay with Credit Card", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-            }
-        }
-        else{
-            if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox) {
-                self.title = NSLocalizedStringFromTableInBundle(@"Add Credit Card (TEST)", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-            } else {
-                self.title = NSLocalizedStringFromTableInBundle(@"Add Credit Card", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-            }
-        }
-
-        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
-        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
-                if (error) return;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
-                });
-            }];
-        }
-        else{
-            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
-        }
-    }
-    
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox) {
+        self.title = NSLocalizedStringFromTableInBundle(@"Add Credit Card (TEST)", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    } else {
+        self.title = NSLocalizedStringFromTableInBundle(@"Add Credit Card", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    }
+    
+    NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
+    if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
+            if (error) return;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
+            });
+        }];
+    }
+    else{
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+    }
     
     UIButton *buttonPay = [[UIButton alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 44)];
     buttonPay.backgroundColor = [UIColor colorWithRed:74 / 255.0f green:137 / 255.0f blue:220 / 255.0f alpha:1.0];
     [buttonPay addTarget:self action:@selector(onButtonPayClicked) forControlEvents:UIControlEventTouchUpInside];
-    if (self.printOrder){
-        [buttonPay setTitle: NSLocalizedStringFromTableInBundle(@"Pay", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-    }
-    else{
-        [buttonPay setTitle: NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-    }
+    
+    [buttonPay setTitle: NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    
     [buttonPay makeRoundRect];
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44 + 40)];
@@ -216,19 +193,11 @@ UITableViewDataSource, UITextFieldDelegate>
     [view.superview addConstraints:con];
     
     self.tableView.tableFooterView = footerView;
-    
-    if (self.printOrder){
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Pay", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
-                                                                             style:UIBarButtonItemStyleDone
-                                                                            target:self
-                                                                            action:@selector(onButtonPayClicked)];
-    }
-    else{
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
-                                                                                  style:UIBarButtonItemStyleDone
-                                                                                 target:self
-                                                                                 action:@selector(onButtonPayClicked)];
-    }
+
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Add", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
+                                                                              style:UIBarButtonItemStyleDone
+                                                                             target:self
+                                                                             action:@selector(onButtonPayClicked)];
     
     UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
     if (color1){
@@ -271,7 +240,7 @@ UITableViewDataSource, UITextFieldDelegate>
     if (![self.textFieldCardNumber.text isValidCreditCardNumber]) {
         NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
         return;
     }
@@ -279,7 +248,7 @@ UITableViewDataSource, UITextFieldDelegate>
     if (self.textFieldExpiryDate.text.length != 5) {
         NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"For credit cards");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
         return;
     }
@@ -287,7 +256,7 @@ UITableViewDataSource, UITextFieldDelegate>
     if (self.textFieldCVV.text.length == 0) {
         NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid CVV number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"The credit card security number");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
         return;
     }
@@ -297,7 +266,7 @@ UITableViewDataSource, UITextFieldDelegate>
     if (expireMonth > 12) {
         NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid expiry date", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"For credit cards");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
         return;
     }
@@ -308,7 +277,7 @@ UITableViewDataSource, UITextFieldDelegate>
     if (componentsYear > expireYear || (componentsYear == expireYear && components.month > expireMonth)){
         NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"For credit cards");
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
         return;
     }
@@ -331,7 +300,7 @@ UITableViewDataSource, UITextFieldDelegate>
         default: {
             NSString *localizedDescription = NSLocalizedStringFromTableInBundle(@"Enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
             [self presentViewController:ac animated:YES completion:NULL];
             return;
         }
@@ -343,28 +312,9 @@ UITableViewDataSource, UITextFieldDelegate>
         card.expireMonth = expireMonth;
         card.expireYear = expireYear;
         card.cvv2 = [self cardCVV];
-        
-        if (self.printOrder){
-            [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
-            [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Processing the order")];
-            [card chargeCard:nil currencyCode:nil description:nil completionHandler:^(NSString *proofOfPayment, NSError *error) {
-                if (error) {
-                    [OLProgressHUD dismiss];
-                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
-                    [self presentViewController:ac animated:YES completion:NULL];
-                    return;
-                }
-                
-                [OLProgressHUD dismiss];
-                [self.delegate creditCardCaptureController:(OLCreditCardCaptureViewController *) self.navigationController didFinishWithProofOfPayment:proofOfPayment];
-                [card saveAsLastUsedCard];
-            }];
-        }
-        else{
-            [card saveAsLastUsedCard];
-            [self.delegate creditCardCaptureController:(OLCreditCardCaptureViewController *) self.navigationController didFinishWithProofOfPayment:nil];
-        }
+
+        [card saveAsLastUsedCard];
+        [self.delegate creditCardCaptureController:(OLCreditCardCaptureViewController *) self.navigationController didFinishWithProofOfPayment:nil];
     }
     else{
         OLPayPalCard *card = [[OLPayPalCard alloc] init];
@@ -374,37 +324,9 @@ UITableViewDataSource, UITextFieldDelegate>
         card.expireYear = expireYear;
         card.cvv2 = [self cardCVV];
         
-        if (self.printOrder){
-            [self storeAndChargeCard:card];
-        }
-        else{
-            [card saveAsLastUsedCard];
-            [self.delegate creditCardCaptureController:(OLCreditCardCaptureViewController *) self.navigationController didFinishWithProofOfPayment:nil];
-        }
+        [card saveAsLastUsedCard];
+        [self.delegate creditCardCaptureController:(OLCreditCardCaptureViewController *) self.navigationController didFinishWithProofOfPayment:nil];
     }
-}
-
-- (void)storeAndChargeCard:(id)card{
-    [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
-    [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
-    [card storeCardWithCompletionHandler:^(NSError *error) {
-        // ignore error as I'd rather the user gets a nice checkout experience than we store the card in PayPal vault.
-        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
-            [card chargeCard:[cost totalCostInCurrency:self.printOrder.currencyCode] currencyCode:self.printOrder.currencyCode description:self.printOrder.paymentDescription completionHandler:^(NSString *proofOfPayment, NSError *error) {
-                if (error) {
-                    [OLProgressHUD dismiss];
-                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
-                    [self presentViewController:ac animated:YES completion:NULL];
-                    return;
-                }
-                
-                [OLProgressHUD dismiss];
-                [self.delegate creditCardCaptureController:(OLCreditCardCaptureViewController *) self.navigationController didFinishWithProofOfPayment:proofOfPayment];
-                [card saveAsLastUsedCard];
-            }];
-        }];
-    }];
 }
 
 - (void)onButtonCancelClicked {

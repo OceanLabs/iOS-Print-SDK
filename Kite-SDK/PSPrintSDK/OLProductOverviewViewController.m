@@ -165,7 +165,7 @@
     }
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductDescriptionScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
+    [OLAnalytics trackProductDetailsScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
     
     self.originalBoxConstraint = self.detailsBoxTopCon.constant;
@@ -475,13 +475,9 @@
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            if ([existingJob extraCopies] > 0){
-                [existingJob setExtraCopies:[existingJob extraCopies]-1];
-            }
-            else{
-                [printOrder removePrintJob:existingJob];
-            }
+            job.extraCopies = existingJob.extraCopies;
             job.uuid = self.product.uuid;
+            [printOrder removePrintJob:existingJob];
         }
     }
     self.product.uuid = job.uuid;

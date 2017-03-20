@@ -120,7 +120,7 @@
     
 #ifndef OL_NO_ANALYTICS
     if (self.product){
-        [OLAnalytics trackPhotoSelectionScreenViewed:self.product.productTemplate.name];
+        [OLAnalytics trackImagePickerScreenViewed:self.product.productTemplate.name];
     }
 #endif
     
@@ -265,15 +265,18 @@
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
-- (void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackPhotoSelectionScreenHitBack:self.product.productTemplate.name];
+        [OLAnalytics trackImagePickerScreenHitBack:self.product.productTemplate.name];
     }
 #endif
-    
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     self.viewWillDisappear = YES;
 }
 
@@ -637,6 +640,12 @@
     self.nextButton.hidden = NO;
     ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).nextButton.hidden = YES;
     [self positionSelectedProviderIndicator];
+    self.indicatorDestFrame = CGRectZero;
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPhotoProviderPicked:self.providers[[self.pageController.viewControllers[0] pageIndex]].name forProductName:self.product.productTemplate.name];
+#endif
+
 }
 
 #pragma mark Custom VC
@@ -732,7 +741,7 @@
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     
-    CGFloat margin = MAX((collectionView.frame.size.width - ([self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]].width * [self collectionView:collectionView numberOfItemsInSection:section] + [self collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section] * ([self collectionView:collectionView numberOfItemsInSection:section]-1)))/2.0, 5);
+    CGFloat margin = MAX((collectionView.frame.size.width - ([self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]].width * [self collectionView:collectionView numberOfItemsInSection:section] + [self collectionView:collectionView layout:collectionViewLayout minimumLineSpacingForSectionAtIndex:section] * ([self collectionView:collectionView numberOfItemsInSection:section]-1)))/2.0, 0);
     return UIEdgeInsetsMake(0, margin, 0, margin);
 }
 
@@ -762,6 +771,10 @@
     [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished){
         welf.indicatorDestFrame = CGRectZero;
         [welf positionSelectedProviderIndicator];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackPhotoProviderPicked:welf.providers[[welf.pageController.viewControllers[0] pageIndex]].name forProductName:welf.product.productTemplate.name];
+#endif
     }];
 }
 
@@ -773,9 +786,6 @@
         CGFloat percentMoved = (scrollView.contentOffset.x - scrollView.frame.size.width) / scrollView.frame.size.width;
         if (!CGRectIsNull(self.indicatorDestFrame) && CGSizeEqualToSize(self.indicatorDestFrame.size, CGSizeZero)){
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0];
-            if (percentMoved < 0 && indexPath.item > 0){
-                indexPath = [NSIndexPath indexPathForItem:indexPath.item-1 inSection:indexPath.section];
-            }
             self.indicatorDestFrame = [self.sourcesCollectionView cellForItemAtIndexPath:indexPath].frame;
         }
         if (!CGRectIsNull(self.indicatorDestFrame)){
@@ -819,7 +829,7 @@
     }
     if (errorMessage) {
         UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
-        [av addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+        [av addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:NULL]];
         [self presentViewController:av animated:YES completion:NULL];
         return NO;
     }
@@ -853,7 +863,9 @@
             shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
         }
         
+#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackUpsellShown:shouldShowOffer];
+#endif
         if (shouldShowOffer){
             OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
             c.providesPresentationContextTransitionStyle = true;
@@ -892,6 +904,9 @@
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackImagePickerScreenHitBack:self.product.productTemplate.name];
+#endif
 }
 
 - (void)onButtonDoneTapped:(UIButton *)sender{

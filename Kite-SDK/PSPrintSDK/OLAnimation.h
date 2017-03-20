@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Mark Pospesel. All rights reserved.
 //
 
-@import UIKit;
+#import <UIKit/UIKit.h>
 
 @interface OLAnimation : NSObject
 

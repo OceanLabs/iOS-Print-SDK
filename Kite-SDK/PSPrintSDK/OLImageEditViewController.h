@@ -37,7 +37,7 @@
 @class OLPhotoEdits;
 @class OLAsset;
 
-@protocol OLScrollCropViewControllerDelegate <NSObject>
+@protocol OLImageEditViewControllerDelegate <NSObject>
 
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage;
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset;
@@ -55,7 +55,7 @@
 @property (weak, nonatomic) IBOutlet OLRemoteImageCropper *cropView;
 @property (assign, nonatomic) CGFloat aspectRatio;
 @property (strong, nonatomic) NSNumber *centerYConConstant;
-@property (weak, nonatomic) id<OLScrollCropViewControllerDelegate> delegate;
+@property (weak, nonatomic) id<OLImageEditViewControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL enableCircleMask;
 @property (strong, nonatomic) UIView *previewView;
 @property (strong, nonatomic) UIView *previewSourceView;
@@ -66,6 +66,7 @@
 @property (weak, nonatomic) UIButton *ctaButton;
 @property (weak, nonatomic) IBOutlet OLEditingToolsView *editingTools;
 @property (strong, nonatomic) OLProduct *product;
+@property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 
 
 

@@ -44,6 +44,8 @@
 #import "UIImageView+FadeIn.h"
 #import "UIView+RoundRect.h"
 #import "OLCustomPickerController.h"
+#import "OLTouchTolerantView.h"
+#import "OLAnalytics.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -202,12 +204,28 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField hideButtons];
+        [self setButtonsHidden:YES forTextField:self.activeTextField];
     }
     self.activeTextField = nil;
     
     if (self.editingTools.collectionView.tag != kOLEditTagCrop){
         [self dismissDrawerWithCompletionHandler:NULL];
+    }
+}
+
+- (void)setButtonsHidden:(BOOL)hidden forTextField:(OLPhotoTextField *)tf{
+    CGRect frame = tf.frame;
+    if (hidden){
+        [self addTextFieldToView:self.cropView existing:tf];
+        tf.frame = frame;
+        [tf hideButtons];
+        self.textFieldsView.userInteractionEnabled = NO;
+    }
+    else{
+        [self addTextFieldToView:self.textFieldsView existing:tf];
+        tf.frame = frame;
+        [tf showButtons];
+        self.textFieldsView.userInteractionEnabled = YES;
     }
 }
 
@@ -218,7 +236,8 @@ const NSInteger kOLEditTagCrop = 40;
         [self.navigationBar removeFromSuperview];
     }
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit image");
+    self.customNavigationItem.title = NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit image");
+    [self.customNavigationItem.leftBarButtonItem setTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     
     self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor darkGrayColor], [UIColor colorWithRed:0.890 green:0.863 blue:0.761 alpha:1.000], [UIColor colorWithRed:0.765 green:0.678 blue:0.588 alpha:1.000], [UIColor colorWithRed:0.624 green:0.620 blue:0.612 alpha:1.000], [UIColor colorWithRed:0.976 green:0.910 blue:0.933 alpha:1.000], [UIColor colorWithRed:0.604 green:0.522 blue:0.741 alpha:1.000], [UIColor colorWithRed:0.996 green:0.522 blue:0.886 alpha:1.000], [UIColor colorWithRed:0.392 green:0.271 blue:0.576 alpha:1.000], [UIColor colorWithRed:0.906 green:0.573 blue:0.565 alpha:1.000], [UIColor colorWithRed:0.984 green:0.275 blue:0.404 alpha:1.000], [UIColor colorWithRed:0.918 green:0.000 blue:0.200 alpha:1.000], [UIColor colorWithRed:0.776 green:0.176 blue:0.157 alpha:1.000], [UIColor colorWithRed:0.965 green:0.831 blue:0.239 alpha:1.000], [UIColor colorWithRed:0.961 green:0.682 blue:0.118 alpha:1.000], [UIColor colorWithRed:0.945 green:0.482 blue:0.204 alpha:1.000], [UIColor colorWithRed:0.827 green:0.859 blue:0.898 alpha:1.000], [UIColor colorWithRed:0.616 green:0.710 blue:0.851 alpha:1.000], [UIColor colorWithRed:0.400 green:0.541 blue:0.784 alpha:1.000], [UIColor colorWithRed:0.400 green:0.541 blue:0.784 alpha:1.000], [UIColor colorWithRed:0.173 green:0.365 blue:0.725 alpha:1.000], [UIColor colorWithRed:0.102 green:0.247 blue:0.361 alpha:1.000], [UIColor colorWithRed:0.765 green:0.933 blue:0.898 alpha:1.000], [UIColor colorWithRed:0.506 green:0.788 blue:0.643 alpha:1.000], [UIColor colorWithRed:0.345 green:0.502 blue:0.400 alpha:1.000], [UIColor colorWithRed:0.337 green:0.427 blue:0.208 alpha:1.000]];
     
@@ -229,9 +248,9 @@ const NSInteger kOLEditTagCrop = 40;
     
     [self setupCropGuides];
     
-    self.textFieldsView = [[UIView alloc] init];
+    self.textFieldsView = [[OLTouchTolerantView alloc] init];
     self.textFieldsView.userInteractionEnabled = NO;
-    [self.view insertSubview:self.textFieldsView aboveSubview:self.cropView];
+    [self.printContainerView insertSubview:self.textFieldsView aboveSubview:self.cropView];
     self.textFieldsView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
     [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
@@ -280,7 +299,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     NSArray *copy = [[NSArray alloc] initWithArray:self.edits.textsOnPhoto copyItems:NO];
     for (OLTextOnPhoto *textOnPhoto in copy){
-        UITextField *textField = [self addTextFieldToView:self.cropView temp:NO];
+        UITextField *textField = [self addTextFieldToView:self.textFieldsView existing:nil];
         textField.text = textOnPhoto.text;
         textField.transform = textOnPhoto.transform;
         textField.textColor = textOnPhoto.color;
@@ -511,6 +530,7 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)orderViews{
     [self.view bringSubviewToFront:self.printContainerView];
     [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.textFieldsView];
     [self.view bringSubviewToFront:self.previewView];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
@@ -526,7 +546,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (BOOL)cropIsInImageEditingTools{
-    return self.product.productTemplate.templateUI == OLTemplateUIApparel;
+    return self.product.productTemplate.templateUI == OLTemplateUIApparel && self.product.productTemplate.options.count > 1;
 }
 
 - (UIEdgeInsets)imageInsetsOnContainer{
@@ -668,7 +688,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupBottomBorderTextField{
-    if (self.product.productTemplate.templateUI != OLTemplateUIApparel && self.borderInsets.bottom / self.borderInsets.top >= 1.1 && !self.borderTextField){
+    if (self.product.productTemplate.supportsTextOnBorder && !self.borderTextField){
         CGFloat heightFactor = self.cropView.frame.size.height / 212.0;
         
         UITextField *tf = [[UITextField alloc] init];
@@ -744,22 +764,30 @@ const NSInteger kOLEditTagCrop = 40;
     }
 }
 
-- (OLPhotoTextField *)addTextFieldToView:(UIView *)view temp:(BOOL)temp{
-    OLPhotoTextField *textField = [[OLPhotoTextField alloc] initWithFrame:CGRectMake(0, 0, 130, 70)];
-    textField.center = self.cropView.center;
-    textField.margins = 10;
-    textField.delegate = self;
-    textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.photoTextFieldDelegate = self;
-    textField.keyboardAppearance = UIKeyboardAppearanceDark;
-    [textField addTarget:self
-                  action:@selector(textFieldDidChange:)
-        forControlEvents:UIControlEventEditingChanged];
-    
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
-    panGesture.delegate = self;
-    [panGesture addTarget:self action:@selector(onTextfieldGesturePanRecognized:)];
-    [textField addGestureRecognizer:panGesture];
+- (OLPhotoTextField *)addTextFieldToView:(UIView *)view existing:(OLPhotoTextField *)existing{
+    OLPhotoTextField *textField;
+    if (existing){
+        textField = existing;
+    }
+    else{
+        textField = [[OLPhotoTextField alloc] initWithFrame:CGRectMake(0, 0, 130, 70)];
+        textField.center = self.cropView.center;
+        textField.margins = 10;
+        textField.delegate = self;
+        textField.autocorrectionType = UITextAutocorrectionTypeNo;
+        textField.photoTextFieldDelegate = self;
+        textField.keyboardAppearance = UIKeyboardAppearanceDark;
+        [textField addTarget:self
+                      action:@selector(textFieldDidChange:)
+            forControlEvents:UIControlEventEditingChanged];
+        
+        UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
+        panGesture.delegate = self;
+        [panGesture addTarget:self action:@selector(onTextfieldGesturePanRecognized:)];
+        [textField addGestureRecognizer:panGesture];
+        
+        [self.textFields addObject:textField];
+    }
     
     [view addSubview:textField];
     [textField.superview addConstraint:[NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:textField.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
@@ -776,10 +804,6 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     [textField.superview addConstraints:con];
-    
-    if (!temp){
-        [self.textFields addObject:textField];
-    }
     
     return textField;
 }
@@ -822,11 +846,11 @@ const NSInteger kOLEditTagCrop = 40;
         if (self.activeTextField != textField){
             [self.activeTextField resignFirstResponder];
             if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-                [self.activeTextField hideButtons];
+                [self setButtonsHidden:YES forTextField:self.activeTextField];
             }
             self.activeTextField = (OLPhotoTextField *)textField;
             if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-                [self.activeTextField showButtons];
+                [self setButtonsHidden:NO forTextField:self.activeTextField];
             }
         }
     }
@@ -1106,7 +1130,7 @@ const NSInteger kOLEditTagCrop = 40;
             }
         } completion:^(BOOL finished){
             [UIView animateWithDuration:0.7 animations:^{
-                self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), -M_PI_4);
+                self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height * 1.2), -M_PI_4);
             }completion:^(BOOL finished){
                 if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){
                     [self.delegate scrollCropViewControllerDidDropChanges:self];
@@ -1123,6 +1147,9 @@ const NSInteger kOLEditTagCrop = 40;
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackEditScreenDidCancel];
+#endif
 }
 
 - (void)selectButton:(UIButton *)sender{
@@ -1131,9 +1158,15 @@ const NSInteger kOLEditTagCrop = 40;
     switch (sender.tag) {
         case kOLEditTagImageTools:
             self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"IMAGE TOOLS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Image Tools"];
+#endif
             break;
         case kOLEditTagImages:
             [self showImagePicker];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Image Picker"];
+#endif
             return;
         case kOLEditTagProductOptionsTab:
             if (self.product.productTemplate.options.count == 1 || self.product.productTemplate.templateUI == OLTemplateUIApparel){
@@ -1150,14 +1183,23 @@ const NSInteger kOLEditTagCrop = 40;
                     self.editingTools.drawerLabel.text = [self.selectedOption.name uppercaseString];
                 }
                 self.editingTools.collectionView.tag = self.selectedOption.type;
+#ifndef OL_NO_ANALYTICS
+                [OLAnalytics trackEditScreenButtonTapped:self.selectedOption.code];
+#endif
             }
             else{
                 self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"PRODUCT OPTIONS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+#ifndef OL_NO_ANALYTICS
+                [OLAnalytics trackEditScreenButtonTapped:@"Product Options"];
+#endif
             }
 
             break;
         case kOLEditTagCrop:
             [self onButtonCropClicked:sender];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
+#endif
             return;
             
         default:
@@ -1192,7 +1234,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField hideButtons];
+        [self setButtonsHidden:YES forTextField:self.activeTextField];
     }
 }
 
@@ -1246,7 +1288,7 @@ const NSInteger kOLEditTagCrop = 40;
     self.animating = YES;
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField hideButtons];
+        [self setButtonsHidden:YES forTextField:self.activeTextField];
     }
     self.activeTextField = nil;
     
@@ -1278,7 +1320,7 @@ const NSInteger kOLEditTagCrop = 40;
     self.animating = YES;
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField hideButtons];
+        [self setButtonsHidden:YES forTextField:self.activeTextField];
     }
     self.activeTextField = nil;
     
@@ -1306,7 +1348,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonAddTextClicked:(UIButton *)sender {
-    OLPhotoTextField *textField = [self addTextFieldToView:self.cropView temp:NO];
+    OLPhotoTextField *textField = [self addTextFieldToView:self.textFieldsView existing:nil];
     [self.view layoutIfNeeded];
     [textField becomeFirstResponder]; //Take focus away from any existing active TF
     [textField becomeFirstResponder]; //Become first responder
@@ -1637,7 +1679,7 @@ const NSInteger kOLEditTagCrop = 40;
         return CGSizeMake(120, self.editingTools.collectionView.frame.size.height);
     }
     
-    return CGSizeMake(self.editingTools.collectionView.frame.size.height * 1.6, self.editingTools.collectionView.frame.size.height);
+    return CGSizeMake(self.editingTools.collectionView.frame.size.height * 1.65, self.editingTools.collectionView.frame.size.height);
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
@@ -1659,6 +1701,9 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Fonts"];
+#endif
         }
         else if (indexPath.item == 1){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
@@ -1668,6 +1713,9 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Text Color"];
+#endif
         }
         
     }
@@ -1683,18 +1731,33 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Filters"];
+#endif
         }
         else if (indexPath.item == 1){
             [self onButtonHorizontalFlipClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Flip"];
+#endif
         }
         else if (indexPath.item == 2){
             [self onButtonRotateClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Rotate"];
+#endif
         }
         else if (indexPath.item == 3){
             [self onButtonAddTextClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Add Text"];
+#endif
         }
         else if (indexPath.item == 4){
             [self onButtonCropClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
+#endif
         }
     }
     else if ((collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3) && !self.selectedOption.choices[indexPath.item].productBackground){
@@ -1749,6 +1812,9 @@ const NSInteger kOLEditTagCrop = 40;
         NSMutableArray *vcs = [self.navigationController.viewControllers mutableCopy];
         [vcs replaceObjectAtIndex:vcs.count-1 withObject:vc];
         [self.navigationController setViewControllers:vcs];
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackEditScreenButtonTapped:product.productTemplate.name];
+#endif
     }
     else if (self.selectedOption){
         OLProductTemplateOptionChoice *choice = self.selectedOption.choices[indexPath.item];
@@ -1760,6 +1826,9 @@ const NSInteger kOLEditTagCrop = 40;
         if (self.selectedChoice.color){
             self.editingTools.drawerLabel.text = [[self.selectedOption.name stringByAppendingString:[NSString stringWithFormat:@" - %@", self.selectedChoice.name]] uppercaseString];
         }
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackEditScreenButtonTapped:choice.code];
+#endif
     }
     else{
         UIButton *selectedButton;
@@ -1778,6 +1847,10 @@ const NSInteger kOLEditTagCrop = 40;
             [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
             [collectionView reloadData];
             [self showDrawerWithCompletionHandler:NULL];
+            
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:self.selectedOption.code];
+#endif
         }];
     }
     
@@ -1849,6 +1922,7 @@ const NSInteger kOLEditTagCrop = 40;
     label.textAlignment = NSTextAlignmentCenter;
     label.adjustsFontSizeToFitWidth = YES;
     label.minimumScaleFactor = 0.5;
+    label.numberOfLines = 2;
     [label setTextColor:[UIColor blackColor]];
     if ([label respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]){
         label.allowsDefaultTighteningForTruncation = YES;
@@ -1863,7 +1937,7 @@ const NSInteger kOLEditTagCrop = 40;
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
     NSArray *visuals = @[@"H:|-0-[imageView]-0-|", @"H:|-0-[label]-0-|",
-                         @"V:|-0-[imageView(20)]-5-[label]-0-|"];
+                         @"V:|-0-[imageView(20)]-0-[label]-(-10)-|"];
     
     
     for (NSString *visual in visuals) {
@@ -2044,11 +2118,11 @@ const NSInteger kOLEditTagCrop = 40;
     }
     [self.activeTextField resignFirstResponder];
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField hideButtons];
+        [self setButtonsHidden:YES forTextField:self.activeTextField];
     }
     self.activeTextField = (OLPhotoTextField *)textField;
     if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self.activeTextField showButtons];
+        [self setButtonsHidden:NO forTextField:self.activeTextField];
     }
     return NO;
 }
@@ -2156,6 +2230,10 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)loadImageFromAsset{
+    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+        self.cropView.hidden = !self.asset;
+    }
+    
     self.cropView.imageView.image = nil;
     __weak OLImageEditViewController *welf = self;
     [self.asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
@@ -2168,7 +2246,7 @@ const NSInteger kOLEditTagCrop = 40;
             
             NSArray *copy = [[NSArray alloc] initWithArray:welf.edits.textsOnPhoto copyItems:NO];
             for (OLTextOnPhoto *textOnPhoto in copy){
-                UITextField *textField = [welf addTextFieldToView:welf.cropView temp:NO];
+                UITextField *textField = [welf addTextFieldToView:welf.textFieldsView existing:nil];
                 textField.text = textOnPhoto.text;
                 textField.transform = textOnPhoto.transform;
                 textField.textColor = textOnPhoto.color;

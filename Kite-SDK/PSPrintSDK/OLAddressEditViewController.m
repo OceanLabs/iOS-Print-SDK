@@ -80,7 +80,7 @@ static const NSUInteger kTagTextField = 99;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [OLAnalytics trackAddAddressScreenViewed];
+    [OLAnalytics trackAddEditAddressScreenViewed];
 }
 
 - (void)viewDidLoad {
@@ -154,6 +154,10 @@ static const NSUInteger kTagTextField = 99;
         flag = NO;
         errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in Line 1 of the address.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
+    else if ([self.textFieldCity.text isEqualToString:@""]){
+        flag = NO;
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your city.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    }
     else if ([self.textFieldPostCode.text isEqualToString:@""]){
         flag = NO;
         errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your postal code.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
@@ -164,7 +168,7 @@ static const NSUInteger kTagTextField = 99;
                                    alertControllerWithTitle:nil
                                    message:errorMessage
                                    preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction * action){}];
         
         [alert addAction:ok];

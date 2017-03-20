@@ -44,10 +44,6 @@
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
-@interface OLProduct (Private)
--(OLAsset *)classImageAsset;
-@end
-
 @interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
 
 @property (strong, nonatomic) NSMutableArray *products;
@@ -143,7 +139,7 @@
     }
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductTypeSelectionScreenViewedWithTemplateClass:self.templateClass];
+    [OLAnalytics trackProductListScreenViewedWithTemplateClass:self.templateClass];
 #endif
 }
 
@@ -152,7 +148,7 @@
 
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackProductTypeSelectionScreenHitBackTemplateClass:self.templateClass];
+        [OLAnalytics trackProductListScreenHitBackTemplateClass:self.templateClass];
     }
 #endif
 }
@@ -274,7 +270,9 @@
     if (indexPath.item >= self.products.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder.png"] withCompletionHandler:^(UIImage *image, NSError *error){
+        UILabel *label = [cell.contentView viewWithTag:50];
+        label.text = NSLocalizedStringFromTableInBundle(@"MORE ITEMS\nCOMING SOON!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder-loc.png"] withCompletionHandler:^(UIImage *image, NSError *error){
             dispatch_async(dispatch_get_main_queue(), ^{
                 cellImageView.image = image;
                 cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
@@ -314,7 +312,7 @@
     OLProduct *product = (OLProduct *)self.products[indexPath.item];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:40];
-    [imageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
+    [imageView setAndFadeInImageWithOLAsset:[product coverPhotoAsset] size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
     
     UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];

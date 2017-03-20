@@ -48,6 +48,7 @@
 @property (strong, nonatomic) SCNGeometry *tube;
 @property (strong, nonatomic) SCNNode *tubeNode;
 @property (strong, nonatomic) SCNNode *mug;
+@property (strong, nonatomic) SCNNode *camera;
 @end
 
 @implementation OL3DProductViewController
@@ -55,7 +56,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    SCNScene *scene = [SCNScene sceneWithURL:[[OLKiteUtils kiteResourcesBundle] URLForResource:@"mug" withExtension:@"dae"]
+    SCNScene *scene = [SCNScene sceneWithURL:[[OLKiteUtils kiteResourcesBundle] URLForResource:@"mug" withExtension:@"scn"]
  options:NULL error:nil];
     
     self.tube = [SCNTube tubeWithInnerRadius:1 outerRadius:1 height:1.95];
@@ -70,13 +71,35 @@
     [[scene rootNode] enumerateChildNodesUsingBlock:^(SCNNode *node, BOOL *stop){
         if ([node.name isEqualToString:@"mug"]){
             self.mug = node;
-            *stop = YES;
+        }
+        if ([node.name isEqualToString:@"Camera"]){
+            self.camera = node;
         }
     }];
+    
+    if (self.view.frame.size.width > self.view.frame.size.height){
+        self.camera.position = SCNVector3Make(0, 6.5, 0);
+    }
+    else{
+        self.camera.position = SCNVector3Make(0, 4.2, 0);
+    }
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    [coordinator animateAlongsideTransition:^(id cotext){
+        if (size.width > size.height){
+            self.camera.position = SCNVector3Make(0, 6.5, 0);
+        }
+        else{
+            self.camera.position = SCNVector3Make(0, 4.2, 0);
+        }
+    }completion:NULL];
 }
 
 - (CGFloat)aspectRatio{
-    return 1.0/2.415;
+    return 1.110/2.685;
 }
 
 - (void)orderViews{

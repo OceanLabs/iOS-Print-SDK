@@ -219,7 +219,14 @@
     XCTAssert(!paymentVc.presentedViewController, @"Did not dismiss photobook screen");
     
     [self performUIAction:^{
-        [paymentVc onButtonPayWithCreditCardClicked];
+        [paymentVc onButtonAddPaymentMethodClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)paymentVc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     }];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
@@ -237,7 +244,11 @@
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
     
-    [creditCardVc.rootVC onButtonPayClicked];
+    [self performUIAction:^{
+        [creditCardVc.rootVC onButtonPayClicked];
+    }];
+    
+    [paymentVc onButtonPayClicked:nil];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for order complete"];
     
@@ -275,8 +286,8 @@
     });
     [self waitForExpectationsWithTimeout:120 handler:NULL];
     
+    XCTAssert([[caseVc product].selectedOptions[(NSString *)[[caseVc product].productTemplate.options.firstObject code]] isEqualToString:(NSString *)[[[[caseVc product].productTemplate.options.firstObject choices] firstObject] code]], @"Default option not set");
     
-    //TODO: Check product option that default selected is first option
     [self performUIAction:^{
         [caseVc.editingTools.button2 sendActionsForControlEvents:UIControlEventTouchUpInside];
     }];
@@ -286,8 +297,9 @@
     [self performUIAction:^{
         [caseVc collectionView:caseVc.editingTools.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
     }];
-    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option  should selected");
-    //TODO: Check product option that second is selected
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option should be selected");
+    
+    XCTAssert([[caseVc product].selectedOptions[(NSString *)[[caseVc product].productTemplate.options.firstObject code]] isEqualToString:(NSString *)[[[[caseVc product].productTemplate.options.firstObject choices] lastObject] code]], @"Second option not set");
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
@@ -299,21 +311,37 @@
     OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
     
-    [paymentVc onButtonPayWithCreditCardClicked];
+    [self performUIAction:^{
+        [paymentVc onButtonAddPaymentMethodClicked:nil];
+    }];
     
-    expectation = [self expectationWithDescription:@"Wait for Payment VC"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [expectation fulfill];
-    });
-    
-    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)paymentVc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    if (![creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]]){
+        UIGraphicsBeginImageContextWithOptions(creditCardVc.view.bounds.size, NO, 0.0);
+        [[creditCardVc.view layer] renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *ViewImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        NSData *pngData = UIImagePNGRepresentation(ViewImage);
+        [pngData writeToFile:@"/Users/distiller/image.png" atomically:NO];
+    }
+    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureViewController class]], @"Got %@", [creditCardVc class]);
     creditCardVc.rootVC.textFieldCVV.text = @"111";
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
     
-    [creditCardVc.rootVC onButtonPayClicked];
+    [self performUIAction:^{
+        [creditCardVc.rootVC onButtonPayClicked];
+    }];
+    
+    [paymentVc onButtonPayClicked:nil];
     
     expectation = [self expectationWithDescription:@"Wait for order complete"];
     
@@ -358,21 +386,37 @@
     OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
     
-    [paymentVc onButtonPayWithCreditCardClicked];
+    [self performUIAction:^{
+        [paymentVc onButtonAddPaymentMethodClicked:nil];
+    }];
     
-    expectation = [self expectationWithDescription:@"Wait for Payment VC"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [expectation fulfill];
-    });
-    
-    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)paymentVc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    if (![creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]]){
+        UIGraphicsBeginImageContextWithOptions(creditCardVc.view.bounds.size, NO, 0.0);
+        [[creditCardVc.view layer] renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *ViewImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        NSData *pngData = UIImagePNGRepresentation(ViewImage);
+        [pngData writeToFile:@"/Users/distiller/image.png" atomically:NO];
+    }
+    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureViewController class]], @"Got %@", [creditCardVc class]);
     creditCardVc.rootVC.textFieldCVV.text = @"111";
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
     
-    [creditCardVc.rootVC onButtonPayClicked];
+    [self performUIAction:^{
+        [creditCardVc.rootVC onButtonPayClicked];
+    }];
+    
+    [paymentVc onButtonPayClicked:nil];
     
     expectation = [self expectationWithDescription:@"Wait for order complete"];
     
@@ -389,7 +433,7 @@
 
 - (void)testCompleteApparelJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
-    [self chooseClass:@"T-shirts" onOLProductHomeViewController:productHomeVc];
+    [self chooseClass:@"Apparel" onOLProductHomeViewController:productHomeVc];
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
@@ -407,7 +451,8 @@
     [self waitForExpectationsWithTimeout:120 handler:NULL];
     
     
-    //TODO: Check product option that default selected is first option
+    XCTAssert(![caseVc product].selectedOptions[(NSString *)[[caseVc product].productTemplate.options.firstObject code]] , @"Default option should not set");
+    
     [self performUIAction:^{
         [caseVc.editingTools.button2 sendActionsForControlEvents:UIControlEventTouchUpInside];
     }];
@@ -417,14 +462,29 @@
     [self performUIAction:^{
         [caseVc collectionView:caseVc.editingTools.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]];
     }];
-    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option  should selected");
-    //TODO: Check product option that second is selected
+    XCTAssert([caseVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]].isSelected, @"Second option should be selected");
+    
+    XCTAssert([[caseVc product].selectedOptions[(NSString *)[[caseVc product].productTemplate.options.firstObject code]] isEqualToString:(NSString *)[[[[caseVc product].productTemplate.options.firstObject choices] objectAtIndex:1] code]], @"Second option not set");
     
     //Wait for the overlay to finish rendering. Can be slow in simulators.
     expectation = [self expectationWithDescription:@"Wait for Payment VC"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [expectation fulfill];
     });
+    
+    [self performUIAction:^{
+        [caseVc onButtonCropClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        [caseVc exitCropMode];
+    }];
+    
+    if (caseVc.productFlipButton){
+        [self performUIAction:^{
+            [caseVc onButtonProductFlipClicked:nil];
+        }];
+    }
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
@@ -436,21 +496,37 @@
     OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
     
-    [paymentVc onButtonPayWithCreditCardClicked];
+    [self performUIAction:^{
+        [paymentVc onButtonAddPaymentMethodClicked:nil];
+    }];
     
-    expectation = [self expectationWithDescription:@"Wait for Payment VC"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [expectation fulfill];
-    });
-    
-    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)paymentVc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    if (![creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]]){
+        UIGraphicsBeginImageContextWithOptions(creditCardVc.view.bounds.size, NO, 0.0);
+        [[creditCardVc.view layer] renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *ViewImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        NSData *pngData = UIImagePNGRepresentation(ViewImage);
+        [pngData writeToFile:@"/Users/distiller/image.png" atomically:NO];
+    }
+    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureViewController class]], @"Got %@", [creditCardVc class]);
     creditCardVc.rootVC.textFieldCVV.text = @"111";
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
     
-    [creditCardVc.rootVC onButtonPayClicked];
+    [self performUIAction:^{
+        [creditCardVc.rootVC onButtonPayClicked];
+    }];
+    
+    [paymentVc onButtonPayClicked:nil];
     
     expectation = [self expectationWithDescription:@"Wait for order complete"];
     
@@ -576,23 +652,39 @@
     OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
     
-    [paymentVc onButtonPayWithCreditCardClicked];
+    [self performUIAction:^{
+        [paymentVc onButtonAddPaymentMethodClicked:nil];
+    }];
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for Payment VC"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [expectation fulfill];
-    });
-    
-    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)paymentVc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    if (![creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]]){
+        UIGraphicsBeginImageContextWithOptions(creditCardVc.view.bounds.size, NO, 0.0);
+        [[creditCardVc.view layer] renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *ViewImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        NSData *pngData = UIImagePNGRepresentation(ViewImage);
+        [pngData writeToFile:@"/Users/distiller/image.png" atomically:NO];
+    }
+    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureViewController class]], @"Got %@", [creditCardVc class]);
     creditCardVc.rootVC.textFieldCVV.text = @"111";
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
     
-    [creditCardVc.rootVC onButtonPayClicked];
+    [self performUIAction:^{
+        [creditCardVc.rootVC onButtonPayClicked];
+    }];
     
-    expectation = [self expectationWithDescription:@"Wait for order complete"];
+    [paymentVc onButtonPayClicked:nil];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for order complete"];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         while (!printOrder.printed) {
@@ -619,9 +711,9 @@
                           [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
                           [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
                           [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
-                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
-                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
-                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
+//                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
+//                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+//                          [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
                           [OLAsset assetWithDataAsJPEG:data1],
                           [OLAsset assetWithDataAsPNG:data2],
                           [OLAsset assetWithPHAsset:phAsset]
@@ -632,12 +724,12 @@
     [OLUserSession currentSession].appAssets = [olAssets mutableCopy];
     [[OLUserSession currentSession] resetUserSelectedPhotos];
     
-    [self chooseClass:@"Frames" onOLProductHomeViewController:productHomeVc];
+    [self chooseClass:@"Magnet Wall Frames" onOLProductHomeViewController:productHomeVc];
     
-    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
-    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
-    
-    [self chooseProduct:@"Frames 50cm (2x2)" onOLProductTypeSelectionViewController:productTypeVc];
+//    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+//    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+//    
+//    [self chooseProduct:@"Frames 50cm (2x2)" onOLProductTypeSelectionViewController:productTypeVc];
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
@@ -688,23 +780,39 @@
     OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
     
-    [paymentVc onButtonPayWithCreditCardClicked];
+    [self performUIAction:^{
+        [paymentVc onButtonAddPaymentMethodClicked:nil];
+    }];
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for Payment VC"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [expectation fulfill];
-    });
-    
-    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)paymentVc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    if (![creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]]){
+        UIGraphicsBeginImageContextWithOptions(creditCardVc.view.bounds.size, NO, 0.0);
+        [[creditCardVc.view layer] renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *ViewImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        NSData *pngData = UIImagePNGRepresentation(ViewImage);
+        [pngData writeToFile:@"/Users/distiller/image.png" atomically:NO];
+    }
+    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureViewController class]], @"Got %@", [creditCardVc class]);
     creditCardVc.rootVC.textFieldCVV.text = @"111";
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
     
-    [creditCardVc.rootVC onButtonPayClicked];
+    [self performUIAction:^{
+        [creditCardVc.rootVC onButtonPayClicked];
+    }];
     
-    expectation = [self expectationWithDescription:@"Wait for order complete"];
+    [paymentVc onButtonPayClicked:nil];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for order complete"];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         while (!printOrder.printed) {
@@ -734,23 +842,39 @@
     OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
     
-    [paymentVc onButtonPayWithCreditCardClicked];
+    [self performUIAction:^{
+        [paymentVc onButtonAddPaymentMethodClicked:nil];
+    }];
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for Payment VC"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [expectation fulfill];
-    });
-    
-    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)paymentVc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    if (![creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]]){
+        UIGraphicsBeginImageContextWithOptions(creditCardVc.view.bounds.size, NO, 0.0);
+        [[creditCardVc.view layer] renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *ViewImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        NSData *pngData = UIImagePNGRepresentation(ViewImage);
+        [pngData writeToFile:@"/Users/distiller/image.png" atomically:NO];
+    }
+    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureViewController class]], @"Got %@", [creditCardVc class]);
     creditCardVc.rootVC.textFieldCVV.text = @"111";
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
     
-    [creditCardVc.rootVC onButtonPayClicked];
+    [self performUIAction:^{
+        [creditCardVc.rootVC onButtonPayClicked];
+    }];
     
-    expectation = [self expectationWithDescription:@"Wait for order complete"];
+    [paymentVc onButtonPayClicked:nil];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for order complete"];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         while (!printOrder.printed) {
@@ -836,23 +960,39 @@
     OLPaymentViewController *paymentVc = (OLPaymentViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
     
-    [paymentVc onButtonPayWithCreditCardClicked];
+    [self performUIAction:^{
+        [paymentVc onButtonAddPaymentMethodClicked:nil];
+    }];
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for Payment VC"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [expectation fulfill];
-    });
-    
-    [self waitForExpectationsWithTimeout:3 handler:NULL];
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)paymentVc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }];
     
     OLCreditCardCaptureViewController *creditCardVc = (OLCreditCardCaptureViewController *)paymentVc.presentedViewController;
+    if (![creditCardVc isKindOfClass:[OLCreditCardCaptureRootController class]]){
+        UIGraphicsBeginImageContextWithOptions(creditCardVc.view.bounds.size, NO, 0.0);
+        [[creditCardVc.view layer] renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *ViewImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        NSData *pngData = UIImagePNGRepresentation(ViewImage);
+        [pngData writeToFile:@"/Users/distiller/image.png" atomically:NO];
+    }
+    XCTAssert([creditCardVc isKindOfClass:[OLCreditCardCaptureViewController class]], @"Got %@", [creditCardVc class]);
     creditCardVc.rootVC.textFieldCVV.text = @"111";
     creditCardVc.rootVC.textFieldCardNumber.text = @"4242424242424242";
     creditCardVc.rootVC.textFieldExpiryDate.text = @"12/20";
     
-    [creditCardVc.rootVC onButtonPayClicked];
+    [self performUIAction:^{
+        [creditCardVc.rootVC onButtonPayClicked];
+    }];
     
-    expectation = [self expectationWithDescription:@"Wait for order complete"];
+    [paymentVc onButtonPayClicked:nil];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for order complete"];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         while (!printOrder.printed) {

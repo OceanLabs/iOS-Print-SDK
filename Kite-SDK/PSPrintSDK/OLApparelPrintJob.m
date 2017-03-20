@@ -105,6 +105,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     }
     json[@"assets"] = assets;
     json[@"options"] = self.options;
+    json[@"job_id"] = [self uuid];
     
     return json;
 }
@@ -145,6 +146,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         val = 39 * val + [self.options[key] hash] + [key hash];
     }
     val = 40 * val + [self.address hash];
+    val = 41 * val + [self.uuid hash];
     
     return val;
 }

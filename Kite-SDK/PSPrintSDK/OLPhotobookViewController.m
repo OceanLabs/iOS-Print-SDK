@@ -106,7 +106,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate,UIGestureRecognizerDelegate, OLImageViewDelegate, OLScrollCropViewControllerDelegate, UINavigationControllerDelegate, OLUpsellViewControllerDelegate, OLImagePickerViewControllerDelegate>
+@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate,UIGestureRecognizerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate, UINavigationControllerDelegate, OLUpsellViewControllerDelegate, OLImagePickerViewControllerDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL bookClosed;
@@ -121,7 +121,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) NSLayoutConstraint *centerYCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon2;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon;
-@property (strong, nonatomic) OLAsset *croppingPrintPhoto;
+@property (strong, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
@@ -680,7 +680,7 @@ static const CGFloat kBookEdgePadding = 38;
     }];
 }
 
-#pragma mark - OLScrollCropView delegate
+#pragma mark - OLImageEditViewController delegate
 
 - (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:YES completion:NULL];
@@ -691,31 +691,34 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 -(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
-    [self.croppingPrintPhoto unloadImage];
-    self.croppingPrintPhoto.edits = cropper.edits;
-    if (self.croppingPrintPhoto == self.coverPhoto){
+    [self.editingAsset unloadImage];
+    self.editingAsset.edits = cropper.edits;
+    if (self.editingAsset == self.coverPhoto){
         [self loadCoverPhoto];
     }
     
     [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    if (self.croppingPrintPhoto == self.coverPhoto){
+    if (self.editingAsset == self.coverPhoto){
         self.coverPhoto = asset;
         [self loadCoverPhoto];
     }
     else{
-        NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.croppingPrintPhoto];
+        NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingAsset];
         [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
-        index = [self.photobookPhotos indexOfObjectIdenticalTo:self.croppingPrintPhoto];
+        index = [self.photobookPhotos indexOfObjectIdenticalTo:self.editingAsset];
         [self.photobookPhotos replaceObjectAtIndex:index withObject:asset];
         
          [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
     }
-    self.croppingPrintPhoto = asset;
+    self.editingAsset = asset;
 }
 
 #pragma mark - UIPageViewControllerDataSource and delegate
@@ -815,7 +818,7 @@ static const CGFloat kBookEdgePadding = 38;
     
     if (selectedCount == 0){
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please add some photos to your photo book", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
         return NO;
     }
@@ -884,13 +887,9 @@ static const CGFloat kBookEdgePadding = 38;
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             job.dateAddedToBasket = [existingJob dateAddedToBasket];
-            if ([existingJob extraCopies] > 0){
-                [existingJob setExtraCopies:[existingJob extraCopies]-1];
-            }
-            else{
-                [printOrder removePrintJob:existingJob];
-            }
+            job.extraCopies = existingJob.extraCopies;
             job.uuid = self.product.uuid;
+            [printOrder removePrintJob:existingJob];
         }
     }
     [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
@@ -928,9 +927,9 @@ static const CGFloat kBookEdgePadding = 38;
         if ([OLUserSession currentSession].kiteVc.disableEditingTools){
             return;
         }
-        self.croppingPrintPhoto = self.coverPhoto;
+        self.editingAsset = self.coverPhoto;
         UIImageView *imageView = self.coverImageView;
-        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
         cropVc.delegate = self;
         cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
         cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
@@ -941,9 +940,9 @@ static const CGFloat kBookEdgePadding = 38;
         cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         cropVc.product = self.product;
         
-        [self.croppingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+        [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             [cropVc setFullImage:image];
-            cropVc.edits = self.croppingPrintPhoto.edits;
+            cropVc.edits = self.editingAsset.edits;
             [self presentViewController:cropVc animated:NO completion:NULL];
         }];
     }
@@ -996,9 +995,9 @@ static const CGFloat kBookEdgePadding = 38;
             return;
         }
         UIImageView *imageView = [page imageView];
-        self.croppingPrintPhoto = self.photobookPhotos[index];
-        [self.croppingPrintPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
-            OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLScrollCropViewController"];
+        self.editingAsset = self.photobookPhotos[index];
+        [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+            OLImageEditViewController *cropVc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImageEditViewController"];
             cropVc.delegate = self;
             cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
             
@@ -1009,13 +1008,13 @@ static const CGFloat kBookEdgePadding = 38;
             cropVc.definesPresentationContext = true;
             cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
             [cropVc setFullImage:image];
-            cropVc.edits = self.croppingPrintPhoto.edits;
+            cropVc.edits = self.editingAsset.edits;
             cropVc.product = self.product;
             
             [self presentViewController:cropVc animated:NO completion:NULL];
             
 #ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+            [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
 #endif
         }];
     }

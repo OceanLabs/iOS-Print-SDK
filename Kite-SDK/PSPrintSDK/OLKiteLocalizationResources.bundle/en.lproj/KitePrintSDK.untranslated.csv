@@ -6,6 +6,7 @@ ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
 Add,Add,
 Add %ld %@!,Add %ld %@!,
 Add a %@!,Add a %@!,
+Add a photo\non this side,Add a photo\non this side,/* this side [of the shirt] */
 Add Address,Add Address,
 Add another %@!,Add another %@!,
 Add Credit Card,Add Credit Card,
@@ -26,6 +27,7 @@ Are you sure?,Are you sure?,
 Authorise,Authorise,
 Back,Back,
 BACK,BACK,/* Back of the photo */
+Back Image Is Too Small,Back Image Is Too Small,
 Basket is empty,Basket is empty,
 Cancel,Cancel,
 Card Number,Card Number,
@@ -40,6 +42,7 @@ Choose Photos,Choose Photos,
 City,City,
 Clearing Code,Clearing Code,/* Clearing promo code */
 cm,cm,/* Centimeters */
+Completed Orders,Completed Orders,
 Continue Shopping,Continue Shopping,
 Country,Country,
 County,County,/* Address county */
@@ -80,6 +83,7 @@ Filters,Filters,/* Image filters */
 First Name,First Name,
 Flip,Flip,/* Horizontally flip image */
 Fonts,Fonts,
+For only %@ extra,For only %@ extra,/* [Add a photo on this side of the shirt] for only $4.00 extra */
 FREE,FREE,"/* Free, no cost */"
 FRONT,FRONT,/* Front of the photo */
 Great gifts for all the family,Great gifts for all the family,
@@ -101,6 +105,7 @@ Maximum Photos Reached,Maximum Photos Reached,
 Medium,Medium,
 Missing Delivery Address,Missing Delivery Address,
 MM/YY,MM/YY,/* Credit card date format: MonthMonth/YearYear */
+MORE ITEMS\nCOMING SOON!,MORE ITEMS\nCOMING SOON!,
 Move Pages,Move Pages,/* Title of a screen that allows the user to move the pages of a book around */
 New Payment,New Payment,
 Next,Next,
@@ -110,20 +115,17 @@ No Thanks,No Thanks,
 "No, keep it","No, keep it","/* No, keep [the photo] */"
 "No, not yet","No, not yet",
 Not now,Not now,
-OK,OK,
+OK,OK,/* Acknowledgent to an alert dialog. */
 Only registered %d/%d image URLs with the asset endpoint,Only registered %d/%d image URLs with the asset endpoint,
 Oops!,Oops!,
+OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,
 Or print on a product below ▼,Or print on a product below ▼,
+Order History,Order History,
 Order Id,Order Id,
 Order Summary,Order Summary,
 Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.,Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.,
 Pack of,Pack of,/* Pack of [20 square photos] */
-Pay,Pay,
 Pay %@,Pay %@,/* Pay [$10.00] */
-Pay with card ending %@,Pay with card ending %@,
-Pay with Credit Card,Pay with Credit Card,
-Pay with Credit Card (TEST),Pay with Credit Card (TEST),
-Pay with new card,Pay with new card,
 Paying With,Paying With,/* Paying with [PayPal/Credit Card] */
 Payment,Payment,
 Payment (TEST),Payment (TEST),
@@ -139,6 +141,7 @@ Please enter a valid email address,Please enter a valid email address,
 Please enter a valid phone number,Please enter a valid phone number,
 Please enter your first and last name.,Please enter your first and last name.,
 Please fill in Line 1 of the address.,Please fill in Line 1 of the address.,
+Please fill in your city.,Please fill in your city.,
 Please fill in your postal code.,Please fill in your postal code.,
 Please scan the QR code using a QR reader app on your device.,Please scan the QR code using a QR reader app on your device.,
 Please select %d images.,Please select %d images.,/* Please select [number] images */
@@ -162,6 +165,7 @@ PRODUCT OPTIONS,PRODUCT OPTIONS,
 Promo Code,Promo Code,
 Promotional Discount,Promotional Discount,
 Quantity,Quantity,/* Quantity of photos */
+Receipt,Receipt,
 Recents,Recents,/* Recent photos used */
 Remove,Remove,/* Remove/clear an image */
 Remove?,Remove?,/* Remove [photo]? */
@@ -201,6 +205,7 @@ Total,Total,
 Uploading book,Uploading book,
 Uploading Images \n%lu / %lu,Uploading Images \n%lu / %lu,
 View Item,View Item,/* View [basket] item */
+WE HAVE RECEIVED\nYOUR ORDER,WE HAVE RECEIVED\nYOUR ORDER,
 We'll send you confirmation and order updates.,We'll send you confirmation and order updates.,
 We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,
 Yes,Yes,

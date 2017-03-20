@@ -61,13 +61,13 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 @interface OLCheckoutViewController (PrivateMethods)
 
 @property (strong, nonatomic) UITextField *textFieldEmail, *textFieldPhone;
-- (void)onBackgroundClicked;
 - (BOOL)hasUserProvidedValidDetailsToProgressToPayment;
 - (BOOL)showPhoneEntryField;
 - (NSString *)userEmail;
 - (NSString *)userPhone;
+- (UITableViewCell *)createTextFieldCellWithReuseIdentifier:(NSString *)identifier keyboardType:(UIKeyboardType)type;
+- (void)onBackgroundClicked;
 - (void)onButtonCheckboxClicked:(UIButton *)sender;
-
 @end
 
 @interface OLIntegratedCheckoutViewController () <UITextFieldDelegate, OLCountryPickerControllerDelegate, UINavigationControllerDelegate, UITableViewDelegate>
@@ -111,7 +111,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
 - (void)trackViewed{
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Integrated" showPhoneEntryField:[self showPhoneEntryField]];
+    [OLAnalytics trackDeliveryDetailsScreenViewedForOrder:self.printOrder variant:@"Integrated" showPhoneEntryField:[self showPhoneEntryField]];
 #endif
 }
 
@@ -126,6 +126,10 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         flag = NO;
         errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in Line 1 of the address.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
+    else if ([self.textFieldCity.text isEqualToString:@""]){
+        flag = NO;
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your city.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    }
     else if ([self.textFieldPostCode.text isEqualToString:@""]){
         flag = NO;
         errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your postal code.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
@@ -136,7 +140,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
                                    alertControllerWithTitle:nil
                                    message:errorMessage
                                    preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault
+        UIAlertAction* ok = [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault
                                                    handler:^(UIAlertAction * action){}];
         
         [alert addAction:ok];
@@ -293,7 +297,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
         
         cell = [tableView dequeueReusableCellWithIdentifier:kAddDeliveryAddressCell];
         if (!cell) {
-            cell = [self createTextFieldCellWithReuseIdentifier:kAddDeliveryAddressCell title:@"" keyboardType:UIKeyboardTypeAlphabet];
+            cell = [self createTextFieldCellWithReuseIdentifier:kAddDeliveryAddressCell keyboardType:UIKeyboardTypeAlphabet];
         }
         
         UITextField *tf = (UITextField *) [cell viewWithTag:kTagTextField];
@@ -482,9 +486,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
             case 5:
                 self.shippingAddress.zipOrPostcode = textField.text;
                 break;
-            case 6:
-//                self.shippingAddress.country = [OLCountry countryForCode:textField.text];
-                break;
             default:
                 break;
         }
@@ -541,44 +542,6 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     [self saveAddressFromTextField:textField];
     return YES;
 }
-
-- (UITableViewCell *)createTextFieldCellWithReuseIdentifier:(NSString *)identifier title:(NSString *)title keyboardType:(UIKeyboardType)type {
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(20, 0, [UIScreen mainScreen].bounds.size.width, 43)];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    UITextField *inputField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 43)];
-    inputField.delegate = self;
-    inputField.tag = kInputFieldTag;
-    [inputField setKeyboardType:type];
-    [inputField setReturnKeyType:UIReturnKeyNext];
-    [cell addSubview:inputField];
-    
-    UIView *view = inputField;
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-20-[view]-0-|", @"V:[view(43)]"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    NSLayoutConstraint *centerY = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:view.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
-    [con addObject:centerY];
-    
-    [view.superview addConstraints:con];
-    
-    
-    return cell;
-}
-
-//-(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-//    if (indexPath.section == kSectionDeliveryDetails) {
-//    return 400;
-//    }
-//    return [super tableView:tableView heightForRowAtIndexPath:indexPath];
-//}
 
 
 @end

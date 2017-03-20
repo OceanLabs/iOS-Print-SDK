@@ -154,6 +154,14 @@
  */
 @property (strong, nonatomic) NSString *_Nullable defaultPhotoAlbumName;
 
+
+/**
+ Request a view controller that shows the user's complete order history
+
+ @return A UINavigationController that is ready to be presented
+ */
++ (UINavigationController *_Nonnull)orderHistoryViewController;
+
 /**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with
  *

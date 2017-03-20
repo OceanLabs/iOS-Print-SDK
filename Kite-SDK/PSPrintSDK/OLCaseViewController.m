@@ -37,48 +37,79 @@
 #import "UIImageView+FadeIn.h"
 #import "OLPhotoTextField.h"
 #import "OLKiteUtils.h"
+#import "OLImagePickerViewController.h"
+#import "NSDecimalNumber+CostFormatter.h"
+#import "NSObject+Utils.h"
+#import "OLKiteABTesting.h"
+
+@interface OLProduct ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
+- (NSString *)currencyCode;
+@end
+
+@interface OLProductPrintJob ()
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
+@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
+@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+@end
+
+@interface OLPrintOrder ()
+- (void)saveOrder;
+@end
 
 @interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
 
--(void) doCheckout;
-@property (weak, nonatomic) IBOutlet UIView *printContainerView;
-@property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
+- (BOOL)shouldDoCheckout;
 - (UIEdgeInsets)imageInsetsOnContainer;
-@property (strong, nonatomic) UITextField *borderTextField;
-- (void)onButtonCropClicked:(UIButton *)sender;
-- (void)onTapGestureRecognized:(id)sender;
-@property (strong, nonatomic) OLPhotoTextField *activeTextField;
-@property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
 - (void)disableOverlay;
-- (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
+- (void)doCheckout;
+- (void)loadImageFromAsset;
+- (void)onButtonCropClicked:(UIButton *)sender;
 - (void)onButtonDoneTapped:(id)sender;
+- (void)onTapGestureRecognized:(id)sender;
+- (void)saveEditsToAsset:(OLAsset *)asset;
+- (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
+@property (assign, nonatomic) BOOL showingBack;
 @property (assign, nonatomic) CGAffineTransform backupTransform;
+@property (nonatomic, copy) void (^saveJobCompletionHandler)();
+@property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
+@property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
+@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
+@property (strong, nonatomic) OLPhotoTextField *activeTextField;
+@property (strong, nonatomic) UITextField *borderTextField;
+@property (strong, nonatomic) UIView *textFieldsView;
+@property (strong, nonatomic) UIViewController *presentedVc;
+@property (weak, nonatomic) IBOutlet UIView *printContainerView;
 @property (weak, nonatomic) UIView *gestureView;
+
 @end
 
 @interface OLCaseViewController ()
-
 @property (assign, nonatomic) BOOL downloadedMask;
 @property (strong, nonatomic) IBOutlet UIVisualEffectView *caseVisualEffectView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
+@property (strong, nonatomic) NSBlockOperation *viewDidAppearOperation;
+@property (strong, nonatomic) NSOperation *downloadImagesOperation;
+@property (strong, nonatomic) OLAsset *backAsset;
 @property (strong, nonatomic) UIImage *maskImage;
+@property (strong, nonatomic) UIImageView *renderedImageView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
+@property (weak, nonatomic) IBOutlet UIButton *productFlipButton;
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
-@property (strong, nonatomic) NSOperation *downloadImagesOperation;
-@property (strong, nonatomic) UIImageView *renderedImageView;
-@property (strong, nonatomic) NSBlockOperation *viewDidAppearOperation;
-
 @end
 
 @implementation OLCaseViewController
 
 - (void)setActiveTextField:(OLPhotoTextField *)activeTextField{
     if ([self isUsingMultiplyBlend]){
-        if (self.activeTextField && !activeTextField ){
+        if (self.activeTextField && !activeTextField){
             [self renderImage];
         }
-        else{
+        else if (activeTextField){
             [self disableOverlay];
         }
     }
@@ -90,6 +121,10 @@
     if ([self isUsingMultiplyBlend]){
         [self.cropView setGesturesEnabled:NO];
         self.viewDidAppearOperation = [NSBlockOperation blockOperationWithBlock:^{}];
+    }
+    
+    if (self.product.productTemplate.fulfilmentItems.count < 2){
+        [self.productFlipButton removeFromSuperview];
     }
     
     [super viewDidLoad];
@@ -122,16 +157,61 @@
     return self.product.productTemplate.sizePx.height / self.product.productTemplate.sizePx.width;
 }
 
+- (NSURL *)maskURL{
+    if (!self.showingBack){
+        return self.product.productTemplate.maskImageURL;
+    }
+    else{
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]){
+                return item.maskUrl;
+            }
+        }
+    }
+    
+    return nil;
+}
+
+- (NSURL *)productBackgroundURL{
+    if (!self.showingBack){
+        return self.product.productTemplate.productBackgroundImageURL;
+    }
+    else{
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]){
+                return item.productBackGroundImageURL;
+            }
+        }
+    }
+    
+    return nil;
+}
+
+- (NSURL *)productHighlightsURL{
+    if (!self.showingBack){
+        return self.product.productTemplate.productHighlightsImageURL;
+    }
+    else{
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]){
+                return item.productHighlightsUrl;
+            }
+        }
+    }
+    
+    return nil;
+}
+
 - (void)setupProductRepresentation{
     self.downloadedMask = NO;
     
     self.downloadImagesOperation = [NSBlockOperation blockOperationWithBlock:^{}];
     
-    if (self.product.productTemplate.maskImageURL){
+    if ([self maskURL]){
         NSOperation *op1 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op1];
         
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.maskImageURL withCompletionHandler:^(UIImage *image, NSError *error){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[self maskURL] withCompletionHandler:^(UIImage *image, NSError *error){
             [[NSOperationQueue mainQueue] addOperation:op1];
         }];
     }
@@ -139,11 +219,11 @@
         [self.caseVisualEffectView removeFromSuperview];
         [self.maskActivityIndicator stopAnimating];
     }
-    if (self.product.productTemplate.productHighlightsImageURL){
+    if ([self productHighlightsURL]){
         NSOperation *op2 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op2];
         
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL withCompletionHandler:^(UIImage *image, NSError *error){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productHighlightsURL] withCompletionHandler:^(UIImage *image, NSError *error){
             [[NSOperationQueue mainQueue] addOperation:op2];
         }];
     }
@@ -151,11 +231,11 @@
         [self.highlightsView removeFromSuperview];
     }
     
-    if (self.product.productTemplate.productBackgroundImageURL){
+    if ([self productBackgroundURL]){
         NSOperation *op3 = [NSBlockOperation blockOperationWithBlock:^{}];
         [self.downloadImagesOperation addDependency:op3];
         
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL withCompletionHandler:^(UIImage *image, NSError *error){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] withCompletionHandler:^(UIImage *image, NSError *error){
             [[NSOperationQueue mainQueue] addOperation:op3];
         }];
     }
@@ -215,6 +295,10 @@
     if (self.viewDidAppearOperation && !self.viewDidAppearOperation.finished){
         [[NSOperationQueue mainQueue] addOperation:self.viewDidAppearOperation];
     }
+    
+    if ([OLUserSession currentSession].userSelectedPhotos.count == 0  && !self.backAsset && self.hintView.alpha <= 0.1f) {
+        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:YES];
+    }
 }
 
 - (void)onButtonDoneTapped:(id)sender{
@@ -223,7 +307,137 @@
         return;
     }
     
-    [super onButtonDoneTapped:sender];
+    if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && !self.backAsset) {
+        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
+        return;
+    }
+    
+    if (![self shouldDoCheckout]){
+        return;
+    }
+    
+    [self saveJobWithCompletionHandler:^{
+        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
+            UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+            [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
+            [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
+            [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        else{
+            OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+            [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+                [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+                [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+                
+                [self.navigationController pushViewController:vc animated:YES];
+            }];
+        }
+    }];
+}
+
+- (void)saveJobWithCompletionHandler:(void(^)())handler{
+    [self saveEditsToAsset:self.asset];
+    
+    OLAsset *asset = [[OLUserSession currentSession].userSelectedPhotos.lastObject copy];
+    OLAsset *backAsset = [self.backAsset copy];
+    if (!asset){
+        asset = backAsset;
+        backAsset = nil;
+    }
+    [asset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
+        if (dataLength < 40000){
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Image Is Too Small", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please zoom out or pick a higher quality image", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+            [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print It Anyway", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                [self saveJobNowWithCompletionHandler:handler];
+            }]];
+            [self presentViewController:alert animated:YES completion:NULL];
+            return;
+            
+        }
+        
+        [self.backAsset dataLengthWithCompletionHandler:^(long long dataLength, NSError *error){
+            if (dataLength < 40000){
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Back Image Is Too Small", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please zoom out or pick a higher quality image", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+                [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print It Anyway", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    [self saveJobNowWithCompletionHandler:handler];
+                }]];
+                [self presentViewController:alert animated:YES completion:NULL];
+                return;
+                
+            }
+        }];
+        
+        [self saveJobNowWithCompletionHandler:handler];
+    }];
+}
+
+- (void)saveJobNowWithCompletionHandler:(void(^)())handler {
+    if (self.product.productTemplate.collectionName && self.product.productTemplate.collectionId){
+        NSString *templateId = self.product.selectedOptions[self.product.productTemplate.collectionId];
+        if (templateId){
+            OLProduct *product = [OLProduct productWithTemplateId:templateId];
+            product.selectedOptions = self.product.selectedOptions;
+            product.uuid = self.product.uuid;
+            self.product = product;
+        }
+    }
+    
+    OLAsset *asset = [[OLUserSession currentSession].userSelectedPhotos.lastObject copy];
+    
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+    OLProductPrintJob *job;
+    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+        if (self.product.productTemplate.fulfilmentItems.count > 0){
+            NSMutableDictionary *assetDict = [[NSMutableDictionary alloc] init];
+            for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+                if (([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]) && asset){
+                    [assetDict setObject:asset forKey:item.identifier];
+                }
+                else if (([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]) && self.backAsset){
+                    [assetDict setObject:[self.backAsset copy] forKey:item.identifier];
+                }
+            }
+            job = [OLPrintJob apparelWithTemplateId:self.product.templateId OLAssets:assetDict];
+            
+        }
+        else{
+            job = [OLPrintJob apparelWithTemplateId:self.product.templateId OLAssets:@{
+                                                                                       @"center_chest": asset,
+                                                                                       }];
+        }
+    }
+    else{
+        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[asset]];
+    }
+    for (NSString *option in self.product.selectedOptions.allKeys){
+        [job setValue:self.product.selectedOptions[option] forOption:option];
+    }
+    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+    for (id<OLPrintJob> existingJob in jobs){
+        if ([existingJob.uuid isEqualToString:self.product.uuid]){
+            job.dateAddedToBasket = [existingJob dateAddedToBasket];
+            job.extraCopies = existingJob.extraCopies;
+            job.uuid = self.product.uuid;
+            [printOrder removePrintJob:existingJob];
+        }
+    }
+    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
+    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
+    job.redeemedOffer = self.product.redeemedOffer;
+    self.product.uuid = job.uuid;
+    self.editingPrintJob = job;
+    [printOrder addPrintJob:self.editingPrintJob];
+    
+    [printOrder saveOrder];
+    
+    if (handler){
+        handler();
+    }
+    
+    self.saveJobCompletionHandler = nil;
 }
 
 - (UIColor *)containerBackgroundColor{
@@ -234,6 +448,7 @@
     [self.view bringSubviewToFront:self.deviceView];
     [self.view bringSubviewToFront:self.printContainerView];
     [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.textFieldsView];
     
     if (![self isUsingMultiplyBlend]){
         [self.view bringSubviewToFront:self.highlightsView];
@@ -248,6 +463,7 @@
     [self.view bringSubviewToFront:self.renderedImageView];
     [self.view bringSubviewToFront:self.hintView];
     [self.view bringSubviewToFront:self.gestureView];
+    [self.view bringSubviewToFront:self.productFlipButton];
 }
 
 - (void)viewDidLayoutSubviews{
@@ -303,6 +519,8 @@
                 [self.view setNeedsLayout];
                 [self.view layoutIfNeeded];
                 
+                self.cropView.imageView.transform = self.edits.cropTransform;
+                
                 self.maskImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
                 [self maskWithImage:self.maskImage targetView:self.cropView];
                 
@@ -344,7 +562,6 @@
 }
 
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
-    
     self.renderedImageView.image = nil;
     if (choice.productBackground){
         self.cropView.hidden = YES;
@@ -396,6 +613,8 @@
     self.editingTools.halfWidthDrawerDoneButton.hidden = NO;
     self.editingTools.halfWidthDrawerCancelButton.hidden = NO;
     
+    self.productFlipButton.enabled = NO;
+    
     if ([self isUsingMultiplyBlend]){
         [self.cropView setGesturesEnabled:YES];
     }
@@ -439,6 +658,7 @@
         [self.printContainerView bringSubviewToFront:view];
     }
     self.gestureView.userInteractionEnabled = NO;
+    self.productFlipButton.enabled = YES;
     [UIView animateWithDuration:0.2 animations:^{
         for (UIView *textField in self.textFields){
             textField.alpha = 1;
@@ -455,6 +675,54 @@
     }];
 }
 
+- (void)showExtraChargeHint{
+    if (self.product.productTemplate.fulfilmentItems.count > 1){
+        if ((self.showingBack && [OLUserSession currentSession].userSelectedPhotos.lastObject && !self.backAsset) || (!self.showingBack && self.backAsset && ![OLUserSession currentSession].userSelectedPhotos.lastObject)){
+            for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+                if (((([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]) && self.showingBack) || (([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]) && !self.showingBack)) && [item hasCostForCurrency:[self.product currencyCode]]){
+                    [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Add a photo\non this side", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"this side [of the shirt]") body:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"For only %@ extra", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"[Add a photo on this side of the shirt] for only $4.00 extra"), [[item costForCurrency:self.product.currencyCode] formatCostForCurrencyCode:self.product.currencyCode]] delay:NO];
+                }
+            }
+        }
+    }
+}
+
+- (IBAction)onButtonProductFlipClicked:(UIButton *)sender {
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.hintView.alpha = 0;
+    } completion:NULL];
+    
+    [self disableOverlay];
+    
+    [self saveEditsToAsset:self.asset];
+    
+    self.showingBack = !self.showingBack;
+    
+    if (self.showingBack){
+        self.asset = self.backAsset;
+    }
+    else{
+        self.asset = [OLUserSession currentSession].userSelectedPhotos.lastObject;
+    }
+    
+    self.cropView.imageView.image = nil;
+    self.edits = nil;
+    self.fullImage = nil;
+    
+    [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+        [self setupProductRepresentation];
+        [self loadImageFromAsset];
+    }completion:^(BOOL finished){
+        [self renderImage];
+        [self showExtraChargeHint];
+    }];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackEditScreenButtonTapped:@"Product Flip"];
+#endif
+}
+
+
 -(void) doCheckout{
     if (!self.downloadedMask && self.product.productTemplate.maskImageURL) {
         return;
@@ -463,7 +731,7 @@
 }
 
 - (void)renderImage{
-    if (![self isUsingMultiplyBlend] || [[[UIDevice currentDevice] systemVersion] floatValue] < 10){
+    if (![self isUsingMultiplyBlend]  || self.maskActivityIndicator.isAnimating || [[[UIDevice currentDevice] systemVersion] floatValue] < 10){
         return;
     }
     
@@ -491,6 +759,48 @@
     
     self.renderedImageView.hidden = NO;
     self.highlightsView.hidden = YES;
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    OLAsset *asset = addedAssets.lastObject;
+    if (self.showingBack){
+        self.backAsset = asset;
+    }
+    self.asset = asset;
+    self.edits = [asset.edits copy];
+    if (asset){
+        if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didReplaceAssetWithAsset:)]){
+            [self.delegate scrollCropViewController:self didReplaceAssetWithAsset:asset];
+        }
+        
+        self.ctaButton.enabled = YES;
+        id view = [self.view viewWithTag:1010];
+        if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+            [(UIActivityIndicatorView *)view startAnimating];
+        }
+        
+        [self loadImageFromAsset];
+    }
+    
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:^{
+            [self updateProductRepresentationForChoice:nil];
+        }];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:^{
+            [self updateProductRepresentationForChoice:nil];
+        }];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
+}
+
+- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    if (!self.showingBack){
+        [[OLUserSession currentSession].userSelectedPhotos addObject:asset];
+    }
 }
 
 #pragma mark - RMImageCropperDelegate methods

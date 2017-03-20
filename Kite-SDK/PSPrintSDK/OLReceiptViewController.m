@@ -131,7 +131,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Receipt";
+    self.title = NSLocalizedStringFromTableInBundle(@"Receipt", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
     [self setupHeader];
     
@@ -168,6 +168,17 @@ static const NSUInteger kSectionErrorRetry = 2;
     }
     else{
         [self setupBannerImage:[UIImage imageNamedInKiteBundle:self.printOrder.printed ? @"receipt_success" : @"receipt_failure"] withBgImage:[UIImage imageNamedInKiteBundle:self.printOrder.printed ? @"receipt_success_bg" : @"receipt_failure_bg"]];
+        UILabel *label = [[UILabel alloc] init];
+        label.translatesAutoresizingMaskIntoConstraints = NO;
+        label.numberOfLines = 4;
+        label.textAlignment = NSTextAlignmentCenter;
+        label.font = [UIFont systemFontOfSize:15];
+        label.textColor = [UIColor colorWithWhite:0.337 alpha:1.000];
+        [self.tableView.tableHeaderView addSubview:label];
+        
+        [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:self.printOrder.printed ? 0 : 35]];
+        [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+        label.text = self.printOrder.printed ? NSLocalizedStringFromTableInBundle(@"WE HAVE RECEIVED\nYOUR ORDER", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") : NSLocalizedStringFromTableInBundle(@"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
 }
 
@@ -244,7 +255,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             [OLProgressHUD dismiss];
             if (error){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:NULL]];
+                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:NULL]];
                 [self presentViewController:ac animated:YES completion:NULL];
                 
             }
@@ -262,7 +273,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)retrySubmittingOrderForPrinting {
     [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
     [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
-    [OLProgressHUD showWithStatus:@"Processing"];
+    [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Processing the order")];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
@@ -276,7 +287,7 @@ static const NSUInteger kSectionErrorRetry = 2;
         
         if (error) {
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
             [self presentViewController:ac animated:YES completion:NULL];
         } else {
             [self retryWasSuccessful];
@@ -355,6 +366,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellIdOrderId];
             cell.textLabel.adjustsFontSizeToFitWidth = YES;
             cell.textLabel.minimumScaleFactor = 0.5;
+            cell.textLabel.font = [UIFont systemFontOfSize:14];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
@@ -401,39 +413,45 @@ static const NSUInteger kSectionErrorRetry = 2;
             [cell.detailTextLabel.superview addConstraint:[NSLayoutConstraint constraintWithItem:cell.detailTextLabel attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:cell.detailTextLabel.superview attribute:NSLayoutAttributeTrailing multiplier:1 constant:-15]];
         }
         
-        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *orderCost, NSError *error) {
-            if (orderCost){
-                NSArray *lineItems = orderCost.lineItems;
-                NSDecimalNumber *totalCost = [orderCost totalCostInCurrency:self.printOrder.currencyCode];
-                
-                BOOL total = indexPath.row >= lineItems.count;
-                NSDecimalNumber *cost;
-                NSString *currencyCode = self.printOrder.currencyCode;
-                if (total) {
-                    cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-                    cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
-                    cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
+        if (self.printOrder.printed){
+            [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *orderCost, NSError *error) {
+                if (orderCost){
+                    NSArray *lineItems = orderCost.lineItems;
+                    NSDecimalNumber *totalCost = [orderCost totalCostInCurrency:self.printOrder.currencyCode];
                     
-                    cost = totalCost;
-                    
-                    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-                    [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-                    [formatter setCurrencyCode:currencyCode];
-                    cell.detailTextLabel.text = [formatter stringFromNumber:totalCost];
+                    BOOL total = indexPath.row >= lineItems.count;
+                    NSDecimalNumber *cost;
+                    NSString *currencyCode = self.printOrder.currencyCode;
+                    if (total) {
+                        cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+                        cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
+                        cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
+                        
+                        cost = totalCost;
+                        
+                        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+                        [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+                        [formatter setCurrencyCode:currencyCode];
+                        cell.detailTextLabel.text = [formatter stringFromNumber:totalCost];
+                    }
+                    else{
+                        OLPaymentLineItem *item = lineItems[indexPath.row];
+                        cell.textLabel.text = item.description;
+                        cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
+                        cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
+                        cell.detailTextLabel.text = [item costStringInCurrency:self.printOrder.currencyCode];
+                    }
                 }
                 else{
-                    OLPaymentLineItem *item = lineItems[indexPath.row];
-                    cell.textLabel.text = item.description;
+                    cell.textLabel.text = [self.printOrder.jobs[indexPath.item] productName];
                     cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
-                    cell.detailTextLabel.font = [UIFont systemFontOfSize:cell.detailTextLabel.font.pointSize];
-                    cell.detailTextLabel.text = [item costStringInCurrency:self.printOrder.currencyCode];
                 }
-            }
-            else{
-                cell.textLabel.text = [self.printOrder.jobs[indexPath.item] productName];
-                cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
-            }
-        }];
+            }];
+        }
+        else{
+            cell.textLabel.text = [self.printOrder.jobs[indexPath.item] productName];
+//            cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
+        }
     } else if (indexPath.section == kSectionErrorRetry) {
         static NSString *const kCellRetry = @"kCellRetry";
         cell = [tableView dequeueReusableCellWithIdentifier:kCellRetry];

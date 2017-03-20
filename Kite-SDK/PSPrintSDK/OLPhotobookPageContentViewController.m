@@ -124,13 +124,13 @@
     if (imageIndex >= self.userSelectedPhotos.count){
         return;
     }
-    OLAsset *printPhoto = [self.userSelectedPhotos objectAtIndex:imageIndex];
-    if (![printPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+    OLAsset *asset = [self.userSelectedPhotos objectAtIndex:imageIndex];
+    if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
         self.imageView.image = nil;
         dispatch_async(dispatch_get_main_queue(), ^{
             NSInteger blockIndex = imageIndex;
             
-            [printPhoto imageWithSize:self.imageView.frame.size applyEdits:YES progress:^(float progress){
+            [asset imageWithSize:self.imageView.frame.size applyEdits:YES progress:^(float progress){
                 [self.imageView setProgress:progress];
             }completion:^(UIImage *image, NSError *error){
                 dispatch_async(dispatch_get_main_queue(), ^{

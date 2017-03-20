@@ -267,6 +267,8 @@
                                 NSArray *supportedOptions;
                                 NSString *collectionId;
                                 NSString *collectionName;
+                                NSMutableArray *fulfilmentItems;
+                                BOOL supportsTextOnBorder = NO;
                                 OLProductRepresentation *productRepresentation;
                                 if (product){
                                     NSArray *coverPhotoDicts = product[@"cover_photo_variants"];
@@ -277,6 +279,30 @@
                                                     coverPhotos[dict[@"variant_id"]] = dict[@"url"];
                                                 }
                                             }
+                                        }
+                                    }
+                                    
+                                    supportsTextOnBorder = [product[@"supports_text_on_border"] isKindOfClass:[NSNumber class]] ? [product[@"supports_text_on_border"] boolValue] : NO;
+                                    
+                                    NSArray *fulfilmentFields = product[@"fulfilment_fields"];
+                                    if ([fulfilmentFields isKindOfClass:[NSArray class]]){
+                                        fulfilmentItems = [[NSMutableArray alloc] init];
+                                        for (NSDictionary *dict in fulfilmentFields){
+                                            OLFulfilmentItem *item = [[OLFulfilmentItem alloc] init];
+                                            item.costs = [dict[@"cost"] isKindOfClass:[NSArray class]] ? dict[@"cost"] : nil;
+                                            item.itemDescription = [dict[@"description"] isKindOfClass:[NSString class]] ? dict[@"description"] : nil;
+                                            item.identifier = [dict[@"field_name"] isKindOfClass:[NSString class]] ? dict[@"field_name"] : nil;
+                                            item.required = [dict[@"required"] isKindOfClass:[NSNumber class]] ? [dict[@"required"] boolValue] : NO;
+                                            item.name = [dict[@"verbose_name"] isKindOfClass:[NSString class]] ? dict[@"verbose_name"] : nil;
+                                            
+                                            id s = dict[@"product_highlights_url"];
+                                            item.productHighlightsUrl = [s isKindOfClass:[NSString class]] && ![s isEqualToString:@""] ? [NSURL URLWithString:s] : nil;
+                                            s = dict[@"mask_url"];
+                                            item.maskUrl = [s isKindOfClass:[NSString class]] && ![s isEqualToString:@""] ? [NSURL URLWithString:s] : nil;
+                                            s = dict[@"product_background_image_url"];
+                                            item.productBackGroundImageURL = [s isKindOfClass:[NSString class]] && ![s isEqualToString:@""] ? [NSURL URLWithString:s] : nil;
+                                            
+                                            [fulfilmentItems addObject:item];
                                         }
                                     }
                                     
@@ -461,6 +487,8 @@
                                     t.collectionName = collectionName;
                                     t.logo = logo;
                                     t.representationAssets = representationAssets;
+                                    t.fulfilmentItems = fulfilmentItems;
+                                    t.supportsTextOnBorder = supportsTextOnBorder;
                                     
                                     if ([blendMode isEqualToString:@"MULTIPLY"]){
                                         t.blendMode = OLImageBlendModeMultiply;

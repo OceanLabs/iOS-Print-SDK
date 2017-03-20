@@ -213,6 +213,8 @@ static id stringOrEmptyString(NSString *str) {
     self.options[@"polaroid_text"] = borderTextArray;
     json[@"options"] = self.options;
     
+    json[@"job_id"] = [self uuid];
+    
     if (self.address) {
         NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
                                           @"address_line_1": stringOrEmptyString(self.address.line1),
@@ -256,6 +258,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     val = 40 * val + [self.address hash];
+    val = 41 * val + [self.uuid hash];
 
     return val;
 }

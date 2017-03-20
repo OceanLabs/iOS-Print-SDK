@@ -5,6 +5,7 @@
 "Add" = "Ajouter";
 "Add %ld %@!" = "Ajouter %ld %@!";
 "Add a %@!" = "Ajouter un %@!";
+"Add a photo\non this side" = "Add a photo\non this side";
 "Add Address" = "Ajouter une adresse";
 "Add another %@!" = "Ajouter un autre %@!";
 "Add Credit Card" = "Ajouter une carte de crédit";
@@ -25,6 +26,7 @@
 "Authorise" = "Autoriser";
 "Back" = "Retour";
 "BACK" = "RETOUR";
+"Back Image Is Too Small" = "Back Image Is Too Small";
 "Basket is empty" = "Le panier est vide";
 "basket.Edit" = "Modifier";
 "Cancel" = "Annuler";
@@ -40,6 +42,7 @@
 "City" = "Ville";
 "Clearing Code" = "Code de compensation";
 "cm" = "cm";
+"Completed Orders" = "Completed Orders";
 "Continue Shopping" = "Continuer mes achats";
 "Country" = "Pays";
 "County" = "Région";
@@ -78,8 +81,9 @@
 "Failed to validate the order. Please try again." = "Nous n'avons pu valider la commande. Veuillez réessayer.";
 "Filters" = "Filtres";
 "First Name" = "Prénom";
-"Flip" = "Flip";
+"Flip" = "Inverser";
 "Fonts" = "Polices";
+"For only %@ extra" = "For only %@ extra";
 "FREE" = "GRATUIT";
 "FRONT" = "DEVANT";
 "Great gifts for all the family" = "Supers cadeaux pour toute la famille";
@@ -101,6 +105,7 @@
 "Medium" = "Medium";
 "Missing Delivery Address" = "Adresse de livraison manquante";
 "MM/YY" = "MM/AA";
+"MORE ITEMS\nCOMING SOON!" = "MORE ITEMS\nCOMING SOON!";
 "Move Pages" = "Déplacerles pages";
 "New Payment" = "Nouveau paiement";
 "Next" = "Suivant";
@@ -113,17 +118,14 @@
 "OK" = "Accepter";
 "Only registered %d/%d image URLs with the asset endpoint" = "Seules les URL d'image %d/%d enregistrées avec le point d'extrémité d'actif";
 "Oops!" = "Oups!";
+"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW" = "OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW";
 "Or print on a product below ▼" = "Ou imprimer sur un produit ci-dessous ▼";
+"Order History" = "Order History";
 "Order Id" = "Numéro de commande";
 "Order Summary" = "Récapitulatif de commande";
 "Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later." = "Notre magasin est actuellement en cours de maintenance donc aucun produit n'est disponible pour l'achat en ce moment. Veuillez réessayer un peu plus tard.";
 "Pack of" = "Pack de";
-"Pay" = "Payer";
 "Pay %@" = "Payer %@";
-"Pay with card ending %@" = "Payer avec la carte finissant %@";
-"Pay with Credit Card" = "Payer avec une carte de crédit";
-"Pay with Credit Card (TEST)" = "Payer avec une carte de crédit (TEST)";
-"Pay with new card" = "Payer avec une nouvelle carte";
 "Paying With" = "Payer avec";
 "Payment" = "Paiement";
 "Payment (TEST)" = "Paiement (TEST)";
@@ -139,6 +141,7 @@
 "Please enter a valid phone number" = "Merci d'ajouter un numéro de téléphonevalide";
 "Please enter your first and last name." = "Merci d'entrer votre nom et prénom.";
 "Please fill in Line 1 of the address." = "Merci de remplir la première ligne de votre adresse.";
+"Please fill in your city." = "Merci de remplir votre ville";
 "Please fill in your postal code." = "Merci de remplir votre code postal.";
 "Please scan the QR code using a QR reader app on your device." = "Veuillez scanner le QR code en utilisant un lecteur QR sur votre smartphone.";
 "Please select %d images." = "Merci de sélectionner %d images.";
@@ -162,13 +165,14 @@
 "Promo Code" = "Code Promo";
 "Promotional Discount" = "Remise promotionnelle";
 "Quantity" = "Quantité";
+"Receipt" = "Reçu";
 "Recents" = "Récents";
 "Remove" = "Retirer";
 "Remove?" = "Retirer ?";
 "Required by the postal service in case there are any issues during delivery." = "Requis par les services postaux en cas de problèmes durant la livraison.";
 "Retry" = "Réessayer";
 "Review" = "Revoir";
-"Rotate" = "Faire pivoter";
+"Rotate" = "Pivoter";
 "Save" = "Sauvegarder";
 "Scan QR Code" = "QR Code";
 "Search by postcode, street or address" = "Recherche par code postal, rue ou adresse";
@@ -201,6 +205,7 @@
 "Uploading book" = "Chargement du livre";
 "Uploading Images \n%lu / %lu" = "Images en cours de téléchargement \n%lu / %lu";
 "View Item" = "Voir les éléments";
+"WE HAVE RECEIVED\nYOUR ORDER" = "WE HAVE RECEIVED\nYOUR ORDER";
 "We'll send you confirmation and order updates." = "Nous vous enverrons une confirmation et des mises à jour de commande.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Nous vous enverrons une confirmation et des mises à jour de commande. Décochez cette case si vous ne souhaitez pas recevoir d'emails de notre part.";
 "Yes" = "Oui";
