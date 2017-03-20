@@ -45,7 +45,7 @@
 
 @interface OL3DProductViewController ()
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
-@property (weak, nonatomic) IBOutlet SCNView *scene;
+@property (strong, nonatomic) SCNView *scene;
 @property (strong, nonatomic) SCNGeometry *tube;
 @property (strong, nonatomic) SCNNode *tubeNode;
 @property (strong, nonatomic) SCNNode *mug;
@@ -56,6 +56,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.scene = [[SCNView alloc] init];
+    self.scene.backgroundColor = self.view.backgroundColor;
+    [self.view addSubview:self.scene];
+    [self.scene leadingFromSuperview:0 relation:NSLayoutRelationEqual];
+    [self.scene trailingToSuperview:0 relation:NSLayoutRelationEqual];
+    [self.scene verticalSpacingToView:self.editingTools constant:0 relation:NSLayoutRelationEqual];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.scene attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanGestureRecognized:)];
+    [self.scene addGestureRecognizer:panGesture];
     
     SCNScene *scene = [SCNScene sceneWithURL:[[OLKiteUtils kiteResourcesBundle] URLForResource:@"mug" withExtension:@"scn"]
  options:NULL error:nil];
@@ -84,6 +95,8 @@
     else{
         self.camera.position = SCNVector3Make(0, 4.2, 0);
     }
+    
+    [self orderViews];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
@@ -121,6 +134,10 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         UIImage *image = [self addBorderToImage:[self.cropView editedImage]];
+        
+        if (!image){
+            return;
+        }
         
         OLAsset *tempAsset = [OLAsset assetWithImageAsPNG:image];
         tempAsset.edits.filterName = self.edits.filterName;

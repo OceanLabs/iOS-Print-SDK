@@ -49,6 +49,7 @@
 #import "UIImage+OLUtils.h"
 #import "OLCaseViewController.h"
 #import "OLSingleImagePosterViewController.h"
+#import "OL3DProductViewController.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -278,6 +279,9 @@ static CGFloat fadeTime = 0.3;
     else if (templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
         return [[OLSingleImagePosterViewController alloc] init];
     }
+    else if (templateUI == OLTemplateUIMug){
+        return [[OL3DProductViewController alloc] init];
+    }
     
     return [self.storyboard instantiateViewControllerWithIdentifier:[self reviewViewControllerIdentifierForProduct:product photoSelectionScreen:photoSelectionScreen]];
     
@@ -290,9 +294,6 @@ static CGFloat fadeTime = 0.3;
     }
     else if (templateUI == OLTemplateUINonCustomizable){
         return @"OLPaymentViewController";
-    }
-    else if (templateUI == OLTemplateUIMug){
-        return @"OL3DProductViewController";
     }
     else if (photoSelectionScreen){
         return @"OLImagePickerViewController";
