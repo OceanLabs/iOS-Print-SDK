@@ -1928,7 +1928,7 @@ const NSInteger kOLEditTagCrop = 40;
         
         [self saveEditsToAsset:self.asset];
         
-        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[[OLUserSession currentSession].kiteVc reviewViewControllerIdentifierForProduct:product photoSelectionScreen:NO]];
+        UIViewController *vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:product photoSelectionScreen:NO];
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
         NSMutableArray *vcs = [self.navigationController.viewControllers mutableCopy];
         [vcs replaceObjectAtIndex:vcs.count-1 withObject:vc];
