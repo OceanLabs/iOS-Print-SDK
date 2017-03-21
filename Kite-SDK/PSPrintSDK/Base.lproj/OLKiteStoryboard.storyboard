@@ -106,7 +106,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oYN-uJ-Rfi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1300" y="-2034"/>
+            <point key="canvasLocation" x="2188" y="-2034"/>
         </scene>
         <!--Product Overview Page Content View Controller-->
         <scene sceneID="0If-qa-Bx3">
@@ -220,7 +220,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hQe-al-rzP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1063" y="-1338"/>
+            <point key="canvasLocation" x="-1930" y="-1338"/>
         </scene>
         <!--Frame Order Review View Controller-->
         <scene sceneID="6Dd-YI-JlP">
@@ -862,7 +862,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4516" y="-581"/>
+            <point key="canvasLocation" x="4490" y="-1337"/>
         </scene>
         <!--Payment Method-->
         <scene sceneID="E3C-Dg-pIs">
@@ -977,7 +977,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SeA-xU-bXt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5336.8000000000002" y="-581.55922038980509"/>
+            <point key="canvasLocation" x="4489" y="-2033"/>
         </scene>
         <!--Edit Photobook View Controller-->
         <scene sceneID="HfJ-UO-EWf">
@@ -1237,13 +1237,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zbp-qJ-ahZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4516" y="-1345"/>
+            <point key="canvasLocation" x="3745" y="-2034"/>
         </scene>
         <!--Product Home View Controller-->
         <scene sceneID="utb-1P-DTs">
             <objects>
                 <collectionViewController storyboardIdentifier="ProductHomeViewController" id="U81-HI-b1P" customClass="OLProductHomeViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="a6K-tv-eGU">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="a6K-tv-eGU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1752,13 +1752,13 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bnp-ON-2Gu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1066" y="-582"/>
+            <point key="canvasLocation" x="-1055" y="-1338"/>
         </scene>
         <!--Pack Product View Controller-->
         <scene sceneID="dR2-z7-yB6">
             <objects>
                 <collectionViewController storyboardIdentifier="OrderReviewViewController" id="7wc-Kp-jtQ" customClass="OLPackProductViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2362,7 +2362,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vsq-oC-uOo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-287" y="-581"/>
+            <point key="canvasLocation" x="-276" y="-1337"/>
         </scene>
         <!--Photobook View Controller-->
         <scene sceneID="VAM-9o-3tT">
@@ -2907,7 +2907,7 @@ only Lorem Ipsum</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iQ8-0f-KPs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2193" y="-2034"/>
+            <point key="canvasLocation" x="2988" y="-2034"/>
         </scene>
         <!--Image Picker Login Page View Controller-->
         <scene sceneID="bOS-mN-cdO">
@@ -2961,7 +2961,7 @@ only Lorem Ipsum</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u6S-70-uku" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1300" y="-1299"/>
+            <point key="canvasLocation" x="1434" y="-2032"/>
         </scene>
         <!--Image Picker Photos Page View Controller-->
         <scene sceneID="dJj-UV-A6G">
@@ -3224,7 +3224,7 @@ only Lorem Ipsum</string>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1300" y="-581"/>
+            <point key="canvasLocation" x="1433" y="-1338"/>
         </scene>
         <!--Pick Your Images-->
         <scene sceneID="4yn-Zk-3xA">
@@ -3362,7 +3362,7 @@ only Lorem Ipsum</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="il2-d3-2zV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1300" y="152"/>
+            <point key="canvasLocation" x="1434" y="-581"/>
         </scene>
         <!--Product Overview View Controller-->
         <scene sceneID="mjB-Xv-Dpy">
@@ -3481,7 +3481,7 @@ only Lorem Ipsum</string>
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="532" y="-1322"/>
+            <point key="canvasLocation" x="532" y="-1338"/>
         </scene>
         <!--Orders-->
         <scene sceneID="hWb-jU-mLV">
