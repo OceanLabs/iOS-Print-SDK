@@ -361,7 +361,7 @@
     
 }
 
-- (void)testCompleteMugJourney{
+- (void)DISABLED_testCompleteMugJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     [self chooseClass:@"Mugs" onOLProductHomeViewController:productHomeVc];
     
@@ -434,6 +434,11 @@
 - (void)testCompleteApparelJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     [self chooseClass:@"Apparel" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Roly Sublimation T-Shirt" onOLProductTypeSelectionViewController:productTypeVc];
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
