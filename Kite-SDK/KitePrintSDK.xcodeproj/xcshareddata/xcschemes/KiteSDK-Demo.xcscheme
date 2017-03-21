@@ -30,7 +30,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CD73BF88186215790009DE03"
                BuildableName = "KitePrintSDKTests.xctest"
-               BlueprintName = "KitePrintSDKTests"
+               BlueprintName = "Tests"
                ReferencedContainer = "container:KitePrintSDK.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
