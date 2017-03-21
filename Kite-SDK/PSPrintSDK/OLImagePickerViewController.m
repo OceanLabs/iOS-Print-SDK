@@ -864,7 +864,7 @@
         [OLAnalytics trackUpsellShown:shouldShowOffer];
 #endif
         if (shouldShowOffer){
-            OLUpsellViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
+            OLUpsellViewController *c = [[OLUserSession currentSession].kiteVc.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
             c.providesPresentationContextTransitionStyle = true;
             c.definesPresentationContext = true;
             c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
