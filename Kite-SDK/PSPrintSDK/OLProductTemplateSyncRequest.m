@@ -42,6 +42,7 @@
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
+@property (strong, nonatomic) NSURL *nextPage;
 @end
 
 @interface OLKitePrintSDK (Private)
@@ -83,12 +84,12 @@
             handler(nil, error);
         } else {
             if (httpStatusCode >= 200 & httpStatusCode <= 299) {
-                NSURL *nextPage = nil;
+                self.nextPage = nil;
                 id meta = json[@"meta"];
                 if ([meta isKindOfClass:[NSDictionary class]]) {
                     id next = meta[@"next"];
                     if ([next isKindOfClass:[NSString class]]) {
-                        nextPage = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OLKitePrintSDK apiEndpoint], next]];
+                        self.nextPage = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OLKitePrintSDK apiEndpoint], next]];
                     }
                 }
                 
@@ -518,9 +519,9 @@
                     }
                 }
                 
-                if (nextPage != nil) {
+                if (self.nextPage != nil) {
                     handler(acc, nil);
-                    [self fetchTemplatesWithURL:nextPage templateAccumulator:acc handler:handler];
+                    [self fetchTemplatesWithURL:self.nextPage templateAccumulator:acc handler:handler];
                 }
                 else {
                     self.req = nil;
@@ -561,7 +562,7 @@
 }
 
 - (BOOL)isInProgress{
-    return self.req != nil;
+    return self.req != nil || self.nextPage;
 }
 
 @end

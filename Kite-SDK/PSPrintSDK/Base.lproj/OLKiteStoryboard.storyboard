@@ -1757,8 +1757,26 @@
                                 </constraints>
                                 <size key="customSize" width="600" height="84"/>
                             </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="loadingCell" id="U6T-Vv-fRX">
+                                <rect key="frame" x="0.0" y="1948" width="600" height="84"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="84"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" tag="10" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="m5D-13-NWN">
+                                            <rect key="frame" x="290" y="32" width="20" height="20"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="m5D-13-NWN" firstAttribute="centerX" secondItem="U6T-Vv-fRX" secondAttribute="centerX" id="Th7-xH-GeE"/>
+                                    <constraint firstItem="m5D-13-NWN" firstAttribute="centerY" secondItem="U6T-Vv-fRX" secondAttribute="centerY" id="cTR-OF-HKs"/>
+                                </constraints>
+                                <size key="customSize" width="600" height="84"/>
+                            </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PrintAtHomeCell" id="9Ul-7Z-5bz">
-                                <rect key="frame" x="38" y="1948" width="299" height="264"/>
+                                <rect key="frame" x="38" y="2034" width="299" height="264"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="299" height="264"/>
@@ -1955,7 +1973,7 @@
         <scene sceneID="dR2-z7-yB6">
             <objects>
                 <collectionViewController storyboardIdentifier="OrderReviewViewController" id="7wc-Kp-jtQ" customClass="OLPackProductViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
