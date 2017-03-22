@@ -50,6 +50,7 @@
 #import "OLCaseViewController.h"
 #import "OLSingleImagePosterViewController.h"
 #import "OL3DProductViewController.h"
+#import "OLApparelViewController.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -273,8 +274,11 @@ static CGFloat fadeTime = 0.3;
 
 - (UIViewController *)reviewViewControllerForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
     OLTemplateUI templateUI = product.productTemplate.templateUI;
-    if (templateUI == OLTemplateUICase || templateUI == OLTemplateUIApparel){
+    if (templateUI == OLTemplateUICase){
         return [[OLCaseViewController alloc] init];
+    }
+    else if (templateUI == OLTemplateUIApparel){
+        return [[OLApparelViewController alloc] init];
     }
     else if (templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
         return [[OLSingleImagePosterViewController alloc] init];

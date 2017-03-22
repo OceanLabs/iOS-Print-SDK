@@ -682,7 +682,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (BOOL)cropIsInImageEditingTools{
-    return self.product.productTemplate.templateUI == OLTemplateUIApparel && self.product.productTemplate.options.count > 1;
+    return NO;
 }
 
 - (UIEdgeInsets)imageInsetsOnContainer{
@@ -1176,23 +1176,14 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupButton4{
-    if (self.product.productTemplate.templateUI == OLTemplateUIApparel && self.product.productTemplate.options.count > 1){
-        self.editingTools.button4.tag = kOLEditTagProductOptionsTab;
-        [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self.product.productTemplate.options[1] iconWithCompletionHandler:^(UIImage *icon){
-            [self.editingTools.button4 setImage:icon forState:UIControlStateNormal];
-        }];
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        [self.editingTools.button4 removeFromSuperview];
+        [self.cropView setGesturesEnabled:NO];
     }
     else{
-        if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-            [self.editingTools.button4 removeFromSuperview];
-            [self.cropView setGesturesEnabled:NO];
-        }
-        else{
-            [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
-            self.editingTools.button4.tag = kOLEditTagCrop;
-            [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        }
+        [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
+        self.editingTools.button4.tag = kOLEditTagCrop;
+        [self.editingTools.button4 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 
@@ -1808,7 +1799,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3 || (self.product.productTemplate.templateUI == OLTemplateUIApparel && collectionView.tag == 0)){
+    if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
         return CGSizeMake(self.editingTools.collectionView.frame.size.height, self.editingTools.collectionView.frame.size.height);
     }
     else if (collectionView.tag == kOLEditTagFonts){

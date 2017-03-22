@@ -166,11 +166,7 @@
 }
 
 - (BOOL)isUsingMultiplyBlend{
-    return self.product.productTemplate.templateUI == OLTemplateUIApparel || self.product.productTemplate.blendMode == OLImageBlendModeMultiply;
-}
-
-- (BOOL)shouldEnableGestures{
-    return self.product.productTemplate.templateUI != OLTemplateUIApparel;
+    return self.product.productTemplate.blendMode == OLImageBlendModeMultiply;
 }
 
 - (void)disableOverlay{
@@ -320,11 +316,6 @@
 }
 
 - (void)onButtonDoneTapped:(id)sender{
-    if ([OLUserSession currentSession].userSelectedPhotos.count != 0 && self.product.productTemplate.templateUI == OLTemplateUIApparel && !self.product.selectedOptions[@"garment_size"]) {
-        [self showHintViewForView:self.editingTools.button2 header:NSLocalizedStringFromTableInBundle(@"Select Size", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Example: Shirt size") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
-        return;
-    }
-    
     if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && !self.backAsset) {
         [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
         return;
@@ -406,30 +397,7 @@
     OLAsset *asset = [[OLUserSession currentSession].userSelectedPhotos.lastObject copy];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-    OLProductPrintJob *job;
-    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
-        if (self.product.productTemplate.fulfilmentItems.count > 0){
-            NSMutableDictionary *assetDict = [[NSMutableDictionary alloc] init];
-            for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
-                if (([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]) && asset){
-                    [assetDict setObject:asset forKey:item.identifier];
-                }
-                else if (([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]) && self.backAsset){
-                    [assetDict setObject:[self.backAsset copy] forKey:item.identifier];
-                }
-            }
-            job = [OLPrintJob apparelWithTemplateId:self.product.templateId OLAssets:assetDict];
-            
-        }
-        else{
-            job = [OLPrintJob apparelWithTemplateId:self.product.templateId OLAssets:@{
-                                                                                       @"center_chest": asset,
-                                                                                       }];
-        }
-    }
-    else{
-        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[asset]];
-    }
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[asset]];
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }

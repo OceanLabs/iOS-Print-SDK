@@ -37,6 +37,15 @@
 @class OLPhotoEdits;
 @class OLAsset;
 
+extern const NSInteger kOLEditTagImages;
+extern const NSInteger kOLEditTagProductOptionsTab;
+extern const NSInteger kOLEditTagImageTools;
+extern const NSInteger kOLEditTagTextTools;
+extern const NSInteger kOLEditTagTextColors;
+extern const NSInteger kOLEditTagFonts;
+extern const NSInteger kOLEditTagFilters;
+extern const NSInteger kOLEditTagCrop;
+
 @protocol OLImageEditViewControllerDelegate <NSObject>
 
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage;
