@@ -45,6 +45,7 @@
 #import "UIView+RoundRect.h"
 #import "OLCustomPickerController.h"
 #import "OLTouchTolerantView.h"
+#import "OLAnalytics.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -1129,7 +1130,7 @@ const NSInteger kOLEditTagCrop = 40;
             }
         } completion:^(BOOL finished){
             [UIView animateWithDuration:0.7 animations:^{
-                self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height), -M_PI_4);
+                self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height * 1.2), -M_PI_4);
             }completion:^(BOOL finished){
                 if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){
                     [self.delegate scrollCropViewControllerDidDropChanges:self];
@@ -1146,6 +1147,9 @@ const NSInteger kOLEditTagCrop = 40;
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackEditScreenDidCancel];
+#endif
 }
 
 - (void)selectButton:(UIButton *)sender{
@@ -1154,9 +1158,15 @@ const NSInteger kOLEditTagCrop = 40;
     switch (sender.tag) {
         case kOLEditTagImageTools:
             self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"IMAGE TOOLS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Image Tools"];
+#endif
             break;
         case kOLEditTagImages:
             [self showImagePicker];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Image Picker"];
+#endif
             return;
         case kOLEditTagProductOptionsTab:
             if (self.product.productTemplate.options.count == 1 || self.product.productTemplate.templateUI == OLTemplateUIApparel){
@@ -1173,14 +1183,23 @@ const NSInteger kOLEditTagCrop = 40;
                     self.editingTools.drawerLabel.text = [self.selectedOption.name uppercaseString];
                 }
                 self.editingTools.collectionView.tag = self.selectedOption.type;
+#ifndef OL_NO_ANALYTICS
+                [OLAnalytics trackEditScreenButtonTapped:self.selectedOption.code];
+#endif
             }
             else{
                 self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"PRODUCT OPTIONS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+#ifndef OL_NO_ANALYTICS
+                [OLAnalytics trackEditScreenButtonTapped:@"Product Options"];
+#endif
             }
 
             break;
         case kOLEditTagCrop:
             [self onButtonCropClicked:sender];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
+#endif
             return;
             
         default:
@@ -1682,6 +1701,9 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Fonts"];
+#endif
         }
         else if (indexPath.item == 1){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
@@ -1691,6 +1713,9 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Text Color"];
+#endif
         }
         
     }
@@ -1706,18 +1731,33 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Filters"];
+#endif
         }
         else if (indexPath.item == 1){
             [self onButtonHorizontalFlipClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Flip"];
+#endif
         }
         else if (indexPath.item == 2){
             [self onButtonRotateClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Rotate"];
+#endif
         }
         else if (indexPath.item == 3){
             [self onButtonAddTextClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Add Text"];
+#endif
         }
         else if (indexPath.item == 4){
             [self onButtonCropClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
+#endif
         }
     }
     else if ((collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3) && !self.selectedOption.choices[indexPath.item].productBackground){
@@ -1772,6 +1812,9 @@ const NSInteger kOLEditTagCrop = 40;
         NSMutableArray *vcs = [self.navigationController.viewControllers mutableCopy];
         [vcs replaceObjectAtIndex:vcs.count-1 withObject:vc];
         [self.navigationController setViewControllers:vcs];
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackEditScreenButtonTapped:product.productTemplate.name];
+#endif
     }
     else if (self.selectedOption){
         OLProductTemplateOptionChoice *choice = self.selectedOption.choices[indexPath.item];
@@ -1783,6 +1826,9 @@ const NSInteger kOLEditTagCrop = 40;
         if (self.selectedChoice.color){
             self.editingTools.drawerLabel.text = [[self.selectedOption.name stringByAppendingString:[NSString stringWithFormat:@" - %@", self.selectedChoice.name]] uppercaseString];
         }
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackEditScreenButtonTapped:choice.code];
+#endif
     }
     else{
         UIButton *selectedButton;
@@ -1801,6 +1847,10 @@ const NSInteger kOLEditTagCrop = 40;
             [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
             [collectionView reloadData];
             [self showDrawerWithCompletionHandler:NULL];
+            
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:self.selectedOption.code];
+#endif
         }];
     }
     

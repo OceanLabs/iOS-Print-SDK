@@ -30,6 +30,8 @@
 #import <Foundation/Foundation.h>
 #import "OLProductTemplate.h"
 
+@class OLAsset;
+
 @interface OLProduct : NSObject
 
 @property (strong, nonatomic) UIColor *labelColor;
@@ -39,9 +41,9 @@
 @property (strong, nonatomic) NSMutableDictionary *selectedOptions;
 @property (strong, nonatomic) NSString *uuid;
 
-+(NSArray *)products;
-+(NSArray *)productsWithFilters:(NSArray *)allowedTemplateIds;
--(instancetype)initWithTemplate:(OLProductTemplate *)productTemplate;
++ (NSArray *)products;
++ (NSArray *)productsWithFilters:(NSArray *)allowedTemplateIds;
+- (instancetype)initWithTemplate:(OLProductTemplate *)productTemplate;
 - (NSUInteger)quantityToFulfillOrder;
 - (NSString *)templateId;
 - (NSString *)unitCost;
@@ -52,6 +54,8 @@
 - (NSString *)dimensions;
 - (NSString *)detailsString;
 - (BOOL)isValidProductForUI;
+- (OLAsset *)classImageAsset;
+- (OLAsset *)coverPhotoAsset;
 +(OLProduct *)productWithTemplateId:(NSString *)templateId;
 
 @end

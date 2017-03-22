@@ -700,6 +700,9 @@ static const CGFloat kBookEdgePadding = 38;
     [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:self.product.productTemplate.name];
+#endif
 }
 
 - (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
@@ -884,13 +887,9 @@ static const CGFloat kBookEdgePadding = 38;
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             job.dateAddedToBasket = [existingJob dateAddedToBasket];
-            if ([existingJob extraCopies] > 0){
-                [existingJob setExtraCopies:[existingJob extraCopies]-1];
-            }
-            else{
-                [printOrder removePrintJob:existingJob];
-            }
+            job.extraCopies = existingJob.extraCopies;
             job.uuid = self.product.uuid;
+            [printOrder removePrintJob:existingJob];
         }
     }
     [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
@@ -1015,7 +1014,7 @@ static const CGFloat kBookEdgePadding = 38;
             [self presentViewController:cropVc animated:NO completion:NULL];
             
 #ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+            [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
 #endif
         }];
     }

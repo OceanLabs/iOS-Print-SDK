@@ -288,7 +288,7 @@
         [vc onButtonPayClicked:nil];
     }];
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:3 action:^{
         [vc.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
     }];
     
@@ -988,6 +988,8 @@
     [self performUIActionWithDelay:7 action:^{
         //Just wait for the video to load
     }];
+    
+    [OLKiteTestHelper undoMockTemplateRequest];
 }
 
 - (void)testBasket{
@@ -1055,6 +1057,171 @@
     }];
     
     XCTAssert([OLUserSession currentSession].userSelectedPhotos.count == 2, @"Did not pick 2 images");
+}
+
+- (void)testCountryPicker{
+    OLCountryPickerController *vc = [[OLCountryPickerController alloc] init];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
+    }];
+}
+
+- (void)testPrintOrderHistory{
+    UINavigationController *nvc = [OLKiteViewController orderHistoryViewController];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
+    }];
+}
+
+- (void)testMockCostRequest{
+    [OLKiteTestHelper mockCostRequest];
+    
+    [self launchKiteToBasket];
+    
+    [OLKiteTestHelper undoMockCostRequest];
+}
+
+- (void)testMockPrintOrderRequest{
+    [OLKiteTestHelper mockPrintOrderRequest];
+    
+    OLPaymentViewController *paymentVc = [self launchKiteToBasket];
+    
+    [self performUIAction:^{
+        [paymentVc submitOrderForPrintingWithProofOfPayment:@"PAUTH-🤑" paymentMethod:@"😉" completion:^(NSInteger i){}];
+    }];
+    
+    [self performUIAction:^{
+        NSLog(@"Done");
+    }];
+    
+    [OLKiteTestHelper undoMockPrintOrderRequest];
+}
+
+#pragma mark Failing requests
+
+-(void)testFailedTemplateSync{
+    [OLKiteTestHelper mockTemplateServerErrorRequest];
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]]]];
+    vc.delegate = (id<OLKiteDelegate>)self;
+    
+    OLImagePickerProviderCollection *dogsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]]] name:@"Dogs"];
+    OLImagePickerProviderCollection *catsCollection = [[OLImagePickerProviderCollection alloc] initWithArray:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]], [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]] name:@"Cats"];
+    [vc addCustomPhotoProviderWithCollections:@[catsCollection, dogsCollection] name:@"Pets" icon:[UIImage imageNamed:@"dog"]];
+    [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:vc animated:YES completion:NULL];
+    }];
+    
+    XCTAssert([vc.presentedViewController isKindOfClass:[UIAlertController class]], @"Did not show alert");
+    
+    [OLKiteTestHelper undoMockTemplateServerErrorRequest];
+}
+
+- (void)testFailedCostRequest{
+    [OLKiteTestHelper mockCostServerErrorRequest];
+    
+    UIViewController *vc = [self launchKiteToBasket];
+    
+    XCTAssert([vc.presentedViewController isKindOfClass:[UIAlertController class]], @"Did not show alert");
+    
+    [OLKiteTestHelper undoMockCostServerErrorRequest];
+}
+
+- (void)testFailedPrintOrderRequest{
+    [OLKiteTestHelper mockPrintOrderServerErrorRequest];
+    
+    OLPaymentViewController *paymentVc = [self launchKiteToBasket];
+    
+    [self performUIAction:^{
+        [paymentVc submitOrderForPrintingWithProofOfPayment:@"PAUTH-🤑" paymentMethod:@"😉" completion:^(NSInteger i){}];
+    }];
+    
+    [self performUIAction:^{
+        NSLog(@"Done");
+    }];
+    
+    [OLKiteTestHelper undoMockPrintOrderServerErrorRequest];
+}
+
+- (void)testFailedPrintOrderValidationRequest{
+    [OLKiteTestHelper mockPrintOrderValidationServerErrorRequest];
+    
+    OLPaymentViewController *paymentVc = [self launchKiteToBasket];
+    
+    [self performUIAction:^{
+        [paymentVc submitOrderForPrintingWithProofOfPayment:@"PAUTH-🤑" paymentMethod:@"😉" completion:^(NSInteger i){}];
+    }];
+    
+    [self performUIAction:^{
+        NSLog(@"Done");
+    }];
+    
+    [OLKiteTestHelper undoMockPrintOrderValidationServerErrorRequest];
+}
+
+- (void)testRejectedPrintOrderValidationRequest{
+    [OLKiteTestHelper mockPrintOrderValidationRejectedErrorRequest];
+    
+    OLPaymentViewController *paymentVc = [self launchKiteToBasket];
+    
+    [self performUIAction:^{
+        [paymentVc submitOrderForPrintingWithProofOfPayment:@"PAUTH-🤑" paymentMethod:@"😉" completion:^(NSInteger i){}];
+    }];
+    
+    [self performUIAction:^{
+        NSLog(@"Done");
+    }];
+    
+    [OLKiteTestHelper undoMockPrintOrderValidationRejectedErrorRequest];
+}
+
+#pragma mark Helper
+
+- (OLPaymentViewController *)launchKiteToBasket{
+    [self kvoObserveObject:[OLKiteABTesting sharedInstance] forValue:@"launchWithPrintOrderVariant" andExecuteBlock:^{
+        [OLKiteABTesting sharedInstance].launchWithPrintOrderVariant = @"Checkout";
+    }];
+    
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:printOrder];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Load KiteViewController"];
+    [rootVc.topViewController presentViewController:vc animated:YES completion:^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            while (vc.childViewControllers.count == 0) {
+                sleep(1);
+            }
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [expectation fulfill];
+            });
+            
+        });
+    }];
+    
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    
+    UINavigationController *nav = (UINavigationController *)vc.childViewControllers.firstObject;
+    OLPaymentViewController *paymentVc = (OLPaymentViewController *)nav.topViewController;
+    XCTAssert([paymentVc isKindOfClass:[OLPaymentViewController class]]);
+    
+    return paymentVc;
 }
 
 @end

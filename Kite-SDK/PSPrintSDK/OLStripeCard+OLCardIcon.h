@@ -29,7 +29,7 @@
 
 #import "OLStripeCard.h"
 
-@import UIKit;
+#import <UIKit/UIKit.h>
 
 @interface OLStripeCard (OLCardIcon)
 

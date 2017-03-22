@@ -111,7 +111,7 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
 
 - (void)trackViewed{
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackShippingScreenViewedForOrder:self.printOrder variant:@"Integrated" showPhoneEntryField:[self showPhoneEntryField]];
+    [OLAnalytics trackDeliveryDetailsScreenViewedForOrder:self.printOrder variant:@"Integrated" showPhoneEntryField:[self showPhoneEntryField]];
 #endif
 }
 
@@ -125,6 +125,10 @@ static NSString *const kKeyCountry = @"co.oceanlabs.pssdk.kKeyCountry";
     else if ([self.textFieldLine1.text isEqualToString:@""]){
         flag = NO;
         errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in Line 1 of the address.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    }
+    else if ([self.textFieldCity.text isEqualToString:@""]){
+        flag = NO;
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your city.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if ([self.textFieldPostCode.text isEqualToString:@""]){
         flag = NO;

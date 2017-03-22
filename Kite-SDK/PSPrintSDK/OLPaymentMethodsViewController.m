@@ -38,11 +38,16 @@
 #import "OLStripeCard+OLCardIcon.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLUserSession.h"
+#import "OLPaymentViewController.h"
 
 @interface OLPaymentMethodsViewController () <UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLCreditCardCaptureDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (assign, nonatomic) CGSize rotationSize;
 
+@end
+
+@interface OLPaymentViewController ()
+@property (strong, nonatomic) OLPrintOrder *printOrder;
 @end
 
 @interface OLKitePrintSDK ()
@@ -66,6 +71,20 @@
     self.collectionView.delegate = self;
     
     self.title = NSLocalizedStringFromTableInBundle(@"Payment Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackPaymentMethodScreenViewed:[(OLPaymentViewController *)self.delegate printOrder]];
+#endif
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    
+#ifndef OL_NO_ANALYTICS
+    if (!self.navigationController){
+        [OLAnalytics trackPaymentMethodScreenHitBack:[(OLPaymentViewController *)self.delegate printOrder]];
+    }
+#endif
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -108,6 +127,13 @@
     UIImageView *imageView = [cell viewWithTag:10];
     UILabel *label = [cell viewWithTag:20];
     
+    UIView *view = [cell viewWithTag:100];
+    view.transform = CGAffineTransformIdentity;
+    
+    for (UIGestureRecognizer *gesture in cell.gestureRecognizers){
+        [cell removeGestureRecognizer:gesture];
+    }
+    
     OLPaymentMethod method = [self paymentMethodForSection:indexPath.section];
     id existingCard = [OLKitePrintSDK useStripeForCreditCards] ? [OLStripeCard lastUsedCard] : [OLPayPalCard lastUsedCard];
     if (method == kOLPaymentMethodCreditCard && indexPath.row == 0 && existingCard){
@@ -119,6 +145,10 @@
         else{
             [cell viewWithTag:30].hidden = YES;
         }
+        
+        UISwipeGestureRecognizer *gesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeftGestureRecognized:)];
+        gesture.direction = UISwipeGestureRecognizerDirectionLeft;
+        [cell addGestureRecognizer:gesture];
     }
     else if (method == kOLPaymentMethodCreditCard){
         imageView.image = [UIImage imageNamedInKiteBundle:@"add-payment"];
@@ -148,7 +178,7 @@
         }
         else{
             [cell viewWithTag:30].hidden = YES;
-        }
+        }        
     }
     else{
         NSAssert(NO, @"Too many cells?");
@@ -164,9 +194,13 @@
     if (method == kOLPaymentMethodCreditCard && (indexPath.item > 0 || !existingCard)){
         [self addNewCard];
     }
-    else{
+    else if (self.selectedPaymentMethod != method){
         self.selectedPaymentMethod = method;
         [self.collectionView reloadData];
+    }
+    else{
+        UIView *view = [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:100];
+        view.transform = CGAffineTransformIdentity;
     }
 }
 
@@ -214,6 +248,22 @@
     ccCaptureController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:ccCaptureController animated:YES completion:nil];
 }
+- (IBAction)swipeLeftGestureRecognized:(UISwipeGestureRecognizer *)sender {
+    UIView *view = [sender.view viewWithTag:100];
+    [UIView animateWithDuration:0.25 animations:^{
+        view.transform = CGAffineTransformMakeTranslation(-view.frame.size.width, 0);
+    }];
+}
 
+- (IBAction)onButtonDeleteCardTapped:(UIButton *)sender {
+    [OLStripeCard clearLastUsedCard];
+    [OLPayPalCard clearLastUsedCard];
+    
+    if (self.selectedPaymentMethod == kOLPaymentMethodCreditCard){
+        self.selectedPaymentMethod = kOLPaymentMethodNone;
+    }
+    
+    [self.collectionView reloadData];
+}
 
 @end

@@ -116,6 +116,9 @@ static NSString *const kKeyCompanyName = @"co.oceanlabs.pssdk.kKeyCompanyName";
     else if (!self.line1 || [self.line1 isEqualToString:@""]){
         return NO;
     }
+    else if (!self.city || [self.city isEqualToString:@""]){
+        return NO;
+    }
     else if (!self.zipOrPostcode || [self.zipOrPostcode isEqualToString:@""]){
         return NO;
     }

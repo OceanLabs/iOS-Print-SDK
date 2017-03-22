@@ -167,6 +167,7 @@
 - (void)onBackgroundClicked;
 - (void)payPalPaymentDidCancel:(id)paymentViewController;
 - (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method;
+- (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment paymentMethod:(NSString *)paymentMethod completion:(id)handler;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;

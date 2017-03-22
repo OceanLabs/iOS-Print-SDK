@@ -392,7 +392,7 @@ CGFloat posterMargin = 2;
     }];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenEnteredCropScreenForProductName:self.product.productTemplate.name];
+    [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
 #endif
 }
 
@@ -405,12 +405,18 @@ CGFloat posterMargin = 2;
 -(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingAsset unloadImage];
     
+    for (OLAsset *asset in self.posterPhotos){
+        if ([asset isEqual:self.editingAsset] && asset != self.editingAsset){
+            asset.edits = cropper.edits;
+            [asset unloadImage];
+        }
+    }
     self.editingAsset.edits = cropper.edits;
     
     NSInteger posterQty = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
     //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
     for (NSInteger i = 0; i < self.posterPhotos.count; i++){
-        if (self.posterPhotos[i] == self.editingAsset){
+        if ([self.posterPhotos[i] isEqual:self.editingAsset]){
             NSInteger outerIndex = i / posterQty;
             
             if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
@@ -439,7 +445,7 @@ CGFloat posterMargin = 2;
     }];
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackReviewScreenDidCropPhotoForProductName:self.product.productTemplate.name];
+    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:self.product.productTemplate.name];
 #endif
 }
 

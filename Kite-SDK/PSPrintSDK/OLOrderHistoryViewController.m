@@ -35,6 +35,7 @@
 #import "OLPrintOrderCost.h"
 #import "OLPrintOrder+History.h"
 #import "OLKiteUtils.h"
+#import "OLAnalytics.h"
 
 @interface OLOrderHistoryViewController ()
 @property (strong, nonatomic) NSArray *printOrderHistory;
@@ -51,10 +52,16 @@
     self.printOrderHistory = [OLPrintOrder printOrderHistory];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
+    
+    [OLAnalytics trackOrderHistoryScreenViewed];
 }
 
 - (void)dismiss{
     [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)dealloc{
+    [OLAnalytics trackOrderHistoryScreenDismissed];
 }
 
 #pragma mark - UITableViewDataSource methods

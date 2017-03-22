@@ -160,7 +160,7 @@
 
  @return A UINavigationController that is ready to be presented
  */
-+ (UIViewController *_Nonnull)orderHistoryViewController;
++ (UINavigationController *_Nonnull)orderHistoryViewController;
 
 /**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with

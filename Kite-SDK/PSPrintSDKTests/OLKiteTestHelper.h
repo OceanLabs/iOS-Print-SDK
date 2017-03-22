@@ -18,5 +18,20 @@
 + (NSData *)testImageData;
 + (PHAsset *)aPHAsset;
 + (void)mockTemplateRequest;
++ (void)undoMockTemplateRequest;
++ (void)mockTemplateServerErrorRequest;
++ (void)undoMockTemplateServerErrorRequest;
++ (void)mockCostRequest;
++ (void)undoMockCostRequest;
++ (void)mockCostServerErrorRequest;
++ (void)undoMockCostServerErrorRequest;
++ (void)mockPrintOrderRequest;
++ (void)undoMockPrintOrderRequest;
++ (void)mockPrintOrderServerErrorRequest;
++ (void)undoMockPrintOrderServerErrorRequest;
++ (void)mockPrintOrderValidationServerErrorRequest;
++ (void)undoMockPrintOrderValidationServerErrorRequest;
++ (void)mockPrintOrderValidationRejectedErrorRequest;
++ (void)undoMockPrintOrderValidationRejectedErrorRequest;
 
 @end

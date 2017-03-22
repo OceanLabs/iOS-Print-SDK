@@ -226,6 +226,9 @@ We have made significant changes under the hood. Please see the [Migration Docum
 ## HP Print SDK
 You can optionally offer print-at-home functionality by enabling the HP Print SDK, which will integrate it nicely within the Kite SDK. Please see [here](Kite-SDK/docs/hp_sdk.md) for details. 
 
+## Open Source Acknowledgements
+The iOS Print SDK uses software created by the Open Source community, you can find a full list of acknowledgements [here](https://kite.uservoice.com/knowledgebase/articles/1141681-open-source).
+
 ## License
 
 Kite iOS Print SDK is available under a modified MIT license. See the [LICENSE](Kite-SDK/LICENSE) file for more info.

@@ -31,8 +31,9 @@
 
 - (void)testPrintsUpsellDecline{
     [OLKiteTestHelper mockTemplateRequest];
-    
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [OLKiteTestHelper undoMockTemplateRequest];
+    
     [self chooseClass:@"Prints" onOLProductHomeViewController:productHomeVc];
     
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
@@ -63,8 +64,9 @@
 
 - (void)testPrintsUpsellAccept{
     [OLKiteTestHelper mockTemplateRequest];
-    
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [OLKiteTestHelper undoMockTemplateRequest];
+    
     [self chooseClass:@"Prints" onOLProductHomeViewController:productHomeVc];
     
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
@@ -95,8 +97,9 @@
 
 - (void)testCaseUpsellDecline{
     [OLKiteTestHelper mockTemplateRequest];
-    
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [OLKiteTestHelper undoMockTemplateRequest];
+    
     [self chooseClass:@"Snap Cases" onOLProductHomeViewController:productHomeVc];
     
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
@@ -128,8 +131,9 @@
 
 - (void)testCaseUpsellAccept{
     [OLKiteTestHelper mockTemplateRequest];
-    
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [OLKiteTestHelper undoMockTemplateRequest];
+    
     [self chooseClass:@"Snap Cases" onOLProductHomeViewController:productHomeVc];
     
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
@@ -160,8 +164,9 @@
 
 - (void)testPhotobookUpsellDecline{
     [OLKiteTestHelper mockTemplateRequest];
-    
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [OLKiteTestHelper undoMockTemplateRequest];
+    
     [self chooseClass:@"Photo Books" onOLProductHomeViewController:productHomeVc];
     
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
@@ -197,8 +202,9 @@
 
 - (void)testPhotobookUpsellAccept{
     [OLKiteTestHelper mockTemplateRequest];
-    
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
+    [OLKiteTestHelper undoMockTemplateRequest];
+    
     [self chooseClass:@"Photo Books" onOLProductHomeViewController:productHomeVc];
     
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;

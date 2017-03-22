@@ -80,7 +80,7 @@ static const NSUInteger kTagTextField = 99;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [OLAnalytics trackAddAddressScreenViewed];
+    [OLAnalytics trackAddEditAddressScreenViewed];
 }
 
 - (void)viewDidLoad {
@@ -153,6 +153,10 @@ static const NSUInteger kTagTextField = 99;
     else if ([self.textFieldLine1.text isEqualToString:@""]){
         flag = NO;
         errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in Line 1 of the address.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    }
+    else if ([self.textFieldCity.text isEqualToString:@""]){
+        flag = NO;
+        errorMessage = NSLocalizedStringFromTableInBundle(@"Please fill in your city.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     else if ([self.textFieldPostCode.text isEqualToString:@""]){
         flag = NO;
