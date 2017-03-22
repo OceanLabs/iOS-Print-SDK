@@ -228,6 +228,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     if (inProgressSyncRequest == nil) {
         inProgressSyncRequest = [[OLProductTemplateSyncRequest alloc] init];
         [inProgressSyncRequest sync:^(NSArray *templates_, NSError *error) {
+            BOOL partial = [inProgressSyncRequest isInProgress];
             inProgressSyncRequest = nil;
             if (error) {
                 if (handler){
@@ -236,10 +237,14 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:@{kNotificationKeyTemplateSyncError: error}];
             } else {
                 [self saveTemplatesAsLatest:templates_];
-                if (handler){
-                    handler(templates_, nil);
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncPartialComplete object:self userInfo:nil];
+                if (!partial){
+                    if (handler){
+                        handler(templates_, nil);
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:nil];
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:nil];
             }
         }];
     }

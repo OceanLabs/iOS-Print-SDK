@@ -64,7 +64,7 @@
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
     NSAssert(self.req == nil, @"Oops only one template sync request should be in progress at any given time");
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/?limit=200", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/?limit=20", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
     [self fetchTemplatesWithURL:url templateAccumulator:[[NSMutableArray alloc] init] handler:handler];
 }
 
@@ -519,8 +519,10 @@
                 }
                 
                 if (nextPage != nil) {
+                    handler(acc, nil);
                     [self fetchTemplatesWithURL:nextPage templateAccumulator:acc handler:handler];
-                } else {
+                }
+                else {
                     self.req = nil;
                     NSMutableSet *coverPhotoVariants = [[NSMutableSet alloc] init];
                     
@@ -535,7 +537,8 @@
                     [[OLKiteABTesting sharedInstance] setupCoverPhotoTestWithExperimentDict:experimentDict];
                     handler(acc, nil);
                 }
-            } else {
+            }
+            else {
                 id errorObj = json[@"error"];
                 if ([errorObj isKindOfClass:[NSDictionary class]]) {
                     id errorMessage = errorObj[@"message"];
@@ -555,6 +558,10 @@
 - (void)cancel {
     [self.req cancel];
     self.req = nil;
+}
+
+- (BOOL)isInProgress{
+    return self.req != nil;
 }
 
 @end
