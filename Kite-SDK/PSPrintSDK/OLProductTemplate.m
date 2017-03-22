@@ -73,6 +73,7 @@ static NSString *const kKeySupportsTextOnBorder = @"co.oceanlabs.pssdk.kKeySuppo
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
 static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
+static BOOL partial = NO;
 
 @interface OLKitePrintSDK (Private)
 
@@ -241,8 +242,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     if (inProgressSyncRequest == nil) {
         inProgressSyncRequest = [[OLProductTemplateSyncRequest alloc] init];
         [inProgressSyncRequest sync:^(NSArray *templates_, NSError *error) {
-            BOOL partial = [inProgressSyncRequest isInProgress];
-            inProgressSyncRequest = nil;
+            partial = [inProgressSyncRequest isInProgress];
+            if (!partial){
+                inProgressSyncRequest = nil;
+            }
             if (error) {
                 if (handler){
                     handler(nil, error);
@@ -264,7 +267,7 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 }
 
 + (BOOL)isSyncInProgress {
-    return inProgressSyncRequest != nil;
+    return inProgressSyncRequest != nil || partial;
 }
 
 + (void)cancelSyncInProgress{
