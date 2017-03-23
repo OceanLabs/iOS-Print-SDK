@@ -395,11 +395,11 @@ CGFloat posterMargin = 2;
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
-- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
+- (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
--(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+-(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingAsset unloadImage];
     
     for (OLAsset *asset in self.posterPhotos){
@@ -446,7 +446,7 @@ CGFloat posterMargin = 2;
 #endif
 }
 
-- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
     NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingAsset];
     if (index != NSNotFound){
         [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
@@ -459,7 +459,7 @@ CGFloat posterMargin = 2;
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
     OLAsset *asset = addedAssets.lastObject;
     if (asset){
-        [self scrollCropViewController:nil didReplaceAssetWithAsset:asset];
+        [self imageEditViewController:nil didReplaceAssetWithAsset:asset];
         
         //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
         NSMutableArray *indexPaths = [[NSMutableArray alloc] init];

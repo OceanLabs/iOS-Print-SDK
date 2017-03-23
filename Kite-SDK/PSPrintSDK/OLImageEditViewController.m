@@ -1231,11 +1231,11 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)onButtonDoneTapped:(id)sender {
     [self saveEditsToAsset:nil];
     
-    if (self.asset && [self.delegate respondsToSelector:@selector(scrollCropViewController:didReplaceAssetWithAsset:)]){
-        [self.delegate scrollCropViewController:self didReplaceAssetWithAsset:self.asset];
+    if (self.asset && [self.delegate respondsToSelector:@selector(imageEditViewController:didReplaceAssetWithAsset:)]){
+        [self.delegate imageEditViewController:self didReplaceAssetWithAsset:self.asset];
     }
-    if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didFinishCroppingImage:)]){
-        [self.delegate scrollCropViewController:self didFinishCroppingImage:[self.cropView editedImage]];
+    if ([self.delegate respondsToSelector:@selector(imageEditViewController:didFinishCroppingImage:)]){
+        [self.delegate imageEditViewController:self didFinishCroppingImage:[self.cropView editedImage]];
     }
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
@@ -1243,7 +1243,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
-    if (self.ctaButton.enabled && self.previewView && [self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){ //discard changes
+    if (self.ctaButton.enabled && self.previewView && [self.delegate respondsToSelector:@selector(imageEditViewControllerDidDropChanges:)]){ //discard changes
         [self exitCropMode];
         self.previewSourceView.hidden = NO;
         
@@ -1265,8 +1265,8 @@ const NSInteger kOLEditTagCrop = 40;
             [UIView animateWithDuration:0.7 animations:^{
                 self.previewView.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, self.view.frame.size.height * 1.2), -M_PI_4);
             }completion:^(BOOL finished){
-                if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){
-                    [self.delegate scrollCropViewControllerDidDropChanges:self];
+                if ([self.delegate respondsToSelector:@selector(imageEditViewControllerDidDropChanges:)]){
+                    [self.delegate imageEditViewControllerDidDropChanges:self];
                 }
                 else{
                     [self dismissViewControllerAnimated:NO completion:NULL];
@@ -1274,8 +1274,8 @@ const NSInteger kOLEditTagCrop = 40;
             }];
         }];
     }
-    else if ([self.delegate respondsToSelector:@selector(scrollCropViewControllerDidCancel:)]){
-        [self.delegate scrollCropViewControllerDidCancel:self];
+    else if ([self.delegate respondsToSelector:@selector(imageEditViewControllerDidCancel:)]){
+        [self.delegate imageEditViewControllerDidCancel:self];
     }
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
@@ -2334,8 +2334,8 @@ const NSInteger kOLEditTagCrop = 40;
     self.asset = addedAssets.lastObject;
     self.edits = [self.asset.edits copy];
     if (self.asset){
-        if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didReplaceAssetWithAsset:)]){
-            [self.delegate scrollCropViewController:self didReplaceAssetWithAsset:self.asset];
+        if ([self.delegate respondsToSelector:@selector(imageEditViewController:didReplaceAssetWithAsset:)]){
+            [self.delegate imageEditViewController:self didReplaceAssetWithAsset:self.asset];
         }
         
         self.ctaButton.enabled = YES;

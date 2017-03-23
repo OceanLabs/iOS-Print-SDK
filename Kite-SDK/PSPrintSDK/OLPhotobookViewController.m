@@ -675,15 +675,15 @@ static const CGFloat kBookEdgePadding = 38;
 
 #pragma mark - OLImageEditViewController delegate
 
-- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
+- (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
+- (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 
--(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+-(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingAsset unloadImage];
     self.editingAsset.edits = cropper.edits;
     if (self.editingAsset == self.coverPhoto){
@@ -698,7 +698,7 @@ static const CGFloat kBookEdgePadding = 38;
 #endif
 }
 
-- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
     if (self.editingAsset == self.coverPhoto){
         self.coverPhoto = asset;
         [self loadCoverPhoto];

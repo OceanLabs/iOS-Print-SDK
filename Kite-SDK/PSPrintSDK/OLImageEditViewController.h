@@ -48,12 +48,12 @@ extern const NSInteger kOLEditTagCrop;
 
 @protocol OLImageEditViewControllerDelegate <NSObject>
 
-- (void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage;
-- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset;
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage;
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset;
 
 @optional
-- (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper;
-- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper;
+- (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper;
+- (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper;
 @end
 
 @interface OLImageEditViewController : OLViewController

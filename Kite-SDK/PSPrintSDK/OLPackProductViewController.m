@@ -746,7 +746,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
-- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper{
+- (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
     [self.editingAsset unloadImage];
     [cropper dismissViewControllerAnimated:YES completion:^{
         [UIView animateWithDuration:0.25 animations:^{
@@ -756,7 +756,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     }];
 }
 
-- (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
+- (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
     [self.editingAsset unloadImage];
     [UIView animateWithDuration:0.25 animations:^{
         self.nextButton.alpha = 1;
@@ -765,7 +765,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 
--(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+-(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingAsset unloadImage];
     self.editingAsset.edits = cropper.edits;
     
@@ -800,7 +800,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 #endif
 }
 
-- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
     NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingAsset];
     [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
     self.editingAsset = asset;
@@ -815,7 +815,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
     OLAsset *asset = addedAssets.lastObject;
     if (asset){
-        [self scrollCropViewController:nil didReplaceAssetWithAsset:asset];
+        [self imageEditViewController:nil didReplaceAssetWithAsset:asset];
         
         //Find the new previewSourceView for the dismiss animation
         for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++){

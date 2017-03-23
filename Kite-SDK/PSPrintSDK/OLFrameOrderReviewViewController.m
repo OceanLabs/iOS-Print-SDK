@@ -473,7 +473,7 @@ CGFloat innerMargin = 3;
     [innerCollectionView reloadData];
 }
 
--(void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+-(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingAsset unloadImage];
     
     self.editingAsset.edits = cropper.edits;
@@ -514,7 +514,7 @@ CGFloat innerMargin = 3;
 #endif
 }
 
-- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
     NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingAsset];
     if (index != NSNotFound){
         [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
@@ -530,7 +530,7 @@ CGFloat innerMargin = 3;
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
     OLAsset *asset = addedAssets.lastObject;
     if (asset){
-        [self scrollCropViewController:nil didReplaceAssetWithAsset:asset];
+        [self imageEditViewController:nil didReplaceAssetWithAsset:asset];
         
         NSInteger frameQty = [self numberOfPhotosPerFrame];
         //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.

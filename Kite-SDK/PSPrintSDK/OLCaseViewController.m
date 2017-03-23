@@ -719,8 +719,8 @@
     self.asset = asset;
     self.edits = [asset.edits copy];
     if (asset){
-        if ([self.delegate respondsToSelector:@selector(scrollCropViewController:didReplaceAssetWithAsset:)]){
-            [self.delegate scrollCropViewController:self didReplaceAssetWithAsset:asset];
+        if ([self.delegate respondsToSelector:@selector(imageEditViewController:didReplaceAssetWithAsset:)]){
+            [self.delegate imageEditViewController:self didReplaceAssetWithAsset:asset];
         }
         
         self.ctaButton.enabled = YES;
@@ -747,7 +747,7 @@
     self.presentedVc = nil;
 }
 
-- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
     if (!self.showingBack){
         [[OLUserSession currentSession].userSelectedPhotos addObject:asset];
     }
