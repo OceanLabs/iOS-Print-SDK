@@ -118,8 +118,8 @@ static const NSInteger kSectionPages = 2;
     
     [view.superview addConstraints:con];
     
-    
-    [self updatePhotobookPhotos];
+    //TODO
+//    [self updatePhotobookPhotos];
     
     [self setupCtaButton];
     
@@ -164,7 +164,7 @@ static const NSInteger kSectionPages = 2;
         self.haveCachedCells = YES;
     }
     
-    if (!self.shownImagePicker && [OLUserSession currentSession].userSelectedPhotos.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
+    if (!self.shownImagePicker && [OLUserSession currentSession].userSelectedAssets.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
         self.shownImagePicker = YES;
         [self photobook:self.childViewControllers[1] userDidTapOnImageWithIndex:0];
     }
@@ -245,51 +245,51 @@ static const NSInteger kSectionPages = 2;
     OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
     photobook.coverPhoto = self.coverPhoto;
     [photobook loadCoverPhoto];
-    photobook.userSelectedPhotos = [OLUserSession currentSession].userSelectedPhotos;
     photobook.photobookPhotos = self.photobookPhotos;
     photobook.product = self.product;
     
     [self.navigationController pushViewController:photobook animated:YES];
 }
 
-- (void)updatePhotobookPhotos{
-    if (!self.photobookPhotos){
-        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:[OLUserSession currentSession].userSelectedPhotos copyItems:NO];
-        self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
-        NSInteger start = 0;
-        if (!self.coverPhoto){
-            self.coverPhoto = [OLUserSession currentSession].userSelectedPhotos.firstObject;
-            start++;
-        }
-        else if ([self.coverPhoto isKindOfClass:[OLPlaceholderAsset class]]){
-            self.coverPhoto = nil;
-        }
-        for (NSInteger i = start; i < self.product.quantityToFulfillOrder + start; i++){
-            [self.photobookPhotos addObject:i < [OLUserSession currentSession].userSelectedPhotos.count ? [OLUserSession currentSession].userSelectedPhotos[i] : [OLPlaceholderAsset asset]];
-        }
-    }
-    else{
-        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:[[OLUserSession currentSession].userSelectedPhotos subarrayWithRange:NSMakeRange(0, MIN([OLUserSession currentSession].userSelectedPhotos.count, self.product.quantityToFulfillOrder+1))]];
-        [newPhotos removeObjectsInArray:self.userSelectedPhotosCopy];
-        for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
-            BOOL foundSpot = NO;
-            for (NSInteger bookPhoto = self.addNewPhotosAtIndex; bookPhoto < self.photobookPhotos.count && !foundSpot; bookPhoto++){
-                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
-                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
-                    foundSpot = YES;
-                }
-            }
-            for (NSInteger bookPhoto = 0; bookPhoto < self.addNewPhotosAtIndex && !foundSpot; bookPhoto++){
-                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
-                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
-                    foundSpot = YES;
-                }
-            }
-        }
-        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:[OLUserSession currentSession].userSelectedPhotos copyItems:NO];
-    }
-    
-}
+//TODO
+//- (void)updatePhotobookPhotos{
+//    if (!self.photobookPhotos){
+//        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:[OLUserSession currentSession].userSelectedPhotos copyItems:NO];
+//        self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
+//        NSInteger start = 0;
+//        if (!self.coverPhoto){
+//            self.coverPhoto = [OLUserSession currentSession].userSelectedPhotos.firstObject;
+//            start++;
+//        }
+//        else if ([self.coverPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+//            self.coverPhoto = nil;
+//        }
+//        for (NSInteger i = start; i < self.product.quantityToFulfillOrder + start; i++){
+//            [self.photobookPhotos addObject:i < [OLUserSession currentSession].userSelectedPhotos.count ? [OLUserSession currentSession].userSelectedPhotos[i] : [OLPlaceholderAsset asset]];
+//        }
+//    }
+//    else{
+//        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:[[OLUserSession currentSession].userSelectedPhotos subarrayWithRange:NSMakeRange(0, MIN([OLUserSession currentSession].userSelectedPhotos.count, self.product.quantityToFulfillOrder+1))]];
+//        [newPhotos removeObjectsInArray:self.userSelectedPhotosCopy];
+//        for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
+//            BOOL foundSpot = NO;
+//            for (NSInteger bookPhoto = self.addNewPhotosAtIndex; bookPhoto < self.photobookPhotos.count && !foundSpot; bookPhoto++){
+//                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
+//                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
+//                    foundSpot = YES;
+//                }
+//            }
+//            for (NSInteger bookPhoto = 0; bookPhoto < self.addNewPhotosAtIndex && !foundSpot; bookPhoto++){
+//                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
+//                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
+//                    foundSpot = YES;
+//                }
+//            }
+//        }
+//        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:[OLUserSession currentSession].userSelectedPhotos copyItems:NO];
+//    }
+//    
+//}
 
 - (void)swapImageAtIndex:(NSInteger)index1 withImageAtIndex:(NSInteger)index2{
     [self.photobookPhotos exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
@@ -364,17 +364,18 @@ static const NSInteger kSectionPages = 2;
     }
 }
 
-- (void)updateUserSelectedPhotos{
-    [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
-    if (self.coverPhoto && ![self.coverPhoto isKindOfClass:[OLPlaceholderAsset class]]){
-        [[OLUserSession currentSession].userSelectedPhotos addObject:self.coverPhoto];
-    }
-    for (OLAsset *item in self.photobookPhotos){
-        if (![item isKindOfClass:[OLPlaceholderAsset class]]){
-            [[OLUserSession currentSession].userSelectedPhotos addObject:item];
-        }
-    }
-}
+//TODO
+//- (void)updateUserSelectedPhotos{
+//    [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
+//    if (self.coverPhoto && ![self.coverPhoto isKindOfClass:[OLPlaceholderAsset class]]){
+//        [[OLUserSession currentSession].userSelectedPhotos addObject:self.coverPhoto];
+//    }
+//    for (OLAsset *item in self.photobookPhotos){
+//        if (![item isKindOfClass:[OLPlaceholderAsset class]]){
+//            [[OLUserSession currentSession].userSelectedPhotos addObject:item];
+//        }
+//    }
+//}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     CGRect headerFrame = self.nextButton.frame;
@@ -398,7 +399,7 @@ static const NSInteger kSectionPages = 2;
 - (void)deletePage{
     if (self.longPressImageIndex == -1){
         [self.photobookPhotos removeObjectIdenticalTo:self.coverPhoto];
-        [[OLUserSession currentSession].userSelectedPhotos removeObjectIdenticalTo:self.coverPhoto];
+        [[OLUserSession currentSession].userSelectedAssets removeAsset:self.coverPhoto];
         self.coverPhoto = nil;
         self.interactionPhotobook.coverPhoto = nil;
         [self.interactionPhotobook loadCoverPhoto];
@@ -409,9 +410,10 @@ static const NSInteger kSectionPages = 2;
         [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         self.selectedIndexNumber = nil;
     }
-    [[OLUserSession currentSession].userSelectedPhotos removeObjectIdenticalTo:self.photobookPhotos[self.longPressImageIndex]];
+    [[OLUserSession currentSession].userSelectedAssets removeAsset:self.photobookPhotos[self.longPressImageIndex]];
     self.photobookPhotos[self.longPressImageIndex] = [OLPlaceholderAsset asset];
-    [self updateUserSelectedPhotos];
+    //TODO
+//    [self updateUserSelectedPhotos];
     self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
     [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
 }
@@ -856,9 +858,8 @@ static const NSInteger kSectionPages = 2;
         [self.interactionPhotobook loadCoverPhoto];
     }
     else{
-        NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.photobookPhotos[self.longPressImageIndex]];
-        [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
-        [self.photobookPhotos replaceObjectAtIndex:self.longPressImageIndex withObject:asset];
+        [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.photobookPhotos[self.longPressImageIndex] withNewAsset:asset];
+//        [self.photobookPhotos replaceObjectAtIndex:self.longPressImageIndex withObject:asset];
         
         self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
         [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
@@ -877,7 +878,7 @@ static const NSInteger kSectionPages = 2;
     }
     
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
-    vc.selectedAssets = [OLUserSession currentSession].userSelectedPhotos;
+    vc.selectedAssets = [[[OLUserSession currentSession].userSelectedAssets nonPlaceholderAssets] mutableCopy];
     vc.delegate = self;
     vc.maximumPhotos = max;
     vc.product = self.product;
@@ -890,7 +891,7 @@ static const NSInteger kSectionPages = 2;
         UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
         [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
-        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[OLUserSession currentSession].userSelectedPhotos mutableCopy]];
+        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets mutableCopy]];
         if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
             vc.maximumPhotos = self.product.quantityToFulfillOrder;
         }
@@ -939,7 +940,8 @@ static const NSInteger kSectionPages = 2;
     }
     
     [self.photobookPhotos removeObjectsInArray:removedAssets];
-    [self updatePhotobookPhotos];
+    //TODO
+//    [self updatePhotobookPhotos];
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         if (!photobook.bookClosed){
             photobook.photobookPhotos = self.photobookPhotos;
@@ -948,7 +950,8 @@ static const NSInteger kSectionPages = 2;
             }
         }
     }
-    [self updateUserSelectedPhotos];
+    //TODO
+//    [self updateUserSelectedPhotos];
     
     if (!self.autoAddedCover && assets.count > 0){
         self.autoAddedCover = YES;

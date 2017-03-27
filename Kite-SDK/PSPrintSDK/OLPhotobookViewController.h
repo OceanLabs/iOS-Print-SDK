@@ -58,7 +58,6 @@
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
 
 - (void)loadCoverPhoto;
-- (void)setUserSelectedPhotos:(NSMutableArray<OLAsset *> *)userSelectedPhotos;
 - (void)saveJobWithCompletionHandler:(void(^)())handler;
 
 @end

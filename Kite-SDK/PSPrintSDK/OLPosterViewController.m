@@ -80,12 +80,12 @@ CGFloat posterMargin = 2;
     
     // ensure order is maxed out by adding duplicates as necessary
     self.posterPhotos = [[NSMutableArray alloc] init];
-    [self.posterPhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedPhotos];
+    [self.posterPhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets];
     NSUInteger userSelectedAssetCount = [self.posterPhotos count];
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [self.posterPhotos addObject:[[OLUserSession currentSession].userSelectedPhotos[i % userSelectedAssetCount] copy]];
+        [self.posterPhotos addObject:[[OLPlaceholderAsset alloc] init]];
     }
 #ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
@@ -447,11 +447,8 @@ CGFloat posterMargin = 2;
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingAsset];
-    if (index != NSNotFound){
-        [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
-    }
-    index = [self.posterPhotos indexOfObjectIdenticalTo:self.editingAsset];
+    [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.editingAsset withNewAsset:asset];
+    NSInteger index = [self.posterPhotos indexOfObjectIdenticalTo:self.editingAsset];
     [self.posterPhotos replaceObjectAtIndex:index withObject:asset];
     self.editingAsset = asset;
 }

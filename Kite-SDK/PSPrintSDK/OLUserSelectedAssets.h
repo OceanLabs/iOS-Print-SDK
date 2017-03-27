@@ -26,38 +26,21 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+
 #import <Foundation/Foundation.h>
-#import "OLPrintOrder.h"
-#import "OLAsset.h"
-#import "OLUserSelectedAssets.h"
 
-enum {
-    OLUserSessionCleanupOptionNone             = 0,
-    OLUserSessionCleanupOptionPhotos           = 1 << 0,
-    OLUserSessionCleanupOptionBasket           = 1 << 1,
-    OLUserSessionCleanupOptionPayment          = 1 << 2,
-    OLUserSessionCleanupOptionSocial           = 1 << 3,
-    OLUserSessionCleanupOptionPersonal         = 1 << 4,
-    OLUserSessionCleanupOptionAll              = 1 << 5,
-};
-typedef NSUInteger OLUserSessionCleanupOption;
+@class OLAsset;
 
-@protocol OLKiteDelegate;
-@class OLKiteViewController;
+@interface OLUserSelectedAssets : NSObject <NSFastEnumeration>
 
-@interface OLUserSession : NSObject
+- (OLAsset *)assetAtIndex:(NSInteger)index;
+- (void)addAsset:(OLAsset *)asset;
+- (void)removeAsset:(OLAsset *)asset;
+- (void)removeAssetAtIndex:(NSInteger)index;
+- (void)replaceAsset:(OLAsset *)asset withNewAsset:(OLAsset *)newAsset;
+- (NSInteger)count;
+- (void)clearAssets;
+- (NSArray *)nonPlaceholderAssets;
+- (void)discardPlaceholderAssets;
 
-@property (strong, nonatomic) OLUserSelectedAssets *userSelectedAssets;
-@property (strong, nonatomic) NSMutableArray<OLAsset *> *recentPhotos;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-@property (strong, nonatomic) NSArray<OLAsset *> *appAssets;
-@property (assign, nonatomic) CGFloat screenScale;
-@property (weak, nonatomic) OLKiteViewController *kiteVc;
-+ (instancetype)currentSession;
-- (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions;
-- (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;
-- (void)resetUserSelectedPhotos;
-- (void)clearUserSelectedPhotos;
-- (void)logoutOfInstagram;
-- (void)logoutOfFacebook;
 @end

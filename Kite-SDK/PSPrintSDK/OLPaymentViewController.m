@@ -407,8 +407,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 
 - (void)dismiss{
     if (self.currentUserSelectedPhotos){
-        [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
-        [[OLUserSession currentSession].userSelectedPhotos addObjectsFromArray:self.currentUserSelectedPhotos];
+        [[OLUserSession currentSession].userSelectedAssets clearAssets];
+        for (OLAsset *asset in self.currentUserSelectedPhotos){
+            [[OLUserSession currentSession].userSelectedAssets addAsset:asset];
+        }
     }
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
@@ -1679,7 +1681,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         
     }
     
-    [OLUserSession currentSession].userSelectedPhotos = userSelectedPhotos;
+    for (OLAsset *asset in userSelectedPhotos){
+        [[OLUserSession currentSession].userSelectedAssets addAsset:asset];
+    }
     
     if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != OLTemplateUIMug && product.productTemplate.templateUI != OLTemplateUICase && product.productTemplate.templateUI != OLTemplateUIApparel && product.productTemplate.templateUI != OLTemplateUIPhotobook && product.productTemplate.templateUI != OLTemplateUIPostcard && !(product.productTemplate.templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){
         OLImagePickerViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];

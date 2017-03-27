@@ -34,7 +34,6 @@
 
 @interface OLPhotobookPageContentViewController : UIViewController
 
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (assign, nonatomic) NSInteger pageIndex;
 @property (weak, nonatomic) IBOutlet OLRemoteImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft2;

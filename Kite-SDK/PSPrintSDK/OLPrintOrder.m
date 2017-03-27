@@ -112,7 +112,6 @@ static id stringOrEmptyString(NSString *str) {
 @property (strong, nonatomic, readwrite) NSString *submitStatusErrorMessage;
 @property (assign, nonatomic) NSInteger numberOfTimesPolledForSubmissionStatus;
 
-@property (weak, nonatomic) NSArray *userSelectedPhotos;
 @property (strong, nonatomic) NSString *paymentMethod;
 @property (nonatomic, readwrite) NSString *receipt;
 

@@ -34,6 +34,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLPageLayout.h"
 #import "OLAsset+Private.h"
+#import "OLUserSession.h"
 
 @interface OLPhotobookPageContentViewController ()
 
@@ -121,10 +122,10 @@
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
     NSInteger imageIndex = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex].firstIndex;
-    if (imageIndex >= self.userSelectedPhotos.count){
+    if (imageIndex >= [OLUserSession currentSession].userSelectedAssets.count){
         return;
     }
-    OLAsset *asset = [self.userSelectedPhotos objectAtIndex:imageIndex];
+    OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:imageIndex];
     if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
         self.imageView.image = nil;
         dispatch_async(dispatch_get_main_queue(), ^{

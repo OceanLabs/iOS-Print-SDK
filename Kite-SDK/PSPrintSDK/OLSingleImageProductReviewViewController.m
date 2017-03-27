@@ -88,7 +88,7 @@
 
 - (OLAsset *)asset{
     if (!super.asset && !self.showingBack){
-        super.asset = [OLUserSession currentSession].userSelectedPhotos.lastObject;
+        super.asset = [[OLUserSession currentSession].userSelectedAssets nonPlaceholderAssets].lastObject;
     }
     
     return super.asset;
@@ -215,7 +215,7 @@
 }
 
 - (void)showHintViewIfNeeded{
-    if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && self.hintView.alpha <= 0.1f) {
+    if ([OLUserSession currentSession].userSelectedAssets.count == 0 && self.hintView.alpha <= 0.1f) {
         [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:YES];
     }
 }
@@ -225,7 +225,7 @@
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLUserSession currentSession].userSelectedPhotos.count];
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLUserSession currentSession].userSelectedAssets.count];
     }
 #endif
 }
@@ -310,7 +310,7 @@
     OLUpsellOffer *offer = [self upsellOfferToShow];
     BOOL shouldShowOffer = offer != nil;
     if (offer){
-        shouldShowOffer &= offer.minUnits <= [OLUserSession currentSession].userSelectedPhotos.count;
+        shouldShowOffer &= offer.minUnits <= [OLUserSession currentSession].userSelectedAssets.count;
         shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
     }
     if (shouldShowOffer){
@@ -358,7 +358,7 @@
 }
 
 -(void) doCheckout{
-    if ([OLUserSession currentSession].userSelectedPhotos.count == 0) {
+    if ([OLUserSession currentSession].userSelectedAssets.count == 0) {
         [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
         return;
     }
@@ -392,7 +392,7 @@
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    [[OLUserSession currentSession].userSelectedPhotos addObject:asset];
+    [[OLUserSession currentSession].userSelectedAssets addAsset:asset];
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
@@ -415,10 +415,10 @@
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]];
+        [assets addObject:[[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets.firstObject copy]];
     }
     else{
-        for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
+        for (OLAsset *photo in [OLUserSession currentSession].userSelectedAssets){
             [assets addObject:[photo copy]];
         }
     }

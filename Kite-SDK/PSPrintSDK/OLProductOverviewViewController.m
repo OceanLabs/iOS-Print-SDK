@@ -404,8 +404,8 @@
     OLUpsellOffer *offer = [self upsellOfferToShow];
     BOOL shouldShowOffer = offer != nil;
     if (offer){
-        shouldShowOffer &= offer.minUnits <= [OLUserSession currentSession].userSelectedPhotos.count;
-        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= [OLUserSession currentSession].userSelectedPhotos.count;
+        shouldShowOffer &= offer.minUnits <= [OLUserSession currentSession].userSelectedAssets.count;
+        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= [OLUserSession currentSession].userSelectedAssets.count;
         shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
     }
     if (shouldShowOffer){
@@ -572,10 +572,10 @@
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]];
+        [assets addObject:[[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets.firstObject copy]];
     }
     else{
-        for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
+        for (OLAsset *photo in [OLUserSession currentSession].userSelectedAssets){
             [assets addObject:[photo copy]];
         }
     }

@@ -310,13 +310,13 @@
 }
 
 - (void)showHintViewIfNeeded{
-    if ([OLUserSession currentSession].userSelectedPhotos.count == 0  && !self.backAsset && self.hintView.alpha <= 0.1f) {
+    if ([OLUserSession currentSession].userSelectedAssets.count == 0  && !self.backAsset && self.hintView.alpha <= 0.1f) {
         [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:YES];
     }
 }
 
 - (void)onButtonDoneTapped:(id)sender{
-    if ([OLUserSession currentSession].userSelectedPhotos.count == 0 && !self.backAsset) {
+    if ([OLUserSession currentSession].userSelectedAssets.count == 0 && !self.backAsset) {
         [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
         return;
     }
@@ -348,7 +348,7 @@
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
     [self saveEditsToAsset:self.asset];
     
-    OLAsset *asset = [[OLUserSession currentSession].userSelectedPhotos.lastObject copy];
+    OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets.lastObject copy];
     OLAsset *backAsset = [self.backAsset copy];
     if (!asset){
         asset = backAsset;
@@ -394,7 +394,7 @@
         }
     }
     
-    OLAsset *asset = [[OLUserSession currentSession].userSelectedPhotos.lastObject copy];
+    OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets.lastObject copy];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[asset]];
@@ -627,7 +627,7 @@
 
 - (void)showExtraChargeHint{
     if (self.product.productTemplate.fulfilmentItems.count > 1){
-        if ((self.showingBack && [OLUserSession currentSession].userSelectedPhotos.lastObject && !self.backAsset) || (!self.showingBack && self.backAsset && ![OLUserSession currentSession].userSelectedPhotos.lastObject)){
+        if ((self.showingBack && [OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets.lastObject && !self.backAsset) || (!self.showingBack && self.backAsset && ![OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets.lastObject)){
             for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
                 if (((([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]) && self.showingBack) || (([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]) && !self.showingBack)) && [item hasCostForCurrency:[self.product currencyCode]]){
                     [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Add a photo\non this side", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"this side [of the shirt]") body:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"For only %@ extra", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"[Add a photo on this side of the shirt] for only $4.00 extra"), [[item costForCurrency:self.product.currencyCode] formatCostForCurrencyCode:self.product.currencyCode]] delay:NO];
@@ -652,7 +652,7 @@
         self.asset = self.backAsset;
     }
     else{
-        self.asset = [OLUserSession currentSession].userSelectedPhotos.lastObject;
+        self.asset = [OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets.lastObject;
     }
     
     self.cropView.imageView.image = nil;
@@ -749,7 +749,7 @@
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
     if (!self.showingBack){
-        [[OLUserSession currentSession].userSelectedPhotos addObject:asset];
+        [[OLUserSession currentSession].userSelectedAssets addAsset:asset];
     }
 }
 

@@ -84,7 +84,7 @@ CGFloat innerMargin = 3;
     
     // add placeholder photos
     self.framePhotos = [[NSMutableArray alloc] init];
-    [self.framePhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedPhotos];
+    [self.framePhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets];
     NSUInteger userSelectedAssetCount = [self.framePhotos count];
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
@@ -515,14 +515,8 @@ CGFloat innerMargin = 3;
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingAsset];
-    if (index != NSNotFound){
-        [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
-    }
-    else if ([self.editingAsset isKindOfClass:[OLPlaceholderAsset class]]){
-        [[OLUserSession currentSession].userSelectedPhotos addObject:asset];
-    }
-    index = [self.framePhotos indexOfObjectIdenticalTo:self.editingAsset];
+    [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.editingAsset withNewAsset:asset];
+    NSInteger index = [self.framePhotos indexOfObjectIdenticalTo:self.editingAsset];
     [self.framePhotos replaceObjectAtIndex:index withObject:asset];
     self.editingAsset = asset;
 }

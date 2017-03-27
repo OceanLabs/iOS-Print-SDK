@@ -564,14 +564,14 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)didReceiveMemoryWarning{
-    for (OLAsset *asset in [OLUserSession currentSession].userSelectedPhotos){
+    for (OLAsset *asset in [OLUserSession currentSession].userSelectedAssets){
         [asset unloadImage];
     }
 }
 
 - (void)dealloc{
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionPhotos];
-    [OLUserSession currentSession].userSelectedPhotos = nil;
+    [OLUserSession currentSession].userSelectedAssets = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
