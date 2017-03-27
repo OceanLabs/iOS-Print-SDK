@@ -204,6 +204,7 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)loadRemoteData{
+    [OLUserSession currentSession].kiteVc = self;
     [[OLUserSession currentSession] calcScreenScaleForTraitCollection:self.traitCollection];
     
     self.operationQueue = [NSOperationQueue mainQueue];
