@@ -235,10 +235,7 @@ static CGFloat fadeTime = 0.3;
         [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
             [welf.operationQueue addOperation:welf.remotePlistSyncOperation];
         }];
-        NSDate *date = [NSDate date];
-        [OLProductTemplate syncWithCompletionHandler:^(id templates, id error){
-            NSLog(@"%f", [[NSDate date] timeIntervalSinceDate:date]);
-        }];
+        [OLProductTemplate syncWithCompletionHandler:^(id templates, id error){}];
     }
 }
 
