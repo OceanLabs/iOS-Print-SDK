@@ -464,7 +464,7 @@
 - (void)templateSyncDidUpdate{
     self.productGroups = nil;
     
-    if (![OLProductTemplate isSyncInProgress]){
+    if (![OLProductTemplate isSyncInProgress] || self.navigationController.topViewController != self){
         [self.collectionView reloadData];
         return;
     }

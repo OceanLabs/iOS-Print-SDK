@@ -349,7 +349,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
     
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[]];
+    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     vc.userEmail = @"";
     vc.userPhone = @"";
     vc.delegate = self;
