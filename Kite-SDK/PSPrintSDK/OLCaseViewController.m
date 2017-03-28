@@ -172,12 +172,13 @@
 
 - (NSURL *)maskURL{
     if (!self.showingBack){
+        NSURL *url;
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
             if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
-                return item.maskUrl;
+                url = item.maskUrl;
             }
         }
-        return self.product.productTemplate.maskImageURL;
+        return url ? url : self.product.productTemplate.maskImageURL;
     }
     else{
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
@@ -192,12 +193,13 @@
 
 - (NSURL *)productBackgroundURL{
     if (!self.showingBack){
+        NSURL *url;
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
             if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
-                return item.productBackGroundImageURL;
+                url = item.productBackGroundImageURL;
             }
         }
-        return self.product.productTemplate.productBackgroundImageURL;
+        return url ? url : self.product.productTemplate.productBackgroundImageURL;
     }
     else{
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
@@ -212,12 +214,13 @@
 
 - (NSURL *)productHighlightsURL{
     if (!self.showingBack){
+        NSURL *url;
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
             if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
-                return item.productHighlightsUrl;
+                url = item.productHighlightsUrl;
             }
         }
-        return self.product.productTemplate.productHighlightsImageURL;
+        return url ? url : self.product.productTemplate.productHighlightsImageURL;
     }
     else{
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
