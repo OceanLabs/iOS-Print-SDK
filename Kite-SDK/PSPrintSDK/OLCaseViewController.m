@@ -86,6 +86,8 @@
 @property (strong, nonatomic) UIViewController *presentedVc;
 @property (weak, nonatomic) IBOutlet UIView *printContainerView;
 @property (weak, nonatomic) UIView *gestureView;
+- (OLProductTemplateOptionChoice *)selectedChoice;
+@property (weak, nonatomic) OLProductTemplateOption *selectedOption;
 
 @end
 
@@ -571,6 +573,17 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
                 [UIView animateWithDuration:0.1 animations:^{
+                    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+                        for (OLProductTemplateOption *option in self.product.productTemplate.options){
+                            if ([option.code isEqualToString:@"garment_color"]){
+                                for (OLProductTemplateOptionChoice *choice in option.choices){
+                                    if ([choice.code isEqualToString:self.product.selectedOptions[option.code]]){
+                                        [self updateProductRepresentationForChoice:choice];
+                                    }
+                                }
+                            }
+                        }
+                    }
                     self.deviceView.alpha = 1;
                 } completion:^(BOOL finished){
                     [self renderImage];

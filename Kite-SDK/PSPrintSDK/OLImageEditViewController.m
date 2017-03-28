@@ -114,6 +114,14 @@ const NSInteger kOLEditTagCrop = 40;
 
 @implementation OLImageEditViewController
 
+- (OLProductTemplateOptionChoice *)selectedChoice{
+    if (!_selectedChoice && self.selectedOption && ![self.selectedOption.code isEqualToString:@"garment_size"]){
+        _selectedChoice = self.selectedOption.choices.firstObject;
+    }
+    
+    return _selectedChoice;
+}
+
 -(NSArray<NSString *> *) fonts{
     if (!_fonts){
         OLKiteViewController *kvc = [OLUserSession currentSession].kiteVc;
