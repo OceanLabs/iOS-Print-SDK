@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Computertalk Sweden. All rights reserved.
 //
 
-#import "OLMarkDownParser.h"
+#import "OLMarkdownParser.h"
 
 @interface TSExpressionBlockPair : NSObject
 

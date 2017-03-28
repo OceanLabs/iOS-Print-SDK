@@ -588,17 +588,6 @@ static const CGFloat kBookEdgePadding = 38;
     return vc;
 }
 
-- (NSInteger)photobookPhotosCount{
-    NSInteger count = 0;
-    for (id object in self.photobookPhotos){
-        if (![object isKindOfClass:[OLPlaceholderAsset class]]){
-            count++;
-        }
-    }
-    
-    return count;
-}
-
 #pragma mark OLUpsellViewControllerDelegate
 
 - (void)userDidDeclineUpsell:(OLUpsellViewController *)vc{
@@ -705,8 +694,7 @@ static const CGFloat kBookEdgePadding = 38;
     }
     else{
         [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.editingAsset withNewAsset:asset];
-        NSInteger index = [self.photobookPhotos indexOfObjectIdenticalTo:self.editingAsset];
-        [self.photobookPhotos replaceObjectAtIndex:index withObject:asset];
+        [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.editingAsset withNewAsset:asset];
         
          [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
     }
@@ -801,25 +789,20 @@ static const CGFloat kBookEdgePadding = 38;
         return NO;
     }
     
-    NSUInteger selectedCount = 0;
-    for (id object in self.photobookPhotos){
-        if (![object isKindOfClass:[OLPlaceholderAsset class]]){
-            selectedCount++;
-        }
-    }
+    NSUInteger assetCount = [OLUserSession currentSession].userSelectedAssets.count;
     
-    if (selectedCount == 0){
+    if (assetCount == 0){
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please add some photos to your photo book", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
         return NO;
     }
     
-    NSUInteger numOrders = 1 + (MAX(0, selectedCount - 1) / self.product.quantityToFulfillOrder);
+    NSUInteger numOrders = 1 + (MAX(0, assetCount - 1) / self.product.quantityToFulfillOrder);
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-    if (selectedCount < quantityToFulfilOrder) {
-        NSUInteger canSelectExtraCount = quantityToFulfilOrder - selectedCount;
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""),selectedCount] message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You can add %d more for the same price.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
+    if (assetCount < quantityToFulfilOrder) {
+        NSUInteger canSelectExtraCount = quantityToFulfilOrder - assetCount;
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""),assetCount] message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You can add %d more for the same price.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Add more", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Add more [photos]") style:UIAlertActionStyleCancel handler:NULL]];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print these", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Print these [photos]") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
             [self doCheckout];
@@ -831,31 +814,7 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
-    NSInteger i = 0;
-    NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
-    NSMutableArray *photobookPhotosClean = [[NSMutableArray alloc] init];
-    for (id asset in self.photobookPhotos){
-        if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
-            [photobookPhotosClean addObject:asset];
-        }
-    }
-    
-    for (NSInteger object = 0; object < self.photobookPhotos.count; object++){
-        if ([self.photobookPhotos[object] isKindOfClass:[OLPlaceholderAsset class]]){
-            [bookPhotos addObject:photobookPhotosClean[i % photobookPhotosClean.count]];
-            i++;
-        }
-        else{
-            [bookPhotos addObject:self.photobookPhotos[object]];
-        }
-    }
-    
-    // Avoid uploading assets if possible. We can avoid uploading where the image already exists at a remote
-    // URL and the user did not manipulate it in any way.
-    NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
-    for (OLAsset *photo in bookPhotos) {
-        [photoAssets addObject:[photo copy]];
-    }
+    NSMutableArray *photoAssets = [[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets mutableCopy];
     
     // ensure order is maxed out by adding duplicates as necessary
     NSUInteger userSelectedAssetCount = photoAssets.count;
@@ -979,7 +938,7 @@ static const CGFloat kBookEdgePadding = 38;
         
         return;
     }
-    else if ([[self.photobookPhotos objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
+    else if ([[[OLUserSession currentSession].userSelectedAssets assetAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
         self.addNewPhotosAtIndex = index;
         [self addMorePhotosFromView:sender.view];
     }
@@ -988,7 +947,7 @@ static const CGFloat kBookEdgePadding = 38;
             return;
         }
         UIImageView *imageView = [page imageView];
-        self.editingAsset = self.photobookPhotos[index];
+        self.editingAsset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:index];
         [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
             cropVc.delegate = self;
@@ -1517,9 +1476,9 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (void)addMorePhotosFromView:(UIView *)view{
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
-    if ([self.photobookPhotos indexOfObject:self.coverPhoto] == NSNotFound){
-        [[OLUserSession currentSession].userSelectedAssets removeAsset:self.coverPhoto];
-    }
+//    if ([self.photobookPhotos indexOfObject:self.coverPhoto] == NSNotFound){
+//        [[OLUserSession currentSession].userSelectedAssets removeAsset:self.coverPhoto];
+//    }
     vc.selectedAssets = [[[OLUserSession currentSession].userSelectedAssets nonPlaceholderAssets] mutableCopy];
     vc.delegate = self;
     vc.maximumPhotos = self.product.quantityToFulfillOrder;
@@ -1564,7 +1523,7 @@ static const CGFloat kBookEdgePadding = 38;
             }
         }
     }
-    [self.photobookPhotos removeObjectsInArray:removedAssets];
+//    [self.photobookPhotos removeObjectsInArray:removedAssets];
     //TODO
 //    [self updatePhotobookPhotos];
     for (OLPhotobookPageContentViewController *page in self.pageController.viewControllers){

@@ -1705,7 +1705,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:coverPhoto];
         }
         else{
-            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:[OLPlaceholderAsset asset]];
+            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:[[OLPlaceholderAsset alloc] init]];
         }
         
         [orvc safePerformSelector:@selector(setProduct:) withObject:product];

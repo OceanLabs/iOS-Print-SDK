@@ -71,7 +71,6 @@ static const NSInteger kSectionPages = 2;
 @property (strong, nonatomic) NSNumber *replacingImageNumber;
 @property (strong, nonatomic) NSNumber *selectedIndexNumber;
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
-@property (strong, nonatomic) NSMutableArray *photobookPhotos;
 @property (strong, nonatomic) OLAsset *coverPhoto;
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 @property (strong, nonatomic) UIButton *nextButton;
@@ -117,6 +116,8 @@ static const NSInteger kSectionPages = 2;
     }
     
     [view.superview addConstraints:con];
+    
+    [[OLUserSession currentSession].userSelectedAssets trimAndPadWithPlaceholderAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder + 1];
     
     //TODO
 //    [self updatePhotobookPhotos];
@@ -197,7 +198,6 @@ static const NSInteger kSectionPages = 2;
     
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         if (!photobook.bookClosed){
-            photobook.photobookPhotos = self.photobookPhotos;
             for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
                 [page loadImageWithCompletionHandler:NULL];
             }
@@ -245,7 +245,6 @@ static const NSInteger kSectionPages = 2;
     OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
     photobook.coverPhoto = self.coverPhoto;
     [photobook loadCoverPhoto];
-    photobook.photobookPhotos = self.photobookPhotos;
     photobook.product = self.product;
     
     [self.navigationController pushViewController:photobook animated:YES];
@@ -292,7 +291,7 @@ static const NSInteger kSectionPages = 2;
 //}
 
 - (void)swapImageAtIndex:(NSInteger)index1 withImageAtIndex:(NSInteger)index2{
-    [self.photobookPhotos exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
+    [[OLUserSession currentSession].userSelectedAssets exchangeAssetAtIndex:index1 withAssetAtIndex:index2];
 }
 
 - (OLPhotobookPageContentViewController *)pageControllerForPageIndex:(NSInteger)index{
@@ -383,22 +382,10 @@ static const NSInteger kSectionPages = 2;
     self.nextButton.frame = headerFrame;
 }
 
-- (NSInteger)photobookPhotosCount{
-    NSInteger count = 0;
-    for (id object in self.photobookPhotos){
-        if (![object isKindOfClass:[OLPlaceholderAsset class]]){
-            count++;
-        }
-    }
-    
-    return count;
-}
-
 #pragma mark - Menu Actions
 
 - (void)deletePage{
     if (self.longPressImageIndex == -1){
-        [self.photobookPhotos removeObjectIdenticalTo:self.coverPhoto];
         [[OLUserSession currentSession].userSelectedAssets removeAsset:self.coverPhoto];
         self.coverPhoto = nil;
         self.interactionPhotobook.coverPhoto = nil;
@@ -410,11 +397,10 @@ static const NSInteger kSectionPages = 2;
         [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         self.selectedIndexNumber = nil;
     }
-    [[OLUserSession currentSession].userSelectedAssets removeAsset:self.photobookPhotos[self.longPressImageIndex]];
-    self.photobookPhotos[self.longPressImageIndex] = [OLPlaceholderAsset asset];
+    [[OLUserSession currentSession].userSelectedAssets removeAssetAtIndex:self.longPressImageIndex];
+    [[OLUserSession currentSession].userSelectedAssets replaceAsset:[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] withNewAsset:[[OLPlaceholderAsset alloc] init]];
     //TODO
 //    [self updateUserSelectedPhotos];
-    self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
     [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
 }
 
@@ -426,7 +412,7 @@ static const NSInteger kSectionPages = 2;
         imageView = self.interactionPhotobook.coverImageView;
     }
     else{
-        cropPhoto = self.photobookPhotos[self.longPressImageIndex];
+        cropPhoto = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex];
         imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
     }
     OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
@@ -454,7 +440,7 @@ static const NSInteger kSectionPages = 2;
 #pragma mark - User Actions
 
 - (void)onButtonNextClicked{
-    if (self.photobookPhotos.count == 0){
+    if ([OLUserSession currentSession].userSelectedAssets.count == 0){
         NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"No photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of an alert letting the user know that they selected no photos");
         NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Please add at least one photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.");
@@ -464,7 +450,7 @@ static const NSInteger kSectionPages = 2;
         return;
     }
     
-    if (self.photobookPhotos.count < self.product.quantityToFulfillOrder){
+    if ([OLUserSession currentSession].userSelectedAssets.count < self.product.quantityToFulfillOrder){
         NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"You can add more photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"Yes, proceed", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
@@ -509,7 +495,7 @@ static const NSInteger kSectionPages = 2;
     }
     else if (self.selectedIndexNumber){ //swap
         OLPhotobookPageContentViewController *selectedPage = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]];
-        OLAsset *asset = [self.photobookPhotos objectAtIndex:tappedImageIndex];
+        OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:tappedImageIndex];
         
         [page unhighlightImageAtIndex:tappedImageIndex];
         [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
@@ -551,9 +537,7 @@ static const NSInteger kSectionPages = 2;
             } completion:^(BOOL finished){
                 [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:tappedImageIndex];
                 self.selectedIndexNumber = nil;
-                photobook.photobookPhotos = self.photobookPhotos;
                 
-                [(OLPhotobookViewController *)selectedPage.parentViewController.parentViewController setPhotobookPhotos:self.photobookPhotos];
                 [page loadImageWithCompletionHandler:^{
                     [selectedPage loadImageWithCompletionHandler:^{
                         [pageCopy removeFromSuperview];
@@ -569,16 +553,12 @@ static const NSInteger kSectionPages = 2;
         }
         else{ //Previously selected image is not in view. Only pretend to swap.
             [self.view addSubview:pageCopy];
-            if ([self.photobookPhotos[tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
+            if ([[[OLUserSession currentSession].userSelectedAssets assetAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
                 [pageCopy viewWithTag:12].alpha = 0;
                 [pageCopy viewWithTag:22].alpha = 0;
             }
             
             [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:tappedImageIndex];
-            photobook.photobookPhotos = self.photobookPhotos;
-            for (OLPhotobookViewController *otherPhotobook in self.childViewControllers){
-                otherPhotobook.photobookPhotos = self.photobookPhotos;
-            }
             
             CGFloat x = 0;
             if (page.pageIndex % 2 == 0 && [self.selectedIndexNumber integerValue] % 2 == 1){
@@ -622,7 +602,7 @@ static const NSInteger kSectionPages = 2;
                     [pageCopy removeFromSuperview];
                     self.selectedIndexNumber = nil;
                     
-                    if (![self.photobookPhotos[tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
+                    if (![[[OLUserSession currentSession].userSelectedAssets assetAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
                         if (tappedImageIndex % 2 == 0){
                             page.pageShadowLeft2.hidden = NO;
                             page.pageShadowLeft2.alpha = 1;
@@ -641,7 +621,7 @@ static const NSInteger kSectionPages = 2;
         
         
     }
-    else if ([[self.photobookPhotos objectAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){ //pick new images
+    else if ([[[OLUserSession currentSession].userSelectedAssets assetAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){ //pick new images
         self.addNewPhotosAtIndex = tappedImageIndex;
         [self addMorePhotosFromView:page.view];
         self.animating = NO;
@@ -660,7 +640,7 @@ static const NSInteger kSectionPages = 2;
         view = (OLPopupOptionsImageView *)sender.view;
     }
     else{
-        if ([self.photobookPhotos[index] isKindOfClass:[OLPlaceholderAsset class]]){
+        if ([[[OLUserSession currentSession].userSelectedAssets assetAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
             return;
         }
         view = (OLPopupOptionsImageView *)[[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:index]] imageView];
@@ -732,7 +712,6 @@ static const NSInteger kSectionPages = 2;
             photobook.startOpen = YES;
         }
         
-        photobook.photobookPhotos = self.photobookPhotos;
         if (indexPath.section == kSectionCover){
             photobook.editingPageNumber = nil;
             
@@ -815,7 +794,7 @@ static const NSInteger kSectionPages = 2;
         [self.coverPhoto unloadImage];
     }
     else{
-        [self.photobookPhotos[self.longPressImageIndex] unloadImage];
+        [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] unloadImage];
     }
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
@@ -825,7 +804,7 @@ static const NSInteger kSectionPages = 2;
         [self.coverPhoto unloadImage];
     }
     else{
-        [self.photobookPhotos[self.longPressImageIndex] unloadImage];
+        [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] unloadImage];
     }
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
@@ -839,8 +818,8 @@ static const NSInteger kSectionPages = 2;
         
     }
     else{
-        [self.photobookPhotos[self.longPressImageIndex] unloadImage];
-        [self.photobookPhotos[self.longPressImageIndex] setEdits:cropper.edits];
+        [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] unloadImage];
+        [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] setEdits:cropper.edits];
         
         [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
     }
@@ -858,10 +837,8 @@ static const NSInteger kSectionPages = 2;
         [self.interactionPhotobook loadCoverPhoto];
     }
     else{
-        [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.photobookPhotos[self.longPressImageIndex] withNewAsset:asset];
-//        [self.photobookPhotos replaceObjectAtIndex:self.longPressImageIndex withObject:asset];
+        [[OLUserSession currentSession].userSelectedAssets replaceAsset:[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] withNewAsset:asset];
         
-        self.interactionPhotobook.photobookPhotos = self.photobookPhotos;
         [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
     }
     
@@ -872,7 +849,7 @@ static const NSInteger kSectionPages = 2;
 
 - (void)addMorePhotosFromView:(UIView *)view{
     NSInteger max = self.product.quantityToFulfillOrder + 1; //Plus cover photo
-    NSInteger current = [self photobookPhotosCount];
+    NSInteger current = [OLUserSession currentSession].userSelectedAssets.count;
     if (self.replacingImageNumber){
         current--;
     }
@@ -916,7 +893,7 @@ static const NSInteger kSectionPages = 2;
             self.addNewPhotosAtIndex = -1;
         }
         else{
-            self.photobookPhotos[[self.replacingImageNumber integerValue]] = [OLPlaceholderAsset asset];
+            [[OLUserSession currentSession].userSelectedAssets replaceAsset:[[OLUserSession currentSession].userSelectedAssets assetAtIndex:[self.replacingImageNumber integerValue]] withNewAsset:[[OLPlaceholderAsset alloc] init]];
         }
         self.replacingImageNumber = nil;
     }
@@ -939,12 +916,11 @@ static const NSInteger kSectionPages = 2;
         }
     }
     
-    [self.photobookPhotos removeObjectsInArray:removedAssets];
+//    [self.photobookPhotos removeObjectsInArray:removedAssets];
     //TODO
 //    [self updatePhotobookPhotos];
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         if (!photobook.bookClosed){
-            photobook.photobookPhotos = self.photobookPhotos;
             for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
                 [page loadImageWithCompletionHandler:NULL];
             }

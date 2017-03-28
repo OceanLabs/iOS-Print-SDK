@@ -30,5 +30,5 @@
 #import "OLAsset.h"
 
 @interface OLPlaceholderAsset : OLAsset
-+ (instancetype)asset;
+
 @end

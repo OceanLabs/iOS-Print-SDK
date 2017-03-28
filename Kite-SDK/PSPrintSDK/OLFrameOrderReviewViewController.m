@@ -89,7 +89,7 @@ CGFloat innerMargin = 3;
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
     for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [self.framePhotos addObject:[OLPlaceholderAsset asset]];
+        [self.framePhotos addObject:[[OLPlaceholderAsset alloc] init]];
     }
 #ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);

@@ -42,5 +42,7 @@
 - (void)clearAssets;
 - (NSArray *)nonPlaceholderAssets;
 - (void)discardPlaceholderAssets;
+- (void)exchangeAssetAtIndex:(NSInteger)index1 withAssetAtIndex:(NSInteger)index2;
+- (void)trimAndPadWithPlaceholderAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets;
 
 @end

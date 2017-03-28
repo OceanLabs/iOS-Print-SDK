@@ -35,6 +35,7 @@
 #import "OLPageLayout.h"
 #import "OLAsset+Private.h"
 #import "OLUserSession.h"
+#import "UIImageView+FadeIn.h"
 
 @interface OLPhotobookPageContentViewController ()
 
@@ -122,45 +123,25 @@
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
     NSInteger imageIndex = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex].firstIndex;
-    if (imageIndex >= [OLUserSession currentSession].userSelectedAssets.count){
-        return;
-    }
     OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:imageIndex];
-    if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
-        self.imageView.image = nil;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSInteger blockIndex = imageIndex;
-            
-            [asset imageWithSize:self.imageView.frame.size applyEdits:YES progress:^(float progress){
-                [self.imageView setProgress:progress];
-            }completion:^(UIImage *image, NSError *error){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (blockIndex == imageIndex){
-                        self.imageView.image = image;
-                        
-                        if (self.left){
-                            self.pageShadowLeft2.hidden = NO;
-                        }
-                        else{
-                            self.pageShadowRight2.hidden = NO;
-                        }
-                    }
-                    if (handler){
-                        handler();
-                    }
-                });
-            }];
-        });
-    }
-    else{
-        self.pageShadowLeft2.hidden = YES;
-        self.pageShadowRight2.hidden = YES;
-        self.imageView.image = nil;
-        if (handler){
-            handler();
-        }
-        
-    }
+    self.imageView.image = nil;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.imageView setAndFadeInImageWithOLAsset:asset size:self.imageView.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+            [self.imageView setProgress:progress];
+        }completionHandler:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (self.left){
+                    self.pageShadowLeft2.hidden = NO;
+                }
+                else{
+                    self.pageShadowRight2.hidden = NO;
+                }
+                if (handler){
+                    handler();
+                }
+            });
+        }];
+    });
 }
 
 @end

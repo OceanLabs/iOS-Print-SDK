@@ -65,7 +65,7 @@
 }
 
 - (NSInteger)count{
-    NSInteger count;
+    NSInteger count = 0;
     for (OLAsset *asset in self.assets){
         if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
             count++;
@@ -96,6 +96,19 @@
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(__unsafe_unretained id  _Nonnull *)buffer count:(NSUInteger)len{
     return [self.assets countByEnumeratingWithState:state objects:buffer count:len];
+}
+
+- (void)exchangeAssetAtIndex:(NSInteger)index1 withAssetAtIndex:(NSInteger)index2{
+    [self.assets exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
+}
+
+- (void)trimAndPadWithPlaceholderAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets{
+    for (NSUInteger i = self.assets.count; i > totalNumberOfAssets; i++){
+        [self.assets removeObjectAtIndex:i-1];
+    }
+    for (NSUInteger i = self.assets.count; i < totalNumberOfAssets; i++){
+        [self.assets addObject:[[OLPlaceholderAsset alloc] init]];
+    }
 }
 
 @end
