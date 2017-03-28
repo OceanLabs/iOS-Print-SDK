@@ -172,6 +172,11 @@
 
 - (NSURL *)maskURL{
     if (!self.showingBack){
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
+                return item.maskUrl;
+            }
+        }
         return self.product.productTemplate.maskImageURL;
     }
     else{
@@ -187,6 +192,11 @@
 
 - (NSURL *)productBackgroundURL{
     if (!self.showingBack){
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
+                return item.productBackGroundImageURL;
+            }
+        }
         return self.product.productTemplate.productBackgroundImageURL;
     }
     else{
@@ -202,6 +212,11 @@
 
 - (NSURL *)productHighlightsURL{
     if (!self.showingBack){
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
+                return item.productHighlightsUrl;
+            }
+        }
         return self.product.productTemplate.productHighlightsImageURL;
     }
     else{
