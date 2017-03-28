@@ -35,6 +35,7 @@ Details,Details,/* Product Details */
 Do you want to log out of %@?,Do you want to log out of %@?,/* Log out of Instagram/Facebook */
 Do you want to remove this photo?,Do you want to remove this photo?,
 Edit Poster,Edit Poster,
+Enter a valid card number,Enter a valid card number,
 Error validating the order. Please try again later.,Error validating the order. Please try again later.,
 Failed to download phone case mask. Please check your internet connectivity and try again,Failed to download phone case mask. Please check your internet connectivity and try again,
 Failed to get upload URL. Try again later.,Failed to get upload URL. Try again later.,
@@ -103,6 +104,7 @@ Review,Review,/* Title of a screen where the user can review the product before 
 Rotate,Rotate,/* Rotate image by 90 degrees */
 Scan QR Code,Scan QR Code,
 Select Size,Select Size,/* Example: Shirt size */
+Single Photo Poster,Single Photo Poster,
 Size,Size,/* Physical size of the product */
 Small,Small,
 Start by tapping this button,Start by tapping this button,
