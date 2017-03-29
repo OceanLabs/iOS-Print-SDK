@@ -73,6 +73,7 @@ static NSString *const kKeySupportsTextOnBorder = @"co.oceanlabs.pssdk.kKeySuppo
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
 static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
+static BOOL partial = NO;
 
 @interface OLProductTemplate ()
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
@@ -228,7 +229,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     if (inProgressSyncRequest == nil) {
         inProgressSyncRequest = [[OLProductTemplateSyncRequest alloc] init];
         [inProgressSyncRequest sync:^(NSArray *templates_, NSError *error) {
-            inProgressSyncRequest = nil;
+            partial = [inProgressSyncRequest isInProgress];
+            if (!partial){
+                inProgressSyncRequest = nil;
+            }
             if (error) {
                 if (handler){
                     handler(nil, error);
@@ -236,17 +240,21 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:@{kNotificationKeyTemplateSyncError: error}];
             } else {
                 [self saveTemplatesAsLatest:templates_];
-                if (handler){
-                    handler(templates_, nil);
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncPartialComplete object:self userInfo:nil];
+                if (!partial){
+                    if (handler){
+                        handler(templates_, nil);
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:nil];
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:nil];
             }
         }];
     }
 }
 
 + (BOOL)isSyncInProgress {
-    return inProgressSyncRequest != nil;
+    return inProgressSyncRequest != nil || partial;
 }
 
 + (void)cancelSyncInProgress{

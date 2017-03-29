@@ -31,12 +31,16 @@
 #import "OLUserSession.h"
 #import "OLKiteUtils.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLImageDownloader.h"
+#import "UIImage+OLUtils.h"
 
 @interface OLImageEditViewController ()
 - (void)setupButton4;
 - (void)onButtonClicked:(UIButton *)sender;
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)cropIsInImageEditingTools;
+- (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice;
+- (void)renderImage;
 @end
 
 @interface OLCaseViewController ()
@@ -170,6 +174,44 @@
     }
     else{
         return [super collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    }
+}
+
+- (void)applyProductImageLayers{
+    if (!self.deviceView.image){
+        self.deviceView.alpha = 0;
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+                [UIView animateWithDuration:0.1 animations:^{
+                    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+                        for (OLProductTemplateOption *option in self.product.productTemplate.options){
+                            if ([option.code isEqualToString:@"garment_color"]){
+                                for (OLProductTemplateOptionChoice *choice in option.choices){
+                                    if ([choice.code isEqualToString:self.product.selectedOptions[option.code]]){
+                                        [self updateProductRepresentationForChoice:choice];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    self.deviceView.alpha = 1;
+                } completion:^(BOOL finished){
+                    [self renderImage];
+                }];
+            });
+        }];
+    }
+    if (!self.highlightsView.image){
+        self.highlightsView.alpha = 0;
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+                [UIView animateWithDuration:0.1 animations:^{
+                    self.highlightsView.alpha = 1;
+                }];
+            });
+        }];
     }
 }
 
