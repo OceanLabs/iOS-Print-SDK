@@ -27,11 +27,11 @@
 //  THE SOFTWARE.
 //
 
-#import "OLPackProductViewController.h"
+#import "OLFrameOrderReviewViewController.h"
 
 @class OLProduct;
 
-@interface OLPosterViewController : OLPackProductViewController
+@interface OLPosterViewController : OLFrameOrderReviewViewController
 
 +(void)changeOrderOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
 
