@@ -117,7 +117,7 @@ static const NSInteger kSectionPages = 2;
     
     [view.superview addConstraints:con];
     
-    [[OLUserSession currentSession].userSelectedAssets trimAndPadWithPlaceholderAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder + 1];
+    [[OLUserSession currentSession].userSelectedAssets adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder + 1 trim:YES];
     
     //TODO
 //    [self updatePhotobookPhotos];

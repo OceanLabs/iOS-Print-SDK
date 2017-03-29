@@ -59,8 +59,12 @@
     [self.assets removeObjectAtIndex:index];
 }
 
+- (void)insertAsset:(OLAsset *)asset atIndex:(NSInteger)index{
+    [self.assets insertObject:asset atIndex:index];
+}
+
 - (void)replaceAsset:(OLAsset *)asset withNewAsset:(OLAsset *)newAsset{
-    NSInteger index = [self.assets indexOfObject:asset];
+    NSInteger index = [self.assets indexOfObjectIdenticalTo:asset];
     [self.assets replaceObjectAtIndex:index withObject:newAsset];
 }
 
@@ -102,9 +106,11 @@
     [self.assets exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
 }
 
-- (void)trimAndPadWithPlaceholderAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets{
-    for (NSUInteger i = self.assets.count; i > totalNumberOfAssets; i++){
-        [self.assets removeObjectAtIndex:i-1];
+- (void)adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets trim:(BOOL)trim{
+    if (trim){
+        for (NSUInteger i = self.assets.count; i > totalNumberOfAssets; i--){
+            [self.assets removeObjectAtIndex:i-1];
+        }
     }
     for (NSUInteger i = self.assets.count; i < totalNumberOfAssets; i++){
         [self.assets addObject:[[OLPlaceholderAsset alloc] init]];
