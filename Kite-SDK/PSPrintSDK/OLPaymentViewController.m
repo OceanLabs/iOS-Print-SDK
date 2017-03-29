@@ -1511,32 +1511,38 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [[cell viewWithTag:1000] removeFromSuperview];
         
         [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+            NSDecimalNumber *itemCost = [NSDecimalNumber decimalNumberWithString:@"0"];
+            NSDecimalNumber *discountedItemCost = [NSDecimalNumber decimalNumberWithString:@"0"];
             for (OLPaymentLineItem *item in cost.lineItems){
                 if ([item.identifier isEqualToString:[job uuid]]){
                     productNameLabel.text = item.description;
-                    
-                    priceLabel.text = [item costStringInCurrency:self.printOrder.currencyCode];
-                    
-                    NSString *discountedPrice = [item discountedCostStringInCurrency:self.printOrder.currencyCode];
-                    if (discountedPrice && ![discountedPrice isEqualToString:@""]){
-                        UILabel *finalCostLabel = [cell.contentView viewWithTag:1000];
-                        if (!finalCostLabel){
-                            finalCostLabel = [[UILabel alloc] init];
-                            
-                            finalCostLabel.font = priceLabel.font;
-                            finalCostLabel.tag = 1000;
-                            
-                            [cell.contentView addSubview:finalCostLabel];
-                            finalCostLabel.translatesAutoresizingMaskIntoConstraints = NO;
-                            [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeTop multiplier:1 constant:-5]];
-                            [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-                        }
-                        finalCostLabel.text = discountedPrice;
-                        
-                        priceLabel.attributedText = [[NSAttributedString alloc] initWithString:priceLabel.text attributes:@{NSFontAttributeName : priceLabel.font, NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSForegroundColorAttributeName : [UIColor colorWithWhite:0.40 alpha:1.000]}];
+                    itemCost = [itemCost decimalNumberByAdding:[item costInCurrency:self.printOrder.currencyCode]];
+                    NSDecimalNumber *d = [item discountedCostInCurrency:self.printOrder.currencyCode];
+                    if (d){
+                        discountedItemCost = [discountedItemCost decimalNumberByAdding:d];
                     }
                 }
             }
+            priceLabel.text = [itemCost formatCostForCurrencyCode:self.printOrder.currencyCode];
+            
+            if ([discountedItemCost doubleValue] != 0.0){
+                UILabel *finalCostLabel = [cell.contentView viewWithTag:1000];
+                if (!finalCostLabel){
+                    finalCostLabel = [[UILabel alloc] init];
+                    
+                    finalCostLabel.font = priceLabel.font;
+                    finalCostLabel.tag = 1000;
+                    
+                    [cell.contentView addSubview:finalCostLabel];
+                    finalCostLabel.translatesAutoresizingMaskIntoConstraints = NO;
+                    [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeTop multiplier:1 constant:-5]];
+                    [cell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:priceLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:finalCostLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+                }
+                finalCostLabel.text = [discountedItemCost formatCostForCurrencyCode:self.printOrder.currencyCode];
+                
+                priceLabel.attributedText = [[NSAttributedString alloc] initWithString:priceLabel.text attributes:@{NSFontAttributeName : priceLabel.font, NSStrikethroughStyleAttributeName : [NSNumber numberWithInteger:NSUnderlineStyleSingle], NSForegroundColorAttributeName : [UIColor colorWithWhite:0.40 alpha:1.000]}];
+            }
+            
             [(UIActivityIndicatorView *)[[self.tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:90] stopAnimating];
         }];
         

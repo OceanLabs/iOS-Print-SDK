@@ -42,6 +42,7 @@
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
+@property (strong, nonatomic) NSURL *nextPage;
 @end
 
 @interface OLKitePrintSDK (Private)
@@ -64,7 +65,7 @@
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
     NSAssert(self.req == nil, @"Oops only one template sync request should be in progress at any given time");
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/?limit=200", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/?limit=20", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
     [self fetchTemplatesWithURL:url templateAccumulator:[[NSMutableArray alloc] init] handler:handler];
 }
 
@@ -83,12 +84,12 @@
             handler(nil, error);
         } else {
             if (httpStatusCode >= 200 & httpStatusCode <= 299) {
-                NSURL *nextPage = nil;
+                self.nextPage = nil;
                 id meta = json[@"meta"];
                 if ([meta isKindOfClass:[NSDictionary class]]) {
                     id next = meta[@"next"];
                     if ([next isKindOfClass:[NSString class]]) {
-                        nextPage = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OLKitePrintSDK apiEndpoint], next]];
+                        self.nextPage = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OLKitePrintSDK apiEndpoint], next]];
                     }
                 }
                 
@@ -518,9 +519,11 @@
                     }
                 }
                 
-                if (nextPage != nil) {
-                    [self fetchTemplatesWithURL:nextPage templateAccumulator:acc handler:handler];
-                } else {
+                if (self.nextPage != nil) {
+                    handler(acc, nil);
+                    [self fetchTemplatesWithURL:self.nextPage templateAccumulator:acc handler:handler];
+                }
+                else {
                     self.req = nil;
                     NSMutableSet *coverPhotoVariants = [[NSMutableSet alloc] init];
                     
@@ -535,7 +538,8 @@
                     [[OLKiteABTesting sharedInstance] setupCoverPhotoTestWithExperimentDict:experimentDict];
                     handler(acc, nil);
                 }
-            } else {
+            }
+            else {
                 id errorObj = json[@"error"];
                 if ([errorObj isKindOfClass:[NSDictionary class]]) {
                     id errorMessage = errorObj[@"message"];
@@ -555,6 +559,10 @@
 - (void)cancel {
     [self.req cancel];
     self.req = nil;
+}
+
+- (BOOL)isInProgress{
+    return self.req != nil || self.nextPage;
 }
 
 @end

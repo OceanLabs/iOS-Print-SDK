@@ -118,6 +118,14 @@ const NSInteger kOLEditTagCrop = 40;
     return _allViews;
 }
 
+- (OLProductTemplateOptionChoice *)selectedChoice{
+    if (!_selectedChoice && self.selectedOption && ![self.selectedOption.code isEqualToString:@"garment_size"]){
+        _selectedChoice = self.selectedOption.choices.firstObject;
+    }
+    
+    return _selectedChoice;
+}
+
 -(NSArray<NSString *> *) fonts{
     if (!_fonts){
         OLKiteViewController *kvc = [OLUserSession currentSession].kiteVc;
@@ -1646,25 +1654,27 @@ const NSInteger kOLEditTagCrop = 40;
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
         [self setupToolCell:cell];
         
-        if (indexPath.item == 0){
+        NSInteger adjustedIndexPathItem = indexPath.item - ([self cropIsInImageEditingTools] ? 1 : 0);
+        
+        if (indexPath.item == 0 && [self cropIsInImageEditingTools]){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"crop"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Crop image")];
+        }
+        else if (adjustedIndexPathItem == 0){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"filters"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image filters")];
         }
-        else if (indexPath.item == 1){
+        else if (adjustedIndexPathItem == 1){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"flip"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Flip", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Horizontally flip image")];
         }
-        else if (indexPath.item == 2){
+        else if (adjustedIndexPathItem == 2){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"rotate"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Rotate", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Rotate image by 90 degrees")];
         }
-        else if (indexPath.item == 3){
+        else if (adjustedIndexPathItem == 3){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Tt"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Add Text", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Add text on image")];
-        }
-        else if (indexPath.item == 4){
-            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"crop"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Crop image")];
         }
     }
     else if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
@@ -1853,7 +1863,14 @@ const NSInteger kOLEditTagCrop = 40;
         
     }
     else if (collectionView.tag == kOLEditTagImageTools){
-        if (indexPath.item == 0){
+        NSInteger adjustedIndexPathItem = indexPath.item - ([self cropIsInImageEditingTools] ? 1 : 0);
+        if (indexPath.item == 0 && [self cropIsInImageEditingTools]){
+            [self onButtonCropClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
+#endif
+        }
+        else if (adjustedIndexPathItem == 0){
             if (!self.cropView.imageView.image){
                 return;
             }
@@ -1868,28 +1885,22 @@ const NSInteger kOLEditTagCrop = 40;
             [OLAnalytics trackEditScreenButtonTapped:@"Filters"];
 #endif
         }
-        else if (indexPath.item == 1){
+        else if (adjustedIndexPathItem == 1){
             [self onButtonHorizontalFlipClicked:nil];
 #ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Flip"];
 #endif
         }
-        else if (indexPath.item == 2){
+        else if (adjustedIndexPathItem == 2){
             [self onButtonRotateClicked:nil];
 #ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Rotate"];
 #endif
         }
-        else if (indexPath.item == 3){
+        else if (adjustedIndexPathItem == 3){
             [self onButtonAddTextClicked:nil];
 #ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Add Text"];
-#endif
-        }
-        else if (indexPath.item == 4){
-            [self onButtonCropClicked:nil];
-#ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
 #endif
         }
     }

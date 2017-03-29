@@ -81,7 +81,9 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 - (NSDictionary *)jsonFromOrder:(OLPrintOrder *)order {
     NSMutableArray *basket = [[NSMutableArray alloc] initWithCapacity:order.jobs.count];
     for (id<OLPrintJob> job in order.jobs){
-        [basket addObject:[job jsonRepresentation]];
+        for (NSInteger i = -1; i < job.extraCopies; i++) {
+            [basket addObject:[job jsonRepresentation]];
+        }
     }
 
     NSDictionary *dict = @{@"basket" : basket,
@@ -207,7 +209,6 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 - (void)order:(OLPrintOrder *)order parseCostResponseJson:(NSDictionary *)json withCompletionHandler:(OLPrintOrderCostRequestCompletionHandler)handler {
     NSMutableArray *lineItems = [[NSMutableArray alloc] init];
     NSMutableDictionary *jobCosts = [[NSMutableDictionary alloc] init];
-    NSInteger idx = 0;
     for (NSDictionary *lineItemDict in json[@"line_items"]){
         NSDictionary *productCosts = [self createCostsDictionaryFromJSON:lineItemDict[@"product_cost"]];
         NSDictionary *productDiscountedCosts = [self createCostsDictionaryFromJSON:lineItemDict[@"discounted_cost"]];
@@ -218,9 +219,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
         [lineItems addObject:item];
         item.identifier = lineItemDict[@"job_id"];
         
-        OLProductPrintJob *job = order.jobs[idx];
-        [jobCosts setObject:@{@"product_cost" : productCosts, @"shipping_cost" : shippingCosts, @"discounted_cost" : productDiscountedCosts} forKey:job];
-        idx++;
+        [jobCosts setObject:@{@"product_cost" : productCosts, @"shipping_cost" : shippingCosts, @"discounted_cost" : productDiscountedCosts} forKey:lineItemDict[@"job_id"]];
     }
 
     NSDictionary *totalCosts = [self createCostsDictionaryFromJSON:json[@"total"]];

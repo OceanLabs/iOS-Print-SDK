@@ -85,6 +85,8 @@
 @property (strong, nonatomic) UIView *textFieldsView;
 @property (strong, nonatomic) UIViewController *presentedVc;
 @property (weak, nonatomic) UIView *gestureView;
+- (OLProductTemplateOptionChoice *)selectedChoice;
+@property (weak, nonatomic) OLProductTemplateOption *selectedOption;
 
 @end
 
@@ -183,7 +185,13 @@
 
 - (NSURL *)maskURL{
     if (!self.showingBack){
-        return self.product.productTemplate.maskImageURL;
+        NSURL *url;
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
+                url = item.maskUrl;
+            }
+        }
+        return url ? url : self.product.productTemplate.maskImageURL;
     }
     else{
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
@@ -198,7 +206,13 @@
 
 - (NSURL *)productBackgroundURL{
     if (!self.showingBack){
-        return self.product.productTemplate.productBackgroundImageURL;
+        NSURL *url;
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
+                url = item.productBackGroundImageURL;
+            }
+        }
+        return url ? url : self.product.productTemplate.productBackgroundImageURL;
     }
     else{
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
@@ -213,7 +227,13 @@
 
 - (NSURL *)productHighlightsURL{
     if (!self.showingBack){
-        return self.product.productTemplate.productHighlightsImageURL;
+        NSURL *url;
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
+                url = item.productHighlightsUrl;
+            }
+        }
+        return url ? url : self.product.productTemplate.productHighlightsImageURL;
     }
     else{
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
