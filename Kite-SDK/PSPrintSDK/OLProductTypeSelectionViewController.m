@@ -43,7 +43,7 @@
 #import "UIViewController+OLMethods.h"
 #import "OLKiteViewController+Private.h"
 
-@interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
+@interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout>
 
 @property (strong, nonatomic) NSMutableArray *products;
 @property (strong, nonatomic) NSMutableArray *allPosterProducts;
@@ -133,10 +133,6 @@
                                                                             target:nil
                                                                             action:nil];
     
-    if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
-        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
-    }
-    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductListScreenViewedWithTemplateClass:self.templateClass];
 #endif
@@ -182,17 +178,6 @@
     if (vc){
         [self.navigationController pushViewController:vc animated:YES];
     }
-}
-
-- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
-    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
-    [previewingContext setSourceRect:cell.frame];
-    return [self viewControllerForItemAtIndexPath:indexPath];
-}
-
-- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    [self.navigationController pushViewController:viewControllerToCommit animated:YES];
 }
 
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{

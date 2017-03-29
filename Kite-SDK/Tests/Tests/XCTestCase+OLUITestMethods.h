@@ -111,8 +111,6 @@
 
 @interface OLPackProductViewController ()
 @property (strong, nonatomic) UIButton *nextButton;
-- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location;
-- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit;
 - (void) deletePhotoAtIndex:(NSUInteger)index;
 @end
 

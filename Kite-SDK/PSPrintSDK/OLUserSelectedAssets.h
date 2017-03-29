@@ -33,17 +33,18 @@
 
 @interface OLUserSelectedAssets : NSObject <NSFastEnumeration>
 
+- (NSArray *)nonPlaceholderAssets;
+- (NSInteger)count;
+- (NSInteger)totalCount;
 - (OLAsset *)assetAtIndex:(NSInteger)index;
 - (void)addAsset:(OLAsset *)asset;
+- (void)adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets trim:(BOOL)trim;
+- (void)clearAssets;
+- (void)discardPlaceholderAssets;
+- (void)exchangeAssetAtIndex:(NSInteger)index1 withAssetAtIndex:(NSInteger)index2;
+- (void)insertAsset:(OLAsset *)asset atIndex:(NSInteger)index;
 - (void)removeAsset:(OLAsset *)asset;
 - (void)removeAssetAtIndex:(NSInteger)index;
 - (void)replaceAsset:(OLAsset *)asset withNewAsset:(OLAsset *)newAsset;
-- (NSInteger)count;
-- (void)clearAssets;
-- (NSArray *)nonPlaceholderAssets;
-- (void)discardPlaceholderAssets;
-- (void)exchangeAssetAtIndex:(NSInteger)index1 withAssetAtIndex:(NSInteger)index2;
-- (void)adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets trim:(BOOL)trim;
-- (void)insertAsset:(OLAsset *)asset atIndex:(NSInteger)index;
 
 @end

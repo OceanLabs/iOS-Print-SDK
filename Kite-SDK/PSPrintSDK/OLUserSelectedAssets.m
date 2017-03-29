@@ -79,6 +79,10 @@
     return count;
 }
 
+- (NSInteger)totalCount{
+    return self.assets.count;
+}
+
 - (void)clearAssets{
     [self.assets removeAllObjects];
 }

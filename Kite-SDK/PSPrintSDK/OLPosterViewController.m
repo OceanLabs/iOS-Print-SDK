@@ -57,7 +57,6 @@ CGFloat posterMargin = 2;
 
 @interface OLPosterViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, LXReorderableCollectionViewDataSource, OLImageEditViewControllerDelegate>
 
-@property (strong, nonatomic) NSMutableArray *posterPhotos;
 @property (assign, nonatomic) CGFloat numberOfRows;
 @property (assign, nonatomic) CGFloat numberOfColumns;
 @property (weak, nonatomic) OLAsset *editingAsset;
@@ -78,18 +77,7 @@ CGFloat posterMargin = 2;
 -(void)viewDidLoad{
     [super viewDidLoad];
     
-    // ensure order is maxed out by adding duplicates as necessary
-    self.posterPhotos = [[NSMutableArray alloc] init];
-    [self.posterPhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets];
-    NSUInteger userSelectedAssetCount = [self.posterPhotos count];
-    NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
-    NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
-    for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [self.posterPhotos addObject:[[OLPlaceholderAsset alloc] init]];
-    }
-#ifdef OL_VERBOSE
-    NSLog(@"Adding %lu duplicates to frame", (unsigned long)duplicatesToFillOrder);
-#endif
+    [[OLUserSession currentSession].userSelectedAssets adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder trim:NO];
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
@@ -131,8 +119,7 @@ CGFloat posterMargin = 2;
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (collectionView.tag == 10){
-        int incompleteFrame = ([self.posterPhotos count] % self.product.quantityToFulfillOrder) != 0 ? 1 : 0;
-        return [self.posterPhotos count]/self.product.quantityToFulfillOrder + incompleteFrame;
+        return [OLUserSession currentSession].userSelectedAssets.totalCount / self.product.quantityToFulfillOrder;
     }
     else{
         return self.product.quantityToFulfillOrder;
@@ -178,18 +165,17 @@ CGFloat posterMargin = 2;
     UIActivityIndicatorView *activity = (UIActivityIndicatorView *)[cell viewWithTag:796];
     [activity startAnimating];
     
-    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
+    __weak OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
     imageView.image = nil;
     imageView.userInteractionEnabled = YES;
     [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editPhoto:)]];
     
-    OLAsset *asset =(OLAsset*)[self.posterPhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
+    OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
     
-    [asset imageWithSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES progress:^(float progress){
-        [imageView setProgress:progress];
-    } completion:^(UIImage *image, NSError *error){
+    [imageView setAndFadeInImageWithOLAsset:asset size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES placeholder:nil progress:^(float progress){
+                [imageView setProgress:progress];
+    } completionHandler:^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            imageView.image = image;
             [activity stopAnimating];
         });
     }];
@@ -240,9 +226,9 @@ CGFloat posterMargin = 2;
     NSInteger trueFromIndex = fromIndexPath.item + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder;
     NSInteger trueToIndex = toIndexPath.item + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder;
     
-    id object = [self.posterPhotos objectAtIndex:trueFromIndex];
-    [self.posterPhotos removeObjectAtIndex:trueFromIndex];
-    [self.posterPhotos insertObject:object atIndex:trueToIndex];
+    OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:trueFromIndex];
+    [[OLUserSession currentSession].userSelectedAssets removeAssetAtIndex:trueFromIndex];
+    [[OLUserSession currentSession].userSelectedAssets insertAsset:asset atIndex:trueToIndex];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath canMoveToIndexPath:(NSIndexPath *)toIndexPath{
@@ -282,7 +268,7 @@ CGFloat posterMargin = 2;
 }
 
 - (void)preparePhotosForCheckout{
-    NSMutableArray *reversePhotos = [self.posterPhotos mutableCopy];
+    NSMutableArray *reversePhotos = [[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets mutableCopy];
     [OLPosterViewController changeOrderOfPhotosInArray:reversePhotos forProduct:self.product];
     self.checkoutPhotos = reversePhotos;
 }
@@ -311,7 +297,7 @@ CGFloat posterMargin = 2;
         return;
     }
     
-    self.editingAsset = self.posterPhotos[(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
+    self.editingAsset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:(outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder + indexPath.row];
     
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
         [self replacePhoto:nil];
@@ -337,62 +323,6 @@ CGFloat posterMargin = 2;
     }];
 }
 
-- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        return nil;
-    }
-    
-    NSIndexPath *outerCollectionViewIndexPath = [self.collectionView indexPathForItemAtPoint:location];
-    UICollectionViewCell *outerCollectionViewCell = [self.collectionView cellForItemAtIndexPath:outerCollectionViewIndexPath];
-    
-    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
-    
-    NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[collectionView convertPoint:location fromView:self.collectionView]];
-    
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
-    
-    OLAsset *asset =(OLAsset*)[self.posterPhotos objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
-    if (!imageView.image){
-        return nil;
-    }
-    
-    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
-    
-    self.editingAsset = asset;
-    
-    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
-    __weak OLImagePreviewViewController *weakVc = previewVc;
-    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingAsset size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
-        [weakVc.imageView setProgress:progress];
-    }completionHandler:NULL];
-    previewVc.providesPresentationContextTransitionStyle = true;
-    previewVc.definesPresentationContext = true;
-    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    return previewVc;
-}
-
-- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
-    cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
-    cropVc.delegate = self;
-    cropVc.aspectRatio = 1;
-    cropVc.product = self.product;
-    
-    [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
-        [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image, NSError *error){
-        [cropVc setFullImage:image];
-        cropVc.edits = self.editingAsset.edits;
-        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
-        [self presentViewController:cropVc animated:YES completion:NULL];        
-    }];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
-#endif
-}
-
 #pragma mark - OLImageEditorViewControllerDelegate methods
 
 - (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
@@ -402,7 +332,7 @@ CGFloat posterMargin = 2;
 -(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingAsset unloadImage];
     
-    for (OLAsset *asset in self.posterPhotos){
+    for (OLAsset *asset in [OLUserSession currentSession].userSelectedAssets){
         if ([asset isEqual:self.editingAsset] && asset != self.editingAsset){
             asset.edits = cropper.edits;
             [asset unloadImage];
@@ -412,8 +342,8 @@ CGFloat posterMargin = 2;
     
     NSInteger posterQty = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
     //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
-    for (NSInteger i = 0; i < self.posterPhotos.count; i++){
-        if ([self.posterPhotos[i] isEqual:self.editingAsset]){
+    for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedAssets.count; i++){
+        if ([[[OLUserSession currentSession].userSelectedAssets assetAtIndex:i] isEqual:self.editingAsset]){
             NSInteger outerIndex = i / posterQty;
             
             if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
@@ -446,13 +376,6 @@ CGFloat posterMargin = 2;
 #endif
 }
 
-- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.editingAsset withNewAsset:asset];
-    NSInteger index = [self.posterPhotos indexOfObjectIdenticalTo:self.editingAsset];
-    [self.posterPhotos replaceObjectAtIndex:index withObject:asset];
-    self.editingAsset = asset;
-}
-
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
     OLAsset *asset = addedAssets.lastObject;
     if (asset){
@@ -460,8 +383,8 @@ CGFloat posterMargin = 2;
         
         //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
         NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-        for (NSInteger i = 0; i < self.posterPhotos.count; i++){
-            if (self.posterPhotos[i] == self.editingAsset){
+        for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedAssets.count; i++){
+            if ([[OLUserSession currentSession].userSelectedAssets assetAtIndex:i] == self.editingAsset){
                 NSInteger outerIndex = i / self.product.quantityToFulfillOrder;
                 
                 if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){

@@ -59,7 +59,7 @@
 
 @end
 
-@interface OLFrameOrderReviewViewController () <OLImageEditViewControllerDelegate,UIViewControllerPreviewingDelegate>
+@interface OLFrameOrderReviewViewController () <OLImageEditViewControllerDelegate>
 
 @property (weak, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
@@ -224,10 +224,6 @@ CGFloat innerMargin = 3;
     return [super shouldGoToCheckout];
 }
 
-- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    return nil;
-}
-
 #pragma mark Button Actions
 
 - (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
@@ -243,9 +239,7 @@ CGFloat innerMargin = 3;
 
 - (NSInteger)numberOfFrames{
     if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
-        NSInteger numberOfPhotosPerFrame =  self.product.quantityToFulfillOrder;
-        int incompleteFrame = ([OLUserSession currentSession].userSelectedAssets.count % numberOfPhotosPerFrame) != 0 ? 1 : 0;
-        return [OLUserSession currentSession].userSelectedAssets.count / self.product.quantityToFulfillOrder + incompleteFrame;
+        return [OLUserSession currentSession].userSelectedAssets.totalCount / self.product.quantityToFulfillOrder;
     }
     else{
         NSInteger numberOfPhotosPerFrame = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
@@ -500,11 +494,6 @@ CGFloat innerMargin = 3;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:self.product.productTemplate.name];
 #endif
-}
-
-- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.editingAsset withNewAsset:asset];
-    self.editingAsset = asset;
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{

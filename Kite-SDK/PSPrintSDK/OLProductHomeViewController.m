@@ -59,7 +59,7 @@
 @end
 
 
-@interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
+@interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (assign, nonatomic) BOOL fromRotation;
@@ -98,10 +98,6 @@
         else{
             self.title = NSLocalizedStringFromTableInBundle(@"Print Shop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
-    }
-    
-    if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
-        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
     
     if ([self isPushed]){
@@ -600,17 +596,6 @@
     if (vc){
         [self.navigationController pushViewController:vc animated:YES];
     }
-}
-
-- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
-    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
-    [previewingContext setSourceRect:cell.frame];
-    return [self viewControllerForItemAtIndexPath:indexPath];
-}
-
-- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    [self.navigationController pushViewController:viewControllerToCommit animated:YES];
 }
 
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{

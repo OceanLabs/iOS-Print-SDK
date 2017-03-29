@@ -77,8 +77,7 @@
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout,
-UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoBannerDelegate>
+@interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout, OLImagePickerViewControllerDelegate, OLInfoBannerDelegate>
 
 @property (weak, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) UIView *addMorePhotosView;
@@ -117,10 +116,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     [self setupCtaButton];
     
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.nextButton.frame.size.height, self.collectionView.contentInset.right);
-    
-    if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
-        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
-    }
     [self addInfoBanner];
 }
 
@@ -373,53 +368,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     else{
         return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
     }
-}
-
-- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        return nil;
-    }
-    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
-    OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    
-    if (!cell.imageView.image){
-        return nil;
-    }
-    
-    [previewingContext setSourceRect:[cell convertRect:cell.imageView.frame toView:self.collectionView]];
-    
-    self.editingAsset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:indexPath.item];
-    
-    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
-    __weak OLImagePreviewViewController *weakVc = previewVc;
-    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingAsset size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
-        [weakVc.imageView setProgress:progress];
-    }completionHandler:NULL];
-    previewVc.providesPresentationContextTransitionStyle = true;
-    previewVc.definesPresentationContext = true;
-    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    return previewVc;
-}
-
-- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
-    cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
-    cropVc.delegate = self;
-    cropVc.aspectRatio = [self productAspectRatio];
-    cropVc.product = self.product;
-    
-    [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
-        [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image, NSError *error){
-        [cropVc setFullImage:image];
-        cropVc.edits = self.editingAsset.edits;
-        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
-        [self presentViewController:cropVc animated:NO completion:NULL];
-    }];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
-#endif
 }
 
 - (void)setupBottomBorderTextFieldOnView:(OLCircleMaskCollectionViewCell *)cell{
@@ -802,7 +750,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    //TODO TEST
     [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.editingAsset withNewAsset:asset];
     self.editingAsset = asset;
 }
