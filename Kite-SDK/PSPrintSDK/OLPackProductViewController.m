@@ -51,7 +51,6 @@
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
 #import "OLKiteViewController+Private.h"
-#import "OLUserSelectedAssets.h"
 
 @interface OLPaymentViewController (Private)
 
@@ -179,7 +178,7 @@
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLUserSession currentSession].userSelectedAssets.count];
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLAsset userSelectedAssets].nonPlaceholderAssets.count];
     }
 #endif
 }
@@ -234,7 +233,7 @@
 
 -(NSUInteger) totalNumberOfExtras{
     NSUInteger res = 0;
-    for (OLAsset *photo in [OLUserSession currentSession].userSelectedAssets){
+    for (OLAsset *photo in [OLAsset userSelectedAssets]){
         res += photo.extraCopies;
     }
     return res;
@@ -242,9 +241,9 @@
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
     if (self.product.quantityToFulfillOrder > 1){
-        NSUInteger numOrders = 1 + (MAX(0, [OLUserSession currentSession].userSelectedAssets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+        NSUInteger numOrders = 1 + (MAX(0, [OLAsset userSelectedAssets].nonPlaceholderAssets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
         NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-        self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) ([OLUserSession currentSession].userSelectedAssets.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
+        self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) ([OLAsset userSelectedAssets].nonPlaceholderAssets.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
     }
     else{
         self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering");
@@ -252,7 +251,7 @@
 }
 
 -(BOOL) shouldGoToCheckout{
-    NSUInteger selectedCount = [OLUserSession currentSession].userSelectedAssets.count + [self totalNumberOfExtras];
+    NSUInteger selectedCount = [OLAsset userSelectedAssets].nonPlaceholderAssets.count + [self totalNumberOfExtras];
     NSUInteger numOrders = 1 + (MAX(0, selectedCount - 1) / self.product.quantityToFulfillOrder);
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
     if (selectedCount < quantityToFulfilOrder) {
@@ -346,9 +345,9 @@
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDeletedPhotoForProductName:self.product.productTemplate.name];
 #endif
-    [[OLUserSession currentSession].userSelectedAssets removeAssetAtIndex:index];
+    [[OLAsset userSelectedAssets] removeObjectAtIndex:index];
     
-    if ([OLUserSession currentSession].userSelectedAssets.count == 0){
+    if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 0){
         [self.navigationController popViewControllerAnimated:YES];
     }
     
@@ -409,8 +408,8 @@
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSInteger extraCopies = [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:indexPath.item] extraCopies] + 1;
-    [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:indexPath.item] setExtraCopies:extraCopies];
+    NSInteger extraCopies = [[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] extraCopies] + 1;
+    [[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] setExtraCopies:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -429,7 +428,7 @@
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSInteger extraCopies = [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:indexPath.item] extraCopies];
+    NSInteger extraCopies = [[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] extraCopies];
     if (extraCopies == 0){
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Remove?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Remove [photo]?") message:NSLocalizedStringFromTableInBundle(@"Do you want to remove this photo?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes, remove it", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Yes, remove [the photo]") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
@@ -441,7 +440,7 @@
     }
     extraCopies--;
     
-    [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:indexPath.item] setExtraCopies:extraCopies];
+    [[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] setExtraCopies:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -477,7 +476,7 @@
     UIView *printView = [(OLCircleMaskCollectionViewCell *)cell printContainerView];
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    self.editingAsset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:indexPath.item];
+    self.editingAsset = [[OLAsset userSelectedAssets] objectAtIndex:indexPath.item];
     
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
         [self replacePhoto:sender];
@@ -533,11 +532,11 @@
 
 - (void)preparePhotosForCheckout{
     self.checkoutPhotos = [[NSMutableArray alloc] init];
-    [self.checkoutPhotos addObjectsFromArray:[[OLUserSession currentSession].userSelectedAssets nonPlaceholderAssets]];
-    for (int i = 0; i < [OLUserSession currentSession].userSelectedAssets.count; i++) {
-        NSInteger numberOfCopies = [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:i] extraCopies];
+    [self.checkoutPhotos addObjectsFromArray:[[OLAsset userSelectedAssets] nonPlaceholderAssets]];
+    for (int i = 0; i < [OLAsset userSelectedAssets].nonPlaceholderAssets.count; i++) {
+        NSInteger numberOfCopies = [[[OLAsset userSelectedAssets] objectAtIndex:i] extraCopies];
         for (NSInteger j = 0; j < numberOfCopies; j++){
-            [self.checkoutPhotos addObject:[[OLUserSession currentSession].userSelectedAssets assetAtIndex:i]];
+            [self.checkoutPhotos addObject:[[OLAsset userSelectedAssets] objectAtIndex:i]];
         }
     }
 }
@@ -545,7 +544,7 @@
 #pragma mark UICollectionView data source and delegate methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return [OLUserSession currentSession].userSelectedAssets.count;
+    return [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -599,14 +598,14 @@
     [downButton addTarget:self action:@selector(onButtonDownArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[[OLUserSession currentSession].userSelectedAssets assetAtIndex:indexPath.item] extraCopies]+1]];
+    [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] extraCopies]+1]];
     if ([OLKiteABTesting sharedInstance].lightThemeColor3){
         [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
         [upButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
         [downButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
     }
     
-    OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:indexPath.item];
+    OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:indexPath.item];
     CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
     
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
@@ -719,8 +718,8 @@
     self.editingAsset.edits = cropper.edits;
     
     //Find the new previewSourceView for the dismiss animation
-    for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedAssets.count; i++){
-        if ([[OLUserSession currentSession].userSelectedAssets assetAtIndex:i] == self.editingAsset){
+    for (NSInteger i = 0; i < [OLAsset userSelectedAssets].nonPlaceholderAssets.count; i++){
+        if ([[OLAsset userSelectedAssets] objectAtIndex:i] == self.editingAsset){
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (indexPath){
                 [UIView animateWithDuration:0 animations:^{
@@ -750,8 +749,8 @@
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.editingAsset withNewAsset:asset];
-    self.editingAsset = asset;
+    NSInteger index = [[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:self.editingAsset];
+    [[OLAsset userSelectedAssets] replaceObjectAtIndex:index withObject:asset];
 }
 
 #pragma mark Image Picker Delegate
@@ -766,8 +765,8 @@
         [self imageEditViewController:nil didReplaceAssetWithAsset:asset];
         
         //Find the new previewSourceView for the dismiss animation
-        for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedAssets.count; i++){
-            if ([[OLUserSession currentSession].userSelectedAssets assetAtIndex:i] == self.editingAsset){
+        for (NSInteger i = 0; i < [OLAsset userSelectedAssets].nonPlaceholderAssets.count; i++){
+            if ([[OLAsset userSelectedAssets] objectAtIndex:i] == self.editingAsset){
                 NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
                 if (indexPath){
                     [UIView animateWithDuration:0 animations:^{

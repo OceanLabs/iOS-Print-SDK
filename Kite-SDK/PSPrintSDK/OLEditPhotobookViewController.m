@@ -117,7 +117,7 @@ static const NSInteger kSectionPages = 2;
     
     [view.superview addConstraints:con];
     
-    [[OLUserSession currentSession].userSelectedAssets adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder + 1 trim:YES];
+    [[OLAsset userSelectedAssets] adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder + 1 trim:YES];
     
     //TODO
 //    [self updatePhotobookPhotos];
@@ -165,7 +165,7 @@ static const NSInteger kSectionPages = 2;
         self.haveCachedCells = YES;
     }
     
-    if (!self.shownImagePicker && [OLUserSession currentSession].userSelectedAssets.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
+    if (!self.shownImagePicker && [OLAsset userSelectedAssets].nonPlaceholderAssets.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
         self.shownImagePicker = YES;
         [self photobook:self.childViewControllers[1] userDidTapOnImageWithIndex:0];
     }
@@ -291,7 +291,7 @@ static const NSInteger kSectionPages = 2;
 //}
 
 - (void)swapImageAtIndex:(NSInteger)index1 withImageAtIndex:(NSInteger)index2{
-    [[OLUserSession currentSession].userSelectedAssets exchangeAssetAtIndex:index1 withAssetAtIndex:index2];
+    [[OLAsset userSelectedAssets] exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
 }
 
 - (OLPhotobookPageContentViewController *)pageControllerForPageIndex:(NSInteger)index{
@@ -386,7 +386,8 @@ static const NSInteger kSectionPages = 2;
 
 - (void)deletePage{
     if (self.longPressImageIndex == -1){
-        [[OLUserSession currentSession].userSelectedAssets removeAsset:self.coverPhoto];
+        //TODO
+//        [[OLAsset userSelectedAssets] removeAsset:self.coverPhoto];
         self.coverPhoto = nil;
         self.interactionPhotobook.coverPhoto = nil;
         [self.interactionPhotobook loadCoverPhoto];
@@ -397,8 +398,8 @@ static const NSInteger kSectionPages = 2;
         [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         self.selectedIndexNumber = nil;
     }
-    [[OLUserSession currentSession].userSelectedAssets removeAssetAtIndex:self.longPressImageIndex];
-    [[OLUserSession currentSession].userSelectedAssets replaceAsset:[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] withNewAsset:[[OLPlaceholderAsset alloc] init]];
+
+    [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.longPressImageIndex withObject:[[OLPlaceholderAsset alloc] init]];
     //TODO
 //    [self updateUserSelectedPhotos];
     [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
@@ -412,7 +413,7 @@ static const NSInteger kSectionPages = 2;
         imageView = self.interactionPhotobook.coverImageView;
     }
     else{
-        cropPhoto = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex];
+        cropPhoto = [[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex];
         imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
     }
     OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
@@ -440,7 +441,7 @@ static const NSInteger kSectionPages = 2;
 #pragma mark - User Actions
 
 - (void)onButtonNextClicked{
-    if ([OLUserSession currentSession].userSelectedAssets.count == 0){
+    if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 0){
         NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"No photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of an alert letting the user know that they selected no photos");
         NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Please add at least one photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.");
@@ -450,7 +451,7 @@ static const NSInteger kSectionPages = 2;
         return;
     }
     
-    if ([OLUserSession currentSession].userSelectedAssets.count < self.product.quantityToFulfillOrder){
+    if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count < self.product.quantityToFulfillOrder){
         NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"You can add more photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"Yes, proceed", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
@@ -495,7 +496,7 @@ static const NSInteger kSectionPages = 2;
     }
     else if (self.selectedIndexNumber){ //swap
         OLPhotobookPageContentViewController *selectedPage = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]];
-        OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:tappedImageIndex];
+        OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:tappedImageIndex];
         
         [page unhighlightImageAtIndex:tappedImageIndex];
         [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
@@ -553,7 +554,7 @@ static const NSInteger kSectionPages = 2;
         }
         else{ //Previously selected image is not in view. Only pretend to swap.
             [self.view addSubview:pageCopy];
-            if ([[[OLUserSession currentSession].userSelectedAssets assetAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
+            if ([[[OLAsset userSelectedAssets] objectAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
                 [pageCopy viewWithTag:12].alpha = 0;
                 [pageCopy viewWithTag:22].alpha = 0;
             }
@@ -602,7 +603,7 @@ static const NSInteger kSectionPages = 2;
                     [pageCopy removeFromSuperview];
                     self.selectedIndexNumber = nil;
                     
-                    if (![[[OLUserSession currentSession].userSelectedAssets assetAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
+                    if (![[[OLAsset userSelectedAssets] objectAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
                         if (tappedImageIndex % 2 == 0){
                             page.pageShadowLeft2.hidden = NO;
                             page.pageShadowLeft2.alpha = 1;
@@ -621,7 +622,7 @@ static const NSInteger kSectionPages = 2;
         
         
     }
-    else if ([[[OLUserSession currentSession].userSelectedAssets assetAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){ //pick new images
+    else if ([[[OLAsset userSelectedAssets] objectAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){ //pick new images
         self.addNewPhotosAtIndex = tappedImageIndex;
         [self addMorePhotosFromView:page.view];
         self.animating = NO;
@@ -640,7 +641,7 @@ static const NSInteger kSectionPages = 2;
         view = (OLPopupOptionsImageView *)sender.view;
     }
     else{
-        if ([[[OLUserSession currentSession].userSelectedAssets assetAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
+        if ([[[OLAsset userSelectedAssets] objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
             return;
         }
         view = (OLPopupOptionsImageView *)[[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:index]] imageView];
@@ -794,7 +795,7 @@ static const NSInteger kSectionPages = 2;
         [self.coverPhoto unloadImage];
     }
     else{
-        [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] unloadImage];
+        [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] unloadImage];
     }
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
@@ -804,7 +805,7 @@ static const NSInteger kSectionPages = 2;
         [self.coverPhoto unloadImage];
     }
     else{
-        [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] unloadImage];
+        [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] unloadImage];
     }
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
@@ -818,8 +819,8 @@ static const NSInteger kSectionPages = 2;
         
     }
     else{
-        [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] unloadImage];
-        [[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] setEdits:cropper.edits];
+        [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] unloadImage];
+        [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] setEdits:cropper.edits];
         
         [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
     }
@@ -837,7 +838,7 @@ static const NSInteger kSectionPages = 2;
         [self.interactionPhotobook loadCoverPhoto];
     }
     else{
-        [[OLUserSession currentSession].userSelectedAssets replaceAsset:[[OLUserSession currentSession].userSelectedAssets assetAtIndex:self.longPressImageIndex] withNewAsset:asset];
+        [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.longPressImageIndex withObject:asset];
         
         [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
     }
@@ -849,13 +850,13 @@ static const NSInteger kSectionPages = 2;
 
 - (void)addMorePhotosFromView:(UIView *)view{
     NSInteger max = self.product.quantityToFulfillOrder + 1; //Plus cover photo
-    NSInteger current = [OLUserSession currentSession].userSelectedAssets.count;
+    NSInteger current = [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
     if (self.replacingImageNumber){
         current--;
     }
     
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
-    vc.selectedAssets = [[[OLUserSession currentSession].userSelectedAssets nonPlaceholderAssets] mutableCopy];
+    vc.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];
     vc.delegate = self;
     vc.maximumPhotos = max;
     vc.product = self.product;
@@ -868,7 +869,7 @@ static const NSInteger kSectionPages = 2;
         UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
         [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
-        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets mutableCopy]];
+        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy]];
         if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
             vc.maximumPhotos = self.product.quantityToFulfillOrder;
         }
@@ -893,7 +894,7 @@ static const NSInteger kSectionPages = 2;
             self.addNewPhotosAtIndex = -1;
         }
         else{
-            [[OLUserSession currentSession].userSelectedAssets replaceAsset:[[OLUserSession currentSession].userSelectedAssets assetAtIndex:[self.replacingImageNumber integerValue]] withNewAsset:[[OLPlaceholderAsset alloc] init]];
+            [[OLAsset userSelectedAssets] replaceObjectAtIndex:[self.replacingImageNumber integerValue] withObject:[[OLPlaceholderAsset alloc] init]];
         }
         self.replacingImageNumber = nil;
     }

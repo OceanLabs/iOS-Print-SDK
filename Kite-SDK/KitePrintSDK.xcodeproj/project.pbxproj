@@ -231,6 +231,8 @@
 		2E65FEA91E4E143B00A301BB /* OLOrderHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65FEA71E4E143B00A301BB /* OLOrderHistoryViewController.m */; };
 		2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */; };
 		2E7D39731DAE39820046D255 /* OLImageRenderOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */; };
+		2E7FB64E1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7FB64C1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h */; };
+		2E7FB64F1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7FB64D1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m */; };
 		2E870D3A1E49EF2100623C54 /* OLFulfilmentItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E870D381E49EF2100623C54 /* OLFulfilmentItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E870D3B1E49EF2100623C54 /* OLFulfilmentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E870D391E49EF2100623C54 /* OLFulfilmentItem.m */; };
 		2E898CCB1CC518180041CCD8 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
@@ -450,8 +452,6 @@
 		2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2EB8FE881D95692000E26BDF /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
 		2EBDF4CE1E434A0B004775BD /* OLKiteLocalizationResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */; };
-		2EC020601E8945A300E45EB2 /* OLUserSelectedAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC0205E1E8945A300E45EB2 /* OLUserSelectedAssets.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2EC020611E8945A300E45EB2 /* OLUserSelectedAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0205F1E8945A300E45EB2 /* OLUserSelectedAssets.m */; };
 		2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */; };
 		2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */; };
 		2ECA34EC1E82743800D56220 /* OLApparelViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2ECA34EA1E82743800D56220 /* OLApparelViewController.h */; };
@@ -711,6 +711,8 @@
 		2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageRenderOptions.m; sourceTree = "<group>"; };
 		2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLGreetingCardPrintJob.m; sourceTree = "<group>"; };
 		2E7F516F1BF5FBCD00A78718 /* OLGreetingCardPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLGreetingCardPrintJob.h; sourceTree = "<group>"; };
+		2E7FB64C1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSMutableArray+OLUserSelectedAssetsUtils.h"; path = "PSPrintSDK/Categories/NSMutableArray+OLUserSelectedAssetsUtils.h"; sourceTree = "<group>"; };
+		2E7FB64D1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSMutableArray+OLUserSelectedAssetsUtils.m"; path = "PSPrintSDK/Categories/NSMutableArray+OLUserSelectedAssetsUtils.m"; sourceTree = "<group>"; };
 		2E837D461C3C1FBB004DA682 /* OLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLViewController.h; sourceTree = "<group>"; };
 		2E837D471C3C1FBB004DA682 /* OLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLViewController.m; sourceTree = "<group>"; };
 		2E837D4A1C3C221E004DA682 /* OLCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCollectionViewController.h; sourceTree = "<group>"; };
@@ -825,8 +827,6 @@
 		2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloader.h; sourceTree = "<group>"; };
 		2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloader.m; sourceTree = "<group>"; };
 		2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = OLKiteLocalizationResources.bundle; sourceTree = "<group>"; };
-		2EC0205E1E8945A300E45EB2 /* OLUserSelectedAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUserSelectedAssets.h; sourceTree = "<group>"; };
-		2EC0205F1E8945A300E45EB2 /* OLUserSelectedAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLUserSelectedAssets.m; sourceTree = "<group>"; };
 		2EC020621E89460C00E45EB2 /* Kite-Print-SDK.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = "Kite-Print-SDK.podspec"; path = "../Kite-Print-SDK.podspec"; sourceTree = "<group>"; };
 		2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPlaceholderAsset.h; sourceTree = "<group>"; };
 		2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPlaceholderAsset.m; sourceTree = "<group>"; };
@@ -1457,6 +1457,8 @@
 				2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */,
 				2E12DBC61E795511000A6CEF /* UIView+AutoLayoutHelper.h */,
 				2E12DBC71E795511000A6CEF /* UIView+AutoLayoutHelper.m */,
+				2E7FB64C1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h */,
+				2E7FB64D1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -1868,8 +1870,6 @@
 				2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */,
 				2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */,
 				2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */,
-				2EC0205E1E8945A300E45EB2 /* OLUserSelectedAssets.h */,
-				2EC0205F1E8945A300E45EB2 /* OLUserSelectedAssets.m */,
 			);
 			name = Asset;
 			sourceTree = "<group>";
@@ -1948,7 +1948,6 @@
 				2EB8FE571D95685100E26BDF /* OLCheckoutDelegate.h in Headers */,
 				2EB8FE161D95685100E26BDF /* OLTransition.h in Headers */,
 				2EB8FDEF1D95685100E26BDF /* OLGreetingCardPrintJob.h in Headers */,
-				2EC020601E8945A300E45EB2 /* OLUserSelectedAssets.h in Headers */,
 				2EB8FE441D95685100E26BDF /* OLImagePickerPhotosPageViewController+Facebook.h in Headers */,
 				2EB8FE6A1D95685100E26BDF /* OLKiteViewController.h in Headers */,
 				2EB8FE2E1D95685100E26BDF /* OLOAuth2Request.h in Headers */,
@@ -2006,6 +2005,7 @@
 				2EB0DC761DC8DB7400B556CE /* OL3DProductViewController.h in Headers */,
 				2EB8FE1B1D95685100E26BDF /* OLIndefiniteAnimatedView.h in Headers */,
 				2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */,
+				2E7FB64E1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h in Headers */,
 				2E65FEA81E4E143B00A301BB /* OLOrderHistoryViewController.h in Headers */,
 				2EB8FE131D95685100E26BDF /* OLFlipEnumerations.h in Headers */,
 				2EB8FE5C1D95685100E26BDF /* OLAddressLookupViewController.h in Headers */,
@@ -2505,7 +2505,6 @@
 				2E451E691D955B1F0080F1C1 /* qrspec.c in Sources */,
 				2E451DD91D9555540080F1C1 /* OLAddressSearchRequest.m in Sources */,
 				2E451E461D9555D30080F1C1 /* OLPackProductViewController.m in Sources */,
-				2EC020611E8945A300E45EB2 /* OLUserSelectedAssets.m in Sources */,
 				2E451DEC1D95555C0080F1C1 /* OLGreetingCardPrintJob.m in Sources */,
 				2E451DF01D95555C0080F1C1 /* OLPrintOrder.m in Sources */,
 				2E451DF11D95555C0080F1C1 /* OLPrintOrderCost.m in Sources */,
@@ -2564,6 +2563,7 @@
 				2E451E311D9555870080F1C1 /* OLInfoBanner.m in Sources */,
 				2E451DDC1D9555540080F1C1 /* OLAsset.m in Sources */,
 				2E451DD11D95554D0080F1C1 /* OLAddress+AddressBook.m in Sources */,
+				2E7FB64F1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m in Sources */,
 				2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */,
 				2E451E0F1D9555870080F1C1 /* OLFacebookSDKWrapper.m in Sources */,
 				2E451E2F1D9555870080F1C1 /* OLCircleSelectedCollectionViewCell.m in Sources */,

@@ -33,6 +33,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLImageDownloader.h"
 #import "UIImage+OLUtils.h"
+#import "OLAsset+Private.h"
 
 @interface OLImageEditViewController ()
 - (void)setupButton4;
@@ -86,7 +87,7 @@
 }
 
 - (void)onButtonDoneTapped:(id)sender{
-    if ([OLUserSession currentSession].userSelectedAssets.count != 0 && self.product.productTemplate.templateUI == OLTemplateUIApparel && !self.product.selectedOptions[@"garment_size"]) {
+    if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count != 0 && self.product.productTemplate.templateUI == OLTemplateUIApparel && !self.product.selectedOptions[@"garment_size"]) {
         [self showHintViewForView:self.editingTools.button2 header:NSLocalizedStringFromTableInBundle(@"Select Size", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Example: Shirt size") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
         return;
     }
@@ -105,7 +106,7 @@
         }
     }
     
-    OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets.lastObject copy];
+    OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.lastObject copy];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLProductPrintJob *job;

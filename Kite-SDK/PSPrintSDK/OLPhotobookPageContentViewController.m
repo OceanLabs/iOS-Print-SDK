@@ -123,7 +123,7 @@
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
     NSInteger imageIndex = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex].firstIndex;
-    OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:imageIndex];
+    OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:imageIndex];
     self.imageView.image = nil;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.imageView setAndFadeInImageWithOLAsset:asset size:self.imageView.frame.size applyEdits:YES placeholder:nil progress:^(float progress){

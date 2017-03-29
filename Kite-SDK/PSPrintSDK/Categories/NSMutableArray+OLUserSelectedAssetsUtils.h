@@ -29,22 +29,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class OLAsset;
-
-@interface OLUserSelectedAssets : NSObject <NSFastEnumeration>
-
+@interface NSMutableArray (OLUserSelectedAssetsUtils)
 - (NSArray *)nonPlaceholderAssets;
-- (NSInteger)count;
-- (NSInteger)totalCount;
-- (OLAsset *)assetAtIndex:(NSInteger)index;
-- (void)addAsset:(OLAsset *)asset;
 - (void)adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets trim:(BOOL)trim;
-- (void)clearAssets;
-- (void)discardPlaceholderAssets;
-- (void)exchangeAssetAtIndex:(NSInteger)index1 withAssetAtIndex:(NSInteger)index2;
-- (void)insertAsset:(OLAsset *)asset atIndex:(NSInteger)index;
-- (void)removeAsset:(OLAsset *)asset;
-- (void)removeAssetAtIndex:(NSInteger)index;
-- (void)replaceAsset:(OLAsset *)asset withNewAsset:(OLAsset *)newAsset;
-
 @end

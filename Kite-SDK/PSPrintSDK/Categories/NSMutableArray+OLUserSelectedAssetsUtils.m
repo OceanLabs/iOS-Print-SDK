@@ -26,37 +26,32 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
-#import <Foundation/Foundation.h>
-#import "OLPrintOrder.h"
-#import "OLAsset.h"
 
-enum {
-    OLUserSessionCleanupOptionNone             = 0,
-    OLUserSessionCleanupOptionPhotos           = 1 << 0,
-    OLUserSessionCleanupOptionBasket           = 1 << 1,
-    OLUserSessionCleanupOptionPayment          = 1 << 2,
-    OLUserSessionCleanupOptionSocial           = 1 << 3,
-    OLUserSessionCleanupOptionPersonal         = 1 << 4,
-    OLUserSessionCleanupOptionAll              = 1 << 5,
-};
-typedef NSUInteger OLUserSessionCleanupOption;
+#import "NSMutableArray+OLUserSelectedAssetsUtils.h"
+#import "OLPlaceholderAsset.h"
 
-@protocol OLKiteDelegate;
-@class OLKiteViewController;
+@implementation NSMutableArray (OLUserSelectedAssetsUtils)
 
-@interface OLUserSession : NSObject
+- (NSArray *)nonPlaceholderAssets{
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id asset in self){
+        if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
+            [assets addObject:asset];
+        }
+    }
+    
+    return assets;
+}
 
-@property (strong, nonatomic) NSMutableArray<OLAsset *> *userSelectedAssets;
-@property (strong, nonatomic) NSMutableArray<OLAsset *> *recentPhotos;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
-@property (strong, nonatomic) NSArray<OLAsset *> *appAssets;
-@property (assign, nonatomic) CGFloat screenScale;
-@property (weak, nonatomic) OLKiteViewController *kiteVc;
-+ (instancetype)currentSession;
-- (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions;
-- (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;
-- (void)resetUserSelectedPhotos;
-- (void)clearUserSelectedPhotos;
-- (void)logoutOfInstagram;
-- (void)logoutOfFacebook;
+- (void)adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets trim:(BOOL)trim{
+    if (trim){
+        for (NSUInteger i = self.count; i > totalNumberOfAssets; i--){
+            [self removeObjectAtIndex:i-1];
+        }
+    }
+    for (NSUInteger i = self.count; i < totalNumberOfAssets; i++){
+        [self addObject:[[OLPlaceholderAsset alloc] init]];
+    }
+}
+
 @end

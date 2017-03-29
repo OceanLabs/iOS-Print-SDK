@@ -109,7 +109,7 @@ CGFloat posterMargin = 2;
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (collectionView.tag == 10){
-        return [OLUserSession currentSession].userSelectedAssets.totalCount / self.product.quantityToFulfillOrder;
+        return [OLAsset userSelectedAssets].count / self.product.quantityToFulfillOrder;
     }
     else{
         return self.product.quantityToFulfillOrder;
@@ -160,7 +160,7 @@ CGFloat posterMargin = 2;
     imageView.userInteractionEnabled = YES;
     [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)]];
     
-    OLAsset *asset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
+    OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * self.product.quantityToFulfillOrder];
     
     [imageView setAndFadeInImageWithOLAsset:asset size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES placeholder:nil progress:^(float progress){
                 [imageView setProgress:progress];
@@ -229,7 +229,7 @@ CGFloat posterMargin = 2;
 }
 
 - (void)preparePhotosForCheckout{
-    NSMutableArray *reversePhotos = [[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets mutableCopy];
+    NSMutableArray *reversePhotos = [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
     [OLPosterViewController changeOrderOfPhotosInArray:reversePhotos forProduct:self.product];
     self.checkoutPhotos = reversePhotos;
 }

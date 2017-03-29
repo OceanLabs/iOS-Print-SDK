@@ -60,7 +60,6 @@
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "NSObject+Utils.h"
 #import "OLKiteViewController+Private.h"
-#import "OLUserSelectedAssets.h"
 
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;
@@ -402,7 +401,7 @@ static const CGFloat kBookEdgePadding = 38;
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController && !self.editMode){
-        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLUserSession currentSession].userSelectedAssets.count];
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLAsset userSelectedAssets].nonPlaceholderAssets.count];
     }
 #endif
 }
@@ -604,10 +603,10 @@ static const CGFloat kBookEdgePadding = 38;
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets.firstObject copy]];
+        [assets addObject:[[OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject copy]];
     }
     else{
-        for (OLAsset *photo in [OLUserSession currentSession].userSelectedAssets){
+        for (OLAsset *photo in [OLAsset userSelectedAssets]){
             [assets addObject:[photo copy]];
         }
     }
@@ -693,8 +692,8 @@ static const CGFloat kBookEdgePadding = 38;
         [self loadCoverPhoto];
     }
     else{
-        [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.editingAsset withNewAsset:asset];
-        [[OLUserSession currentSession].userSelectedAssets replaceAsset:self.editingAsset withNewAsset:asset];
+        NSInteger index = [[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:self.editingAsset];
+        [[OLAsset userSelectedAssets] replaceObjectAtIndex:index withObject:asset];
         
          [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
     }
@@ -773,8 +772,8 @@ static const CGFloat kBookEdgePadding = 38;
     OLUpsellOffer *offer = [self upsellOfferToShow];
     BOOL shouldShowOffer = offer != nil;
     if (offer){
-        shouldShowOffer &= offer.minUnits <= [OLUserSession currentSession].userSelectedAssets.count;
-        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= [OLUserSession currentSession].userSelectedAssets.count;
+        shouldShowOffer &= offer.minUnits <= [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
+        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
         shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
     }
     if (shouldShowOffer){
@@ -789,7 +788,7 @@ static const CGFloat kBookEdgePadding = 38;
         return NO;
     }
     
-    NSUInteger assetCount = [OLUserSession currentSession].userSelectedAssets.count;
+    NSUInteger assetCount = [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
     
     if (assetCount == 0){
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please add some photos to your photo book", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
@@ -814,7 +813,7 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
-    NSMutableArray *photoAssets = [[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets mutableCopy];
+    NSMutableArray *photoAssets = [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
     
     // ensure order is maxed out by adding duplicates as necessary
     NSUInteger userSelectedAssetCount = photoAssets.count;
@@ -938,7 +937,7 @@ static const CGFloat kBookEdgePadding = 38;
         
         return;
     }
-    else if ([[[OLUserSession currentSession].userSelectedAssets assetAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
+    else if ([[[OLAsset userSelectedAssets] objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
         self.addNewPhotosAtIndex = index;
         [self addMorePhotosFromView:sender.view];
     }
@@ -947,7 +946,7 @@ static const CGFloat kBookEdgePadding = 38;
             return;
         }
         UIImageView *imageView = [page imageView];
-        self.editingAsset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:index];
+        self.editingAsset = [[OLAsset userSelectedAssets] objectAtIndex:index];
         [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
             cropVc.delegate = self;
@@ -1477,9 +1476,9 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)addMorePhotosFromView:(UIView *)view{
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
 //    if ([self.photobookPhotos indexOfObject:self.coverPhoto] == NSNotFound){
-//        [[OLUserSession currentSession].userSelectedAssets removeAsset:self.coverPhoto];
+//        [[OLAsset userSelectedAssets] removeAsset:self.coverPhoto];
 //    }
-    vc.selectedAssets = [[[OLUserSession currentSession].userSelectedAssets nonPlaceholderAssets] mutableCopy];
+    vc.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];
     vc.delegate = self;
     vc.maximumPhotos = self.product.quantityToFulfillOrder;
     
@@ -1491,7 +1490,7 @@ static const CGFloat kBookEdgePadding = 38;
         UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
         [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
-        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[[OLUserSession currentSession].userSelectedAssets nonPlaceholderAssets] mutableCopy]];
+        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy]];
         if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
             vc.maximumPhotos = self.product.quantityToFulfillOrder;
         }

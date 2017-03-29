@@ -106,7 +106,7 @@
 
 - (NSMutableArray<OLAsset *> *)selectedAssets{
     if (!_selectedAssets){
-        return [[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets mutableCopy];
+        return [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
     }
     
     return _selectedAssets;
@@ -402,7 +402,7 @@
             
             //When editing a job from basket, add the assets
             if ([self isExclusiveCustomViewControllerProvider] && [self overrideImagePickerMode]){
-                [customProvider.collections.firstObject addAssets:[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets unique:YES];
+                [customProvider.collections.firstObject addAssets:[OLAsset userSelectedAssets].nonPlaceholderAssets unique:YES];
             }
         }
         else{
@@ -850,7 +850,7 @@
 
 - (IBAction)onButtonNextClicked:(UIButton *)sender {
     if ([self shouldGoToOrderPreview]) {
-        [self updateRecentsWith:[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets];
+        [self updateRecentsWith:[OLAsset userSelectedAssets].nonPlaceholderAssets];
         
         OLUpsellOffer *offer = [self upsellOfferToShow];
         BOOL shouldShowOffer = offer != nil;
@@ -874,7 +874,7 @@
             [self presentViewController:c animated:NO completion:NULL];
         }
         else{
-            for (OLAsset *asset in [OLUserSession currentSession].userSelectedAssets){
+            for (OLAsset *asset in [OLAsset userSelectedAssets]){
                 if ([asset isEdited]){
                     [asset unloadImage];
                 }

@@ -568,7 +568,7 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)didReceiveMemoryWarning{
-    for (OLAsset *asset in [OLUserSession currentSession].userSelectedAssets){
+    for (OLAsset *asset in [OLAsset userSelectedAssets]){
         [asset unloadImage];
     }
 }

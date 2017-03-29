@@ -407,9 +407,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 
 - (void)dismiss{
     if (self.currentUserSelectedPhotos){
-        [[OLUserSession currentSession].userSelectedAssets clearAssets];
+        [[OLAsset userSelectedAssets] removeAllObjects];
         for (OLAsset *asset in self.currentUserSelectedPhotos){
-            [[OLUserSession currentSession].userSelectedAssets addAsset:asset];
+            [[OLAsset userSelectedAssets] addObject:asset];
         }
     }
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
@@ -1688,7 +1688,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
     
     for (OLAsset *asset in userSelectedPhotos){
-        [[OLUserSession currentSession].userSelectedAssets addAsset:asset];
+        [[OLAsset userSelectedAssets] addObject:asset];
     }
     
     if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != OLTemplateUIMug && product.productTemplate.templateUI != OLTemplateUICase && product.productTemplate.templateUI != OLTemplateUIApparel && product.productTemplate.templateUI != OLTemplateUIPhotobook && product.productTemplate.templateUI != OLTemplateUIPostcard && !(product.productTemplate.templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){

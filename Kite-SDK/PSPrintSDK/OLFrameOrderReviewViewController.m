@@ -81,7 +81,7 @@ CGFloat innerMargin = 3;
         innerMargin = 2;
     }
     
-    [[OLUserSession currentSession].userSelectedAssets adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder trim:self.product.productTemplate.templateUI == OLTemplateUICalendar];
+    [[OLAsset userSelectedAssets] adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder trim:self.product.productTemplate.templateUI == OLTemplateUICalendar];
     
     self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering");
 }
@@ -129,7 +129,7 @@ CGFloat innerMargin = 3;
         return;
     }
     
-    self.editingAsset = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:(outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section] + indexPath.row];
+    self.editingAsset = [[OLAsset userSelectedAssets] objectAtIndex:(outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section] + indexPath.row];
     
     if ([OLUserSession currentSession].kiteVc.disableEditingTools || [self.editingAsset isKindOfClass:[OLPlaceholderAsset class]]){
         [self replacePhoto:nil];
@@ -191,10 +191,10 @@ CGFloat innerMargin = 3;
 
 - (void)preparePhotosForCheckout{
     if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
-        self.checkoutPhotos = [[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets mutableCopy];
+        self.checkoutPhotos = [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
         return;
     }
-    NSMutableArray *reversePhotos = [[OLUserSession currentSession].userSelectedAssets.nonPlaceholderAssets mutableCopy];
+    NSMutableArray *reversePhotos = [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
     [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:reversePhotos forProduct:self.product];
     self.checkoutPhotos = reversePhotos;
 }
@@ -205,14 +205,14 @@ CGFloat innerMargin = 3;
 
 -(BOOL) shouldGoToCheckout{
     NSInteger nullCount = 0;
-    for (OLAsset *asset in [OLUserSession currentSession].userSelectedAssets){
+    for (OLAsset *asset in [OLAsset userSelectedAssets]){
         if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
             nullCount++;
         }
     }
     
     if (nullCount > 0){
-        NSInteger selected = [OLUserSession currentSession].userSelectedAssets.count;
+        NSInteger selected = [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
         NSString *title = selected == 1 ? [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photo.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), selected] : [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), selected];
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please add %d more.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Please add [a number] more [photos]"), nullCount] preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleCancel handler:NULL]];
@@ -239,7 +239,7 @@ CGFloat innerMargin = 3;
 
 - (NSInteger)numberOfFrames{
     if (self.product.productTemplate.templateUI == OLTemplateUIFrame){
-        return [OLUserSession currentSession].userSelectedAssets.totalCount / self.product.quantityToFulfillOrder;
+        return [OLAsset userSelectedAssets].count / self.product.quantityToFulfillOrder;
     }
     else{
         NSInteger numberOfPhotosPerFrame = self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY;
@@ -360,7 +360,7 @@ CGFloat innerMargin = 3;
         
         NSInteger numberOfPhotosPerFrame = self.product.productTemplate.templateUI == OLTemplateUIFrame ? self.product.quantityToFulfillOrder : (self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY != 0 ? self.product.productTemplate.gridCountX * self.product.productTemplate.gridCountY : 4);
         
-        OLAsset *asset =(OLAsset*)[[OLUserSession currentSession].userSelectedAssets assetAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * numberOfPhotosPerFrame];
+        OLAsset *asset =(OLAsset*)[[OLAsset userSelectedAssets] objectAtIndex:indexPath.row + (outerCollectionViewIndexPath.item) * numberOfPhotosPerFrame];
         [cellImage setAndFadeInImageWithOLAsset:asset size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES placeholder:nil progress:^(float progress){
                         [cellImage setProgress:progress];
         } completionHandler:NULL];
@@ -444,9 +444,9 @@ CGFloat innerMargin = 3;
     NSInteger trueFromIndex = fromIndexPath.item + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:fromIndexPath.section];
     NSInteger trueToIndex = toIndexPath.item + (outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:toIndexPath.section];
     
-    id object = [[OLUserSession currentSession].userSelectedAssets assetAtIndex:trueFromIndex];
-    [[OLUserSession currentSession].userSelectedAssets removeAssetAtIndex:trueFromIndex];
-    [[OLUserSession currentSession].userSelectedAssets insertAsset:object atIndex:trueToIndex];
+    id object = [[OLAsset userSelectedAssets] objectAtIndex:trueFromIndex];
+    [[OLAsset userSelectedAssets] removeObjectAtIndex:trueFromIndex];
+    [[OLAsset userSelectedAssets] insertObject:object atIndex:trueToIndex];
 }
 
 - (void) collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -463,7 +463,7 @@ CGFloat innerMargin = 3;
     NSInteger frameQty = [self numberOfPhotosPerFrame];
     //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
     for (NSInteger i = 0; i < self.product.quantityToFulfillOrder; i++){
-        if ([[OLUserSession currentSession].userSelectedAssets assetAtIndex:i] == self.editingAsset){
+        if ([[OLAsset userSelectedAssets] objectAtIndex:i] == self.editingAsset){
             NSInteger outerIndex = i / frameQty;
             
             if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
@@ -504,7 +504,7 @@ CGFloat innerMargin = 3;
         NSInteger frameQty = [self numberOfPhotosPerFrame];
         //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
         for (NSInteger i = 0; i < self.product.quantityToFulfillOrder; i++){
-            if ([[OLUserSession currentSession].userSelectedAssets assetAtIndex:i] == self.editingAsset){
+            if ([[OLAsset userSelectedAssets] objectAtIndex:i] == self.editingAsset){
                 NSInteger outerIndex = i / frameQty;
                 
                 if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
