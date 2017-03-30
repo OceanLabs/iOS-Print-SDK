@@ -726,6 +726,14 @@
 }
 
 - (void)onButtonProductFlipClicked:(UIButton *)sender {
+    self.productFlipButton.enabled = NO;
+    UIActivityIndicatorView *aiv = [[UIActivityIndicatorView alloc] init];
+    [self.view addSubview:aiv];
+    aiv.translatesAutoresizingMaskIntoConstraints = NO;
+    [aiv.superview addConstraint:[NSLayoutConstraint constraintWithItem:aiv attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:aiv.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [aiv.superview addConstraint:[NSLayoutConstraint constraintWithItem:aiv attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:aiv.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    [aiv startAnimating];
+    
     [self saveEditsToAsset:self.asset];
     
     self.showingBack = !self.showingBack;
@@ -744,6 +752,7 @@
     NSBlockOperation *backgroundImageDownloadCompleteBlock = [NSBlockOperation blockOperationWithBlock:^{}];
     NSBlockOperation *highlightsImageDownloadCompleteBlock = [NSBlockOperation blockOperationWithBlock:^{}];
     NSBlockOperation *flipBlock = [NSBlockOperation blockOperationWithBlock:^{
+        [aiv removeFromSuperview];
         [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
             [self disableOverlay];
             
@@ -771,6 +780,7 @@
         }completion:^(BOOL finished){
             [self renderImage];
             [self showExtraChargeHint];
+            self.productFlipButton.enabled = YES;
         }];
     }];
     [flipBlock addDependency:backgroundImageDownloadCompleteBlock];
