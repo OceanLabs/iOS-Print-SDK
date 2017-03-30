@@ -569,39 +569,39 @@
 - (void)applyProductImageLayers{
     if (!self.deviceView.image){
         self.deviceView.alpha = 0;
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-                [UIView animateWithDuration:0.1 animations:^{
-                    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
-                        for (OLProductTemplateOption *option in self.product.productTemplate.options){
-                            if ([option.code isEqualToString:@"garment_color"]){
-                                for (OLProductTemplateOptionChoice *choice in option.choices){
-                                    if ([choice.code isEqualToString:self.product.selectedOptions[option.code]]){
-                                        [self updateProductRepresentationForChoice:choice];
-                                    }
+    }
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            [UIView animateWithDuration:0.1 animations:^{
+                if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+                    for (OLProductTemplateOption *option in self.product.productTemplate.options){
+                        if ([option.code isEqualToString:@"garment_color"]){
+                            for (OLProductTemplateOptionChoice *choice in option.choices){
+                                if ([choice.code isEqualToString:self.product.selectedOptions[option.code]]){
+                                    [self updateProductRepresentationForChoice:choice];
                                 }
                             }
                         }
                     }
-                    self.deviceView.alpha = 1;
-                } completion:^(BOOL finished){
-                    [self renderImage];
-                }];
-            });
-        }];
-    }
+                }
+                self.deviceView.alpha = 1;
+            } completion:^(BOOL finished){
+                [self renderImage];
+            }];
+        });
+    }];
     if (!self.highlightsView.image){
         self.highlightsView.alpha = 0;
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-                [UIView animateWithDuration:0.1 animations:^{
-                    self.highlightsView.alpha = 1;
-                }];
-            });
-        }];
     }
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productHighlightsURL] priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            [UIView animateWithDuration:0.1 animations:^{
+                self.highlightsView.alpha = 1;
+            }];
+        });
+    }];
 }
 
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
@@ -725,13 +725,7 @@
     }
 }
 
-- (IBAction)onButtonProductFlipClicked:(UIButton *)sender {
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        self.hintView.alpha = 0;
-    } completion:NULL];
-    
-    [self disableOverlay];
-    
+- (void)onButtonProductFlipClicked:(UIButton *)sender {
     [self saveEditsToAsset:self.asset];
     
     self.showingBack = !self.showingBack;
@@ -743,17 +737,60 @@
         self.asset = [OLUserSession currentSession].userSelectedPhotos.lastObject;
     }
     
-    self.cropView.imageView.image = nil;
-    self.edits = nil;
-    self.fullImage = nil;
     
-    [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
-        [self setupProductRepresentation];
-        [self loadImageFromAsset];
-    }completion:^(BOOL finished){
-        [self renderImage];
-        [self showExtraChargeHint];
+    __block UIImage *backgroundImage;
+    __block UIImage *highlightsImage;
+    
+    NSBlockOperation *backgroundImageDownloadCompleteBlock = [NSBlockOperation blockOperationWithBlock:^{}];
+    NSBlockOperation *highlightsImageDownloadCompleteBlock = [NSBlockOperation blockOperationWithBlock:^{}];
+    NSBlockOperation *flipBlock = [NSBlockOperation blockOperationWithBlock:^{
+        [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+            [self disableOverlay];
+            
+            self.cropView.imageView.image = nil;
+            self.edits = nil;
+            self.fullImage = nil;
+            
+            self.renderedImageView.image = nil;
+            [self loadImageFromAsset];
+            
+            if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+                for (OLProductTemplateOption *option in self.product.productTemplate.options){
+                    if ([option.code isEqualToString:@"garment_color"]){
+                        for (OLProductTemplateOptionChoice *choice in option.choices){
+                            if ([choice.code isEqualToString:self.product.selectedOptions[option.code]]){
+                                self.deviceView.tintColor = choice.color;
+                            }
+                        }
+                    }
+                }
+            }
+            self.deviceView.image = backgroundImage;
+            self.highlightsView.image = highlightsImage;
+            
+        }completion:^(BOOL finished){
+            [self renderImage];
+            [self showExtraChargeHint];
+        }];
     }];
+    [flipBlock addDependency:backgroundImageDownloadCompleteBlock];
+    [flipBlock addDependency:highlightsImageDownloadCompleteBlock];
+    
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+        backgroundImage = [[image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [[NSOperationQueue mainQueue] addOperation:backgroundImageDownloadCompleteBlock];
+    }];
+    
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productHighlightsURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+            highlightsImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+        [[NSOperationQueue mainQueue] addOperation:highlightsImageDownloadCompleteBlock];
+    }];
+    
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.hintView.alpha = 0;
+    } completion:NULL];
+    
+    [[NSOperationQueue mainQueue] addOperation:flipBlock];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackEditScreenButtonTapped:@"Product Flip"];
