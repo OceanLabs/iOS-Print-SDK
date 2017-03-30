@@ -1587,9 +1587,6 @@ const NSInteger kOLEditTagCrop = 40;
         if (collectionView.tag == kOLEditTagTextColors){
             [cell setSelected:[self.activeTextField.textColor isEqual:color]];
         }
-        else if(collectionView.tag == OLProductTemplateOptionTypeColor1 && !self.selectedOption.choices[indexPath.item].productBackground){
-            [cell setSelected:[self.edits.borderColor isEqual:color]];
-        }
         else{
             [cell setSelected:self.selectedOption.choices[indexPath.item] == self.selectedChoice];
         }
