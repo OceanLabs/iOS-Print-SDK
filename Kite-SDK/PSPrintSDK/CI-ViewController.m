@@ -49,6 +49,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLKiteTestHelper.h"
 #import "OLKiteUtils.h"
 #import "JDStatusBarNotification/JDStatusBarNotification.h"
+#import "AppDelegate.h"
 
 @import Photos;
 
@@ -67,6 +68,14 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 -(void)viewDidAppear:(BOOL)animated{
     self.printOrder = [[OLPrintOrder alloc] init];
+    
+    if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties]){
+        [self showKiteVcForAPIKey:nil assets:nil];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [(AppDelegate *)[UIApplication sharedApplication].delegate setSetupProperties:nil];
 }
 
 - (void)viewDidLoad {
@@ -344,6 +353,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
+    if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"]){
+        s = [(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"];
+    }
     [OLKitePrintSDK setAPIKey:s withEnvironment:[self environment]];
     
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
@@ -355,7 +367,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     vc.delegate = self;
     vc.qrCodeUploadEnabled = YES;
     
-//    vc.filterProducts = @[@"squares"];
+    if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]){
+        vc.filterProducts = @[[(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]];
+    }
     
     [self addCatsAndDogsImagePickersToKite:vc];
     
