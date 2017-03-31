@@ -98,12 +98,6 @@
 - (void)resetUserSelectedPhotos{
     [self clearUserSelectedPhotos];
     [self.userSelectedPhotos addObjectsFromArray:self.appAssets];
-    
-//    for (OLCustomViewControllerPhotoProvider *provider in self.kiteVc.customImageProviders){
-//        if ([provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
-//            [provider.collections.firstObject addAssets:provider.preselectedAssets unique:NO];
-//        }
-//    }
 }
 
 - (void)clearUserSelectedPhotos{
@@ -212,6 +206,17 @@
             self.screenScale = scale;
         }
     }
+}
+
+- (BOOL)shouldLoadTemplatesProgressively{
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        return NO;
+    }
+    if (self.kiteVc.filterProducts.count > 0){
+        return NO;
+    }
+    
+    return YES;
 }
 
 @end
