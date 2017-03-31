@@ -2193,7 +2193,7 @@
 					};
 					2E898C4C1CC518180041CCD8 = {
 						DevelopmentTeam = L78L4U72YJ;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
 								enabled = 0;
@@ -2813,7 +2813,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KiteSDK-Demo.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = L78L4U72YJ;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2892,8 +2892,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a5cf22df-d6a2-45d4-b858-0ed1fdbcf3c5";
-				PROVISIONING_PROFILE_SPECIFIER = "Kite SDK Dev";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2907,8 +2907,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "KiteSDK-Demo.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				DEVELOPMENT_TEAM = L78L4U72YJ;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2987,8 +2987,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1fe5113b-76f9-4725-a636-31bd0b27fb3c";
-				PROVISIONING_PROFILE_SPECIFIER = "Kite SDK CI";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

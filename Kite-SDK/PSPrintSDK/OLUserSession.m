@@ -94,9 +94,7 @@
 
 - (void)resetUserSelectedPhotos{
     [self clearUserSelectedPhotos];
-    for (OLAsset *asset in self.appAssets){
-        [self.userSelectedAssets addObject:asset];
-    }
+    [self.userSelectedPhotos addObjectsFromArray:self.appAssets];
 }
 
 - (void)clearUserSelectedPhotos{
@@ -188,6 +186,8 @@
 }
 
 - (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection{
+    //TODO: Just check for the specific model and get rid of this image loading business
+    
     //Should be [UIScreen mainScreen].scale but the 6 Plus with its 1GB RAM chokes on 3x images.
     CGFloat scale = [UIScreen mainScreen].scale;
     if (scale == 2.0 || scale == 1.0){
@@ -205,6 +205,17 @@
             self.screenScale = scale;
         }
     }
+}
+
+- (BOOL)shouldLoadTemplatesProgressively{
+    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+        return NO;
+    }
+    if (self.kiteVc.filterProducts.count > 0){
+        return NO;
+    }
+    
+    return YES;
 }
 
 @end

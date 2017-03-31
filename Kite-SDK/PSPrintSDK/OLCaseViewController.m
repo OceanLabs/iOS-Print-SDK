@@ -657,12 +657,14 @@
     }
 }
 
-- (IBAction)onButtonProductFlipClicked:(UIButton *)sender {
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        self.hintView.alpha = 0;
-    } completion:NULL];
-    
-    [self disableOverlay];
+- (void)onButtonProductFlipClicked:(UIButton *)sender {
+    self.productFlipButton.enabled = NO;
+    UIActivityIndicatorView *aiv = [[UIActivityIndicatorView alloc] init];
+    [self.view addSubview:aiv];
+    aiv.translatesAutoresizingMaskIntoConstraints = NO;
+    [aiv.superview addConstraint:[NSLayoutConstraint constraintWithItem:aiv attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:aiv.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [aiv.superview addConstraint:[NSLayoutConstraint constraintWithItem:aiv attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:aiv.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    [aiv startAnimating];
     
     [self saveEditsToAsset:self.asset];
     
@@ -675,17 +677,64 @@
         self.asset = [OLAsset userSelectedAssets].nonPlaceholderAssets.lastObject;
     }
     
-    self.cropView.imageView.image = nil;
-    self.edits = nil;
-    self.fullImage = nil;
     
-    [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
-        [self setupProductRepresentation];
-        [self loadImageFromAsset];
-    }completion:^(BOOL finished){
-        [self renderImage];
-        [self showExtraChargeHint];
+    __block UIImage *backgroundImage;
+    __block UIImage *highlightsImage;
+    
+    NSBlockOperation *backgroundImageDownloadCompleteBlock = [NSBlockOperation blockOperationWithBlock:^{}];
+    NSBlockOperation *highlightsImageDownloadCompleteBlock = [NSBlockOperation blockOperationWithBlock:^{}];
+    NSBlockOperation *flipBlock = [NSBlockOperation blockOperationWithBlock:^{
+        [aiv removeFromSuperview];
+        [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+            [self disableOverlay];
+            
+            self.cropView.imageView.image = nil;
+            self.edits = nil;
+            self.fullImage = nil;
+            
+            self.renderedImageView.image = nil;
+            [self loadImageFromAsset];
+            
+            self.deviceView.image = backgroundImage;
+            self.highlightsView.image = highlightsImage;
+            if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+                for (OLProductTemplateOption *option in self.product.productTemplate.options){
+                    if ([option.code isEqualToString:@"garment_color"]){
+                        for (OLProductTemplateOptionChoice *choice in option.choices){
+                            if ([choice.code isEqualToString:self.product.selectedOptions[option.code]]){
+                                self.deviceView.tintColor = choice.color;
+                                self.deviceView.image = [backgroundImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                            }
+                        }
+                    }
+                }
+            }
+            
+            
+        }completion:^(BOOL finished){
+            [self renderImage];
+            [self showExtraChargeHint];
+            self.productFlipButton.enabled = YES;
+        }];
     }];
+    [flipBlock addDependency:backgroundImageDownloadCompleteBlock];
+    [flipBlock addDependency:highlightsImageDownloadCompleteBlock];
+    
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+        backgroundImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+        [[NSOperationQueue mainQueue] addOperation:backgroundImageDownloadCompleteBlock];
+    }];
+    
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productHighlightsURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+            highlightsImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+        [[NSOperationQueue mainQueue] addOperation:highlightsImageDownloadCompleteBlock];
+    }];
+    
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.hintView.alpha = 0;
+    } completion:NULL];
+    
+    [[NSOperationQueue mainQueue] addOperation:flipBlock];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackEditScreenButtonTapped:@"Product Flip"];

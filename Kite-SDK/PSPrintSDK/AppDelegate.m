@@ -30,11 +30,18 @@
 #import "AppDelegate.h"
 #import "OLKitePrintSDK.h"
 
+#ifdef OL_KITE_CI_DEPLOY
+#import "CI-ViewController.h"
+#endif
+
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    if (launchOptions[UIApplicationLaunchOptionsURLKey]){
+        [self application:application openURL:launchOptions[UIApplicationLaunchOptionsURLKey] sourceApplication:launchOptions[UIApplicationLaunchOptionsSourceApplicationKey] annotation:launchOptions];
+    }
     
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                     didFinishLaunchingWithOptions:launchOptions];
@@ -76,6 +83,20 @@
                                                                      openURL:url
                                                            sourceApplication:sourceApplication
                                                                   annotation:annotation];
+#ifdef OL_KITE_CI_DEPLOY
+    NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+    if ([components.host isEqualToString:@"setup"]){
+        self.setupProperties = [[NSMutableDictionary alloc] init];
+        for (NSURLQueryItem *item in components.queryItems){
+            self.setupProperties[item.name] = item.value;
+        }
+        
+        CIViewController *vc = (CIViewController *)[(UINavigationController *)self.window.rootViewController topViewController];
+        [vc dismissViewControllerAnimated:NO completion:NULL];
+        [vc showKiteVcForAPIKey:nil assets:nil];
+        
+    }
+#endif
     return wasHandled;
 }
 

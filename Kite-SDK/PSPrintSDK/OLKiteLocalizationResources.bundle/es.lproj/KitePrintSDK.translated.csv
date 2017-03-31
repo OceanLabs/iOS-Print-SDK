@@ -1,221 +1,231 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
-%ldx%ld Collage,%ldx%ld Collage
-"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!","**Garantía de calidad**\nNuestros productos son de la más alta calidad y estamos seguros de que usted amará el suyo. Si no, ofrecemos una garantía de devolución de dinero. ¡Disfruta!"
-401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,401 Error de solicitud no autorizada al intentar cargar un recurso. Compruebe que incluyó un encabezado de autorización y que las credenciales de autenticación suministradas son correctas.
-500 Internal Server Error whilst trying to upload an asset. Please try again.,500 Error interno del servidor al intentar cargar un activo. Vuelve a intentarlo.
-Add %ld %@!,¡Añadir %ld %@!
-Add Address,Añadir une dirección
-Add Credit Card (TEST),Añadir tarjeta de crédito (TEST)
-Add Credit Card,Añadir tarjeta de crédito
-Add Credit/Debit Card,Añadir tarjeta de crédito/débito
-Add New Address,Añadir una nueva dirección
-Add Payment Method,Agregar método de pago
-Add Text,Añadir texto
-Add a %@!,Añadir una %@!
-Add another %@!,Añadir otra %@!
-Add more,Añadir más
-Add to Basket,Añadir al carrito
-Add,Añadir
-Address Book,Directorio
-Address Search,Búsqueda de direcciones
-All Photos,Todas las fotos
-Alternatively type the following URL into your mobile browser's address bar,"Alternativamente, escriba la siguiente URL en la barra de direcciones del navegador de su móvil"
-Are you sure you want to delete this item?,¿Está seguro de que desea eliminar este elemento?
-"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos","¿Estás seguro de que quiere continuar? Si lo hace, las páginas en blanco se rellenarán con fotos duplicadas"
-Are you sure?,¿Está seguro?
-Authorise,Autorizar
-BACK,ESPALDA
-Back,Espalda
-Basket is empty,La cesta está vacía
-CVV,CVV
-Cancel,Cancelar
-Card Number,Número de tarjeta
-Checking Code,Código de verificación
-Checkout for Free!,Comprar sin coste!
-Checkout,Checkout
-Choose Address,Elegir dirección
-Choose Country,Elegir País
-Choose Delivery Address,Elegir dirección de entrega
-Choose Photo,Escoge una foto
-Choose Photos,Escoge fotos
-City,Ciudad
-Clearing Code,Código de compensación
-Continue Shopping,Seguir comprando
-Country,País
-County,País
-Create Image,Crear Image
-Create a %@ for\nonly %@ %@,Crear un %@\nsolo %@ %@
-Create a pack for\nonly %@ %@,Crear un paquete\nsolo %@ %@
-Create another %@ for\nonly %@ %@,Crear una otra %@\nsolo %@ %@
-Create another pack for\nonly %@ %@,Crear un paquete\nsolo %@ %@
-Crop,Recortar
-Default,Defecto
-Delete Item,Borrar elemento
-Delivery Address,Dirección de entrega
-Delivery Details,Detalles de la entrega
-Description,Descripción
-Details,Detalles
-Do you want to log out of %@?,Do you want to log out of %@?
-Do you want to remove this photo?,¿Desea borrar esta foto?
-Done,Està hecho
-Edit Address,Editar dirección
-Edit Poster,Editar el póster
-Edit,Editar
-Email,Correo electrónico
-Enter Address Manually,Ingrese la dirección manualmente
-Enter a valid CVV number,Ingrese un número válido de CVV
-Enter a valid card number,Ingresa un número de tarjeta válido
-Enter a valid expiry date,Ingrese una fecha de caducidad válida
-Error validating the order. Please try again later.,"Error al validar el pedido. Por favor, inténtelo de nuevo más tarde."
-FREE,GRATIS
-FRONT,FRENTE
-Failed to download phone case mask. Please check your internet connectivity and try again,No se pudo descargar la máscara de la funda para móviles. Comprueba su conexión a Internet y vuelve a intentarlo
-Failed to get the price of the order. Please try again.,"No se pudo obtener el precio de la orden. Por favor, inténtelo de nuevo más tarde."
-Failed to get upload URL. Try again later.,"Error al obtener la URL de subida. Por favor, inténtelo de nuevo más tarde."
-Failed to log in to Instagram. Please check your internet connectivity and try again,No se pudo iniciar sesión en Instagram. Comprueba su conexión a Internet y vuelve a intentarlo
-Failed to store card details with PayPal. Please try again.,"Error al guardar los datos de la tarjeta con PayPal. Por favor, inténtelo de nuevo más tarde."
-Failed to synchronize product templates. Please try again.,"Error al sincronizar las plantillas de producto. Por favor, inténtelo de nuevo más tarde."
-"Failed to validate card details, please try again.","Error al validar los detalles de la tarjeta, por favor, inténtelo de nuevo más tarde."
-Failed to validate the order. Please try again.,"Error al validar el pedido. Por favor, inténtelo de nuevo más tarde."
-Filters,Filtros
-First Name,Nombre
-Flip,Girar
-Fonts,Fuentes
-Great gifts for all the family,Grandes regalos para toda la familia
-IMAGE TOOLS,HERRAMIENTAS DE IMAGEN
-Image Is Too Small,La imagen es demasiado pequeña
-Image upload failed with a %lu HTTP response status code. Please try again.,"Error de carga de la imagen con un código de estado de respuesta %lu HTTP. Por favor, inténtelo de nuevo más tarde."
-Invalid Email Address,Email inválido
-Invalid Phone Number,Numero de telefono inválido
-Large,Grande
-Last Name,Apellido
-Let's pick\nan image!,Escoge una\n imagen!
-Line 1,Línea 1
-Line 2,Línea 2
-Log In,Iniciar sesión
-Log out,Desconectarse
-Login,Iniciar sesión
-MM/YY,MM/AA
-Maximum Photos Reached,Máximo de fotos alcanzado
-Medium,Medio
-Missing Delivery Address,Falta dirección de entrega
-Move Pages,Mover páginas
-New Payment,Nuevo Pago
-Next,Siguiente
-No Thanks,No gracias
-No photos,Sin fotos
-No,No
-"No, keep it","No, manténgalo"
-"No, not yet","No, ahora no"
-Not now,Ahora no
-OK,Aceptar
-Only registered %d/%d image URLs with the asset endpoint,Solo se registran las URL de imagen %d/%d con el punto final del recurso
-Oops!,Oops!
-Or print on a product below ▼,O imprimir sobre un producto debajo de ▼
-Order Id,Número de identificación del pedido
-Order Summary,Resumen del pedido
-Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.,Nuestra tienda está actualmente en proceso de mantenimiento pues no hay productos disponibles para la compra en este momento. Vuelve a intentarlo un poco más tarde.
-PRINT AT HOME,IMPRIMIR EN SU CASA
-PRODUCT OPTIONS,OPCIONES DEL PRODUCTO
-Pack of,Paquete de
-Pay %@,Pagar %@
-Pay with Credit Card (TEST),Pagar con tarjeta de crédito (TEST)
-Pay with Credit Card,Pagar con tarjeta de crédito
-Pay with card ending %@,Pagar con la tarjeta que termina en %@
-Pay with new card,Pagar con tarjeta nueva
-Pay,Pagar
-Paying With,Pagando con
-Payment (TEST),Pago (TEST)
-Payment Method,Método de pago
-Payment,Pago
-Phone,Teléfono
-Please add %d more.,"Por favor, Agregue %d más."
-Please add at least one photo,"Por favor, añada al menos una foto"
-Please add some photos to your photo book,"Por favor, añade algunas fotos a su libro de fotos"
-Please choose an address to have your order shipped to,"Por favor, elija una dirección para que su pedido sea enviado a"
-Please enter a card expiry date in the future,"Por favor, ingrese una fecha de caducidad de la tarjeta en el futuro"
-Please enter a valid card number,"Por favor, ingrese un número de tarjeta válido"
-Please enter a valid email address,"Por favor, ingrese una correo electrónico válido"
-Please enter a valid phone number,"Por favor, ingrese un número de teléfono válido"
-Please enter your first and last name.,Por favor introduce su nombre y apellido.
-Please fill in Line 1 of the address.,Por favor llene la línea 1 de dirección.
-Please fill in your postal code.,"Por favor, ingrese su código postal."
-Please scan the QR code using a QR reader app on your device.,"Por favor, escanee el código QR usando una aplicación de lector QR en su movíl."
-Please select %d images.,Por favor seleccione %d imágenes.
-Please select %ld photos,Por favor seleccione %ld imágenes.
-Please select at least %d images.,"Por favor, seleccione al menos %d imágenes."
-Please select no more than %d images.,"Por favor, no selecciones más de% d imágenes."
-Please select only %ld photo,"Por favor, seleccione sólo %ld photo"
-Please select some images.,"Por favor, selecciona algunas imágenes."
-Please select up to %ld photos,"Por favor, selecciona hasta %ld fotos"
-Please zoom out or pick a higher quality image,Por favor amplía la imagen o elige una imagen de mejor calidad
-Postcode,Código postal
-Powered by Kite.ly,Desarrollado por Kite.ly
-Price,Precio
-Print It Anyway,Imprimir todos modos
-Print Shop,Imprenta
-Print order submission failed with a %lu HTTP response status code. Please try again.,Error en la presentación de la orden de impresión con un código de estado de respuesta %lu HTTP. Vuelve a intentarlo.
-Print these,Imprima estos
-Processing,Tratamiento
-Promo Code,Código promocional
-Promotional Discount,Descuento promocional
-Quantity,Cantidad
-Recents,Recientes
-Remove,Retirar
-Remove?,¿Retirar?
-Required by the postal service in case there are any issues during delivery.,Requerido por el servicio postal en caso de que haya problemas durante la entrega.
-Retry,Inténtarlo de nuevo
-Review,Revisar
-Rotate,Girar
-Save,Guardar
-Scan QR Code,Escanear el código QR
-"Search by postcode, street or address","Buscar por código postal, calle o dirección"
-"Search by street, address or ZIP code","Buscar por calle, dirección o código postal"
-Search for Address,Buscar dirección
-Select Size,Selecciona el tamaño
-Shipping,Envío
-Single Photo Poster,Poster con una sola foto
-Size,Tamaño
-Small,Pequeña
-Start Creating,Comenzar a crear
-Start by tapping this button,Comienza tocando este botón
-State,Estado
-Store Maintenance,Mantenimiento de tienda
-Swipe to rotate your mug,Deslizar para girar tu taza
-TEXT TOOLS,HERRAMIENTAS DE TEXTO
-Tap Image to Change,Toca la imagen para cambiar
-Tap Image to Edit or Hold to Rearrange,Toca Imagen para editar o Mantén presionada para reorganizar
-Tap Image to Edit,Toca la imagen para editar
-Tap on this button,Aprieta este botón
-Tap to edit,Tap to edit
-Tap to swap pages. Hold for more options.,Toca para intercambiar páginas. Mantén para obtener más opciones.
-Text Colour,Color del texto
-There was a problem getting Print Shop products. Check your Internet connectivity or try again later.,Se ha producido un problema al obtener los productos de la Imprenta. Compruebe su conexión a Internet o vuelva a intentarlo más tarde.
-There was an error getting one of your photos. Please remove or replace it.,Se ha producido un error al obtener una de sus fotos. Borra o reemplácelo.
-There was an error trying to validate the card. Please try again later.,"Se ha producido un error al intentar validar la tarjeta. Por favor, inténtelo de nuevo más tarde."
-This is the 3-4 digit verification number/security code normally found on the back of your card,Este es el número de verificación de 3-4 dígitos / código de seguridad que normalmente se encuentra en la parte posterior de su tarjeta
-This will discard your edits.,Esto descartará sus ediciones.
-Total,Total
-Uploading Images \n%lu / %lu,Subiendo Imágenes \n%lu / %lu
-Uploading book,Cargando el libro
-View Item,Ver elemento
-We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,Le enviaremos confirmación y actualizaciones de pedidos. Desmarca esta casilla para inhabilitar las campañas de correo electrónico.
-We'll send you confirmation and order updates.,Le enviaremos confirmación y actualizaciones de pedidos.
-Yes Please,Sí por favor
-Yes,Sí
-"Yes, proceed","Sí, proceda"
-"Yes, remove it","Sí, quítelo"
-You can add %d more for the same price.,Puede agregar %d más por el mismo precio.
-You can add more photos,Puede agregar más fotos
-You need to authorize the app to access your Instagram account if you want to import photos from there.,Debe autorizar que la aplicación acceda a su cuenta de Instagram si desea importar fotos desde allí.
-You've only selected %d photo.,Solo ha seleccionado %d foto.
-You've only selected %d photos.,Solo ha seleccionado %d fotos.
-You've selected %d photos.,Solo ha seleccionado %d fotos.
-Your 15-16 digit card number,N° de tarjeta (15-16 chiffres)
-Your Phone,Su teléfono
-Your card expiry date,La fecha de caducidad de su tarjeta
-Your payment was not approved (transaction state: %@). Please try again.,"Su pago no fue aprobado (estado de la transacción: %@). Por favor, vuelve a intentarlo."
-ZIP Code,Código postal
-basket.Edit,Editar
-cm,cm
-inches,pulgadas
+"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!","**Garantía de calidad**\nNuestros productos son de la más alta calidad y estamos seguros de que usted amará el suyo. Si no, ofrecemos una garantía de devolución de dinero. ¡Disfruta!",
+"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos","¿Estás seguro de que quiere continuar? Si lo hace, las páginas en blanco se rellenarán con fotos duplicadas",
+"Failed to validate card details, please try again.","Error al validar los detalles de la tarjeta, por favor, inténtelo de nuevo más tarde.",
+"No, keep it","No, manténgalo",
+"No, not yet","No, ahora no",
+"Search by postcode, street or address","Buscar por código postal, calle o dirección",
+"Search by street, address or ZIP code","Buscar por calle, dirección o código postal",
+"Yes, proceed","Sí, proceda",
+"Yes, remove it","Sí, quítelo",
+%ldx%ld Collage,%ldx%ld Collage,
+401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,401 Error de solicitud no autorizada al intentar cargar un recurso. Compruebe que incluyó un encabezado de autorización y que las credenciales de autenticación suministradas son correctas.,
+500 Internal Server Error whilst trying to upload an asset. Please try again.,500 Error interno del servidor al intentar cargar un activo. Vuelve a intentarlo.,
+Add %ld %@!,¡Añadir %ld %@!,
+Add Address,Añadir une dirección,
+Add Credit Card (TEST),Añadir tarjeta de crédito (TEST),
+Add Credit Card,Añadir tarjeta de crédito,
+Add Credit/Debit Card,Añadir tarjeta de crédito/débito,
+Add New Address,Añadir una nueva dirección,
+Add Payment Method,Agregar método de pago,
+Add Text,Añadir texto,
+Add a %@!,Añadir una %@!,
+Add a photo\non this side,Añadir una foto\nde este lado,
+Add another %@!,Añadir otra %@!,
+Add more,Añadir más,
+Add to Basket,Añadir al carrito,
+Add,Añadir,
+Address Book,Directorio,
+Address Search,Búsqueda de direcciones,
+All Photos,Todas las fotos,
+Alternatively type the following URL into your mobile browser's address bar,"Alternativamente, escriba la siguiente URL en la barra de direcciones del navegador de su móvil",
+Are you sure you want to delete this item?,¿Está seguro de que desea eliminar este elemento?,
+Are you sure?,¿Está seguro?,
+Authorise,Autorizar,
+BACK,ESPALDA,
+Back Image Is Too Small,La imagen trasera es demasiado pequeña,
+Back,Espalda,
+Basket is empty,La cesta está vacía,
+CVV,CVV,
+Cancel,Cancelar,
+Card Number,Número de tarjeta,
+Checking Code,Código de verificación,
+Checkout for Free!,Comprar Gratis!,
+Checkout,Checkout,
+Choose Address,Elegir dirección,
+Choose Country,Elegir País,
+Choose Delivery Address,Elegir dirección de entrega,
+Choose Photo,Escoge una foto,
+Choose Photos,Escoge fotos,
+City,Ciudad,
+Clearing Code,Código de compensación,
+Completed Orders,Pedidos finalizados,
+Continue Shopping,Seguir comprando,
+Country,País,
+County,País,
+Create Image,Crear Image,
+Create a %@ for\nonly %@ %@,Crear un %@\nsolo %@ %@,
+Create a pack for\nonly %@ %@,Crear un paquete\nsolo %@ %@,
+Create another %@ for\nonly %@ %@,Crear una otra %@\nsolo %@ %@,
+Create another pack for\nonly %@ %@,Crear un paquete\nsolo %@ %@,
+Crop,Recortar,
+Default,Defecto,
+Delete Item,Borrar elemento,
+Delivery Address,Dirección de entrega,
+Delivery Details,Detalles de la entrega,
+Description,Descripción,
+Details,Detalles,
+Do you want to log out of %@?,Quieres desconectarte de %@?,
+Do you want to remove this photo?,¿Desea borrar esta foto?,
+Done,Està hecho,
+Edit Address,Editar dirección,
+Edit Poster,Editar el póster,
+Edit,Editar,
+Email,Correo electrónico,
+Enter Address Manually,Ingrese la dirección manualmente,
+Enter a valid CVV number,Ingrese un número válido de CVV,
+Enter a valid card number,Ingresa un número de tarjeta válido,
+Enter a valid expiry date,Ingrese una fecha de caducidad válida,
+Error validating the order. Please try again later.,"Error al validar el pedido. Por favor, inténtelo de nuevo más tarde.",
+FREE,GRATIS,
+FRONT,FRENTE,
+Failed to download phone case mask. Please check your internet connectivity and try again,No se pudo descargar la máscara de la funda para móviles. Comprueba su conexión a Internet y vuelve a intentarlo,
+Failed to get the price of the order. Please try again.,"No se pudo obtener el precio de la orden. Por favor, inténtelo de nuevo más tarde.",
+Failed to get upload URL. Try again later.,"Error al obtener la URL de subida. Por favor, inténtelo de nuevo más tarde.",
+Failed to log in to Instagram. Please check your internet connectivity and try again,No se pudo iniciar sesión en Instagram. Comprueba su conexión a Internet y vuelve a intentarlo,
+Failed to store card details with PayPal. Please try again.,"Error al guardar los datos de la tarjeta con PayPal. Por favor, inténtelo de nuevo más tarde.",
+Failed to synchronize product templates. Please try again.,"Error al sincronizar las plantillas de producto. Por favor, inténtelo de nuevo más tarde.",
+Failed to validate the order. Please try again.,"Error al validar el pedido. Por favor, inténtelo de nuevo más tarde.",
+Filters,Filtros,
+First Name,Nombre,
+Flip,Invertir,
+Fonts,Fuentes,
+For only %@ extra,Por sólo %@ de más,
+Great gifts for all the family,Grandes regalos para toda la familia,
+IMAGE TOOLS,HERRAMIENTAS DE IMAGEN,
+Image Is Too Small,La imagen es demasiado pequeña,
+Image upload failed with a %lu HTTP response status code. Please try again.,"Error de carga de la imagen con un código de estado de respuesta %lu HTTP. Por favor, inténtelo de nuevo más tarde.",
+Invalid Email Address,Correo electrónico inválido,
+Invalid Phone Number,Numero de telefono inválido,
+Large,Grande,
+Last Name,Apellido,
+Let's pick\nan image!,Escoge una\n imagen!,
+Line 1,Línea 1,
+Line 2,Línea 2,
+Log In,Iniciar sesión,
+Log out,Desconectarse,
+Login,Iniciar sesión,
+MM/YY,MM/AA,
+MORE ITEMS\nCOMING SOON!,MÁS ARTÍCULOS\nPRÓXIMAMENTE!,
+Maximum Photos Reached,Máximo de fotos alcanzado,
+Medium,Medio,
+Missing Delivery Address,Falta dirección de entrega,
+Move Pages,Mover páginas,
+New Payment,Nuevo Pago,
+Next,Siguiente,
+No Thanks,No gracias,
+No photos,Sin fotos,
+No,No,
+Not now,Ahora no,
+OK,Aceptar,
+OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,Vaya\nALGO HA SALIDO MAL\nPOR FAVOR VUELVE A INTENTAR,
+Only registered %d/%d image URLs with the asset endpoint,Solo se registran las URL de imagen %d/%d con el punto final del recurso,
+Oops!,¡Vaya!,
+Or print on a product below ▼,O imprimir sobre un producto debajo de ▼,
+Order History,Historial de pedidos,
+Order Id,Número de identificación del pedido,
+Order Summary,Resumen del pedido,
+Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.,Nuestra tienda está actualmente en proceso de mantenimiento pues no hay productos disponibles para la compra en este momento. Vuelve a intentarlo un poco más tarde.,
+PRINT AT HOME,IMPRIMIR EN SU CASA,
+PRODUCT OPTIONS,OPCIONES DEL PRODUCTO,
+Pack of,Paquete de,
+Pay %@,Pagar %@,
+Paying With,Pagando con,
+Payment (TEST),Pago (TEST),
+Payment Method,Método de pago,
+Payment,Pago,
+Phone,Teléfono,
+Please add %d more.,"Por favor, Agregue %d más.",
+Pay with Credit Card (TEST),Pagar con tarjeta de crédito (TEST),
+Pay with Credit Card,Pagar con tarjeta de crédito,
+Pay with card ending %@,Pagar con la tarjeta que termina en %@,
+Pay with new card,Pagar con tarjeta nueva,
+Pay,Pagar,
+Please add at least one photo,"Por favor, añada al menos una foto",
+Please add some photos to your photo book,"Por favor, añade algunas fotos a su libro de fotos",
+Please choose an address to have your order shipped to,"Por favor, elija una dirección para que su pedido sea enviado a",
+Please enter a card expiry date in the future,"Por favor, ingrese una fecha de caducidad de la tarjeta en el futuro",
+Please enter a valid card number,"Por favor, ingrese un número de tarjeta válido",
+Please enter a valid email address,"Por favor, ingrese un correo electrónico válido",
+Please enter a valid phone number,"Por favor, ingrese un número de teléfono válido",
+Please enter your first and last name.,Por favor introduce su nombre y apellido.,
+Please fill in Line 1 of the address.,Por favor llene la línea 1 de dirección.,
+Please fill in your city.,"Por favor, ingrese su ciudad.",
+Please fill in your postal code.,"Por favor, ingrese su código postal.",
+Please scan the QR code using a QR reader app on your device.,"Por favor, escanee el código QR usando una aplicación de lector QR en su movíl.",
+Please select %d images.,Por favor seleccione %d imágenes.,
+Please select %ld photos,Por favor seleccione %ld imágenes.,
+Please select at least %d images.,"Por favor, seleccione al menos %d imágenes.",
+Please select no more than %d images.,"Por favor, no selecciones más de% d imágenes.",
+Please select only %ld photo,"Por favor, seleccione sólo %ld photo",
+Please select some images.,"Por favor, selecciona algunas imágenes.",
+Please select up to %ld photos,"Por favor, selecciona hasta %ld fotos",
+Please zoom out or pick a higher quality image,Por favor amplía la imagen o elige una imagen de mejor calidad,
+Postcode,Código postal,
+Powered by Kite.ly,Desarrollado por Kite.ly,
+Price,Precio,
+Print It Anyway,Imprimir todos modos,
+Print Shop,Imprenta,
+Print order submission failed with a %lu HTTP response status code. Please try again.,Error en la presentación de la orden de impresión con un código de estado de respuesta %lu HTTP. Vuelve a intentarlo.,
+Print these,Imprima estos,
+Processing,Tratamiento,
+Promo Code,Código promocional,
+Promotional Discount,Descuento promocional,
+Quantity,Cantidad,
+Receipt,Recibo,
+Recents,Recientes,
+Remove,Retirar,
+Remove?,¿Retirar?,
+Required by the postal service in case there are any issues during delivery.,Requerido por el servicio postal en caso de que haya problemas durante la entrega.,
+Retry,Inténtarlo de nuevo,
+Review,Revisar,
+Rotate,Girar,
+Save,Guardar,
+Scan QR Code,Escanear el código QR,
+Search for Address,Buscar dirección,
+Select Size,Selecciona el tamaño,
+Shipping,Envío,
+Single Photo Poster,Poster con una sola foto,
+Size,Tamaño,
+Small,Pequeña,
+Start Creating,Comenzar a crear,
+Start by tapping this button,Comienza tocando este botón,
+State,Estado,
+Store Maintenance,Mantenimiento de tienda,
+Swipe to rotate your mug,Deslizar para girar tu taza,
+TEXT TOOLS,HERRAMIENTAS DE TEXTO,
+Tap Image to Change,Toca la imagen para cambiar,
+Tap Image to Edit or Hold to Rearrange,Toca Imagen para editar o Mantén presionada para reorganizar,
+Tap Image to Edit,Toca la imagen para editar,
+Tap on this button,Aprieta este botón,
+Tap to edit,Pulsa para editar,
+Tap to swap pages. Hold for more options.,Toca para intercambiar páginas. Mantén para obtener más opciones.,
+Text Colour,Color del texto,
+There was a problem getting Print Shop products. Check your Internet connectivity or try again later.,Se ha producido un problema al obtener los productos de la Imprenta. Compruebe su conexión a Internet o vuelva a intentarlo más tarde.,
+There was an error getting one of your photos. Please remove or replace it.,Se ha producido un error al obtener una de sus fotos. Borra o reemplácelo.,
+There was an error trying to validate the card. Please try again later.,"Se ha producido un error al intentar validar la tarjeta. Por favor, inténtelo de nuevo más tarde.",
+This is the 3-4 digit verification number/security code normally found on the back of your card,Este es el número de verificación de 3-4 dígitos / código de seguridad que normalmente se encuentra en la parte posterior de su tarjeta,
+This will discard your edits.,Esto descartará sus ediciones.,
+Total,Total,
+Uploading Images \n%lu / %lu,Subiendo Imágenes \n%lu / %lu,
+Uploading book,Cargando el libro,
+View Item,Ver elemento,
+WE HAVE RECEIVED\nYOUR ORDER,HEMOS RECIBIDO\nSU PEDIDO,
+We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,Le enviaremos confirmación y actualizaciones de pedidos. Desmarca esta casilla para inhabilitar las campañas de correo electrónico.,
+We'll send you confirmation and order updates.,Le enviaremos confirmación y actualizaciones de pedidos.,
+Yes Please,Sí por favor,
+Yes,Sí,
+You can add %d more for the same price.,Puede agregar %d más por el mismo precio.,
+You can add more photos,Puede agregar más fotos,
+You need to authorize the app to access your Instagram account if you want to import photos from there.,Debe autorizar que la aplicación acceda a su cuenta de Instagram si desea importar fotos desde allí.,
+You've only selected %d photo.,Solo ha seleccionado %d foto.,
+You've only selected %d photos.,Solo ha seleccionado %d fotos.,
+You've selected %d photos.,Solo ha seleccionado %d fotos.,
+Your 15-16 digit card number,N° de tarjeta (15-16 digitos),
+Your Phone,Su teléfono,
+Your card expiry date,La fecha de caducidad de su tarjeta,
+Your payment was not approved (transaction state: %@). Please try again.,"Su pago no fue aprobado (estado de la transacción: %@). Por favor, vuelve a intentarlo.",
+ZIP Code,Código postal,
+basket.Edit,Editar,
+cm,cm,
+inches,pulgadas,
