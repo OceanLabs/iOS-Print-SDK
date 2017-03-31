@@ -5,7 +5,7 @@
 "Add" = "Aggiungi";
 "Add %ld %@!" = "Aggiungi %ld %@!";
 "Add a %@!" = "Aggiungi a %@!";
-"Add a photo\non this side" = "Add a photo\non this side";
+"Add a photo\non this side" = "Aggiungere una foto\nsu questo lato";
 "Add Address" = "Aggiungi indirizzo";
 "Add another %@!" = "Aggiungi un altro %@!";
 "Add Credit Card" = "Aggiungi carta di credito";
@@ -26,7 +26,7 @@
 "Authorise" = "Autorizza";
 "Back" = "Indietro";
 "BACK" = "INDIETRO";
-"Back Image Is Too Small" = "Back Image Is Too Small";
+"Back Image Is Too Small" = "Indietro immagine è troppo piccola";
 "Basket is empty" = "Il carrello è vuoto";
 "basket.Edit" = "Modifica.carrello";
 "Cancel" = "Annulla";
@@ -42,7 +42,7 @@
 "City" = "Città";
 "Clearing Code" = "Resetta codice";
 "cm" = "cm";
-"Completed Orders" = "Completed Orders";
+"Completed Orders" = "Ordini completati";
 "Continue Shopping" = "Continua con gli acquisti";
 "Country" = "Paese";
 "County" = "Regione";
@@ -53,7 +53,7 @@
 "Create Image" = "Crea immagine";
 "Crop" = "Ritaglia";
 "CVV" = "Codice CVV";
-"Default" = "Default";
+"Default" = "Predefinito";
 "Delete Item" = "Elimina oggetto";
 "Delivery Address" = "Indirizzo di consegna";
 "Delivery Details" = "Dettagli di consegna";
@@ -83,7 +83,7 @@
 "First Name" = "Nome";
 "Flip" = "Capovolgi";
 "Fonts" = "Font";
-"For only %@ extra" = "For only %@ extra";
+"For only %@ extra" = "Per soli %@ più";
 "FREE" = "GRATUITO";
 "FRONT" = "FRONTE";
 "Great gifts for all the family" = "Ottimi regali per tutta la famiglia";
@@ -100,12 +100,12 @@
 "Line 2" = "Riga 3";
 "Log In" = "Login";
 "Log out" = "Logout";
-"Login" = "Login";
+"Login" = "Accesso";
 "Maximum Photos Reached" = "Raggiunto il numero massimo di foto";
 "Medium" = "Medio";
 "Missing Delivery Address" = "Indirizzo di consegna mancante";
 "MM/YY" = "MM/AA";
-"MORE ITEMS\nCOMING SOON!" = "MORE ITEMS\nCOMING SOON!";
+"MORE ITEMS\nCOMING SOON!" = "Altri articoli \nProssimamente!";
 "Move Pages" = "Sposta pagine";
 "New Payment" = "Nuovo pagamento";
 "Next" = "Successivo";
@@ -118,9 +118,10 @@
 "OK" = "OK";
 "Only registered %d/%d image URLs with the asset endpoint" = "Solo URL immagini %d/%d registrati con asset alla fine";
 "Oops!" = "Oops!";
-"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW" = "OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW";
-"Or print on a product below ▼" = "Oppure stampa su di un prodotto qui sotto ▼";
-"Order History" = "Order History";
+"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW" = "Oops\nQUALCOSA È ANDATO STORTO\nSI PREGA DI RIPROVARE";
+"Or print on a product below ▼" = "Oppure stampa su di un prodotto qui sotto 
+▼";
+"Order History" = "Cronologia ordini";
 "Order Id" = "Id Ordine";
 "Order Summary" = "Riepilogo Ordine";
 "Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later." = "Il nostro store è attualmente in fase di manutenzione, quindi nessun prodotto risulta disponibile per l'acquisto in questo momento. Per favore riprova più tardi.";
@@ -141,19 +142,19 @@
 "Please enter a valid phone number" = "Inserisci un numero di telefono valido";
 "Please enter your first and last name." = "Inserisci il tuo nome ed il tuo cognome";
 "Please fill in Line 1 of the address." = "Compila la Riga 1 dell'indirizzo";
-"Please fill in your city." = "Please fill in your city.";
+"Please fill in your city." = "Si prega di compilare nella tua città.";
 "Please fill in your postal code." = "Inserisci il tuo CAP";
 "Please scan the QR code using a QR reader app on your device." = "Scansiona il QR code tramite una app per la lettura dei QR code sul tuo dispositivo";
 "Please select %d images." = "Seleziona %d immagini";
 "Please select %ld photos" = "Seleziona %ld foto";
 "Please select at least %d images." = "Seleziona almeno %d immagini";
 "Please select no more than %d images." = "Non selezionare più di %d immagini";
-"Please select only %ld photo" = "Seleziona solo %Id foto";
+"Please select only %ld photo" = "Seleziona solo %ld foto";
 "Please select some images." = "Seleziona delle immagini.";
 "Please select up to %ld photos" = "Seleziona fino a %ld foto";
 "Please zoom out or pick a higher quality image" = "Zoomma oppure scegli un\immagine di qualità migliore";
 "Postcode" = "Codice postale";
-"Powered by Kite.ly" = "Powered by Kite.ly";
+"Powered by Kite.ly" = "Realizzato da Kite.ly";
 "Price" = "Prezzo";
 "PRINT AT HOME" = "STAMPA A CASA";
 "Print It Anyway" = "Stampa ovunque";
@@ -165,7 +166,7 @@
 "Promo Code" = "Codice Promo";
 "Promotional Discount" = "Sconto Promozionale";
 "Quantity" = "Quantità";
-"Receipt" = "Receipt";
+"Receipt" = "Ricevuta";
 "Recents" = "Recenti";
 "Remove" = "Elimina";
 "Remove?" = "Eliminare?";
@@ -205,7 +206,7 @@
 "Uploading book" = "Caricamento album";
 "Uploading Images \n%lu / %lu" = "Caricamento delle immagini \n%lu /%lu";
 "View Item" = "Vedi l'oggetto";
-"WE HAVE RECEIVED\nYOUR ORDER" = "WE HAVE RECEIVED\nYOUR ORDER";
+"WE HAVE RECEIVED\nYOUR ORDER" = "ABBIAMO RICEVUTO\nIL TUO ORDINE";
 "We'll send you confirmation and order updates." = "Ti invieremo la conferma e gli aggiornamenti dell'ordine";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Ti invieremo la conferma e gli aggiornamenti dell'ordine. Togli la spunta a questa casella se non vuoi ricevere informative via email.";
 "Yes" = "Si";

@@ -44,9 +44,11 @@
 @end
 
 @interface OLCaseViewController ()
+- (NSURL *)productBackgroundURL;
+- (NSURL *)productHighlightsURL;
 - (void)onButtonDoneTapped:(id)sender;
-@property (strong, nonatomic) OLAsset *backAsset;
 @property (nonatomic, copy) void (^saveJobCompletionHandler)();
+@property (strong, nonatomic) OLAsset *backAsset;
 @end
 
 @interface OLApparelViewController ()
@@ -180,39 +182,39 @@
 - (void)applyProductImageLayers{
     if (!self.deviceView.image){
         self.deviceView.alpha = 0;
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-                [UIView animateWithDuration:0.1 animations:^{
-                    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
-                        for (OLProductTemplateOption *option in self.product.productTemplate.options){
-                            if ([option.code isEqualToString:@"garment_color"]){
-                                for (OLProductTemplateOptionChoice *choice in option.choices){
-                                    if ([choice.code isEqualToString:self.product.selectedOptions[option.code]]){
-                                        [self updateProductRepresentationForChoice:choice];
-                                    }
+    }
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            [UIView animateWithDuration:0.1 animations:^{
+                if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+                    for (OLProductTemplateOption *option in self.product.productTemplate.options){
+                        if ([option.code isEqualToString:@"garment_color"]){
+                            for (OLProductTemplateOptionChoice *choice in option.choices){
+                                if ([choice.code isEqualToString:self.product.selectedOptions[option.code]]){
+                                    [self updateProductRepresentationForChoice:choice];
                                 }
                             }
                         }
                     }
-                    self.deviceView.alpha = 1;
-                } completion:^(BOOL finished){
-                    [self renderImage];
-                }];
-            });
-        }];
-    }
+                }
+                self.deviceView.alpha = 1;
+            } completion:^(BOOL finished){
+                [self renderImage];
+            }];
+        });
+    }];
     if (!self.highlightsView.image){
         self.highlightsView.alpha = 0;
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-                [UIView animateWithDuration:0.1 animations:^{
-                    self.highlightsView.alpha = 1;
-                }];
-            });
-        }];
     }
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productHighlightsURL] priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            [UIView animateWithDuration:0.1 animations:^{
+                self.highlightsView.alpha = 1;
+            }];
+        });
+    }];
 }
 
 @end

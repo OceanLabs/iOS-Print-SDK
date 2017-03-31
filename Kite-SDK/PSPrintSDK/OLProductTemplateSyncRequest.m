@@ -39,6 +39,7 @@
 #import "OLPageLayout.h"
 #import "OLProductRepresentation.h"
 #import "OLProductTemplateCollection.h"
+#import "OLUserSession.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
@@ -520,7 +521,9 @@
                 }
                 
                 if (self.nextPage != nil) {
-                    handler(acc, nil);
+                    if ([[OLUserSession currentSession] shouldLoadTemplatesProgressively] && [OLKiteABTesting sharedInstance].progressiveTemplateLoading){
+                        handler(acc, nil);
+                    }
                     [self fetchTemplatesWithURL:self.nextPage templateAccumulator:acc handler:handler];
                 }
                 else {
