@@ -763,19 +763,21 @@
             self.renderedImageView.image = nil;
             [self loadImageFromAsset];
             
+            self.deviceView.image = backgroundImage;
+            self.highlightsView.image = highlightsImage;
             if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
                 for (OLProductTemplateOption *option in self.product.productTemplate.options){
                     if ([option.code isEqualToString:@"garment_color"]){
                         for (OLProductTemplateOptionChoice *choice in option.choices){
                             if ([choice.code isEqualToString:self.product.selectedOptions[option.code]]){
                                 self.deviceView.tintColor = choice.color;
+                                self.deviceView.image = [backgroundImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
                             }
                         }
                     }
                 }
             }
-            self.deviceView.image = backgroundImage;
-            self.highlightsView.image = highlightsImage;
+            
             
         }completion:^(BOOL finished){
             [self renderImage];
@@ -787,7 +789,7 @@
     [flipBlock addDependency:highlightsImageDownloadCompleteBlock];
     
     [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-        backgroundImage = [[image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        backgroundImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
         [[NSOperationQueue mainQueue] addOperation:backgroundImageDownloadCompleteBlock];
     }];
     
