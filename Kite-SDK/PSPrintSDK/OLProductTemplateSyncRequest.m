@@ -521,7 +521,7 @@
                 }
                 
                 if (self.nextPage != nil) {
-                    if ([[OLUserSession currentSession] shouldLoadTemplatesProgressively]){
+                    if ([[OLUserSession currentSession] shouldLoadTemplatesProgressively] && [OLKiteABTesting sharedInstance].progressiveTemplateLoading){
                         handler(acc, nil);
                     }
                     [self fetchTemplatesWithURL:self.nextPage templateAccumulator:acc handler:handler];
