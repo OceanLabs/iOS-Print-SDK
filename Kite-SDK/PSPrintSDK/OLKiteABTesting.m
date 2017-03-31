@@ -644,7 +644,7 @@ static dispatch_once_t srand48OnceToken;
 }
 
 #pragma mark OLKiteABTesting
-//The following methods were adapted from OLKiteABTesting: https://github.com/mattt/OLKiteABTesting
+//The following methods were adapted from SkyLab: https://github.com/mattt/SkyLab
 
 + (void)splitTestWithName:(NSString *)name
                conditions:(id <NSFastEnumeration>)conditions
