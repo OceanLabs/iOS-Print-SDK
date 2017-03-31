@@ -34,11 +34,12 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb298749663586228</string>
+				<string>kitely</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>4</string>
+	<string>9</string>
 	<key>FacebookAppID</key>
 	<string>298749663586228</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

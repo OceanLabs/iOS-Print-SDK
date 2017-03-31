@@ -59,4 +59,5 @@ typedef NSUInteger OLUserSessionCleanupOption;
 - (void)clearUserSelectedPhotos;
 - (void)logoutOfInstagram;
 - (void)logoutOfFacebook;
+- (BOOL)shouldLoadTemplatesProgressively;
 @end
