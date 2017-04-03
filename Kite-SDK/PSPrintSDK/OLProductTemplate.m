@@ -73,13 +73,7 @@ static NSString *const kKeySupportsTextOnBorder = @"co.oceanlabs.pssdk.kKeySuppo
 static NSMutableArray *templates;
 static NSDate *lastSyncDate;
 static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
-
-@interface OLKitePrintSDK (Private)
-
-+ (void)setCacheTemplates:(BOOL)cache;
-+ (BOOL)cacheTemplates;
-
-@end
+static BOOL partial = NO;
 
 @interface OLProductTemplate ()
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
@@ -126,12 +120,6 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     }
     
     return self;
-}
-
-+ (NSString *)templatesFilePath {
-    NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
-    NSString *documentDirPath = [(NSURL *)[urls objectAtIndex:0] path];
-    return [documentDirPath stringByAppendingPathComponent:@"co.oceanlabs.pssdk.Templates"];
 }
 
 - (void)setSupportedOptions:(NSArray *_Nullable)supportedOptions{
@@ -241,7 +229,10 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     if (inProgressSyncRequest == nil) {
         inProgressSyncRequest = [[OLProductTemplateSyncRequest alloc] init];
         [inProgressSyncRequest sync:^(NSArray *templates_, NSError *error) {
-            inProgressSyncRequest = nil;
+            partial = [inProgressSyncRequest isInProgress];
+            if (!partial){
+                inProgressSyncRequest = nil;
+            }
             if (error) {
                 if (handler){
                     handler(nil, error);
@@ -249,17 +240,21 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:@{kNotificationKeyTemplateSyncError: error}];
             } else {
                 [self saveTemplatesAsLatest:templates_];
-                if (handler){
-                    handler(templates_, nil);
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncPartialComplete object:self userInfo:nil];
+                if (!partial){
+                    if (handler){
+                        handler(templates_, nil);
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:nil];
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:nil];
             }
         }];
     }
 }
 
 + (BOOL)isSyncInProgress {
-    return inProgressSyncRequest != nil;
+    return inProgressSyncRequest != nil || partial;
 }
 
 + (void)cancelSyncInProgress{
@@ -283,74 +278,14 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
 + (void)saveTemplatesAsLatest:(NSArray *)templates_ {
     templates = [NSMutableArray arrayWithArray:templates_];
     lastSyncDate = [NSDate date];
-    if ([OLKitePrintSDK cacheTemplates]){
-        [NSKeyedArchiver archiveRootObject:@[lastSyncDate, templates] toFile:[OLProductTemplate templatesFilePath]];
-    }
 }
 
 + (NSDate *_Nullable)lastSyncDate {
     return lastSyncDate;
 }
 
-+ (NSMutableArray *)templatesFromBundledPlist {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"OLProductTemplates" ofType:@"plist"];
-    NSMutableArray *plist = [[NSMutableArray alloc] initWithContentsOfFile:path];
-    
-    NSMutableArray *templates = [[NSMutableArray alloc] init];
-    for (id productTemplate in plist) {
-        if ([productTemplate isKindOfClass:[NSDictionary class]]) {
-            id templateId = productTemplate[@"OLTemplateId"];
-            id templateName = productTemplate[@"OLTemplateName"];
-            id sheetQuantity = productTemplate[@"OLSheetQuanity"];
-            id enabled = productTemplate[@"OLEnabled"] ? productTemplate[@"OLEnabled"] : [NSNumber numberWithInt:1];
-            id sheetCosts = productTemplate[@"OLSheetCosts"];
-            if ([templateId isKindOfClass:[NSString class]] && [templateName isKindOfClass:[NSString class]]
-                && [sheetQuantity isKindOfClass:[NSNumber class]] && [enabled isKindOfClass:[NSNumber class]]
-                && [sheetCosts isKindOfClass:[NSDictionary class]]) {
-                
-                NSMutableDictionary<NSString *, NSDecimalNumber *> *costs = [[NSMutableDictionary alloc] init];
-                for (id key in sheetCosts) {
-                    id val = sheetCosts[key];
-                    if ([key isKindOfClass:[NSString class]] && [val isKindOfClass:[NSString class]]) {
-                        if ([OLCountry isValidCurrencyCode:key]) {
-                            NSDecimalNumber *cost = [NSDecimalNumber decimalNumberWithString:val];
-                            costs[key] = cost;
-                        }
-                    }
-                }
-                
-                NSAssert(costs.count > 0, @"OLProductTemplates.plist %@ (%@) does not contain any cost information", templateId, templateName);
-                if (costs.count > 0) {
-                    [templates addObject:[[OLProductTemplate alloc] initWithIdentifier:templateId name:templateName sheetQuantity:[sheetQuantity unsignedIntegerValue] sheetCostsByCurrencyCode:costs enabled:[enabled boolValue]]];
-                }
-            } else {
-                NSAssert(NO, @"Bad template format in OLProductTemplates.plist");
-            }
-        }
-    }
-    return templates;
-}
-
-
 + (NSArray *_Nullable)templates {
-    if (!templates) {
-        NSArray *components = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLProductTemplate templatesFilePath]];
-        if (!components) {
-            lastSyncDate = nil;
-            templates = [self templatesFromBundledPlist];
-        } else {
-            lastSyncDate = components[0];
-            templates = components[1];
-        }
-    }
-    
     return templates;
-}
-
-+ (void) deleteCachedTemplates{
-    NSFileManager *manager = [NSFileManager defaultManager];
-    NSError *error;
-    [manager removeItemAtPath:[OLProductTemplate templatesFilePath] error:&error];
 }
 
 + (void) resetTemplates{
@@ -388,9 +323,9 @@ static OLProductTemplateSyncRequest *inProgressSyncRequest = nil;
     else if ([identifier isEqualToString:@"APPAREL"]){
         return OLTemplateUIApparel;
     }
-//    else if ([identifier isEqualToString:@"MUG"]){
-//        return OLTemplateUIMug;
-//    }
+    else if ([identifier isEqualToString:@"MUG"]){
+        return OLTemplateUIMug;
+    }
     return OLTemplateUINA;
 }
 

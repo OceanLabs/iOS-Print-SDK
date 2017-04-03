@@ -15,7 +15,6 @@
     [OLKitePrintSDK setIsKiosk:NO];
     [OLKitePrintSDK setUseStripeForCreditCards:YES];
     [OLKitePrintSDK setUseStaging:NO];
-    [OLKitePrintSDK setCacheTemplates:NO];
     [OLKitePrintSDK setApplePayPayToString:@"JABBA"];
     [OLStripeCard clearLastUsedCard];
 }

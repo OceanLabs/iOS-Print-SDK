@@ -40,8 +40,8 @@
     [self.ctaButton setBackgroundColor:color];
 }
 
--(id)initWithCoder:(NSCoder *)aDecoder{
-    if ((self = [super initWithCoder:aDecoder])){
+-(id)initWithFrame:(CGRect)frame{
+    if ((self = [super initWithFrame:frame])){
         UIView *view = [[[OLKiteUtils kiteResourcesBundle] loadNibNamed:@"OLEditingToolsView"
                                                       owner:self
                                                     options:nil] objectAtIndex:0];
@@ -60,24 +60,6 @@
 
 - (void)tapGestureRecognizer:(id)sender{
     //Do nothing for now
-}
-
--  (id)initWithFrame:(CGRect)aRect
-{
-    self = [super initWithFrame:aRect];
-    
-    if (self)
-    {
-        UIView *view = [[[OLKiteUtils kiteResourcesBundle] loadNibNamed:@"OLEditingToolsView"
-                                                      owner:self
-                                                    options:nil] objectAtIndex:0];
-        view.frame = self.bounds;
-        view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self addSubview:view];
-        
-    }
-    
-    return self;
 }
 
 - (NSArray *)buttons{

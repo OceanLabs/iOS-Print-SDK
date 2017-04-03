@@ -461,6 +461,27 @@
     }];
 }
 
+- (void)templateSyncDidUpdate{
+    self.productGroups = nil;
+    
+    if (![OLProductTemplate isSyncInProgress] || self.navigationController.topViewController != self || self.presentedViewController){
+        [self.collectionView reloadData];
+        return;
+    }
+    
+    NSUInteger section = 0;
+    if ([self includeBannerSection]){
+        section++;
+    }
+    
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    for (NSInteger i = [self.collectionView numberOfItemsInSection:section]; i < [self collectionView:self.collectionView numberOfItemsInSection:section]; i++){
+        [array addObject:[NSIndexPath indexPathForItem:i inSection:section]];
+    }
+    
+    [self.collectionView insertItemsAtIndexPaths:array];
+}
+
 #pragma mark Banner Section
 
 - (BOOL)printAtHomeAvailable{
@@ -529,8 +550,12 @@
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     CGSize size = self.view.frame.size;
+    NSInteger productSection = [self includeBannerSection] ? 1 : 0;
     if (indexPath.section == 0 && [self includeBannerSection]){
         return [self collectionView:collectionView sizeForBannerSectionCellForIndexPath:indexPath];
+    }
+    else if (indexPath.section == productSection + 1){
+        return CGSizeMake(size.width, 40);
     }
     
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
@@ -661,13 +686,23 @@
     if (self.isOffScreen){
         return 0;
     }
-    return [self includeBannerSection] ? 2 : 1;
+    
+    NSInteger numberOfSections = [self includeBannerSection] ? 2 : 1;
+    if ([OLProductTemplate isSyncInProgress]){
+        numberOfSections++;
+    }
+    return numberOfSections;
 }
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    NSInteger productSection = [self includeBannerSection] ? 1 : 0;
     if (section == 0 && [self includeBannerSection]){
         return [self collectionView:collectionView numberOfItemsInBannerSection:section];
     }
+    else if (section == productSection + 1){
+        return 1;
+    }
+    
     NSInteger extras = 0;
     NSInteger numberOfProducts = [self.productGroups count];
     
@@ -680,8 +715,15 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    NSInteger productSection = [self includeBannerSection] ? 1 : 0;
     if (indexPath.section == 0 && [self includeBannerSection]){
         return [self collectionView:collectionView bannerSectionCellForIndexPath:indexPath];
+    }
+    else if (indexPath.section == productSection + 1){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"loadingCell" forIndexPath:indexPath];
+        UIActivityIndicatorView *activity = [cell viewWithTag:10];
+        [activity startAnimating];
+        return cell;
     }
     
     if (indexPath.item >= self.productGroups.count){

@@ -47,6 +47,7 @@ static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_ban
 static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
 static NSString *const kOLKiteABTestPaymentScreen = @"ly.kite.abtest.payment_screen";
 static NSString *const kOLKiteABTestCoverPhotoVariants = @"ly.kite.abtest.cover_photo_variants";
+static NSString *const kOLKiteABTestProgressiveTemplateLoading = @"ly.kite.abtest.progressive_template_loading";
 
 static NSString *const kOLKiteABTestSkipProductOverview = @"ly.kite.abtest.skip_product_overview";
 static NSString *const kOLKiteABTestDisableProductCategories = @"ly.kite.abtest.disable_product_categories";
@@ -67,6 +68,7 @@ static dispatch_once_t srand48OnceToken;
 @property (assign, nonatomic, readwrite) BOOL requirePhoneNumber;
 @property (assign, nonatomic, readwrite) BOOL hidePrice;
 @property (assign, nonatomic, readwrite) BOOL offerPayPal;
+@property (assign, nonatomic, readwrite) BOOL progressiveTemplateLoading;
 @property (strong, nonatomic, readwrite) NSString *qualityBannerType;
 @property (strong, nonatomic, readwrite) NSString *checkoutScreenType;
 @property (strong, nonatomic, readwrite) NSString *productTileStyle;
@@ -575,6 +577,25 @@ static dispatch_once_t srand48OnceToken;
                                 }];
 }
 
+- (void)setupProgressiveTemplateLoadingTest{
+    self.progressiveTemplateLoading = NO;
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProgressiveTemplateLoading];
+    if (!experimentDict) {
+        experimentDict = @{@"Yes" : @0, @"No" : @1};
+    }
+    NSMutableDictionary *options = [[NSMutableDictionary alloc] init];
+    for (NSString *s in experimentDict.allKeys){
+        [options setObject:safeObject(experimentDict[s]) forKey:s];
+    }
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestProgressiveTemplateLoading
+                            conditions:@{
+                                         @"Yes" : experimentDict[@"Yes"],
+                                         @"No" : experimentDict[@"No"]
+                                         } block:^(id choice) {
+                                             self.progressiveTemplateLoading = [choice isEqualToString:@"Yes"];
+                                         }];
+}
+
 /**
  *  Promo strings look like this: @"<header>Hello World!</header><para>Off to the woods in [[2015-08-04 18:05 GMT+3]]</para>"
  */
@@ -636,7 +657,7 @@ static dispatch_once_t srand48OnceToken;
     [self setupPromoBannerTextTest];
     [self setupHidePriceTest];
     [self setupShowProductDescriptionScreenBeforeShippingTest];
-    [self setupHidePriceTest];
+    [self setupProgressiveTemplateLoadingTest];
     [self setupSkipProductOverviewTest];
     [self setupDisableProductCategories];
     [self setupMinimalNavigationBarTest];
@@ -644,7 +665,7 @@ static dispatch_once_t srand48OnceToken;
 }
 
 #pragma mark OLKiteABTesting
-//The following methods were adapted from OLKiteABTesting: https://github.com/mattt/OLKiteABTesting
+//The following methods were adapted from SkyLab: https://github.com/mattt/SkyLab
 
 + (void)splitTestWithName:(NSString *)name
                conditions:(id <NSFastEnumeration>)conditions

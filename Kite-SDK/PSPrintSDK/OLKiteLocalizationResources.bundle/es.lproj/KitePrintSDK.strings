@@ -5,7 +5,7 @@
 "Add" = "Añadir";
 "Add %ld %@!" = "¡Añadir %ld %@!";
 "Add a %@!" = "Añadir una %@!";
-"Add a photo\non this side" = "Add a photo\non this side";
+"Add a photo\non this side" = "Añadir una foto\nde este lado";
 "Add Address" = "Añadir une dirección";
 "Add another %@!" = "Añadir otra %@!";
 "Add Credit Card" = "Añadir tarjeta de crédito";
@@ -26,14 +26,14 @@
 "Authorise" = "Autorizar";
 "Back" = "Espalda";
 "BACK" = "ESPALDA";
-"Back Image Is Too Small" = "Back Image Is Too Small";
+"Back Image Is Too Small" = "La imagen trasera es demasiado pequeña";
 "Basket is empty" = "La cesta está vacía";
 "basket.Edit" = "Editar";
 "Cancel" = "Cancelar";
 "Card Number" = "Número de tarjeta";
 "Checking Code" = "Código de verificación";
 "Checkout" = "Checkout";
-"Checkout for Free!" = "Comprar sin coste!";
+"Checkout for Free!" = "Comprar Gratis!";
 "Choose Address" = "Elegir dirección";
 "Choose Country" = "Elegir País";
 "Choose Delivery Address" = "Elegir dirección de entrega";
@@ -42,7 +42,7 @@
 "City" = "Ciudad";
 "Clearing Code" = "Código de compensación";
 "cm" = "cm";
-"Completed Orders" = "Completed Orders";
+"Completed Orders" = "Pedidos finalizados";
 "Continue Shopping" = "Seguir comprando";
 "Country" = "País";
 "County" = "País";
@@ -59,7 +59,7 @@
 "Delivery Details" = "Detalles de la entrega";
 "Description" = "Descripción";
 "Details" = "Detalles";
-"Do you want to log out of %@?" = "¿Quieres desconectarte de% @?";
+"Do you want to log out of %@?" = "Quieres desconectarte de %@?";
 "Do you want to remove this photo?" = "¿Desea borrar esta foto?";
 "Done" = "Està hecho";
 "Edit" = "Editar";
@@ -83,7 +83,7 @@
 "First Name" = "Nombre";
 "Flip" = "Invertir";
 "Fonts" = "Fuentes";
-"For only %@ extra" = "For only %@ extra";
+"For only %@ extra" = "Por sólo %@ de más";
 "FREE" = "GRATIS";
 "FRONT" = "FRENTE";
 "Great gifts for all the family" = "Grandes regalos para toda la familia";
@@ -105,7 +105,7 @@
 "Medium" = "Medio";
 "Missing Delivery Address" = "Falta dirección de entrega";
 "MM/YY" = "MM/AA";
-"MORE ITEMS\nCOMING SOON!" = "MORE ITEMS\nCOMING SOON!";
+"MORE ITEMS\nCOMING SOON!" = "MÁS ARTÍCULOS\nPRÓXIMAMENTE!";
 "Move Pages" = "Mover páginas";
 "New Payment" = "Nuevo Pago";
 "Next" = "Siguiente";
@@ -117,10 +117,10 @@
 "Not now" = "Ahora no";
 "OK" = "Aceptar";
 "Only registered %d/%d image URLs with the asset endpoint" = "Solo se registran las URL de imagen %d/%d con el punto final del recurso";
-"Oops!" = "Oops!";
-"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW" = "OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW";
+"Oops!" = "¡Vaya!";
+"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW" = "Vaya\nALGO HA SALIDO MAL\nPOR FAVOR VUELVE A INTENTAR";
 "Or print on a product below ▼" = "O imprimir sobre un producto debajo de ▼";
-"Order History" = "Order History";
+"Order History" = "Historial de pedidos";
 "Order Id" = "Número de identificación del pedido";
 "Order Summary" = "Resumen del pedido";
 "Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later." = "Nuestra tienda está actualmente en proceso de mantenimiento pues no hay productos disponibles para la compra en este momento. Vuelve a intentarlo un poco más tarde.";
@@ -192,7 +192,7 @@
 "Tap Image to Edit" = "Toca la imagen para editar";
 "Tap Image to Edit or Hold to Rearrange" = "Toca Imagen para editar o Mantén presionada para reorganizar";
 "Tap on this button" = "Aprieta este botón";
-"Tap to edit" = "Tap to edit";
+"Tap to edit" = "Pulsa para editar";
 "Tap to swap pages. Hold for more options." = "Toca para intercambiar páginas. Mantén para obtener más opciones.";
 "Text Colour" = "Color del texto";
 "TEXT TOOLS" = "HERRAMIENTAS DE TEXTO";
@@ -205,7 +205,7 @@
 "Uploading book" = "Cargando el libro";
 "Uploading Images \n%lu / %lu" = "Subiendo Imágenes \n%lu / %lu";
 "View Item" = "Ver elemento";
-"WE HAVE RECEIVED\nYOUR ORDER" = "WE HAVE RECEIVED\nYOUR ORDER";
+"WE HAVE RECEIVED\nYOUR ORDER" = "HEMOS RECIBIDO\nSU PEDIDO";
 "We'll send you confirmation and order updates." = "Le enviaremos confirmación y actualizaciones de pedidos.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Le enviaremos confirmación y actualizaciones de pedidos. Desmarca esta casilla para inhabilitar las campañas de correo electrónico.";
 "Yes" = "Sí";

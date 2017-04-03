@@ -243,7 +243,8 @@ static NSString *nonNilStr(NSString *str) {
                                              @"Environment" : environment,
                                              @"API Key": apiKey,
                                              @"Kite SDK Version": kOLKiteSDKVersion,
-                                             @"Locale Country": localeCountry
+                                             @"Locale Country": localeCountry,
+                                             @"Progressive Template Loading" : @([OLKiteABTesting sharedInstance].progressiveTemplateLoading)
                                              } mutableCopy];
     if ([extraInfo isKindOfClass:[NSDictionary class]]){
         for (id key in extraInfo.allKeys){

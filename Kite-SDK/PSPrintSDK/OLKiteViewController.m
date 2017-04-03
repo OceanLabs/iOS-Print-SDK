@@ -71,13 +71,6 @@ static CGFloat fadeTime = 0.3;
 
 @end
 
-@interface OLKitePrintSDK (Private)
-
-+ (void)setCacheTemplates:(BOOL)cache;
-+ (BOOL)cacheTemplates;
-
-@end
-
 @protocol OLCustomPickerController;
 
 @implementation OLKiteViewController
@@ -102,7 +95,7 @@ static CGFloat fadeTime = 0.3;
 
 - (void)awakeFromNib{
     [super awakeFromNib];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidFinish:) name:kNotificationTemplateSyncComplete object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(templateSyncDidReturn:) name:kNotificationTemplateSyncPartialComplete object:nil];
 }
 
 - (UIImageView *)loadingImageView{
@@ -204,6 +197,7 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)loadRemoteData{
+    [OLUserSession currentSession].kiteVc = self;
     [[OLUserSession currentSession] calcScreenScaleForTraitCollection:self.traitCollection];
     
     self.operationQueue = [NSOperationQueue mainQueue];
@@ -227,10 +221,7 @@ static CGFloat fadeTime = 0.3;
         [self.operationQueue addOperation:loadingHandlerOperation];
     }
     
-    if (![OLKitePrintSDK cacheTemplates]) {
-        [OLProductTemplate deleteCachedTemplates];
-        [OLProductTemplate resetTemplates];
-    }
+    [OLProductTemplate resetTemplates];
     
     if ([OLProductTemplate templates].count > 0){
         fadeTime = 0;
@@ -244,7 +235,7 @@ static CGFloat fadeTime = 0.3;
         [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
             [welf.operationQueue addOperation:welf.remotePlistSyncOperation];
         }];
-        [OLProductTemplate sync];
+        [OLProductTemplate syncWithCompletionHandler:^(id templates, id error){}];
     }
 }
 
@@ -459,7 +450,7 @@ static CGFloat fadeTime = 0.3;
     
 }
 
-- (void)templateSyncDidFinish:(NSNotification *)n{
+- (void)templateSyncDidReturn:(NSNotification *)n{
     NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if (self.templateSyncOperation.finished){
@@ -487,7 +478,7 @@ static CGFloat fadeTime = 0.3;
     }
     
     else{
-        if (!self.remoteThemePlistSyncOperation.finished){
+        if (!self.remoteThemePlistSyncOperation.finished && ![self.operationQueue.operations containsObject:self.remoteThemePlistSyncOperation]){
             if ([OLKiteABTesting sharedInstance].userConfig[@"theme"]){
                 __weak OLKiteViewController *welf = self;
                     [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
@@ -503,6 +494,9 @@ static CGFloat fadeTime = 0.3;
         if (!self.templateSyncOperation.finished){
             [self.operationQueue addOperation:self.templateSyncOperation];
         }
+        
+        UINavigationController *vc = self.childViewControllers.firstObject;
+        [vc.viewControllers.firstObject safePerformSelector:@selector(templateSyncDidUpdate) withObject:nil];
     }
 }
 

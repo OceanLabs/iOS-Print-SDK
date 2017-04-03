@@ -30,5 +30,5 @@
 #import <UIKit/UIKit.h>
 
 @interface CIViewController : UIViewController
-@property (nonatomic, weak) IBOutlet UILabel *label;
+- (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets;
 @end

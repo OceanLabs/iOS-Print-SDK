@@ -41,6 +41,8 @@
 #import "NSDecimalNumber+CostFormatter.h"
 #import "NSObject+Utils.h"
 #import "OLKiteABTesting.h"
+#import "UIView+AutoLayoutHelper.h"
+#import "UIColor+OLHexString.h"
 
 @interface OLProduct ()
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
@@ -84,6 +86,8 @@
 @property (strong, nonatomic) UIViewController *presentedVc;
 @property (weak, nonatomic) IBOutlet UIView *printContainerView;
 @property (weak, nonatomic) UIView *gestureView;
+- (OLProductTemplateOptionChoice *)selectedChoice;
+@property (weak, nonatomic) OLProductTemplateOption *selectedOption;
 
 @end
 
@@ -95,9 +99,8 @@
 @property (strong, nonatomic) OLAsset *backAsset;
 @property (strong, nonatomic) UIImage *maskImage;
 @property (strong, nonatomic) UIImageView *renderedImageView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *centerYCon;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *maskActivityIndicator;
-@property (weak, nonatomic) IBOutlet UIButton *productFlipButton;
+@property (strong, nonatomic) UIButton *productFlipButton;
 @property (weak, nonatomic) IBOutlet UIImageView *deviceView;
 @property (weak, nonatomic) IBOutlet UIImageView *highlightsView;
 @end
@@ -125,6 +128,18 @@
     
     if (self.product.productTemplate.fulfilmentItems.count < 2){
         [self.productFlipButton removeFromSuperview];
+    }
+    
+    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+        self.cropView.backgroundColor = [UIColor clearColor];
+        
+        self.productFlipButton = [[UIButton alloc] init];
+        [self.view addSubview:self.productFlipButton];
+        [self.productFlipButton setImage:[UIImage imageNamedInKiteBundle:@"flip-black"] forState:UIControlStateNormal];
+        [self.productFlipButton addTarget:self action:@selector(onButtonProductFlipClicked:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.productFlipButton.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.productFlipButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeBottom multiplier:1 constant:15]];
+        [self.productFlipButton leadingFromSuperview:15 relation:NSLayoutRelationEqual];
     }
     
     [super viewDidLoad];
@@ -159,7 +174,13 @@
 
 - (NSURL *)maskURL{
     if (!self.showingBack){
-        return self.product.productTemplate.maskImageURL;
+        NSURL *url;
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
+                url = item.maskUrl;
+            }
+        }
+        return url ? url : self.product.productTemplate.maskImageURL;
     }
     else{
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
@@ -174,7 +195,13 @@
 
 - (NSURL *)productBackgroundURL{
     if (!self.showingBack){
-        return self.product.productTemplate.productBackgroundImageURL;
+        NSURL *url;
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
+                url = item.productBackGroundImageURL;
+            }
+        }
+        return url ? url : self.product.productTemplate.productBackgroundImageURL;
     }
     else{
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
@@ -189,7 +216,13 @@
 
 - (NSURL *)productHighlightsURL{
     if (!self.showingBack){
-        return self.product.productTemplate.productHighlightsImageURL;
+        NSURL *url;
+        for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
+            if ([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]){
+                url = item.productHighlightsUrl;
+            }
+        }
+        return url ? url : self.product.productTemplate.productHighlightsImageURL;
     }
     else{
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
@@ -271,8 +304,6 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
-    
     if (!self.downloadedMask && self.product.productTemplate.maskImageURL){
         UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
         [self.cropView removeConstraint:self.aspectRatioConstraint];
@@ -295,7 +326,9 @@
     if (self.viewDidAppearOperation && !self.viewDidAppearOperation.finished){
         [[NSOperationQueue mainQueue] addOperation:self.viewDidAppearOperation];
     }
-    
+}
+
+- (void)showHintViewIfNeeded{
     if ([OLUserSession currentSession].userSelectedPhotos.count == 0  && !self.backAsset && self.hintView.alpha <= 0.1f) {
         [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:YES];
     }
@@ -488,7 +521,6 @@
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
-        self.centerYCon.constant = (88.0 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 20.0))/2.0;
         [self.view layoutIfNeeded];
         [self maskWithImage:self.maskImage targetView:self.cropView];
     }completion:^(id <UIViewControllerTransitionCoordinatorContext> context){}];
@@ -537,41 +569,47 @@
 - (void)applyProductImageLayers{
     if (!self.deviceView.image){
         self.deviceView.alpha = 0;
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productBackgroundImageURL priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-                [UIView animateWithDuration:0.1 animations:^{
-                    self.deviceView.alpha = 1;
-                } completion:^(BOOL finished){
-                    [self renderImage];
-                }];
-            });
-        }];
     }
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.deviceView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            [UIView animateWithDuration:0.1 animations:^{
+                if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+                    for (OLProductTemplateOption *option in self.product.productTemplate.options){
+                        if ([option.code isEqualToString:@"garment_color"]){
+                            for (OLProductTemplateOptionChoice *choice in option.choices){
+                                if ([choice.code isEqualToString:self.product.selectedOptions[option.code]]){
+                                    [self updateProductRepresentationForChoice:choice];
+                                }
+                            }
+                        }
+                    }
+                }
+                self.deviceView.alpha = 1;
+            } completion:^(BOOL finished){
+                [self renderImage];
+            }];
+        });
+    }];
     if (!self.highlightsView.image){
         self.highlightsView.alpha = 0;
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:self.product.productTemplate.productHighlightsImageURL priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-                [UIView animateWithDuration:0.1 animations:^{
-                    self.highlightsView.alpha = 1;
-                }];
-            });
-        }];
     }
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productHighlightsURL] priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.highlightsView.image = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+            [UIView animateWithDuration:0.1 animations:^{
+                self.highlightsView.alpha = 1;
+            }];
+        });
+    }];
 }
 
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
     self.renderedImageView.image = nil;
-    if (choice.productBackground){
-        self.cropView.hidden = YES;
-        [self.maskActivityIndicator.superview bringSubviewToFront:self.maskActivityIndicator];
-        [self.maskActivityIndicator startAnimating];
-        [self.deviceView setAndFadeInImageWithURL:choice.productBackground size:[UIScreen mainScreen].bounds.size placeholder:nil progress:NULL completionHandler:^{
-            self.cropView.hidden = NO;
-            [self.maskActivityIndicator stopAnimating];
-            [self renderImage];
-        }];
+    if (choice.color){
+        self.deviceView.tintColor = choice.color;
+        self.deviceView.image = [self.deviceView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [self renderImage];
     }
     else{
         [self renderImage];
@@ -687,12 +725,14 @@
     }
 }
 
-- (IBAction)onButtonProductFlipClicked:(UIButton *)sender {
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        self.hintView.alpha = 0;
-    } completion:NULL];
-    
-    [self disableOverlay];
+- (void)onButtonProductFlipClicked:(UIButton *)sender {
+    self.productFlipButton.enabled = NO;
+    UIActivityIndicatorView *aiv = [[UIActivityIndicatorView alloc] init];
+    [self.view addSubview:aiv];
+    aiv.translatesAutoresizingMaskIntoConstraints = NO;
+    [aiv.superview addConstraint:[NSLayoutConstraint constraintWithItem:aiv attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:aiv.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [aiv.superview addConstraint:[NSLayoutConstraint constraintWithItem:aiv attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:aiv.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    [aiv startAnimating];
     
     [self saveEditsToAsset:self.asset];
     
@@ -705,17 +745,64 @@
         self.asset = [OLUserSession currentSession].userSelectedPhotos.lastObject;
     }
     
-    self.cropView.imageView.image = nil;
-    self.edits = nil;
-    self.fullImage = nil;
     
-    [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
-        [self setupProductRepresentation];
-        [self loadImageFromAsset];
-    }completion:^(BOOL finished){
-        [self renderImage];
-        [self showExtraChargeHint];
+    __block UIImage *backgroundImage;
+    __block UIImage *highlightsImage;
+    
+    NSBlockOperation *backgroundImageDownloadCompleteBlock = [NSBlockOperation blockOperationWithBlock:^{}];
+    NSBlockOperation *highlightsImageDownloadCompleteBlock = [NSBlockOperation blockOperationWithBlock:^{}];
+    NSBlockOperation *flipBlock = [NSBlockOperation blockOperationWithBlock:^{
+        [aiv removeFromSuperview];
+        [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+            [self disableOverlay];
+            
+            self.cropView.imageView.image = nil;
+            self.edits = nil;
+            self.fullImage = nil;
+            
+            self.renderedImageView.image = nil;
+            [self loadImageFromAsset];
+            
+            self.deviceView.image = backgroundImage;
+            self.highlightsView.image = highlightsImage;
+            if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
+                for (OLProductTemplateOption *option in self.product.productTemplate.options){
+                    if ([option.code isEqualToString:@"garment_color"]){
+                        for (OLProductTemplateOptionChoice *choice in option.choices){
+                            if ([choice.code isEqualToString:self.product.selectedOptions[option.code]]){
+                                self.deviceView.tintColor = choice.color;
+                                self.deviceView.image = [backgroundImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                            }
+                        }
+                    }
+                }
+            }
+            
+            
+        }completion:^(BOOL finished){
+            [self renderImage];
+            [self showExtraChargeHint];
+            self.productFlipButton.enabled = YES;
+        }];
     }];
+    [flipBlock addDependency:backgroundImageDownloadCompleteBlock];
+    [flipBlock addDependency:highlightsImageDownloadCompleteBlock];
+    
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+        backgroundImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+        [[NSOperationQueue mainQueue] addOperation:backgroundImageDownloadCompleteBlock];
+    }];
+    
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productHighlightsURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
+            highlightsImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
+        [[NSOperationQueue mainQueue] addOperation:highlightsImageDownloadCompleteBlock];
+    }];
+    
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        self.hintView.alpha = 0;
+    } completion:NULL];
+    
+    [[NSOperationQueue mainQueue] addOperation:flipBlock];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackEditScreenButtonTapped:@"Product Flip"];
