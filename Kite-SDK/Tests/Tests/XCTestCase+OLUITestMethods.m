@@ -141,7 +141,7 @@
     
     [rootVc.topViewController presentViewController:vc animated:YES completion:^{
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            while (vc.childViewControllers.count == 0) {
+            while (vc.childViewControllers.count == 0 || [OLProductTemplate isSyncInProgress]) {
                 sleep(1);
             }
             
