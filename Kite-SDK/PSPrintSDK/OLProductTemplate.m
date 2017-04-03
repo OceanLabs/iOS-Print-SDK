@@ -237,6 +237,7 @@ static BOOL partial = NO;
                 if (handler){
                     handler(nil, error);
                 }
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncPartialComplete object:self userInfo:nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:@{kNotificationKeyTemplateSyncError: error}];
             } else {
                 [self saveTemplatesAsLatest:templates_];
@@ -323,9 +324,9 @@ static BOOL partial = NO;
     else if ([identifier isEqualToString:@"APPAREL"]){
         return OLTemplateUIApparel;
     }
-    else if ([identifier isEqualToString:@"MUG"]){
-        return OLTemplateUIMug;
-    }
+//    else if ([identifier isEqualToString:@"MUG"]){
+//        return OLTemplateUIMug;
+//    }
     return OLTemplateUINA;
 }
 
