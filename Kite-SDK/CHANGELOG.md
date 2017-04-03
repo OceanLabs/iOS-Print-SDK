@@ -1,4 +1,4 @@
-## 6.5.1
+### 6.5.1
 - Fixed: Submitting orders without UI.
 - Fixed: Not showing error when template sync fails.
 
