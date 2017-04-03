@@ -1,5 +1,10 @@
 ## 6.5.0
 - Enabled T-Shirts and Hoodies again
+- Improved: Visuals when flipping apparel
+- Improved: Loading time
+- Improved French, German, Spanish localization
+- Added: Italian localization
+- Fixed: Pricing issue when adding multiples of a product
 
 ## 6.4.0
 - New Product: Full Sublimation T-Shirts
