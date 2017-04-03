@@ -17,13 +17,15 @@
 		<string>en</string>
 		<string>fr</string>
 		<string>es</string>
+		<string>de</string>
+		<string>it</string>
 	</array>
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>6.5.0</string>
+	<string>6.5.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -39,7 +41,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>10</string>
+	<string>11</string>
 	<key>FacebookAppID</key>
 	<string>298749663586228</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
