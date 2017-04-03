@@ -438,7 +438,7 @@
     OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
     
-    [self chooseProduct:@"Roly Sublimation T-Shirt" onOLProductTypeSelectionViewController:productTypeVc];
+    [self chooseProduct:@"Gildan Adult Cotton T-Shirt" onOLProductTypeSelectionViewController:productTypeVc];
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     

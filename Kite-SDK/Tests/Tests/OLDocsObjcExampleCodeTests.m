@@ -162,12 +162,12 @@
     NSArray *assets = @[
                         [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/1.jpg"]]
                         ];
-    id<OLPrintJob> ipadAirCase = [OLPrintJob printJobWithTemplateId:@"ipad_air_case" OLAssets:assets];
+    id<OLPrintJob> iphone7Case = [OLPrintJob printJobWithTemplateId:@"i7_case" OLAssets:assets];
     id<OLPrintJob> galaxyS5Case = [OLPrintJob printJobWithTemplateId:@"samsung_s5_case" OLAssets:assets];
     [galaxyS5Case setValue:@"matte" forOption:@"case_style"];
     
     OLPrintOrder *order = [[OLPrintOrder alloc] init];
-    [order addPrintJob:ipadAirCase];
+    [order addPrintJob:iphone7Case];
     [order addPrintJob:galaxyS5Case];
     order.email = @"ios_unit_test@kite.ly";
     [order setUserData:@{@"Unit Tests" : @YES}];
