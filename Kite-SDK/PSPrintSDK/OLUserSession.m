@@ -94,7 +94,7 @@
 
 - (void)resetUserSelectedPhotos{
     [self clearUserSelectedPhotos];
-    [self.userSelectedPhotos addObjectsFromArray:self.appAssets];
+    [self.userSelectedAssets addObjectsFromArray:self.appAssets];
 }
 
 - (void)clearUserSelectedPhotos{
