@@ -125,6 +125,8 @@
     [self.view insertSubview:self.pageController.view belowSubview:self.pageControl];
     [self.pageController didMoveToParentViewController:self];
     
+    self.separatorHeightCon.constant = 1.5;
+    
     UIPageControl *pageControl = [UIPageControl appearance];
     pageControl.pageIndicatorTintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
     pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
@@ -168,8 +170,7 @@
     [OLAnalytics trackProductDetailsScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
     
-    self.originalBoxConstraint = self.detailsBoxTopCon.constant;
-    
+    self.originalBoxConstraint = self.detailsBoxTopCon.constant;   
 }
 
 - (void)setupProductRepresentation{

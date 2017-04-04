@@ -153,7 +153,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
     }
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
+    self.nextButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
     if (font){
         [self.nextButton.titleLabel setFont:font];
@@ -655,9 +655,14 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies]+1]];
     if ([OLKiteABTesting sharedInstance].lightThemeColor3){
-        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
         [upButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
         [downButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+    }
+    if ([OLKiteABTesting sharedInstance].lightThemeColor5){
+        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor5];
+    }
+    else if ([OLKiteABTesting sharedInstance].lightThemeColor3){
+        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
     }
     
     OLAsset *asset = (OLAsset*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];

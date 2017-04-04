@@ -30,22 +30,23 @@
 #import <Foundation/Foundation.h>
 #import "OLKiteTheme.h"
 
-static NSString *const kOLKiteThemeHeaderLogoImageURL = @"themeLogoImageURL";
-static NSString *const kOLKiteThemeCheckoutProgress1 = @"themeCheckoutProgress1";
-static NSString *const kOLKiteThemeCheckoutProgress2 = @"themeCheckoutProgress2";
-static NSString *const kOLKiteThemeCheckoutProgress1Bg = @"themeCheckoutProgress1Bg";
-static NSString *const kOLKiteThemeCheckoutProgress2Bg = @"themeCheckoutProgress2Bg";
-static NSString *const kOLKiteThemeReceiptSuccess = @"themeReceiptSuccess";
-static NSString *const kOLKiteThemeReceiptFailure = @"themeReceiptFailure";
-static NSString *const kOLKiteThemeReceiptSuccessBg = @"themeReceiptSuccessBg";
-static NSString *const kOLKiteThemeReceiptFailureBg = @"themeReceiptFailureBg";
-static NSString *const kOLKiteThemeCancelButtonIcon = @"themeCancelButtonIcon";
-static NSString *const kOLKiteThemeSupportEmail = @"themeSupportEmail";
+static NSString *const kOLKiteThemeHeaderLogoImageURL = @"ly.kite.theme.headerLogoImageURL";
+static NSString *const kOLKiteThemeCheckoutProgress1 = @"ly.kite.theme.kOLKiteThemeCheckoutProgress1";
+static NSString *const kOLKiteThemeCheckoutProgress2 = @"ly.kite.theme.kOLKiteThemeCheckoutProgress2";
+static NSString *const kOLKiteThemeCheckoutProgress1Bg = @"ly.kite.theme.kOLKiteThemeCheckoutProgress1Bg";
+static NSString *const kOLKiteThemeCheckoutProgress2Bg = @"ly.kite.theme.kOLKiteThemeCheckoutProgress2Bg";
+static NSString *const kOLKiteThemeReceiptSuccess = @"ly.kite.theme.kOLKiteThemeReceiptSuccess";
+static NSString *const kOLKiteThemeReceiptFailure = @"ly.kite.theme.kOLKiteThemeReceiptFailure";
+static NSString *const kOLKiteThemeReceiptSuccessBg = @"ly.kite.theme.kOLKiteThemeReceiptSuccessBg";
+static NSString *const kOLKiteThemeReceiptFailureBg = @"ly.kite.theme.kOLKiteThemeReceiptFailureBg";
+static NSString *const kOLKiteThemeCancelButtonIcon = @"ly.kite.theme.kOLKiteThemeCancelButtonIcon";
+static NSString *const kOLKiteThemeSupportEmail = @"ly.kite.theme.supportEmail";
 
 static NSString *const kOLKiteLightThemeColor1 = @"ly.kite.theme.light.color.1";
 static NSString *const kOLKiteLightThemeColor2 = @"ly.kite.theme.light.color.2";
 static NSString *const kOLKiteLightThemeColor3 = @"ly.kite.theme.light.color.3";
 static NSString *const kOLKiteLightThemeColor4 = @"ly.kite.theme.light.color.4";
+static NSString *const kOLKiteLightThemeColor5 = @"ly.kite.theme.light.color.5";
 static NSString *const kOLKiteLightThemeTitleColor1 = @"ly.kite.theme.light.titleColor.1";
 static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 
@@ -79,6 +80,7 @@ static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor2;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor3;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor4;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColor5;
 @property (strong, nonatomic, readonly) UIColor *lightThemeTitleColor1;
 - (UIFont *)lightThemeFont1WithSize:(CGFloat)size;
 - (NSString *)backButtonText;

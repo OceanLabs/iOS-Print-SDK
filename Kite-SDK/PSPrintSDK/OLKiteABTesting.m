@@ -268,6 +268,16 @@ static dispatch_once_t srand48OnceToken;
     return color;
 }
 
+- (UIColor *)lightThemeColor5{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:kOLKiteLightThemeColor5];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    return color;
+}
+
 - (UIColor *)lightThemeTitleColor1{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     UIColor *color;
@@ -308,6 +318,7 @@ static dispatch_once_t srand48OnceToken;
     [defaults removeObjectForKey:kOLKiteLightThemeColor2];
     [defaults removeObjectForKey:kOLKiteLightThemeColor3];
     [defaults removeObjectForKey:kOLKiteLightThemeColor4];
+    [defaults removeObjectForKey:kOLKiteLightThemeColor5];
     [defaults removeObjectForKey:kOLKiteLightThemeTitleColor1];
     
     [defaults synchronize];
@@ -420,7 +431,7 @@ static dispatch_once_t srand48OnceToken;
     
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
     if (!experimentDict) {
-        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0, @"Dark" : @0, @"MinimalWhite" : @0};
+        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0, @"Dark" : @0, @"MinimalWhite" : @0, @"ThemeColor" : @0};
     }
     [OLKiteABTesting splitTestWithName:kOLKiteABTestProductTileStyle
                    conditions:@{
@@ -428,7 +439,8 @@ static dispatch_once_t srand48OnceToken;
                                 @"A" : safeObject(experimentDict[@"A"]),
                                 @"B" : safeObject(experimentDict[@"B"]),
                                 @"Dark" : safeObject(experimentDict[@"Dark"]),
-                                @"MinimalWhite" : safeObject(experimentDict[@"MinimalWhite"])
+                                @"MinimalWhite" : safeObject(experimentDict[@"MinimalWhite"]),
+                                @"ThemeColor" : safeObject(experimentDict[@"ThemeColor"])
                                 } block:^(id choice) {
                                     self.productTileStyle = choice;
                                 }];

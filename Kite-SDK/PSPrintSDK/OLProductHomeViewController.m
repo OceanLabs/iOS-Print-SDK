@@ -376,7 +376,9 @@
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (url && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
         [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
-            if (error) return;
+            if (error){
+                return;
+            }
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
@@ -562,6 +564,10 @@
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
     CGFloat height = 233;
+    
+    if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"ThemeColor"]){
+        height = 200;
+    }
     
     if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) {
         if (numberOfCells == 2){
@@ -789,6 +795,12 @@
         
         if (![OLKiteABTesting sharedInstance].skipProductOverview){
             [[cell.contentView viewWithTag:303] removeFromSuperview];
+        }
+    }
+    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"ThemeColor"]){
+        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+            UILabel *detailsLabel = [cell.contentView viewWithTag:302];
+            detailsLabel.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
         }
     }
     else{

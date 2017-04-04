@@ -1858,8 +1858,8 @@
 				2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */,
 				2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
-				2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */,
 				2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */,
+				2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */,
 				2E8E19B71E93E0BF0003905E /* OLHintView.xib */,
 				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
 			);
