@@ -48,8 +48,7 @@
 #import "OLKiteViewController+Private.h"
 
 static const NSInteger kSectionCover = 0;
-static const NSInteger kSectionHelp = 1;
-static const NSInteger kSectionPages = 2;
+static const NSInteger kSectionPages = 1;
 
 @interface OLPhotobookViewController ()
 @property (weak, nonatomic) UIImageView *coverImageView;
@@ -68,14 +67,10 @@ static const NSInteger kSectionPages = 2;
 @property (assign, nonatomic) BOOL rotating;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
 @property (assign, nonatomic) NSInteger longPressImageIndex;
-@property (strong, nonatomic) NSNumber *replacingImageNumber;
 @property (strong, nonatomic) NSNumber *selectedIndexNumber;
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
-@property (strong, nonatomic) OLAsset *coverPhoto;
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 @property (strong, nonatomic) UIButton *nextButton;
-@property (assign, nonatomic) BOOL autoAddedCover;
-@property (assign, nonatomic) BOOL shownImagePicker;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
 
@@ -164,11 +159,6 @@ static const NSInteger kSectionPages = 2;
         [self collectionView:self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:maxItem+2 inSection:kSectionPages]];
         self.haveCachedCells = YES;
     }
-    
-    if (!self.shownImagePicker && [OLAsset userSelectedAssets].nonPlaceholderAssets.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
-        self.shownImagePicker = YES;
-        [self photobook:self.childViewControllers[1] userDidTapOnImageWithIndex:0];
-    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -243,58 +233,18 @@ static const NSInteger kSectionPages = 2;
     self.navigationItem.rightBarButtonItem.enabled = NO;
     
     OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
-    photobook.coverPhoto = self.coverPhoto;
     [photobook loadCoverPhoto];
     photobook.product = self.product;
     
     [self.navigationController pushViewController:photobook animated:YES];
 }
 
-//TODO
-//- (void)updatePhotobookPhotos{
-//    if (!self.photobookPhotos){
-//        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:[OLUserSession currentSession].userSelectedPhotos copyItems:NO];
-//        self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
-//        NSInteger start = 0;
-//        if (!self.coverPhoto){
-//            self.coverPhoto = [OLUserSession currentSession].userSelectedPhotos.firstObject;
-//            start++;
-//        }
-//        else if ([self.coverPhoto isKindOfClass:[OLPlaceholderAsset class]]){
-//            self.coverPhoto = nil;
-//        }
-//        for (NSInteger i = start; i < self.product.quantityToFulfillOrder + start; i++){
-//            [self.photobookPhotos addObject:i < [OLUserSession currentSession].userSelectedPhotos.count ? [OLUserSession currentSession].userSelectedPhotos[i] : [OLPlaceholderAsset asset]];
-//        }
-//    }
-//    else{
-//        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:[[OLUserSession currentSession].userSelectedPhotos subarrayWithRange:NSMakeRange(0, MIN([OLUserSession currentSession].userSelectedPhotos.count, self.product.quantityToFulfillOrder+1))]];
-//        [newPhotos removeObjectsInArray:self.userSelectedPhotosCopy];
-//        for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
-//            BOOL foundSpot = NO;
-//            for (NSInteger bookPhoto = self.addNewPhotosAtIndex; bookPhoto < self.photobookPhotos.count && !foundSpot; bookPhoto++){
-//                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
-//                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
-//                    foundSpot = YES;
-//                }
-//            }
-//            for (NSInteger bookPhoto = 0; bookPhoto < self.addNewPhotosAtIndex && !foundSpot; bookPhoto++){
-//                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
-//                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
-//                    foundSpot = YES;
-//                }
-//            }
-//        }
-//        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:[OLUserSession currentSession].userSelectedPhotos copyItems:NO];
-//    }
-//    
-//}
-
 - (void)swapImageAtIndex:(NSInteger)index1 withImageAtIndex:(NSInteger)index2{
     [[OLAsset userSelectedAssets] exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
 }
 
 - (OLPhotobookPageContentViewController *)pageControllerForPageIndex:(NSInteger)index{
+    index--;
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         if (photobook.bookClosed){
             continue;
@@ -386,10 +336,7 @@ static const NSInteger kSectionPages = 2;
 
 - (void)deletePage{
     if (self.longPressImageIndex == -1){
-        //TODO
-//        [[OLAsset userSelectedAssets] removeAsset:self.coverPhoto];
-        self.coverPhoto = nil;
-        self.interactionPhotobook.coverPhoto = nil;
+        [[OLAsset userSelectedAssets] replaceObjectAtIndex:0 withObject:[[OLPlaceholderAsset alloc] init]];
         [self.interactionPhotobook loadCoverPhoto];
         return;
     }
@@ -409,7 +356,7 @@ static const NSInteger kSectionPages = 2;
     OLAsset *cropPhoto;
     UIImageView *imageView;
     if (self.longPressImageIndex == -1){
-        cropPhoto = self.coverPhoto;
+        cropPhoto = [OLAsset userSelectedAssets].firstObject;
         imageView = self.interactionPhotobook.coverImageView;
     }
     else{
@@ -474,7 +421,7 @@ static const NSInteger kSectionPages = 2;
     }
     self.animating = YES;
     if (tappedImageIndex == -1){ //Replace Cover
-        if (!self.coverPhoto){
+        if ([[OLAsset userSelectedAssets].firstObject isKindOfClass:[OLPlaceholderAsset class]]){
             self.addNewPhotosAtIndex = tappedImageIndex;
             [self addMorePhotosFromView:photobook.view];
             self.animating = NO;
@@ -679,13 +626,6 @@ static const NSInteger kSectionPages = 2;
     if (indexPath.section == kSectionCover){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"coverEditCell" forIndexPath:indexPath];
     }
-    else if (indexPath.section == kSectionHelp){
-        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"helpCell" forIndexPath:indexPath];
-        UILabel *label = (UILabel *)[cell viewWithTag:10];
-        label.text = NSLocalizedStringFromTableInBundle(@"Tap to swap pages. Hold for more options.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        [[cell viewWithTag:999] removeFromSuperview];
-        return cell;
-    }
     else{
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"bookPreviewCell" forIndexPath:indexPath];
     }
@@ -716,7 +656,6 @@ static const NSInteger kSectionPages = 2;
         if (indexPath.section == kSectionCover){
             photobook.editingPageNumber = nil;
             
-            photobook.coverPhoto = self.coverPhoto;
             [photobook loadCoverPhoto];
         }
         else{
@@ -758,7 +697,7 @@ static const NSInteger kSectionPages = 2;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if (section == kSectionCover || section == kSectionHelp){
+    if (section == kSectionCover){
         return 1;
     }
     else{
@@ -772,10 +711,7 @@ static const NSInteger kSectionPages = 2;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.section == kSectionHelp){
-        return CGSizeMake(self.view.frame.size.width, 20);
-    }
-    else if (indexPath.section == kSectionCover){
+    if (indexPath.section == kSectionCover){
         return CGSizeMake(self.view.frame.size.width, [self cellHeightForSize:self.view.frame.size] + 10);
     }
     else {
@@ -792,7 +728,7 @@ static const NSInteger kSectionPages = 2;
 
 - (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
     if (self.longPressImageIndex == -1){
-        [self.coverPhoto unloadImage];
+        [[OLAsset userSelectedAssets].firstObject unloadImage];
     }
     else{
         [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] unloadImage];
@@ -802,7 +738,7 @@ static const NSInteger kSectionPages = 2;
 
 - (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
     if (self.longPressImageIndex == -1){
-        [self.coverPhoto unloadImage];
+        [[OLAsset userSelectedAssets].firstObject unloadImage];
     }
     else{
         [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] unloadImage];
@@ -812,9 +748,8 @@ static const NSInteger kSectionPages = 2;
 
 -(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     if (self.longPressImageIndex == -1){
-        [self.coverPhoto unloadImage];
-        self.coverPhoto.edits = cropper.edits;
-        self.interactionPhotobook.coverPhoto = self.coverPhoto;
+        [[OLAsset userSelectedAssets].firstObject unloadImage];
+        [OLAsset userSelectedAssets].firstObject.edits = cropper.edits;
         [self.interactionPhotobook loadCoverPhoto];
         
     }
@@ -833,8 +768,7 @@ static const NSInteger kSectionPages = 2;
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
     if (self.longPressImageIndex == -1){
-        self.coverPhoto = asset;
-        self.interactionPhotobook.coverPhoto = self.coverPhoto;
+        [[OLAsset userSelectedAssets] replaceObjectAtIndex:0 withObject:asset];
         [self.interactionPhotobook loadCoverPhoto];
     }
     else{
@@ -850,10 +784,6 @@ static const NSInteger kSectionPages = 2;
 
 - (void)addMorePhotosFromView:(UIView *)view{
     NSInteger max = self.product.quantityToFulfillOrder + 1; //Plus cover photo
-    NSInteger current = [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
-    if (self.replacingImageNumber){
-        current--;
-    }
     
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     vc.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];
@@ -887,61 +817,21 @@ static const NSInteger kSectionPages = 2;
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    
-    if (self.replacingImageNumber){
-        if ([self.replacingImageNumber integerValue] == -1){
-            self.coverPhoto = nil;
-            self.addNewPhotosAtIndex = -1;
-        }
-        else{
-            [[OLAsset userSelectedAssets] replaceObjectAtIndex:[self.replacingImageNumber integerValue] withObject:[[OLPlaceholderAsset alloc] init]];
-        }
-        self.replacingImageNumber = nil;
-    }
+    [OLAsset updateUserSelectedAssetsAtIndex:MAX(0, self.addNewPhotosAtIndex) withAddedAssets:addedAssets removedAssets:removedAssets];
     
     if (self.addNewPhotosAtIndex == -1){
-            self.coverPhoto = [addedAssets firstObject];
-        if (addedAssets.count > 0){
-            addedAssets = [addedAssets mutableCopy];
-            [(NSMutableArray *)addedAssets removeObjectAtIndex:0];
-            [assets removeObjectIdenticalTo:self.coverPhoto];
-        }
-        self.addNewPhotosAtIndex = 0;
-        
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if ([photobook bookClosed]){
-                photobook.coverPhoto = self.coverPhoto;
                 [photobook loadCoverPhoto];
                 break;
             }
         }
     }
-    
-//    [self.photobookPhotos removeObjectsInArray:removedAssets];
-    //TODO
-//    [self updatePhotobookPhotos];
+
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         if (!photobook.bookClosed){
             for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
                 [page loadImageWithCompletionHandler:NULL];
-            }
-        }
-    }
-    //TODO
-//    [self updateUserSelectedPhotos];
-    
-    if (!self.autoAddedCover && assets.count > 0){
-        self.autoAddedCover = YES;
-        if (!self.coverPhoto){
-            self.coverPhoto = addedAssets.firstObject;
-            [assets removeObject:self.coverPhoto];
-            [assets insertObject:self.coverPhoto atIndex:0];
-            for (OLPhotobookViewController *photobook in self.childViewControllers){
-                if ([photobook bookClosed]){
-                    photobook.coverPhoto = self.coverPhoto;
-                    [photobook loadCoverPhoto];
-                    break;
-                }
             }
         }
     }

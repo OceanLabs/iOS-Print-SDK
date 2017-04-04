@@ -1241,7 +1241,7 @@
 			name = SVProgressHUD;
 			sourceTree = "<group>";
 		};
-		2E4CAF101BC293EA0089FA26 /* Products */ = {
+		2E4CAF101BC293EA0089FA26 /* Product Lists */ = {
 			isa = PBXGroup;
 			children = (
 				2EA8BEAC1A484FCB008A9248 /* OLProductHomeViewController.h */,
@@ -1259,7 +1259,7 @@
 				2E5D95AA1CA984E00080EF07 /* OLUpsellViewController.h */,
 				2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */,
 			);
-			name = Products;
+			name = "Product Lists";
 			sourceTree = "<group>";
 		};
 		2E4CAF111BC293FC0089FA26 /* Edit-Review */ = {
@@ -1839,7 +1839,7 @@
 		CDA8BF4F18D70CF500D835BB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				2E4CAF101BC293EA0089FA26 /* Products */,
+				2E4CAF101BC293EA0089FA26 /* Product Lists */,
 				2E1E66F21D479674002524A4 /* Image Picker */,
 				2E4CAF111BC293FC0089FA26 /* Edit-Review */,
 				2E4CAF121BC2940A0089FA26 /* Shipping-Payment */,

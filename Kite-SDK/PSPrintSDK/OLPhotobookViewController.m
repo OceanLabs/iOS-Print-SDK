@@ -60,6 +60,7 @@
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "NSObject+Utils.h"
 #import "OLKiteViewController+Private.h"
+#import "UIImageView+FadeIn.h"
 
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;
@@ -128,7 +129,6 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) OLPopupOptionsImageView *coverImageView;
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
-@property (strong, nonatomic) UILabel *coverHelpLabel;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
 
@@ -552,18 +552,12 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)loadCoverPhoto{
-    if (!self.coverPhoto || (id)self.coverPhoto == [NSNull null]){
-        self.coverImageView.image = nil;
-        return;
-    }
     __weak OLPhotobookViewController *welf = self;
     if (self.coverImageView){
-        [self.coverPhoto imageWithSize:self.coverImageView.frame.size applyEdits:YES progress:^(float progress){
+        [self.coverImageView setAndFadeInImageWithOLAsset:[OLAsset userSelectedAssets].firstObject size:self.coverImageView.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
             [welf.coverImageView setProgress:progress];
-        }completion:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                welf.coverImageView.image = image;
-            });
+        }completionHandler:^{
+            welf.coverImageView.backgroundColor = [UIColor clearColor];
         }];
     }
 }
@@ -674,7 +668,7 @@ static const CGFloat kBookEdgePadding = 38;
 -(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     [self.editingAsset unloadImage];
     self.editingAsset.edits = cropper.edits;
-    if (self.editingAsset == self.coverPhoto){
+    if (self.editingAsset == [OLAsset userSelectedAssets].firstObject){
         [self loadCoverPhoto];
     }
     
@@ -687,8 +681,8 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    if (self.editingAsset == self.coverPhoto){
-        self.coverPhoto = asset;
+    if (self.editingAsset == [OLAsset userSelectedAssets].firstObject){
+        [[OLAsset userSelectedAssets] replaceObjectAtIndex:0 withObject:asset];
         [self loadCoverPhoto];
     }
     else{
@@ -829,7 +823,12 @@ static const CGFloat kBookEdgePadding = 38;
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    job.frontCover = self.coverPhoto;
+    if (![[OLAsset userSelectedAssets].firstObject isKindOfClass:[OLPlaceholderAsset class]]){
+        job.frontCover = [OLAsset userSelectedAssets].firstObject;
+    }
+    else{
+        job.frontCover = nil;
+    }
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
@@ -872,37 +871,33 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)onCoverTapRecognized:(UITapGestureRecognizer *)sender{
     if (self.editMode){
         [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:-1];
+        return;
     }
-    else if (self.coverPhoto){
-        if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-            return;
-        }
-        self.editingAsset = self.coverPhoto;
-        UIImageView *imageView = self.coverImageView;
-        OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
-        cropVc.delegate = self;
-        cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
-        cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
-        cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
-        cropVc.previewSourceView = imageView;
-        cropVc.providesPresentationContextTransitionStyle = true;
-        cropVc.definesPresentationContext = true;
-        cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-        cropVc.product = self.product;
-        
-        [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
-            [cropVc setFullImage:image];
-            cropVc.edits = self.editingAsset.edits;
-            [self presentViewController:cropVc animated:NO completion:NULL];
-        }];
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        return;
     }
-    else{
-        [self openBook:sender];
-    }
+    self.editingAsset = [OLAsset userSelectedAssets].firstObject;
+    UIImageView *imageView = self.coverImageView;
+    OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
+    cropVc.delegate = self;
+    cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
+    cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
+    cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
+    cropVc.previewSourceView = imageView;
+    cropVc.providesPresentationContextTransitionStyle = true;
+    cropVc.definesPresentationContext = true;
+    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    cropVc.product = self.product;
+    
+    [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+        [cropVc setFullImage:image];
+        cropVc.edits = self.editingAsset.edits;
+        [self presentViewController:cropVc animated:NO completion:NULL];
+    }];
 }
 
 - (void)onCoverLongPressRecognized:(UILongPressGestureRecognizer *)sender{
-    if (self.editMode && self.coverPhoto){
+    if (self.editMode && ![[OLAsset userSelectedAssets].firstObject isKindOfClass:[OLPlaceholderAsset class]]){
         [self.photobookDelegate photobook:self userDidLongPressOnImageWithIndex:-1 sender:sender];
     }
 }
@@ -926,7 +921,7 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
-    NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]];
+    NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]] + 1;
     
     if (index == NSNotFound){
         return;
@@ -1069,7 +1064,7 @@ static const CGFloat kBookEdgePadding = 38;
         self.croppingImageIndex = 1;
     }
     OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
-    NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]];
+    NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]] + 1;
     [self.photobookDelegate photobook:self userDidLongPressOnImageWithIndex:index sender:sender];
 }
 
@@ -1129,7 +1124,6 @@ static const CGFloat kBookEdgePadding = 38;
     self.coverImageView = coverImageView;
     [self loadCoverPhoto];
     coverImageView.tag = 18;
-    coverImageView.contentMode = UIViewContentModeScaleAspectFill;
     coverImageView.clipsToBounds = YES;
     [halfBookCoverImageContainer addSubview:coverImageView];
     coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -1218,20 +1212,6 @@ static const CGFloat kBookEdgePadding = 38;
         [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:coverImageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:halfBookCoverImageContainer attribute:NSLayoutAttributeHeight multiplier:0.9 constant:0]];
         [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:coverImageView attribute:NSLayoutAttributeCenterX multiplier:0.97 constant:0]];
         [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:coverImageView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
-        
-        if (self.editMode){
-            [[halfBookCoverImageContainer viewWithTag:1234] removeFromSuperview];
-            UILabel *helpLabel = [[UILabel alloc] init];
-            helpLabel.tag = 1234;
-            helpLabel.font = [UIFont systemFontOfSize:11];
-            helpLabel.text = NSLocalizedStringFromTableInBundle(@"Tap to edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Tap to edit [photo]");
-            helpLabel.translatesAutoresizingMaskIntoConstraints = NO;
-            self.coverHelpLabel = helpLabel;
-            [halfBookCoverImageContainer insertSubview:helpLabel belowSubview:coverImageView];
-            [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:helpLabel attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-            [halfBookCoverImageContainer addConstraint:[NSLayoutConstraint constraintWithItem:halfBookCoverImageContainer attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:helpLabel attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
-        }
-        
         [self.bookCover viewWithTag:kTagRight].hidden = NO;
     }
     else{
@@ -1508,28 +1488,17 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    
+    [OLAsset updateUserSelectedAssetsAtIndex:MAX(0, self.addNewPhotosAtIndex) withAddedAssets:addedAssets removedAssets:removedAssets];
     if (self.addNewPhotosAtIndex == -1){
-        self.coverPhoto = [addedAssets firstObject];
-        addedAssets = [[addedAssets subarrayWithRange:NSMakeRange(1, assets.count - 1)] mutableCopy];
-        self.addNewPhotosAtIndex = 0;
-        
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if ([photobook bookClosed]){
-                photobook.coverPhoto = self.coverPhoto;
                 [photobook loadCoverPhoto];
-                break;
             }
         }
     }
-//    [self.photobookPhotos removeObjectsInArray:removedAssets];
-    //TODO
-//    [self updatePhotobookPhotos];
     for (OLPhotobookPageContentViewController *page in self.pageController.viewControllers){
         [page loadImageWithCompletionHandler:NULL];
     }
-    //TODO
-//    [self updateUserSelectedPhotos];
     
     if (self.presentedVc){
         [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
@@ -1540,47 +1509,6 @@ static const CGFloat kBookEdgePadding = 38;
     
     self.vcDelegateForCustomVc = nil;
     self.presentedVc = nil;
-    
 }
-
-//TODO
-//- (void)updatePhotobookPhotos{
-//    if (!self.photobookPhotos){
-//        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:[OLUserSession currentSession].userSelectedPhotos copyItems:NO];
-//        self.photobookPhotos = [[NSMutableArray alloc] initWithCapacity:self.product.quantityToFulfillOrder];
-//        NSInteger start = 0;
-//        if (!self.coverPhoto){
-//            self.coverPhoto = [OLUserSession currentSession].userSelectedPhotos.firstObject;
-//            start++;
-//        }
-//        else if ([self.coverPhoto isKindOfClass:[OLPlaceholderAsset class]]){
-//            self.coverPhoto = nil;
-//        }
-//        for (NSInteger i = start; i < self.product.quantityToFulfillOrder + start; i++){
-//            [self.photobookPhotos addObject:i < [OLUserSession currentSession].userSelectedPhotos.count ? [OLUserSession currentSession].userSelectedPhotos[i] : [OLPlaceholderAsset asset]];
-//        }
-//    }
-//    else{
-//        NSMutableArray *newPhotos = [NSMutableArray arrayWithArray:[[OLUserSession currentSession].userSelectedPhotos subarrayWithRange:NSMakeRange(0, MIN([OLUserSession currentSession].userSelectedPhotos.count, self.product.quantityToFulfillOrder+1))]];
-//        [newPhotos removeObjectsInArray:self.userSelectedPhotosCopy];
-//        for (NSInteger newPhoto = 0; newPhoto < newPhotos.count; newPhoto++){
-//            BOOL foundSpot = NO;
-//            for (NSInteger bookPhoto = self.addNewPhotosAtIndex; bookPhoto < self.photobookPhotos.count && !foundSpot; bookPhoto++){
-//                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
-//                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
-//                    foundSpot = YES;
-//                }
-//            }
-//            for (NSInteger bookPhoto = 0; bookPhoto < self.addNewPhotosAtIndex && !foundSpot; bookPhoto++){
-//                if ([self.photobookPhotos[bookPhoto] isKindOfClass:[OLPlaceholderAsset class]]){
-//                    self.photobookPhotos[bookPhoto] = newPhotos[newPhoto];
-//                    foundSpot = YES;
-//                }
-//            }
-//        }
-//        self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:[OLUserSession currentSession].userSelectedPhotos copyItems:NO];
-//    }
-//    
-//}
 
 @end

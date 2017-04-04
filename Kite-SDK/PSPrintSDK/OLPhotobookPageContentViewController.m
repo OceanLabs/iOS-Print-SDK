@@ -122,7 +122,7 @@
 }
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
-    NSInteger imageIndex = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex].firstIndex;
+    NSInteger imageIndex = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex].firstIndex + 1;
     OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:imageIndex];
     self.imageView.image = nil;
     dispatch_async(dispatch_get_main_queue(), ^{

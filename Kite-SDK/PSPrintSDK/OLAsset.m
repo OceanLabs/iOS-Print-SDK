@@ -614,6 +614,22 @@ static NSOperationQueue *imageOperationQueue;
     return [OLUserSession currentSession].userSelectedAssets;
 }
 
++ (void)updateUserSelectedAssetsAtIndex:(NSInteger)insertIndex withAddedAssets:(NSArray<OLAsset *> *)addedAssets removedAssets:(NSArray<OLAsset *> *)removedAssets{
+    for (OLAsset *asset in addedAssets){
+        for (NSInteger bookPhoto = 0; bookPhoto < [OLAsset userSelectedAssets].count; bookPhoto++){
+            NSInteger index = (bookPhoto + insertIndex) % [OLAsset userSelectedAssets].count;
+            if ([[[OLAsset userSelectedAssets] objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
+                [[OLAsset userSelectedAssets] replaceObjectAtIndex:index withObject:asset];
+                break;
+            }
+        }
+    }
+    for (OLAsset *asset in removedAssets){
+        NSInteger index = [[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:asset];
+        [[OLAsset userSelectedAssets] replaceObjectAtIndex:index withObject:[[OLPlaceholderAsset alloc] init]];
+    }
+}
+
 - (void)unloadImage {
     self.cachedEditedImage = nil; // we can always recreate this
 }

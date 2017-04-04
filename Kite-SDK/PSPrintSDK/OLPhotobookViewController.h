@@ -51,7 +51,6 @@
 @property (assign, nonatomic) BOOL editMode;
 @property (assign, nonatomic) BOOL startOpen;
 @property (assign, nonatomic, readonly) BOOL bookClosed;
-@property (strong, nonatomic) OLAsset *coverPhoto;
 @property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
 
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
