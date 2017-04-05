@@ -503,6 +503,10 @@ static CGFloat fadeTime = 0.3;
     return [(UINavigationController *)self.childViewControllers.firstObject viewControllers];
 }
 
+- (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder{
+    return [[OLReceiptViewController alloc] initWithPrintOrder:printOrder];
+}
+
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
     if (group.products.count > 1){
         return @"OLTypeSelectionViewController";
