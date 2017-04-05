@@ -51,6 +51,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIViewController+OLMethods.h"
 #import <Photos/Photos.h>
+#import "UIView+RoundRect.h"
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomViewControllerPhotoProvider *> *customImageProviders;
@@ -143,6 +144,18 @@
     
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         self.nextButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+    }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
+    if (font){
+        [self.nextButton.titleLabel setFont:font];
+    }
+    
+    NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
+    if (cornerRadius){
+        [self.nextButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
     
     NSMutableArray<OLImagePickerProvider *> *providers = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
@@ -727,6 +740,11 @@
     UILabel *label = [cell viewWithTag:20];
     imageView.image = self.providers[indexPath.item].icon;
     label.text = self.providers[indexPath.item].name;
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:12];
+    if (font){
+        label.font = font;
+    }
     
     return cell;
 }

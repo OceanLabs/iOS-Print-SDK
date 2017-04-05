@@ -47,6 +47,8 @@
 #import "OLUserSession.h"
 #import "UIViewController+OLMethods.h"
 #import "OLProductOverviewPageAnimatedContentViewController.h"
+#import "UIColor+OLHexString.h"
+#import "UIView+RoundRect.h"
 
 @interface OLKiteViewController ()
 - (void)dismiss;
@@ -161,16 +163,28 @@
         [self.callToActionButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
         [self.detailsSeparator setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
-    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
     if (font){
         [self.callToActionButton.titleLabel setFont:font];
+    }
+    
+    NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
+    if (cornerRadius){
+        [self.callToActionButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductDetailsScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif
     
-    self.originalBoxConstraint = self.detailsBoxTopCon.constant;   
+    self.originalBoxConstraint = self.detailsBoxTopCon.constant;
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeColorDescriptionSeparator){
+        self.detailsSeparator.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorDescriptionSeparator;
+    }
 }
 
 - (void)setupProductRepresentation{

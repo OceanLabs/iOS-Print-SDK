@@ -118,6 +118,40 @@
     }
     
     [self setupBannerView];
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeSecretRevealURL){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:[OLKiteABTesting sharedInstance].lightThemeSecretRevealURL] withCompletionHandler:^(UIImage *image, NSError *error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.topSurpriseImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                self.topSurpriseImageView.image = image;
+                CGRect f = self.topSurpriseImageView.frame;
+                
+                f.size.height = (self.view.frame.size.width / f.size.width) * f.size.height;
+                f.size.width = self.view.frame.size.width;
+                
+                f.origin.y = -f.size.height;
+                self.topSurpriseImageView.frame = f;
+                self.topSurpriseImageView.contentMode = UIViewContentModeScaleAspectFill;
+                self.topSurpriseImageView.clipsToBounds = YES;
+                
+                [self.collectionView addSubview:self.topSurpriseImageView];
+            });
+        }];
+    }
+}
+
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    
+    if (self.topSurpriseImageView){
+        CGRect f = self.topSurpriseImageView.frame;
+        
+        f.size.height = (self.view.frame.size.width / f.size.width) * f.size.height;
+        f.size.width = self.view.frame.size.width;
+        
+        f.origin.y = -f.size.height;
+        self.topSurpriseImageView.frame = f;
+    }
 }
 
 - (void)setupBannerView{

@@ -138,7 +138,10 @@
     
     self.ctaButton.enabled = YES;
     
-    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
     if (font){
         [self.ctaButton.titleLabel setFont:font];
     }
@@ -178,10 +181,26 @@
     [self.view addConstraint:con];
     
     if (header){
-        [(UILabel *)[self.hintView viewWithTag:20] setText:header];
+        UILabel *label = (UILabel *)[self.hintView viewWithTag:20];
+        [label setText:header];
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:25];
+        if (!font){
+            font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:25];
+        }
+        
+        if (font){
+            [label setFont:font];
+        }
     }
     if (body){
-        [(UILabel *)[self.hintView viewWithTag:30] setText:body];
+        UILabel *label = (UILabel *)[self.hintView viewWithTag:30];
+        [label setText:body];
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:13];
+        if (font){
+            [label setFont:font];
+        }
     }
     
     NSTimeInterval delay = shouldDelay ? 1 : 0;

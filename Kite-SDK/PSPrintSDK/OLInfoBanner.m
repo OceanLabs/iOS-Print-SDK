@@ -45,6 +45,14 @@
     label.adjustsFontSizeToFitWidth = YES;
     [banner addSubview:label];
     
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
+    if (font){
+        [label setFont:font];
+    }
+    
     UIImageView *x = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x"]];
     [banner addSubview:x];
     

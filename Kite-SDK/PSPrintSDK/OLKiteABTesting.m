@@ -165,7 +165,7 @@ static dispatch_once_t srand48OnceToken;
 
 - (void)prefetchRemoteImages{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg, kOLKiteThemeCancelButtonIcon]){
+    for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg, kOLKiteThemeCancelButtonIcon, kOLKiteLightThemeSecretReveal]){
         NSURL *url = [NSURL URLWithString:[defaults objectForKey:s]];
         if (url){
             [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
@@ -223,6 +223,11 @@ static dispatch_once_t srand48OnceToken;
     return [defaults objectForKey:kOLKiteThemeCancelButtonIcon];
 }
 
+- (NSString *)lightThemeSecretRevealURL{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteLightThemeSecretReveal];
+}
+
 - (NSString *)supportEmail{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults objectForKey:kOLKiteThemeSupportEmail];
@@ -268,10 +273,20 @@ static dispatch_once_t srand48OnceToken;
     return color;
 }
 
-- (UIColor *)lightThemeColor5{
+- (UIColor *)lightThemeColorReviewCounter{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     UIColor *color;
-    NSString *hex = [defaults objectForKey:kOLKiteLightThemeColor5];
+    NSString *hex = [defaults objectForKey:kOLKiteLightThemeColorReviewCounter];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    return color;
+}
+
+- (UIColor *)lightThemeColorDescriptionSeparator{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:kOLKiteLightThemeColorDescriptionSeparator];
     if (hex){
         color = [UIColor colorWithHexString:hex];
     }
@@ -301,6 +316,24 @@ static dispatch_once_t srand48OnceToken;
     return font;
 }
 
+- (UIFont *)lightThemeHeavyFont1WithSize:(CGFloat)size{
+    UIFont *font;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *fontName = [defaults objectForKey:kOLKiteLightThemeHeavyFont1];
+    
+    if (fontName){
+        font = [UIFont fontWithName:fontName size:size];
+    }
+    
+    return font;
+}
+
+- (NSNumber *)lightThemeButtonRoundCorners{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:kOLKiteLightThemeButtonRoundCorners];
+}
+
 - (void)resetTheme{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:kOLKiteThemeHeaderLogoImageURL];
@@ -312,13 +345,15 @@ static dispatch_once_t srand48OnceToken;
     [defaults removeObjectForKey:kOLKiteThemeReceiptFailure];
     [defaults removeObjectForKey:kOLKiteThemeReceiptSuccessBg];
     [defaults removeObjectForKey:kOLKiteThemeReceiptFailureBg];
+    [defaults removeObjectForKey:kOLKiteLightThemeSecretReveal];
     [defaults removeObjectForKey:kOLKiteThemeSupportEmail];
     [defaults removeObjectForKey:kOLKiteLightThemeFont1];
     [defaults removeObjectForKey:kOLKiteLightThemeColor1];
     [defaults removeObjectForKey:kOLKiteLightThemeColor2];
     [defaults removeObjectForKey:kOLKiteLightThemeColor3];
     [defaults removeObjectForKey:kOLKiteLightThemeColor4];
-    [defaults removeObjectForKey:kOLKiteLightThemeColor5];
+    [defaults removeObjectForKey:kOLKiteLightThemeColorReviewCounter];
+    [defaults removeObjectForKey:kOLKiteLightThemeColorDescriptionSeparator];
     [defaults removeObjectForKey:kOLKiteLightThemeTitleColor1];
     
     [defaults synchronize];
