@@ -495,8 +495,7 @@ static CGFloat fadeTime = 0.3;
             [self.operationQueue addOperation:self.templateSyncOperation];
         }
         
-        UINavigationController *vc = self.childViewControllers.firstObject;
-        [vc.viewControllers.firstObject safePerformSelector:@selector(templateSyncDidUpdate) withObject:nil];
+        [self.viewControllers.firstObject safePerformSelector:@selector(templateSyncDidUpdate) withObject:nil];
     }
 }
 

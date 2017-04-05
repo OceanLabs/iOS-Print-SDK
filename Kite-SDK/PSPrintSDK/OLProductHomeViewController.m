@@ -374,7 +374,7 @@
     [super viewDidAppear:animated];
     
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
-    if (url && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
+    if (url && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:url] && !([self.navigationItem.titleView isKindOfClass:[UIImageView class]] || [self.parentViewController.navigationItem.titleView isKindOfClass:[UIImageView class]])){
         [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
             if (error){
                 return;
