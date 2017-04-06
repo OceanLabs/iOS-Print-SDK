@@ -47,6 +47,7 @@
 #import "NSObject+Utils.h"
 #import "OLKiteViewController+Private.h"
 #import "UIView+RoundRect.h"
+#import "OLInfoBanner.h"
 
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionPages = 1;
@@ -61,7 +62,7 @@ static const NSInteger kSectionPages = 1;
 + (NSString *) instagramClientID;
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate>
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate, OLInfoBannerDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL haveCachedCells;
@@ -74,6 +75,7 @@ static const NSInteger kSectionPages = 1;
 @property (strong, nonatomic) UIButton *nextButton;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
+@property (strong, nonatomic) OLInfoBanner *infoBanner;
 
 @end
 
@@ -118,6 +120,8 @@ static const NSInteger kSectionPages = 1;
     [self setupCtaButton];
     
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.nextButton.frame.size.height, self.collectionView.contentInset.right);
+    
+    [self addInfoBanner];
 }
 
 - (void)setupCtaButton{
@@ -342,6 +346,12 @@ static const NSInteger kSectionPages = 1;
     self.nextButton.frame = headerFrame;
 }
 
+- (void)addInfoBanner{
+    self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap to swap pages. Hold for more options.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+    self.infoBanner.delegate = self;
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 50, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+}
+
 #pragma mark - Menu Actions
 
 - (void)deletePage{
@@ -559,6 +569,7 @@ static const NSInteger kSectionPages = 1;
         self.animating = NO;
     }
     else{ //select
+        [self.infoBanner dismiss];
         self.selectedIndexNumber = [NSNumber numberWithInteger:tappedImageIndex];
         [page highlightImageAtIndex:tappedImageIndex];
         self.animating = NO;
@@ -567,6 +578,7 @@ static const NSInteger kSectionPages = 1;
 }
 
 - (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
+    [self.infoBanner dismiss];
     OLPopupOptionsImageView *view;
     if (index == -1){
         view = (OLPopupOptionsImageView *)sender.view;
