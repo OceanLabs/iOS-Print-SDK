@@ -145,7 +145,7 @@ static const NSInteger kSectionPages = 2;
         [self.nextButton.titleLabel setFont:font];
     }
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
+    self.nextButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
     [self.collectionView addSubview:self.nextButton];
 }
 
