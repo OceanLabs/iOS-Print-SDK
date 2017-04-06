@@ -45,6 +45,7 @@
 #import "OLCustomPickerController.h"
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "NSObject+Utils.h"
+#import "UIView+RoundRect.h"
 
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionHelp = 1;
@@ -144,6 +145,12 @@ static const NSInteger kSectionPages = 2;
     if (font){
         [self.nextButton.titleLabel setFont:font];
     }
+    NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
+    if (cornerRadius){
+        [self.nextButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+    }
+
+    
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.nextButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
     [self.collectionView addSubview:self.nextButton];
@@ -170,6 +177,22 @@ static const NSInteger kSectionPages = 2;
     if (!self.shownImagePicker && [OLUserSession currentSession].userSelectedPhotos.count == 0 && self.childViewControllers.count > 1 && !self.coverPhoto){
         self.shownImagePicker = YES;
         [self photobook:self.childViewControllers[1] userDidTapOnImageWithIndex:0];
+    }
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
+    if (font){
+        [self.nextButton.titleLabel setFont:font];
+    }
+    else{
+        [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+    }
+    
+    NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
+    if (cornerRadius){
+        [self.nextButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
 }
 
