@@ -288,7 +288,7 @@ static CGFloat fadeTime = 0.3;
         return [[OL3DProductViewController alloc] init];
     }
     
-    return [self.storyboard instantiateViewControllerWithIdentifier:[self reviewViewControllerIdentifierForProduct:product photoSelectionScreen:photoSelectionScreen]];
+    return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:[self reviewViewControllerIdentifierForProduct:product photoSelectionScreen:photoSelectionScreen]];
     
 }
 
