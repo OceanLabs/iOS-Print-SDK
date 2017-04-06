@@ -530,7 +530,7 @@
         [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
             id printItem = [OLHPSDKWrapper printItemWithAsset:[UIImage imageWithData:data scale:1]];
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIViewController *vc = [OLHPSDKWrapper printViewControllerWithDelegate:[OLUserSession currentSession].kiteVc.delegate dataSource:[OLUserSession currentSession].kiteVc.delegate printItem:printItem fromQueue:NO settingsOnly:NO];
+                UIViewController *vc = [OLHPSDKWrapper printViewControllerWithDelegate:self dataSource:[OLUserSession currentSession].kiteVc.delegate printItem:printItem fromQueue:NO settingsOnly:NO];
                 [self.navigationController presentViewController:vc animated:YES completion:NULL];
             });
         }];
@@ -814,6 +814,28 @@
     }
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
     [self collectionView:self.collectionView didSelectItemAtIndexPath:indexPath];
+}
+
+#pragma mark Print At Home delegate methods
+
+- (void)didCancelPrintFlow:(UIViewController *)printViewController{
+    id delegate = [OLUserSession currentSession].kiteVc.delegate;
+    if ([delegate respondsToSelector:@selector(didCancelPrintFlow:)]){
+        [delegate safePerformSelector:@selector(didCancelPrintFlow:) withObject:printViewController];
+    }
+    else{
+        [printViewController dismissViewControllerAnimated:YES completion:NULL];
+    }
+}
+
+- (void)didFinishPrintFlow:(UIViewController *)printViewController{
+    id delegate = [OLUserSession currentSession].kiteVc.delegate;
+    if ([delegate respondsToSelector:@selector(didFinishPrintFlow:)]){
+        [delegate safePerformSelector:@selector(didFinishPrintFlow:) withObject:printViewController];
+    }
+    else{
+        [printViewController dismissViewControllerAnimated:YES completion:NULL];
+    }
 }
 
 
