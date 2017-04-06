@@ -1144,6 +1144,15 @@ const NSInteger kOLEditTagCrop = 40;
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.editingTools setColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
+    if (font){
+        [self.editingTools.drawerDoneButton.titleLabel setFont:font];
+        [self.editingTools.ctaButton.titleLabel setFont:font];
+    }
 }
 
 - (void)setupCtaButtons{

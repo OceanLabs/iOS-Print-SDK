@@ -47,6 +47,8 @@
 #import "UIViewController+OLMethods.h"
 #import "OLProductOverviewPageAnimatedContentViewController.h"
 #import "OLKiteViewController+Private.h"
+#import "UIColor+OLHexString.h"
+#import "UIView+RoundRect.h"
 
 @interface OLProduct ()
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
@@ -121,6 +123,8 @@
     [self.view insertSubview:self.pageController.view belowSubview:self.pageControl];
     [self.pageController didMoveToParentViewController:self];
     
+    self.separatorHeightCon.constant = 1.5;
+    
     UIPageControl *pageControl = [UIPageControl appearance];
     pageControl.pageIndicatorTintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
     pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
@@ -155,9 +159,17 @@
         [self.callToActionButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
         [self.detailsSeparator setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
-    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
     if (font){
         [self.callToActionButton.titleLabel setFont:font];
+    }
+    
+    NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
+    if (cornerRadius){
+        [self.callToActionButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
     
 #ifndef OL_NO_ANALYTICS
@@ -166,6 +178,9 @@
     
     self.originalBoxConstraint = self.detailsBoxTopCon.constant;
     
+    if ([OLKiteABTesting sharedInstance].lightThemeColorDescriptionSeparator){
+        self.detailsSeparator.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorDescriptionSeparator;
+    }
 }
 
 - (void)setupProductRepresentation{

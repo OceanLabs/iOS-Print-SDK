@@ -51,6 +51,7 @@
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
 #import "OLKiteViewController+Private.h"
+#import "UIView+RoundRect.h"
 
 @interface OLPaymentViewController (Private)
 
@@ -140,7 +141,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 
 - (void)setupCtaButton{
     self.nextButton = [[UIButton alloc] init];
-    [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
@@ -150,11 +150,23 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
     }
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
-    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    self.nextButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
     if (font){
         [self.nextButton.titleLabel setFont:font];
     }
+    else{
+        [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+    }
+    
+    NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
+    if (cornerRadius){
+        [self.nextButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+    }
+    
     [self.collectionView addSubview:self.nextButton];
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
@@ -642,6 +654,10 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [editButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
     }
     [editButton setTitle:NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit image") forState:UIControlStateNormal];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [editButton.titleLabel setFont:font];
+    }
     
     UIButton *upButton = (UIButton *)[cell.contentView viewWithTag:12];
     [upButton addTarget:self action:@selector(onButtonUpArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -652,9 +668,14 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies]+1]];
     if ([OLKiteABTesting sharedInstance].lightThemeColor3){
-        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
         [upButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
         [downButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+    }
+    if ([OLKiteABTesting sharedInstance].lightThemeColorReviewCounter){
+        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColorReviewCounter];
+    }
+    else if ([OLKiteABTesting sharedInstance].lightThemeColor3){
+        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
     }
     
     OLAsset *asset = (OLAsset*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
