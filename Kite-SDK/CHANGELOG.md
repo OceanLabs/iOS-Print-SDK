@@ -1,3 +1,6 @@
+### 6.5.3
+- Handle HP SDK delegate calls internally if OLKiteDelegate doesn’t handle them.
+
 ### 6.5.2
 - Fixed xib file not being including in the resource bundle when installing via Cocoapods.
 
