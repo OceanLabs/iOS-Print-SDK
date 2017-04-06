@@ -243,7 +243,10 @@ static const CGFloat kBookEdgePadding = 38;
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
-    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:18];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:18];
+    }
     if (font){
         [self.ctaButton.titleLabel setFont:font];
     }

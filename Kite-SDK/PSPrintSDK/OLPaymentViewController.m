@@ -87,6 +87,10 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 static OLPaymentMethod selectedPaymentMethod;
 
+@interface OLKiteViewController ()
+- (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder;
+@end
+
 @interface OLProductTemplate ()
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
 @end
@@ -700,7 +704,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [welf.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
             return ;
         }
-        OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:welf.printOrder];
+        OLReceiptViewController *receiptVC = [[OLUserSession currentSession].kiteVc receiptViewControllerForPrintOrder:welf.printOrder];
         receiptVC.delegate = welf.delegate;
         receiptVC.presentedModally = welf.presentedModally;
         receiptVC.delegate = welf.delegate;

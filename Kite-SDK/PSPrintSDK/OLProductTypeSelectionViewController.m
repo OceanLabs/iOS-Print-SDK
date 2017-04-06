@@ -341,6 +341,12 @@
             detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
         }
     }
+    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"ThemeColor"]){
+        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+            UILabel *detailsLabel = [cell.contentView viewWithTag:302];
+            detailsLabel.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+        }
+    }
     else{
         UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
         button.layer.shadowColor = [[UIColor blackColor] CGColor];
@@ -391,6 +397,10 @@
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
     CGFloat height = 233;
+    
+    if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"ThemeColor"]){
+        height = 200;
+    }
     
     if (indexPath.item >= self.products.count && self.products.count % 2 == 0){
         return CGSizeMake(size.width, halfScreenHeight);
