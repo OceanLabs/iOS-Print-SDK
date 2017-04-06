@@ -422,7 +422,7 @@ static const NSInteger kSectionPages = 1;
     if (tappedImageIndex == -1){ //Replace Cover
         if ([[OLAsset userSelectedAssets].firstObject isKindOfClass:[OLPlaceholderAsset class]]){
             self.addNewPhotosAtIndex = tappedImageIndex;
-            [self addMorePhotosFromView:photobook.view];
+            [self showImagePicker];
             self.animating = NO;
             return;
         }
@@ -570,7 +570,7 @@ static const NSInteger kSectionPages = 1;
     }
     else if ([[[OLAsset userSelectedAssets] objectAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){ //pick new images
         self.addNewPhotosAtIndex = tappedImageIndex;
-        [self addMorePhotosFromView:page.view];
+        [self showImagePicker];
         self.animating = NO;
     }
     else{ //select
@@ -781,7 +781,7 @@ static const NSInteger kSectionPages = 1;
 
 #pragma mark - Adding new images
 
-- (void)addMorePhotosFromView:(UIView *)view{
+- (void)showImagePicker{
     NSInteger max = self.product.quantityToFulfillOrder + 1; //Plus cover photo
     
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];

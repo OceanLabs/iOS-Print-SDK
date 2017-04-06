@@ -53,7 +53,6 @@
 - (void) doCheckout;
 - (void)preparePhotosForCheckout;
 -(NSUInteger) totalNumberOfExtras;
-- (void)replacePhoto:(id)sender;
 @property (strong, nonatomic) UIButton *nextButton;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
 
@@ -86,11 +85,11 @@ CGFloat innerMargin = 3;
     self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering");
 }
 
-- (void)replacePhoto:(id)sender{
+- (void)showImagePicker{
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];
     vc.delegate = self;
-    vc.selectedAssets = [[NSMutableArray alloc] init];
-    vc.maximumPhotos = 1;
+    vc.maximumPhotos = self.product.quantityToFulfillOrder;
     vc.product = self.product;
     
     if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
@@ -132,7 +131,7 @@ CGFloat innerMargin = 3;
     self.editingAsset = [[OLAsset userSelectedAssets] objectAtIndex:(outerCollectionViewIndexPath.item) * [self collectionView:collectionView numberOfItemsInSection:indexPath.section] + indexPath.row];
     
     if ([OLUserSession currentSession].kiteVc.disableEditingTools || [self.editingAsset isKindOfClass:[OLPlaceholderAsset class]]){
-        [self replacePhoto:nil];
+        [self showImagePicker];
         return;
     }
     
@@ -496,41 +495,20 @@ CGFloat innerMargin = 3;
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    OLAsset *asset = addedAssets.lastObject;
-    if (asset){
-        [self imageEditViewController:nil didReplaceAssetWithAsset:asset];
-        
-        NSInteger frameQty = [self numberOfPhotosPerFrame];
-        //Need to do some work to only reload the proper cells, otherwise the cropped image might zoom to the wrong cell.
-        for (NSInteger i = 0; i < self.product.quantityToFulfillOrder; i++){
-            if ([[OLAsset userSelectedAssets] objectAtIndex:i] == self.editingAsset){
-                NSInteger outerIndex = i / frameQty;
-                
-                if (![self.collectionView.indexPathsForVisibleItems containsObject:[NSIndexPath indexPathForItem:outerIndex inSection:0]]){
-                    continue;
-                }
-                
-                UICollectionViewCell *outerCell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:outerIndex inSection:0]];
-                UICollectionView *innerCollectionView = [outerCell viewWithTag:20];
-                
-                NSInteger innerIndex = i - outerIndex * frameQty;
-                NSIndexPath *innerIndexPath = [NSIndexPath indexPathForItem:innerIndex inSection:0];
-                if (innerIndexPath){
-                    [innerCollectionView reloadItemsAtIndexPaths:@[innerIndexPath]];
-                }
-            }
-        }
-        
-        if (self.presentedVc){
-            [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
-        }
-        else{
-            [vc dismissViewControllerAnimated:YES completion:NULL];
-        }
-        
-        self.vcDelegateForCustomVc = nil;
-        self.presentedVc = nil;
+    [OLAsset updateUserSelectedAssetsAtIndex:[[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:self.editingAsset] withAddedAssets:addedAssets removedAssets:removedAssets];
+    
+    [self.collectionView reloadData];
+    
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
     }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
+    
 }
 
 @end

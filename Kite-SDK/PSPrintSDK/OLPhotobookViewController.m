@@ -912,7 +912,7 @@ static const CGFloat kBookEdgePadding = 38;
     OLAsset *asset = [OLAsset userSelectedAssets].firstObject;
     if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
         self.addNewPhotosAtIndex = -1;
-        [self addMorePhotosFromView:sender.view];
+        [self showImagePicker];
         return;
     }
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
@@ -966,7 +966,7 @@ static const CGFloat kBookEdgePadding = 38;
     }
     else if ([[[OLAsset userSelectedAssets] objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
         self.addNewPhotosAtIndex = index;
-        [self addMorePhotosFromView:sender.view];
+        [self showImagePicker];
     }
     else{
         if ([OLUserSession currentSession].kiteVc.disableEditingTools){
@@ -1485,7 +1485,7 @@ static const CGFloat kBookEdgePadding = 38;
 
 #pragma mark - Adding new images
 
-- (void)addMorePhotosFromView:(UIView *)view{
+- (void)showImagePicker{
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     vc.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];
     vc.delegate = self;
