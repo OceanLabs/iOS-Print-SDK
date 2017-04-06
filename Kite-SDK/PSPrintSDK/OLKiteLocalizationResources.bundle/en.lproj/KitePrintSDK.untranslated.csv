@@ -22,7 +22,6 @@ Address Search,Address Search,
 All Photos,All Photos,
 Alternatively type the following URL into your mobile browser's address bar,Alternatively type the following URL into your mobile browser's address bar,
 Are you sure you want to delete this item?,Are you sure you want to delete this item?,/* Refers to a basket item */
-"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos","Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos",
 Are you sure?,Are you sure?,
 Authorise,Authorise,
 Back,Back,
@@ -110,10 +109,8 @@ Move Pages,Move Pages,/* Title of a screen that allows the user to move the page
 New Payment,New Payment,
 Next,Next,
 No,No,
-No photos,No photos,/* Title of an alert letting the user know that they selected no photos */
 No Thanks,No Thanks,
 "No, keep it","No, keep it","/* No, keep [the photo] */"
-"No, not yet","No, not yet",
 Not now,Not now,
 OK,OK,/* Acknowledgent to an alert dialog. */
 Only registered %d/%d image URLs with the asset endpoint,Only registered %d/%d image URLs with the asset endpoint,
@@ -132,7 +129,6 @@ Payment (TEST),Payment (TEST),
 Payment Method,Payment Method,
 Phone,Phone,/* Phone number */
 Please add %d more.,Please add %d more.,/* Please add [a number] more [photos] */
-Please add at least one photo,Please add at least one photo,
 Please add some photos to your photo book,Please add some photos to your photo book,
 Please choose an address to have your order shipped to,Please choose an address to have your order shipped to,
 Please enter a card expiry date in the future,Please enter a card expiry date in the future,/* For credit cards */
@@ -159,7 +155,7 @@ PRINT AT HOME,PRINT AT HOME,
 Print It Anyway,Print It Anyway,
 Print order submission failed with a %lu HTTP response status code. Please try again.,Print order submission failed with a %lu HTTP response status code. Please try again.,
 Print Shop,Print Shop,
-Print these,Print these,/* Print these [photos] */
+Print these,Print these,
 Processing,Processing,/* Processing the order */
 PRODUCT OPTIONS,PRODUCT OPTIONS,
 Promo Code,Promo Code,
@@ -208,10 +204,8 @@ We'll send you confirmation and order updates.,We'll send you confirmation and o
 We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,
 Yes,Yes,
 Yes Please,Yes Please,
-"Yes, proceed","Yes, proceed",
 "Yes, remove it","Yes, remove it","/* Yes, remove [the photo] */"
 You can add %d more for the same price.,You can add %d more for the same price.,
-You can add more photos,You can add more photos,
 You need to authorize the app to access your Instagram account if you want to import photos from there.,You need to authorize the app to access your Instagram account if you want to import photos from there.,
 You've only selected %d photo.,You've only selected %d photo.,
 You've only selected %d photos.,You've only selected %d photos.,

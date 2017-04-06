@@ -21,7 +21,6 @@
 "All Photos" = "Toutes les photos";
 "Alternatively type the following URL into your mobile browser's address bar" = "Autrement, saisissez l’URL suivante dans la barre de votre navigateur mobile";
 "Are you sure you want to delete this item?" = "Etes-vous sûr de vouloir supprimer cet élément ?";
-"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos" = "Êtes-vous sûr de vouloir continuer ? Si vous le faites, les pages vierges seront remplies avec des photos en double";
 "Are you sure?" = "Êtes-vous certain ?";
 "Authorise" = "Autoriser";
 "Back" = "Retour";
@@ -110,10 +109,8 @@
 "New Payment" = "Nouveau paiement";
 "Next" = "Suivant";
 "No" = "Non";
-"No photos" = "Pas de photos";
 "No Thanks" = "Non merci";
 "No, keep it" = "Non, le garder";
-"No, not yet" = "Non, pas maintenant";
 "Not now" = "Pas maintenant";
 "OK" = "Accepter";
 "Only registered %d/%d image URLs with the asset endpoint" = "Seules les URL d'image %d/%d enregistrées avec le point d'extrémité d'actif";
@@ -132,7 +129,6 @@
 "Payment Method" = "Méthode de paiement";
 "Phone" = "Téléphone";
 "Please add %d more." = "Merci d'ajouter %d de plus.";
-"Please add at least one photo" = "Merci d'ajouter au moins une photo";
 "Please add some photos to your photo book" = "Merci d'ajouter des photos à votre livre";
 "Please choose an address to have your order shipped to" = "Veuillez choisir une adresse pour que votre commande soit expédiée";
 "Please enter a card expiry date in the future" = "Veuillez entrer une date d'expiration future de la carte";
@@ -208,10 +204,8 @@
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Nous vous enverrons une confirmation et des mises à jour de commande. Décochez cette case si vous ne souhaitez pas recevoir d'emails de notre part.";
 "Yes" = "Oui";
 "Yes Please" = "Oui s'il vous plaît";
-"Yes, proceed" = "Oui, procédez";
 "Yes, remove it" = "Oui, le retirer";
 "You can add %d more for the same price." = "Vous pouvez ajouter %d de plus pour le même prix.";
-"You can add more photos" = "Vous pouvez ajouter plus de photos";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "Vous devez autoriser l'application à accéder à votre compte Instagram si vous souhaitez importer des photos à partir de là.";
 "You've only selected %d photo." = "Vous avez sélectionné seulement %d photo.";
 "You've only selected %d photos." = "Vous avez sélectionné seulement %d photos.";

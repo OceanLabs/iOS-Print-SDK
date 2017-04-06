@@ -816,24 +816,25 @@ static const CGFloat kBookEdgePadding = 38;
         return NO;
     }
     
-    NSUInteger assetCount = [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
+    NSInteger nullCount = 0;
+    for (OLAsset *asset in [[OLAsset userSelectedAssets] subarrayWithRange:NSMakeRange(1, self.product.quantityToFulfillOrder)]){
+        if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
+            nullCount++;
+        }
+    }
     
-    if (assetCount == 0){
+    if (nullCount == self.product.quantityToFulfillOrder){
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please add some photos to your photo book", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
         [self presentViewController:ac animated:YES completion:NULL];
         return NO;
     }
     
-    NSUInteger numOrders = 1 + (MAX(0, assetCount - 1) / self.product.quantityToFulfillOrder);
-    NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-    if (assetCount < quantityToFulfilOrder) {
-        NSUInteger canSelectExtraCount = quantityToFulfilOrder - assetCount;
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""),assetCount] message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You can add %d more for the same price.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), canSelectExtraCount] preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Add more", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Add more [photos]") style:UIAlertActionStyleCancel handler:NULL]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Print these", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Print these [photos]") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-            [self doCheckout];
-        }]];
+    if (nullCount > 0){
+        NSInteger selected = [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
+        NSString *title = selected == 1 ? [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photo.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), selected] : [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), selected];
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please add %d more.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Please add [a number] more [photos]"), nullCount] preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleCancel handler:NULL]];
         [self presentViewController:ac animated:YES completion:NULL];
         return NO;
     }
@@ -907,10 +908,17 @@ static const CGFloat kBookEdgePadding = 38;
         [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:-1];
         return;
     }
+    
+    OLAsset *asset = [OLAsset userSelectedAssets].firstObject;
+    if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
+        self.addNewPhotosAtIndex = -1;
+        [self addMorePhotosFromView:sender.view];
+        return;
+    }
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
         return;
     }
-    self.editingAsset = [OLAsset userSelectedAssets].firstObject;
+    self.editingAsset = asset;
     UIImageView *imageView = self.coverImageView;
     OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
     cropVc.delegate = self;
@@ -935,16 +943,6 @@ static const CGFloat kBookEdgePadding = 38;
         [self.photobookDelegate photobook:self userDidLongPressOnImageWithIndex:-1 sender:sender];
     }
 }
-
-//TODO
-//- (void)updateUserSelectedPhotos{
-//    [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
-//    for (OLAsset *item in self.photobookPhotos){
-//        if (![item isKindOfClass:[OLPlaceholderAsset class]]){
-//            [[OLUserSession currentSession].userSelectedPhotos addObject:item];
-//        }
-//    }
-//}
 
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
     if ([sender locationInView:self.pageController.view].x < self.pageController.view.frame.size.width / 2.0){
@@ -1489,12 +1487,10 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (void)addMorePhotosFromView:(UIView *)view{
     OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
-//    if ([self.photobookPhotos indexOfObject:self.coverPhoto] == NSNotFound){
-//        [[OLAsset userSelectedAssets] removeAsset:self.coverPhoto];
-//    }
     vc.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];
     vc.delegate = self;
     vc.maximumPhotos = self.product.quantityToFulfillOrder;
+    vc.product = self.product;
     
     if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
         //Skip the image picker and only show the custom vc
@@ -1508,6 +1504,7 @@ static const CGFloat kBookEdgePadding = 38;
         if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
             vc.maximumPhotos = self.product.quantityToFulfillOrder;
         }
+        
         
         [self presentViewController:customVc animated:YES completion:NULL];
         self.presentedVc = customVc;
@@ -1524,10 +1521,8 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
     [OLAsset updateUserSelectedAssetsAtIndex:MAX(0, self.addNewPhotosAtIndex) withAddedAssets:addedAssets removedAssets:removedAssets];
     if (self.addNewPhotosAtIndex == -1){
-        for (OLPhotobookViewController *photobook in self.childViewControllers){
-            if ([photobook bookClosed]){
-                [photobook loadCoverPhoto];
-            }
+        if ([self bookClosed]){
+            [self loadCoverPhoto];
         }
     }
     for (OLPhotobookPageContentViewController *page in self.pageController.viewControllers){

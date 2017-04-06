@@ -115,9 +115,6 @@ static const NSInteger kSectionPages = 1;
     
     [[OLAsset userSelectedAssets] adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder + 1 trim:YES];
     
-    //TODO
-//    [self updatePhotobookPhotos];
-    
     [self setupCtaButton];
     
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.nextButton.frame.size.height, self.collectionView.contentInset.right);
@@ -214,6 +211,9 @@ static const NSInteger kSectionPages = 1;
             for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
                 [page loadImageWithCompletionHandler:NULL];
             }
+        }
+        else{
+            [photobook loadCoverPhoto];
         }
     }
 }
@@ -411,31 +411,7 @@ static const NSInteger kSectionPages = 1;
 #pragma mark - User Actions
 
 - (void)onButtonNextClicked{
-    if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 0){
-        NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"No photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of an alert letting the user know that they selected no photos");
-        NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Please add at least one photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.");
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:NULL]];
-        [self presentViewController:ac animated:YES completion:NULL];
-        return;
-    }
-    
-    if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count < self.product.quantityToFulfillOrder){
-        NSString *alertTitle = NSLocalizedStringFromTableInBundle(@"You can add more photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        NSString *alertMessage = NSLocalizedStringFromTableInBundle(@"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        NSString *actionTitle = NSLocalizedStringFromTableInBundle(@"Yes, proceed", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:actionTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-            [self proceedToBookReview];
-        }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No, not yet", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
-        [self presentViewController:ac animated:YES completion:NULL];
-    }
-    else{
-        [self proceedToBookReview];
-    }
-    
+    [self proceedToBookReview];
 }
 
 - (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)tappedImageIndex{
@@ -730,7 +706,7 @@ static const NSInteger kSectionPages = 1;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return self.rotating ? 0 : 3;
+    return self.rotating ? 0 : 2;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{

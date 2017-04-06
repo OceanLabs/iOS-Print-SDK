@@ -21,7 +21,6 @@
 "All Photos" = "Alle Fotos";
 "Alternatively type the following URL into your mobile browser's address bar" = "Bitte gib Alternative diese URL in den Browser deines Smartphones ein";
 "Are you sure you want to delete this item?" = "Bist du sicher, dass du diesen Artikel löschen möchtest?";
-"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos" = "Bist du sicher, dass du fortfahren möchtest? Wenn ja, werden die leeren Seiten mit doppelten Fotos ausgefüllt";
 "Are you sure?" = "Bist Du sicher?";
 "Authorise" = "Autorisieren";
 "Back" = "Zurück";
@@ -110,10 +109,8 @@
 "New Payment" = "Neue Zahlung";
 "Next" = "Weiter";
 "No" = "Nein";
-"No photos" = "Keine Fotos";
 "No Thanks" = "Nein, danke";
 "No, keep it" = "Nein, beibehalten";
-"No, not yet" = "Nein, noch nicht";
 "Not now" = "Nicht jetzt";
 "OK" = "OK";
 "Only registered %d/%d image URLs with the asset endpoint" = "Nur registrierte %d/%d Bild-URLs mit dem Asset-Endpunkt";
@@ -132,7 +129,6 @@
 "Payment Method" = "Zahlungsmethode";
 "Phone" = "Telefonnummer";
 "Please add %d more." = "Bitte füge %d mehr hinzu.";
-"Please add at least one photo" = "Bitte füge mindestens ein Foto hinzu";
 "Please add some photos to your photo book" = "Bitte füge deinem Fotobuch einige Fotos hinzu";
 "Please choose an address to have your order shipped to" = "Bitte Lieferadresse wählen";
 "Please enter a card expiry date in the future" = "Bitte ein Kartenablaufdatum in der Zukunft eingeben";
@@ -208,10 +204,8 @@
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Wir werden Dir eine Bestellbestätigung und den Status deiner Lieferung senden. Um dies nicht zu erhalten, bitte das Kästchen nicht anklicken. ";
 "Yes" = "Ja";
 "Yes Please" = "Ja bitte";
-"Yes, proceed" = "Ja, weitermachen";
 "Yes, remove it" = "Ja, entfernen";
 "You can add %d more for the same price." = "Du kannst mehr %d hinzufügen für den gleichen Preis.";
-"You can add more photos" = "Du kannst weitere Fotos hinzufügen.";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "Du musst die App autorisieren auf dein Instagram-Konto zuzugreifen, wenn du Fotos von dort importieren möchtest.";
 "You've only selected %d photo." = "Du hast nur %d Foto ausgewählt.";
 "You've only selected %d photos." = "Du hast nur %d Fotos ausgewählt.";
