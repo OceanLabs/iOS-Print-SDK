@@ -38,13 +38,10 @@
 #import "OLAnalytics.h"
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
+#import "OLKiteViewController+Private.h"
 
 @interface OLOrderHistoryViewController ()
 @property (strong, nonatomic) NSArray *printOrderHistory;
-@end
-
-@interface OLKiteViewController ()
-- (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder;
 @end
 
 @implementation OLOrderHistoryViewController

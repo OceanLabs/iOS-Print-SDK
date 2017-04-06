@@ -31,6 +31,7 @@
 
 @class OLProductGroup;
 @class OLImagePickerProvider;
+@class OLReceiptViewController;
 
 @interface OLKiteViewController (Private)
 
@@ -38,6 +39,7 @@
 @property (strong, nonatomic) NSArray *fontNames;
 
 - (UIViewController *)reviewViewControllerForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
+- (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder;
 - (void)dismiss;
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
 @end
