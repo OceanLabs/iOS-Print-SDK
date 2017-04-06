@@ -107,7 +107,7 @@
 
 - (NSMutableArray<OLAsset *> *)selectedAssets{
     if (!_selectedAssets){
-        return [OLAsset userSelectedAssets];
+        return [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
     }
     
     return _selectedAssets;
