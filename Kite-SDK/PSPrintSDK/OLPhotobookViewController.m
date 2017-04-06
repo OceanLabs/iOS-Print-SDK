@@ -125,6 +125,10 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet UIView *openbookView;
 @property (weak, nonatomic) IBOutlet UIView *pagesLabelContainer;
 @property (weak, nonatomic) NSLayoutConstraint *topMarginCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonTrailingCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonLeadingCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonHeightCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonBottomCon;
 @property (weak, nonatomic) OLPopupOptionsImageView *coverImageView;
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
@@ -396,6 +400,31 @@ static const CGFloat kBookEdgePadding = 38;
         self.topMarginCon.constant = 10;
         self.bottomMarginCon.constant = 0;
     }
+    
+    [self setupCtaButtonConstraints];
+}
+
+- (void)setupCtaButtonConstraints{
+    if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact){
+        self.ctaButtonTrailingCon.constant = 0;
+        self.ctaButtonLeadingCon.constant = 0;
+        self.ctaButtonBottomCon.constant = 0;
+        self.ctaButtonHeightCon.constant = 40;
+        
+        [self.ctaButton makeRoundRectWithRadius:0];
+    }
+    else{
+        self.ctaButtonTrailingCon.constant = 5;
+        self.ctaButtonLeadingCon.constant = 5;
+        self.ctaButtonBottomCon.constant = 5;
+        self.ctaButtonHeightCon.constant = 50;
+        
+        NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
+        if (cornerRadius){
+            [self.ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+        }
+
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -529,6 +558,8 @@ static const CGFloat kBookEdgePadding = 38;
     [self.view addConstraint:self.widthCon];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self setupCtaButtonConstraints];
+        
         [self setUpBookCoverViewForFrontCover:YES];
         if (size.width > size.height){
             self.containerView.transform = CGAffineTransformIdentity;

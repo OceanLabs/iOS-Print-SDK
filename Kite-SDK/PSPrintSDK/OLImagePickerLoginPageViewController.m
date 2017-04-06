@@ -71,6 +71,17 @@
     if ([OLKiteABTesting sharedInstance].lightThemeColor2){
         self.loginButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor2;
     }
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        self.label.font = font;
+    }
+    
+    font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
+    if (font){
+        [self.loginButton.titleLabel setFont:font];
+    }
+    
 }
 
 - (IBAction)onButtonLoginTapped:(UIButton *)sender {

@@ -129,6 +129,12 @@ CGFloat OLImagePickerMargin = 1.5;
     else{
         self.albumLabel.text = @"";
     }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        self.albumLabel.font = font;
+    }
+    
+    
     self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
     
     self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
@@ -333,6 +339,10 @@ CGFloat OLImagePickerMargin = 1.5;
         label.text = self.provider.collections[indexPath.item].name;
         if ([OLKiteABTesting sharedInstance].lightThemeColor2){
             label.superview.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor2;
+        }
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            label.font = font;
         }
     }
     

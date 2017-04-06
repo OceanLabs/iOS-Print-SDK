@@ -1243,7 +1243,7 @@
         <scene sceneID="utb-1P-DTs">
             <objects>
                 <collectionViewController storyboardIdentifier="ProductHomeViewController" id="U81-HI-b1P" customClass="OLProductHomeViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="a6K-tv-eGU">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="a6K-tv-eGU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1819,11 +1819,11 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
+                                        <exclude reference="36y-Lh-Tr3"/>
                                         <exclude reference="StA-4u-vfS"/>
                                         <exclude reference="ts3-p5-qBP"/>
-                                        <exclude reference="36y-Lh-Tr3"/>
-                                        <exclude reference="mKJ-sj-H00"/>
                                         <exclude reference="JcO-CZ-79p"/>
+                                        <exclude reference="mKJ-sj-H00"/>
                                     </mask>
                                 </variation>
                             </collectionViewCell>
@@ -2076,7 +2076,7 @@
         <scene sceneID="VME-6Y-RI6">
             <objects>
                 <collectionViewController storyboardIdentifier="OLTypeSelectionViewController" id="IOx-76-Eqt" customClass="OLProductTypeSelectionViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="w1o-j0-lQ5">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="w1o-j0-lQ5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2496,11 +2496,11 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="RLF-ub-B6D"/>
                                         <exclude reference="9ci-xl-ZUG"/>
+                                        <exclude reference="RLF-ub-B6D"/>
                                         <exclude reference="WXN-6I-ooy"/>
-                                        <exclude reference="idi-BM-ezK"/>
                                         <exclude reference="Ncu-6r-Ci1"/>
+                                        <exclude reference="idi-BM-ezK"/>
                                     </mask>
                                 </variation>
                             </collectionViewCell>
@@ -2640,6 +2640,10 @@
                         <outlet property="bottomMarginCon" destination="6OB-XY-vp2" id="UJa-Gn-Ee7"/>
                         <outlet property="containerView" destination="wLR-Iq-33c" id="ZB7-ei-MIu"/>
                         <outlet property="ctaButton" destination="sot-G1-rGw" id="baR-AE-JgQ"/>
+                        <outlet property="ctaButtonBottomCon" destination="Rj1-EO-WbO" id="2re-3Q-hox"/>
+                        <outlet property="ctaButtonHeightCon" destination="HjL-Rw-h8y" id="nXC-1y-MSH"/>
+                        <outlet property="ctaButtonLeadingCon" destination="MmO-Eb-lON" id="Nla-WT-HR7"/>
+                        <outlet property="ctaButtonTrailingCon" destination="QDC-Wp-H5x" id="Wpd-Df-kiT"/>
                         <outlet property="fakeShadowView" destination="4k7-zt-s1N" id="VDC-XM-Td3"/>
                         <outlet property="openbookView" destination="rlk-bS-4UT" id="Q1X-2u-4iN"/>
                         <outlet property="pagesLabel" destination="6zv-ER-YtC" id="COA-sz-sqZ"/>
@@ -2713,7 +2717,7 @@
         <scene sceneID="kFc-fy-yh6">
             <objects>
                 <collectionViewController storyboardIdentifier="OLPosterViewController" id="AaA-7l-tb4" customClass="OLPosterViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="LuI-LA-fpj">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" dataMode="prototypes" id="LuI-LA-fpj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3727,8 +3731,8 @@ only Lorem Ipsum</string>
         <image name="apple-pay-method" width="45" height="29"/>
         <image name="basket-button-pressed" width="22" height="41"/>
         <image name="book" width="575" height="393"/>
-        <image name="button_arrow_down" width="45" height="45"/>
-        <image name="button_arrow_up" width="45" height="45"/>
+        <image name="button_arrow_down" width="12" height="16"/>
+        <image name="button_arrow_up" width="12" height="16"/>
         <image name="card" width="16" height="11"/>
         <image name="details-arrow" width="8" height="5"/>
         <image name="dropshadow" width="375" height="3"/>
