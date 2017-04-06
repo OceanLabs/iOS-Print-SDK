@@ -336,19 +336,6 @@ static const NSInteger kSectionPages = 1;
     }
 }
 
-//TODO
-//- (void)updateUserSelectedPhotos{
-//    [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
-//    if (self.coverPhoto && ![self.coverPhoto isKindOfClass:[OLPlaceholderAsset class]]){
-//        [[OLUserSession currentSession].userSelectedPhotos addObject:self.coverPhoto];
-//    }
-//    for (OLAsset *item in self.photobookPhotos){
-//        if (![item isKindOfClass:[OLPlaceholderAsset class]]){
-//            [[OLUserSession currentSession].userSelectedPhotos addObject:item];
-//        }
-//    }
-//}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     CGRect headerFrame = self.nextButton.frame;
     headerFrame.origin.y = self.view.frame.size.height - self.nextButton.frame.size.height + scrollView.contentOffset.y ;
@@ -370,8 +357,6 @@ static const NSInteger kSectionPages = 1;
     }
 
     [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.longPressImageIndex withObject:[[OLPlaceholderAsset alloc] init]];
-    //TODO
-//    [self updateUserSelectedPhotos];
     [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
 }
 

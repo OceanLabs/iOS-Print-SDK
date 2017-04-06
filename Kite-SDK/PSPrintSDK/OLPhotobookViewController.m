@@ -164,23 +164,6 @@ static const CGFloat kBookEdgePadding = 38;
     return _inertiaBehavior;
 }
 
-// TODO
-//- (void)setUserSelectedPhotos:(NSMutableArray<OLAsset *> *)userSelectedPhotos{
-//    [OLUserSession currentSession].userSelectedPhotos = userSelectedPhotos;
-//    
-//    self.photobookPhotos = [[NSMutableArray<OLAsset *> alloc] initWithCapacity:self.product.quantityToFulfillOrder];
-//    [self.photobookPhotos addObjectsFromArray:userSelectedPhotos];
-//    for (NSInteger i = userSelectedPhotos.count; i < self.product.quantityToFulfillOrder; i++){
-//        [self.photobookPhotos addObject:[userSelectedPhotos objectAtIndex:i % userSelectedPhotos.count]];
-//    }
-//    
-//    for (OLPhotobookPageContentViewController *page in [self.pageController viewControllers]){
-//        page.userSelectedPhotos = self.photobookPhotos;
-//    }
-//    
-//    self.userSelectedPhotosCopy = [[NSArray alloc] initWithArray:userSelectedPhotos copyItems:NO];
-//}
-
 - (void)setEditingPageNumber:(NSNumber *)editingPageNumber{
     _editingPageNumber = editingPageNumber;
     [self updatePagesLabel];

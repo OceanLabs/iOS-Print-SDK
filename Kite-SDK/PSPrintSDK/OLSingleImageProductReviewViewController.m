@@ -411,8 +411,7 @@
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    //TODO
-    [[OLAsset userSelectedAssets] addObject:asset];
+    [[OLAsset userSelectedAssets] replaceObjectAtIndex:[[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:self.asset] withObject:asset];
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
