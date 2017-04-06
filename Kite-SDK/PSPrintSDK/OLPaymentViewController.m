@@ -87,10 +87,6 @@ static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 static OLPaymentMethod selectedPaymentMethod;
 
-@interface OLKiteViewController ()
-- (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder;
-@end
-
 @interface OLProductTemplate ()
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
 @end
