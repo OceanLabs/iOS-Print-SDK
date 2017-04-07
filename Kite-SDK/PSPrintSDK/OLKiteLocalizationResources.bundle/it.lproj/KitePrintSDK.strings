@@ -58,6 +58,7 @@
 "Delivery Details" = "Dettagli di consegna";
 "Description" = "Descrizione";
 "Details" = "Dettagli";
+"Discard Edits" = "Discard Edits";
 "Do you want to log out of %@?" = "Vuoi uscire da %@?";
 "Do you want to remove this photo?" = "Vuoi rimuovere questa foto?";
 "Done" = "Fatto";
@@ -171,6 +172,7 @@
 "Review" = "Scrivi una recensione";
 "Rotate" = "Ruota";
 "Save" = "Salva";
+"Save as Copy" = "Save as Copy";
 "Scan QR Code" = "Scansiona QR code";
 "Search by postcode, street or address" = "Cerca per codice postale, strada o indirizzo";
 "Search by street, address or ZIP code" = "Cerca per CAP, strada o indirizzo";

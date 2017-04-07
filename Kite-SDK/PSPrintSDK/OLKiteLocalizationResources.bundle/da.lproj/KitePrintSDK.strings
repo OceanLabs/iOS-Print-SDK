@@ -58,6 +58,7 @@
 "Delivery Details" = "Leveringsdetaljer";
 "Description" = "Description";
 "Details" = "Detaljer";
+"Discard Edits" = "Discard Edits";
 "Do you want to log out of %@?" = "Do you want to log out of %@?";
 "Do you want to remove this photo?" = "Do you want to remove this photo?";
 "Done" = "Færdig";
@@ -170,6 +171,7 @@
 "Review" = "Vurder os";
 "Rotate" = "Rotate";
 "Save" = "Gem";
+"Save as Copy" = "Save as Copy";
 "Scan QR Code" = "Scan QR Code";
 "Search by postcode, street or address" = "Søg på postnummer, gade eller adresse";
 "Search by street, address or ZIP code" = "Søg på gade, adresse eller postnummer";

@@ -38,8 +38,9 @@
 #import "OLAsset+Private.h"
 #import "OLKiteUtils.h"
 #import "OLKiteABTesting.h"
+#import "OLImagePreviewViewController.h"
 
-@interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
+@interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerPreviewingDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
 @property (assign, nonatomic) CGSize rotationSize;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
@@ -183,6 +184,46 @@ CGFloat OLImagePickerMargin = 1.5;
     [self.view layoutIfNeeded];
     
     self.reloadOnViewWillAppear = YES;
+    
+    if ([self.imagePicker.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.imagePicker.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+    }
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    if (self.collectionView.tag != 10){
+        return nil;
+    }
+    
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    
+    UIImageView *imageView = [cell viewWithTag:10];
+    
+    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
+    
+    id potentialAsset = [self assetForIndexPath:indexPath];
+    OLAsset *asset;
+    if ([potentialAsset isKindOfClass:[PHAsset class]]){
+        asset = [OLAsset assetWithPHAsset:potentialAsset];
+        
+        //If it's already selected use the existing OLAsset instead of the newly created one
+        if ([self.imagePicker.selectedAssets containsObject:asset]){
+            asset = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:asset]];
+        }
+    }
+    else if ([potentialAsset isKindOfClass:[OLAsset class]]){
+        asset = potentialAsset;
+    }
+    
+    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
+    previewVc.asset = asset;
+    previewVc.providesPresentationContextTransitionStyle = true;
+    previewVc.definesPresentationContext = true;
+    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    previewVc.preferredContentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.width * (imageView.image.size.height / imageView.image.size.width));
+    
+    return previewVc;
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -199,9 +240,7 @@ CGFloat OLImagePickerMargin = 1.5;
         self.albumsContainerView.transform = CGAffineTransformIdentity;
         
         self.logoutButton.frame = CGRectMake(0, -45, size.width, 45);
-    }completion:^(id<UIViewControllerTransitionCoordinator> context){
-        
-    }];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){}];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{

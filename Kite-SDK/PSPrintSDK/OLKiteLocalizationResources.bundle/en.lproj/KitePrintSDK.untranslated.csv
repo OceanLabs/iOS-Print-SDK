@@ -58,6 +58,7 @@ Delivery Address,Delivery Address,
 Delivery Details,Delivery Details,
 Description,Description,/* Product description */
 Details,Details,/* Product Details */
+Discard Edits,Discard Edits,
 Do you want to log out of %@?,Do you want to log out of %@?,/* Log out of Instagram/Facebook */
 Do you want to remove this photo?,Do you want to remove this photo?,
 Done,Done,
@@ -170,6 +171,7 @@ Retry,Retry,
 Review,Review,/* Title of a screen where the user can review the product before ordering */
 Rotate,Rotate,/* Rotate image by 90 degrees */
 Save,Save,
+Save as Copy,Save as Copy,
 Scan QR Code,Scan QR Code,
 "Search by postcode, street or address","Search by postcode, street or address",
 "Search by street, address or ZIP code","Search by street, address or ZIP code",

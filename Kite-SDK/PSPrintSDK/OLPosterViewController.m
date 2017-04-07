@@ -40,7 +40,6 @@
 #import "OLKiteABTesting.h"
 #import "OLRemoteImageView.h"
 #import "OLKiteUtils.h"
-#import "OLImagePreviewViewController.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
 #import "UIImageView+FadeIn.h"

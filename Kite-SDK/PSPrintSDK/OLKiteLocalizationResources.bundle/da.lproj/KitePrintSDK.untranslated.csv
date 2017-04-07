@@ -28,6 +28,7 @@ CVV,CVV,/* The credit card security code */
 Default,Default,
 Delete Item,Delete Item,/* Delete [basket item] */
 Description,Description,/* Product description */
+Discard Edits,Discard Edits,
 Do you want to log out of %@?,Do you want to log out of %@?,/* Log out of Instagram/Facebook */
 Do you want to remove this photo?,Do you want to remove this photo?,
 Edit Poster,Edit Poster,
@@ -87,6 +88,7 @@ Recents,Recents,/* Recent photos used */
 Remove,Remove,/* Remove/clear an image */
 Remove?,Remove?,/* Remove [photo]? */
 Rotate,Rotate,/* Rotate image by 90 degrees */
+Save as Copy,Save as Copy,
 Scan QR Code,Scan QR Code,
 Select Size,Select Size,/* Example: Shirt size */
 Small,Small,

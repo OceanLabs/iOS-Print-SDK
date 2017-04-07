@@ -30,8 +30,8 @@
 #import <UIKit/UIKit.h>
 #import "OLRemoteImageView.h"
 
+@class OLAsset;
+
 @interface OLImagePreviewViewController : UIViewController
-
-@property (strong, nonatomic) OLRemoteImageView *imageView;
-
+@property (strong, nonatomic) OLAsset *asset;
 @end
