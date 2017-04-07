@@ -56,7 +56,6 @@ typedef enum {
 - (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL;
 - (void)unloadImage;
 + (NSMutableArray<OLAsset *> *)userSelectedAssets;
-+ (void)updateUserSelectedAssetsAtIndex:(NSInteger)insertIndex withAddedAssets:(NSArray<OLAsset *> *)addedAssets removedAssets:(NSArray<OLAsset *> *)removedAssets;
 @property (assign, nonatomic) BOOL corrupt;
 @property (assign, nonatomic) NSInteger extraCopies;
 @property (nonatomic, readonly) OLAssetType assetType;

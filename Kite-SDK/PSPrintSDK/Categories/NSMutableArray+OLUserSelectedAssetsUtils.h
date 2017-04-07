@@ -29,7 +29,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class OLAsset;
+
 @interface NSMutableArray (OLUserSelectedAssetsUtils)
 - (NSArray *)nonPlaceholderAssets;
 - (void)adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets trim:(BOOL)trim;
+- (void)updateUserSelectedAssetsAtIndex:(NSInteger)insertIndex withAddedAssets:(NSArray<OLAsset *> *)addedAssets removedAssets:(NSArray<OLAsset *> *)removedAssets;
 @end

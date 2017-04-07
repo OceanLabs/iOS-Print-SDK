@@ -495,7 +495,7 @@ CGFloat innerMargin = 3;
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    [OLAsset updateUserSelectedAssetsAtIndex:[[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:self.editingAsset] withAddedAssets:addedAssets removedAssets:removedAssets];
+    [[OLAsset userSelectedAssets] updateUserSelectedAssetsAtIndex:[[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:self.editingAsset] withAddedAssets:addedAssets removedAssets:removedAssets];
     
     [self.collectionView reloadData];
     
