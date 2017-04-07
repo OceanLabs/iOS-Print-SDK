@@ -34,4 +34,12 @@
     return [[OLPlaceholderAsset alloc] init];
 }
 
+- (BOOL)isEqual:(id)object{
+    if ([object isKindOfClass:[OLPlaceholderAsset class]]){
+        return YES;
+    }
+    
+    return NO;
+}
+
 @end

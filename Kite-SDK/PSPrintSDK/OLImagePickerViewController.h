@@ -61,6 +61,7 @@
 - (void)onButtonDoneTapped:(UIButton *)sender;
 - (void)presentExternalViewControllerForProvider:(OLImagePickerProvider *)provider;
 - (BOOL)isExclusiveCustomViewControllerProvider;
+- (NSUInteger)assetCount;
 
 
 @end

@@ -113,6 +113,17 @@
     return _selectedAssets;
 }
 
+- (NSUInteger)assetCount{
+    NSUInteger count = 0;
+    for (OLAsset *asset in self.selectedAssets){
+        if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
+            count++;
+        }
+    }
+    
+    return count;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -249,7 +260,7 @@
         self.title = NSLocalizedStringFromTableInBundle(@"Choose Photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     
-    if (self.selectedAssets.count > self.maximumPhotos && self.maximumPhotos != 0){
+    if ([self assetCount] > self.maximumPhotos && self.maximumPhotos != 0){
         NSArray *maxSelected = [self.selectedAssets subarrayWithRange:NSMakeRange(0, self.maximumPhotos)];
         [self.selectedAssets removeAllObjects];
         [self.selectedAssets addObjectsFromArray:maxSelected];
@@ -555,22 +566,22 @@
 #pragma mark Asset Management
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
-    if (self.selectedAssets.count == 0) {
+    if ([self assetCount] == 0) {
         self.title = NSLocalizedStringFromTableInBundle(@"Choose Photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     } else {
         if (self.maximumPhotos > 0){
-            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.selectedAssets.count + [self totalNumberOfExtras], (unsigned long)self.maximumPhotos];
+            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)[self assetCount] + [self totalNumberOfExtras], (unsigned long)self.maximumPhotos];
         }
         else if (self.product.quantityToFulfillOrder > 1){
-            NSUInteger numOrders = 1 + (MAX(0, self.selectedAssets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+            NSUInteger numOrders = 1 + (MAX(0, [self assetCount] - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
             if (![self.product isMultipack]){
                 numOrders = 1;
             }
             NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)self.selectedAssets.count + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
+            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)[self assetCount] + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
         }
         else{
-            self.title = [NSString stringWithFormat:@"%lu", (unsigned long)self.selectedAssets.count];
+            self.title = [NSString stringWithFormat:@"%lu", (unsigned long)[self assetCount]];
         }
     }
 }
@@ -712,7 +723,7 @@
     }
     [self.providerForPresentedVc.collections.firstObject addAssets:validAssets unique:YES];
     for (OLAsset *asset in validAssets){
-        if(self.maximumPhotos == 0 || self.selectedAssets.count < self.maximumPhotos){
+        if(self.maximumPhotos == 0 || [self assetCount] < self.maximumPhotos){
             if (![self.selectedAssets containsObject:asset]){
                 [self.selectedAssets addObject:asset];
             }
@@ -830,16 +841,16 @@
 
 - (BOOL)shouldGoToOrderPreview {
     NSString *errorMessage;
-    if (self.selectedAssets.count == 0){
+    if ([self assetCount] == 0){
         errorMessage = NSLocalizedStringFromTableInBundle(@"Please select some images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
-    else if (self.selectedAssets.count < self.minimumPhotos && self.minimumPhotos == self.maximumPhotos){
+    else if ([self assetCount] < self.minimumPhotos && self.minimumPhotos == self.maximumPhotos){
         errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Please select [number] images"), self.minimumPhotos];
     }
-    else if (self.selectedAssets.count < self.minimumPhotos){
+    else if ([self assetCount] < self.minimumPhotos){
         errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select at least %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Please select at least [number] images"), self.minimumPhotos];
     }
-    else if (![self.product isMultipack] && self.selectedAssets.count > self.maximumPhotos && self.maximumPhotos != 0){
+    else if (![self.product isMultipack] && [self assetCount] > self.maximumPhotos && self.maximumPhotos != 0){
         errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select no more than %d images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Please select no more than [number] images"), self.maximumPhotos];
     }
     if (errorMessage) {
@@ -873,8 +884,8 @@
         OLUpsellOffer *offer = [self upsellOfferToShow];
         BOOL shouldShowOffer = offer != nil;
         if (offer){
-            shouldShowOffer &= offer.minUnits <= self.selectedAssets.count;
-            shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= self.selectedAssets.count;
+            shouldShowOffer &= offer.minUnits <= [self assetCount];
+            shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= [self assetCount];
             shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
         }
         

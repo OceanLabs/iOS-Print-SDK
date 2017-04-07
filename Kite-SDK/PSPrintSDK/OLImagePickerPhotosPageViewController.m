@@ -533,7 +533,7 @@ CGFloat OLImagePickerMargin = 1.5;
                 [collectionView reloadItemsAtIndexPaths:@[indexPath]];
             }
         }
-        else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){ //Maximum reached
+        else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.assetCount >= self.imagePicker.maximumPhotos){ //Maximum reached
             NSString *message;
             if (self.imagePicker.maximumPhotos != self.imagePicker.minimumPhotos && self.imagePicker.maximumPhotos != 1){
                 message = [NSString stringWithFormat:self.imagePicker.maximumPhotos == 1 ? NSLocalizedStringFromTableInBundle(@"Please select only %ld photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") : NSLocalizedStringFromTableInBundle(@"Please select up to %ld photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (long)self.imagePicker.maximumPhotos];
@@ -556,7 +556,13 @@ CGFloat OLImagePickerMargin = 1.5;
             [self.imagePicker presentViewController:alert animated:YES completion:nil];
         }
         else if (asset){ //Add photo
-            [self.imagePicker.selectedAssets addObject:asset];
+            NSUInteger index = [self.imagePicker.selectedAssets indexOfObject:[[OLPlaceholderAsset alloc] init]];
+            if (index != NSNotFound){
+                [self.imagePicker.selectedAssets replaceObjectAtIndex:index withObject:asset];
+            }
+            else{
+                [self.imagePicker.selectedAssets addObject:asset];
+            }
             asset.edits = nil;
             [asset unloadImage];
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
