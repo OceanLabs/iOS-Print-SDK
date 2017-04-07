@@ -80,7 +80,8 @@ CGFloat innerMargin = 3;
         innerMargin = 2;
     }
     
-    [[OLAsset userSelectedAssets] adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder trim:self.product.productTemplate.templateUI == OLTemplateUICalendar];
+    NSUInteger numOrders = 1 + (MAX(0, [OLAsset userSelectedAssets].count - 1) / self.product.quantityToFulfillOrder);
+    [[OLAsset userSelectedAssets] adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder * numOrders trim:self.product.productTemplate.templateUI == OLTemplateUICalendar];
     
     self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering");
 }

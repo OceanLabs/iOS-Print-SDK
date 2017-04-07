@@ -109,7 +109,8 @@ CGFloat posterMargin = 2;
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (collectionView.tag == 10){
-        return [OLAsset userSelectedAssets].count / self.product.quantityToFulfillOrder;
+        NSUInteger numOrders = 1 + (MAX(0, [OLAsset userSelectedAssets].count - 1) / self.product.quantityToFulfillOrder);
+        return numOrders;
     }
     else{
         return self.product.quantityToFulfillOrder;

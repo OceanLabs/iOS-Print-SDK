@@ -275,7 +275,7 @@ typedef enum {
 }
 
 - (BOOL)isMultipack{
-    if (self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUICircle || self.productTemplate.templateUI == OLTemplateUIRectagle){
+    if (self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUICircle || self.productTemplate.templateUI == OLTemplateUIRectagle || (self.productTemplate.templateUI == OLTemplateUIPoster && self.quantityToFulfillOrder > 1)){
         return YES;
     }
     
