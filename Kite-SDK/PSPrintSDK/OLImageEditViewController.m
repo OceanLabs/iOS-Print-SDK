@@ -2351,10 +2351,6 @@ const NSInteger kOLEditTagCrop = 40;
     self.asset = addedAssets.lastObject;
     self.edits = [self.asset.edits copy];
     if (self.asset){
-        if ([self.delegate respondsToSelector:@selector(imageEditViewController:didReplaceAssetWithAsset:)]){
-            [self.delegate imageEditViewController:self didReplaceAssetWithAsset:self.asset];
-        }
-        
         self.ctaButton.enabled = YES;
         id view = [self.view viewWithTag:1010];
         if ([view isKindOfClass:[UIActivityIndicatorView class]]){

@@ -769,8 +769,9 @@
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    NSInteger index = [[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:self.editingAsset];
+    NSUInteger index = [[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:self.editingAsset];
     [[OLAsset userSelectedAssets] replaceObjectAtIndex:index withObject:asset];
+    self.editingAsset = asset;
 }
 
 #pragma mark Image Picker Delegate
