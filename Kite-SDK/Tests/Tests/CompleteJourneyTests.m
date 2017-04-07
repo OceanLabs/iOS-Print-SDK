@@ -209,8 +209,6 @@
         [presentedVc.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
     }];
     
-    [(OLPhotobookViewController *)presentedVc setCoverPhoto:nil];
-    
     [self performUIAction:^{
         [(OLPhotobookViewController *)presentedVc onCoverTapRecognized:nil];
     }];
@@ -902,7 +900,7 @@
     
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     
-    [OLUserSession currentSession].userSelectedPhotos = [assets mutableCopy];
+    [OLUserSession currentSession].userSelectedAssets = [assets mutableCopy];
     
     [self chooseClass:@"Posters" onOLProductHomeViewController:productHomeVc];
     

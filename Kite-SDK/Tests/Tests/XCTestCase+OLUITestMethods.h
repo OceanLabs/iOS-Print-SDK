@@ -47,6 +47,8 @@
 #import "OLAddressLookupViewController.h"
 #import "OLAddressSelectionViewController.h"
 #import "OLKiteViewController+Private.h"
+#import "OLAsset+Private.h"
+#import "OLRemoteImageView.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;
@@ -114,6 +116,7 @@
 @end
 
 @interface OLEditPhotobookViewController ()
+- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)tappedImageIndex;
 - (void)deletePage;
 - (void)editImage;
 @end
