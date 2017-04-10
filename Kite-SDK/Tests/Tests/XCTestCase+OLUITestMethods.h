@@ -67,10 +67,6 @@
 - (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender;
 @end
 
-@interface OLPosterViewController ()
-- (IBAction)editPhoto:(id)sender;
-@end
-
 @interface OLFrameOrderReviewViewController ()
 - (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer;
 @end

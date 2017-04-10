@@ -927,13 +927,12 @@
     UICollectionViewCell *outerCollectionViewCell = [reviewVc.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:795];
     
     [self performUIAction:^{
         OLTestTapGestureRecognizer *tap = [[OLTestTapGestureRecognizer alloc] init];
-        tap.customLocationInView = [reviewVc.collectionView convertPoint:CGPointMake(10, 10) fromView:imageView];
+        tap.customLocationInView = [reviewVc.collectionView convertPoint:CGPointMake(10, 10) fromView:cell];
         
-        [reviewVc editPhoto:tap];
+        [reviewVc onTapGestureThumbnailTapped:tap];
     }];
     
     OLImageEditViewController *editor = (OLImageEditViewController *)reviewVc.presentedViewController;
