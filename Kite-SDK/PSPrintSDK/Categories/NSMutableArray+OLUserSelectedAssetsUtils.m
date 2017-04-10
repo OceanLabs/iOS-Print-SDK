@@ -26,20 +26,48 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+
+#import "NSMutableArray+OLUserSelectedAssetsUtils.h"
 #import "OLPlaceholderAsset.h"
 
-@implementation OLPlaceholderAsset
+@implementation NSMutableArray (OLUserSelectedAssetsUtils)
 
-+ (instancetype)asset{
-    return [[OLPlaceholderAsset alloc] init];
-}
-
-- (BOOL)isEqual:(id)object{
-    if ([object isKindOfClass:[OLPlaceholderAsset class]]){
-        return YES;
+- (NSArray *)nonPlaceholderAssets{
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (id asset in self){
+        if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
+            [assets addObject:asset];
+        }
     }
     
-    return NO;
+    return assets;
+}
+
+- (void)adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets trim:(BOOL)trim{
+    if (trim){
+        for (NSUInteger i = self.count; i > totalNumberOfAssets; i--){
+            [self removeObjectAtIndex:i-1];
+        }
+    }
+    for (NSUInteger i = self.count; i < totalNumberOfAssets; i++){
+        [self addObject:[[OLPlaceholderAsset alloc] init]];
+    }
+}
+
+- (void)updateUserSelectedAssetsAtIndex:(NSInteger)insertIndex withAddedAssets:(NSArray<OLAsset *> *)addedAssets removedAssets:(NSArray<OLAsset *> *)removedAssets{
+    for (OLAsset *asset in addedAssets){
+        for (NSInteger bookPhoto = 0; bookPhoto < self.count; bookPhoto++){
+            NSInteger index = (bookPhoto + insertIndex) % self.count;
+            if ([[self objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
+                [self replaceObjectAtIndex:index withObject:asset];
+                break;
+            }
+        }
+    }
+    for (OLAsset *asset in removedAssets){
+        NSInteger index = [self indexOfObjectIdenticalTo:asset];
+        [self replaceObjectAtIndex:index withObject:[[OLPlaceholderAsset alloc] init]];
+    }
 }
 
 @end

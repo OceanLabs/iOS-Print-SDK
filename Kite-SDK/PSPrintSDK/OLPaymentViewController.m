@@ -407,8 +407,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 
 - (void)dismiss{
     if (self.currentUserSelectedPhotos){
-        [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
-        [[OLUserSession currentSession].userSelectedPhotos addObjectsFromArray:self.currentUserSelectedPhotos];
+        [[OLAsset userSelectedAssets] removeAllObjects];
+        for (OLAsset *asset in self.currentUserSelectedPhotos){
+            [[OLAsset userSelectedAssets] addObject:asset];
+        }
     }
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 #ifndef OL_NO_ANALYTICS
@@ -1685,7 +1687,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         
     }
     
-    [OLUserSession currentSession].userSelectedPhotos = userSelectedPhotos;
+    for (OLAsset *asset in userSelectedPhotos){
+        [[OLAsset userSelectedAssets] addObject:asset];
+    }
     
     if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != OLTemplateUIMug && product.productTemplate.templateUI != OLTemplateUICase && product.productTemplate.templateUI != OLTemplateUIApparel && product.productTemplate.templateUI != OLTemplateUIPhotobook && product.productTemplate.templateUI != OLTemplateUIPostcard && !(product.productTemplate.templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1)){
         OLImagePickerViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
@@ -1707,7 +1711,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:coverPhoto];
         }
         else{
-            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:[OLPlaceholderAsset asset]];
+            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:[[OLPlaceholderAsset alloc] init]];
         }
         
         [orvc safePerformSelector:@selector(setProduct:) withObject:product];

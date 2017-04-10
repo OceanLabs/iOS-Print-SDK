@@ -21,7 +21,6 @@
 "All Photos" = "Tutte le foto";
 "Alternatively type the following URL into your mobile browser's address bar" = "In alternativa digita il seguente URL nella barra degli indirizzi del tuo browser mobile.";
 "Are you sure you want to delete this item?" = "Sei sicuro di voler eliminare questo prodotto?";
-"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos" = "Sei sicuro di voler procedere? Se lo fai, le pagine vuote verranno riempite con doppioni delle foto.";
 "Are you sure?" = "Sei sicuro?";
 "Authorise" = "Autorizza";
 "Back" = "Indietro";
@@ -59,6 +58,7 @@
 "Delivery Details" = "Dettagli di consegna";
 "Description" = "Descrizione";
 "Details" = "Dettagli";
+"Discard Edits" = "Discard Edits";
 "Do you want to log out of %@?" = "Vuoi uscire da %@?";
 "Do you want to remove this photo?" = "Vuoi rimuovere questa foto?";
 "Done" = "Fatto";
@@ -110,10 +110,8 @@
 "New Payment" = "Nuovo pagamento";
 "Next" = "Successivo";
 "No" = "No";
-"No photos" = "Nessuna foto";
 "No Thanks" = "No Grazie";
 "No, keep it" = "No, tienila";
-"No, not yet" = "No, non ancora";
 "Not now" = "Non ora";
 "OK" = "OK";
 "Only registered %d/%d image URLs with the asset endpoint" = "Solo URL immagini %d/%d registrati con asset alla fine";
@@ -133,7 +131,6 @@
 "Payment Method" = "Metodo di pagamento";
 "Phone" = "Telefono";
 "Please add %d more." = "Per favore aggiungi più %d";
-"Please add at least one photo" = "Aggiungi almeno una foto";
 "Please add some photos to your photo book" = "Aggiungi delle foto al tuo album";
 "Please choose an address to have your order shipped to" = "Scegli un indirizzo a cui consegnare il tuo ordine";
 "Please enter a card expiry date in the future" = "Inserisci una data di scadenza della carta ";
@@ -175,6 +172,7 @@
 "Review" = "Scrivi una recensione";
 "Rotate" = "Ruota";
 "Save" = "Salva";
+"Save as Copy" = "Save as Copy";
 "Scan QR Code" = "Scansiona QR code";
 "Search by postcode, street or address" = "Cerca per codice postale, strada o indirizzo";
 "Search by street, address or ZIP code" = "Cerca per CAP, strada o indirizzo";
@@ -193,7 +191,6 @@
 "Tap Image to Edit" = "Tocca l\immagine per modificare";
 "Tap Image to Edit or Hold to Rearrange" = "Tocca l\immagine per modificare o mantieni premuto per reimpostare";
 "Tap on this button" = "Tocca questo pulsante";
-"Tap to edit" = "Tocca per modificare";
 "Tap to swap pages. Hold for more options." = "Tocca per cambiare pagine. Mantieni premuto per ulteriori opzioni.";
 "Text Colour" = "Colore del testo";
 "TEXT TOOLS" = "STRUMENTI DI TESTO";
@@ -211,10 +208,8 @@
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Ti invieremo la conferma e gli aggiornamenti dell'ordine. Togli la spunta a questa casella se non vuoi ricevere informative via email.";
 "Yes" = "Si";
 "Yes Please" = "Si grazie";
-"Yes, proceed" = "Si, procedi";
 "Yes, remove it" = "Si, rimuovi";
 "You can add %d more for the same price." = "Puoi aggiungere %d in più per lo stesso prezzo";
-"You can add more photos" = "Puoi aggiungere più foto";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "Devi autorizzare l'app ad accedere al tuo account Instagram se vuoi importarne le foto.";
 "You've only selected %d photo." = "Hai selezionato solo %d foto";
 "You've only selected %d photos." = "Hai selezionato solo %d foto";

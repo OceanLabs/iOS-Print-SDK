@@ -32,7 +32,6 @@
 #import "OLPrintOrder+History.h"
 #import "OLFrameOrderReviewViewController.h"
 #import "OLInfoPageViewController.h"
-#import "OLImagePreviewViewController.h"
 #import "OLUserSession.h"
 #import "OLPhotoEdits.h"
 #import "OLImagePickerViewController.h"
@@ -48,6 +47,8 @@
 #import "OLAddressLookupViewController.h"
 #import "OLAddressSelectionViewController.h"
 #import "OLKiteViewController+Private.h"
+#import "OLAsset+Private.h"
+#import "OLRemoteImageView.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;
@@ -64,10 +65,6 @@
 
 @interface UIViewController ()
 - (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender;
-@end
-
-@interface OLPosterViewController ()
-- (IBAction)editPhoto:(id)sender;
 @end
 
 @interface OLFrameOrderReviewViewController ()
@@ -111,12 +108,11 @@
 
 @interface OLPackProductViewController ()
 @property (strong, nonatomic) UIButton *nextButton;
-- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location;
-- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit;
 - (void) deletePhotoAtIndex:(NSUInteger)index;
 @end
 
 @interface OLEditPhotobookViewController ()
+- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)tappedImageIndex;
 - (void)deletePage;
 - (void)editImage;
 @end

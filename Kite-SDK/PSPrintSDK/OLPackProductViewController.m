@@ -34,7 +34,6 @@
 #import "OLCircleMaskCollectionViewCell.h"
 #import "OLConstants.h"
 #import "OLImagePickerViewController.h"
-#import "OLImagePreviewViewController.h"
 #import "OLInfoBanner.h"
 #import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteABTesting.h"
@@ -77,8 +76,7 @@
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout,
-UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoBannerDelegate>
+@interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout, OLImagePickerViewControllerDelegate, OLInfoBannerDelegate>
 
 @property (weak, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) UIView *addMorePhotosView;
@@ -117,10 +115,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     [self setupCtaButton];
     
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.nextButton.frame.size.height, self.collectionView.contentInset.right);
-    
-    if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
-        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
-    }
     [self addInfoBanner];
 }
 
@@ -195,7 +189,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLUserSession currentSession].userSelectedPhotos.count];
+        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLAsset userSelectedAssets].nonPlaceholderAssets.count];
     }
 #endif
 }
@@ -250,7 +244,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 
 -(NSUInteger) totalNumberOfExtras{
     NSUInteger res = 0;
-    for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
+    for (OLAsset *photo in [OLAsset userSelectedAssets]){
         res += photo.extraCopies;
     }
     return res;
@@ -258,9 +252,9 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 
 - (void)updateTitleBasedOnSelectedPhotoQuanitity {
     if (self.product.quantityToFulfillOrder > 1){
-        NSUInteger numOrders = 1 + (MAX(0, [OLUserSession currentSession].userSelectedPhotos.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+        NSUInteger numOrders = 1 + (MAX(0, [OLAsset userSelectedAssets].nonPlaceholderAssets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
         NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-        self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) ([OLUserSession currentSession].userSelectedPhotos.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
+        self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long) ([OLAsset userSelectedAssets].nonPlaceholderAssets.count + [self totalNumberOfExtras]), (unsigned long)quanityToFulfilOrder];
     }
     else{
         self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering");
@@ -268,7 +262,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 -(BOOL) shouldGoToCheckout{
-    NSUInteger selectedCount = [OLUserSession currentSession].userSelectedPhotos.count + [self totalNumberOfExtras];
+    NSUInteger selectedCount = [OLAsset userSelectedAssets].nonPlaceholderAssets.count + [self totalNumberOfExtras];
     NSUInteger numOrders = 1 + (MAX(0, selectedCount - 1) / self.product.quantityToFulfillOrder);
     NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
     if (selectedCount < quantityToFulfilOrder) {
@@ -362,9 +356,9 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDeletedPhotoForProductName:self.product.productTemplate.name];
 #endif
-    [[OLUserSession currentSession].userSelectedPhotos removeObjectAtIndex:index];
+    [[OLAsset userSelectedAssets] removeObjectAtIndex:index];
     
-    if ([OLUserSession currentSession].userSelectedPhotos.count == 0){
+    if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 0){
         [self.navigationController popViewControllerAnimated:YES];
     }
     
@@ -384,53 +378,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     else{
         return self.product.productTemplate.sizeCm.height / self.product.productTemplate.sizeCm.width;
     }
-}
-
-- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        return nil;
-    }
-    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
-    OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    
-    if (!cell.imageView.image){
-        return nil;
-    }
-    
-    [previewingContext setSourceRect:[cell convertRect:cell.imageView.frame toView:self.collectionView]];
-    
-    self.editingAsset = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
-    
-    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
-    __weak OLImagePreviewViewController *weakVc = previewVc;
-    [previewVc.imageView setAndFadeInImageWithOLAsset:self.editingAsset size:self.view.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
-        [weakVc.imageView setProgress:progress];
-    }completionHandler:NULL];
-    previewVc.providesPresentationContextTransitionStyle = true;
-    previewVc.definesPresentationContext = true;
-    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    return previewVc;
-}
-
-- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
-    cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
-    cropVc.delegate = self;
-    cropVc.aspectRatio = [self productAspectRatio];
-    cropVc.product = self.product;
-    
-    [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
-        [cropVc.cropView setProgress:progress];
-    }completion:^(UIImage *image, NSError *error){
-        [cropVc setFullImage:image];
-        cropVc.edits = self.editingAsset.edits;
-        cropVc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
-        [self presentViewController:cropVc animated:NO completion:NULL];
-    }];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
-#endif
 }
 
 - (void)setupBottomBorderTextFieldOnView:(OLCircleMaskCollectionViewCell *)cell{
@@ -472,8 +419,8 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSInteger extraCopies = [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies] + 1;
-    [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] setExtraCopies:extraCopies];
+    NSInteger extraCopies = [[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] extraCopies] + 1;
+    [[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] setExtraCopies:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -492,7 +439,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     }
     NSIndexPath* indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    NSInteger extraCopies = [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies];
+    NSInteger extraCopies = [[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] extraCopies];
     if (extraCopies == 0){
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Remove?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Remove [photo]?") message:NSLocalizedStringFromTableInBundle(@"Do you want to remove this photo?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes, remove it", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Yes, remove [the photo]") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
@@ -504,7 +451,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     }
     extraCopies--;
     
-    [[OLUserSession currentSession].userSelectedPhotos[indexPath.item] setExtraCopies:extraCopies];
+    [[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] setExtraCopies:extraCopies];
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
@@ -540,7 +487,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     UIView *printView = [(OLCircleMaskCollectionViewCell *)cell printContainerView];
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
     
-    self.editingAsset = [OLUserSession currentSession].userSelectedPhotos[indexPath.item];
+    self.editingAsset = [[OLAsset userSelectedAssets] objectAtIndex:indexPath.item];
     
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
         [self replacePhoto:sender];
@@ -596,11 +543,11 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 
 - (void)preparePhotosForCheckout{
     self.checkoutPhotos = [[NSMutableArray alloc] init];
-    [self.checkoutPhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedPhotos];
-    for (int i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++) {
-        NSInteger numberOfCopies = [[OLUserSession currentSession].userSelectedPhotos[i] extraCopies];
+    [self.checkoutPhotos addObjectsFromArray:[[OLAsset userSelectedAssets] nonPlaceholderAssets]];
+    for (int i = 0; i < [OLAsset userSelectedAssets].nonPlaceholderAssets.count; i++) {
+        NSInteger numberOfCopies = [[[OLAsset userSelectedAssets] objectAtIndex:i] extraCopies];
         for (NSInteger j = 0; j < numberOfCopies; j++){
-            [self.checkoutPhotos addObject:[OLUserSession currentSession].userSelectedPhotos[i]];
+            [self.checkoutPhotos addObject:[[OLAsset userSelectedAssets] objectAtIndex:i]];
         }
     }
 }
@@ -608,7 +555,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 #pragma mark UICollectionView data source and delegate methods
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return [[OLUserSession currentSession].userSelectedPhotos count];
+    return [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -666,7 +613,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     [downButton addTarget:self action:@selector(onButtonDownArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
-    [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies]+1]];
+    [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] extraCopies]+1]];
     if ([OLKiteABTesting sharedInstance].lightThemeColor3){
         [upButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
         [downButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
@@ -678,7 +625,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
     }
     
-    OLAsset *asset = (OLAsset*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];
+    OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:indexPath.item];
     CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
     
     UIEdgeInsets b = self.product.productTemplate.imageBorder;
@@ -791,8 +738,8 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     self.editingAsset.edits = cropper.edits;
     
     //Find the new previewSourceView for the dismiss animation
-    for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++){
-        if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingAsset){
+    for (NSInteger i = 0; i < [OLAsset userSelectedAssets].nonPlaceholderAssets.count; i++){
+        if ([[OLAsset userSelectedAssets] objectAtIndex:i] == self.editingAsset){
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (indexPath){
                 [UIView animateWithDuration:0 animations:^{
@@ -822,8 +769,8 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    NSUInteger index = [[OLUserSession currentSession].userSelectedPhotos indexOfObjectIdenticalTo:self.editingAsset];
-    [[OLUserSession currentSession].userSelectedPhotos replaceObjectAtIndex:index withObject:asset];
+    NSUInteger index = [[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:self.editingAsset];
+    [[OLAsset userSelectedAssets] replaceObjectAtIndex:index withObject:asset];
     self.editingAsset = asset;
 }
 
@@ -839,8 +786,8 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [self imageEditViewController:nil didReplaceAssetWithAsset:asset];
         
         //Find the new previewSourceView for the dismiss animation
-        for (NSInteger i = 0; i < [OLUserSession currentSession].userSelectedPhotos.count; i++){
-            if ([OLUserSession currentSession].userSelectedPhotos[i] == self.editingAsset){
+        for (NSInteger i = 0; i < [OLAsset userSelectedAssets].nonPlaceholderAssets.count; i++){
+            if ([[OLAsset userSelectedAssets] objectAtIndex:i] == self.editingAsset){
                 NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
                 if (indexPath){
                     [UIView animateWithDuration:0 animations:^{

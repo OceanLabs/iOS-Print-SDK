@@ -42,7 +42,6 @@
 #import "OLKiteViewController+Private.h"
 
 @interface OLPrintOrder (Private)
-@property (weak, nonatomic) NSArray *userSelectedPhotos;
 - (void)saveOrder;
 + (id)loadOrder;
 @end
@@ -63,15 +62,17 @@
     return sharedInstance;
 }
 
--(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos){
-        _userSelectedPhotos = [[NSMutableArray alloc] init];
+-(NSMutableArray *) userSelectedAssets{
+    if (!_userSelectedAssets){
+        _userSelectedAssets = [[NSMutableArray alloc] init];
         
         if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-            [_userSelectedPhotos addObjectsFromArray:self.appAssets];
+            for (OLAsset *asset in self.appAssets){
+                [_userSelectedAssets addObject:asset];
+            }
         }
     }
-    return _userSelectedPhotos;
+    return _userSelectedAssets;
 }
 
 -(NSMutableArray *) recentPhotos{
@@ -88,22 +89,21 @@
     if (!_printOrder){
         _printOrder = [[OLPrintOrder alloc] init];
     }
-    _printOrder.userSelectedPhotos = self.userSelectedPhotos;
     return _printOrder;
 }
 
 - (void)resetUserSelectedPhotos{
     [self clearUserSelectedPhotos];
-    [self.userSelectedPhotos addObjectsFromArray:self.appAssets];
+    [self.userSelectedAssets addObjectsFromArray:self.appAssets];
 }
 
 - (void)clearUserSelectedPhotos{
-    for (OLAsset *asset in self.userSelectedPhotos){
+    for (OLAsset *asset in self.userSelectedAssets){
         asset.edits = nil;
         [asset unloadImage];
     }
     
-    [self.userSelectedPhotos removeAllObjects];
+    [self.userSelectedAssets removeAllObjects];
     
     for (OLAsset *asset in self.recentPhotos){
         asset.edits = nil;

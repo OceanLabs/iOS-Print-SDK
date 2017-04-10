@@ -231,6 +231,8 @@
 		2E65FEA91E4E143B00A301BB /* OLOrderHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65FEA71E4E143B00A301BB /* OLOrderHistoryViewController.m */; };
 		2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */; };
 		2E7D39731DAE39820046D255 /* OLImageRenderOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */; };
+		2E7FB64E1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7FB64C1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h */; };
+		2E7FB64F1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7FB64D1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m */; };
 		2E870D3A1E49EF2100623C54 /* OLFulfilmentItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E870D381E49EF2100623C54 /* OLFulfilmentItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E870D3B1E49EF2100623C54 /* OLFulfilmentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E870D391E49EF2100623C54 /* OLFulfilmentItem.m */; };
 		2E898CCB1CC518180041CCD8 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
@@ -709,6 +711,8 @@
 		2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageRenderOptions.m; sourceTree = "<group>"; };
 		2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLGreetingCardPrintJob.m; sourceTree = "<group>"; };
 		2E7F516F1BF5FBCD00A78718 /* OLGreetingCardPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLGreetingCardPrintJob.h; sourceTree = "<group>"; };
+		2E7FB64C1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSMutableArray+OLUserSelectedAssetsUtils.h"; path = "PSPrintSDK/Categories/NSMutableArray+OLUserSelectedAssetsUtils.h"; sourceTree = "<group>"; };
+		2E7FB64D1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSMutableArray+OLUserSelectedAssetsUtils.m"; path = "PSPrintSDK/Categories/NSMutableArray+OLUserSelectedAssetsUtils.m"; sourceTree = "<group>"; };
 		2E837D461C3C1FBB004DA682 /* OLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLViewController.h; sourceTree = "<group>"; };
 		2E837D471C3C1FBB004DA682 /* OLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLViewController.m; sourceTree = "<group>"; };
 		2E837D4A1C3C221E004DA682 /* OLCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCollectionViewController.h; sourceTree = "<group>"; };
@@ -824,6 +828,7 @@
 		2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloader.h; sourceTree = "<group>"; };
 		2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloader.m; sourceTree = "<group>"; };
 		2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = OLKiteLocalizationResources.bundle; sourceTree = "<group>"; };
+		2EC020621E89460C00E45EB2 /* Kite-Print-SDK.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = "Kite-Print-SDK.podspec"; path = "../Kite-Print-SDK.podspec"; sourceTree = "<group>"; };
 		2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPlaceholderAsset.h; sourceTree = "<group>"; };
 		2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPlaceholderAsset.m; sourceTree = "<group>"; };
 		2ECA34EA1E82743800D56220 /* OLApparelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLApparelViewController.h; sourceTree = "<group>"; };
@@ -1044,6 +1049,7 @@
 		01A3969341E0D10D83284FD0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				2EC020621E89460C00E45EB2 /* Kite-Print-SDK.podspec */,
 				8B41929BCC906276818C848C /* Pods-Kite-CI-Deploy.debug.xcconfig */,
 				48EA1821F95A31ABAF57DA36 /* Pods-Kite-CI-Deploy.release.xcconfig */,
 				321E56D8BE2D006816AACDED /* Pods-KiteSDK-Demo.debug.xcconfig */,
@@ -1235,7 +1241,7 @@
 			name = SVProgressHUD;
 			sourceTree = "<group>";
 		};
-		2E4CAF101BC293EA0089FA26 /* Products */ = {
+		2E4CAF101BC293EA0089FA26 /* Product Lists */ = {
 			isa = PBXGroup;
 			children = (
 				2EA8BEAC1A484FCB008A9248 /* OLProductHomeViewController.h */,
@@ -1253,7 +1259,7 @@
 				2E5D95AA1CA984E00080EF07 /* OLUpsellViewController.h */,
 				2E5D95AB1CA984E00080EF07 /* OLUpsellViewController.m */,
 			);
-			name = Products;
+			name = "Product Lists";
 			sourceTree = "<group>";
 		};
 		2E4CAF111BC293FC0089FA26 /* Edit-Review */ = {
@@ -1451,6 +1457,8 @@
 				2ED36B391C8EE4AD00FB2D4A /* NSDictionary+RequestParameterData.m */,
 				2E12DBC61E795511000A6CEF /* UIView+AutoLayoutHelper.h */,
 				2E12DBC71E795511000A6CEF /* UIView+AutoLayoutHelper.m */,
+				2E7FB64C1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h */,
+				2E7FB64D1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -1831,7 +1839,7 @@
 		CDA8BF4F18D70CF500D835BB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				2E4CAF101BC293EA0089FA26 /* Products */,
+				2E4CAF101BC293EA0089FA26 /* Product Lists */,
 				2E1E66F21D479674002524A4 /* Image Picker */,
 				2E4CAF111BC293FC0089FA26 /* Edit-Review */,
 				2E4CAF121BC2940A0089FA26 /* Shipping-Payment */,
@@ -1997,6 +2005,7 @@
 				2EB0DC761DC8DB7400B556CE /* OL3DProductViewController.h in Headers */,
 				2EB8FE1B1D95685100E26BDF /* OLIndefiniteAnimatedView.h in Headers */,
 				2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */,
+				2E7FB64E1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h in Headers */,
 				2E65FEA81E4E143B00A301BB /* OLOrderHistoryViewController.h in Headers */,
 				2EB8FE131D95685100E26BDF /* OLFlipEnumerations.h in Headers */,
 				2EB8FE5C1D95685100E26BDF /* OLAddressLookupViewController.h in Headers */,
@@ -2554,6 +2563,7 @@
 				2E451E311D9555870080F1C1 /* OLInfoBanner.m in Sources */,
 				2E451DDC1D9555540080F1C1 /* OLAsset.m in Sources */,
 				2E451DD11D95554D0080F1C1 /* OLAddress+AddressBook.m in Sources */,
+				2E7FB64F1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m in Sources */,
 				2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */,
 				2E451E0F1D9555870080F1C1 /* OLFacebookSDKWrapper.m in Sources */,
 				2E451E2F1D9555870080F1C1 /* OLCircleSelectedCollectionViewCell.m in Sources */,

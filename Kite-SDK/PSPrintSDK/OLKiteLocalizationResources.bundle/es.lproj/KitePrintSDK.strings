@@ -21,7 +21,6 @@
 "All Photos" = "Todas las fotos";
 "Alternatively type the following URL into your mobile browser's address bar" = "Alternativamente, escriba la siguiente URL en la barra de direcciones del navegador de su móvil";
 "Are you sure you want to delete this item?" = "¿Está seguro de que desea eliminar este elemento?";
-"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos" = "¿Estás seguro de que quiere continuar? Si lo hace, las páginas en blanco se rellenarán con fotos duplicadas";
 "Are you sure?" = "¿Está seguro?";
 "Authorise" = "Autorizar";
 "Back" = "Espalda";
@@ -59,6 +58,7 @@
 "Delivery Details" = "Detalles de la entrega";
 "Description" = "Descripción";
 "Details" = "Detalles";
+"Discard Edits" = "Discard Edits";
 "Do you want to log out of %@?" = "Quieres desconectarte de %@?";
 "Do you want to remove this photo?" = "¿Desea borrar esta foto?";
 "Done" = "Està hecho";
@@ -110,10 +110,8 @@
 "New Payment" = "Nuevo Pago";
 "Next" = "Siguiente";
 "No" = "No";
-"No photos" = "Sin fotos";
 "No Thanks" = "No gracias";
 "No, keep it" = "No, manténgalo";
-"No, not yet" = "No, ahora no";
 "Not now" = "Ahora no";
 "OK" = "Aceptar";
 "Only registered %d/%d image URLs with the asset endpoint" = "Solo se registran las URL de imagen %d/%d con el punto final del recurso";
@@ -132,7 +130,6 @@
 "Payment Method" = "Método de pago";
 "Phone" = "Teléfono";
 "Please add %d more." = "Por favor, Agregue %d más.";
-"Please add at least one photo" = "Por favor, añada al menos una foto";
 "Please add some photos to your photo book" = "Por favor, añade algunas fotos a su libro de fotos";
 "Please choose an address to have your order shipped to" = "Por favor, elija una dirección para que su pedido sea enviado a";
 "Please enter a card expiry date in the future" = "Por favor, ingrese una fecha de caducidad de la tarjeta en el futuro";
@@ -174,6 +171,7 @@
 "Review" = "Revisar";
 "Rotate" = "Girar";
 "Save" = "Guardar";
+"Save as Copy" = "Save as Copy";
 "Scan QR Code" = "Escanear el código QR";
 "Search by postcode, street or address" = "Buscar por código postal, calle o dirección";
 "Search by street, address or ZIP code" = "Buscar por calle, dirección o código postal";
@@ -192,7 +190,6 @@
 "Tap Image to Edit" = "Toca la imagen para editar";
 "Tap Image to Edit or Hold to Rearrange" = "Toca Imagen para editar o Mantén presionada para reorganizar";
 "Tap on this button" = "Aprieta este botón";
-"Tap to edit" = "Pulsa para editar";
 "Tap to swap pages. Hold for more options." = "Toca para intercambiar páginas. Mantén para obtener más opciones.";
 "Text Colour" = "Color del texto";
 "TEXT TOOLS" = "HERRAMIENTAS DE TEXTO";
@@ -210,10 +207,8 @@
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Le enviaremos confirmación y actualizaciones de pedidos. Desmarca esta casilla para inhabilitar las campañas de correo electrónico.";
 "Yes" = "Sí";
 "Yes Please" = "Sí por favor";
-"Yes, proceed" = "Sí, proceda";
 "Yes, remove it" = "Sí, quítelo";
 "You can add %d more for the same price." = "Puede agregar %d más por el mismo precio.";
-"You can add more photos" = "Puede agregar más fotos";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "Debe autorizar que la aplicación acceda a su cuenta de Instagram si desea importar fotos desde allí.";
 "You've only selected %d photo." = "Solo ha seleccionado %d foto.";
 "You've only selected %d photos." = "Solo ha seleccionado %d fotos.";

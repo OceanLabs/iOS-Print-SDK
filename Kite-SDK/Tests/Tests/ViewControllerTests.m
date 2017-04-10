@@ -679,7 +679,7 @@
     
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     
-    NSArray *olAssets = [[OLUserSession currentSession].userSelectedPhotos subarrayWithRange:NSMakeRange(0, 11)];
+    NSArray *olAssets = [[OLAsset userSelectedAssets] subarrayWithRange:NSMakeRange(0, 11)];
     
     [OLUserSession currentSession].appAssets = [olAssets mutableCopy];
     [[OLUserSession currentSession] resetUserSelectedPhotos];
@@ -851,7 +851,7 @@
     
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     
-    [OLUserSession currentSession].userSelectedPhotos = [assets mutableCopy];
+    [OLUserSession currentSession].userSelectedAssets = [assets mutableCopy];
     
     [self chooseClass:@"Prints" onOLProductHomeViewController:productHomeVc];
     
@@ -1003,7 +1003,7 @@
 - (void)testAddingPhotosToPhotobook{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
     
-    [[OLUserSession currentSession].userSelectedPhotos removeAllObjects];
+    [[OLAsset userSelectedAssets] removeAllObjects];
     
     [self chooseClass:@"Photo Books" onOLProductHomeViewController:productHomeVc];
     
@@ -1017,7 +1017,11 @@
     OLEditPhotobookViewController *photobookEditVc = (OLEditPhotobookViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([photobookEditVc isKindOfClass:[OLEditPhotobookViewController class]]);
     
-    XCTAssert([[(UINavigationController *)photobookEditVc.presentedViewController topViewController] isKindOfClass:[OLImagePickerViewController class]], @"Did not show image picker on entry because of no images");
+    [self performUIAction:^{
+        [photobookEditVc photobook:photobookEditVc.childViewControllers[1] userDidTapOnImageWithIndex:1];
+    }];
+    
+    XCTAssert([[(UINavigationController *)photobookEditVc.presentedViewController topViewController] isKindOfClass:[OLImagePickerViewController class]], @"Did not show image picker");
     
     OLImagePickerViewController *picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
     
@@ -1056,7 +1060,7 @@
         [picker onButtonDoneTapped:nil];
     }];
     
-    XCTAssert([OLUserSession currentSession].userSelectedPhotos.count == 2, @"Did not pick 2 images");
+    XCTAssert([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 2, @"Did not pick 2 images");
 }
 
 - (void)testCountryPicker{

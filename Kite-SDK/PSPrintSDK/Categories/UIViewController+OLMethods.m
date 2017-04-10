@@ -116,7 +116,6 @@
     [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-        [vc safePerformSelector:@selector(setCurrentUserSelectedPhotos:) withObject:[NSArray arrayWithArray:[OLUserSession currentSession].userSelectedPhotos]];
         [(OLPaymentViewController *)vc setPresentedModally:YES];
         
         NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];

@@ -47,6 +47,7 @@
 #import "UIViewController+OLMethods.h"
 #import "OLProductOverviewPageAnimatedContentViewController.h"
 #import "OLKiteViewController+Private.h"
+#import "OLAsset+Private.h"
 #import "UIColor+OLHexString.h"
 #import "UIView+RoundRect.h"
 
@@ -419,8 +420,8 @@
     OLUpsellOffer *offer = [self upsellOfferToShow];
     BOOL shouldShowOffer = offer != nil;
     if (offer){
-        shouldShowOffer &= offer.minUnits <= [OLUserSession currentSession].userSelectedPhotos.count;
-        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= [OLUserSession currentSession].userSelectedPhotos.count;
+        shouldShowOffer &= offer.minUnits <= [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
+        shouldShowOffer &= offer.maxUnits == 0 || offer.maxUnits >= [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
         shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
     }
     if (shouldShowOffer){
@@ -587,10 +588,10 @@
         //Do nothing, no assets needed
     }
     else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[[OLUserSession currentSession].userSelectedPhotos.firstObject copy]];
+        [assets addObject:[[OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject copy]];
     }
     else{
-        for (OLAsset *photo in [OLUserSession currentSession].userSelectedPhotos){
+        for (OLAsset *photo in [OLAsset userSelectedAssets]){
             [assets addObject:[photo copy]];
         }
     }

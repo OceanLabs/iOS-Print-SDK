@@ -21,7 +21,6 @@
 "All Photos" = "All Photos";
 "Alternatively type the following URL into your mobile browser's address bar" = "Alternatively type the following URL into your mobile browser's address bar";
 "Are you sure you want to delete this item?" = "Are you sure you want to delete this item?";
-"Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos" = "Are you sure you want to proceed? If you do, the blank pages will be filled in with duplicate photos";
 "Are you sure?" = "Are you sure?";
 "Authorise" = "Authorise";
 "Back" = "Back";
@@ -59,6 +58,7 @@
 "Delivery Details" = "Delivery Details";
 "Description" = "Description";
 "Details" = "Details";
+"Discard Edits" = "Discard Edits";
 "Do you want to log out of %@?" = "Do you want to log out of %@?";
 "Do you want to remove this photo?" = "Do you want to remove this photo?";
 "Done" = "Done";
@@ -110,10 +110,8 @@
 "New Payment" = "New Payment";
 "Next" = "Next";
 "No" = "No";
-"No photos" = "No photos";
 "No Thanks" = "No Thanks";
 "No, keep it" = "No, keep it";
-"No, not yet" = "No, not yet";
 "Not now" = "Not now";
 "OK" = "OK";
 "Only registered %d/%d image URLs with the asset endpoint" = "Only registered %d/%d image URLs with the asset endpoint";
@@ -132,7 +130,6 @@
 "Payment Method" = "Payment Method";
 "Phone" = "Phone";
 "Please add %d more." = "Please add %d more.";
-"Please add at least one photo" = "Please add at least one photo";
 "Please add some photos to your photo book" = "Please add some photos to your photo book";
 "Please choose an address to have your order shipped to" = "Please choose an address to have your order shipped to";
 "Please enter a card expiry date in the future" = "Please enter a card expiry date in the future";
@@ -174,6 +171,7 @@
 "Review" = "Review";
 "Rotate" = "Rotate";
 "Save" = "Save";
+"Save as Copy" = "Save as Copy";
 "Scan QR Code" = "Scan QR Code";
 "Search by postcode, street or address" = "Search by postcode, street or address";
 "Search by street, address or ZIP code" = "Search by street, address or ZIP code";
@@ -192,7 +190,6 @@
 "Tap Image to Edit" = "Tap Image to Edit";
 "Tap Image to Edit or Hold to Rearrange" = "Tap Image to Edit or Hold to Rearrange";
 "Tap on this button" = "Tap on this button";
-"Tap to edit" = "Tap to edit";
 "Tap to swap pages. Hold for more options." = "Tap to swap pages. Hold for more options.";
 "Text Colour" = "Text Colour";
 "TEXT TOOLS" = "TEXT TOOLS";
@@ -210,10 +207,8 @@
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.";
 "Yes" = "Yes";
 "Yes Please" = "Yes Please";
-"Yes, proceed" = "Yes, proceed";
 "Yes, remove it" = "Yes, remove it";
 "You can add %d more for the same price." = "You can add %d more for the same price.";
-"You can add more photos" = "You can add more photos";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "You need to authorize the app to access your Instagram account if you want to import photos from there.";
 "You've only selected %d photo." = "You've only selected %d photo.";
 "You've only selected %d photos." = "You've only selected %d photos.";

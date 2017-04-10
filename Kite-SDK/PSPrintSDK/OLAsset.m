@@ -610,6 +610,10 @@ static NSOperationQueue *imageOperationQueue;
     }
 }
 
++ (NSMutableArray<OLAsset *> *)userSelectedAssets{
+    return [OLUserSession currentSession].userSelectedAssets;
+}
+
 - (void)unloadImage {
     self.cachedEditedImage = nil; // we can always recreate this
 }

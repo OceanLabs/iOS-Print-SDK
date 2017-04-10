@@ -30,6 +30,7 @@
 #import "OLAsset.h"
 #import "OLPhotoEdits.h"
 #import "OLPlaceholderAsset.h"
+#import "NSMutableArray+OLUserSelectedAssetsUtils.h"
 
 typedef enum {
     kOLAssetTypeCorrupt,
@@ -54,6 +55,7 @@ typedef enum {
 - (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler;
 - (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL;
 - (void)unloadImage;
++ (NSMutableArray<OLAsset *> *)userSelectedAssets;
 @property (assign, nonatomic) BOOL corrupt;
 @property (assign, nonatomic) NSInteger extraCopies;
 @property (nonatomic, readonly) OLAssetType assetType;

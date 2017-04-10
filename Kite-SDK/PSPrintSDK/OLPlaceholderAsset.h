@@ -27,8 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+#import "OLAsset.h"
 
-@interface OLPlaceholderAsset : NSObject
-+ (instancetype)asset;
+@interface OLPlaceholderAsset : OLAsset
+
 @end

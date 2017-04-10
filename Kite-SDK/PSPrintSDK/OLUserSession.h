@@ -46,7 +46,7 @@ typedef NSUInteger OLUserSessionCleanupOption;
 
 @interface OLUserSession : NSObject
 
-@property (strong, nonatomic) NSMutableArray<OLAsset *> *userSelectedPhotos;
+@property (strong, nonatomic) NSMutableArray<OLAsset *> *userSelectedAssets;
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *recentPhotos;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSArray<OLAsset *> *appAssets;

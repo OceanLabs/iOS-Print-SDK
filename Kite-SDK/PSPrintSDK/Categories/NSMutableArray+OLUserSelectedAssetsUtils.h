@@ -27,11 +27,12 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-#import "OLRemoteImageView.h"
+#import <Foundation/Foundation.h>
 
 @class OLAsset;
 
-@interface OLImagePreviewViewController : UIViewController
-@property (strong, nonatomic) OLAsset *asset;
+@interface NSMutableArray (OLUserSelectedAssetsUtils)
+- (NSArray *)nonPlaceholderAssets;
+- (void)adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets trim:(BOOL)trim;
+- (void)updateUserSelectedAssetsAtIndex:(NSInteger)insertIndex withAddedAssets:(NSArray<OLAsset *> *)addedAssets removedAssets:(NSArray<OLAsset *> *)removedAssets;
 @end
