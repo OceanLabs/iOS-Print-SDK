@@ -638,9 +638,8 @@
     [cell setNeedsLayout];
     [cell layoutIfNeeded];
     
-    [cell.imageView setAndFadeInImageWithOLAsset:asset size:cell.imageView.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
-        [cell.imageView setProgress:progress];
-    } completionHandler:^(){
+    cell.imageView.assetViews.firstObject.asset = asset;
+    [cell.imageView.assetViews.firstObject loadImageWithCompletionHandler:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             [cell.activityView stopAnimating];
         });

@@ -27,18 +27,25 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-#import "OLArtboardView.h"
+#import "OLArtboardAssetView.h"
+#import "UIImageView+FadeIn.h"
+#import "OLPlaceholderAsset.h"
 
-@interface OLCircleMaskCollectionViewCell : UICollectionViewCell
+@implementation OLArtboardAssetView
 
-@property (assign, nonatomic) BOOL enableMask;
-@property (weak, nonatomic) IBOutlet OLArtboardView *imageView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewTopCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewLeftCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewBottomCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewRightCon;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
-@property (weak, nonatomic) IBOutlet UIView *printContainerView;
+- (OLAsset *)asset{
+    if (!_asset){
+        return [[OLPlaceholderAsset alloc] init];
+    }
+    
+    return _asset;
+}
+
+- (void)loadImageWithCompletionHandler:(void(^)())handler{
+    __weak OLArtboardAssetView *welf = self;
+    [self setAndFadeInImageWithOLAsset:self.asset size:self.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+        [welf setProgress:progress];
+    }completionHandler:handler];
+}
 
 @end

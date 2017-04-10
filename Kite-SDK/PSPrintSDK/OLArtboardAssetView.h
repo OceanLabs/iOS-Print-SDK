@@ -26,19 +26,17 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
-
 #import <UIKit/UIKit.h>
-#import "OLArtboardView.h"
+#import "OLRemoteImageView.h"
 
-@interface OLCircleMaskCollectionViewCell : UICollectionViewCell
+@class OLAsset;
 
-@property (assign, nonatomic) BOOL enableMask;
-@property (weak, nonatomic) IBOutlet OLArtboardView *imageView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewTopCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewLeftCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewBottomCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewRightCon;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
-@property (weak, nonatomic) IBOutlet UIView *printContainerView;
+@interface OLArtboardAssetView : OLRemoteImageView
+
+@property (strong, nonatomic) NSString *identifier;
+@property (strong, nonatomic) OLAsset *asset;
+@property (assign, nonatomic) CGRect relativeFrame;
+
+- (void)loadImageWithCompletionHandler:(void(^)())handler;
 
 @end

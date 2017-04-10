@@ -28,17 +28,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLArtboardView.h"
+#import "OLArtboardAssetView.h"
 
-@interface OLCircleMaskCollectionViewCell : UICollectionViewCell
-
-@property (assign, nonatomic) BOOL enableMask;
-@property (weak, nonatomic) IBOutlet OLArtboardView *imageView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewTopCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewLeftCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewBottomCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewRightCon;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
-@property (weak, nonatomic) IBOutlet UIView *printContainerView;
+@interface OLArtboardView : UIImageView
+@property (strong, nonatomic) NSMutableArray<OLArtboardAssetView *> *assetViews;
+- (void)addAssetViewWithRelativeFrame:(CGRect)frame identifier:(NSString *)name;
 
 @end

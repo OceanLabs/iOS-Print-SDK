@@ -229,6 +229,10 @@
 		2E65FEA11E4E058400A301BB /* OLTouchTolerantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */; };
 		2E65FEA81E4E143B00A301BB /* OLOrderHistoryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */; };
 		2E65FEA91E4E143B00A301BB /* OLOrderHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65FEA71E4E143B00A301BB /* OLOrderHistoryViewController.m */; };
+		2E7A8D8F1E9BBE8900AB4736 /* OLArtboardAssetView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7A8D8B1E9BBE8900AB4736 /* OLArtboardAssetView.h */; };
+		2E7A8D901E9BBE8900AB4736 /* OLArtboardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7A8D8C1E9BBE8900AB4736 /* OLArtboardView.h */; };
+		2E7A8D911E9BBE8900AB4736 /* OLArtboardAssetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7A8D8D1E9BBE8900AB4736 /* OLArtboardAssetView.m */; };
+		2E7A8D921E9BBE8900AB4736 /* OLArtboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7A8D8E1E9BBE8900AB4736 /* OLArtboardView.m */; };
 		2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */; };
 		2E7D39731DAE39820046D255 /* OLImageRenderOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */; };
 		2E7FB64E1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7FB64C1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h */; };
@@ -705,6 +709,10 @@
 		2E74A9D01B6B7827001AE97B /* OLPosterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPosterViewController.m; sourceTree = "<group>"; };
 		2E768F531B394372009BAC18 /* OLPhotobookPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookPrintJob.h; sourceTree = "<group>"; };
 		2E768F541B394372009BAC18 /* OLPhotobookPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPrintJob.m; sourceTree = "<group>"; };
+		2E7A8D8B1E9BBE8900AB4736 /* OLArtboardAssetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLArtboardAssetView.h; sourceTree = "<group>"; };
+		2E7A8D8C1E9BBE8900AB4736 /* OLArtboardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLArtboardView.h; sourceTree = "<group>"; };
+		2E7A8D8D1E9BBE8900AB4736 /* OLArtboardAssetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLArtboardAssetView.m; sourceTree = "<group>"; };
+		2E7A8D8E1E9BBE8900AB4736 /* OLArtboardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLArtboardView.m; sourceTree = "<group>"; };
 		2E7BDAD81D3E1713005F142C /* OLUserSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUserSession.h; sourceTree = "<group>"; };
 		2E7BDAD91D3E1713005F142C /* OLUserSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLUserSession.m; sourceTree = "<group>"; };
 		2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageRenderOptions.h; sourceTree = "<group>"; };
@@ -1085,6 +1093,10 @@
 				2EF718331D589DB60036502D /* OLInfoBanner.m */,
 				2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */,
 				2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */,
+				2E7A8D8B1E9BBE8900AB4736 /* OLArtboardAssetView.h */,
+				2E7A8D8D1E9BBE8900AB4736 /* OLArtboardAssetView.m */,
+				2E7A8D8C1E9BBE8900AB4736 /* OLArtboardView.h */,
+				2E7A8D8E1E9BBE8900AB4736 /* OLArtboardView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1936,6 +1948,7 @@
 				2EB8FE181D95685100E26BDF /* OLMarkdownParser.h in Headers */,
 				2EB8FDE61D95685100E26BDF /* OLPayPalCard.h in Headers */,
 				2EB8FDF81D95685100E26BDF /* OLProductTemplateOptionChoice.h in Headers */,
+				2E7A8D901E9BBE8900AB4736 /* OLArtboardView.h in Headers */,
 				2EB8FDEC1D95685100E26BDF /* OLPrintEnvironment.h in Headers */,
 				2EB8FE2A1D95685100E26BDF /* OLOAuth2Constants.h in Headers */,
 				2EB8FE761D95685100E26BDF /* UITextField+Selection.h in Headers */,
@@ -2064,6 +2077,7 @@
 				2EB8FE641D95685100E26BDF /* qrspec.h in Headers */,
 				2EB8FDFC1D95685100E26BDF /* OLPageLayout.h in Headers */,
 				2ECA34EC1E82743800D56220 /* OLApparelViewController.h in Headers */,
+				2E7A8D8F1E9BBE8900AB4736 /* OLArtboardAssetView.h in Headers */,
 				2EB8FE731D95685100E26BDF /* UIViewController+OLMethods.h in Headers */,
 				2EB8FE3F1D95685100E26BDF /* OLProductDetailsViewController.h in Headers */,
 				2EB8FE551D95685100E26BDF /* OLCheckoutViewController.h in Headers */,
@@ -2516,6 +2530,7 @@
 				2E451E381D9555870080F1C1 /* OLImagePickerViewController.m in Sources */,
 				2E451E5E1D9555EF0080F1C1 /* OLKiteViewController.m in Sources */,
 				2E451E651D955B0D0080F1C1 /* qrencode.c in Sources */,
+				2E7A8D921E9BBE8900AB4736 /* OLArtboardView.m in Sources */,
 				2E451E431D9555D30080F1C1 /* OLSingleImageProductReviewViewController.m in Sources */,
 				2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */,
 				2E451E181D9555870080F1C1 /* OLProgressHUD.m in Sources */,
@@ -2545,6 +2560,7 @@
 				2E451E151D9555870080F1C1 /* OLCircularProgressView.m in Sources */,
 				2E451E201D9555870080F1C1 /* OLOAuth2Client.m in Sources */,
 				2E451E541D9555D90080F1C1 /* OLAddressSelectionViewController.m in Sources */,
+				2E7A8D911E9BBE8900AB4736 /* OLArtboardAssetView.m in Sources */,
 				2E451DFB1D95555D0080F1C1 /* OLPrintPhoto.m in Sources */,
 				2E451E261D9555870080F1C1 /* OLOAuth2Request.m in Sources */,
 				2E451E121D9555870080F1C1 /* OLFlipViewController.m in Sources */,

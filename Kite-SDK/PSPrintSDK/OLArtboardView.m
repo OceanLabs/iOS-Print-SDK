@@ -26,19 +26,55 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
-
-#import <UIKit/UIKit.h>
 #import "OLArtboardView.h"
+#import "UIView+AutoLayoutHelper.h"
+#import "OLAsset.h"
 
-@interface OLCircleMaskCollectionViewCell : UICollectionViewCell
+@interface OLArtboardView ()
+@end
 
-@property (assign, nonatomic) BOOL enableMask;
-@property (weak, nonatomic) IBOutlet OLArtboardView *imageView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewTopCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewLeftCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewBottomCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewRightCon;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
-@property (weak, nonatomic) IBOutlet UIView *printContainerView;
+@implementation OLArtboardView
+
+- (void)setImage:(UIImage *)image{
+    self.assetViews.firstObject.image = image;
+}
+
+-(NSMutableArray *) assetViews{
+    if (!_assetViews){
+        _assetViews = [[NSMutableArray alloc] init];
+    }
+    
+    if (_assetViews.count == 0){
+        [self addAssetViewWithRelativeFrame:CGRectMake(0, 0, 1, 1) identifier:@"1"];
+    }
+    
+    return _assetViews;
+}
+
+- (instancetype)init{
+    if (self = [super init]){
+        self.backgroundColor = [UIColor whiteColor];
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+    }
+    
+    return self;
+}
+
+- (void)layoutSubviews{
+    for (OLArtboardAssetView *view in self.assetViews){
+        view.frame = CGRectMake(view.relativeFrame.origin.x * self.frame.size.width, view.relativeFrame.origin.y * self.frame.size.height, view.relativeFrame.size.width * self.frame.size.width, view.relativeFrame.size.height * self.frame.size.height);
+    }
+}
+
+- (void)addAssetViewWithRelativeFrame:(CGRect)frame identifier:(NSString *)identifier{
+    OLArtboardAssetView *view = [[OLArtboardAssetView alloc] init];
+    view.contentMode = UIViewContentModeScaleAspectFill;
+    view.clipsToBounds = YES;
+    [self addSubview:view];
+    [_assetViews addObject:view];
+    
+    view.identifier = identifier;
+    view.relativeFrame = frame;
+}
 
 @end
