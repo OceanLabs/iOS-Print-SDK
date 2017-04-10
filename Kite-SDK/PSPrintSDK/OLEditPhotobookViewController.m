@@ -241,7 +241,7 @@ static const NSInteger kSectionPages = 1;
     }
     
     self.rotating = YES;
-    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
+    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]];
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         [photobook.view removeFromSuperview];
         [photobook removeFromParentViewController];
@@ -251,7 +251,7 @@ static const NSInteger kSectionPages = 1;
         self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         self.rotating = NO;
-        [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
+        [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]];
         [self.collectionView scrollToItemAtIndexPath:visibleCells.firstObject atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
     }];
 }
