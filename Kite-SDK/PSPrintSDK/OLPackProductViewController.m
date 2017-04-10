@@ -81,7 +81,7 @@
 @property (weak, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) UIView *addMorePhotosView;
 @property (strong, nonatomic) UIButton *addMorePhotosButton;
-@property (strong, nonatomic) UIButton *nextButton;
+@property (strong, nonatomic) UIButton *ctaButton;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
 
 @end
@@ -114,7 +114,7 @@
     
     [self setupCtaButton];
     
-    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.nextButton.frame.size.height, self.collectionView.contentInset.right);
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.ctaButton.frame.size.height, self.collectionView.contentInset.right);
     [self addInfoBanner];
 }
 
@@ -134,38 +134,38 @@
 }
 
 - (void)setupCtaButton{
-    self.nextButton = [[UIButton alloc] init];
-    [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-    [self.nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+    self.ctaButton = [[UIButton alloc] init];
+    [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    [self.ctaButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
-        [self.nextButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+        [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
     else{
-        [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+        [self.ctaButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
     }
-    [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.nextButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
+    [self.ctaButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.ctaButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
     if (!font){
         font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
     }
     if (font){
-        [self.nextButton.titleLabel setFont:font];
+        [self.ctaButton.titleLabel setFont:font];
     }
     else{
-        [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+        [self.ctaButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     }
     
     NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
     if (cornerRadius){
-        [self.nextButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+        [self.ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
     
-    [self.collectionView addSubview:self.nextButton];
+    [self.collectionView addSubview:self.ctaButton];
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         }
         
         if(!self.editingPrintJob){
@@ -177,9 +177,9 @@
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
-            [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-            [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [self.nextButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+            [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
         }
     }
 }
@@ -196,7 +196,7 @@
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
+    self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -231,15 +231,15 @@
             [cell setNeedsDisplay];
         }
         
-        self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
+        self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    CGRect frame = self.nextButton.frame;
-    frame.origin.y = self.view.frame.size.height - self.nextButton.frame.size.height + scrollView.contentOffset.y ;
-    self.nextButton.frame = frame;
+    CGRect frame = self.ctaButton.frame;
+    frame.origin.y = self.view.frame.size.height - self.ctaButton.frame.size.height + scrollView.contentOffset.y ;
+    self.ctaButton.frame = frame;
 }
 
 -(NSUInteger) totalNumberOfExtras{
@@ -514,7 +514,7 @@
         [self presentViewController:cropVc animated:NO completion:NULL];
         
         [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
-            self.nextButton.alpha = 0;
+            self.ctaButton.alpha = 0;
             self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
             self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
         } completion:^(BOOL finished){
@@ -718,7 +718,7 @@
     [self.editingAsset unloadImage];
     [cropper dismissViewControllerAnimated:YES completion:^{
         [UIView animateWithDuration:0.25 animations:^{
-            self.nextButton.alpha = 1;
+            self.ctaButton.alpha = 1;
             self.navigationController.navigationBar.alpha = 1;
         }];
     }];
@@ -727,7 +727,7 @@
 - (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
     [self.editingAsset unloadImage];
     [UIView animateWithDuration:0.25 animations:^{
-        self.nextButton.alpha = 1;
+        self.ctaButton.alpha = 1;
         self.navigationController.navigationBar.alpha = 1;
     }];
     [cropper dismissViewControllerAnimated:NO completion:NULL];
@@ -758,7 +758,7 @@
     
     [cropper dismissViewControllerAnimated:YES completion:^{
         [UIView animateWithDuration:0.25 animations:^{
-            self.nextButton.alpha = 1;
+            self.ctaButton.alpha = 1;
             self.navigationController.navigationBar.alpha = 1;
         }];
     }];

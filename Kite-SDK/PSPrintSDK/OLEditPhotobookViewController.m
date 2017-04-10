@@ -72,7 +72,7 @@ static const NSInteger kSectionPages = 1;
 @property (strong, nonatomic) NSNumber *selectedIndexNumber;
 @property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
 @property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
-@property (strong, nonatomic) UIButton *nextButton;
+@property (strong, nonatomic) UIButton *ctaButton;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
@@ -119,35 +119,35 @@ static const NSInteger kSectionPages = 1;
     
     [self setupCtaButton];
     
-    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.nextButton.frame.size.height, self.collectionView.contentInset.right);
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.ctaButton.frame.size.height, self.collectionView.contentInset.right);
     
     [self addInfoBanner];
 }
 
 - (void)setupCtaButton{
-    self.nextButton = [[UIButton alloc] init];
-    [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
-    [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-    [self.nextButton addTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
+    self.ctaButton = [[UIButton alloc] init];
+    [self.ctaButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+    [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    [self.ctaButton addTarget:self action:@selector(onButtonNextClicked) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
-        [self.nextButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+        [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
     else{
-        [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+        [self.ctaButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
     }
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
     if (font){
-        [self.nextButton.titleLabel setFont:font];
+        [self.ctaButton.titleLabel setFont:font];
     }
     NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
     if (cornerRadius){
-        [self.nextButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+        [self.ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
 
     
-    [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.nextButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
-    [self.collectionView addSubview:self.nextButton];
+    [self.ctaButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.ctaButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
+    [self.collectionView addSubview:self.ctaButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -173,15 +173,15 @@ static const NSInteger kSectionPages = 1;
         font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
     }
     if (font){
-        [self.nextButton.titleLabel setFont:font];
+        [self.ctaButton.titleLabel setFont:font];
     }
     else{
-        [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+        [self.ctaButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     }
     
     NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
     if (cornerRadius){
-        [self.nextButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+        [self.ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
 }
 
@@ -224,7 +224,7 @@ static const NSInteger kSectionPages = 1;
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
+    self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
@@ -248,7 +248,7 @@ static const NSInteger kSectionPages = 1;
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
+        self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         self.rotating = NO;
         [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]];
@@ -341,9 +341,9 @@ static const NSInteger kSectionPages = 1;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    CGRect headerFrame = self.nextButton.frame;
-    headerFrame.origin.y = self.view.frame.size.height - self.nextButton.frame.size.height + scrollView.contentOffset.y ;
-    self.nextButton.frame = headerFrame;
+    CGRect headerFrame = self.ctaButton.frame;
+    headerFrame.origin.y = self.view.frame.size.height - self.ctaButton.frame.size.height + scrollView.contentOffset.y ;
+    self.ctaButton.frame = headerFrame;
 }
 
 - (void)addInfoBanner{

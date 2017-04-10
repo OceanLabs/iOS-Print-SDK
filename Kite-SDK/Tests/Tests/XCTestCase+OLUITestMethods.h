@@ -107,7 +107,7 @@
 @end
 
 @interface OLPackProductViewController ()
-@property (strong, nonatomic) UIButton *nextButton;
+@property (strong, nonatomic) UIButton *ctaButton;
 - (void) deletePhotoAtIndex:(NSUInteger)index;
 @end
 
@@ -129,7 +129,6 @@
 @end
 
 @interface OLProductOverviewViewController ()
-@property (weak, nonatomic) IBOutlet UIButton *callToActionButton;
 - (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender;
 @end
 

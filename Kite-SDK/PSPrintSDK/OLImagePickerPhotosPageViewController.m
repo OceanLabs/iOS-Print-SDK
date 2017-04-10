@@ -138,9 +138,9 @@ CGFloat OLImagePickerMargin = 1.5;
     
     self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
     
-    self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
-    self.nextButton.titleLabel.font = self.imagePicker.nextButton.titleLabel.font;
-    [self.nextButton setTitle:self.imagePicker.nextButton.currentTitle forState:UIControlStateNormal];
+    self.ctaButton.backgroundColor = self.imagePicker.ctaButton.backgroundColor;
+    self.ctaButton.titleLabel.font = self.imagePicker.ctaButton.titleLabel.font;
+    [self.ctaButton setTitle:self.imagePicker.ctaButton.currentTitle forState:UIControlStateNormal];
     
     UIVisualEffect *blurEffect;
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
@@ -322,7 +322,7 @@ CGFloat OLImagePickerMargin = 1.5;
             qtyLabel = [[UILabel alloc] init];
             qtyLabel.tag = 11;
             
-            qtyLabel.backgroundColor = self.nextButton.backgroundColor;
+            qtyLabel.backgroundColor = self.ctaButton.backgroundColor;
             qtyLabel.textColor = [UIColor whiteColor];
             qtyLabel.font = [UIFont systemFontOfSize:11];
             qtyLabel.textAlignment = NSTextAlignmentCenter;
@@ -607,8 +607,8 @@ CGFloat OLImagePickerMargin = 1.5;
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
             
             if (self.imagePicker.maximumPhotos == 1){
-                if (self.imagePicker.nextButton){
-                    [self.imagePicker.nextButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+                if (self.imagePicker.ctaButton){
+                    [self.imagePicker.ctaButton sendActionsForControlEvents:UIControlEventTouchUpInside];
                 }
                 else{
                     [self.imagePicker onButtonDoneTapped:nil];
@@ -673,13 +673,13 @@ CGFloat OLImagePickerMargin = 1.5;
     BOOL isOpening = CGAffineTransformIsIdentity(self.albumsContainerView.transform);
     
     if (isOpening){
-        self.nextButton.hidden = NO;
-        self.imagePicker.nextButton.hidden = YES;
+        self.ctaButton.hidden = NO;
+        self.imagePicker.ctaButton.hidden = YES;
     }
     else{
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            self.imagePicker.nextButton.hidden = NO;
-            self.nextButton.hidden = YES;
+            self.imagePicker.ctaButton.hidden = NO;
+            self.ctaButton.hidden = YES;
         });
     }
     
@@ -717,8 +717,8 @@ CGFloat OLImagePickerMargin = 1.5;
             CGFloat percentComplete = MAX(self.albumsContainerView.transform.ty, 0) / (openTY);
             self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI * (1- MIN(percentComplete, 1)));
             
-            self.nextButton.hidden = percentComplete <= 0.5;
-            self.imagePicker.nextButton.hidden = percentComplete > 0.5;
+            self.ctaButton.hidden = percentComplete <= 0.5;
+            self.imagePicker.ctaButton.hidden = percentComplete > 0.5;
             
             self.albumsCollectionViewContainerView.alpha = MIN(percentComplete * 15, 1);
             
@@ -742,8 +742,8 @@ CGFloat OLImagePickerMargin = 1.5;
             CGFloat time = ABS(0.8 - (0.8 * percentComplete));
             
             if (opening){
-                self.nextButton.hidden = NO;
-                self.imagePicker.nextButton.hidden = YES;
+                self.ctaButton.hidden = NO;
+                self.imagePicker.ctaButton.hidden = YES;
                 
                 [UIView animateWithDuration:0.1 animations:^{
                     self.albumsCollectionViewContainerView.alpha = 1;
@@ -754,8 +754,8 @@ CGFloat OLImagePickerMargin = 1.5;
                     self.albumsCollectionViewContainerView.alpha = 0;
                 } completion:NULL];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    self.nextButton.hidden = YES;
-                    self.imagePicker.nextButton.hidden = NO;
+                    self.ctaButton.hidden = YES;
+                    self.imagePicker.ctaButton.hidden = NO;
                 });
             }
             

@@ -85,14 +85,7 @@
 - (void)tapNextOnViewController:(UIViewController *)vc{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for vc push"];
     
-    UIButton *button;
-    button = (UIButton *)[vc safePerformSelectorWithReturn:@selector(nextButton) withObject:nil];
-    if (!button){
-        button = (UIButton *)[vc safePerformSelectorWithReturn:@selector(ctaButton) withObject:nil];
-    }
-    if (!button){
-        button = (UIButton *)[vc safePerformSelectorWithReturn:@selector(callToActionButton) withObject:nil];
-    }
+    UIButton *button = (UIButton *)[vc safePerformSelectorWithReturn:@selector(ctaButton) withObject:nil];
     [button sendActionsForControlEvents:UIControlEventTouchUpInside];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{

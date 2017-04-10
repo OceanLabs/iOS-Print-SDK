@@ -82,10 +82,10 @@
 @interface OLProductOverviewViewController () <UIPageViewControllerDataSource, OLProductOverviewPageContentViewControllerDelegate, OLProductDetailsDelegate, UIPageViewControllerDelegate, OLUpsellViewControllerDelegate>
 @property (strong, nonatomic) UIPageViewController *pageController;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
-@property (weak, nonatomic) IBOutlet UILabel *costLabel;
-@property (weak, nonatomic) IBOutlet UIButton *callToActionButton;
+@property (weak, nonatomic) UILabel *costLabel;
+@property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsBoxTopCon;
-@property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
+@property (weak, nonatomic) UIImageView *arrowImageView;
 @property (weak, nonatomic) IBOutlet UIView *detailsView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsViewHeightCon;
 @property (weak, nonatomic) IBOutlet UIView *detailsSeparator;
@@ -143,21 +143,21 @@
     }
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != OLTemplateUINonCustomizable){
         if (![[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
-            [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Checkout", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+            [self.ctaButton setTitle: NSLocalizedStringFromTableInBundle(@"Checkout", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         }
         else{
-            [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering") forState:UIControlStateNormal];
+            [self.ctaButton setTitle: NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering") forState:UIControlStateNormal];
         }
     }
     else if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
-        [self.callToActionButton setTitle: NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+        [self.ctaButton setTitle: NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     else{
-        [self.callToActionButton setTitle:NSLocalizedStringFromTableInBundle(@"Start Creating", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Start Creating [your product]") forState:UIControlStateNormal];
+        [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Start Creating", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Start Creating [your product]") forState:UIControlStateNormal];
     }
     
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
-        [self.callToActionButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
+        [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
         [self.detailsSeparator setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
@@ -165,12 +165,12 @@
         font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
     }
     if (font){
-        [self.callToActionButton.titleLabel setFont:font];
+        [self.ctaButton.titleLabel setFont:font];
     }
     
     NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
     if (cornerRadius){
-        [self.callToActionButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+        [self.ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
     
 #ifndef OL_NO_ANALYTICS

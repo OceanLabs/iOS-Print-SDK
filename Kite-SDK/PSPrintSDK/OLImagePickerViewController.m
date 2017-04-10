@@ -134,36 +134,36 @@
 #endif
     
     if (!self.navigationController){
-        [self.nextButton removeFromSuperview];
+        [self.ctaButton removeFromSuperview];
     }
     else if (self.navigationController.viewControllers.firstObject == self && !self.overrideImagePickerMode){
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onBarButtonItemCancelTapped:)];
-        [self.nextButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self.nextButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+        [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self.ctaButton addTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     else{
         self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                                  style:UIBarButtonItemStylePlain
                                                                                 target:nil
                                                                                 action:nil];
-        [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+        [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
-        self.nextButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+        self.ctaButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
     }
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
     if (!font){
         font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
     }
     if (font){
-        [self.nextButton.titleLabel setFont:font];
+        [self.ctaButton.titleLabel setFont:font];
     }
     
     NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
     if (cornerRadius){
-        [self.nextButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+        [self.ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
     
     NSMutableArray<OLImagePickerProvider *> *providers = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
@@ -482,7 +482,7 @@
         UIButton *addButton = [[UIButton alloc] init];
         [addButton addTarget:self action:@selector(onButtonAddClicked) forControlEvents:UIControlEventTouchUpInside];
         [addButton setBackgroundColor:color];
-        [self.nextButton.superview addSubview:addButton];
+        [self.ctaButton.superview addSubview:addButton];
         addButton.translatesAutoresizingMaskIntoConstraints = NO;
         NSDictionary *views = NSDictionaryOfVariableBindings(addButton);
         NSMutableArray *con = [[NSMutableArray alloc] init];
@@ -658,8 +658,8 @@
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
     [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[pageViewController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
-    self.nextButton.hidden = NO;
-    ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).nextButton.hidden = YES;
+    self.ctaButton.hidden = NO;
+    ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).ctaButton.hidden = YES;
     [self positionSelectedProviderIndicator];
     self.indicatorDestFrame = CGRectZero;
     
@@ -731,7 +731,7 @@
     }
     [self reloadPageController];
     [self updateTitleBasedOnSelectedPhotoQuanitity];
-    if ([[self.nextButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].firstObject isEqualToString:@"onButtonNextClicked:"]){
+    if ([[self.ctaButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].firstObject isEqualToString:@"onButtonNextClicked:"]){
         [picker dismissViewControllerAnimated:YES completion:NULL];
     }
     else{

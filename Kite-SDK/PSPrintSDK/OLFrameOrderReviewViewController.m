@@ -52,7 +52,7 @@
 - (void) doCheckout;
 - (void)preparePhotosForCheckout;
 -(NSUInteger) totalNumberOfExtras;
-@property (strong, nonatomic) UIButton *nextButton;
+@property (strong, nonatomic) UIButton *ctaButton;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
 
 @end
@@ -155,7 +155,7 @@ CGFloat innerMargin = 3;
         [self presentViewController:cropVc animated:NO completion:NULL];
         
         [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
-            self.nextButton.alpha = 0;
+            self.ctaButton.alpha = 0;
             self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
             self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
         } completion:^(BOOL finished){
@@ -484,7 +484,7 @@ CGFloat innerMargin = 3;
     
     [cropper dismissViewControllerAnimated:YES completion:^{
         [UIView animateWithDuration:0.25 animations:^{
-            self.nextButton.alpha = 1;
+            self.ctaButton.alpha = 1;
             self.navigationController.navigationBar.alpha = 1;
         }];
     }];

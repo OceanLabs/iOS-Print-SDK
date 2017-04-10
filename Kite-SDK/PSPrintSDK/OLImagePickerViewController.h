@@ -47,7 +47,7 @@
 @interface OLImagePickerViewController : UIViewController
 
 @property (strong, nonatomic) OLProduct *product;
-@property (weak, nonatomic) IBOutlet UIButton *nextButton;
+@property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) id<OLImagePickerViewControllerDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *selectedAssets;
 @property (assign, nonatomic) NSInteger maximumPhotos;

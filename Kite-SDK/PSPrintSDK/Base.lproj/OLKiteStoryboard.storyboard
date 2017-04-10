@@ -983,7 +983,7 @@
         <scene sceneID="HfJ-UO-EWf">
             <objects>
                 <collectionViewController storyboardIdentifier="OLEditPhotobookViewController" id="0x8-qa-jns" customClass="OLEditPhotobookViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="ev0-PQ-X7a">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="ev0-PQ-X7a">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.69335091114044189" green="0.76087397336959839" blue="0.77860403060913086" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3478,7 +3478,7 @@ only Lorem Ipsum</string>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="containerView" destination="rFW-UE-yVX" id="mmz-me-ivQ"/>
-                        <outlet property="nextButton" destination="nAS-1v-6Ot" id="eDq-ng-Slj"/>
+                        <outlet property="ctaButton" destination="nAS-1v-6Ot" id="VrV-AC-vDK"/>
                         <outlet property="nextButtonBottomCon" destination="64N-7J-oJh" id="v3v-y7-fYT"/>
                         <outlet property="nextButtonLeadingCon" destination="hKO-6C-YHe" id="xt2-Re-JR8"/>
                         <outlet property="nextButtonTrailingCon" destination="P71-5m-cUg" id="h6v-t5-RPW"/>
@@ -3573,7 +3573,7 @@ only Lorem Ipsum</string>
                     </view>
                     <navigationItem key="navigationItem" id="NaT-16-vRa"/>
                     <connections>
-                        <outlet property="callToActionButton" destination="Ra5-Gi-wGw" id="p0w-8a-gjT"/>
+                        <outlet property="ctaButton" destination="Ra5-Gi-wGw" id="00r-i4-vkY"/>
                         <outlet property="detailsBoxTopCon" destination="WoK-8u-hxW" id="COs-FA-E20"/>
                         <outlet property="detailsSeparator" destination="ewi-GK-x4I" id="HSq-nr-ihC"/>
                         <outlet property="detailsView" destination="y0x-Gv-fxJ" id="lVb-mq-mp6"/>
