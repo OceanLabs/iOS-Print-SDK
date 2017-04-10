@@ -36,7 +36,7 @@
 #import "OLKiteTheme.h"
 #import "OLCountry.h"
 #import "OLKiteUtils.h"
-#import "OLPageLayout.h"
+#import "OLArtboardTemplate.h"
 #import "OLProductRepresentation.h"
 #import "OLProductTemplateCollection.h"
 #import "OLUserSession.h"
@@ -363,7 +363,7 @@
                                                 continue;
                                             }
                                             
-                                            OLPageLayout *pageLayout = [[OLPageLayout alloc] init];
+                                            OLArtboardTemplate *pageLayout = [[OLArtboardTemplate alloc] init];
                                             NSMutableArray *positions = [[NSMutableArray alloc] init];
                                             for (NSDictionary *layoutInfoDict in representationDict[@"layouts"][layoutKey]){
                                                 if (![layoutInfoDict isKindOfClass:[NSDictionary class]]){
@@ -383,7 +383,7 @@
                                             }
                                             
                                             for (int i = 0; i < [pageDict[@"min"] intValue]; i++){
-                                                OLPageLayout *layout = layouts[[pageDict[@"allowed_layouts"] firstObject]];
+                                                OLArtboardTemplate *layout = layouts[[pageDict[@"allowed_layouts"] firstObject]];
                                                 if (layout){
                                                     [pages addObject:layout];
                                                 }
@@ -396,7 +396,7 @@
                                     
                                     //Fallback for older photobook products that don't yet have the new product representation
                                     if (!productRepresentation && [uiClass isEqualToString:@"PHOTOBOOK"]){
-                                        OLPageLayout *pageLayout = [[OLPageLayout alloc] init];
+                                        OLArtboardTemplate *pageLayout = [[OLArtboardTemplate alloc] init];
                                         pageLayout.positions = @[[NSValue valueWithCGRect:CGRectMake(0, 0, 1-imageBorder.top*2, 1-imageBorder.left*2)]];
                                         
                                         productRepresentation = [[OLProductRepresentation alloc] init];

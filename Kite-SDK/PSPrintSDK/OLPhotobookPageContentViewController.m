@@ -27,14 +27,14 @@
 //  THE SOFTWARE.
 //
 
-#import "OLPhotobookPageContentViewController.h"
+#import "OLArtboardTemplate.h"
+#import "OLAsset+Private.h"
 #import "OLImageEditViewController.h"
+#import "OLPhotobookPageContentViewController.h"
 #import "OLProduct.h"
 #import "OLRemoteImageView.h"
-#import "UIImage+ImageNamedInKiteBundle.h"
-#import "OLPageLayout.h"
-#import "OLAsset+Private.h"
 #import "OLUserSession.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImageView+FadeIn.h"
 
 @interface OLPhotobookPageContentViewController ()
@@ -55,7 +55,7 @@
 }
 
 - (void)setupImageViews{
-    OLPageLayout *layout = self.product.productTemplate.productRepresentation.pages[self.pageIndex];
+    OLArtboardTemplate *layout = self.product.productTemplate.productRepresentation.pages[self.pageIndex];
     CGRect imageViewPosition = [layout.positions.firstObject CGRectValue];
     
     [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeHeight multiplier:imageViewPosition.size.height constant:0]];
@@ -93,12 +93,7 @@
 }
 
 - (NSInteger)imageIndexForPoint:(CGPoint)p{
-    NSIndexSet *indexSet = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex];
-    if (indexSet.count > 0){
-        return indexSet.firstIndex;
-    }
-    
-    return NSNotFound;
+    return self.pageIndex;
 }
 
 - (void)unhighlightImageAtIndex:(NSInteger)index{
@@ -122,7 +117,7 @@
 }
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
-    NSInteger imageIndex = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex].firstIndex + 1;
+    NSInteger imageIndex = self.pageIndex + 1;
     OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:imageIndex];
     self.imageView.image = nil;
     dispatch_async(dispatch_get_main_queue(), ^{

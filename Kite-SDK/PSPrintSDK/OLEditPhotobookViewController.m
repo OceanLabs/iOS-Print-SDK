@@ -362,12 +362,12 @@ static const NSInteger kSectionPages = 1;
     }
     
     if ([self.selectedIndexNumber integerValue] == self.longPressImageIndex){
-        [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
+        [[self pageControllerForPageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         self.selectedIndexNumber = nil;
     }
 
     [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.longPressImageIndex withObject:[[OLPlaceholderAsset alloc] init]];
-    [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
+    [[self pageControllerForPageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
 }
 
 - (void)editImage{
@@ -379,7 +379,7 @@ static const NSInteger kSectionPages = 1;
     }
     else{
         cropPhoto = [[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex];
-        imageView = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]].imageView;
+        imageView = [self pageControllerForPageIndex:self.longPressImageIndex].imageView;
     }
     OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
     cropVc.delegate = self;
@@ -428,15 +428,15 @@ static const NSInteger kSectionPages = 1;
         }
     }
     
-    OLPhotobookPageContentViewController *page = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:tappedImageIndex]];
+    OLPhotobookPageContentViewController *page = [self pageControllerForPageIndex:tappedImageIndex];
     if (self.selectedIndexNumber && [self.selectedIndexNumber integerValue] == tappedImageIndex){ //deselect
-        [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]] unhighlightImageAtIndex:tappedImageIndex];
+        [[self pageControllerForPageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:tappedImageIndex];
         self.selectedIndexNumber = nil;
         self.animating = NO;
         [self photobook:photobook userDidLongPressOnImageWithIndex:tappedImageIndex sender:nil];
     }
     else if (self.selectedIndexNumber){ //swap
-        OLPhotobookPageContentViewController *selectedPage = [self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:[self.selectedIndexNumber integerValue]]];
+        OLPhotobookPageContentViewController *selectedPage = [self pageControllerForPageIndex:[self.selectedIndexNumber integerValue]];
         OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:tappedImageIndex];
         
         [page unhighlightImageAtIndex:tappedImageIndex];
@@ -587,7 +587,7 @@ static const NSInteger kSectionPages = 1;
         if ([[[OLAsset userSelectedAssets] objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
             return;
         }
-        view = (OLPopupOptionsImageView *)[[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:index]] imageView];
+        view = (OLPopupOptionsImageView *)[[self pageControllerForPageIndex:index] imageView];
     }
     
     self.longPressImageIndex = index;
@@ -753,7 +753,7 @@ static const NSInteger kSectionPages = 1;
         [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] unloadImage];
         [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] setEdits:cropper.edits];
         
-        [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
+        [[self pageControllerForPageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
     }
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
@@ -770,7 +770,7 @@ static const NSInteger kSectionPages = 1;
     else{
         [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.longPressImageIndex withObject:asset];
         
-        [[self pageControllerForPageIndex:[self.product.productTemplate.productRepresentation pageIndexForImageIndex:self.longPressImageIndex]] loadImageWithCompletionHandler:NULL];
+        [[self pageControllerForPageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
     }
     
 }

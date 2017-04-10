@@ -104,7 +104,7 @@
 		2E451DF61D95555D0080F1C1 /* OLUpsellOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0087A1CB293A900C23DFA /* OLUpsellOffer.m */; };
 		2E451DF71D95555D0080F1C1 /* OLProductGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */; };
 		2E451DF81D95555D0080F1C1 /* OLProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */; };
-		2E451DF91D95555D0080F1C1 /* OLPageLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E37B17A1D227EDA003DAA84 /* OLPageLayout.m */; };
+		2E451DF91D95555D0080F1C1 /* OLArtboardTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E37B17A1D227EDA003DAA84 /* OLArtboardTemplate.m */; };
 		2E451DFA1D95555D0080F1C1 /* OLProductRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E37B1801D229162003DAA84 /* OLProductRepresentation.m */; };
 		2E451DFB1D95555D0080F1C1 /* OLPrintPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E18DC501D913DB1004752D2 /* OLPrintPhoto.m */; };
 		2E451DFC1D9555620080F1C1 /* OLConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFB018634ED50009DE03 /* OLConstants.m */; };
@@ -320,7 +320,7 @@
 		2EB8FDF91D95685100E26BDF /* OLUpsellOffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EA008791CB293A900C23DFA /* OLUpsellOffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FDFA1D95685100E26BDF /* OLProductGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8ECA4F1AD692FA00CFB2C0 /* OLProductGroup.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FDFB1D95685100E26BDF /* OLProduct.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E3F96AD1A4967FF005C0EA3 /* OLProduct.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2EB8FDFC1D95685100E26BDF /* OLPageLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E37B1791D227EDA003DAA84 /* OLPageLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2EB8FDFC1D95685100E26BDF /* OLArtboardTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E37B1791D227EDA003DAA84 /* OLArtboardTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FDFD1D95685100E26BDF /* OLProductRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E37B17F1D229162003DAA84 /* OLProductRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FDFE1D95685100E26BDF /* OLPrintPhoto.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E18DC4F1D913DB1004752D2 /* OLPrintPhoto.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FDFF1D95685100E26BDF /* OLAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0E250D1A77997E00808ED8 /* OLAnalytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -617,8 +617,8 @@
 		2E36A1DB1D42094C00EA2F0F /* OLImagePickerProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerProvider.m; sourceTree = "<group>"; };
 		2E36A1E01D420CDA00EA2F0F /* OLImagePickerProviderCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerProviderCollection.h; sourceTree = "<group>"; };
 		2E36A1E11D420CDA00EA2F0F /* OLImagePickerProviderCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerProviderCollection.m; sourceTree = "<group>"; };
-		2E37B1791D227EDA003DAA84 /* OLPageLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPageLayout.h; sourceTree = "<group>"; };
-		2E37B17A1D227EDA003DAA84 /* OLPageLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPageLayout.m; sourceTree = "<group>"; };
+		2E37B1791D227EDA003DAA84 /* OLArtboardTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLArtboardTemplate.h; sourceTree = "<group>"; };
+		2E37B17A1D227EDA003DAA84 /* OLArtboardTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLArtboardTemplate.m; sourceTree = "<group>"; };
 		2E37B17F1D229162003DAA84 /* OLProductRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductRepresentation.h; sourceTree = "<group>"; };
 		2E37B1801D229162003DAA84 /* OLProductRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductRepresentation.m; sourceTree = "<group>"; };
 		2E3F96AD1A4967FF005C0EA3 /* OLProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProduct.h; sourceTree = "<group>"; };
@@ -1838,8 +1838,8 @@
 				3D8ECA501AD692FA00CFB2C0 /* OLProductGroup.m */,
 				2E3F96AD1A4967FF005C0EA3 /* OLProduct.h */,
 				2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */,
-				2E37B1791D227EDA003DAA84 /* OLPageLayout.h */,
-				2E37B17A1D227EDA003DAA84 /* OLPageLayout.m */,
+				2E37B1791D227EDA003DAA84 /* OLArtboardTemplate.h */,
+				2E37B17A1D227EDA003DAA84 /* OLArtboardTemplate.m */,
 				2E37B17F1D229162003DAA84 /* OLProductRepresentation.h */,
 				2E37B1801D229162003DAA84 /* OLProductRepresentation.m */,
 				2E18DC4F1D913DB1004752D2 /* OLPrintPhoto.h */,
@@ -2075,7 +2075,7 @@
 				2E12DBC81E795511000A6CEF /* UIView+AutoLayoutHelper.h in Headers */,
 				2EB8FE4F1D95685100E26BDF /* OLEditPhotobookViewController.h in Headers */,
 				2EB8FE641D95685100E26BDF /* qrspec.h in Headers */,
-				2EB8FDFC1D95685100E26BDF /* OLPageLayout.h in Headers */,
+				2EB8FDFC1D95685100E26BDF /* OLArtboardTemplate.h in Headers */,
 				2ECA34EC1E82743800D56220 /* OLApparelViewController.h in Headers */,
 				2E7A8D8F1E9BBE8900AB4736 /* OLArtboardAssetView.h in Headers */,
 				2EB8FE731D95685100E26BDF /* UIViewController+OLMethods.h in Headers */,
@@ -2595,7 +2595,7 @@
 				2E451E471D9555D30080F1C1 /* OLFrameOrderReviewViewController.m in Sources */,
 				2E12DBC91E795511000A6CEF /* UIView+AutoLayoutHelper.m in Sources */,
 				2E451E231D9555870080F1C1 /* OLOAuth2FileStreamWrapper.m in Sources */,
-				2E451DF91D95555D0080F1C1 /* OLPageLayout.m in Sources */,
+				2E451DF91D95555D0080F1C1 /* OLArtboardTemplate.m in Sources */,
 				2E451E351D9555870080F1C1 /* OLProductOverviewPageContentViewController.m in Sources */,
 				2E451E0B1D9555860080F1C1 /* OLFacebookAlbum.m in Sources */,
 				2E451E5D1D9555EC0080F1C1 /* OLQRCodeUploadViewController.m in Sources */,

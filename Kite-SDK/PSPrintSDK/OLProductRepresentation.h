@@ -28,15 +28,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OLPageLayout.h"
+#import "OLArtboardTemplate.h"
 
 @interface OLProductRepresentation : NSObject
 
-@property (strong, nonatomic) NSArray <OLPageLayout *> *pages;
+@property (strong, nonatomic) NSArray <OLArtboardTemplate *> *pages;
 
 - (NSInteger)numberOfPages;
 - (NSInteger)numberOfPhotos;
-- (NSIndexSet *)indexSetForPageNumber:(NSInteger)pageNumber;
-- (NSInteger)pageIndexForImageIndex:(NSInteger)imageIndex;
 
 @end

@@ -46,7 +46,7 @@
 #import "UIView+RoundRect.h"
 #import "OLUpsellViewController.h"
 #import "OLProductRepresentation.h"
-#import "OLPageLayout.h"
+#import "OLArtboardTemplate.h"
 #import "OLPhotobookPageBlankContentViewController.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
@@ -431,7 +431,7 @@ static const CGFloat kBookEdgePadding = 38;
     }
     int displayPage = page+1;
     
-    if ([(OLPageLayout *)self.product.productTemplate.productRepresentation.pages.firstObject numberOfPhotos] == 0&& page > 0){
+    if ([(OLArtboardTemplate *)self.product.productTemplate.productRepresentation.pages.firstObject numberOfPhotos] == 0&& page > 0){
         displayPage--;
     }
     

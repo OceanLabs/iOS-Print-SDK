@@ -27,9 +27,9 @@
 //  THE SOFTWARE.
 //
 
-#import "OLPageLayout.h"
+#import "OLArtboardTemplate.h"
 
-@implementation OLPageLayout
+@implementation OLArtboardTemplate
 
 - (NSInteger)numberOfPhotos{
     return self.positions.count;

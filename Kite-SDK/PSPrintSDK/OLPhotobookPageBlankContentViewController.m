@@ -36,7 +36,7 @@
 @implementation OLPhotobookPageBlankContentViewController
 
 - (void)setupImageViews{
-    
+    //Empty page
 }
 
 @end

@@ -29,7 +29,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OLPageLayout : NSObject
+@interface OLArtboardTemplate : NSObject
 
 /**
  *  Array of NSValues of CGRect. The values in the CGRect are relative. The number of NSValues in the array shows the number of photos.
