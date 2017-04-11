@@ -382,13 +382,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [self presentViewController:vc animated:YES completion:NULL];
 }
 
-- (void)didCancelPrintFlow:(UIViewController *)printViewController{
-    [printViewController dismissViewControllerAnimated:YES completion:NULL];
-}
-- (void)didFinishPrintFlow:(UIViewController *)printViewController{
-    [printViewController dismissViewControllerAnimated:YES completion:NULL];
-}
-
 - (void)assetsPickerController:(id)ipvc didFinishPickingAssets:(NSMutableArray *)assets{
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
     vc.userEmail = @"";
