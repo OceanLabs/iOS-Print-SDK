@@ -240,9 +240,6 @@
     [OLProgressHUD dismiss];
     self.progressToEditViewControllerOnUniqueAddressResult = NO;
     self.inProgressRequest = nil;
-    if (self.presentedViewController) {
-        return;
-    }
     
     self.searchResults = options;
     [self.tableView reloadData];
@@ -253,9 +250,6 @@
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didSuceedWithUniqueAddress:(OLAddress *)addr {
     [OLProgressHUD dismiss];
     self.inProgressRequest = nil;
-    if (self.presentedViewController) {
-        return;
-    }
     
     if (self.progressToEditViewControllerOnUniqueAddressResult) {
         self.progressToEditViewControllerOnUniqueAddressResult = NO;
