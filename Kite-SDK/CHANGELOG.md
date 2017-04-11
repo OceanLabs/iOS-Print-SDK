@@ -1,8 +1,14 @@
+### 6.5.4
+- Minor design tweaks.
+- Custom theme now extends to more places.
+- Fixed: Layout issues on Order History screen.
+- Collage Posters are now limited to a single product at a time.
+
 ### 6.5.3
-- Handle HP SDK delegate calls internally if OLKiteDelegate doesn’t handle them.
+- Handle Print at Home delegate calls internally if OLKiteDelegate doesn’t handle them.
 
 ### 6.5.2
-- Fixed xib file not being including in the resource bundle when installing via Cocoapods.
+- Fixed: Xib file was not included in the resource bundle when installing via Cocoapods.
 
 ### 6.5.1
 - Fixed: Submitting orders without UI.
