@@ -298,7 +298,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     self.initialOrientation = self.fullImage.imageOrientation;
-    self.cropView.delegate = self;
+    self.cropView.assetViews.firstObject.delegate = self;
     
     if (self.forceSourceViewDimensions && self.previewSourceView){
         UIView *view = self.cropView;
@@ -403,8 +403,8 @@ const NSInteger kOLEditTagCrop = 40;
     
     [gestureView.superview addConstraints:con];
     
-    [gestureView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self.cropView action:@selector(panRecognized:)]];
-    [gestureView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.cropView action:@selector(pinchRecognized:)]];
+    [gestureView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self.cropView.assetViews.firstObject action:@selector(panRecognized:)]];
+    [gestureView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.cropView.assetViews.firstObject action:@selector(pinchRecognized:)]];
     gestureView.userInteractionEnabled = NO;
 }
 
@@ -453,13 +453,16 @@ const NSInteger kOLEditTagCrop = 40;
     }
     [activityIndicator centerInSuperview];
     
-    self.cropView = [[OLRemoteImageCropper alloc] init];
+    self.cropView = [[OLArtboardView alloc] init];
     [self.printContainerView addSubview:self.cropView];
     NSArray *cons = [self.cropView fillSuperView];
     self.cropViewTopCon = cons[0];
     self.cropViewLeftCon = cons[1];
     self.cropViewBottomCon = cons[2];
     self.cropViewRightCon= cons[3];
+    
+    self.cropView.userInteractionEnabled = YES;
+    [self.cropView.assetViews.firstObject setGesturesEnabled:YES];
     
     self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
     [self.cropView addConstraint:self.aspectRatioConstraint];
@@ -763,14 +766,14 @@ const NSInteger kOLEditTagCrop = 40;
             self.cropView.image = image;
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
-            self.cropView.imageView.transform = self.edits.cropTransform;
+            self.cropView.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
         }];
     }
     else{
         self.cropView.image = image;
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
-        self.cropView.imageView.transform = self.edits.cropTransform;
+        self.cropView.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
     }
 }
 
@@ -789,11 +792,11 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    self.cropView.imageView.image = nil;
-    self.edits.cropImageRect = [self.cropView getImageRect];
-    self.edits.cropImageFrame = [self.cropView getFrameRect];
-    self.edits.cropImageSize = [self.cropView croppedImageSize];
-    self.edits.cropTransform = [self.cropView.imageView transform];
+    self.cropView.assetViews.firstObject.imageView.image = nil;
+    self.edits.cropImageRect = [self.cropView.assetViews.firstObject getImageRect];
+    self.edits.cropImageFrame = [self.cropView.assetViews.firstObject getFrameRect];
+    self.edits.cropImageSize = [self.cropView.assetViews.firstObject croppedImageSize];
+    self.edits.cropTransform = [self.cropView.assetViews.firstObject.imageView transform];
     
     [coordinator animateAlongsideTransition:^(id context){
         [self setupImage];
@@ -827,7 +830,7 @@ const NSInteger kOLEditTagCrop = 40;
         self.cropViewLeftCon.constant = b.left;
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
-        self.cropView.imageView.transform = self.edits.cropTransform;
+        self.cropView.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
     }
     
     if (!self.product.productTemplate.maskImageURL){
@@ -885,7 +888,7 @@ const NSInteger kOLEditTagCrop = 40;
         UIEdgeInsets b = [self imageInsetsOnContainer];
         [self.printContainerView addSubview:self.cropView];
         self.cropView.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.printContainerView.frame.size.height - b.top - b.bottom);
-        self.cropView.imageView.transform = self.edits.cropTransform;
+        self.cropView.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
         self.previewView  = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
         
         self.previewView.frame = self.printContainerView.frame;
@@ -980,7 +983,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     if (gesture.state == UIGestureRecognizerStateBegan){
         if ([self shouldEnableGestures]){
-            [self.cropView setGesturesEnabled:NO];
+            [self.cropView.assetViews.firstObject setGesturesEnabled:NO];
         }
         original = gesture.view.transform;
         originalFrame = gesture.view.frame;
@@ -1068,7 +1071,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (gesture.state == UIGestureRecognizerStateEnded){
         if ([self shouldEnableGestures]){
-            [self.cropView setGesturesEnabled:YES];
+            [self.cropView.assetViews.firstObject setGesturesEnabled:YES];
         }
         self.resizingTextField = NO;
         self.rotatingTextField = NO;
@@ -1195,7 +1198,7 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)setupButton4{
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
         [self.editingTools.button4 removeFromSuperview];
-        [self.cropView setGesturesEnabled:NO];
+        [self.cropView.assetViews.firstObject setGesturesEnabled:NO];
     }
     else{
         [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
@@ -1215,10 +1218,10 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)saveEditsToAsset:(OLAsset *)asset{
-    self.edits.cropImageRect = [self.cropView getImageRect];
-    self.edits.cropImageFrame = [self.cropView getFrameRect];
-    self.edits.cropImageSize = [self.cropView croppedImageSize];
-    self.edits.cropTransform = [self.cropView.imageView transform];
+    self.edits.cropImageRect = [self.cropView.assetViews.firstObject getImageRect];
+    self.edits.cropImageFrame = [self.cropView.assetViews.firstObject getFrameRect];
+    self.edits.cropImageSize = [self.cropView.assetViews.firstObject croppedImageSize];
+    self.edits.cropTransform = [self.cropView.assetViews.firstObject.imageView transform];
     
     for (OLPhotoTextField *textField in self.textFields){
         if (!textField.text || [textField.text isEqualToString:@""]){
@@ -1252,7 +1255,7 @@ const NSInteger kOLEditTagCrop = 40;
         [self.delegate imageEditViewController:self didReplaceAssetWithAsset:self.asset];
     }
     if ([self.delegate respondsToSelector:@selector(imageEditViewController:didFinishCroppingImage:)]){
-        [self.delegate imageEditViewController:self didFinishCroppingImage:[self.cropView editedImage]];
+        [self.delegate imageEditViewController:self didFinishCroppingImage:[self.cropView.assetViews.firstObject editedImage]];
     }
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
@@ -1264,11 +1267,11 @@ const NSInteger kOLEditTagCrop = 40;
         [self exitCropMode];
         self.previewSourceView.hidden = NO;
         
-        CGAffineTransform t = [self.cropView.imageView transform];
+        CGAffineTransform t = [self.cropView.assetViews.firstObject.imageView transform];
         UIEdgeInsets b = [self imageInsetsOnContainer];
         [self.printContainerView addSubview:self.cropView];
         self.cropView.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.previewView.frame.size.height - b.top - b.bottom);
-        self.cropView.imageView.transform = t;
+        self.cropView.assetViews.firstObject.imageView.transform = t;
         self.previewView  = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
         
         self.previewView.frame = self.printContainerView.frame;
@@ -1430,7 +1433,7 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Actions
 
 - (IBAction)onButtonHorizontalFlipClicked:(id)sender {
-    if (self.cropView.isCorrecting || self.animating || !self.cropView.imageView.image){
+    if (self.cropView.assetViews.firstObject.isCorrecting || self.animating || !self.cropView.assetViews.firstObject.imageView.image){
         return;
     }
     
@@ -1442,13 +1445,13 @@ const NSInteger kOLEditTagCrop = 40;
     }
     self.activeTextField = nil;
     
-    [self.edits performHorizontalFlipEditFromOrientation:self.cropView.imageView.image.imageOrientation];
+    [self.edits performHorizontalFlipEditFromOrientation:self.cropView.assetViews.firstObject.imageView.image.imageOrientation];
     
-    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
     
     [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
         
-        [UIView transitionWithView:self.cropView.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+        [UIView transitionWithView:self.cropView.assetViews.firstObject.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
             [self.cropView setImage:image];
         }completion:^(BOOL finished){
             self.animating = NO;
@@ -1461,7 +1464,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonRotateClicked:(id)sender {
-    if (self.cropView.isCorrecting || self.animating || !self.cropView.imageView.image){
+    if (self.cropView.assetViews.firstObject.isCorrecting || self.animating || !self.cropView.assetViews.firstObject.imageView.image){
         return;
     }
     
@@ -1477,15 +1480,15 @@ const NSInteger kOLEditTagCrop = 40;
     [(UIBarButtonItem *)sender setEnabled:NO];
     self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
     
-    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
     [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
         
         [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            self.cropView.imageView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+            self.cropView.assetViews.firstObject.imageView.transform = CGAffineTransformMakeRotation(-M_PI_2);
             
         } completion:^(BOOL finished){
             [self.cropView setImage:image];
-            self.cropView.imageView.transform = CGAffineTransformIdentity;
+            self.cropView.assetViews.firstObject.imageView.transform = CGAffineTransformIdentity;
             
             [(UIBarButtonItem *)sender setEnabled:YES];
             self.ctaButton.enabled = YES;
@@ -1509,7 +1512,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
-    self.backupTransform = self.cropView.imageView.transform;
+    self.backupTransform = self.cropView.assetViews.firstObject.imageView.transform;
     self.editingTools.drawerDoneButton.hidden = YES;
     self.editingTools.halfWidthDrawerDoneButton.hidden = NO;
     self.editingTools.halfWidthDrawerCancelButton.hidden = NO;
@@ -1546,7 +1549,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onDrawerButtonCancelClicked:(id)sender{
-    self.cropView.imageView.transform = self.backupTransform;
+    self.cropView.assetViews.firstObject.imageView.transform = self.backupTransform;
 
     [self onDrawerButtonDoneClicked:sender];
 }
@@ -1877,7 +1880,7 @@ const NSInteger kOLEditTagCrop = 40;
 #endif
         }
         else if (adjustedIndexPathItem == 0){
-            if (!self.cropView.imageView.image){
+            if (!self.cropView.assetViews.firstObject.imageView.image){
                 return;
             }
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
@@ -1933,10 +1936,10 @@ const NSInteger kOLEditTagCrop = 40;
         self.ctaButton.enabled = YES;
         self.edits.filterName = [self filterNames][indexPath.item];
         
-        UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+        UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
         
         [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
-            self.cropView.imageView.image = image;
+            self.cropView.assetViews.firstObject.imageView.image = image;
             [self updateProductRepresentationForChoice:nil];
         }];
     }
@@ -2348,7 +2351,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    self.asset = addedAssets.lastObject;
+    self.asset = addedAssets.firstObject;
     self.edits = [self.asset.edits copy];
     if (self.asset){
         self.ctaButton.enabled = YES;
@@ -2377,11 +2380,11 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)loadImageFromAsset{
     self.fullImage = nil;
-    self.cropView.imageView.image = nil;
+    self.cropView.assetViews.firstObject.imageView.image = nil;
     __weak OLImageEditViewController *welf = self;
     [self.asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
         dispatch_async(dispatch_get_main_queue(), ^{
-            [welf.cropView setProgress:progress];
+            [welf.cropView.assetViews.firstObject setProgress:progress];
         });
     } completion:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{

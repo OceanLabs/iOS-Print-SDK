@@ -30,20 +30,13 @@
 #import "OLArtboardAssetView.h"
 #import "UIImageView+FadeIn.h"
 #import "OLPlaceholderAsset.h"
+#import "OLAsset+Private.h"
 
 @implementation OLArtboardAssetView
 
-- (OLAsset *)asset{
-    if (!_asset){
-        return [[OLPlaceholderAsset alloc] init];
-    }
-    
-    return _asset;
-}
-
 - (void)loadImageWithCompletionHandler:(void(^)())handler{
     __weak OLArtboardAssetView *welf = self;
-    [self setAndFadeInImageWithOLAsset:self.asset size:self.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+    [self.imageView setAndFadeInImageWithOLAsset:[[OLAsset userSelectedAssets] objectAtIndex:self.index] size:self.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
         [welf setProgress:progress];
     }completionHandler:handler];
 }

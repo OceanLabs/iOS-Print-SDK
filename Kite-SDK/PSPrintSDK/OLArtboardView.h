@@ -32,6 +32,6 @@
 
 @interface OLArtboardView : UIImageView
 @property (strong, nonatomic) NSMutableArray<OLArtboardAssetView *> *assetViews;
-- (void)addAssetViewWithRelativeFrame:(CGRect)frame identifier:(NSString *)name;
+- (void)addAssetViewWithRelativeFrame:(CGRect)frame index:(NSUInteger)index;
 
 @end

@@ -45,7 +45,7 @@
     }
     
     if (_assetViews.count == 0){
-        [self addAssetViewWithRelativeFrame:CGRectMake(0, 0, 1, 1) identifier:@"1"];
+        [self addAssetViewWithRelativeFrame:CGRectMake(0, 0, 1, 1) index:0];
     }
     
     return _assetViews;
@@ -66,14 +66,15 @@
     }
 }
 
-- (void)addAssetViewWithRelativeFrame:(CGRect)frame identifier:(NSString *)identifier{
+- (void)addAssetViewWithRelativeFrame:(CGRect)frame index:(NSUInteger)index{
     OLArtboardAssetView *view = [[OLArtboardAssetView alloc] init];
     view.contentMode = UIViewContentModeScaleAspectFill;
     view.clipsToBounds = YES;
+    [view setGesturesEnabled:NO];
     [self addSubview:view];
     [_assetViews addObject:view];
     
-    view.identifier = identifier;
+    view.index = index;
     view.relativeFrame = frame;
 }
 

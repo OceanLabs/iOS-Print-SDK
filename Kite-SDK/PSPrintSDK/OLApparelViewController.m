@@ -108,7 +108,7 @@
         }
     }
     
-    OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.lastObject copy];
+    OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject copy];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLProductPrintJob *job;

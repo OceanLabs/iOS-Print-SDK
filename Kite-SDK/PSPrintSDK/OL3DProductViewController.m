@@ -133,7 +133,7 @@
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        UIImage *image = [self addBorderToImage:[self.cropView editedImage]];
+        UIImage *image = [self addBorderToImage:[self.cropView.assetViews.firstObject editedImage]];
         
         if (!image){
             return;

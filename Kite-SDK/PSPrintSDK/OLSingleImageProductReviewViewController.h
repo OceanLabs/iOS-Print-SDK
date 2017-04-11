@@ -31,13 +31,15 @@
 
 #import "OLKitePrintSDK.h"
 #import "OLImageEditViewController.h"
+#import "OLArtboardView.h"
 
 @class OLProduct;
 
 @interface OLSingleImageProductReviewViewController : OLImageEditViewController
 
-@property (weak, nonatomic) IBOutlet UIView *hintView;
+@property (strong, nonatomic) UIView *hintView;
 @property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
+@property (strong, nonatomic) OLArtboardView *artboardView;
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler;
 - (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body delay:(BOOL)shouldDelay;

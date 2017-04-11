@@ -638,7 +638,7 @@
     [cell setNeedsLayout];
     [cell layoutIfNeeded];
     
-    cell.imageView.assetViews.firstObject.asset = asset;
+    cell.imageView.assetViews.firstObject.index = indexPath.item;
     [cell.imageView.assetViews.firstObject loadImageWithCompletionHandler:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             [cell.activityView stopAnimating];

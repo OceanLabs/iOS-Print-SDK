@@ -87,7 +87,7 @@
 
 - (OLAsset *)asset{
     if (!super.asset && !self.showingBack){
-        super.asset = [[OLAsset userSelectedAssets] nonPlaceholderAssets].lastObject;
+        super.asset = [[OLAsset userSelectedAssets] nonPlaceholderAssets].firstObject;
     }
     
     return super.asset;
