@@ -2,6 +2,7 @@
 - Minor design tweaks.
 - Custom theme now extends to more places.
 - Fixed: Layout issues on Order History screen.
+- Collage Posters are now limited to a single product at a time.
 
 ### 6.5.3
 - Handle Print at Home delegate calls internally if OLKiteDelegate doesn’t handle them.

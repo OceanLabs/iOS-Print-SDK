@@ -260,7 +260,7 @@
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
-    if ((self.product.productTemplate.templateUI == OLTemplateUICalendar || self.product.productTemplate.templateUI == OLTemplateUIDoubleSided) && self.maximumPhotos == 0){
+    if ((self.product.productTemplate.templateUI == OLTemplateUICalendar || self.product.productTemplate.templateUI == OLTemplateUIDoubleSided || self.product.productTemplate.templateUI == OLTemplateUIPoster) && self.maximumPhotos == 0){
         self.maximumPhotos = self.product.quantityToFulfillOrder;
     }
 }
