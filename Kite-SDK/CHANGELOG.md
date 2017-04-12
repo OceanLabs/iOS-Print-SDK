@@ -1,4 +1,4 @@
-### 6.5.4
+### 6.6.0
 - Minor design tweaks.
 - Custom theme now extends to more places.
 - Fixed: Layout issues on Order History screen.
