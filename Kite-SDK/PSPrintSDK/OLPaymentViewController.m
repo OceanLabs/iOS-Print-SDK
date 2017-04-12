@@ -915,7 +915,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [self.tableView reloadData];
             [self dismissPresentedViewController];
 #ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackBasketScreenHitEditItemDone:editingVc.editingPrintJob inOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
+            [OLAnalytics trackBasketScreenHitEditItemDone:nil inOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
 #endif
         }];
     }
@@ -1691,7 +1691,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [addedAssetsUUIDs addObject:asset.uuid];
             [userSelectedPhotos addObject:[asset copy]];
         }
-        
     }
     
     [OLUserSession currentSession].userSelectedPhotos = userSelectedPhotos;
@@ -1720,7 +1719,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         }
         
         [orvc safePerformSelector:@selector(setProduct:) withObject:product];
-        [orvc safePerformSelector:@selector(setEditingPrintJob:) withObject:printJob];
         return [self navViewControllerWithControllers:@[orvc]];
     }
 }

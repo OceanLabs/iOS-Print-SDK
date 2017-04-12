@@ -119,11 +119,6 @@
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
             [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         }
-        
-        if(!self.editingPrintJob){
-            self.editingPrintJob = [[OLUserSession currentSession].printOrder.jobs firstObject];
-            self.product.uuid = self.editingPrintJob.uuid;
-        }
     }
     
     [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
@@ -310,8 +305,7 @@
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
     self.product.uuid = job.uuid;
-    self.editingPrintJob = job;
-    [printOrder addPrintJob:self.editingPrintJob];
+    [printOrder addPrintJob:job];
     
     [printOrder saveOrder];
     

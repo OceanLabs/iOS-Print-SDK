@@ -147,18 +147,6 @@ static const CGFloat kBookEdgePadding = 38;
 
 @implementation OLPhotobookViewController
 
--(id<OLPrintJob>)editingPrintJob{
-    if (_editingPrintJob){
-        return _editingPrintJob;
-    }
-    else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        self.product.uuid = [[OLUserSession currentSession].printOrder.jobs.firstObject uuid];
-        return [[OLUserSession currentSession].printOrder.jobs firstObject];
-    }
-    
-    return nil;
-}
-
 -(UIDynamicAnimator*) dynamicAnimator{
     if (!_dynamicAnimator) _dynamicAnimator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
     return _dynamicAnimator;
@@ -234,11 +222,6 @@ static const CGFloat kBookEdgePadding = 38;
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
             [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        }
-        
-        if(!self.editingPrintJob){
-            self.editingPrintJob = [[OLUserSession currentSession].printOrder.jobs firstObject];
-            self.product.uuid = self.editingPrintJob.uuid;
         }
     }
     
@@ -930,8 +913,7 @@ static const CGFloat kBookEdgePadding = 38;
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
     self.product.uuid = job.uuid;
-    self.editingPrintJob = job;
-    [printOrder addPrintJob:self.editingPrintJob];
+    [printOrder addPrintJob:job];
     
     [printOrder saveOrder];
     
