@@ -121,7 +121,9 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackSearchAddressScreenViewed];
+#endif
 }
 
 - (void)setCountry:(OLCountry *)country {
