@@ -214,7 +214,7 @@ static id stringOrEmptyString(NSString *str) {
     json[@"options"] = self.options;
     
     json[@"job_id"] = [self uuid];
-    json[@"quantity"] = [NSNumber numberWithInteger:self.extraCopies + 1];
+    json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
     
     if (self.address) {
         NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),

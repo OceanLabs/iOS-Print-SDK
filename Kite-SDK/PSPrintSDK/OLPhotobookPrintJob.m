@@ -169,7 +169,7 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
     }
     
     json[@"job_id"] = [self uuid];
-    json[@"quantity"] = [NSNumber numberWithInteger:self.extraCopies + 1];
+    json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
     
     return json;
 }

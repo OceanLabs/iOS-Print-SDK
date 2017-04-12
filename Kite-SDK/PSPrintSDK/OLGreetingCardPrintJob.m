@@ -166,7 +166,7 @@ static id stringOrEmptyString(NSString *str) {
     json[@"assets"] = assets;
     json[@"pdf"] = pdfs[@"front_image"];
     json[@"job_id"] = [self uuid];
-    json[@"quantity"] = [NSNumber numberWithInteger:self.extraCopies + 1];
+    json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
     
     // set message
     if (self.message) {
