@@ -1,8 +1,9 @@
-### 6.6.0
+## 6.6.0
 - Minor design tweaks.
 - Custom theme now extends to more places.
 - Fixed: Layout issues on Order History screen.
 - Collage Posters are now limited to a single product at a time.
+- Adding more than the maximum amount of photos to a prints pack will create a second basket item.
 
 ### 6.5.3
 - Handle Print at Home delegate calls internally if OLKiteDelegate doesn’t handle them.

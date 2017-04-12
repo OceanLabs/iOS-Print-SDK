@@ -488,7 +488,6 @@
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             job.extraCopies = existingJob.extraCopies;
-            job.uuid = self.product.uuid;
             [printOrder removePrintJob:existingJob];
         }
     }

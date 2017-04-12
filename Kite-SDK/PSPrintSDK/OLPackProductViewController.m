@@ -304,28 +304,27 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
-    
-    
-    OLProductPrintJob *job;
-    if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
-        job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:photoAssets.firstObject backImageOLAsset:photoAssets.lastObject];
-    }
-    else{
-        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    }
-    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-    for (id<OLPrintJob> existingJob in jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            job.dateAddedToBasket = [existingJob dateAddedToBasket];
-            job.extraCopies = existingJob.extraCopies;
-            job.uuid = self.product.uuid;
-            [printOrder removePrintJob:existingJob];
+    for (NSUInteger jobIndex = 0; jobIndex < numOrders; jobIndex++){
+        OLProductPrintJob *job;
+        if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+            job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:photoAssets.firstObject backImageOLAsset:photoAssets.lastObject];
         }
+        else{
+            job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[photoAssets subarrayWithRange:NSMakeRange(jobIndex * self.product.quantityToFulfillOrder, self.product.quantityToFulfillOrder)]];
+        }
+        NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+        for (id<OLPrintJob> existingJob in jobs){
+            if ([existingJob.uuid isEqualToString:self.product.uuid]){
+                job.dateAddedToBasket = [existingJob dateAddedToBasket];
+                job.extraCopies = existingJob.extraCopies;
+                [printOrder removePrintJob:existingJob];
+            }
+        }
+        [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
+        [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
+        job.redeemedOffer = self.product.redeemedOffer;
+        [printOrder addPrintJob:job];
     }
-    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
-    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
-    job.redeemedOffer = self.product.redeemedOffer;
-    [printOrder addPrintJob:job];
     
     [printOrder saveOrder];
     

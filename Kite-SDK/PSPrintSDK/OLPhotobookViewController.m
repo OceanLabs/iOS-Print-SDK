@@ -905,7 +905,6 @@ static const CGFloat kBookEdgePadding = 38;
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             job.dateAddedToBasket = [existingJob dateAddedToBasket];
             job.extraCopies = existingJob.extraCopies;
-            job.uuid = self.product.uuid;
             [printOrder removePrintJob:existingJob];
         }
     }
