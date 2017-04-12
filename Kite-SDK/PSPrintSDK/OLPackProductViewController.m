@@ -304,6 +304,8 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
+    
+    
     OLProductPrintJob *job;
     if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
         job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:photoAssets.firstObject backImageOLAsset:photoAssets.lastObject];
@@ -323,7 +325,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
-    self.product.uuid = job.uuid;
     [printOrder addPrintJob:job];
     
     [printOrder saveOrder];

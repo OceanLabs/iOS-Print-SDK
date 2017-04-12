@@ -492,7 +492,6 @@
             [printOrder removePrintJob:existingJob];
         }
     }
-    self.product.uuid = job.uuid;
     [printOrder addPrintJob:job];
     
     [printOrder saveOrder];

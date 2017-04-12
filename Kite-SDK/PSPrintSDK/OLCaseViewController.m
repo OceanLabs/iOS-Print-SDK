@@ -460,7 +460,6 @@
     [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
-    self.product.uuid = job.uuid;
     [printOrder addPrintJob:job];
     
     [printOrder saveOrder];
