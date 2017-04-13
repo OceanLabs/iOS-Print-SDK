@@ -285,7 +285,7 @@ CGFloat OLImagePickerMargin = 1.5;
             
             qtyLabel.backgroundColor = self.nextButton.backgroundColor;
             qtyLabel.textColor = [UIColor whiteColor];
-            qtyLabel.font = [UIFont systemFontOfSize:11];
+            qtyLabel.font = [UIFont systemFontOfSize:13];
             qtyLabel.textAlignment = NSTextAlignmentCenter;
             
             [cell.contentView addSubview:qtyLabel];
@@ -293,8 +293,8 @@ CGFloat OLImagePickerMargin = 1.5;
             NSDictionary *views = NSDictionaryOfVariableBindings(qtyLabel);
             NSMutableArray *con = [[NSMutableArray alloc] init];
             
-            NSArray *visuals = @[@"H:[qtyLabel(22)]-8-|",
-                                 @"V:|-8-[qtyLabel(22)]"];
+            NSArray *visuals = @[@"H:[qtyLabel(28)]-(6.5)-|",
+                                 @"V:|-(6.5)-[qtyLabel(28)]"];
             
             
             for (NSString *visual in visuals) {
@@ -302,7 +302,7 @@ CGFloat OLImagePickerMargin = 1.5;
             }
             
             [qtyLabel.superview addConstraints:con];
-            [qtyLabel makeRoundRectWithRadius:11];
+            [qtyLabel makeRoundRectWithRadius:14];
         }
         
         if (asset.extraCopies > 0){
