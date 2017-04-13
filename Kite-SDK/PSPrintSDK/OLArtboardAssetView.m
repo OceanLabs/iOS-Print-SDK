@@ -31,13 +31,14 @@
 #import "UIImageView+FadeIn.h"
 #import "OLPlaceholderAsset.h"
 #import "OLAsset+Private.h"
+#import "OLImageView.h"
 
 @implementation OLArtboardAssetView
 
 - (void)loadImageWithCompletionHandler:(void(^)())handler{
     __weak OLArtboardAssetView *welf = self;
     [self.imageView setAndFadeInImageWithOLAsset:[[OLAsset userSelectedAssets] objectAtIndex:self.index] size:self.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
-        [welf setProgress:progress];
+        [(OLImageView *)welf.imageView setProgress:progress];
     }completionHandler:handler];
 }
 

@@ -131,7 +131,6 @@ static char tasksKey;
         size = CGSizeMake(self.frame.size.width * [UIScreen mainScreen].scale, self.frame.size.height * [UIScreen mainScreen].scale);
     }
     
-    self.alpha = 0;
     self.tasks[asset.uuid] = [NSNull null];
     [asset imageWithSize:self.frame.size applyEdits:applyEdits progress:^(float progress){
         if (progressHandler){
@@ -152,7 +151,7 @@ static char tasksKey;
         }
         
         self.contentMode = UIViewContentModeScaleAspectFill;
-        
+        self.alpha = 0;
         self.image = image;
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.alpha = 1;
