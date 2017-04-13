@@ -512,9 +512,7 @@ static NSBlockOperation *templateSyncOperation;
     }
     
     for (id<OLPrintJob> printJob in self.jobs) {
-        for (NSInteger i = -1; i < printJob.extraCopies; i++) {
-            [jobs addObject:[printJob jsonRepresentation]];
-        }
+        [jobs addObject:[printJob jsonRepresentation]];
     }
     
     if (self.phone){
