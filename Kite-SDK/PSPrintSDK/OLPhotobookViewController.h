@@ -53,8 +53,6 @@
 @property (assign, nonatomic, readonly) BOOL bookClosed;
 @property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
 
-@property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
-
 - (void)loadCoverPhoto;
 - (void)saveJobWithCompletionHandler:(void(^)())handler;
 

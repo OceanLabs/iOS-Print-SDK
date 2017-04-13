@@ -96,9 +96,6 @@
 
 @property (strong, nonatomic) OLProductDetailsViewController *productDetails;
 
-@property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
-
-
 @end
 
 @implementation OLProductOverviewViewController
@@ -488,13 +485,10 @@
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             job.extraCopies = existingJob.extraCopies;
-            job.uuid = self.product.uuid;
             [printOrder removePrintJob:existingJob];
         }
     }
-    self.product.uuid = job.uuid;
-    self.editingPrintJob = job;
-    [printOrder addPrintJob:self.editingPrintJob];
+    [printOrder addPrintJob:job];
     
     [printOrder saveOrder];
     

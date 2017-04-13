@@ -426,16 +426,13 @@
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             job.dateAddedToBasket = [existingJob dateAddedToBasket];
             job.extraCopies = existingJob.extraCopies;
-            job.uuid = self.product.uuid;
             [printOrder removePrintJob:existingJob];
         }
     }
     [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
-    self.product.uuid = job.uuid;
-    self.editingPrintJob = job;
-    [printOrder addPrintJob:self.editingPrintJob];
+    [printOrder addPrintJob:job];
     
     [printOrder saveOrder];
     

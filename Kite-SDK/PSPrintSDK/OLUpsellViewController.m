@@ -132,7 +132,9 @@
 }
 
 - (IBAction)acceptButtonAction:(UIButton *)sender {
+#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackUpsellDismissed:YES];
+#endif
     [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
         self.view.backgroundColor = [UIColor clearColor];
     } completion:NULL];
@@ -146,7 +148,9 @@
 }
 
 - (IBAction)declineButtonAction:(UIButton *)sender {
+#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackUpsellDismissed:NO];
+#endif
     [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
         self.view.backgroundColor = [UIColor clearColor];
     } completion:NULL];

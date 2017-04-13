@@ -49,8 +49,10 @@
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"logo"]];
     CGRect f = self.navigationItem.titleView.frame;
     self.navigationItem.titleView.frame = CGRectMake(f.origin.x, f.origin.y + 25, f.size.width, f.size.height);
-    
+ 
+#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackQualityInfoScreenViewed];
+#endif
 }
 
 - (void)viewDidDisappear:(BOOL)animated{

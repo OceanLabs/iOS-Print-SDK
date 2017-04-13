@@ -121,7 +121,9 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackSearchAddressScreenViewed];
+#endif
 }
 
 - (void)setCountry:(OLCountry *)country {
@@ -240,9 +242,6 @@
     [OLProgressHUD dismiss];
     self.progressToEditViewControllerOnUniqueAddressResult = NO;
     self.inProgressRequest = nil;
-    if (self.presentedViewController) {
-        return;
-    }
     
     self.searchResults = options;
     [self.tableView reloadData];
@@ -253,9 +252,6 @@
 - (void)addressSearchRequest:(OLAddressSearchRequest *)req didSuceedWithUniqueAddress:(OLAddress *)addr {
     [OLProgressHUD dismiss];
     self.inProgressRequest = nil;
-    if (self.presentedViewController) {
-        return;
-    }
     
     if (self.progressToEditViewControllerOnUniqueAddressResult) {
         self.progressToEditViewControllerOnUniqueAddressResult = NO;
