@@ -510,6 +510,10 @@ static NSBlockOperation *templateSyncOperation;
         [json setObject:self.userData forKey:@"user_data"];
     }
     
+    for (id<OLPrintJob> printJob in self.jobs) {
+        [jobs addObject:[printJob jsonRepresentation]];
+    }
+    
     if (self.phone){
         [json setObject:self.phone forKey:@"customer_phone"];
     }
