@@ -58,8 +58,8 @@
     OLArtboardTemplate *layout = self.product.productTemplate.productRepresentation.pages[self.pageIndex];
     CGRect imageViewPosition = [layout.positions.firstObject CGRectValue];
     
-    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeHeight multiplier:imageViewPosition.size.height constant:0]];
-    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeWidth multiplier:imageViewPosition.size.width constant:0]];
+    [self.artboardView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.artboardView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.artboardView.superview attribute:NSLayoutAttributeHeight multiplier:imageViewPosition.size.height constant:0]];
+    [self.artboardView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.artboardView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.artboardView.superview attribute:NSLayoutAttributeWidth multiplier:imageViewPosition.size.width constant:0]];
     
     [self loadImageWithCompletionHandler:NULL];
 }
@@ -97,14 +97,14 @@
 }
 
 - (void)unhighlightImageAtIndex:(NSInteger)index{
-    UIView *selectedView = self.imageView; //only one for now
+    UIView *selectedView = self.artboardView.assetViews.firstObject;
     
     selectedView.layer.borderColor = [UIColor clearColor].CGColor;
     selectedView.layer.borderWidth = 0;
 }
 
 - (void)highlightImageAtIndex:(NSInteger)index{
-    UIView *selectedView = self.imageView; //only one for now
+    UIView *selectedView = self.artboardView.assetViews.firstObject;
     
     selectedView.layer.borderColor = self.view.tintColor.CGColor;
     selectedView.layer.borderWidth = 3.0;
@@ -113,17 +113,15 @@
 - (void)clearImage{
     self.pageShadowLeft2.hidden = YES;
     self.pageShadowRight2.hidden = YES;
-    self.imageView.image = nil;
+    self.artboardView.assetViews.firstObject.image = nil;
 }
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
     NSInteger imageIndex = self.pageIndex + 1;
-    OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:imageIndex];
-    self.imageView.image = nil;
+    self.artboardView.assetViews.firstObject.image = nil;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.imageView setAndFadeInImageWithOLAsset:asset size:self.imageView.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
-            [self.imageView setProgress:progress];
-        }completionHandler:^{
+        self.artboardView.assetViews.firstObject.index = imageIndex;
+        [self.artboardView.assetViews.firstObject loadImageWithCompletionHandler:^{
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (self.left){
                     self.pageShadowLeft2.hidden = NO;

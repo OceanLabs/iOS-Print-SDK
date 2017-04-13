@@ -27,27 +27,28 @@
 //  THE SOFTWARE.
 //
 
+#import "NSObject+Utils.h"
 #import "OLAnalytics.h"
-#import "OLEditPhotobookViewController.h"
-#import "OLImageCachingManager.h"
-#import "OLKiteUtils.h"
-#import "OLPhotobookPageContentViewController.h"
-#import "OLPhotobookViewController.h"
-#import "OLPopupOptionsImageView.h"
-#import "OLImageEditViewController.h"
-#import "OLUserSession.h"
+#import "OLArtboardView.h"
 #import "OLAsset+Private.h"
-#import "UIViewController+OLMethods.h"
-#import "OLPaymentViewController.h"
-#import "OLImagePickerViewController.h"
-#import "OLNavigationController.h"
-#import "OLKiteABTesting.h"
 #import "OLCustomPickerController.h"
 #import "OLCustomViewControllerPhotoProvider.h"
-#import "NSObject+Utils.h"
-#import "OLKiteViewController+Private.h"
-#import "UIView+RoundRect.h"
+#import "OLEditPhotobookViewController.h"
+#import "OLImageCachingManager.h"
+#import "OLImageEditViewController.h"
+#import "OLImagePickerViewController.h"
 #import "OLInfoBanner.h"
+#import "OLKiteABTesting.h"
+#import "OLKiteUtils.h"
+#import "OLKiteViewController+Private.h"
+#import "OLNavigationController.h"
+#import "OLPaymentViewController.h"
+#import "OLPhotobookPageContentViewController.h"
+#import "OLPhotobookViewController.h"
+#import "OLRemoteImageView.h"
+#import "OLUserSession.h"
+#import "UIView+RoundRect.h"
+#import "UIViewController+OLMethods.h"
 
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionPages = 1;
@@ -379,7 +380,7 @@ static const NSInteger kSectionPages = 1;
     }
     else{
         cropPhoto = [[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex];
-        imageView = [self pageControllerForPageIndex:self.longPressImageIndex].imageView;
+        imageView = [self pageControllerForPageIndex:self.longPressImageIndex].artboardView.assetViews.firstObject.imageView;
     }
     OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
     cropVc.delegate = self;
@@ -442,8 +443,8 @@ static const NSInteger kSectionPages = 1;
         [page unhighlightImageAtIndex:tappedImageIndex];
         [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
         
-        UIView *pageCopy = [page.imageView snapshotViewAfterScreenUpdates:YES];
-        pageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
+        UIView *pageCopy = [page.artboardView.assetViews.firstObject snapshotViewAfterScreenUpdates:YES];
+        pageCopy.frame = [self.view convertRect:page.artboardView.assetViews.firstObject.frame fromView:page.view];
         [page clearImage];
         
         
@@ -452,9 +453,9 @@ static const NSInteger kSectionPages = 1;
             [self setPageShadowAlpha:pageCopy forIndex:page.pageIndex];
             [self.view addSubview:pageCopy];
             OLPhotobookViewController *selectedPhotobook = (OLPhotobookViewController *)selectedPage.parentViewController.parentViewController;
-            UIView *selectedPageCopy = [selectedPage.imageView snapshotViewAfterScreenUpdates:YES];
+            UIView *selectedPageCopy = [selectedPage.artboardView.assetViews.firstObject snapshotViewAfterScreenUpdates:YES];
             [selectedPage clearImage];
-            selectedPageCopy.frame = [self.view convertRect:selectedPage.imageView.frame fromView:selectedPage.view];
+            selectedPageCopy.frame = [self.view convertRect:selectedPage.artboardView.assetViews.firstObject.frame fromView:selectedPage.view];
             [self addPageShadowsToView:selectedPageCopy];
             [self setPageShadowAlpha:selectedPageCopy forIndex:selectedPage.pageIndex];
             
@@ -514,16 +515,16 @@ static const NSInteger kSectionPages = 1;
                 photobook.pagesLabel.superview.alpha = 0;
             }];
             
-            page.imageView.transform = CGAffineTransformMakeTranslation(-1000000, 0);
+            page.artboardView.assetViews.firstObject.transform = CGAffineTransformMakeTranslation(-1000000, 0);
             page.pageShadowLeft2.alpha = 0;
             page.pageShadowRight2.alpha = 0;
             [page loadImageWithCompletionHandler:^{
-                UIView *selectedPageCopy = [page.imageView snapshotViewAfterScreenUpdates:YES];
-                page.imageView.hidden = YES;
+                UIView *selectedPageCopy = [page.artboardView.assetViews.firstObject snapshotViewAfterScreenUpdates:YES];
+                page.artboardView.assetViews.firstObject.hidden = YES;
                 page.pageShadowLeft2.hidden = YES;
                 page.pageShadowRight2.hidden = YES;
-                page.imageView.transform = CGAffineTransformIdentity;
-                selectedPageCopy.frame = [self.view convertRect:page.imageView.frame fromView:page.view];
+                page.artboardView.assetViews.firstObject.transform = CGAffineTransformIdentity;
+                selectedPageCopy.frame = [self.view convertRect:page.artboardView.assetViews.firstObject.frame fromView:page.view];
                 selectedPageCopy.transform = CGAffineTransformMakeTranslation(x, [self.selectedIndexNumber integerValue] < page.pageIndex ? -1000 : 1000);
                 
                 [self addPageShadowsToView:selectedPageCopy];
@@ -539,7 +540,7 @@ static const NSInteger kSectionPages = 1;
                     selectedPageCopy.transform = CGAffineTransformIdentity;
                 }completion:^(BOOL finished){
                     self.animating = NO;
-                    page.imageView.hidden = NO;
+                    page.artboardView.assetViews.firstObject.hidden = NO;
                     [selectedPageCopy removeFromSuperview];
                     [pageCopy removeFromSuperview];
                     self.selectedIndexNumber = nil;
@@ -579,15 +580,15 @@ static const NSInteger kSectionPages = 1;
 
 - (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
     [self.infoBanner dismiss];
-    OLPopupOptionsImageView *view;
+    OLRemoteImageView *view;
     if (index == -1){
-        view = (OLPopupOptionsImageView *)sender.view;
+        view = (OLRemoteImageView *)sender.view;
     }
     else{
         if ([[[OLAsset userSelectedAssets] objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
             return;
         }
-        view = (OLPopupOptionsImageView *)[[self pageControllerForPageIndex:index] imageView];
+        view = (OLRemoteImageView *)[self pageControllerForPageIndex:index].artboardView.assetViews.firstObject.imageView;
     }
     
     self.longPressImageIndex = index;

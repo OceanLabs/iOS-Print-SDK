@@ -535,7 +535,7 @@
         for (NSInteger j = 0; j < numberOfCopies; j++){
             [self.checkoutPhotos addObject:[[OLAsset userSelectedAssets] objectAtIndex:i]];
         }
-        [OLUserSession currentSession].userSelectedPhotos[i].extraCopies = 0;
+        [OLAsset userSelectedAssets][i].extraCopies = 0;
     }
 }
 

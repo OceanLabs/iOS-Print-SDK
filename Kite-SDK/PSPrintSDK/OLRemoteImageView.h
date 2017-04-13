@@ -29,8 +29,13 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol OLImageViewDelegate <NSObject>
+
+@end
+
 @interface OLRemoteImageView : UIImageView 
 
 - (void)setProgress:(float)progress;
+@property (weak, nonatomic) id<OLImageViewDelegate> delegate;
 
 @end

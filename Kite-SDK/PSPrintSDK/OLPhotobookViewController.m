@@ -27,40 +27,36 @@
 //  THE SOFTWARE.
 //
 
-#import "OLFlipTransition.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
+#import "OLArtboardTemplate.h"
+#import "OLAsset+Private.h"
+#import "OLCustomPickerController.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "OLFlipTransition.h"
 #import "OLImageCachingManager.h"
+#import "OLImageEditViewController.h"
+#import "OLImagePickerViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
+#import "OLKiteViewController+Private.h"
+#import "OLNavigationController.h"
 #import "OLPaymentViewController.h"
+#import "OLPhotobookPageBlankContentViewController.h"
 #import "OLPhotobookPageContentViewController.h"
 #import "OLPhotobookPrintJob.h"
 #import "OLPhotobookViewController.h"
-#import "OLPopupOptionsImageView.h"
 #import "OLProduct.h"
-#import "OLProductTemplate.h"
-#import "OLImageEditViewController.h"
-#import "UIImage+ImageNamedInKiteBundle.h"
-#import "UIView+RoundRect.h"
-#import "OLUpsellViewController.h"
 #import "OLProductRepresentation.h"
-#import "OLArtboardTemplate.h"
-#import "OLPhotobookPageBlankContentViewController.h"
+#import "OLProductTemplate.h"
+#import "OLRemoteImageView.h"
+#import "OLUpsellViewController.h"
 #import "OLUserSession.h"
-#import "OLAsset+Private.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
-#import "OLKiteABTesting.h"
-#import "OLPaymentViewController.h"
-#import "UIViewController+OLMethods.h"
-#import "OLImagePickerViewController.h"
-#import "OLNavigationController.h"
-#import "OLCustomPickerController.h"
-#import "OLCustomViewControllerPhotoProvider.h"
-#import "NSObject+Utils.h"
-#import "OLKiteViewController+Private.h"
 #import "UIImageView+FadeIn.h"
+#import "UIView+RoundRect.h"
+#import "UIViewController+OLMethods.h"
 
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;
@@ -130,7 +126,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonLeadingCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonHeightCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonBottomCon;
-@property (weak, nonatomic) OLPopupOptionsImageView *coverImageView;
+@property (weak, nonatomic) OLRemoteImageView *coverImageView;
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
@@ -935,7 +931,7 @@ static const CGFloat kBookEdgePadding = 38;
         if ([OLUserSession currentSession].kiteVc.disableEditingTools){
             return;
         }
-        UIImageView *imageView = [page imageView];
+        UIView *imageView = page.artboardView.assetViews.firstObject;
         self.editingAsset = [[OLAsset userSelectedAssets] objectAtIndex:index];
         [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
@@ -1115,7 +1111,7 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)setupCoverContentInView:(UIView *)halfBookCoverImageContainer{
-    OLPopupOptionsImageView *coverImageView = [[OLPopupOptionsImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
+    OLRemoteImageView *coverImageView = [[OLRemoteImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
     self.coverImageView = coverImageView;
     [self loadCoverPhoto];
     coverImageView.tag = 18;
@@ -1162,7 +1158,7 @@ static const CGFloat kBookEdgePadding = 38;
             [self setupCoverContentInView:halfBookCoverImageContainer];
             
             if (self.editMode){
-                OLPopupOptionsImageView *coverImageView = [halfBookCoverImageContainer viewWithTag:18];
+                OLRemoteImageView *coverImageView = [halfBookCoverImageContainer viewWithTag:18];
                 coverImageView.userInteractionEnabled = YES;
                 [coverImageView addGestureRecognizer:tap];
                 [coverImageView addGestureRecognizer:longPress];

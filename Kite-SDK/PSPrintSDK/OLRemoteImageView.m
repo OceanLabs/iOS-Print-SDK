@@ -94,4 +94,28 @@
     }
 }
 
+- (BOOL)canBecomeFirstResponder{
+    return YES;
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender{
+    NSArray *whiteList = @[@"deletePage", @"addPage", @"cropImage", @"replaceImage"];
+    
+    if ([self respondsToSelector:action] && [self.delegate respondsToSelector:action] && [whiteList containsObject:NSStringFromSelector(action)]){
+        return YES;
+    }
+    else{
+        return NO;
+    }
+    
+}
+
+- (void)deletePage{
+    [self.delegate performSelector:@selector(deletePage)];
+}
+
+- (void)cropImage{
+    [self.delegate performSelector:@selector(cropImage)];
+}
+
 @end

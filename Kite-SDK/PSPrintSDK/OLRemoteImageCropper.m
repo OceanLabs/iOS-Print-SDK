@@ -38,6 +38,10 @@
 
 @implementation OLRemoteImageCropper
 
+- (UIImageView *)imageView{
+    return self.remoteImageView;
+}
+
 - (void)initializeViews{
     self.remoteImageView = [[OLRemoteImageView alloc] init];
     [self addSubview:self.remoteImageView];

@@ -152,7 +152,6 @@
 		2E451E271D9555870080F1C1 /* OLColorSelectionCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */; };
 		2E451E281D9555870080F1C1 /* OLButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0FF2E21D2A9003007093C0 /* OLButtonCollectionViewCell.m */; };
 		2E451E291D9555870080F1C1 /* OLCircleMaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */; };
-		2E451E2A1D9555870080F1C1 /* OLPopupOptionsImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */; };
 		2E451E2B1D9555870080F1C1 /* OLRemoteImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED3EBB91B996ED3005C1E9F /* OLRemoteImageView.m */; };
 		2E451E2C1D9555870080F1C1 /* OLRemoteImageCropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAC21531B9EDDC000C41BD4 /* OLRemoteImageCropper.m */; };
 		2E451E2D1D9555870080F1C1 /* OLPhotoTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED389901C917D2000DC2314 /* OLPhotoTextField.m */; };
@@ -374,7 +373,6 @@
 		2EB8FE301D95685100E26BDF /* OLColorSelectionCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E67B9281D267A3E00914D56 /* OLColorSelectionCollectionViewCell.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE311D95685100E26BDF /* OLButtonCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0FF2E11D2A9003007093C0 /* OLButtonCollectionViewCell.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE321D95685100E26BDF /* OLCircleMaskCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E973EEC1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE331D95685100E26BDF /* OLPopupOptionsImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE341D95685100E26BDF /* OLRemoteImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2ED3EBB81B996ED3005C1E9F /* OLRemoteImageView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE351D95685100E26BDF /* OLRemoteImageCropper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EAC21521B9EDDC000C41BD4 /* OLRemoteImageCropper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE361D95685100E26BDF /* OLPhotoTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 2ED3898F1C917D2000DC2314 /* OLPhotoTextField.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -699,8 +697,6 @@
 		2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTouchTolerantView.m; sourceTree = "<group>"; };
 		2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOrderHistoryViewController.h; sourceTree = "<group>"; };
 		2E65FEA71E4E143B00A301BB /* OLOrderHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOrderHistoryViewController.m; sourceTree = "<group>"; };
-		2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPopupOptionsImageView.h; sourceTree = "<group>"; };
-		2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPopupOptionsImageView.m; sourceTree = "<group>"; };
 		2E67B9281D267A3E00914D56 /* OLColorSelectionCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLColorSelectionCollectionViewCell.h; sourceTree = "<group>"; };
 		2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLColorSelectionCollectionViewCell.m; sourceTree = "<group>"; };
 		2E6C20F31BF375EE00109081 /* KiteSDK-Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "KiteSDK-Demo.entitlements"; sourceTree = "<group>"; };
@@ -1075,8 +1071,6 @@
 				2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */,
 				2E973EEC1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.h */,
 				2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */,
-				2E676C291B33FD70005E068B /* OLPopupOptionsImageView.h */,
-				2E676C2A1B33FD70005E068B /* OLPopupOptionsImageView.m */,
 				2ED3EBB81B996ED3005C1E9F /* OLRemoteImageView.h */,
 				2ED3EBB91B996ED3005C1E9F /* OLRemoteImageView.m */,
 				2EAC21521B9EDDC000C41BD4 /* OLRemoteImageCropper.h */,
@@ -2039,7 +2033,6 @@
 				2EB8FDF11D95685100E26BDF /* OLPhotobookPrintJob.h in Headers */,
 				2EB8FDF41D95685100E26BDF /* OLPrintOrderCost.h in Headers */,
 				2EB8FE0F1D95685100E26BDF /* OLFacebookPhotosForAlbumRequest.h in Headers */,
-				2EB8FE331D95685100E26BDF /* OLPopupOptionsImageView.h in Headers */,
 				2E65FEA01E4E058400A301BB /* OLTouchTolerantView.h in Headers */,
 				2EB8FDFA1D95685100E26BDF /* OLProductGroup.h in Headers */,
 				2EB8FDFB1D95685100E26BDF /* OLProduct.h in Headers */,
@@ -2587,7 +2580,6 @@
 				2E451E631D9555EF0080F1C1 /* OLCollectionViewController.m in Sources */,
 				2E451DDD1D9555540080F1C1 /* OLImageCachingManager.m in Sources */,
 				2E451E011D9555620080F1C1 /* OLImageDownloader.m in Sources */,
-				2E451E2A1D9555870080F1C1 /* OLPopupOptionsImageView.m in Sources */,
 				2E451E5B1D9555DE0080F1C1 /* UIView+RMUtils.m in Sources */,
 				2E451E6A1D955B1F0080F1C1 /* rscode.c in Sources */,
 				2E451E421D9555D30080F1C1 /* OLImageEditViewController.m in Sources */,
