@@ -293,10 +293,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     // ensure order is maxed out by adding duplicates as necessary
     NSUInteger userSelectedAssetCount = photoAssets.count;
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
-    NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
-    for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [photoAssets addObject:photoAssets[i % userSelectedAssetCount]];
-    }
     
 #ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
@@ -310,7 +306,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
             job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:photoAssets.firstObject backImageOLAsset:photoAssets.lastObject];
         }
         else{
-            job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[photoAssets subarrayWithRange:NSMakeRange(jobIndex * self.product.quantityToFulfillOrder, self.product.quantityToFulfillOrder)]];
+            job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[photoAssets subarrayWithRange:NSMakeRange(jobIndex * self.product.quantityToFulfillOrder, MIN(self.product.quantityToFulfillOrder, photoAssets.count - jobIndex * self.product.quantityToFulfillOrder))]];
         }
         NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
         for (id<OLPrintJob> existingJob in jobs){
