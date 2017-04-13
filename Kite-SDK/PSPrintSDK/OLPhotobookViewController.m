@@ -50,7 +50,7 @@
 #import "OLProduct.h"
 #import "OLProductRepresentation.h"
 #import "OLProductTemplate.h"
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
 #import "OLUpsellViewController.h"
 #import "OLUserSession.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
@@ -126,7 +126,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonLeadingCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonHeightCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonBottomCon;
-@property (weak, nonatomic) OLRemoteImageView *coverImageView;
+@property (weak, nonatomic) OLImageView *coverImageView;
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
@@ -1111,7 +1111,7 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)setupCoverContentInView:(UIView *)halfBookCoverImageContainer{
-    OLRemoteImageView *coverImageView = [[OLRemoteImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
+    OLImageView *coverImageView = [[OLImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
     self.coverImageView = coverImageView;
     [self loadCoverPhoto];
     coverImageView.tag = 18;
@@ -1158,7 +1158,7 @@ static const CGFloat kBookEdgePadding = 38;
             [self setupCoverContentInView:halfBookCoverImageContainer];
             
             if (self.editMode){
-                OLRemoteImageView *coverImageView = [halfBookCoverImageContainer viewWithTag:18];
+                OLImageView *coverImageView = [halfBookCoverImageContainer viewWithTag:18];
                 coverImageView.userInteractionEnabled = YES;
                 [coverImageView addGestureRecognizer:tap];
                 [coverImageView addGestureRecognizer:longPress];

@@ -35,14 +35,14 @@
 #import <Photos/Photos.h>
 
 @interface OLImagePreviewViewController ()
-@property (strong, nonatomic) OLRemoteImageView *imageView;
+@property (strong, nonatomic) OLImageView *imageView;
 @end
 
 @implementation OLImagePreviewViewController
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    OLRemoteImageView *imageView = [[OLRemoteImageView alloc] init];
+    OLImageView *imageView = [[OLImageView alloc] init];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageView = imageView;
     [self.view addSubview:self.imageView];

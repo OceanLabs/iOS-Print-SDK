@@ -29,7 +29,7 @@
 
 #import "OLImageDownloader.h"
 #import "OLCaseViewController.h"
-#import "OLRemoteImageCropper.h"
+#import "OLImageCropper.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImage+OLUtils.h"
 #import "OLUserSession.h"

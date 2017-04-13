@@ -28,7 +28,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLRemoteImageCropper.h"
+#import "OLImageCropper.h"
 #import "OLViewController.h"
 #import "OLEditingToolsView.h"
 #import "OLProduct.h"

@@ -31,7 +31,7 @@
 #import "OLAsset.h"
 #import "OLProduct.h"
 #import "OLAsset+Private.h"
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
 #import "OLAnalytics.h"
@@ -122,7 +122,7 @@ CGFloat innerMargin = 3;
     NSIndexPath* indexPath = [collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:collectionView]];
     
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
+    OLImageView *imageView = (OLImageView *)[cell viewWithTag:110];
     
     if (!imageView.image){
         return;
@@ -352,7 +352,7 @@ CGFloat innerMargin = 3;
         
         NSIndexPath* outerCollectionViewIndexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)view];
         
-        __weak OLRemoteImageView* cellImage = (OLRemoteImageView*)[cell.contentView viewWithTag:110];
+        __weak OLImageView* cellImage = (OLImageView*)[cell.contentView viewWithTag:110];
         cellImage.userInteractionEnabled = YES;
         cellImage.image = nil;
         

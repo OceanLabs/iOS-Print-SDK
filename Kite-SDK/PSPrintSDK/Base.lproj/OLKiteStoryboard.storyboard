@@ -264,7 +264,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="110" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dlh-gk-eut" customClass="OLRemoteImageView">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="110" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dlh-gk-eut" customClass="OLImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                             </imageView>
                                                         </subviews>
@@ -329,7 +329,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="110" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SkI-HP-ode" customClass="OLRemoteImageView">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="110" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SkI-HP-ode" customClass="OLImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                             </imageView>
                                                         </subviews>
@@ -1929,7 +1929,7 @@
                                                 <activityIndicatorView opaque="NO" tag="278" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="WLn-fg-42D">
                                                     <rect key="frame" x="150" y="150" width="20" height="20"/>
                                                 </activityIndicatorView>
-                                                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0xl-Dm-9lX" customClass="OLRemoteImageView">
+                                                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0xl-Dm-9lX" customClass="OLImageView">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
                                                     <gestureRecognizers/>
                                                 </imageView>
@@ -1985,7 +1985,7 @@
                                                 <activityIndicatorView opaque="NO" tag="278" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="I6n-sw-k0m">
                                                     <rect key="frame" x="150" y="107.5" width="20" height="20"/>
                                                 </activityIndicatorView>
-                                                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XR8-lY-ZH6" customClass="OLRemoteImageView">
+                                                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XR8-lY-ZH6" customClass="OLImageView">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="235"/>
                                                     <gestureRecognizers/>
                                                 </imageView>
@@ -2721,7 +2721,7 @@
                                                                     <activityIndicatorView hidden="YES" opaque="NO" tag="796" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="odv-gf-xvm">
                                                                         <rect key="frame" x="15" y="15" width="20" height="20"/>
                                                                     </activityIndicatorView>
-                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="110" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iKa-iZ-Nr0" customClass="OLRemoteImageView">
+                                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="110" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iKa-iZ-Nr0" customClass="OLImageView">
                                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                                     </imageView>
                                                                 </subviews>
@@ -3117,7 +3117,7 @@ only Lorem Ipsum</string>
                                             <rect key="frame" x="0.0" y="0.0" width="152" height="142"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lKK-jW-goJ" customClass="OLRemoteImageView">
+                                                <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lKK-jW-goJ" customClass="OLImageView">
                                                     <rect key="frame" x="0.0" y="0.0" width="152" height="142"/>
                                                 </imageView>
                                                 <view tag="20" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ive-Yt-wHF">
@@ -3207,7 +3207,7 @@ only Lorem Ipsum</string>
                                                             <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UvS-en-PHi" customClass="OLRemoteImageView">
+                                                                <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UvS-en-PHi" customClass="OLImageView">
                                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                                                                 </imageView>
                                                                 <view tag="20" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s0C-GP-xfR">

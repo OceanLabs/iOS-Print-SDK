@@ -747,7 +747,7 @@
     UICollectionViewCell *outerCollectionViewCell = [reviewVc.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
+    OLImageView *imageView = (OLImageView *)[cell viewWithTag:110];
     
     [self performUIAction:^{
         OLTestTapGestureRecognizer *tap = [[OLTestTapGestureRecognizer alloc] init];

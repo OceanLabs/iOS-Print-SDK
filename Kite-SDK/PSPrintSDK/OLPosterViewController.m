@@ -38,7 +38,7 @@
 #import "OLAnalytics.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteABTesting.h"
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
@@ -155,7 +155,7 @@ CGFloat posterMargin = 2;
     UIActivityIndicatorView *activity = (UIActivityIndicatorView *)[cell viewWithTag:796];
     [activity startAnimating];
     
-    __weak OLRemoteImageView *imageView = (OLRemoteImageView *)[cell viewWithTag:110];
+    __weak OLImageView *imageView = (OLImageView *)[cell viewWithTag:110];
     imageView.image = nil;
     imageView.userInteractionEnabled = YES;
     [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureThumbnailTapped:)]];

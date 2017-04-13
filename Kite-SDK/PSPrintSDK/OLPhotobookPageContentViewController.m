@@ -32,7 +32,7 @@
 #import "OLImageEditViewController.h"
 #import "OLPhotobookPageContentViewController.h"
 #import "OLProduct.h"
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
 #import "OLUserSession.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImageView+FadeIn.h"

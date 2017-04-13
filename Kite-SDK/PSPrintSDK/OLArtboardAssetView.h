@@ -27,11 +27,11 @@
 //  THE SOFTWARE.
 //
 #import <UIKit/UIKit.h>
-#import "OLRemoteImageCropper.h"
+#import "OLImageCropper.h"
 
 @class OLAsset;
 
-@interface OLArtboardAssetView : OLRemoteImageCropper
+@interface OLArtboardAssetView : OLImageCropper
 
 @property (assign, nonatomic) NSUInteger index;
 @property (assign, nonatomic) CGRect relativeFrame;

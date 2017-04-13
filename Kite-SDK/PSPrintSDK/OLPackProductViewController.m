@@ -45,7 +45,7 @@
 #import "OLProduct.h"
 #import "OLProductPrintJob.h"
 #import "OLProductTemplate.h"
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
 #import "OLUserSession.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"

@@ -26,12 +26,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+#import "RMImageCropper.h"
 
-#import <UIKit/UIKit.h>
-#import "OLImageView.h"
+@interface OLImageCropper : RMImageCropper
 
-@class OLAsset;
+- (void)setProgress:(float)progress;
 
-@interface OLImagePreviewViewController : UIViewController
-@property (strong, nonatomic) OLAsset *asset;
 @end

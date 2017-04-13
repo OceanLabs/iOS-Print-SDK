@@ -48,7 +48,7 @@
 #import "OLAddressSelectionViewController.h"
 #import "OLKiteViewController+Private.h"
 #import "OLAsset+Private.h"
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;

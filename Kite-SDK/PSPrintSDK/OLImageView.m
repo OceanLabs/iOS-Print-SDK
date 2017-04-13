@@ -27,39 +27,32 @@
 //  THE SOFTWARE.
 //
 
-#import "OLRemoteImageCropper.h"
-#import "OLRemoteImageView.h"
 
-@interface OLRemoteImageCropper ()
+#import "OLCircularProgressView.h"
+#import "OLImageView.h"
 
-@property (strong, nonatomic) OLRemoteImageView *remoteImageView;
+@interface OLImageView ()
+
+@property (strong, nonatomic) OLCircularProgressView *loadingView;
 
 @end
 
-@implementation OLRemoteImageCropper
-
-- (UIImageView *)imageView{
-    return self.remoteImageView;
-}
+@implementation OLImageView
 
 - (void)initializeViews{
-    self.remoteImageView = [[OLRemoteImageView alloc] init];
-    [self addSubview:self.remoteImageView];
+    self.loadingView = [[OLCircularProgressView alloc] initWithFrame:CGRectMake(10, 10, 20, 20)];
+    self.loadingView.innerTintColor = [UIColor lightGrayColor];
+    self.loadingView.trackTintColor = [UIColor lightGrayColor];
+    self.loadingView.progressTintColor = [UIColor whiteColor];
+    self.loadingView.thicknessRatio = 1;
+    self.loadingView.hidden = YES;
     
-    UIView *view = self.remoteImageView;
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                         @"V:|-0-[view]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [view.superview addConstraints:con];
+    self.loadingView.clipsToBounds = NO;
+    self.loadingView.layer.shadowColor = [[UIColor blackColor] CGColor];
+    self.loadingView.layer.shadowOpacity = .4;
+    self.loadingView.layer.shadowRadius = 5;
+        
+    [self addSubview:self.loadingView];
 }
 
 - (void)awakeFromNib{
@@ -84,7 +77,45 @@
 }
 
 - (void)setProgress:(float)progress{
-    [self.remoteImageView setProgress:progress];
+    if (progress == 1 && self.loadingView.progress < 0.1){
+        self.loadingView.hidden = YES;
+        return;
+    }
+    
+    if (progress == 0){
+        progress = 0.05;
+    }
+    
+    self.loadingView.hidden = NO;
+    [self.loadingView setProgress:progress animated:YES];
+    
+    if (progress == 1){
+            self.loadingView.hidden = YES;
+    }
+}
+
+- (BOOL)canBecomeFirstResponder{
+    return YES;
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender{
+    NSArray *whiteList = @[@"deletePage", @"addPage", @"cropImage", @"replaceImage"];
+    
+    if ([self respondsToSelector:action] && [self.delegate respondsToSelector:action] && [whiteList containsObject:NSStringFromSelector(action)]){
+        return YES;
+    }
+    else{
+        return NO;
+    }
+    
+}
+
+- (void)deletePage{
+    [self.delegate performSelector:@selector(deletePage)];
+}
+
+- (void)cropImage{
+    [self.delegate performSelector:@selector(cropImage)];
 }
 
 @end

@@ -26,10 +26,16 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
-#import "RMImageCropper.h"
 
-@interface OLRemoteImageCropper : RMImageCropper
+#import <UIKit/UIKit.h>
+
+@protocol OLImageViewDelegate <NSObject>
+
+@end
+
+@interface OLImageView : UIImageView
 
 - (void)setProgress:(float)progress;
+@property (weak, nonatomic) id<OLImageViewDelegate> delegate;
 
 @end

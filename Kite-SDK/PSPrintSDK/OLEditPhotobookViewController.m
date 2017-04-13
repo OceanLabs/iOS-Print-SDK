@@ -45,7 +45,7 @@
 #import "OLPaymentViewController.h"
 #import "OLPhotobookPageContentViewController.h"
 #import "OLPhotobookViewController.h"
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
 #import "OLUserSession.h"
 #import "UIView+RoundRect.h"
 #import "UIViewController+OLMethods.h"
@@ -580,15 +580,15 @@ static const NSInteger kSectionPages = 1;
 
 - (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
     [self.infoBanner dismiss];
-    OLRemoteImageView *view;
+    OLImageView *view;
     if (index == -1){
-        view = (OLRemoteImageView *)sender.view;
+        view = (OLImageView *)sender.view;
     }
     else{
         if ([[[OLAsset userSelectedAssets] objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
             return;
         }
-        view = (OLRemoteImageView *)[self pageControllerForPageIndex:index].artboardView.assetViews.firstObject.imageView;
+        view = (OLImageView *)[self pageControllerForPageIndex:index].artboardView.assetViews.firstObject.imageView;
     }
     
     self.longPressImageIndex = index;

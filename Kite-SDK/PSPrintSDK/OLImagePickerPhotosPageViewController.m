@@ -30,7 +30,7 @@
 
 #import "OLImagePickerPhotosPageViewController.h"
 #import "UIImageView+FadeIn.h"
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
 #import "OLUserSession.h"
 #import "OLImagePickerPhotosPageViewController+Facebook.h"
 #import "OLImagePickerPhotosPageViewController+Instagram.h"
@@ -288,7 +288,7 @@ CGFloat OLImagePickerMargin = 1.5;
     UICollectionViewCell *cell;
     if (collectionView.tag == 10){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
-        OLRemoteImageView *imageView = [cell viewWithTag:10];
+        OLImageView *imageView = [cell viewWithTag:10];
         [self setAssetOfCollection:self.provider.collections[self.showingCollectionIndex] withIndex:indexPath.item toImageView:imageView forCollectionView:collectionView];
         
         UIView *checkmark = [cell viewWithTag:20];
@@ -355,10 +355,10 @@ CGFloat OLImagePickerMargin = 1.5;
     else{
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"albumCell" forIndexPath:indexPath];
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
-        OLRemoteImageView *imageView = [cell viewWithTag:10];
+        OLImageView *imageView = [cell viewWithTag:10];
         
         if (self.provider.collections[indexPath.item].coverAsset){
-            __weak OLRemoteImageView *weakImageView = imageView;
+            __weak OLImageView *weakImageView = imageView;
             [imageView setAndFadeInImageWithOLAsset:self.provider.collections[indexPath.item].coverAsset size:imageView.frame.size applyEdits:NO placeholder:nil progress:^(float progress){
                 [weakImageView setProgress:progress];
             } completionHandler:NULL];
@@ -388,7 +388,7 @@ CGFloat OLImagePickerMargin = 1.5;
     return cell;
 }
 
-- (void)setAssetOfCollection:(OLImagePickerProviderCollection *)collection withIndex:(NSInteger)index toImageView:(OLRemoteImageView *)imageView forCollectionView:(UICollectionView *)collectionView{
+- (void)setAssetOfCollection:(OLImagePickerProviderCollection *)collection withIndex:(NSInteger)index toImageView:(OLImageView *)imageView forCollectionView:(UICollectionView *)collectionView{
     id asset = [collection objectAtIndex:index];
     
     for (OLAsset *selectedAsset in self.imagePicker.selectedAssets){
@@ -411,7 +411,7 @@ CGFloat OLImagePickerMargin = 1.5;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
         options.resizeMode = PHImageRequestOptionsResizeModeFast;
         
-        __weak OLRemoteImageView *weakImageView = imageView;
+        __weak OLImageView *weakImageView = imageView;
         
         CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -421,7 +421,7 @@ CGFloat OLImagePickerMargin = 1.5;
         });
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
-        __weak OLRemoteImageView *weakImageView = imageView;
+        __weak OLImageView *weakImageView = imageView;
         [imageView setAndFadeInImageWithOLAsset:asset size:imageView.frame.size applyEdits:NO placeholder:nil progress:^(float progress){
             [weakImageView setProgress:progress];
         } completionHandler:NULL];
