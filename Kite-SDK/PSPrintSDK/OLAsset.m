@@ -50,6 +50,8 @@ static NSString *const kKeyPHAssetLocalId = @"co.oceanlabs.pssdk.kKeyPHAssetLoca
 static NSString *const kKeyImageEdits = @"co.oceanlabs.pssdk.kKeyImageEdits";
 static NSString *const kKeyKiteAssetId = @"co.oceanlabs.pssdk.kKeyKiteAssetId";
 static NSString *const kKeyKitePreviewURL = @"co.oceanlabs.pssdk.kKeyKitePreviewURL";
+static NSString *const kKeyAssetUUID = @"co.oceanlabs.pssdk.kKeyAssetUUID";
+
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
@@ -703,6 +705,7 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeObject:self.edits forKey:kKeyImageEdits];
     [aCoder encodeObject:self.previewURL forKey:kKeyKitePreviewURL];
     [aCoder encodeObject:[NSNumber numberWithLongLong:self.assetId] forKey:kKeyKiteAssetId];
+    [aCoder encodeObject:self.uuid forKey:kKeyAssetUUID];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -724,6 +727,7 @@ static NSOperationQueue *imageOperationQueue;
         self.edits = [aDecoder decodeObjectForKey:kKeyImageEdits];
         self.assetId = [[aDecoder decodeObjectForKey:kKeyKiteAssetId] longLongValue];
         self.previewURL = [aDecoder decodeObjectForKey:kKeyKitePreviewURL];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyAssetUUID];
         
         NSString *localId = [aDecoder decodeObjectForKey:kKeyPHAssetLocalId];
         if (localId){

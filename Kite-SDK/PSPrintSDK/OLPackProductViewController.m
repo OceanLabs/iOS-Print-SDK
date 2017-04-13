@@ -591,6 +591,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         for (NSInteger j = 0; j < numberOfCopies; j++){
             [self.checkoutPhotos addObject:[OLUserSession currentSession].userSelectedPhotos[i]];
         }
+        [OLUserSession currentSession].userSelectedPhotos[i].extraCopies = 0;
     }
 }
 

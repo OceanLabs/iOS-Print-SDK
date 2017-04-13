@@ -1685,6 +1685,13 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [addedAssetsUUIDs addObject:asset.uuid];
             [userSelectedPhotos addObject:[asset copy]];
         }
+        else if (product.productTemplate.templateUI == OLTemplateUIRectagle || product.productTemplate.templateUI == OLTemplateUICircle){
+            for (OLAsset *existingAsset in userSelectedPhotos){
+                if ([asset.uuid isEqualToString:existingAsset.uuid]){
+                    existingAsset.extraCopies++;
+                }
+            }
+        }
     }
     
     [OLUserSession currentSession].userSelectedPhotos = userSelectedPhotos;
