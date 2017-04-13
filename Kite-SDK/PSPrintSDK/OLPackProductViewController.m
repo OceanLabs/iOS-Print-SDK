@@ -583,10 +583,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     [self doCheckout];
 }
 
-- (IBAction)onButtonImageClicked:(UIButton *)sender {
-    [self editPhoto:sender];
-}
-
 - (void)preparePhotosForCheckout{
     self.checkoutPhotos = [[NSMutableArray alloc] init];
     [self.checkoutPhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedPhotos];
