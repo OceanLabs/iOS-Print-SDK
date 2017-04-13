@@ -40,7 +40,6 @@
 @property (nonatomic, strong) OLProduct *product;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray *checkoutPhotos;
-@property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler;
 

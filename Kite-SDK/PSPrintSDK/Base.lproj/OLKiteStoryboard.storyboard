@@ -1812,7 +1812,7 @@
         <scene sceneID="dR2-z7-yB6">
             <objects>
                 <collectionViewController storyboardIdentifier="OrderReviewViewController" id="7wc-Kp-jtQ" customClass="OLPackProductViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="9ae-ur-Ndc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3625,13 +3625,13 @@ only Lorem Ipsum</string>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12 x Square Prints" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="po1-TW-Ojb">
-                                            <rect key="frame" x="10" y="2" width="332" height="21"/>
+                                            <rect key="frame" x="10" y="2" width="140" height="21"/>
                                             <fontDescription key="fontDescription" name="SourceSansPro-Regular" family="Source Sans Pro" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24 Sept 13" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3af-hV-T0Z">
-                                            <rect key="frame" x="12" y="20" width="275" height="21"/>
+                                            <rect key="frame" x="12" y="20" width="58.5" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="mMx-zr-JkI"/>
                                             </constraints>
@@ -3639,25 +3639,22 @@ only Lorem Ipsum</string>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="£9.99" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L9a-jp-Icp">
-                                            <rect key="frame" x="248" y="0.0" width="89" height="42"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="89" id="frI-Wn-fBT"/>
-                                            </constraints>
+                                            <rect key="frame" x="294" y="0.0" width="43" height="42"/>
                                             <fontDescription key="fontDescription" name="SourceSansPro-Regular" family="Source Sans Pro" pointSize="17"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="L9a-jp-Icp" firstAttribute="top" secondItem="1ae-P4-0o1" secondAttribute="top" id="50P-Tg-BRB"/>
-                                        <constraint firstItem="L9a-jp-Icp" firstAttribute="leading" secondItem="3af-hV-T0Z" secondAttribute="trailing" constant="-39" id="AWE-AU-GDj"/>
                                         <constraint firstAttribute="bottom" secondItem="L9a-jp-Icp" secondAttribute="bottom" constant="1.5" id="CUL-ie-4LX"/>
                                         <constraint firstItem="po1-TW-Ojb" firstAttribute="top" secondItem="1ae-P4-0o1" secondAttribute="topMargin" constant="-6" id="FBB-O0-VfB"/>
+                                        <constraint firstItem="L9a-jp-Icp" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3af-hV-T0Z" secondAttribute="trailing" id="FTF-G1-x8x"/>
                                         <constraint firstItem="3af-hV-T0Z" firstAttribute="leading" secondItem="1ae-P4-0o1" secondAttribute="leading" constant="12" id="bmy-Bh-TSr"/>
                                         <constraint firstAttribute="trailing" secondItem="L9a-jp-Icp" secondAttribute="trailing" constant="5" id="f9N-bM-ZxI"/>
                                         <constraint firstAttribute="bottom" secondItem="3af-hV-T0Z" secondAttribute="bottom" constant="2.5" id="kbO-Td-iSa"/>
                                         <constraint firstItem="3af-hV-T0Z" firstAttribute="top" secondItem="po1-TW-Ojb" secondAttribute="bottom" constant="-3" id="kfr-w2-3UO"/>
                                         <constraint firstItem="po1-TW-Ojb" firstAttribute="leading" secondItem="1ae-P4-0o1" secondAttribute="leading" constant="10" id="v4S-Gb-AA6"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="po1-TW-Ojb" secondAttribute="trailing" constant="-8" id="ybC-aM-T0m"/>
+                                        <constraint firstItem="L9a-jp-Icp" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="po1-TW-Ojb" secondAttribute="trailing" id="xvD-F0-Cfl"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>

@@ -106,6 +106,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     json[@"assets"] = assets;
     json[@"options"] = self.options;
     json[@"job_id"] = [self uuid];
+    json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
     
     return json;
 }

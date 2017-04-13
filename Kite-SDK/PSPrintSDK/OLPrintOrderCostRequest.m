@@ -81,9 +81,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 - (NSDictionary *)jsonFromOrder:(OLPrintOrder *)order {
     NSMutableArray *basket = [[NSMutableArray alloc] initWithCapacity:order.jobs.count];
     for (id<OLPrintJob> job in order.jobs){
-        for (NSInteger i = -1; i < job.extraCopies; i++) {
-            [basket addObject:[job jsonRepresentation]];
-        }
+        [basket addObject:[job jsonRepresentation]];
     }
 
     NSDictionary *dict = @{@"basket" : basket,
