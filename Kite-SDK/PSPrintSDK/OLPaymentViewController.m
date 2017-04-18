@@ -1249,7 +1249,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     if (self.printOrder.jobs.count == 0){
         return;
     }
-    if (![self checkForShippingAddress]){
+    if ((selectedPaymentMethod == kOLPaymentMethodPayPal || selectedPaymentMethod == kOLPaymentMethodCreditCard) && ![self checkForShippingAddress]){
         return;
     }
     
