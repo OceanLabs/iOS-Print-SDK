@@ -2404,7 +2404,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "mkdir -p ${PROJECT_DIR}/Unity-Plugin/KiteSDK/\ncp ${PROJECT_DIR}/docs/unity.md ${PROJECT_DIR}/Unity-Plugin/KiteSDK/README.md\nzip -r ${PROJECT_DIR}/Unity-Plugin/KiteSDK.zip ${PROJECT_DIR}/Unity-Plugin/KiteSDK";
+			shellScript = "mkdir -p ${PROJECT_DIR}/Unity-Plugin/KiteSDK/\ncp ${PROJECT_DIR}/docs/unity.md ${PROJECT_DIR}/Unity-Plugin/KiteSDK/README.md\nzip -r ${PROJECT_DIR}/Unity-Plugin/KiteSDK-Unity-Plugin.zip ${PROJECT_DIR}/Unity-Plugin/KiteSDK";
 		};
 		4725309EF80D2315EB50E573 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
