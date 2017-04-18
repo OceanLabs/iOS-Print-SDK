@@ -2,7 +2,7 @@
 
 ## Installation & Usage
 
- - Download the latest release of Kite SDK.
+ - Download the latest [release](https://github.com/OceanLabs/iOS-Print-SDK/releases/latest) of Kite SDK.
  - Unzip and place the KiteSDK directory in your Unity project under Assets/Plugins/iOS/
  - When you want to show the Kite Shop, call this method from your C# code:
  ```cs
