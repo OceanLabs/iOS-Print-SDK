@@ -460,6 +460,10 @@
 		2EB8FE861D95692000E26BDF /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2EB8FE881D95692000E26BDF /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
+		2EB9669A1EA62A0500AD6BBA /* KiteSDK.cs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB966971EA6172700AD6BBA /* KiteSDK.cs */; };
+		2EB9669B1EA62A0700AD6BBA /* KiteSDKLoader.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */; };
+		2EB9669C1EA62A0900AD6BBA /* KiteSDKLoader.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */; };
+		2EB9669D1EA62A3800AD6BBA /* KiteSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; };
 		2EBDF4CE1E434A0B004775BD /* OLKiteLocalizationResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */; };
 		2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */; };
 		2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */; };
@@ -536,6 +540,10 @@
 			dstPath = "${PROJECT_DIR}/Unity-Plugin/Assets/Plugins/iOS/KiteSDK";
 			dstSubfolderSpec = 0;
 			files = (
+				2EB9669D1EA62A3800AD6BBA /* KiteSDK.framework in CopyFiles */,
+				2EB9669A1EA62A0500AD6BBA /* KiteSDK.cs in CopyFiles */,
+				2EB9669B1EA62A0700AD6BBA /* KiteSDKLoader.h in CopyFiles */,
+				2EB9669C1EA62A0900AD6BBA /* KiteSDKLoader.m in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2396,7 +2404,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp ${PROJECT_DIR}/docs/unity.md ${PROJECT_DIR}/Unity-Plugin/Assets/Plugins/iOS/KiteSDK/README.md";
+			shellScript = "mkdir -p ${PROJECT_DIR}/Unity-Plugin/Assets/Plugins/iOS/KiteSDK/\ncp ${PROJECT_DIR}/docs/unity.md ${PROJECT_DIR}/Unity-Plugin/Assets/Plugins/iOS/KiteSDK/README.md";
 		};
 		4725309EF80D2315EB50E573 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
