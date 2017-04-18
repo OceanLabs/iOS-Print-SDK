@@ -7,6 +7,7 @@
 
 ### 6.5.3
 - Handle Print at Home delegate calls internally if OLKiteDelegate doesn’t handle them.
+- First release of the Unity plugin
 
 ### 6.5.2
 - Fixed: Xib file was not included in the resource bundle when installing via Cocoapods.
