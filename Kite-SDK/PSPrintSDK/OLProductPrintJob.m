@@ -196,7 +196,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
-    json[@"template_id"] = [OLProductTemplate templateWithId:self.templateId].identifier;
+    json[@"template_id"] = self.templateId;
     json[@"assets"] = assets;
     if (pdfs.count > 0){
         json[@"pdf"] = [pdfs firstObject];
@@ -258,6 +258,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     val = 40 * val + [self.address hash];
+    val = 41 * val + [self.uuid hash];
 
     return val;
 }

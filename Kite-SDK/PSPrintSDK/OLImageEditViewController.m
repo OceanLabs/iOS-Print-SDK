@@ -46,6 +46,8 @@
 #import "OLCustomPickerController.h"
 #import "OLTouchTolerantView.h"
 #import "OLAnalytics.h"
+#import "UIView+AutoLayoutHelper.h"
+#import "UIColor+OLHexString.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;
@@ -111,6 +113,14 @@ const NSInteger kOLEditTagCrop = 40;
 @end
 
 @implementation OLImageEditViewController
+
+- (OLProductTemplateOptionChoice *)selectedChoice{
+    if (!_selectedChoice && self.selectedOption && ![self.selectedOption.code isEqualToString:@"garment_size"]){
+        _selectedChoice = self.selectedOption.choices.firstObject;
+    }
+    
+    return _selectedChoice;
+}
 
 -(NSArray<NSString *> *) fonts{
     if (!_fonts){
@@ -231,6 +241,8 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self setupEditingToolsView];
     
     if (self.navigationController){
         [self.navigationBar removeFromSuperview];
@@ -379,6 +391,20 @@ const NSInteger kOLEditTagCrop = 40;
     [gestureView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.cropView action:@selector(pinchRecognized:)]];
     gestureView.userInteractionEnabled = NO;
 
+}
+
+- (void)setupEditingToolsView{
+    self.editingTools = [[OLEditingToolsView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:self.editingTools];
+    
+    [self.editingTools leadingFromSuperview:0 relation:NSLayoutRelationEqual];
+    [self.editingTools trailingToSuperview:0 relation:NSLayoutRelationEqual];
+    [self.editingTools bottomToSuperview:0 relation:NSLayoutRelationEqual];
+    [self.editingTools heightConstraint:45];
+    
+    [self.printContainerView verticalSpacingToView:self.editingTools constant:20 relation:NSLayoutRelationGreaterThanOrEqual];
+    
+    self.editingTools.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
 }
 
 - (void)setupProductRepresentation{
@@ -945,6 +971,8 @@ const NSInteger kOLEditTagCrop = 40;
     [UIView animateWithDuration:0.25 animations:^{
         self.editingTools.drawerView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished){
+        [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+        
         self.editingTools.collectionView.tag = -1;
         [self.editingTools.collectionView reloadData];
         [self.view bringSubviewToFront:self.editingTools];
@@ -1513,25 +1541,27 @@ const NSInteger kOLEditTagCrop = 40;
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"toolCell" forIndexPath:indexPath];
         [self setupToolCell:cell];
         
-        if (indexPath.item == 0){
+        NSInteger adjustedIndexPathItem = indexPath.item - ([self cropIsInImageEditingTools] ? 1 : 0);
+        
+        if (indexPath.item == 0 && [self cropIsInImageEditingTools]){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"crop"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Crop image")];
+        }
+        else if (adjustedIndexPathItem == 0){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"filters"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image filters")];
         }
-        else if (indexPath.item == 1){
+        else if (adjustedIndexPathItem == 1){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"flip"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Flip", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Horizontally flip image")];
         }
-        else if (indexPath.item == 2){
+        else if (adjustedIndexPathItem == 2){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"rotate"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Rotate", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Rotate image by 90 degrees")];
         }
-        else if (indexPath.item == 3){
+        else if (adjustedIndexPathItem == 3){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Tt"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Add Text", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Add text on image")];
-        }
-        else if (indexPath.item == 4){
-            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"crop"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Crop image")];
         }
     }
     else if (collectionView.tag == kOLEditTagTextColors || collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3){
@@ -1556,9 +1586,6 @@ const NSInteger kOLEditTagCrop = 40;
         
         if (collectionView.tag == kOLEditTagTextColors){
             [cell setSelected:[self.activeTextField.textColor isEqual:color]];
-        }
-        else if(collectionView.tag == OLProductTemplateOptionTypeColor1 && !self.selectedOption.choices[indexPath.item].productBackground){
-            [cell setSelected:[self.edits.borderColor isEqual:color]];
         }
         else{
             [cell setSelected:self.selectedOption.choices[indexPath.item] == self.selectedChoice];
@@ -1720,7 +1747,14 @@ const NSInteger kOLEditTagCrop = 40;
         
     }
     else if (collectionView.tag == kOLEditTagImageTools){
-        if (indexPath.item == 0){
+        NSInteger adjustedIndexPathItem = indexPath.item - ([self cropIsInImageEditingTools] ? 1 : 0);
+        if (indexPath.item == 0 && [self cropIsInImageEditingTools]){
+            [self onButtonCropClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
+#endif
+        }
+        else if (adjustedIndexPathItem == 0){
             if (!self.cropView.imageView.image){
                 return;
             }
@@ -1735,32 +1769,26 @@ const NSInteger kOLEditTagCrop = 40;
             [OLAnalytics trackEditScreenButtonTapped:@"Filters"];
 #endif
         }
-        else if (indexPath.item == 1){
+        else if (adjustedIndexPathItem == 1){
             [self onButtonHorizontalFlipClicked:nil];
 #ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Flip"];
 #endif
         }
-        else if (indexPath.item == 2){
+        else if (adjustedIndexPathItem == 2){
             [self onButtonRotateClicked:nil];
 #ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Rotate"];
 #endif
         }
-        else if (indexPath.item == 3){
+        else if (adjustedIndexPathItem == 3){
             [self onButtonAddTextClicked:nil];
 #ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Add Text"];
 #endif
         }
-        else if (indexPath.item == 4){
-            [self onButtonCropClicked:nil];
-#ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
-#endif
-        }
     }
-    else if ((collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3) && !self.selectedOption.choices[indexPath.item].productBackground){
+    else if ((collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3) && self.product.productTemplate.templateUI != OLTemplateUIApparel){
         self.printContainerView.backgroundColor = self.availableColors[indexPath.item];
         self.edits.borderColor = self.availableColors[indexPath.item];
         self.ctaButton.enabled = YES;
@@ -2230,10 +2258,6 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)loadImageFromAsset{
-    if (self.product.productTemplate.templateUI == OLTemplateUIApparel){
-        self.cropView.hidden = !self.asset;
-    }
-    
     self.cropView.imageView.image = nil;
     __weak OLImageEditViewController *welf = self;
     [self.asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){

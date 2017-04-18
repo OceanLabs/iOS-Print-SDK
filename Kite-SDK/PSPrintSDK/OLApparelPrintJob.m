@@ -89,7 +89,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *pdfs = [[NSMutableDictionary alloc] init];
     
-    json[@"template_id"] = [OLProductTemplate templateWithId:self.templateId].identifier;
+    json[@"template_id"] = self.templateId;
     
     NSMutableDictionary *assets = [[NSMutableDictionary alloc] init];
     for (NSString *key in [self.assets allKeys]){
@@ -146,6 +146,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         val = 39 * val + [self.options[key] hash] + [key hash];
     }
     val = 40 * val + [self.address hash];
+    val = 41 * val + [self.uuid hash];
     
     return val;
 }

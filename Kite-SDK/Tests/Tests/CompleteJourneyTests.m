@@ -433,7 +433,12 @@
 
 - (void)testCompleteApparelJourney{
     OLProductHomeViewController *productHomeVc = [self loadKiteViewController];
-    [self chooseClass:@"T-shirts" onOLProductHomeViewController:productHomeVc];
+    [self chooseClass:@"Apparel" onOLProductHomeViewController:productHomeVc];
+    
+    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
+    
+    [self chooseProduct:@"Gildan Adult Cotton T-Shirt" onOLProductTypeSelectionViewController:productTypeVc];
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     

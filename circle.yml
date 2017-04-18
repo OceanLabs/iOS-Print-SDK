@@ -6,8 +6,9 @@ machine:
 
 general:
   branches:
-    ignore:
-    - dev
+    only:
+    - master
+    - beta
   artifacts:
     - "~/image.png"
 
@@ -18,15 +19,3 @@ test:
     - set -o pipefail && xcodebuild -workspace 'Kite-SDK/KitePrintSDK.xcworkspace' -scheme 'Kite-CI-Deploy' clean build test -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=latest' CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= PROVISIONING_PROFILE= GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
   post:
     - bash <(curl -s https://codecov.io/bash)
-
-# deployment:
-#   beta_distribution:
-#     branch: beta
-#     commands:
-#       - gym --use_legacy_build_api -w Kite-SDK/KitePrintSDK.xcworkspace -s Kite-CI-Deploy
-#       - ipa distribute:crashlytics
-#           --crashlytics_path Kite-SDK/Crashlytics.framework
-#           --api_token    "$CRASHLYTICS_API_KEY"
-#           --build_secret "$CRASHLYTICS_SECRET"
-#           --groups "kite-testers"
-#           --notifications YES

@@ -59,6 +59,7 @@ static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 @property (assign, nonatomic, readonly) BOOL offerPayPal;
 @property (assign, nonatomic, readonly) BOOL skipProductOverview;
 @property (assign, nonatomic, readonly) BOOL disableProductCategories;
+@property (assign, nonatomic, readonly) BOOL progressiveTemplateLoading;
 @property (strong, nonatomic, readonly) NSString *qualityBannerType;
 @property (strong, nonatomic, readonly) NSString *checkoutScreenType;
 @property (strong, nonatomic, readonly) NSString *productTileStyle;

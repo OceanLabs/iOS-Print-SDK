@@ -47,7 +47,6 @@ static NSString *const kOLStagingEndpointSandbox = @"https://staging.kite.ly";
 static NSString *const kOLAPIEndpointVersion = @"v3.0";
 
 static BOOL useStripeForCreditCards = YES;
-static BOOL cacheTemplates = NO;
 static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
 static BOOL isKiosk = NO;
@@ -74,17 +73,6 @@ static NSString *instagramRedirectURI = nil;
 
 + (void)setUseStripeForCreditCards:(BOOL)use {
     useStripeForCreditCards = use;
-}
-
-+ (void)setCacheTemplates:(BOOL)cache{
-    if (!cache){
-        [OLProductTemplate deleteCachedTemplates];
-    }
-    cacheTemplates = cache;
-}
-
-+ (BOOL)cacheTemplates{
-    return cacheTemplates;
 }
 
 + (void)setUseStaging:(BOOL)staging{

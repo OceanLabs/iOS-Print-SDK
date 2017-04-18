@@ -120,7 +120,7 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
     }
     
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
-    json[@"template_id"] = [OLProductTemplate templateWithId:self.templateId].identifier;
+    json[@"template_id"] = self.templateId;
     json[@"assets"] = [[NSMutableDictionary alloc] init];
     if (self.frontCover.mimeType == kOLMimeTypePDF){
         json[@"assets"][@"cover_pdf"] = [NSString stringWithFormat:@"%lld", self.frontCover.assetId];
@@ -219,6 +219,7 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
     }
     
     val = 40 * val + [self.address hash];
+    val = 41 * val + [self.uuid hash];
     
     return val;
 }
