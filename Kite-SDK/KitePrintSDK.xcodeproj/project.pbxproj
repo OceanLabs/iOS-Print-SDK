@@ -18,6 +18,19 @@
 			name = Docs;
 			productName = Docs;
 		};
+		2EDB7BCC1E76D05D009B30F0 /* Unity-Plugin */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2EDB7BCF1E76D05D009B30F0 /* Build configuration list for PBXAggregateTarget "Unity-Plugin" */;
+			buildPhases = (
+				2EDB7BD21E76D07A009B30F0 /* CopyFiles */,
+				2EDB7BF51E76E476009B30F0 /* ShellScript */,
+			);
+			dependencies = (
+				2EDB7BDC1E76D48C009B30F0 /* PBXTargetDependency */,
+			);
+			name = "Unity-Plugin";
+			productName = "Unity-Plugin";
+		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
@@ -447,6 +460,10 @@
 		2EB8FE861D95692000E26BDF /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2EB8FE881D95692000E26BDF /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
+		2EB9669A1EA62A0500AD6BBA /* KiteSDK.cs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB966971EA6172700AD6BBA /* KiteSDK.cs */; };
+		2EB9669B1EA62A0700AD6BBA /* KiteSDKLoader.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */; };
+		2EB9669C1EA62A0900AD6BBA /* KiteSDKLoader.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */; };
+		2EB9669D1EA62A3800AD6BBA /* KiteSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; };
 		2EBDF4CE1E434A0B004775BD /* OLKiteLocalizationResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */; };
 		2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */; };
 		2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */; };
@@ -485,6 +502,13 @@
 			remoteGlobalIDString = 2E898C4C1CC518180041CCD8;
 			remoteInfo = "Kite-CI-Deploy";
 		};
+		2EDB7BDB1E76D48C009B30F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD73BF60186215790009DE03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E451DC71D9554B40080F1C1;
+			remoteInfo = KiteSDK;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -508,6 +532,19 @@
 				2E9A772E1DA6839600A50C4D /* KiteSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EDB7BD21E76D07A009B30F0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "${PROJECT_DIR}/Unity-Plugin/KiteSDK";
+			dstSubfolderSpec = 0;
+			files = (
+				2EB9669D1EA62A3800AD6BBA /* KiteSDK.framework in CopyFiles */,
+				2EB9669A1EA62A0500AD6BBA /* KiteSDK.cs in CopyFiles */,
+				2EB9669B1EA62A0700AD6BBA /* KiteSDKLoader.h in CopyFiles */,
+				2EB9669C1EA62A0900AD6BBA /* KiteSDKLoader.m in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -813,6 +850,9 @@
 		2EB715E01CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLPayPalCard+OLCardIcon.m"; sourceTree = "<group>"; };
 		2EB919931D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookPageBlankContentViewController.h; sourceTree = "<group>"; };
 		2EB919941D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPageBlankContentViewController.m; sourceTree = "<group>"; };
+		2EB966971EA6172700AD6BBA /* KiteSDK.cs */ = {isa = PBXFileReference; lastKnownFileType = text; name = KiteSDK.cs; path = Assets/Plugins/iOS/KiteSDK/KiteSDK.cs; sourceTree = "<group>"; };
+		2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KiteSDKLoader.h; path = Assets/Plugins/iOS/KiteSDK/KiteSDKLoader.h; sourceTree = "<group>"; };
+		2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = KiteSDKLoader.m; path = Assets/Plugins/iOS/KiteSDK/KiteSDKLoader.m; sourceTree = "<group>"; };
 		2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloader.h; sourceTree = "<group>"; };
 		2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloader.m; sourceTree = "<group>"; };
 		2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = OLKiteLocalizationResources.bundle; sourceTree = "<group>"; };
@@ -1529,6 +1569,23 @@
 			name = LXReorderableCollectionViewFlowLayout;
 			sourceTree = "<group>";
 		};
+		2EDB7BD31E76D10A009B30F0 /* Unity Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				2EB966971EA6172700AD6BBA /* KiteSDK.cs */,
+				2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */,
+				2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */,
+			);
+			name = "Unity Plugin";
+			sourceTree = "<group>";
+		};
+		2EDB7BE01E76E33B009B30F0 /* Docs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Docs;
+			sourceTree = "<group>";
+		};
 		2EFDD4211E3781E6001B4E83 /* UI Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1609,6 +1666,7 @@
 				CD73BF71186215790009DE03 /* Kite Print SDK */,
 				CD73BF90186215790009DE03 /* Tests */,
 				2E451DC91D9554B40080F1C1 /* Kite Framework */,
+				2EDB7BD31E76D10A009B30F0 /* Unity Plugin */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				01A3969341E0D10D83284FD0 /* Pods */,
@@ -1854,6 +1912,7 @@
 		E29C862E1BE3C4640041D4CF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2EDB7BE01E76E33B009B30F0 /* Docs */,
 				2E582DA41E714FDA00A6DF4E /* mug.scn */,
 				2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */,
 				2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */,
@@ -2181,6 +2240,11 @@
 							};
 						};
 					};
+					2EDB7BCC1E76D05D009B30F0 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = L78L4U72YJ;
+						ProvisioningStyle = Automatic;
+					};
 					CD73BF88186215790009DE03 = {
 						TestTargetID = 2E898C4C1CC518180041CCD8;
 					};
@@ -2203,6 +2267,7 @@
 				2E451DC71D9554B40080F1C1 /* KiteSDK */,
 				CD73BF88186215790009DE03 /* Tests */,
 				2E4CAF081BC25F0A0089FA26 /* Docs */,
+				2EDB7BCC1E76D05D009B30F0 /* Unity-Plugin */,
 			);
 		};
 /* End PBXProject section */
@@ -2327,6 +2392,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "./update-localization-files.sh";
+		};
+		2EDB7BF51E76E476009B30F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p ${PROJECT_DIR}/Unity-Plugin/KiteSDK/\ncp ${PROJECT_DIR}/docs/unity.md ${PROJECT_DIR}/Unity-Plugin/KiteSDK/README.md\nzip -r ${PROJECT_DIR}/Unity-Plugin/KiteSDK-Unity-Plugin.zip ${PROJECT_DIR}/Unity-Plugin/KiteSDK";
 		};
 		4725309EF80D2315EB50E573 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2665,6 +2743,11 @@
 			isa = PBXTargetDependency;
 			target = 2E898C4C1CC518180041CCD8 /* Kite-CI-Deploy */;
 			targetProxy = 2EAB0AEF1CDC833C00625BD6 /* PBXContainerItemProxy */;
+		};
+		2EDB7BDC1E76D48C009B30F0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2E451DC71D9554B40080F1C1 /* KiteSDK */;
+			targetProxy = 2EDB7BDB1E76D48C009B30F0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3159,6 +3242,24 @@
 			};
 			name = Release;
 		};
+		2EDB7BCD1E76D05D009B30F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+			};
+			name = Debug;
+		};
+		2EDB7BCE1E76D05D009B30F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+			};
+			name = Release;
+		};
 		CD73BF98186215790009DE03 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3316,6 +3417,15 @@
 			buildConfigurations = (
 				2EADD8631BE79D6D0051CD31 /* Debug */,
 				2EADD8641BE79D6D0051CD31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2EDB7BCF1E76D05D009B30F0 /* Build configuration list for PBXAggregateTarget "Unity-Plugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EDB7BCD1E76D05D009B30F0 /* Debug */,
+				2EDB7BCE1E76D05D009B30F0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

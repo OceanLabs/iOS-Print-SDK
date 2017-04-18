@@ -33,7 +33,7 @@ Step 3. Add Kite.framework to your embedded binaries
 -----------
 Under the General tab add `Kite.framework` to `Embedded Binaries`
 
-![Add Kite.framework toEmbedded Binaries ](add_framework.gif)
+![Add Kite.framework to Embedded Binaries ](add_framework.gif)
 
 Done
 -----------
