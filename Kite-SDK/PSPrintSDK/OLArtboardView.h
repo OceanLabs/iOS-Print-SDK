@@ -30,8 +30,13 @@
 #import <UIKit/UIKit.h>
 #import "OLArtboardAssetView.h"
 
+@protocol OLArtboardDelegate <NSObject>
+- (UIView *)viewForSelectedAsset;
+@end
+
 @interface OLArtboardView : UIImageView
+@property (weak, nonatomic) id<OLArtboardDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray<OLArtboardAssetView *> *assetViews;
 - (void)addAssetViewWithRelativeFrame:(CGRect)frame index:(NSUInteger)index;
-
+- (void)pickUpView:(OLArtboardAssetView *)assetView;
 @end

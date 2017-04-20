@@ -63,7 +63,7 @@ static const NSInteger kSectionPages = 1;
 + (NSString *) instagramClientID;
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate, OLInfoBannerDelegate>
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate, OLInfoBannerDelegate, OLArtboardDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL haveCachedCells;
@@ -355,22 +355,6 @@ static const NSInteger kSectionPages = 1;
 
 #pragma mark - Menu Actions
 
-- (void)deletePage{
-    if (self.longPressImageIndex == -1){
-        [[OLAsset userSelectedAssets] replaceObjectAtIndex:0 withObject:[[OLPlaceholderAsset alloc] init]];
-        [self.interactionPhotobook loadCoverPhoto];
-        return;
-    }
-    
-    if ([self.selectedIndexNumber integerValue] == self.longPressImageIndex){
-        [[self pageControllerForPageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
-        self.selectedIndexNumber = nil;
-    }
-
-    [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.longPressImageIndex withObject:[[OLPlaceholderAsset alloc] init]];
-    [[self pageControllerForPageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
-}
-
 - (void)editImage{
     OLAsset *cropPhoto;
     UIImageView *imageView;
@@ -429,153 +413,15 @@ static const NSInteger kSectionPages = 1;
         }
     }
     
-    OLPhotobookPageContentViewController *page = [self pageControllerForPageIndex:tappedImageIndex];
     if (self.selectedIndexNumber && [self.selectedIndexNumber integerValue] == tappedImageIndex){ //deselect
-        [[self pageControllerForPageIndex:[self.selectedIndexNumber integerValue]] unhighlightImageAtIndex:tappedImageIndex];
-        self.selectedIndexNumber = nil;
         self.animating = NO;
         [self photobook:photobook userDidLongPressOnImageWithIndex:tappedImageIndex sender:nil];
-    }
-    else if (self.selectedIndexNumber){ //swap
-        OLPhotobookPageContentViewController *selectedPage = [self pageControllerForPageIndex:[self.selectedIndexNumber integerValue]];
-        OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:tappedImageIndex];
-        
-        [page unhighlightImageAtIndex:tappedImageIndex];
-        [selectedPage unhighlightImageAtIndex:[self.selectedIndexNumber integerValue]];
-        
-        UIView *pageCopy = [page.artboardView.assetViews.firstObject snapshotViewAfterScreenUpdates:YES];
-        pageCopy.frame = [self.view convertRect:page.artboardView.assetViews.firstObject.frame fromView:page.view];
-        [page clearImage];
-        
-        
-        if (selectedPage){ //Previously selected page is in view
-            [self addPageShadowsToView:pageCopy];
-            [self setPageShadowAlpha:pageCopy forIndex:page.pageIndex];
-            [self.view addSubview:pageCopy];
-            OLPhotobookViewController *selectedPhotobook = (OLPhotobookViewController *)selectedPage.parentViewController.parentViewController;
-            UIView *selectedPageCopy = [selectedPage.artboardView.assetViews.firstObject snapshotViewAfterScreenUpdates:YES];
-            [selectedPage clearImage];
-            selectedPageCopy.frame = [self.view convertRect:selectedPage.artboardView.assetViews.firstObject.frame fromView:selectedPage.view];
-            [self addPageShadowsToView:selectedPageCopy];
-            [self setPageShadowAlpha:selectedPageCopy forIndex:selectedPage.pageIndex];
-            
-            [self.view addSubview:selectedPageCopy];
-            
-            CGRect tempFrame = pageCopy.frame;
-            if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
-                [pageCopy removeFromSuperview];
-            }
-            [UIView animateWithDuration:0.05 animations:^{
-                photobook.pagesLabel.superview.alpha = 0;
-                selectedPhotobook.pagesLabel.superview.alpha = 0;
-            }];
-            [UIView animateWithDuration:0.5 animations:^{
-                [self setPageShadowAlpha:selectedPageCopy forIndex:page.pageIndex];
-                
-                if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
-                    [self setPageShadowAlpha:pageCopy forIndex:selectedPage.pageIndex];
-                    pageCopy.frame = selectedPageCopy.frame;
-                }
-                selectedPageCopy.frame = tempFrame;
-            } completion:^(BOOL finished){
-                [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:tappedImageIndex];
-                self.selectedIndexNumber = nil;
-                
-                [page loadImageWithCompletionHandler:^{
-                    [selectedPage loadImageWithCompletionHandler:^{
-                        [pageCopy removeFromSuperview];
-                        [selectedPageCopy removeFromSuperview];
-                        self.animating = NO;
-                        [UIView animateWithDuration:0.5 animations:^{
-                            photobook.pagesLabel.superview.alpha = 1;
-                            selectedPhotobook.pagesLabel.superview.alpha = 1;
-                        }];
-                    }];
-                }];
-            }];
-        }
-        else{ //Previously selected image is not in view. Only pretend to swap.
-            [self.view addSubview:pageCopy];
-            if ([[[OLAsset userSelectedAssets] objectAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
-                [pageCopy viewWithTag:12].alpha = 0;
-                [pageCopy viewWithTag:22].alpha = 0;
-            }
-            
-            [self swapImageAtIndex:[self.selectedIndexNumber integerValue] withImageAtIndex:tappedImageIndex];
-            
-            CGFloat x = 0;
-            if (page.pageIndex % 2 == 0 && [self.selectedIndexNumber integerValue] % 2 == 1){
-                x += self.view.frame.size.width / 2.0;
-            }
-            if (page.pageIndex % 2 == 1 && [self.selectedIndexNumber integerValue] % 2 == 0){
-                x -= self.view.frame.size.width / 2.0;
-            }
-            
-            [UIView animateWithDuration:0.05 animations:^{
-                photobook.pagesLabel.superview.alpha = 0;
-            }];
-            
-            page.artboardView.assetViews.firstObject.transform = CGAffineTransformMakeTranslation(-1000000, 0);
-            page.pageShadowLeft2.alpha = 0;
-            page.pageShadowRight2.alpha = 0;
-            [page loadImageWithCompletionHandler:^{
-                UIView *selectedPageCopy = [page.artboardView.assetViews.firstObject snapshotViewAfterScreenUpdates:YES];
-                page.artboardView.assetViews.firstObject.hidden = YES;
-                page.pageShadowLeft2.hidden = YES;
-                page.pageShadowRight2.hidden = YES;
-                page.artboardView.assetViews.firstObject.transform = CGAffineTransformIdentity;
-                selectedPageCopy.frame = [self.view convertRect:page.artboardView.assetViews.firstObject.frame fromView:page.view];
-                selectedPageCopy.transform = CGAffineTransformMakeTranslation(x, [self.selectedIndexNumber integerValue] < page.pageIndex ? -1000 : 1000);
-                
-                [self addPageShadowsToView:selectedPageCopy];
-                [self setPageShadowAlpha:selectedPageCopy forIndex:selectedPage.pageIndex];
-                [self.view addSubview:selectedPageCopy];
-                
-                [UIView animateWithDuration:0.5 animations:^{
-                    [self setPageShadowAlpha:selectedPageCopy forIndex:page.pageIndex];
-                    
-                    if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
-                        pageCopy.transform = selectedPageCopy.transform;
-                    }
-                    selectedPageCopy.transform = CGAffineTransformIdentity;
-                }completion:^(BOOL finished){
-                    self.animating = NO;
-                    page.artboardView.assetViews.firstObject.hidden = NO;
-                    [selectedPageCopy removeFromSuperview];
-                    [pageCopy removeFromSuperview];
-                    self.selectedIndexNumber = nil;
-                    
-                    if (![[[OLAsset userSelectedAssets] objectAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){
-                        if (tappedImageIndex % 2 == 0){
-                            page.pageShadowLeft2.hidden = NO;
-                            page.pageShadowLeft2.alpha = 1;
-                        }
-                        else{
-                            page.pageShadowRight2.hidden = NO;
-                            page.pageShadowRight2.alpha = 1;
-                        }
-                    }
-                    [UIView animateWithDuration:0.5 animations:^{
-                        photobook.pagesLabel.superview.alpha = 1;
-                    }];
-                }];
-            }];
-        }
-        
-        
     }
     else if ([[[OLAsset userSelectedAssets] objectAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){ //pick new images
         self.addNewPhotosAtIndex = tappedImageIndex;
         [self showImagePicker];
         self.animating = NO;
     }
-    else{ //select
-        [self.infoBanner dismiss];
-        self.selectedIndexNumber = [NSNumber numberWithInteger:tappedImageIndex];
-        [page highlightImageAtIndex:tappedImageIndex];
-        self.animating = NO;
-    }
-    
 }
 
 - (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
@@ -602,18 +448,18 @@ static const NSInteger kSectionPages = 1;
     }
     [view becomeFirstResponder];
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    UIMenuItem *deleteItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Remove", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Remove/clear an image") action:@selector(deletePage)];
-    [items addObject:deleteItem];
     
     if (![OLUserSession currentSession].kiteVc.disableEditingTools){
         UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") action:@selector(editImage)];
         [items addObject:cropImageItem];
     }
     
-    UIMenuController *mc = [UIMenuController sharedMenuController];
-    [mc setMenuItems:items];
-    [mc setTargetRect:view.frame inView:view];
-    [mc setMenuVisible:YES animated:YES];
+    if (items.count > 0){
+        UIMenuController *mc = [UIMenuController sharedMenuController];
+        [mc setMenuItems:items];
+        [mc setTargetRect:view.frame inView:view];
+        [mc setMenuVisible:YES animated:YES];
+    }
 }
 
 #pragma mark - CollectionView
@@ -632,20 +478,13 @@ static const NSInteger kSectionPages = 1;
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if (!photobook.view.superview){
                 photobook.editingPageNumber = [NSNumber numberWithInteger:indexPath.item * 2];
-                for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
-                    if (self.selectedIndexNumber && page.pageIndex == [self.selectedIndexNumber integerValue]){
-                        [page highlightImageAtIndex:[self.selectedIndexNumber integerValue]];
-                    }
-                    else{
-                        [page unhighlightImageAtIndex:page.pageIndex];
-                    }
-                }
                 [cell addSubview:photobook.view];
                 [[cell viewWithTag:999] removeFromSuperview];
                 return cell;
             }
         }
         OLPhotobookViewController *photobook = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotobookViewController"];
+        photobook.photobookDelegate = self;
         if (indexPath.section == kSectionPages){
             photobook.startOpen = YES;
         }
@@ -670,21 +509,11 @@ static const NSInteger kSectionPages = 1;
         CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
         photobook.view.frame = CGRectMake(0, 0, size.width, size.height);
         photobook.view.tag = 10;
-        
-        photobook.photobookDelegate = self;
     }
     else{
         for (OLPhotobookViewController *photobook in self.childViewControllers){
             if (photobook.view == view){
                 photobook.editingPageNumber = [NSNumber numberWithInteger:indexPath.item * 2];
-                for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
-                    if (self.selectedIndexNumber && page.pageIndex == [self.selectedIndexNumber integerValue]){
-                        [page highlightImageAtIndex:[self.selectedIndexNumber integerValue]];
-                    }
-                    else{
-                        [page unhighlightImageAtIndex:page.pageIndex];
-                    }
-                }
                 break;
             }
         }
@@ -843,6 +672,12 @@ static const NSInteger kSectionPages = 1;
     self.vcDelegateForCustomVc = nil;
     self.presentedVc = nil;
     
+}
+
+#pragma mark Artboard Delegate
+
+- (UIView *)viewForSelectedAsset{
+    return self.view;
 }
 
 @end

@@ -50,7 +50,8 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-        
+    
+    self.artboardView.delegate = self.delegate;
     [self setupImageViews];
 }
 
@@ -94,20 +95,6 @@
 
 - (NSInteger)imageIndexForPoint:(CGPoint)p{
     return self.pageIndex;
-}
-
-- (void)unhighlightImageAtIndex:(NSInteger)index{
-    UIView *selectedView = self.artboardView.assetViews.firstObject;
-    
-    selectedView.layer.borderColor = [UIColor clearColor].CGColor;
-    selectedView.layer.borderWidth = 0;
-}
-
-- (void)highlightImageAtIndex:(NSInteger)index{
-    UIView *selectedView = self.artboardView.assetViews.firstObject;
-    
-    selectedView.layer.borderColor = self.view.tintColor.CGColor;
-    selectedView.layer.borderWidth = 3.0;
 }
 
 - (void)clearImage{

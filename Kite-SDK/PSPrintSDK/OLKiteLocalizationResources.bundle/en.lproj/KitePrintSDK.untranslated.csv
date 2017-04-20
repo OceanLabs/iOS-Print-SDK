@@ -164,7 +164,6 @@ Promotional Discount,Promotional Discount,
 Quantity,Quantity,/* Quantity of photos */
 Receipt,Receipt,
 Recents,Recents,/* Recent photos used */
-Remove,Remove,/* Remove/clear an image */
 Remove?,Remove?,/* Remove [photo]? */
 Required by the postal service in case there are any issues during delivery.,Required by the postal service in case there are any issues during delivery.,
 Retry,Retry,

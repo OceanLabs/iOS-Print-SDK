@@ -30,7 +30,9 @@
 #import "UIView+AutoLayoutHelper.h"
 #import "OLAsset.h"
 
-@interface OLArtboardView ()
+@interface OLArtboardView () <UIGestureRecognizerDelegate>
+@property (strong, nonatomic) UIView *pickedUpView;
+@property (weak, nonatomic) OLArtboardAssetView *sourceAssetView;
 @end
 
 @implementation OLArtboardView
@@ -76,6 +78,72 @@
     
     view.index = index;
     view.relativeFrame = frame;
+    
+    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+    [view addGestureRecognizer:longPressGesture];
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    panGesture.delegate = self;
+    [view addGestureRecognizer:panGesture];
+}
+
+- (void)pickUpView:(OLArtboardAssetView *)assetView{
+    self.pickedUpView = [[UIView alloc] init];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:assetView.imageView.image];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.clipsToBounds = YES;
+    UIView *viewForSelectedAsset = [self.delegate viewForSelectedAsset];
+    if (!viewForSelectedAsset){
+        return;
+    }
+    
+    [self.pickedUpView addSubview:imageView];
+    [viewForSelectedAsset addSubview:self.pickedUpView];
+    self.pickedUpView.frame = [self convertRect:assetView.frame toView:viewForSelectedAsset];
+    imageView.frame = CGRectMake(0, 0, self.pickedUpView.frame.size.width, self.pickedUpView.frame.size.height);
+    
+    [UIView animateWithDuration:0.15 animations:^{
+        self.pickedUpView.transform = CGAffineTransformMakeScale(1.1, 1.1);
+        self.pickedUpView.layer.shadowRadius = 10;
+        self.pickedUpView.layer.shadowOpacity = 0.5;
+    }];
+    
+}
+
+- (void)dropView:(UIView *)viewDropped onView:(OLArtboardAssetView *)view{
+    [UIView animateWithDuration:0.15 animations:^{
+        self.pickedUpView.transform = CGAffineTransformIdentity;
+        self.pickedUpView.layer.shadowRadius = 0;
+        self.pickedUpView.layer.shadowOpacity = 0.0;
+        self.pickedUpView.frame = [self convertRect:view.frame toView:[self.delegate viewForSelectedAsset]];
+    } completion:^(BOOL finished){
+        [self.pickedUpView removeFromSuperview];
+    }];
+}
+
+- (void)handleLongPressGesture:(UILongPressGestureRecognizer *)sender{
+    if (sender.state == UIGestureRecognizerStateBegan){
+        [self pickUpView:(OLArtboardAssetView *)sender.view];
+    }
+    else if(sender.state == UIGestureRecognizerStateEnded){
+        [self dropView:self.pickedUpView onView:self.sourceAssetView];
+    }
+}
+
+- (void)handlePanGesture:(UIPanGestureRecognizer *)sender{
+    if(sender.state == UIGestureRecognizerStateChanged){
+        UIView *viewForSelectedAsset = [self.delegate viewForSelectedAsset];
+        if (!viewForSelectedAsset){
+            return;
+        }
+        CGPoint translation = [sender translationInView:viewForSelectedAsset];
+        self.pickedUpView.transform = CGAffineTransformScale(CGAffineTransformMakeTranslation(translation.x, translation.y), 1.1, 1.1);
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer{
+    return otherGestureRecognizer.view == gestureRecognizer.view && [otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]];
 }
 
 @end

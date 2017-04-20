@@ -96,7 +96,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate,UIGestureRecognizerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate, UINavigationControllerDelegate, OLUpsellViewControllerDelegate, OLImagePickerViewControllerDelegate>
+@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate,UIGestureRecognizerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate, UINavigationControllerDelegate, OLUpsellViewControllerDelegate, OLImagePickerViewControllerDelegate, OLArtboardDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL bookClosed;
@@ -566,10 +566,12 @@ static const CGFloat kBookEdgePadding = 38;
     OLPhotobookPageContentViewController *vc;
     
     if (self.product.productTemplate.productRepresentation.pages[index].numberOfPhotos == 0){
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageBlankContentViewController"];        vc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
+        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageBlankContentViewController"];
+        vc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
     }
     else{
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
+        vc.delegate = self;
     }
     vc.pageIndex = index;
     vc.product = self.product;
@@ -1497,6 +1499,16 @@ static const CGFloat kBookEdgePadding = 38;
     
     self.vcDelegateForCustomVc = nil;
     self.presentedVc = nil;
+}
+
+#pragma mark Artboard delegate
+
+- (UIView *)viewForSelectedAsset{
+    if (self.editMode){
+        return [(id<OLArtboardDelegate>)self.photobookDelegate viewForSelectedAsset];
+    }
+
+    return self.view;
 }
 
 @end
