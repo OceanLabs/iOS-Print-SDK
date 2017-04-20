@@ -77,7 +77,6 @@ static const NSInteger kSectionPages = 1;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
-@property (weak, nonatomic) OLArtboardAssetView *targetedAssetView;
 
 @end
 
@@ -694,13 +693,6 @@ static const NSInteger kSectionPages = 1;
     }
 
     return nil;
-}
-
-- (void)didTargetAssetView:(OLArtboardAssetView *)assetView{
-    if (self.targetedAssetView && self.targetedAssetView != assetView){
-        self.targetedAssetView.targeted = NO;
-    }
-    self.targetedAssetView = assetView;
 }
 
 @end

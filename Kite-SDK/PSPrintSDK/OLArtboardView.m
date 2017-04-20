@@ -33,6 +33,7 @@
 @interface OLArtboardView () <UIGestureRecognizerDelegate>
 @property (strong, nonatomic) UIView *draggingView;
 @property (weak, nonatomic) OLArtboardAssetView *sourceAssetView;
+@property (weak, nonatomic) OLArtboardAssetView *targetAssetView;
 @end
 
 @implementation OLArtboardView
@@ -51,6 +52,13 @@
     }
     
     return _assetViews;
+}
+
+- (void)setTargetAssetView:(OLArtboardAssetView *)targetAssetView{
+    if (_targetAssetView && _targetAssetView != targetAssetView){
+        _targetAssetView.targeted = NO;
+    }
+    _targetAssetView = targetAssetView;
 }
 
 - (instancetype)init{
@@ -145,7 +153,7 @@
         OLArtboardAssetView *targetView = [self.delegate assetViewAtPoint:CGPointMake(self.draggingView.frame.origin.x + self.draggingView.frame.size.width/2.0, self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0)];
         if (targetView && !targetView.targeted){
             [targetView setTargeted:YES];
-            [self.delegate didTargetAssetView:targetView];
+            self.targetAssetView = targetView;
         }
     }
 }
