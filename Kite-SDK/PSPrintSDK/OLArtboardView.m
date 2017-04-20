@@ -28,12 +28,14 @@
 //
 #import "OLArtboardView.h"
 #import "UIView+AutoLayoutHelper.h"
-#import "OLAsset.h"
+#import "OLAsset+Private.h"
 
 @interface OLArtboardView () <UIGestureRecognizerDelegate>
 @property (strong, nonatomic) UIView *draggingView;
 @property (weak, nonatomic) OLArtboardAssetView *sourceAssetView;
 @property (weak, nonatomic) OLArtboardAssetView *targetAssetView;
+@property (assign, nonatomic) CGRect sourceAssetViewRect;
+@property (assign, nonatomic) NSUInteger sourceAssetIndex;
 @end
 
 @implementation OLArtboardView
@@ -59,6 +61,12 @@
         _targetAssetView.targeted = NO;
     }
     _targetAssetView = targetAssetView;
+}
+
+- (void)setSourceAssetView:(OLArtboardAssetView *)sourceAssetView{
+    _sourceAssetView = sourceAssetView;
+    self.sourceAssetViewRect = [[self.delegate viewToAddDraggingAsset] convertRect:sourceAssetView.frame fromView:sourceAssetView.superview];
+    self.sourceAssetIndex = sourceAssetView.index;
 }
 
 - (instancetype)init{
@@ -96,6 +104,7 @@
 }
 
 - (void)pickUpView:(OLArtboardAssetView *)assetView{
+    self.sourceAssetView = assetView;
     self.draggingView = [[UIView alloc] init];
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:assetView.imageView.image];
@@ -115,18 +124,41 @@
         self.draggingView.transform = CGAffineTransformMakeScale(1.1, 1.1);
         self.draggingView.layer.shadowRadius = 10;
         self.draggingView.layer.shadowOpacity = 0.5;
+    } completion:^(BOOL finished){
+        assetView.image = nil;
     }];
     
 }
 
-- (void)dropView:(UIView *)viewDropped onView:(OLArtboardAssetView *)view{
-    [UIView animateWithDuration:0.15 animations:^{
+- (void)dropView:(UIView *)viewDropped onView:(OLArtboardAssetView *)targetView{
+    UIImageView *swappingView;
+    if (targetView != self.sourceAssetView){
+        swappingView = [[UIImageView alloc] initWithImage:targetView.imageView.image];
+        swappingView.contentMode = UIViewContentModeScaleAspectFill;
+        swappingView.clipsToBounds = YES;
+        UIView *viewToAddDraggingAsset = [self.delegate viewToAddDraggingAsset];
+        [viewToAddDraggingAsset insertSubview:swappingView belowSubview:self.draggingView];
+        swappingView.frame = [viewToAddDraggingAsset convertRect:targetView.frame fromView:targetView.superview];
+    }
+    
+    [UIView animateWithDuration:0.25 animations:^{
         self.draggingView.transform = CGAffineTransformIdentity;
         self.draggingView.layer.shadowRadius = 0;
         self.draggingView.layer.shadowOpacity = 0.0;
-        self.draggingView.frame = [self convertRect:view.frame toView:[self.delegate viewToAddDraggingAsset]];
+        self.draggingView.frame = [[self.delegate viewToAddDraggingAsset] convertRect:targetView.frame fromView:targetView.superview];
+        
+        swappingView.frame = self.sourceAssetViewRect;
     } completion:^(BOOL finished){
+        if (self.sourceAssetIndex == self.sourceAssetView.index){
+            self.sourceAssetView.image = swappingView.image;
+        }
+        self.targetAssetView.image = [self.draggingView.subviews.firstObject image];
+        self.targetAssetView = nil;
+        
+        [[OLAsset userSelectedAssets] exchangeObjectAtIndex:self.sourceAssetIndex withObjectAtIndex:targetView.index];
+        
         [self.draggingView removeFromSuperview];
+        [swappingView removeFromSuperview];
     }];
 }
 
@@ -137,7 +169,11 @@
         [self pickUpView:assetView];
     }
     else if(sender.state == UIGestureRecognizerStateEnded){
-        [self dropView:self.draggingView onView:self.sourceAssetView];
+        OLArtboardAssetView *target = self.targetAssetView;
+        if (!target){
+            target = self.sourceAssetView;
+        }
+        [self dropView:self.draggingView onView:target];
     }
 }
 
