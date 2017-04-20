@@ -31,7 +31,7 @@
 #import "OLArtboardAssetView.h"
 
 @protocol OLArtboardDelegate <NSObject>
-- (UIView *)viewToAddPickedUpAsset;
+- (UIView *)viewToAddDraggingAsset;
 - (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
 @end
 

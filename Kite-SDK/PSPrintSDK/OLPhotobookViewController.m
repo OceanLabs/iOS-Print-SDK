@@ -1503,9 +1503,9 @@ static const CGFloat kBookEdgePadding = 38;
 
 #pragma mark Artboard delegate
 
-- (UIView *)viewToAddPickedUpAsset{
+- (UIView *)viewToAddDraggingAsset{
     if (self.editMode){
-        return [(id<OLArtboardDelegate>)self.photobookDelegate viewToAddPickedUpAsset];
+        return [(id<OLArtboardDelegate>)self.photobookDelegate viewToAddDraggingAsset];
     }
 
     return self.view;
@@ -1517,7 +1517,7 @@ static const CGFloat kBookEdgePadding = 38;
     if (!self.bookClosed){
         for (OLPhotobookPageContentViewController *vc in self.pageController.viewControllers){
             for (OLArtboardAssetView *assetView in vc.artboardView.assetViews){
-                if (!assetView.pickedUp && CGRectContainsPoint(assetView.frame, [assetView convertPoint:point fromView:[self viewToAddPickedUpAsset]])){
+                if (!assetView.dragging && CGRectContainsPoint(assetView.frame, [assetView convertPoint:point fromView:[self viewToAddDraggingAsset]])){
                     return assetView;
                 }
             }

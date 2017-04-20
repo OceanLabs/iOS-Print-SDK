@@ -31,7 +31,7 @@
 #import "OLAsset.h"
 
 @interface OLArtboardView () <UIGestureRecognizerDelegate>
-@property (strong, nonatomic) UIView *pickedUpView;
+@property (strong, nonatomic) UIView *draggingView;
 @property (weak, nonatomic) OLArtboardAssetView *sourceAssetView;
 @end
 
@@ -88,61 +88,61 @@
 }
 
 - (void)pickUpView:(OLArtboardAssetView *)assetView{
-    self.pickedUpView = [[UIView alloc] init];
+    self.draggingView = [[UIView alloc] init];
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:assetView.imageView.image];
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.clipsToBounds = YES;
-    UIView *viewToAddPickedUpAsset = [self.delegate viewToAddPickedUpAsset];
-    if (!viewToAddPickedUpAsset){
+    UIView *viewToAddDraggingAsset = [self.delegate viewToAddDraggingAsset];
+    if (!viewToAddDraggingAsset){
         return;
     }
     
-    [self.pickedUpView addSubview:imageView];
-    [viewToAddPickedUpAsset addSubview:self.pickedUpView];
-    self.pickedUpView.frame = [self convertRect:assetView.frame toView:viewToAddPickedUpAsset];
-    imageView.frame = CGRectMake(0, 0, self.pickedUpView.frame.size.width, self.pickedUpView.frame.size.height);
+    [self.draggingView addSubview:imageView];
+    [viewToAddDraggingAsset addSubview:self.draggingView];
+    self.draggingView.frame = [self convertRect:assetView.frame toView:viewToAddDraggingAsset];
+    imageView.frame = CGRectMake(0, 0, self.draggingView.frame.size.width, self.draggingView.frame.size.height);
     
     [UIView animateWithDuration:0.15 animations:^{
-        self.pickedUpView.transform = CGAffineTransformMakeScale(1.1, 1.1);
-        self.pickedUpView.layer.shadowRadius = 10;
-        self.pickedUpView.layer.shadowOpacity = 0.5;
+        self.draggingView.transform = CGAffineTransformMakeScale(1.1, 1.1);
+        self.draggingView.layer.shadowRadius = 10;
+        self.draggingView.layer.shadowOpacity = 0.5;
     }];
     
 }
 
 - (void)dropView:(UIView *)viewDropped onView:(OLArtboardAssetView *)view{
     [UIView animateWithDuration:0.15 animations:^{
-        self.pickedUpView.transform = CGAffineTransformIdentity;
-        self.pickedUpView.layer.shadowRadius = 0;
-        self.pickedUpView.layer.shadowOpacity = 0.0;
-        self.pickedUpView.frame = [self convertRect:view.frame toView:[self.delegate viewToAddPickedUpAsset]];
+        self.draggingView.transform = CGAffineTransformIdentity;
+        self.draggingView.layer.shadowRadius = 0;
+        self.draggingView.layer.shadowOpacity = 0.0;
+        self.draggingView.frame = [self convertRect:view.frame toView:[self.delegate viewToAddDraggingAsset]];
     } completion:^(BOOL finished){
-        [self.pickedUpView removeFromSuperview];
+        [self.draggingView removeFromSuperview];
     }];
 }
 
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)sender{
     if (sender.state == UIGestureRecognizerStateBegan){
         OLArtboardAssetView *assetView = (OLArtboardAssetView *)sender.view;
-        assetView.pickedUp = YES;
+        assetView.dragging = YES;
         [self pickUpView:assetView];
     }
     else if(sender.state == UIGestureRecognizerStateEnded){
-        [self dropView:self.pickedUpView onView:self.sourceAssetView];
+        [self dropView:self.draggingView onView:self.sourceAssetView];
     }
 }
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)sender{
     if(sender.state == UIGestureRecognizerStateChanged){
-        UIView *viewToAddPickedUpAsset = [self.delegate viewToAddPickedUpAsset];
-        if (!viewToAddPickedUpAsset){
+        UIView *viewToAddDraggingAsset = [self.delegate viewToAddDraggingAsset];
+        if (!viewToAddDraggingAsset){
             return;
         }
-        CGPoint translation = [sender translationInView:viewToAddPickedUpAsset];
-        self.pickedUpView.transform = CGAffineTransformScale(CGAffineTransformMakeTranslation(translation.x, translation.y), 1.1, 1.1);
+        CGPoint translation = [sender translationInView:viewToAddDraggingAsset];
+        self.draggingView.transform = CGAffineTransformScale(CGAffineTransformMakeTranslation(translation.x, translation.y), 1.1, 1.1);
         
-        OLArtboardAssetView *targetView = [self.delegate assetViewAtPoint:CGPointMake(self.pickedUpView.frame.origin.x + self.pickedUpView.frame.size.width/2.0, self.pickedUpView.frame.origin.y + self.pickedUpView.frame.size.height/2.0)];
+        OLArtboardAssetView *targetView = [self.delegate assetViewAtPoint:CGPointMake(self.draggingView.frame.origin.x + self.draggingView.frame.size.width/2.0, self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0)];
         if (targetView){
             [targetView addTargetOverlay];
             NSLog(@"%@", targetView);
