@@ -676,7 +676,7 @@ static const NSInteger kSectionPages = 1;
 
 #pragma mark Artboard Delegate
 
-- (UIView *)viewForSelectedAsset{
+- (UIView *)viewToAddPickedUpAsset{
     return self.view;
 }
 

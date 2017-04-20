@@ -31,7 +31,7 @@
 #import "OLArtboardAssetView.h"
 
 @protocol OLArtboardDelegate <NSObject>
-- (UIView *)viewForSelectedAsset;
+- (UIView *)viewToAddPickedUpAsset;
 @end
 
 @interface OLArtboardView : UIImageView

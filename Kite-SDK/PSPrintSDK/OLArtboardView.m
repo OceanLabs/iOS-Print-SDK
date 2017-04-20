@@ -93,14 +93,14 @@
     UIImageView *imageView = [[UIImageView alloc] initWithImage:assetView.imageView.image];
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.clipsToBounds = YES;
-    UIView *viewForSelectedAsset = [self.delegate viewForSelectedAsset];
-    if (!viewForSelectedAsset){
+    UIView *viewToAddPickedUpAsset = [self.delegate viewToAddPickedUpAsset];
+    if (!viewToAddPickedUpAsset){
         return;
     }
     
     [self.pickedUpView addSubview:imageView];
-    [viewForSelectedAsset addSubview:self.pickedUpView];
-    self.pickedUpView.frame = [self convertRect:assetView.frame toView:viewForSelectedAsset];
+    [viewToAddPickedUpAsset addSubview:self.pickedUpView];
+    self.pickedUpView.frame = [self convertRect:assetView.frame toView:viewToAddPickedUpAsset];
     imageView.frame = CGRectMake(0, 0, self.pickedUpView.frame.size.width, self.pickedUpView.frame.size.height);
     
     [UIView animateWithDuration:0.15 animations:^{
@@ -116,7 +116,7 @@
         self.pickedUpView.transform = CGAffineTransformIdentity;
         self.pickedUpView.layer.shadowRadius = 0;
         self.pickedUpView.layer.shadowOpacity = 0.0;
-        self.pickedUpView.frame = [self convertRect:view.frame toView:[self.delegate viewForSelectedAsset]];
+        self.pickedUpView.frame = [self convertRect:view.frame toView:[self.delegate viewToAddPickedUpAsset]];
     } completion:^(BOOL finished){
         [self.pickedUpView removeFromSuperview];
     }];
@@ -133,11 +133,11 @@
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)sender{
     if(sender.state == UIGestureRecognizerStateChanged){
-        UIView *viewForSelectedAsset = [self.delegate viewForSelectedAsset];
-        if (!viewForSelectedAsset){
+        UIView *viewToAddPickedUpAsset = [self.delegate viewToAddPickedUpAsset];
+        if (!viewToAddPickedUpAsset){
             return;
         }
-        CGPoint translation = [sender translationInView:viewForSelectedAsset];
+        CGPoint translation = [sender translationInView:viewToAddPickedUpAsset];
         self.pickedUpView.transform = CGAffineTransformScale(CGAffineTransformMakeTranslation(translation.x, translation.y), 1.1, 1.1);
     }
 }

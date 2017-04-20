@@ -1503,9 +1503,9 @@ static const CGFloat kBookEdgePadding = 38;
 
 #pragma mark Artboard delegate
 
-- (UIView *)viewForSelectedAsset{
+- (UIView *)viewToAddPickedUpAsset{
     if (self.editMode){
-        return [(id<OLArtboardDelegate>)self.photobookDelegate viewForSelectedAsset];
+        return [(id<OLArtboardDelegate>)self.photobookDelegate viewToAddPickedUpAsset];
     }
 
     return self.view;
