@@ -1512,8 +1512,15 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point{
-    NSLog(@"%f, %f", point.x, point.y);
-    
+    if (self.editMode){
+        return [(id<OLArtboardDelegate>)self.photobookDelegate assetViewAtPoint:point];
+    }
+    else{
+        return [self findAssetViewAtPoint:point];
+    }
+}
+
+- (OLArtboardAssetView *)findAssetViewAtPoint:(CGPoint)point{
     if (!self.bookClosed){
         for (OLPhotobookPageContentViewController *vc in self.pageController.viewControllers){
             for (OLArtboardAssetView *assetView in vc.artboardView.assetViews){

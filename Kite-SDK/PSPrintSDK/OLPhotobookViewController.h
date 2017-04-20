@@ -55,5 +55,6 @@
 
 - (void)loadCoverPhoto;
 - (void)saveJobWithCompletionHandler:(void(^)())handler;
+- (OLArtboardAssetView *)findAssetViewAtPoint:(CGPoint)point;
 
 @end

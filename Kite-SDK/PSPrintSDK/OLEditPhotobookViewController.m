@@ -680,4 +680,19 @@ static const NSInteger kSectionPages = 1;
     return self.view;
 }
 
+- (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point{
+    CGPoint collectionViewPoint = [self.collectionView convertPoint:point fromView:[self viewToAddDraggingAsset]];
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:collectionViewPoint];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    UIView *view = [cell viewWithTag:10];
+    
+    for (OLPhotobookViewController *photobook in self.childViewControllers){
+        if (photobook.view == view){
+            return [photobook findAssetViewAtPoint:point];
+        }
+    }
+
+    return nil;
+}
+
 @end
