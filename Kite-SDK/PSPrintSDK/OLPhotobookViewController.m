@@ -1511,4 +1511,20 @@ static const CGFloat kBookEdgePadding = 38;
     return self.view;
 }
 
+- (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point{
+    NSLog(@"%f, %f", point.x, point.y);
+    
+    if (!self.bookClosed){
+        for (OLPhotobookPageContentViewController *vc in self.pageController.viewControllers){
+            for (OLArtboardAssetView *assetView in vc.artboardView.assetViews){
+                if (!assetView.pickedUp && CGRectContainsPoint(assetView.frame, [assetView convertPoint:point fromView:[self viewToAddPickedUpAsset]])){
+                    return assetView;
+                }
+            }
+        }
+    }
+    
+    return nil;
+}
+
 @end

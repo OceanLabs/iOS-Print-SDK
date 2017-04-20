@@ -32,6 +32,7 @@
 
 @protocol OLArtboardDelegate <NSObject>
 - (UIView *)viewToAddPickedUpAsset;
+- (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
 @end
 
 @interface OLArtboardView : UIImageView

@@ -35,7 +35,9 @@
 
 @property (assign, nonatomic) NSUInteger index;
 @property (assign, nonatomic) CGRect relativeFrame;
+@property (assign, nonatomic) BOOL pickedUp;
 
 - (void)loadImageWithCompletionHandler:(void(^)())handler;
+- (void)addTargetOverlay;
 
 @end

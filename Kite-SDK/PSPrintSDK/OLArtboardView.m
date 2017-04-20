@@ -124,7 +124,9 @@
 
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)sender{
     if (sender.state == UIGestureRecognizerStateBegan){
-        [self pickUpView:(OLArtboardAssetView *)sender.view];
+        OLArtboardAssetView *assetView = (OLArtboardAssetView *)sender.view;
+        assetView.pickedUp = YES;
+        [self pickUpView:assetView];
     }
     else if(sender.state == UIGestureRecognizerStateEnded){
         [self dropView:self.pickedUpView onView:self.sourceAssetView];
@@ -139,6 +141,12 @@
         }
         CGPoint translation = [sender translationInView:viewToAddPickedUpAsset];
         self.pickedUpView.transform = CGAffineTransformScale(CGAffineTransformMakeTranslation(translation.x, translation.y), 1.1, 1.1);
+        
+        OLArtboardAssetView *targetView = [self.delegate assetViewAtPoint:CGPointMake(self.pickedUpView.frame.origin.x + self.pickedUpView.frame.size.width/2.0, self.pickedUpView.frame.origin.y + self.pickedUpView.frame.size.height/2.0)];
+        if (targetView){
+            [targetView addTargetOverlay];
+            NSLog(@"%@", targetView);
+        }
     }
 }
 
