@@ -143,9 +143,9 @@
         self.draggingView.transform = CGAffineTransformScale(CGAffineTransformMakeTranslation(translation.x, translation.y), 1.1, 1.1);
         
         OLArtboardAssetView *targetView = [self.delegate assetViewAtPoint:CGPointMake(self.draggingView.frame.origin.x + self.draggingView.frame.size.width/2.0, self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0)];
-        if (targetView){
-            [targetView addTargetOverlay];
-            NSLog(@"%@", targetView);
+        if (targetView && !targetView.targeted){
+            [targetView setTargeted:YES];
+            [self.delegate didTargetAssetView:targetView];
         }
     }
 }

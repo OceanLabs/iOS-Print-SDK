@@ -131,6 +131,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
+@property (weak, nonatomic) OLArtboardAssetView *targetedAssetView;
 
 @end
 
@@ -1532,6 +1533,18 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     return nil;
+}
+
+- (void)didTargetAssetView:(OLArtboardAssetView *)assetView{
+    if (self.editMode){
+        return [(id<OLArtboardDelegate>)self.photobookDelegate didTargetAssetView:assetView];
+    }
+    else{
+        if (self.targetedAssetView && self.targetedAssetView != assetView){
+            self.targetedAssetView.targeted = NO;
+        }
+        self.targetedAssetView = assetView;
+    }
 }
 
 @end

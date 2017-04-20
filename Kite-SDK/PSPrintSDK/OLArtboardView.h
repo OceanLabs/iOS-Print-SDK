@@ -33,6 +33,7 @@
 @protocol OLArtboardDelegate <NSObject>
 - (UIView *)viewToAddDraggingAsset;
 - (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
+- (void)didTargetAssetView:(OLArtboardAssetView *)assetView;
 @end
 
 @interface OLArtboardView : UIImageView

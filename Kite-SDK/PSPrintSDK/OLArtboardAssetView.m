@@ -42,9 +42,15 @@
     }completionHandler:handler];
 }
 
-- (void)addTargetOverlay{
-    self.layer.borderColor = self.tintColor.CGColor;
-    self.layer.borderWidth = 3.0;
+- (void)setTargeted:(BOOL)targeted{
+    _targeted = targeted;
+    if (targeted){
+        self.layer.borderColor = self.tintColor.CGColor;
+        self.layer.borderWidth = 3.0;
+    }
+    else{
+        self.layer.borderWidth = 0;
+    }
 }
 
 @end

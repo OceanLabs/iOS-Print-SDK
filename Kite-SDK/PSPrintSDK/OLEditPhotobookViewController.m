@@ -77,6 +77,7 @@ static const NSInteger kSectionPages = 1;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
+@property (weak, nonatomic) OLArtboardAssetView *targetedAssetView;
 
 @end
 
@@ -122,7 +123,7 @@ static const NSInteger kSectionPages = 1;
     
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.ctaButton.frame.size.height, self.collectionView.contentInset.right);
     
-    [self addInfoBanner];
+//    [self addInfoBanner];
 }
 
 - (void)setupCtaButton{
@@ -693,6 +694,13 @@ static const NSInteger kSectionPages = 1;
     }
 
     return nil;
+}
+
+- (void)didTargetAssetView:(OLArtboardAssetView *)assetView{
+    if (self.targetedAssetView && self.targetedAssetView != assetView){
+        self.targetedAssetView.targeted = NO;
+    }
+    self.targetedAssetView = assetView;
 }
 
 @end

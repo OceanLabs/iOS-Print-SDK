@@ -1087,10 +1087,10 @@
 				2EF718331D589DB60036502D /* OLInfoBanner.m */,
 				2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */,
 				2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */,
-				2E7A8D8B1E9BBE8900AB4736 /* OLArtboardAssetView.h */,
-				2E7A8D8D1E9BBE8900AB4736 /* OLArtboardAssetView.m */,
 				2E7A8D8C1E9BBE8900AB4736 /* OLArtboardView.h */,
 				2E7A8D8E1E9BBE8900AB4736 /* OLArtboardView.m */,
+				2E7A8D8B1E9BBE8900AB4736 /* OLArtboardAssetView.h */,
+				2E7A8D8D1E9BBE8900AB4736 /* OLArtboardAssetView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
