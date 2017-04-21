@@ -152,6 +152,9 @@
         if (self.sourceAssetIndex == self.sourceAssetView.index){
             self.sourceAssetView.image = swappingView.image;
         }
+        if (!self.targetAssetView){
+            self.targetAssetView = self.sourceAssetView;
+        }
         self.targetAssetView.image = [self.draggingView.subviews.firstObject image];
         self.targetAssetView = nil;
         
@@ -187,7 +190,7 @@
         self.draggingView.transform = CGAffineTransformScale(CGAffineTransformMakeTranslation(translation.x, translation.y), 1.1, 1.1);
         
         OLArtboardAssetView *targetView = [self.delegate assetViewAtPoint:CGPointMake(self.draggingView.frame.origin.x + self.draggingView.frame.size.width/2.0, self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0)];
-        if (targetView && !targetView.targeted){
+        if (!targetView.targeted){
             [targetView setTargeted:YES];
             self.targetAssetView = targetView;
         }
