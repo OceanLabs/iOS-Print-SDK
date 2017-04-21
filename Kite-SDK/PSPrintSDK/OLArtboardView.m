@@ -134,7 +134,7 @@
     UIImageView *swappingView;
     if (targetView != self.sourceAssetView){
         swappingView = [[UIImageView alloc] initWithImage:targetView.imageView.image];
-        swappingView.contentMode = UIViewContentModeScaleAspectFill;
+        swappingView.contentMode = [[OLAsset userSelectedAssets][targetView.index] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
         swappingView.clipsToBounds = YES;
         UIView *viewToAddDraggingAsset = [self.delegate viewToAddDraggingAsset];
         [viewToAddDraggingAsset insertSubview:swappingView belowSubview:self.draggingView];
@@ -151,11 +151,13 @@
     } completion:^(BOOL finished){
         if (self.sourceAssetIndex == self.sourceAssetView.index){
             self.sourceAssetView.image = swappingView.image;
+            self.sourceAssetView.imageView.contentMode = [[OLAsset userSelectedAssets][targetView.index] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
         }
         if (!self.targetAssetView){
             self.targetAssetView = self.sourceAssetView;
         }
         self.targetAssetView.image = [self.draggingView.subviews.firstObject image];
+        self.targetAssetView.imageView.contentMode = [[OLAsset userSelectedAssets][self.sourceAssetIndex] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
         self.targetAssetView = nil;
         
         [[OLAsset userSelectedAssets] exchangeObjectAtIndex:self.sourceAssetIndex withObjectAtIndex:targetView.index];
