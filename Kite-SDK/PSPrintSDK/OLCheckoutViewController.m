@@ -570,7 +570,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         static NSString *const kDeliveryAddressCell = @"DeliveryAddressCell";
         static NSString *const kAddDeliveryAddressCell = @"AddDeliveryAddressCell";
         
-        if (indexPath.row == 0) {
+        if (self.shippingAddress && indexPath.row == 0) {
             cell = [tableView dequeueReusableCellWithIdentifier:kDeliveryAddressCell];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kDeliveryAddressCell];
