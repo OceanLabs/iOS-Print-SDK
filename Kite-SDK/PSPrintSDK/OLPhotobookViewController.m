@@ -265,18 +265,10 @@ static const CGFloat kBookEdgePadding = 38;
     self.widthCon2.priority = UILayoutPriorityDefaultLow;
     [self.view addConstraint:self.widthCon2];
     
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized:)];
-    tapGesture.delegate = self;
-    
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanGestureRecognized:)];
     panGesture.delegate = self;
     
-    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPressGestureRecognized:)];
-    longPressGesture.delegate = self;
-    
-    [self.pageController.view addGestureRecognizer:tapGesture];
     [self.pageController.view addGestureRecognizer:panGesture];
-    [self.pageController.view addGestureRecognizer:longPressGesture];
     
     self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering");
     
@@ -905,60 +897,6 @@ static const CGFloat kBookEdgePadding = 38;
     }
 }
 
-- (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
-    if ([sender locationInView:self.pageController.view].x < self.pageController.view.frame.size.width / 2.0){
-        self.croppingImageIndex = 0;
-    }
-    else{
-        self.croppingImageIndex = 1;
-    }
-    
-    OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
-    NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]] + 1;
-    
-    if (index == NSNotFound){
-        return;
-    }
-    
-    if (self.editMode){
-        [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:index];
-        
-        return;
-    }
-    else if ([[[OLAsset userSelectedAssets] objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
-        self.addNewPhotosAtIndex = index;
-        [self showImagePicker];
-    }
-    else{
-        if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-            return;
-        }
-        UIView *imageView = page.artboardView.assetViews.firstObject;
-        self.editingAsset = [[OLAsset userSelectedAssets] objectAtIndex:index];
-        [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
-            OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
-            cropVc.delegate = self;
-            cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
-            
-            cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
-            cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
-            cropVc.previewSourceView = imageView;
-            cropVc.providesPresentationContextTransitionStyle = true;
-            cropVc.definesPresentationContext = true;
-            cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-            [cropVc setFullImage:image];
-            cropVc.edits = self.editingAsset.edits;
-            cropVc.product = self.product;
-            
-            [self presentViewController:cropVc animated:NO completion:NULL];
-            
-#ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
-#endif
-        }];
-    }
-}
-
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer{
     if (self.animating){
         return;
@@ -1047,18 +985,6 @@ static const CGFloat kBookEdgePadding = 38;
             }
         }];
     }
-}
-
-- (void)onLongPressGestureRecognized:(UILongPressGestureRecognizer *)sender{
-    if ([sender locationInView:self.pageController.view].x < self.pageController.view.frame.size.width / 2.0){
-        self.croppingImageIndex = 0;
-    }
-    else{
-        self.croppingImageIndex = 1;
-    }
-    OLPhotobookPageContentViewController *page = [self.pageController.viewControllers objectAtIndex:self.croppingImageIndex];
-    NSInteger index = [page imageIndexForPoint:[sender locationInView:page.view]] + 1;
-    [self.photobookDelegate photobook:self userDidLongPressOnImageWithIndex:index sender:sender];
 }
 
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
