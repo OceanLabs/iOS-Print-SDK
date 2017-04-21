@@ -591,20 +591,6 @@ static dispatch_once_t srand48OnceToken;
                                 }];
 }
 
-- (void)setupShippingScreenTest{
-    self.checkoutScreenType = nil;
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestShippingScreen];
-    if (!experimentDict){
-        experimentDict = @{@"Classic" : @0.66, @"Integrated" : @0.34}; // There are 3 variants Classic+Address Search, Classic no Address Search & Integrated hence Classic gets 2/3 of the chance here as it will further get split 50:50 between the 2 classic variants internally resulting in 1/3 probability each.
-    }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestShippingScreen conditions:@{
-                                                                       @"Classic" : safeObject(experimentDict[@"Classic"]),
-                                                                       @"Integrated" : safeObject(experimentDict[@"Integrated"])
-                                                                       }block:^(id choice){
-                                                                           self.checkoutScreenType = choice;
-                                                                       }];
-}
-
 - (void)setupHidePriceTest{
     self.hidePrice = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
@@ -693,7 +679,6 @@ static dispatch_once_t srand48OnceToken;
 - (void)groupSetupShippingScreenTests{
     [self setupOfferAddressSearchTest];
     [self setupRequirePhoneNumberTest];
-    [self setupShippingScreenTest];
     [self setupPaymentScreenTest];
     [self setupOfferPayPalTest];
 }

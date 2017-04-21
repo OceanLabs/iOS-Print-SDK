@@ -36,7 +36,6 @@
 #import "OLImagePickerViewController.h"
 #import "OLImagePreviewViewController.h"
 #import "OLInfoBanner.h"
-#import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"

@@ -55,7 +55,6 @@
 "CVV" = "CVV";
 "Default" = "Defecto";
 "Delete Item" = "Borrar elemento";
-"Delivery Address" = "Dirección de entrega";
 "Delivery Details" = "Detalles de la entrega";
 "Description" = "Descripción";
 "Details" = "Detalles";
@@ -185,7 +184,6 @@
 "Small" = "Pequeña";
 "Start by tapping this button" = "Comienza tocando este botón";
 "Start Creating" = "Comenzar a crear";
-"State" = "Estado";
 "Store Maintenance" = "Mantenimiento de tienda";
 "Swipe to rotate your mug" = "Deslizar para girar tu taza";
 "Tap Image to Change" = "Toca la imagen para cambiar";

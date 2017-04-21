@@ -33,7 +33,6 @@
 #import "OLPaymentViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLCheckoutViewController.h"
-#import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
 #import "OLPayPalWrapper.h"
@@ -166,13 +165,7 @@
 }
 
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
-    OLCheckoutViewController *vc;
-    if ([[OLKiteABTesting sharedInstance].checkoutScreenType isEqualToString:@"Classic"]){
-        vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    }
-    else{
-        vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    }
+    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
     handler(vc);
 }
 
