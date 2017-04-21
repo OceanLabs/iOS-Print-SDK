@@ -59,7 +59,7 @@
 
 - (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disallowUserToAddMorePhotos.");
 - (BOOL)kiteControllerShouldDisableCameraRoll:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disableCameraRoll.");
-- (BOOL)shouldShowPhoneEntryOnCheckoutScreen __deprecated_msg("This method will no longer work. Use the OLKiteViewController property hidePhoneEntryOnCheckoutScreen.");
+- (BOOL)shouldShowPhoneEntryOnCheckoutScreen __deprecated_msg("This method will no longer work.");
 - (BOOL)shouldShowContinueShoppingButton __deprecated_msg("This method will no longer work. Use the OLKiteViewController property hideContinueShoppingButton.");
 - (BOOL)shouldStoreDeliveryAddresses __deprecated_msg("This method will no longer work. Use the OLKiteViewController property discardDeliveryAddresses.");
 - (BOOL)shouldShowOptOutOfEmailsCheckbox __deprecated_msg("This method will no longer work. Use the OLKiteViewController property showOptOutOfEmailsCheckbox.");
@@ -99,7 +99,7 @@
 /**
  *  Set to hide the phone entry field at checkout.
  */
-@property (assign, nonatomic) BOOL hidePhoneEntryOnCheckoutScreen;
+@property (assign, nonatomic) BOOL hidePhoneEntryOnCheckoutScreen __deprecated;
 
 /**
  *  Set to hide the Continue Shopping button on the payment screen. The default value is NO.

@@ -37,9 +37,7 @@
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
 static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";
-static NSString *const kOLKiteABTestRequirePhoneNumber = @"ly.kite.abtest.require_phone";
 static NSString *const kOLKiteABTestQualityBannerType = @"ly.kite.abtest.quality_banner_type";
-static NSString *const kOLKiteABTestShippingScreen = @"ly.kite.abtest.shippingscreen";
 static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_tile_style";
 static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
 static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_banner_style";
@@ -65,7 +63,6 @@ static dispatch_once_t srand48OnceToken;
 @property (assign, nonatomic, readwrite) BOOL skipProductOverview;
 @property (assign, nonatomic, readwrite) BOOL disableProductCategories;
 @property (assign, nonatomic) BOOL minimalNavigationBar;
-@property (assign, nonatomic, readwrite) BOOL requirePhoneNumber;
 @property (assign, nonatomic, readwrite) BOOL hidePrice;
 @property (assign, nonatomic, readwrite) BOOL offerPayPal;
 @property (assign, nonatomic, readwrite) BOOL progressiveTemplateLoading;
@@ -576,21 +573,6 @@ static dispatch_once_t srand48OnceToken;
                                 }];
 }
 
-- (void)setupRequirePhoneNumberTest{
-    self.requirePhoneNumber = NO;
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestRequirePhoneNumber];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-    }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestRequirePhoneNumber
-                   conditions:@{
-                                @"Yes" : safeObject(experimentDict[@"Yes"]),
-                                @"No" : safeObject(experimentDict[@"No"])
-                                } block:^(id choice) {
-                                    self.requirePhoneNumber = [choice isEqualToString:@"Yes"];
-                                }];
-}
-
 - (void)setupHidePriceTest{
     self.hidePrice = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
@@ -678,7 +660,6 @@ static dispatch_once_t srand48OnceToken;
 
 - (void)groupSetupShippingScreenTests{
     [self setupOfferAddressSearchTest];
-    [self setupRequirePhoneNumberTest];
     [self setupPaymentScreenTest];
     [self setupOfferPayPalTest];
 }

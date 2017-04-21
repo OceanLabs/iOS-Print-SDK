@@ -979,14 +979,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }];
 }
 
-- (BOOL)showPhoneEntryField {
-    if ([self.kiteDelegate respondsToSelector:@selector(shouldShowPhoneEntryOnCheckoutScreen)]) {
-        return (![OLUserSession currentSession].kiteVc.hidePhoneEntryOnCheckoutScreen);
-    }
-    
-    return [OLKiteABTesting sharedInstance].requirePhoneNumber;
-}
-
 #pragma mark Button Actions
 
 - (IBAction)onButtonApplyPromoCodeClicked:(id)sender {
@@ -1117,11 +1109,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         
         [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         paymentRequest.paymentSummaryItems = lineItems;
-        NSUInteger requiredFields = PKAddressFieldPostalAddress | PKAddressFieldName | PKAddressFieldEmail;
-        if ([self showPhoneEntryField]){
-            requiredFields = requiredFields | PKAddressFieldPhone;
-        }
-        paymentRequest.requiredShippingAddressFields = requiredFields;
+        paymentRequest.requiredShippingAddressFields = PKAddressFieldPostalAddress | PKAddressFieldName | PKAddressFieldEmail | PKAddressFieldPhone;
         UIViewController *paymentController;
         paymentController = [[PKPaymentAuthorizationViewController alloc]
                              initWithPaymentRequest:paymentRequest];
