@@ -203,4 +203,9 @@
     return otherGestureRecognizer.view == gestureRecognizer.view && [otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]];
 }
 
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    OLArtboardAssetView *assetView = (OLArtboardAssetView *)gestureRecognizer.view;
+    return assetView.dragging;
+}
+
 @end
