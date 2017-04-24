@@ -177,8 +177,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 @property (weak, nonatomic) IBOutlet UILabel *promoCodeCostLabel;
 @property (weak, nonatomic) IBOutlet UILabel *shippingCostLabel;
 @property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
-@property (weak, nonatomic) IBOutlet UILabel *shippingTypeLabel;
-@property (weak, nonatomic) IBOutlet UIButton *shippingButton;
+@property (weak, nonatomic) IBOutlet UILabel *shippingLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *promoBoxBottomCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *promoBoxTopCon;
@@ -186,7 +185,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 @property (weak, nonatomic) IBOutlet UILabel *poweredByKiteLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *poweredByKiteLabelBottomCon;
 @property (weak, nonatomic) IBOutlet UIView *shippingDetailsBox;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *shippingDetailsCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *deliveryDetailsCon;
 @property (weak, nonatomic) IBOutlet UILabel *deliveryDetailsLabel;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *totalCostActivityIndicator;
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
@@ -255,7 +254,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                                                                             action:nil];
     
     self.poweredByKiteLabel.text = NSLocalizedStringFromTableInBundle(@"Powered by Kite.ly", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-    [self.shippingButton setTitle:NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    self.shippingLabel.text = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     [self.paymentButton1 setTitle:NSLocalizedStringFromTableInBundle(@"Continue Shopping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     self.reloadTableViewOperation = [NSBlockOperation blockOperationWithBlock:^{
@@ -314,7 +313,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     
     
     if (![OLKiteUtils isApplePayAvailable]){
-        self.shippingDetailsCon.constant = 2;
+        self.deliveryDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
     
@@ -560,7 +559,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     if (selectedPaymentMethod == kOLPaymentMethodNone){
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Add Payment Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         self.payingWithImageView.hidden = YES;
-        self.shippingDetailsCon.constant = 2;
+        self.deliveryDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
     else if (selectedPaymentMethod == kOLPaymentMethodCreditCard){
@@ -568,21 +567,21 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Paying with [PayPal/Credit Card]") forState:UIControlStateNormal];
         self.payingWithImageView.image = [existingCard cardIcon];
         self.payingWithImageView.hidden = NO;
-        self.shippingDetailsCon.constant = 2;
+        self.deliveryDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
     else if (selectedPaymentMethod == kOLPaymentMethodApplePay){
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Paying with [PayPal/Credit Card]") forState:UIControlStateNormal];
         self.payingWithImageView.image = [UIImage imageNamedInKiteBundle:@"apple-pay-method"];
         self.payingWithImageView.hidden = NO;
-        self.shippingDetailsCon.constant = -50;
+        self.deliveryDetailsCon.constant = -50;
         self.shippingDetailsBox.alpha = 0;
     }
     else if (selectedPaymentMethod == kOLPaymentMethodPayPal){
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Paying with [PayPal/Credit Card]") forState:UIControlStateNormal];
         self.payingWithImageView.image = [UIImage imageNamedInKiteBundle:@"paypal-method"];
         self.payingWithImageView.hidden = NO;
-        self.shippingDetailsCon.constant = 2;
+        self.deliveryDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
     
@@ -634,7 +633,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
             
             self.paymentMethodBottomCon.constant = 2 - self.addPaymentBox.frame.size.height;
-            self.shippingDetailsCon.constant = 2;
+            self.deliveryDetailsCon.constant = 2;
             self.shippingDetailsBox.alpha = 1;
             [UIView animateWithDuration:0.25 animations:^{
                 [self.view layoutIfNeeded];
@@ -645,11 +644,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             
             self.paymentMethodBottomCon.constant = 2;
             if (selectedPaymentMethod == kOLPaymentMethodApplePay){
-                self.shippingDetailsCon.constant = -50;
+                self.deliveryDetailsCon.constant = -50;
                 self.shippingDetailsBox.alpha = 0;
             }
             else{
-                self.shippingDetailsCon.constant = 2;
+                self.deliveryDetailsCon.constant = 2;
                 self.shippingDetailsBox.alpha = 1;
             }
             [UIView animateWithDuration:0.25 animations:^{
@@ -1307,6 +1306,12 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [self.navigationController pushViewController:vc animated:YES];
     }];
 }
+
+- (IBAction)onShippingMethodGestureRecognized:(id)sender {
+    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLShippingMethodsViewController"];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 
 #pragma mark - PayPalPaymentDelegate methods
 
