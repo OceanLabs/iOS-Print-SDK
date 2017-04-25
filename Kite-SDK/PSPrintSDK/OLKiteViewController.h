@@ -156,6 +156,12 @@
 
 
 /**
+ By default when OLKiteViewController launches it deletes any previously downloaded product templates and downloads them again. Set this property to true to prevent this behavior. 
+ */
+@property (assign, nonatomic) BOOL preserveExistingTemplates;
+
+
+/**
  Request a view controller that shows the user's complete order history
 
  @return A UINavigationController that is ready to be presented

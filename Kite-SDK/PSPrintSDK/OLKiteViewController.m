@@ -221,7 +221,9 @@ static CGFloat fadeTime = 0.3;
         [self.operationQueue addOperation:loadingHandlerOperation];
     }
     
-    [OLProductTemplate resetTemplates];
+    if (!self.preserveExistingTemplates){
+        [OLProductTemplate resetTemplates];
+    }
     
     if ([OLProductTemplate templates].count > 0){
         fadeTime = 0;
@@ -229,6 +231,7 @@ static CGFloat fadeTime = 0.3;
         
         [self.operationQueue addOperation:self.templateSyncOperation];
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
+        [self.operationQueue addOperation:self.remoteThemePlistSyncOperation];
     }
     else{
         __weak OLKiteViewController *welf = self;

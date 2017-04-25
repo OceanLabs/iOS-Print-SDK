@@ -1,4 +1,5 @@
 ## 6.6.0
+- Added: A way to preserve templates and remote config data between OLKiteViewController launches
 - Minor design tweaks.
 - Custom theme now extends to more places.
 - Fixed: Layout issues on Order History screen.
