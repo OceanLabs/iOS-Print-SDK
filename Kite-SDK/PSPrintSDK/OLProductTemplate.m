@@ -368,6 +368,8 @@ static BOOL partial = NO;
     [aCoder encodeObject:self.logo forKey:kKeyLogo];
     [aCoder encodeObject:self.fulfilmentItems forKey:kKeyFulfilmentItems];
     [aCoder encodeBool:self.supportsTextOnBorder forKey:kKeySupportsTextOnBorder];
+    [aCoder encodeObject:self.shippingClasses forKey:@"shippingClasses"];
+    [aCoder encodeObject:self.countryMapping forKey:@"countryMapping"];
 }
 
 - (NSString *)description{
@@ -412,6 +414,8 @@ static BOOL partial = NO;
         self.logo = [aDecoder decodeObjectForKey:kKeyLogo];
         self.fulfilmentItems = [aDecoder decodeObjectForKey:kKeyFulfilmentItems];
         self.supportsTextOnBorder = [aDecoder decodeBoolForKey:kKeySupportsTextOnBorder];
+        self.shippingClasses = [aDecoder decodeObjectForKey:@"shippingClasses"];
+        self.countryMapping = [aDecoder decodeObjectForKey:@"countryMapping"];
     }
     
     return self;

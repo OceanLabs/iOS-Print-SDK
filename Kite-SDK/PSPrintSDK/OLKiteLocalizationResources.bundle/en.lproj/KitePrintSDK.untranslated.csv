@@ -179,6 +179,7 @@ Scan QR Code,Scan QR Code,
 Search for Address,Search for Address,
 Select Size,Select Size,/* Example: Shirt size */
 Shipping,Shipping,
+Shipping Method,Shipping Method,
 Single Photo Poster,Single Photo Poster,
 Size,Size,/* Physical size of the product */
 Small,Small,

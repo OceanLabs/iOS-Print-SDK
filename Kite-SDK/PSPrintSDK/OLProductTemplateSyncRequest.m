@@ -40,6 +40,7 @@
 #import "OLProductRepresentation.h"
 #import "OLProductTemplateCollection.h"
 #import "OLUserSession.h"
+#import "OLShippingClass.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
@@ -220,6 +221,39 @@
                             
                             NSNumber *printInStoreNumber = productTemplate[@"print_in_store"];
                             BOOL printInStore = printInStoreNumber == nil ? NO : [printInStoreNumber boolValue];
+                            
+                            NSMutableDictionary *templateShippingClasses = [[NSMutableDictionary alloc] init];
+                            NSDictionary *shippingRegions = productTemplate[@"shipping_regions"];
+                            if ([shippingRegions isKindOfClass:[NSDictionary class]]){
+                                for (NSString *key in shippingRegions.allKeys){
+                                    NSDictionary *region = shippingRegions[key];
+                                    if ([region isKindOfClass:[NSDictionary class]]){
+                                        NSArray *shippingClasses = region[@"shipping_classes"];
+                                        if ([shippingClasses isKindOfClass:[NSArray class]]){
+                                            for (NSDictionary *shippingClassDict in shippingClasses){
+                                                if ([shippingClassDict isKindOfClass:[NSDictionary class]]){
+                                                    OLShippingClass *shippingClass = [[OLShippingClass alloc] init];
+                                                    shippingClass.displayName = [shippingClassDict[@"display_name"] isKindOfClass:[NSString class]] ? shippingClassDict[@"display_name"] : nil;
+                                                    shippingClass.displayName = [shippingClassDict[@"min_delivery_time"] isKindOfClass:[NSNumber class]] ? shippingClassDict[@"min_delivery_time"] : nil;
+                                                    shippingClass.displayName = [shippingClassDict[@"max_delivery_time"] isKindOfClass:[NSNumber class]] ? shippingClassDict[@"max_delivery_time"] : nil;
+                                                    shippingClass.costs = [shippingClassDict[@"costs"] isKindOfClass:[NSDictionary class]] ? shippingClassDict[@"costs"] : nil;
+                                                    shippingClass.tracked = [shippingClassDict[@"tracked"] isKindOfClass:[NSNumber class]] ? [shippingClassDict[@"tracked"] boolValue] : NO;
+                                                    shippingClass.className = [shippingClassDict[@"class_name"] isKindOfClass:[NSString class]] ? shippingClassDict[@"class_name"] : nil;
+                                                    shippingClass.identifier = [shippingClassDict[@"id"] isKindOfClass:[NSNumber class]] ? [shippingClassDict[@"id"] integerValue] : 0;
+                                                    
+                                                    NSMutableArray *existingClassesArray = templateShippingClasses[key];
+                                                    if (!existingClassesArray){
+                                                        existingClassesArray = [[NSMutableArray alloc] init];
+                                                    }
+                                                    [existingClassesArray addObject:shippingClass];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            NSDictionary *countryMapping = [productTemplate[@"country_to_region_mapping"] isKindOfClass:[NSDictionary class]] ? productTemplate[@"country_to_region_mapping"] : nil;
                             
                             NSDictionary *shippingCosts = [productTemplate[@"shipping_costs"] isKindOfClass:[NSDictionary class]] ? productTemplate[@"shipping_costs"] : nil;
                             
@@ -491,6 +525,9 @@
                                     t.representationAssets = representationAssets;
                                     t.fulfilmentItems = fulfilmentItems;
                                     t.supportsTextOnBorder = supportsTextOnBorder;
+                                    
+                                    t.countryMapping = countryMapping;
+                                    t.shippingClasses = templateShippingClasses;
                                     
                                     if ([blendMode isEqualToString:@"MULTIPLY"]){
                                         t.blendMode = OLImageBlendModeMultiply;

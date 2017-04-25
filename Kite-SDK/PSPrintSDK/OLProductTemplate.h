@@ -32,6 +32,7 @@
 #import "OLUpsellOffer.h"
 #import "OLProductRepresentation.h"
 #import "OLFulfilmentItem.h"
+#import "OLShippingClass.h"
 
 typedef void (^TemplateSyncHandler)(NSError *_Nullable error);
 
@@ -104,6 +105,8 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 @property (strong, nonatomic) NSURL *_Nullable logo;
 @property (strong, nonatomic) NSMutableArray<OLFulfilmentItem *> *_Nullable fulfilmentItems;
 @property (assign, nonatomic) BOOL supportsTextOnBorder;
+@property (strong, nonatomic) NSDictionary<NSString *, NSArray<OLShippingClass *> *> * _Nullable shippingClasses;
+@property (strong, nonatomic) NSDictionary * _Nullable countryMapping;
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *_Nullable)costPerSheetInCurrencyCode:(NSString *_Nonnull)currencyCode;

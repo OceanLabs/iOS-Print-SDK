@@ -93,6 +93,7 @@ Remove?,Remove?,/* Remove [photo]? */
 Rotate,Rotate,/* Rotate image by 90 degrees */
 Scan QR Code,Scan QR Code,
 Select Size,Select Size,/* Example: Shirt size */
+Shipping Method,Shipping Method,
 Small,Small,
 Start by tapping this button,Start by tapping this button,
 Start Creating,Start Creating,/* Start Creating [your product] */

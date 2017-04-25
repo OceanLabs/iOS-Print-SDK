@@ -624,6 +624,32 @@ static NSBlockOperation *templateSyncOperation;
     return NO;
 }
 
+- (NSArray<OLShippingClass *> *)shippingMethods{
+    NSMutableArray *common = [[NSMutableArray alloc] init];
+    if (!self.shippingAddress.country){
+        return common;
+    }
+    
+    OLProductTemplate *firstJobTemplate = [OLProductTemplate templateWithId:self.jobs.firstObject.templateId];
+    
+    NSString *firstJobRegion = firstJobTemplate.countryMapping[self.shippingAddress.country.codeAlpha3];
+    if (!firstJobRegion){
+        return common;
+    }
+    for (OLShippingClass *shippingClass in firstJobTemplate.shippingClasses[firstJobRegion]){
+        
+        for (id<OLPrintJob> job in self.jobs){
+            OLProductTemplate *template = [OLProductTemplate templateWithId:self.jobs.firstObject.templateId];
+            NSString *region = template.countryMapping[self.shippingAddress.country.codeAlpha3];
+            if (!region){
+                break;
+            }
+        }
+    }
+    
+    return common;
+}
+
 #pragma mark - OLAssetUploadRequestDelegate methods
 
 - (void)assetUploadRequest:(OLAssetUploadRequest *)req didProgressWithTotalAssetsUploaded:(NSUInteger)totalAssetsUploaded totalAssetsToUpload:(NSUInteger)totalAssetsToUpload bytesWritten:(long long)bytesWritten totalAssetBytesWritten:(long long)totalAssetBytesWritten totalAssetBytesExpectedToWrite:(long long)totalAssetBytesExpectedToWrite {

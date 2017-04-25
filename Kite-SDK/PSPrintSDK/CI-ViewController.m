@@ -353,31 +353,12 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
-    if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"]){
-        s = [(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"];
-    }
     [OLKitePrintSDK setAPIKey:s withEnvironment:[self environment]];
     
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-    vc.userEmail = @"";
-    vc.userPhone = @"";
-    vc.delegate = self;
-    vc.qrCodeUploadEnabled = YES;
-    
-    if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]){
-        vc.filterProducts = @[[(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]];
-    }
-    
-    [self addCatsAndDogsImagePickersToKite:vc];
-    
-    KITAssetsPickerController *customVc = [[KITAssetsPickerController alloc] init];
-    self.customDataSources = @[[[CustomAssetCollectionDataSource alloc] init]];
-    customVc.collectionDataSources = self.customDataSources;
-    
-    [vc addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *)customVc name:@"External" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
     
     [self presentViewController:vc animated:YES completion:NULL];
 }
