@@ -37,6 +37,6 @@
 @property (assign, nonatomic) NSInteger identifier;
 @property (assign, nonatomic) BOOL tracked;
 @property (strong, nonatomic) NSString *className;
-@property (strong, nonatomic) NSDictionary *costs;
+@property (strong, nonatomic) NSDictionary<NSString *, NSNumber *> *costs;
 
 @end

@@ -238,7 +238,7 @@
                                                     shippingClass.displayName = [shippingClassDict[@"max_delivery_time"] isKindOfClass:[NSNumber class]] ? shippingClassDict[@"max_delivery_time"] : nil;
                                                     shippingClass.costs = [shippingClassDict[@"costs"] isKindOfClass:[NSDictionary class]] ? shippingClassDict[@"costs"] : nil;
                                                     shippingClass.tracked = [shippingClassDict[@"tracked"] isKindOfClass:[NSNumber class]] ? [shippingClassDict[@"tracked"] boolValue] : NO;
-                                                    shippingClass.className = [shippingClassDict[@"class_name"] isKindOfClass:[NSString class]] ? shippingClassDict[@"class_name"] : nil;
+                                                    shippingClass.className = [shippingClassDict[@"mobile_shipping_name"] isKindOfClass:[NSString class]] ? shippingClassDict[@"mobile_shipping_name"] : nil;
                                                     shippingClass.identifier = [shippingClassDict[@"id"] isKindOfClass:[NSNumber class]] ? [shippingClassDict[@"id"] integerValue] : 0;
                                                     
                                                     NSMutableArray *existingClassesArray = templateShippingClasses[key];

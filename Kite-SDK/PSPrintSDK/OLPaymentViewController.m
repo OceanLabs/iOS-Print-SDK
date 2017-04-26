@@ -75,6 +75,7 @@
 #import "Util.h"
 #import "OLApparelPrintJob.h"
 #import "OLCaseViewController.h"
+#import "OLShippingMethodsViewController.h"
 
 @import PassKit;
 @import Contacts;
@@ -166,7 +167,7 @@ static OLPaymentMethod selectedPaymentMethod;
 @interface OLPaymentViewController () <
 UITableViewDataSource, UITableViewDelegate,
 PKPaymentAuthorizationViewControllerDelegate,
-UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate, OLPaymentMethodsViewControllerDelegate>
+UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate, OLPaymentMethodsViewControllerDelegate, OLShippingMethodsViewControllerDelegate>
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
@@ -187,6 +188,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 @property (weak, nonatomic) IBOutlet UIView *shippingDetailsBox;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *deliveryDetailsCon;
 @property (weak, nonatomic) IBOutlet UILabel *deliveryDetailsLabel;
+@property (weak, nonatomic) IBOutlet UIButton *shippingMethodChevron;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *totalCostActivityIndicator;
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
 @property (assign, nonatomic) BOOL authorizedApplePay;
@@ -198,7 +200,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 @property (weak, nonatomic) IBOutlet UIView *addPaymentBox;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *paymentMethodBottomCon;
 @property (strong, nonatomic) NSArray *currentUserSelectedPhotos;
-
+@property (strong, nonatomic) IBOutlet UITapGestureRecognizer *shippingMethodTapGesture;
 @property (strong, nonatomic) NSOperation *viewDidAppearOperation;
 @property (strong, nonatomic) NSOperation *costCalculationOperation;
 @property (strong, nonatomic) NSOperation *reloadTableViewOperation;
@@ -254,7 +256,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                                                                             action:nil];
     
     self.poweredByKiteLabel.text = NSLocalizedStringFromTableInBundle(@"Powered by Kite.ly", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-    self.shippingLabel.text = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     [self.paymentButton1 setTitle:NSLocalizedStringFromTableInBundle(@"Continue Shopping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     self.reloadTableViewOperation = [NSBlockOperation blockOperationWithBlock:^{
@@ -607,6 +608,8 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [self.totalCostActivityIndicator startAnimating];
         shouldAnimate = YES;
     }
+    
+    [self updateShippingView];
     
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         [self.totalCostActivityIndicator stopAnimating];
@@ -1310,6 +1313,29 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 - (IBAction)onShippingMethodGestureRecognized:(id)sender {
     UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLShippingMethodsViewController"];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)shippingMethodsViewController:(OLShippingMethodsViewController *)vc didPickShippingMethod:(OLShippingClass *)method{
+    [OLUserSession currentSession].printOrder.selectedShippingMethod = method.className;
+    [self updateShippingView];
+}
+
+- (void)updateShippingView{
+    if ([OLUserSession currentSession].printOrder.selectedShippingMethod){
+        self.shippingLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"examples: Standard Shipping, Tracked Shipping"), [OLUserSession currentSession].printOrder.selectedShippingMethod];
+    }
+    else{
+        NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    }
+    
+    if ([OLUserSession currentSession].printOrder.shippingMethods.count > 1){
+        self.shippingMethodChevron.hidden = NO;
+        self.shippingMethodTapGesture.enabled = YES;
+    }
+    else{
+        self.shippingMethodChevron.hidden = YES;
+        self.shippingMethodTapGesture.enabled = NO;
+    }
 }
 
 

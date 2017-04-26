@@ -1,3 +1,4 @@
+"%@ Shipping" = "%@ Shipping";
 "%ldx%ld Collage" = "%ldx%ld Collage";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Garantie de Qualité**\nNos produits sont de la plus haute qualité et nous sommes certains que vous aimerez le vôtre. Sinon, nous offrons une garantie de remboursement. Profitez-en ! !";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "Une erreur 401 Requête non autorisée est survenue durant le téléchargement. Veuillez réessayer.";

@@ -33,6 +33,7 @@
 @class OLPaymentLineItem;
 @class OLPrintOrderCostRequest;
 @class OLPrintOrderCost;
+@class OLShippingClass;
 
 @protocol OLPrintJob;
 
@@ -236,6 +237,28 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
  *  The error message when the order submit status has changed to Error
  */
 @property (strong, nonatomic, readonly) NSString *submitStatusErrorMessage;
+
+
+/**
+ The shipping method that the user has selected
+ */
+@property (strong, nonatomic) NSString *selectedShippingMethod;
+
+
+/**
+ Find the common shipping classes between all jobs in this order.
+
+ @return The array of common shipping classes.
+ */
+- (NSArray<OLShippingClass *> *)shippingMethods;
+
+/**
+ Return the cost for all items in the basket for a given shipping method name
+
+ @param name The name of the shipping method
+ @return The total cost of shipping
+ */
+- (NSDecimalNumber *)costForShippingMethodName:(NSString *)name;
 
 /**
  *  Request the cost of the print order from Kite

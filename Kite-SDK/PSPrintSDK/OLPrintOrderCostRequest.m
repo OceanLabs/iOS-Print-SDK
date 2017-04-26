@@ -79,13 +79,28 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
 @implementation OLPrintOrderCostRequest
 
 - (NSDictionary *)jsonFromOrder:(OLPrintOrder *)order {
+    NSString *shippingCountryCode = order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    
     NSMutableArray *basket = [[NSMutableArray alloc] initWithCapacity:order.jobs.count];
     for (id<OLPrintJob> job in order.jobs){
-        [basket addObject:[job jsonRepresentation]];
+        NSMutableDictionary *dict = [[job jsonRepresentation] mutableCopy];
+        
+        OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+        NSString *region = template.countryMapping[shippingCountryCode];
+        if (region){
+            for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+                if ([shippingClass.className isEqualToString:order.selectedShippingMethod]){
+                    dict[@"shipping_class"] = [NSNumber numberWithInteger:shippingClass.identifier];
+                    break;
+                }
+            }
+        }
+        
+        [basket addObject:dict];
     }
 
     NSDictionary *dict = @{@"basket" : basket,
-                           @"shipping_country_code" : order.shippingAddress.country ? [order.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3],
+                           @"shipping_country_code" : shippingCountryCode,
                            @"promo_code" : order.promoCode ? order.promoCode : @"",
                            @"ship_to_store" : [NSNumber numberWithBool:order.shipToStore],
                            @"pay_in_store" : [NSNumber numberWithBool:order.payInStore]

@@ -178,6 +178,18 @@ static NSBlockOperation *templateSyncOperation;
     return self;
 }
 
+- (NSString *)selectedShippingMethod{
+    for (OLShippingClass *shippingClass in [self shippingMethods]){
+        if ([shippingClass.className isEqualToString:_selectedShippingMethod]){
+            return _selectedShippingMethod;
+        }
+    }
+    
+    // The selected method is no longer available/valid, maybe because a new product that doesn't support it was added to the order
+    _selectedShippingMethod = nil;
+    return nil;
+}
+
 - (void)setPromoCode:(NSString *)promoCode{
     _promoCode = promoCode;
 }
@@ -512,7 +524,21 @@ static NSBlockOperation *templateSyncOperation;
     }
     
     for (id<OLPrintJob> printJob in self.jobs) {
-        [jobs addObject:[printJob jsonRepresentation]];
+        NSMutableDictionary *dict = [[printJob jsonRepresentation] mutableCopy];
+        
+        OLProductTemplate *template = [OLProductTemplate templateWithId:printJob.templateId];
+        NSString *region = template.countryMapping[self.shippingAddress.country.codeAlpha3];
+        if (!region){
+            break;
+        }
+        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+            if ([shippingClass.className isEqualToString:self.selectedShippingMethod]){
+                dict[@"shipping_class"] = [NSNumber numberWithInteger:shippingClass.identifier];
+                break;
+            }
+        }
+        
+        [jobs addObject:dict];
     }
     
     if (self.phone){
@@ -561,6 +587,7 @@ static NSBlockOperation *templateSyncOperation;
     hash = 31 * hash + (self.shipToStore ? 39 : 0);
     hash = 31 * hash + (self.payInStore ? 73 : 0);
     hash = 31 * hash + ([OLKiteUtils isApplePayAvailable] ? 47 : 0);
+    hash = 31 * hash + [self.selectedShippingMethod hash];
     for (id<OLPrintJob> job in self.jobs){
         if (job.address.country){
             hash = 32 * hash + [job.address.country.codeAlpha3 hash];
@@ -625,29 +652,58 @@ static NSBlockOperation *templateSyncOperation;
 }
 
 - (NSArray<OLShippingClass *> *)shippingMethods{
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
     NSMutableArray *common = [[NSMutableArray alloc] init];
-    if (!self.shippingAddress.country){
-        return common;
-    }
     
     OLProductTemplate *firstJobTemplate = [OLProductTemplate templateWithId:self.jobs.firstObject.templateId];
     
-    NSString *firstJobRegion = firstJobTemplate.countryMapping[self.shippingAddress.country.codeAlpha3];
+    NSString *firstJobRegion = firstJobTemplate.countryMapping[countryCode];
     if (!firstJobRegion){
         return common;
     }
-    for (OLShippingClass *shippingClass in firstJobTemplate.shippingClasses[firstJobRegion]){
-        
+    for (OLShippingClass *firstJobShippingClass in firstJobTemplate.shippingClasses[firstJobRegion]){
+        BOOL commonInAllJobs = YES;
         for (id<OLPrintJob> job in self.jobs){
-            OLProductTemplate *template = [OLProductTemplate templateWithId:self.jobs.firstObject.templateId];
-            NSString *region = template.countryMapping[self.shippingAddress.country.codeAlpha3];
+            BOOL foundInJob = NO;
+            OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+            NSString *region = template.countryMapping[countryCode];
             if (!region){
+                break;
+            }
+            for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+                if ([shippingClass.className isEqualToString:firstJobShippingClass.className]){
+                    foundInJob = YES;
+                    break;
+                }
+            }
+            commonInAllJobs |= foundInJob;
+        }
+        if (commonInAllJobs){
+            [common addObject:firstJobShippingClass];
+        }
+    }
+    
+    return common;
+}
+
+- (NSDecimalNumber *)costForShippingMethodName:(NSString *)name{
+    NSDecimalNumber *cost = [NSDecimalNumber decimalNumberWithString:@"0"];
+    
+    for (id<OLPrintJob> job in self.jobs){
+        OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+        NSString *region = template.countryMapping[self.shippingAddress.country.codeAlpha3];
+        if (!region){
+            return nil;
+        }
+        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+            if ([shippingClass.className isEqualToString:name]){
+                cost = [cost decimalNumberByAdding:[NSDecimalNumber decimalNumberWithDecimal:[shippingClass.costs[region] decimalValue]]];
                 break;
             }
         }
     }
     
-    return common;
+    return cost;
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods

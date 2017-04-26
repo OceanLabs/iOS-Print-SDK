@@ -31,6 +31,8 @@
 #import "OLKiteUtils.h"
 #import "OLAnalytics.h"
 #import "OLUserSession.h"
+#import "OLShippingClass.h"
+#import "NSDecimalNumber+CostFormatter.h"
 
 @interface OLShippingMethodsViewController () <UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -49,7 +51,7 @@
     self.title = NSLocalizedStringFromTableInBundle(@"Shipping Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
 #ifndef OL_NO_ANALYTICS
-//    [OLAnalytics trackPaymentMethodScreenViewed:[OLUserSession currentSession].printOrder];
+    [OLAnalytics trackShippingMethodScreenViewed:[OLUserSession currentSession].printOrder];
 #endif
 }
 
@@ -58,7 +60,7 @@
     
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
-//        [OLAnalytics trackPaymentMethodScreenHitBack:[(OLPaymentViewController *)self.delegate printOrder]];
+        [OLAnalytics trackShippingMethodScreenHitBack:[OLUserSession currentSession].printOrder];
     }
 #endif
 }
@@ -75,7 +77,7 @@
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    NSInteger sections = 1;
+    NSInteger sections = [OLUserSession currentSession].printOrder.shippingMethods.count;
     
     return sections;
 }
@@ -91,11 +93,23 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    OLShippingClass *shippingMethod = [OLUserSession currentSession].printOrder.shippingMethods[indexPath.section];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackShippingMethodSelected:[OLUserSession currentSession].printOrder methodName:shippingMethod.className];
+#endif
+    [self.delegate shippingMethodsViewController:self didPickShippingMethod:shippingMethod];
     [self.collectionView reloadData];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"shippingMethodCell" forIndexPath:indexPath];
+    
+    OLShippingClass *shippingClass = [OLUserSession currentSession].printOrder.shippingMethods[indexPath.section];
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+    
+    [cell viewWithTag:10].hidden = [printOrder.selectedShippingMethod isEqualToString:shippingClass.className];
+    [(UILabel *)[cell viewWithTag:20] setText:shippingClass.className];
+    [(UILabel *)[cell viewWithTag:30] setText:[[printOrder costForShippingMethodName:shippingClass.className] formatCostForCurrencyCode:printOrder.currencyCode]];
     
     return cell;
 }

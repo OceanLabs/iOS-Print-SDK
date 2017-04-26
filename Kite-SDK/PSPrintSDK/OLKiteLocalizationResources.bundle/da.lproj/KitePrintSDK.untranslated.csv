@@ -1,4 +1,5 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+%@ Shipping,%@ Shipping,"/* examples: Standard Shipping, Tracked Shipping */"
 %ldx%ld Collage,%ldx%ld Collage,/* example: 5x7 Collage */
 Add %ld %@!,Add %ld %@!,
 Add a %@!,Add a %@!,
