@@ -110,9 +110,6 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *_Nullable)costPerSheetInCurrencyCode:(NSString *_Nonnull)currencyCode;
-- (NSDecimalNumber *_Nullable)shippingCostForCountry:(OLCountry *_Nonnull)country;
-- (NSDecimalNumber *_Nullable)originalShippingCostForCountry:(OLCountry *_Nonnull)country;
-- (NSString *_Nonnull)currencyForCurrentLocale;
 - (void)setSupportedOptions:(NSArray *_Nullable)options;
 + (OLTemplateUI)templateUIWithIdentifier:(NSString *_Nonnull)identifier;
 
