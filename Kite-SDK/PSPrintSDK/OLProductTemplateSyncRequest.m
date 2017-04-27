@@ -234,8 +234,8 @@
                                                 if ([shippingClassDict isKindOfClass:[NSDictionary class]]){
                                                     OLShippingClass *shippingClass = [[OLShippingClass alloc] init];
                                                     shippingClass.displayName = [shippingClassDict[@"display_name"] isKindOfClass:[NSString class]] ? shippingClassDict[@"display_name"] : nil;
-                                                    shippingClass.displayName = [shippingClassDict[@"min_delivery_time"] isKindOfClass:[NSNumber class]] ? shippingClassDict[@"min_delivery_time"] : nil;
-                                                    shippingClass.displayName = [shippingClassDict[@"max_delivery_time"] isKindOfClass:[NSNumber class]] ? shippingClassDict[@"max_delivery_time"] : nil;
+                                                    shippingClass.minDeliveryTime = [shippingClassDict[@"min_delivery_time"] isKindOfClass:[NSNumber class]] ? shippingClassDict[@"min_delivery_time"] : nil;
+                                                    shippingClass.maxDeliveryTime = [shippingClassDict[@"max_delivery_time"] isKindOfClass:[NSNumber class]] ? shippingClassDict[@"max_delivery_time"] : nil;
                                                     shippingClass.tracked = [shippingClassDict[@"tracked"] isKindOfClass:[NSNumber class]] ? [shippingClassDict[@"tracked"] boolValue] : NO;
                                                     shippingClass.className = [shippingClassDict[@"class_name"] isKindOfClass:[NSString class]] ? shippingClassDict[@"class_name"] : nil;
                                                     shippingClass.identifier = [shippingClassDict[@"id"] isKindOfClass:[NSNumber class]] ? [shippingClassDict[@"id"] integerValue] : 0;

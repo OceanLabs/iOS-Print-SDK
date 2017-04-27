@@ -260,6 +260,23 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
  */
 - (NSDecimalNumber *)costForShippingMethodName:(NSString *)name;
 
+
+/**
+ The estimated minimum amount of days for the delivery method
+
+ @param name The name of the delivery method
+ @return Number of days
+ */
+- (NSInteger)minimumDaysForShippingMethodName:(NSString *)name;
+
+/**
+ The estimated maximum amount of days for the delivery method
+ 
+ @param name The name of the delivery method
+ @return Number of days
+ */
+- (NSInteger)maximumDaysForShippingMethodName:(NSString *)name;
+
 /**
  *  Request the cost of the print order from Kite
  *

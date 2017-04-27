@@ -707,6 +707,48 @@ static NSBlockOperation *templateSyncOperation;
     return cost;
 }
 
+- (NSInteger)maximumDaysForShippingMethodName:(NSString *)name{
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    
+    NSInteger days = NSIntegerMin;
+    for (id<OLPrintJob> job in self.jobs){
+        OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+        NSString *region = template.countryMapping[countryCode];
+        if (!region){
+            return days;
+        }
+        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+            if ([shippingClass.className isEqualToString:name] && shippingClass.maxDeliveryTime){
+                days = MAX(days, [shippingClass.maxDeliveryTime integerValue]);
+                break;
+            }
+        }
+    }
+    
+    return days;
+}
+
+- (NSInteger)minimumDaysForShippingMethodName:(NSString *)name{
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    
+    NSInteger days = NSIntegerMax;
+    for (id<OLPrintJob> job in self.jobs){
+        OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+        NSString *region = template.countryMapping[countryCode];
+        if (!region){
+            return days;
+        }
+        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+            if ([shippingClass.className isEqualToString:name] && shippingClass.minDeliveryTime){
+                days = MIN(days, [shippingClass.minDeliveryTime integerValue]);
+                break;
+            }
+        }
+    }
+    
+    return days;
+}
+
 #pragma mark - OLAssetUploadRequestDelegate methods
 
 - (void)assetUploadRequest:(OLAssetUploadRequest *)req didProgressWithTotalAssetsUploaded:(NSUInteger)totalAssetsUploaded totalAssetsToUpload:(NSUInteger)totalAssetsToUpload bytesWritten:(long long)bytesWritten totalAssetBytesWritten:(long long)totalAssetBytesWritten totalAssetBytesExpectedToWrite:(long long)totalAssetBytesExpectedToWrite {

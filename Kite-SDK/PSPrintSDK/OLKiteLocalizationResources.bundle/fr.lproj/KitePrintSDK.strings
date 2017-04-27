@@ -1,6 +1,8 @@
+"%@ days" = "%@ days";
 "%@ Shipping" = "%@ Shipping";
 "%ldx%ld Collage" = "%ldx%ld Collage";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Garantie de Qualité**\nNos produits sont de la plus haute qualité et nous sommes certains que vous aimerez le vôtre. Sinon, nous offrons une garantie de remboursement. Profitez-en ! !";
+"1 day" = "1 day";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "Une erreur 401 Requête non autorisée est survenue durant le téléchargement. Veuillez réessayer.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "Une erreur 500 Serveur Interne est survenue durant le téléchargement. Veuillez réessayer.";
 "Add" = "Ajouter";
