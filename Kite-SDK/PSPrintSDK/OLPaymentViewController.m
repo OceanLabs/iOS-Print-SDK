@@ -1109,6 +1109,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             }
         }
         
+        NSMutableArray *shippingMethods = [self applePayShippingMethods];
+        if (shippingMethods.count > 0){
+            paymentRequest.shippingMethods = shippingMethods;
+        }
+        
         [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         paymentRequest.paymentSummaryItems = lineItems;
         paymentRequest.requiredShippingAddressFields = PKAddressFieldPostalAddress | PKAddressFieldName | PKAddressFieldEmail | PKAddressFieldPhone;
@@ -1118,6 +1123,21 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
         [self presentViewController:paymentController animated:YES completion:nil];
     }];
+}
+
+- (NSMutableArray *)applePayShippingMethods{
+    NSMutableArray *shippingMethods = [[NSMutableArray alloc] init];
+    for (OLShippingClass *class in self.printOrder.shippingMethods){
+        PKShippingMethod *method = [PKShippingMethod summaryItemWithLabel:class.className amount:[self.printOrder costForShippingMethodName:class.className]];
+        method.identifier = class.className;
+        method.detail = [self.printOrder deliveryEstimatedDaysStringForShippingMethodName:class.className];
+        [shippingMethods addObject:method];
+        
+        if ([class.className isEqualToString:self.printOrder.selectedShippingMethod]){
+            [shippingMethods exchangeObjectAtIndex:0 withObjectAtIndex:[shippingMethods indexOfObjectIdenticalTo:method]];
+        }
+    }
+    return shippingMethods;
 }
 
 - (IBAction)onButtonMinusClicked:(UIButton *)sender {
@@ -1326,10 +1346,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         self.shippingLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"examples: Standard Shipping, Tracked Shipping"), [OLUserSession currentSession].printOrder.selectedShippingMethod];
     }
     else{
-        NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        self.shippingLabel.text = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     
-    if ([OLUserSession currentSession].printOrder.shippingMethods.count > 1){
+    if ([OLUserSession currentSession].printOrder.shippingMethods.count > 1 && selectedPaymentMethod != kOLPaymentMethodApplePay){
         self.shippingMethodChevron.hidden = NO;
         self.shippingMethodTapGesture.enabled = YES;
     }
@@ -1471,11 +1491,49 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         
         [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         if (!error){
-            completion(PKPaymentAuthorizationStatusSuccess, nil, lineItems);
+            completion(PKPaymentAuthorizationStatusSuccess, [self applePayShippingMethods], lineItems);
         }
         else{
             self.printOrder.shippingAddress = nil;
-            completion(PKPaymentAuthorizationStatusFailure, nil, nil);
+            completion(PKPaymentAuthorizationStatusFailure, nil, lineItems);
+        }
+    }];
+}
+
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(PKShippingMethod *)shippingMethod completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKPaymentSummaryItem *> * _Nonnull))completion{
+    self.printOrder.selectedShippingMethod = shippingMethod.identifier;
+    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+        [self costCalculationCompletedWithError:error];
+        NSMutableArray *lineItems = [[NSMutableArray alloc] init];
+        for (OLPaymentLineItem *item in cost.lineItems){
+            [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
+        }
+        
+        // if a special discount exists, then add a Discount line item
+        if (cost.specialPromoDiscount){
+            NSDecimalNumber *currencyDiscount = cost.specialPromoDiscount[self.printOrder.currencyCode];
+            if ([currencyDiscount doubleValue] != 0) {
+                if ([currencyDiscount doubleValue] > 0) {
+                    currencyDiscount = [currencyDiscount decimalNumberByMultiplyingBy:(NSDecimalNumber *)[NSDecimalNumber numberWithInteger:-1]];
+                }
+                
+                for (PKPaymentSummaryItem *item in lineItems){
+                    if ([item.amount doubleValue] < 0){
+                        [lineItems removeObject:item];
+                    }
+                }
+                
+                [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedStringFromTableInBundle(@"Promotional Discount", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") amount:currencyDiscount]];
+            }
+        }
+        
+        [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
+        if (!error){
+            completion(PKPaymentAuthorizationStatusSuccess, lineItems);
+        }
+        else{
+            self.printOrder.shippingAddress = nil;
+            completion(PKPaymentAuthorizationStatusFailure, lineItems);
         }
     }];
 }

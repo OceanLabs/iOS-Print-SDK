@@ -910,6 +910,7 @@ static NSBlockOperation *templateSyncOperation;
     [aCoder encodeBool:self.shipToStore forKey:kKeyOrderShipToStore];
     [aCoder encodeBool:self.payInStore forKey:kKeyOrderPayInStore];
     [aCoder encodeObject:self.paymentMethod forKey:kKeyOrderPaymentMethod];
+    [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -934,6 +935,7 @@ static NSBlockOperation *templateSyncOperation;
             _shipToStore = [aDecoder decodeBoolForKey:kKeyOrderShipToStore];
             _payInStore = [aDecoder decodeBoolForKey:kKeyOrderPayInStore];
             _paymentMethod = [aDecoder decodeObjectForKey:kKeyOrderPaymentMethod];
+            _selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
         }
         return self;
         

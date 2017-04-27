@@ -510,7 +510,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cV5-4n-Kc8" userLabel="Shipping Method">
                                 <rect key="frame" x="0.0" y="485" width="375" height="50"/>
                                 <subviews>
-                                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N13-bB-qVS">
+                                    <button hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N13-bB-qVS">
                                         <rect key="frame" x="360" y="14" width="7" height="22"/>
                                         <color key="tintColor" red="0.18220192190000001" green="0.18219646810000001" blue="0.1821995676" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <state key="normal" image="grey-chevron"/>
