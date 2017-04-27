@@ -749,6 +749,41 @@ static NSBlockOperation *templateSyncOperation;
     return days;
 }
 
+- (NSString *)deliveryEstimatedDaysStringForShippingMethodName:(NSString *)name{
+    NSInteger min = [self minimumDaysForShippingMethodName:name];
+    NSInteger max = [self maximumDaysForShippingMethodName:name];
+    
+    if (min != NSIntegerMax && max != NSIntegerMin && min != max){
+        return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d - %d", (int)min, (int)max]];
+    }
+    else if (min == max){
+        if (min == 1){
+            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        }
+        else{
+            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]];
+        }
+    }
+    else if (min != NSIntegerMax){
+        if (min == 1){
+            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        }
+        else{
+            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]];
+        }
+    }
+    else if (max != NSIntegerMin){
+        if (max == 1){
+            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        }
+        else{
+            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)max]];
+        }
+    }
+    
+    return nil;
+}
+
 #pragma mark - OLAssetUploadRequestDelegate methods
 
 - (void)assetUploadRequest:(OLAssetUploadRequest *)req didProgressWithTotalAssetsUploaded:(NSUInteger)totalAssetsUploaded totalAssetsToUpload:(NSUInteger)totalAssetsToUpload bytesWritten:(long long)bytesWritten totalAssetBytesWritten:(long long)totalAssetBytesWritten totalAssetBytesExpectedToWrite:(long long)totalAssetBytesExpectedToWrite {

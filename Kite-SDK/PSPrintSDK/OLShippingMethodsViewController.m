@@ -110,40 +110,7 @@
     [cell viewWithTag:10].hidden = ![printOrder.selectedShippingMethod isEqualToString:shippingClass.className];
     [(UILabel *)[cell viewWithTag:20] setText:shippingClass.className];
     [(UILabel *)[cell viewWithTag:30] setText:[[printOrder costForShippingMethodName:shippingClass.className] formatCostForCurrencyCode:printOrder.currencyCode]];
-    
-    NSInteger min = [printOrder minimumDaysForShippingMethodName:shippingClass.className];
-    NSInteger max = [printOrder maximumDaysForShippingMethodName:shippingClass.className];
-    
-    if (min != NSIntegerMax && max != NSIntegerMin && min != max){
-        [(UILabel *)[cell viewWithTag:40] setText:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d - %d", (int)min, (int)max]]];
-    }
-    else if (min == max){
-        if (min == 1){
-            [(UILabel *)[cell viewWithTag:40] setText:NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
-        }
-        else{
-            [(UILabel *)[cell viewWithTag:40] setText:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]]];
-        }
-    }
-    else if (min != NSIntegerMax){
-        if (min == 1){
-            [(UILabel *)[cell viewWithTag:40] setText:NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
-        }
-        else{
-            [(UILabel *)[cell viewWithTag:40] setText:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]]];
-        }
-    }
-    else if (max != NSIntegerMin){
-        if (max == 1){
-            [(UILabel *)[cell viewWithTag:40] setText:NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
-        }
-        else{
-            [(UILabel *)[cell viewWithTag:40] setText:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)max]]];
-        }
-    }
-    else{
-        [(UILabel *)[cell viewWithTag:40] setText:nil];
-    }
+    [(UILabel *)[cell viewWithTag:40] setText:[printOrder deliveryEstimatedDaysStringForShippingMethodName:shippingClass.className]];
     
     return cell;
 }
