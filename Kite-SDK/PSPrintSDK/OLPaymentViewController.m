@@ -1311,7 +1311,8 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (IBAction)onShippingMethodGestureRecognized:(id)sender {
-    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLShippingMethodsViewController"];
+    OLShippingMethodsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLShippingMethodsViewController"];
+    vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

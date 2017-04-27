@@ -687,17 +687,18 @@ static NSBlockOperation *templateSyncOperation;
 }
 
 - (NSDecimalNumber *)costForShippingMethodName:(NSString *)name{
-    NSDecimalNumber *cost = [NSDecimalNumber decimalNumberWithString:@"0"];
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
     
+    NSDecimalNumber *cost = [NSDecimalNumber decimalNumberWithString:@"0"];
     for (id<OLPrintJob> job in self.jobs){
         OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
-        NSString *region = template.countryMapping[self.shippingAddress.country.codeAlpha3];
+        NSString *region = template.countryMapping[countryCode];
         if (!region){
             return nil;
         }
         for(OLShippingClass *shippingClass in template.shippingClasses[region]){
             if ([shippingClass.className isEqualToString:name]){
-                cost = [cost decimalNumberByAdding:[NSDecimalNumber decimalNumberWithDecimal:[shippingClass.costs[region] decimalValue]]];
+                cost = [cost decimalNumberByAdding:[NSDecimalNumber decimalNumberWithDecimal:[shippingClass.costs[self.currencyCode] decimalValue]]];
                 break;
             }
         }

@@ -107,7 +107,7 @@
     OLShippingClass *shippingClass = [OLUserSession currentSession].printOrder.shippingMethods[indexPath.section];
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
-    [cell viewWithTag:10].hidden = [printOrder.selectedShippingMethod isEqualToString:shippingClass.className];
+    [cell viewWithTag:10].hidden = ![printOrder.selectedShippingMethod isEqualToString:shippingClass.className];
     [(UILabel *)[cell viewWithTag:20] setText:shippingClass.className];
     [(UILabel *)[cell viewWithTag:30] setText:[[printOrder costForShippingMethodName:shippingClass.className] formatCostForCurrencyCode:printOrder.currencyCode]];
     
