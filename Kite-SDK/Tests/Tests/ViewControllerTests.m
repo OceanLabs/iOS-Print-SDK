@@ -97,25 +97,6 @@
     [[OLUserSession currentSession].kiteVc dismiss];
 }
 
-- (void)testIntegratedCheckoutViewController{
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
-    printOrder.email = @"ios_unit_test@kite.ly";
-    printOrder.phone = @"1234123412";
-    
-    OLIntegratedCheckoutViewController *vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-    
-    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-    
-    [self performUIAction:^{
-        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
-    }];
-    [self performUIAction:^{
-            [vc onButtonDoneClicked];
-    }];
-}
-
 - (void)testAddressEditViewController{
     OLAddressEditViewController *vc = [[OLAddressEditViewController alloc] initWithAddress:[OLAddress kiteTeamAddress]];
     
@@ -246,20 +227,6 @@
     
     [self performUIAction:^{
     }];
-    
-    [OLKiteABTesting sharedInstance].checkoutScreenType = @"Integrated";
-    
-    [self performUIAction:^{
-        [vc onShippingDetailsGestureRecognized:nil];
-    }];
-    
-    XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLIntegratedCheckoutViewController class]] ,@"");
-    
-    [self performUIAction:^{
-        [(OLNavigationController *)vc.navigationController popViewControllerAnimated:YES];
-    }];
-    
-    [OLKiteABTesting sharedInstance].checkoutScreenType = @"Classic";
     
     [self performUIAction:^{
         [vc onShippingDetailsGestureRecognized:nil];

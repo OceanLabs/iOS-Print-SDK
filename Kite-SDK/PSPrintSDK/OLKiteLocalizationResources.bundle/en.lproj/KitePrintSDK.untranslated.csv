@@ -44,7 +44,7 @@ cm,cm,/* Centimeters */
 Completed Orders,Completed Orders,
 Continue Shopping,Continue Shopping,
 Country,Country,
-County,County,/* Address county */
+County,County,
 Create a %@ for\nonly %@ %@,Create a %@ for\nonly %@ %@,
 Create a pack for\nonly %@ %@,Create a pack for\nonly %@ %@,
 Create another %@ for\nonly %@ %@,Create another %@ for\nonly %@ %@,
@@ -54,7 +54,6 @@ Crop,Crop,/* Crop image */
 CVV,CVV,/* The credit card security code */
 Default,Default,
 Delete Item,Delete Item,/* Delete [basket item] */
-Delivery Address,Delivery Address,
 Delivery Details,Delivery Details,
 Description,Description,/* Product description */
 Details,Details,/* Product Details */
@@ -96,8 +95,8 @@ Invalid Phone Number,Invalid Phone Number,
 Large,Large,
 Last Name,Last Name,
 Let's pick\nan image!,Let's pick\nan image!,"/* Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half. */"
-Line 1,Line 1,/* Address Line 1 */
-Line 2,Line 2,/* Address Line 2 */
+Line 1,Line 1,
+Line 2,Line 2,
 Log In,Log In,
 Log out,Log out,
 Login,Login,
@@ -128,7 +127,7 @@ Paying With,Paying With,/* Paying with [PayPal/Credit Card] */
 Payment,Payment,
 Payment (TEST),Payment (TEST),
 Payment Method,Payment Method,
-Phone,Phone,/* Phone number */
+Phone,Phone,
 Please add %d more.,Please add %d more.,/* Please add [a number] more [photos] */
 Please add some photos to your photo book,Please add some photos to your photo book,
 Please choose an address to have your order shipped to,Please choose an address to have your order shipped to,
@@ -182,7 +181,6 @@ Size,Size,/* Physical size of the product */
 Small,Small,
 Start by tapping this button,Start by tapping this button,
 Start Creating,Start Creating,/* Start Creating [your product] */
-State,State,/* Address State (for US addresses) */
 Store Maintenance,Store Maintenance,
 Swipe to rotate your mug,Swipe to rotate your mug,
 Tap Image to Change,Tap Image to Change,
@@ -216,4 +214,4 @@ Your 15-16 digit card number,Your 15-16 digit card number,
 Your card expiry date,Your card expiry date,
 Your payment was not approved (transaction state: %@). Please try again.,Your payment was not approved (transaction state: %@). Please try again.,
 Your Phone,Your Phone,"/* Device, not number */"
-ZIP Code,ZIP Code,/* For US Addresses */
+ZIP Code,ZIP Code,

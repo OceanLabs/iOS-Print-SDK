@@ -1385,6 +1385,9 @@ static const CGFloat kBookEdgePadding = 38;
         self.vcDelegateForCustomVc = vc; //Keep strong reference
         vc.providerForPresentedVc = [OLUserSession currentSession].kiteVc.customImageProviders.firstObject;
         UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
+        if (!customVc){
+            customVc = [[OLUserSession currentSession].kiteVc.delegate imagePickerViewControllerForName:vc.providerForPresentedVc.name];
+        }
         [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
         [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy]];
