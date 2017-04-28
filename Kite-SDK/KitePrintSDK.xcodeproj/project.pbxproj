@@ -18,6 +18,19 @@
 			name = Docs;
 			productName = Docs;
 		};
+		2EDB7BCC1E76D05D009B30F0 /* Unity-Plugin */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2EDB7BCF1E76D05D009B30F0 /* Build configuration list for PBXAggregateTarget "Unity-Plugin" */;
+			buildPhases = (
+				2EDB7BD21E76D07A009B30F0 /* CopyFiles */,
+				2EDB7BF51E76E476009B30F0 /* ShellScript */,
+			);
+			dependencies = (
+				2EDB7BDC1E76D48C009B30F0 /* PBXTargetDependency */,
+			);
+			name = "Unity-Plugin";
+			productName = "Unity-Plugin";
+		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
@@ -185,7 +198,6 @@
 		2E451E4D1D9555D90080F1C1 /* OLPaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */; };
 		2E451E4E1D9555D90080F1C1 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
 		2E451E4F1D9555D90080F1C1 /* OLCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */; };
-		2E451E501D9555D90080F1C1 /* OLIntegratedCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */; };
 		2E451E511D9555D90080F1C1 /* OLReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */; };
 		2E451E521D9555D90080F1C1 /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
 		2E451E531D9555D90080F1C1 /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
@@ -406,7 +418,6 @@
 		2EB8FE531D95685100E26BDF /* OLPaymentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE541D95685100E26BDF /* OLPaymentMethodsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB1978F1CF872F200648696 /* OLPaymentMethodsViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE551D95685100E26BDF /* OLCheckoutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2EB8FE561D95685100E26BDF /* OLIntegratedCheckoutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE571D95685100E26BDF /* OLCheckoutDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE581D95685100E26BDF /* OLReceiptViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE591D95685100E26BDF /* OLCreditCardCaptureViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -454,6 +465,10 @@
 		2EB8FE861D95692000E26BDF /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2EB8FE881D95692000E26BDF /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
+		2EB9669A1EA62A0500AD6BBA /* KiteSDK.cs in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB966971EA6172700AD6BBA /* KiteSDK.cs */; };
+		2EB9669B1EA62A0700AD6BBA /* KiteSDKLoader.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */; };
+		2EB9669C1EA62A0900AD6BBA /* KiteSDKLoader.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */; };
+		2EB9669D1EA62A3800AD6BBA /* KiteSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; };
 		2EBDF4CE1E434A0B004775BD /* OLKiteLocalizationResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */; };
 		2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */; };
 		2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */; };
@@ -494,6 +509,13 @@
 			remoteGlobalIDString = 2E898C4C1CC518180041CCD8;
 			remoteInfo = "Kite-CI-Deploy";
 		};
+		2EDB7BDB1E76D48C009B30F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD73BF60186215790009DE03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E451DC71D9554B40080F1C1;
+			remoteInfo = KiteSDK;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -517,6 +539,19 @@
 				2E9A772E1DA6839600A50C4D /* KiteSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EDB7BD21E76D07A009B30F0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "${PROJECT_DIR}/Unity-Plugin/KiteSDK";
+			dstSubfolderSpec = 0;
+			files = (
+				2EB9669D1EA62A3800AD6BBA /* KiteSDK.framework in CopyFiles */,
+				2EB9669A1EA62A0500AD6BBA /* KiteSDK.cs in CopyFiles */,
+				2EB9669B1EA62A0700AD6BBA /* KiteSDKLoader.h in CopyFiles */,
+				2EB9669C1EA62A0900AD6BBA /* KiteSDKLoader.m in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -683,8 +718,6 @@
 		2E5E2D5C1D8ADC2F00D9B1B2 /* KiteCI-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "KiteCI-Info.plist"; sourceTree = "<group>"; };
 		2E5F802A1B01E5F700095203 /* OLPaymentLineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPaymentLineItem.h; sourceTree = "<group>"; };
 		2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentLineItem.m; sourceTree = "<group>"; };
-		2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLIntegratedCheckoutViewController.h; sourceTree = "<group>"; };
-		2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLIntegratedCheckoutViewController.m; sourceTree = "<group>"; };
 		2E6561101D1C341A0092001C /* OLSelectedEffectButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSelectedEffectButton.h; sourceTree = "<group>"; };
 		2E6561111D1C341A0092001C /* OLSelectedEffectButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSelectedEffectButton.m; sourceTree = "<group>"; };
 		2E65A3371E6438F500DBE418 /* JDStatusBarNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JDStatusBarNotification.h; path = JDStatusBarNotification/JDStatusBarNotification.h; sourceTree = "<group>"; };
@@ -829,6 +862,9 @@
 		2EB715E01CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLPayPalCard+OLCardIcon.m"; sourceTree = "<group>"; };
 		2EB919931D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPhotobookPageBlankContentViewController.h; sourceTree = "<group>"; };
 		2EB919941D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotobookPageBlankContentViewController.m; sourceTree = "<group>"; };
+		2EB966971EA6172700AD6BBA /* KiteSDK.cs */ = {isa = PBXFileReference; lastKnownFileType = text; name = KiteSDK.cs; path = Assets/Plugins/iOS/KiteSDK/KiteSDK.cs; sourceTree = "<group>"; };
+		2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KiteSDKLoader.h; path = Assets/Plugins/iOS/KiteSDK/KiteSDKLoader.h; sourceTree = "<group>"; };
+		2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = KiteSDKLoader.m; path = Assets/Plugins/iOS/KiteSDK/KiteSDKLoader.m; sourceTree = "<group>"; };
 		2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloader.h; sourceTree = "<group>"; };
 		2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloader.m; sourceTree = "<group>"; };
 		2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = OLKiteLocalizationResources.bundle; sourceTree = "<group>"; };
@@ -1310,8 +1346,6 @@
 				2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */,
 				CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */,
 				CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */,
-				2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */,
-				2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */,
 				2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */,
 				CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */,
 				CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */,
@@ -1558,6 +1592,23 @@
 			name = LXReorderableCollectionViewFlowLayout;
 			sourceTree = "<group>";
 		};
+		2EDB7BD31E76D10A009B30F0 /* Unity Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				2EB966971EA6172700AD6BBA /* KiteSDK.cs */,
+				2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */,
+				2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */,
+			);
+			name = "Unity Plugin";
+			sourceTree = "<group>";
+		};
+		2EDB7BE01E76E33B009B30F0 /* Docs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Docs;
+			sourceTree = "<group>";
+		};
 		2EFDD4211E3781E6001B4E83 /* UI Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1638,6 +1689,7 @@
 				CD73BF71186215790009DE03 /* Kite Print SDK */,
 				CD73BF90186215790009DE03 /* Tests */,
 				2E451DC91D9554B40080F1C1 /* Kite Framework */,
+				2EDB7BD31E76D10A009B30F0 /* Unity Plugin */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				01A3969341E0D10D83284FD0 /* Pods */,
@@ -1883,6 +1935,7 @@
 		E29C862E1BE3C4640041D4CF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2EDB7BE01E76E33B009B30F0 /* Docs */,
 				2E582DA41E714FDA00A6DF4E /* mug.scn */,
 				2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */,
 				2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */,
@@ -2028,7 +2081,6 @@
 				2EB8FDD31D95685100E26BDF /* OLAddress+AddressBook.h in Headers */,
 				2EB8FE581D95685100E26BDF /* OLReceiptViewController.h in Headers */,
 				2EB8FDDB1D95685100E26BDF /* OLAddressSearchRequest.h in Headers */,
-				2EB8FE561D95685100E26BDF /* OLIntegratedCheckoutViewController.h in Headers */,
 				2EB8FE1C1D95685100E26BDF /* OLProgressHUD.h in Headers */,
 				2EB8FDF11D95685100E26BDF /* OLPhotobookPrintJob.h in Headers */,
 				2EB8FDF41D95685100E26BDF /* OLPrintOrderCost.h in Headers */,
@@ -2215,6 +2267,11 @@
 							};
 						};
 					};
+					2EDB7BCC1E76D05D009B30F0 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = L78L4U72YJ;
+						ProvisioningStyle = Automatic;
+					};
 					CD73BF88186215790009DE03 = {
 						TestTargetID = 2E898C4C1CC518180041CCD8;
 					};
@@ -2237,6 +2294,7 @@
 				2E451DC71D9554B40080F1C1 /* KiteSDK */,
 				CD73BF88186215790009DE03 /* Tests */,
 				2E4CAF081BC25F0A0089FA26 /* Docs */,
+				2EDB7BCC1E76D05D009B30F0 /* Unity-Plugin */,
 			);
 		};
 /* End PBXProject section */
@@ -2362,6 +2420,19 @@
 			shellPath = /bin/sh;
 			shellScript = "./update-localization-files.sh";
 		};
+		2EDB7BF51E76E476009B30F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p ${PROJECT_DIR}/Unity-Plugin/KiteSDK/\ncp ${PROJECT_DIR}/docs/unity.md ${PROJECT_DIR}/Unity-Plugin/KiteSDK/README.md\nzip -r ${PROJECT_DIR}/Unity-Plugin/KiteSDK-Unity-Plugin.zip ${PROJECT_DIR}/Unity-Plugin/KiteSDK";
+		};
 		4725309EF80D2315EB50E573 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2465,7 +2536,6 @@
 				2E451E211D9555870080F1C1 /* OLOAuth2Connection.m in Sources */,
 				2E451E621D9555EF0080F1C1 /* OLViewController.m in Sources */,
 				2E451DD61D9555540080F1C1 /* OLPrintOrderRequest.m in Sources */,
-				2E451E501D9555D90080F1C1 /* OLIntegratedCheckoutViewController.m in Sources */,
 				2E451E4E1D9555D90080F1C1 /* OLPaymentMethodsViewController.m in Sources */,
 				2E451E061D9555860080F1C1 /* OLStripeWrapper.m in Sources */,
 				2E451E3A1D9555870080F1C1 /* OLImagePickerPhotosPageViewController.m in Sources */,
@@ -2703,6 +2773,11 @@
 			isa = PBXTargetDependency;
 			target = 2E898C4C1CC518180041CCD8 /* Kite-CI-Deploy */;
 			targetProxy = 2EAB0AEF1CDC833C00625BD6 /* PBXContainerItemProxy */;
+		};
+		2EDB7BDC1E76D48C009B30F0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2E451DC71D9554B40080F1C1 /* KiteSDK */;
+			targetProxy = 2EDB7BDB1E76D48C009B30F0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3197,6 +3272,24 @@
 			};
 			name = Release;
 		};
+		2EDB7BCD1E76D05D009B30F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+			};
+			name = Debug;
+		};
+		2EDB7BCE1E76D05D009B30F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+			};
+			name = Release;
+		};
 		CD73BF98186215790009DE03 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3354,6 +3447,15 @@
 			buildConfigurations = (
 				2EADD8631BE79D6D0051CD31 /* Debug */,
 				2EADD8641BE79D6D0051CD31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2EDB7BCF1E76D05D009B30F0 /* Build configuration list for PBXAggregateTarget "Unity-Plugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EDB7BCD1E76D05D009B30F0 /* Debug */,
+				2EDB7BCE1E76D05D009B30F0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

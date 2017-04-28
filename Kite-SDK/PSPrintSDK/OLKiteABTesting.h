@@ -59,7 +59,6 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @property (assign, nonatomic) BOOL launchedWithPrintOrder;
 
 @property (assign, nonatomic, readonly) BOOL offerAddressSearch;
-@property (assign, nonatomic, readonly) BOOL requirePhoneNumber;
 @property (assign, nonatomic, readonly) BOOL hidePrice;
 @property (assign, nonatomic, readonly) BOOL offerPayPal;
 @property (assign, nonatomic, readonly) BOOL skipProductOverview;

@@ -2322,7 +2322,9 @@ const NSInteger kOLEditTagCrop = 40;
         
         self.vcDelegateForCustomVc = vc; //Keep strong reference
         UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
-        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+        if (!customVc){
+            customVc = [[OLUserSession currentSession].kiteVc.delegate imagePickerViewControllerForName:vc.providerForPresentedVc.name];
+        }        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
         [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
         if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){

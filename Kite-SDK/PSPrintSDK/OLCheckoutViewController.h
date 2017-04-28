@@ -32,6 +32,7 @@
 #import "OLCheckoutDelegate.h"
 #import "OLKiteViewController.h"
 @class OLPrintOrder;
+@class OLAddress;
 
 extern NSString *const kOLNotificationUserSuppliedShippingDetails;
 extern NSString *const kOLNotificationUserCompletedPayment;
@@ -45,8 +46,7 @@ static const NSUInteger kTagInputFieldLabel = 100;
 
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
 
-@property (strong, nonatomic) NSMutableArray *shippingAddresses;
-@property (strong, nonatomic) NSMutableArray *selectedShippingAddresses;
+@property (strong, nonatomic) OLAddress *shippingAddress;
 
 @property (copy, nonatomic) NSString *userEmail;
 @property (copy, nonatomic) NSString *userPhone;
