@@ -170,6 +170,9 @@
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)sender{
     if (sender.state == UIGestureRecognizerStateBegan){
         OLArtboardAssetView *assetView = (OLArtboardAssetView *)sender.view;
+        if ([[OLAsset userSelectedAssets][assetView.index] isKindOfClass:[OLPlaceholderAsset class]]){
+            return;
+        }
         assetView.dragging = YES;
         [self pickUpView:assetView];
     }
