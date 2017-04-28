@@ -177,7 +177,7 @@ static CGFloat fadeTime = 0.3;
     [self addCustomPhotoProviderWithViewController:vc name:name icon:icon prepopulatedAssets:nil];
 }
 
-- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *> *_Nullable)assets{
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nullable)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *> *_Nullable)assets{
     OLCustomViewControllerPhotoProvider *customProvider = [[OLCustomViewControllerPhotoProvider alloc] initWithController:vc name:name icon:icon];
     [customProvider.collections.firstObject addAssets:assets unique:NO];
     customProvider.preselectedAssets = assets;

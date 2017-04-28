@@ -57,6 +57,15 @@
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *_Nonnull)info;
 
 
+/**
+ Asks the delegate for a UIViewController image picker to show
+
+ @param name The name of the image picker
+ @return A UIViewController that conforms to the OLCustomPickerController protocol to be shown immediately.
+ */
+- (UIViewController<OLCustomPickerController> *_Nonnull)imagePickerViewControllerForName:(NSString *_Nonnull)name;
+
+
 - (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disallowUserToAddMorePhotos.");
 - (BOOL)kiteControllerShouldDisableCameraRoll:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disableCameraRoll.");
 - (BOOL)shouldShowPhoneEntryOnCheckoutScreen __deprecated_msg("This method will no longer work.");
@@ -261,12 +270,12 @@
  *  Add your own photo picker View Controller.
  *  See https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/custom_photo_sources.md for details
  *
- *  @param vc Your view controller
+ *  @param vc Your view controller. This can be nil, in which case you can return it in the imagePickerViewControllerForName: delegate call, which is called when it's needed.
  *  @param name The name for the source
  *  @param icon An image to be used as an icon (where applicable)
  *  @param assets An array of assets that will be prepopulated
  */
-- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *>*_Nullable)assets;
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nullable)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *>*_Nullable)assets;
 
 /**
  Provide a set of font names to be used in image editing (text on photo);

@@ -1,5 +1,6 @@
 ## 6.6.0
 - Added: A way to preserve templates and remote config data between OLKiteViewController launches
+- Added: A way to provide a custom image picker view controller when it is needed rather than providing it when launching the SDK.
 - Minor design tweaks.
 - Custom theme now extends to more places.
 - Fixed: Layout issues on Order History screen.
