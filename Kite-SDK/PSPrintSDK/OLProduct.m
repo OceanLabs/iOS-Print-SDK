@@ -386,7 +386,7 @@ typedef enum {
         }
         for (OLShippingClass *shippingClass in self.productTemplate.shippingClasses[region]){
             NSDecimalNumber *cost = [NSDecimalNumber decimalNumberWithDecimal:[shippingClass.costs[currencyCode] decimalValue]];
-            if (!minCost || [minCost compare:cost] == NSOrderedAscending){
+            if (!minCost || [minCost compare:cost] == NSOrderedDescending){
                 minCost = cost;
             }
         }
