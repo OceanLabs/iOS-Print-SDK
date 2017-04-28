@@ -181,7 +181,7 @@ static CGFloat fadeTime = 0.3;
     [self addCustomPhotoProviderWithViewController:vc name:name icon:icon prepopulatedAssets:nil];
 }
 
-- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *> *_Nullable)assets{
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nullable)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *> *_Nullable)assets{
     OLCustomViewControllerPhotoProvider *customProvider = [[OLCustomViewControllerPhotoProvider alloc] initWithController:vc name:name icon:icon];
     [customProvider.collections.firstObject addAssets:assets unique:NO];
     customProvider.preselectedAssets = assets;
@@ -225,7 +225,9 @@ static CGFloat fadeTime = 0.3;
         [self.operationQueue addOperation:loadingHandlerOperation];
     }
     
-    [OLProductTemplate resetTemplates];
+    if (!self.preserveExistingTemplates){
+        [OLProductTemplate resetTemplates];
+    }
     
     if ([OLProductTemplate templates].count > 0){
         fadeTime = 0;
@@ -233,6 +235,7 @@ static CGFloat fadeTime = 0.3;
         
         [self.operationQueue addOperation:self.templateSyncOperation];
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
+        [self.operationQueue addOperation:self.remoteThemePlistSyncOperation];
     }
     else{
         __weak OLKiteViewController *welf = self;

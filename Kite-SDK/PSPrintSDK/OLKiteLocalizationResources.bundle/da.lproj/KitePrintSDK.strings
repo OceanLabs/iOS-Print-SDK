@@ -54,7 +54,6 @@
 "CVV" = "CVV";
 "Default" = "Default";
 "Delete Item" = "Delete Item";
-"Delivery Address" = "Leveringsadresse";
 "Delivery Details" = "Leveringsdetaljer";
 "Description" = "Description";
 "Details" = "Detaljer";
@@ -183,7 +182,6 @@
 "Small" = "Small";
 "Start by tapping this button" = "Start by tapping this button";
 "Start Creating" = "Start Creating";
-"State" = "State";
 "Store Maintenance" = "Butik vedligeholdelse";
 "Swipe to rotate your mug" = "Swipe to rotate your mug";
 "Tap Image to Change" = "Tap Image to Change";

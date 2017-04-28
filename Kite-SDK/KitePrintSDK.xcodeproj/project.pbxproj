@@ -199,7 +199,6 @@
 		2E451E4D1D9555D90080F1C1 /* OLPaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5018D70D0F00D835BB /* OLPaymentViewController.m */; };
 		2E451E4E1D9555D90080F1C1 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
 		2E451E4F1D9555D90080F1C1 /* OLCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */; };
-		2E451E501D9555D90080F1C1 /* OLIntegratedCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */; };
 		2E451E511D9555D90080F1C1 /* OLReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */; };
 		2E451E521D9555D90080F1C1 /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
 		2E451E531D9555D90080F1C1 /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
@@ -417,7 +416,6 @@
 		2EB8FE531D95685100E26BDF /* OLPaymentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDA8BF5218D70D0F00D835BB /* OLPaymentViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE541D95685100E26BDF /* OLPaymentMethodsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB1978F1CF872F200648696 /* OLPaymentMethodsViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE551D95685100E26BDF /* OLCheckoutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2EB8FE561D95685100E26BDF /* OLIntegratedCheckoutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE571D95685100E26BDF /* OLCheckoutDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE581D95685100E26BDF /* OLReceiptViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE591D95685100E26BDF /* OLCreditCardCaptureViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -718,8 +716,6 @@
 		2E5E2D5C1D8ADC2F00D9B1B2 /* KiteCI-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "KiteCI-Info.plist"; sourceTree = "<group>"; };
 		2E5F802A1B01E5F700095203 /* OLPaymentLineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPaymentLineItem.h; sourceTree = "<group>"; };
 		2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentLineItem.m; sourceTree = "<group>"; };
-		2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLIntegratedCheckoutViewController.h; sourceTree = "<group>"; };
-		2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLIntegratedCheckoutViewController.m; sourceTree = "<group>"; };
 		2E6561101D1C341A0092001C /* OLSelectedEffectButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSelectedEffectButton.h; sourceTree = "<group>"; };
 		2E6561111D1C341A0092001C /* OLSelectedEffectButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSelectedEffectButton.m; sourceTree = "<group>"; };
 		2E65A3371E6438F500DBE418 /* JDStatusBarNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JDStatusBarNotification.h; path = JDStatusBarNotification/JDStatusBarNotification.h; sourceTree = "<group>"; };
@@ -1344,8 +1340,6 @@
 				2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */,
 				CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */,
 				CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */,
-				2E5F80301B04A22500095203 /* OLIntegratedCheckoutViewController.h */,
-				2E5F80311B04A22500095203 /* OLIntegratedCheckoutViewController.m */,
 				2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */,
 				CDA8BF5318D70D0F00D835BB /* OLReceiptViewController.h */,
 				CDA8BF5418D70D0F00D835BB /* OLReceiptViewController.m */,
@@ -2080,7 +2074,6 @@
 				2EB8FDD31D95685100E26BDF /* OLAddress+AddressBook.h in Headers */,
 				2EB8FE581D95685100E26BDF /* OLReceiptViewController.h in Headers */,
 				2EB8FDDB1D95685100E26BDF /* OLAddressSearchRequest.h in Headers */,
-				2EB8FE561D95685100E26BDF /* OLIntegratedCheckoutViewController.h in Headers */,
 				2EB8FE1C1D95685100E26BDF /* OLProgressHUD.h in Headers */,
 				2EB8FDF11D95685100E26BDF /* OLPhotobookPrintJob.h in Headers */,
 				2EB8FDF41D95685100E26BDF /* OLPrintOrderCost.h in Headers */,
@@ -2536,7 +2529,6 @@
 				2E451E211D9555870080F1C1 /* OLOAuth2Connection.m in Sources */,
 				2E451E621D9555EF0080F1C1 /* OLViewController.m in Sources */,
 				2E451DD61D9555540080F1C1 /* OLPrintOrderRequest.m in Sources */,
-				2E451E501D9555D90080F1C1 /* OLIntegratedCheckoutViewController.m in Sources */,
 				2E451E4E1D9555D90080F1C1 /* OLPaymentMethodsViewController.m in Sources */,
 				2E451E061D9555860080F1C1 /* OLStripeWrapper.m in Sources */,
 				2E451E3A1D9555870080F1C1 /* OLImagePickerPhotosPageViewController.m in Sources */,

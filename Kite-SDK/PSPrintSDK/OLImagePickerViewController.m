@@ -684,6 +684,9 @@
     }
     else if (provider.providerType == OLImagePickerProviderTypeViewController && [provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
         UIViewController<OLCustomPickerController> *vc = [(OLCustomViewControllerPhotoProvider *)provider vc];
+        if (!vc){
+            vc = [[OLUserSession currentSession].kiteVc.delegate imagePickerViewControllerForName:provider.name];
+        }
         vc.delegate = self;
         [vc safePerformSelector:@selector(setSelectedAssets:) withObject:[self.selectedAssets mutableCopy]];
         [vc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
