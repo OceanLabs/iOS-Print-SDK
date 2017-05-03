@@ -199,6 +199,16 @@
             [targetView setTargeted:YES];
             self.targetAssetView = targetView;
         }
+        
+        if (self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0 > self.draggingView.superview.frame.size.height * 0.9){
+            [self.delegate startScrollingDown];
+        }
+        else if (self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0 < self.draggingView.superview.frame.size.height * 0.1){
+            [self.delegate startScrollingUp];
+        }
+        else{
+            [self.delegate stopScrolling];
+        }
     }
 }
 

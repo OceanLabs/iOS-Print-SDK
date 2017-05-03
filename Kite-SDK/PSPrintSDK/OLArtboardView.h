@@ -33,6 +33,9 @@
 @protocol OLArtboardDelegate <NSObject>
 - (UIView *)viewToAddDraggingAsset;
 - (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
+- (void)startScrollingDown;
+- (void)startScrollingUp;
+- (void)stopScrolling;
 @end
 
 @interface OLArtboardView : UIImageView

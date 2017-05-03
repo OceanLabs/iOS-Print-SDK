@@ -1463,4 +1463,16 @@ static const CGFloat kBookEdgePadding = 38;
     return nil;
 }
 
+- (void)startScrollingDown{
+    [(id<OLArtboardDelegate>)self.photobookDelegate startScrollingDown];
+}
+
+- (void)startScrollingUp{
+    [(id<OLArtboardDelegate>)self.photobookDelegate startScrollingUp];
+}
+
+- (void)stopScrolling{
+    [(id<OLArtboardDelegate>)self.photobookDelegate stopScrolling];
+}
+
 @end
