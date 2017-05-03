@@ -263,8 +263,6 @@
                             
                             NSDictionary *countryMapping = [productTemplate[@"country_to_region_mapping"] isKindOfClass:[NSDictionary class]] ? productTemplate[@"country_to_region_mapping"] : nil;
                             
-                            NSDictionary *shippingCosts = [productTemplate[@"shipping_costs"] isKindOfClass:[NSDictionary class]] ? productTemplate[@"shipping_costs"] : nil;
-                            
                             NSNumber *gridCountX = [productTemplate[@"grid_count_x"] isKindOfClass:[NSNumber class]] ? productTemplate[@"grid_count_x"] : nil;
                             NSNumber *gridCountY = [productTemplate[@"grid_count_y"] isKindOfClass:[NSNumber class]] ? productTemplate[@"grid_count_y"] : nil;
                             
@@ -520,7 +518,6 @@
                                     t.imageBorder = imageBorder;
                                     t.productDescription = description;
                                     t.productDescriptionMarkdown = descriptionMarkdown;
-                                    t.shippingCosts = shippingCosts;
                                     t.gridCountX = [gridCountX integerValue];
                                     t.gridCountY = [gridCountY integerValue];
                                     t.supportedOptions = supportedOptions;
