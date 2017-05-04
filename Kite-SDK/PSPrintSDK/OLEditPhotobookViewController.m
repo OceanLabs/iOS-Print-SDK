@@ -704,7 +704,7 @@ static const NSInteger kSectionPages = 1;
         return;
     }
     self.scrollingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 repeats:YES block:^(NSTimer *timer){
-        self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y + 1);
+        self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y + 6);
     }];
 }
 
@@ -713,7 +713,7 @@ static const NSInteger kSectionPages = 1;
         return;
     }
     self.scrollingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 repeats:YES block:^(NSTimer *timer){
-        self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y - 1);
+        self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y - 6);
     }];
 }
 
