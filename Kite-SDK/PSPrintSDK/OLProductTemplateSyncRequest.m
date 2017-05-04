@@ -237,7 +237,7 @@
                                                     shippingClass.minDeliveryTime = [shippingClassDict[@"min_delivery_time"] isKindOfClass:[NSNumber class]] ? shippingClassDict[@"min_delivery_time"] : nil;
                                                     shippingClass.maxDeliveryTime = [shippingClassDict[@"max_delivery_time"] isKindOfClass:[NSNumber class]] ? shippingClassDict[@"max_delivery_time"] : nil;
                                                     shippingClass.tracked = [shippingClassDict[@"tracked"] isKindOfClass:[NSNumber class]] ? [shippingClassDict[@"tracked"] boolValue] : NO;
-                                                    shippingClass.className = [shippingClassDict[@"class_name"] isKindOfClass:[NSString class]] ? shippingClassDict[@"class_name"] : nil;
+                                                    shippingClass.className = [shippingClassDict[@"mobile_shipping_name"] isKindOfClass:[NSString class]] && ![shippingClassDict[@"mobile_shipping_name"] isEqualToString:@""] ? shippingClassDict[@"mobile_shipping_name"] : nil;
                                                     shippingClass.identifier = [shippingClassDict[@"id"] isKindOfClass:[NSNumber class]] ? [shippingClassDict[@"id"] integerValue] : 0;
                                                     NSMutableDictionary *costs = [[NSMutableDictionary alloc] init];
                                                     NSArray *costsArray = [shippingClassDict[@"costs"] isKindOfClass:[NSArray class]] ? shippingClassDict[@"costs"] : nil;
