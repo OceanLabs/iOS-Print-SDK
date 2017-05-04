@@ -313,6 +313,7 @@ static CGFloat fadeTime = 0.3;
         else if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
             BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[[OLUserSession currentSession].printOrder.jobs firstObject] assetsForUploading]];
             OLProduct *product = [OLProduct productWithTemplateId:[[[OLUserSession currentSession].printOrder.jobs firstObject] templateId]];
+            product.uuid = [[OLUserSession currentSession].printOrder.jobs firstObject].uuid;
             NSString *identifier;
             if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"] && [product isValidProductForUI]){
                 identifier = @"OLProductOverviewViewController";
