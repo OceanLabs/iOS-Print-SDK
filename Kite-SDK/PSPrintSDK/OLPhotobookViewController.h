@@ -44,7 +44,6 @@
 
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSNumber *editingPageNumber;
-@property (weak, nonatomic) id<OLKiteDelegate> delegate;
 @property (weak, nonatomic) id<OLPhotobookViewControllerDelegate> photobookDelegate;
 @property (strong, nonatomic) UIPageViewController *pageController;
 

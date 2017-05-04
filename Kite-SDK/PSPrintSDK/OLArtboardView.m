@@ -29,14 +29,18 @@
 #import "OLArtboardView.h"
 #import "UIView+AutoLayoutHelper.h"
 #import "OLAsset+Private.h"
+#import "OLImageEditViewController.h"
+#import "OLProduct.h"
+#import "NSObject+Utils.h"
+#import "OLAnalytics.h"
 
-@interface OLArtboardView () <UIGestureRecognizerDelegate>
-@property (strong, nonatomic) UIView *draggingView;
-@property (weak, nonatomic) OLArtboardAssetView *sourceAssetView;
-@property (weak, nonatomic) OLArtboardAssetView *targetAssetView;
+@interface OLArtboardView () <UIGestureRecognizerDelegate, OLImageEditViewControllerDelegate>
 @property (assign, nonatomic) CGRect sourceAssetViewRect;
 @property (assign, nonatomic) NSUInteger sourceAssetIndex;
 @property (strong, nonatomic) NSTimer *scrollingTimer;
+@property (strong, nonatomic) UIView *draggingView;
+@property (weak, nonatomic) OLArtboardAssetView *sourceAssetView;
+@property (weak, nonatomic) OLArtboardAssetView *targetAssetView;
 @end
 
 @implementation OLArtboardView
@@ -102,6 +106,9 @@
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     panGesture.delegate = self;
     [view addGestureRecognizer:panGesture];
+    
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    [view addGestureRecognizer:tapGesture];
 }
 
 - (void)pickUpView:(OLArtboardAssetView *)assetView{
@@ -228,6 +235,47 @@
     }
 }
 
+- (void)handleTapGesture:(UIPanGestureRecognizer *)sender{
+    UIViewController *vc = [self.delegate viewControllerForPresenting];
+    if (!vc){
+        return;
+    }
+    OLProduct *product = [vc safePerformSelectorWithReturn:@selector(product) withObject:nil];
+    if (!product){
+        return;
+    }
+    
+    OLArtboardAssetView *assetView = (OLArtboardAssetView *)sender.view;
+    self.sourceAssetView = assetView;
+    OLAsset *asset = [OLAsset userSelectedAssets][assetView.index];
+    [asset imageWithSize:vc.view.frame.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+        
+        OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
+        cropVc.borderInsets = product.productTemplate.imageBorder;
+        cropVc.enableCircleMask = product.productTemplate.templateUI == OLTemplateUICircle;
+        cropVc.delegate = self;
+        cropVc.aspectRatio = assetView.frame.size.width / assetView.frame.size.height;
+        cropVc.product = product;
+        
+        cropVc.previewView = [assetView snapshotViewAfterScreenUpdates:YES];
+        cropVc.previewView.frame = [self convertRect:assetView.frame toView:nil];
+        cropVc.previewSourceView = assetView;
+        cropVc.providesPresentationContextTransitionStyle = true;
+        cropVc.definesPresentationContext = true;
+        cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        [cropVc setFullImage:image];
+        cropVc.edits = asset.edits;
+        
+        [self.delegate willShowImageEditor];
+        
+        [vc presentViewController:cropVc animated:NO completion:NULL];
+        
+#ifndef OL_NO_ANALYTICS
+        [OLAnalytics trackEditPhotoTappedForProductName:product.productTemplate.name];
+#endif
+    }];
+}
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer{
     return otherGestureRecognizer.view == gestureRecognizer.view && [otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]];
 }
@@ -235,6 +283,40 @@
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
     OLArtboardAssetView *assetView = (OLArtboardAssetView *)gestureRecognizer.view;
     return assetView.dragging;
+}
+
+#pragma mark - OLImageEditViewController delegate
+
+- (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
+    [self.delegate willDismissImageEditor];
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
+    [self.delegate willDismissImageEditor];
+    [cropper dismissViewControllerAnimated:NO completion:NULL];
+}
+
+-(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+    OLAsset *asset = [OLAsset userSelectedAssets][self.sourceAssetView.index];
+    [asset unloadImage];
+    asset.edits = cropper.edits;
+
+    [self.sourceAssetView loadImageWithCompletionHandler:NULL];
+    
+    [self.delegate willDismissImageEditor];
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+    
+#ifndef OL_NO_ANALYTICS
+    UIViewController *vc = [self.delegate viewControllerForPresenting];
+    OLProduct *product = [vc safePerformSelectorWithReturn:@selector(product) withObject:nil];
+    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:product.productTemplate.name];
+#endif
+}
+
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.sourceAssetView.index withObject:asset];
+    [self.sourceAssetView loadImageWithCompletionHandler:NULL];
 }
 
 @end

@@ -631,7 +631,6 @@ static const CGFloat kBookEdgePadding = 38;
             [self saveJobWithCompletionHandler:^{
                 OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
                 UIViewController *nextVc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]];
-                [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
                 [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
                 NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
                 [stack removeObject:self];
@@ -640,45 +639,6 @@ static const CGFloat kBookEdgePadding = 38;
             }];
         }
     }];
-}
-
-#pragma mark - OLImageEditViewController delegate
-
-- (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
-}
-
-- (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
-    [cropper dismissViewControllerAnimated:NO completion:NULL];
-}
-
--(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
-    [self.editingAsset unloadImage];
-    self.editingAsset.edits = cropper.edits;
-    if (self.editingAsset == [OLAsset userSelectedAssets].firstObject){
-        [self loadCoverPhoto];
-    }
-    
-    [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
-    
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:self.product.productTemplate.name];
-#endif
-}
-
-- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    if (self.editingAsset == [OLAsset userSelectedAssets].firstObject){
-        [[OLAsset userSelectedAssets] replaceObjectAtIndex:0 withObject:asset];
-        [self loadCoverPhoto];
-    }
-    else{
-        NSInteger index = [[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:self.editingAsset];
-        [[OLAsset userSelectedAssets] replaceObjectAtIndex:index withObject:asset];
-        
-         [(OLPhotobookPageContentViewController *)[self.pageController.viewControllers objectAtIndex:self.croppingImageIndex] loadImageWithCompletionHandler:NULL];
-    }
-    self.editingAsset = asset;
 }
 
 #pragma mark - UIPageViewControllerDataSource and delegate
@@ -1430,6 +1390,27 @@ static const CGFloat kBookEdgePadding = 38;
 
 - (UIScrollView *)scrollViewForVerticalScolling{
     return [(id<OLArtboardDelegate>)self.photobookDelegate scrollViewForVerticalScolling];
+}
+
+- (UIViewController *)viewControllerForPresenting{
+    if (self.editMode){
+        return (UIViewController *)self.photobookDelegate;
+    }
+    else{
+        return self;
+    }
+}
+
+- (void)willShowImageEditor{
+    if (self.editMode){
+        [(id<OLArtboardDelegate>)self.photobookDelegate willShowImageEditor];
+    }
+}
+
+- (void)willDismissImageEditor{
+    if (self.editMode){
+        [(id<OLArtboardDelegate>)self.photobookDelegate willDismissImageEditor];
+    }
 }
 
 @end

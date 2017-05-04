@@ -59,7 +59,7 @@ static const NSInteger kSectionPages = 1;
 + (NSString *) instagramClientID;
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate,UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate, OLInfoBannerDelegate, OLArtboardDelegate>
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate, OLInfoBannerDelegate, OLArtboardDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL haveCachedCells;
@@ -546,62 +546,6 @@ static const NSInteger kSectionPages = 1;
     return MIN((min) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height), (self.view.frame.size.height - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)) * 0.9);
 }
 
-#pragma mark - OLImageEditViewController delegate
-
-- (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
-    if (self.longPressImageIndex == -1){
-        [[OLAsset userSelectedAssets].firstObject unloadImage];
-    }
-    else{
-        [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] unloadImage];
-    }
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
-}
-
-- (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
-    if (self.longPressImageIndex == -1){
-        [[OLAsset userSelectedAssets].firstObject unloadImage];
-    }
-    else{
-        [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] unloadImage];
-    }
-    [cropper dismissViewControllerAnimated:NO completion:NULL];
-}
-
--(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
-    if (self.longPressImageIndex == -1){
-        [[OLAsset userSelectedAssets].firstObject unloadImage];
-        [OLAsset userSelectedAssets].firstObject.edits = cropper.edits;
-        [self.interactionPhotobook loadCoverPhoto];
-        
-    }
-    else{
-        [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] unloadImage];
-        [[[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex] setEdits:cropper.edits];
-        
-        [[self pageControllerForPageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
-    }
-    
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:self.product.productTemplate.name];
-#endif
-}
-
-- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    if (self.longPressImageIndex == -1){
-        [[OLAsset userSelectedAssets] replaceObjectAtIndex:0 withObject:asset];
-        [self.interactionPhotobook loadCoverPhoto];
-    }
-    else{
-        [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.longPressImageIndex withObject:asset];
-        
-        [[self pageControllerForPageIndex:self.longPressImageIndex] loadImageWithCompletionHandler:NULL];
-    }
-    
-}
-
-
 #pragma mark - Adding new images
 
 - (void)showImagePicker{
@@ -696,6 +640,23 @@ static const NSInteger kSectionPages = 1;
 
 - (UIScrollView *)scrollViewForVerticalScolling{
     return self.collectionView;
+}
+
+- (void)willShowImageEditor{
+    [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
+        self.ctaButton.alpha = 0;
+        self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
+        self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
+    } completion:^(BOOL finished){
+        [self.infoBanner removeFromSuperview];
+        self.infoBanner = nil;
+    }];
+}
+
+- (void)willDismissImageEditor{
+    [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
+        self.ctaButton.alpha = 1;
+    } completion:NULL];
 }
 
 @end

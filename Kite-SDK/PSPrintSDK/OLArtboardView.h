@@ -34,6 +34,9 @@
 - (UIView *)viewToAddDraggingAsset;
 - (UIScrollView *)scrollViewForVerticalScolling;
 - (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
+- (UIViewController *)viewControllerForPresenting;
+- (void)willShowImageEditor;
+- (void)willDismissImageEditor;
 @end
 
 @interface OLArtboardView : UIImageView
