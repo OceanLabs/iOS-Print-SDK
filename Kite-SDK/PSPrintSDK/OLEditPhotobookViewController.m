@@ -719,6 +719,7 @@ static const NSInteger kSectionPages = 1;
 
 - (void)stopScrolling{
     [self.scrollingTimer invalidate];
+    self.scrollingTimer = nil;
 }
 
 @end
