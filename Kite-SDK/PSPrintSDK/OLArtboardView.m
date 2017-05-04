@@ -165,6 +165,8 @@
         
         [self.draggingView removeFromSuperview];
         [swappingView removeFromSuperview];
+        self.sourceAssetView.dragging = NO;
+        self.sourceAssetView = nil;
     }];
 }
 
