@@ -77,7 +77,6 @@ static const NSInteger kSectionPages = 1;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
-@property (strong, nonatomic) NSTimer *scrollingTimer;
 
 @end
 
@@ -699,27 +698,8 @@ static const NSInteger kSectionPages = 1;
     return nil;
 }
 
-- (void)startScrollingDown{
-    if (self.scrollingTimer){
-        return;
-    }
-    self.scrollingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 repeats:YES block:^(NSTimer *timer){
-        self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y + 6);
-    }];
-}
-
-- (void)startScrollingUp{
-    if (self.scrollingTimer){
-        return;
-    }
-    self.scrollingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 repeats:YES block:^(NSTimer *timer){
-        self.collectionView.contentOffset = CGPointMake(self.collectionView.contentOffset.x, self.collectionView.contentOffset.y - 6);
-    }];
-}
-
-- (void)stopScrolling{
-    [self.scrollingTimer invalidate];
-    self.scrollingTimer = nil;
+- (UIScrollView *)scrollViewForVerticalScolling{
+    return self.collectionView;
 }
 
 @end

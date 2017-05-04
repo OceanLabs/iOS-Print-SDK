@@ -36,6 +36,7 @@
 @property (weak, nonatomic) OLArtboardAssetView *targetAssetView;
 @property (assign, nonatomic) CGRect sourceAssetViewRect;
 @property (assign, nonatomic) NSUInteger sourceAssetIndex;
+@property (strong, nonatomic) NSTimer *scrollingTimer;
 @end
 
 @implementation OLArtboardView
@@ -201,13 +202,26 @@
         }
         
         if (self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0 > self.draggingView.superview.frame.size.height * 0.9){
-            [self.delegate startScrollingDown];
+            UIScrollView *scrollView = [self.delegate scrollViewForVerticalScolling];
+            if (self.scrollingTimer || !scrollView){
+                return;
+            }
+            self.scrollingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 repeats:YES block:^(NSTimer *timer){
+                scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + 6);
+            }];
         }
         else if (self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0 < self.draggingView.superview.frame.size.height * 0.1){
-            [self.delegate startScrollingUp];
+            UIScrollView *scrollView = [self.delegate scrollViewForVerticalScolling];
+            if (self.scrollingTimer || !scrollView){
+                return;
+            }
+            self.scrollingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 repeats:YES block:^(NSTimer *timer){
+                scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y - 6);
+            }];
         }
         else{
-            [self.delegate stopScrolling];
+            [self.scrollingTimer invalidate];
+            self.scrollingTimer = nil;
         }
     }
 }
