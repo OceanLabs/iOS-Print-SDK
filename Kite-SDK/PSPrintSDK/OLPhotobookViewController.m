@@ -265,9 +265,13 @@ static const CGFloat kBookEdgePadding = 38;
     self.widthCon2.priority = UILayoutPriorityDefaultLow;
     [self.view addConstraint:self.widthCon2];
     
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized:)];
+    tapGesture.delegate = self;
+    
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanGestureRecognized:)];
     panGesture.delegate = self;
     
+    [self.pageController.view addGestureRecognizer:tapGesture];
     [self.pageController.view addGestureRecognizer:panGesture];
     
     self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering");
@@ -895,6 +899,10 @@ static const CGFloat kBookEdgePadding = 38;
     if (self.editMode && ![[OLAsset userSelectedAssets].firstObject isKindOfClass:[OLPlaceholderAsset class]]){
         [self.photobookDelegate photobook:self userDidLongPressOnImageWithIndex:-1 sender:sender];
     }
+}
+
+- (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
+    return; //Prevent taps from going to the UIPageController
 }
 
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer{
