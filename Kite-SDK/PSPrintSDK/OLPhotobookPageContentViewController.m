@@ -70,12 +70,6 @@
     [self setPage:(self.pageIndex % 2 == 0)];
 }
 
-//- (void)setPageIndex:(NSInteger)pageIndex{
-//    _pageIndex = pageIndex;
-//    
-//    [self setPage:(pageIndex % 2 == 0)];
-//}
-
 - (void)setPage:(BOOL)left{
     self.left = left;
     if (left){

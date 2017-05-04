@@ -126,7 +126,6 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonLeadingCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonHeightCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonBottomCon;
-@property (weak, nonatomic) OLImageView *coverImageView;
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
@@ -166,7 +165,8 @@ static const CGFloat kBookEdgePadding = 38;
             if (([vc isKindOfClass:[OLPhotobookPageContentViewController class]] && numberOfImages == 0) || ([vc isKindOfClass:[OLPhotobookPageBlankContentViewController class]] && numberOfImages == 1)){
                 OLPhotobookPageContentViewController *newVc;
                 if (self.product.productTemplate.productRepresentation.pages[pageIndex+index].numberOfPhotos == 0){
-                    newVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageBlankContentViewController"];        newVc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
+                    newVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageBlankContentViewController"];
+                    newVc.view.backgroundColor = [UIColor colorWithRed:0.918 green:0.910 blue:0.894 alpha:1.000];
                 }
                 else{
                     newVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLPhotobookPageViewController"];
@@ -544,14 +544,7 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)loadCoverPhoto{
-    __weak OLPhotobookViewController *welf = self;
-    if (self.coverImageView){
-        [self.coverImageView setAndFadeInImageWithOLAsset:[OLAsset userSelectedAssets].firstObject size:self.coverImageView.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
-            [welf.coverImageView setProgress:progress];
-        }completionHandler:^{
-            welf.coverImageView.backgroundColor = [UIColor clearColor];
-        }];
-    }
+    [self.coverImageView.assetViews.firstObject loadImageWithCompletionHandler:NULL];
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSUInteger)index {
@@ -861,44 +854,7 @@ static const CGFloat kBookEdgePadding = 38;
 #pragma mark - Gesture recognizers
 
 - (void)onCoverTapRecognized:(UITapGestureRecognizer *)sender{
-    if (self.editMode){
-        [self.photobookDelegate photobook:self userDidTapOnImageWithIndex:-1];
-        return;
-    }
-    
-    OLAsset *asset = [OLAsset userSelectedAssets].firstObject;
-    if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
-        self.addNewPhotosAtIndex = -1;
-        [self showImagePicker];
-        return;
-    }
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        return;
-    }
-    self.editingAsset = asset;
-    UIImageView *imageView = self.coverImageView;
-    OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
-    cropVc.delegate = self;
-    cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
-    cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
-    cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
-    cropVc.previewSourceView = imageView;
-    cropVc.providesPresentationContextTransitionStyle = true;
-    cropVc.definesPresentationContext = true;
-    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    cropVc.product = self.product;
-    
-    [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
-        [cropVc setFullImage:image];
-        cropVc.edits = self.editingAsset.edits;
-        [self presentViewController:cropVc animated:NO completion:NULL];
-    }];
-}
-
-- (void)onCoverLongPressRecognized:(UILongPressGestureRecognizer *)sender{
-    if (self.editMode && ![[OLAsset userSelectedAssets].firstObject isKindOfClass:[OLPlaceholderAsset class]]){
-        [self.photobookDelegate photobook:self userDidLongPressOnImageWithIndex:-1 sender:sender];
-    }
+    return;
 }
 
 - (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender{
@@ -1047,7 +1003,8 @@ static const CGFloat kBookEdgePadding = 38;
 }
 
 - (void)setupCoverContentInView:(UIView *)halfBookCoverImageContainer{
-    OLImageView *coverImageView = [[OLImageView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
+    OLArtboardView *coverImageView = [[OLArtboardView alloc] initWithFrame:CGRectMake(0, 0, self.bookCover.frame.size.width / 2.0, self.bookCover.frame.size.height)];
+    coverImageView.delegate = self;
     self.coverImageView = coverImageView;
     [self loadCoverPhoto];
     coverImageView.tag = 18;
@@ -1058,9 +1015,6 @@ static const CGFloat kBookEdgePadding = 38;
 
 -(void) setUpBookCoverViewForFrontCover:(BOOL)front{
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverTapRecognized:)];
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onCoverLongPressRecognized:)];
-    
     UIView *halfBookCoverImageContainer;
     
     if (front){
@@ -1080,7 +1034,6 @@ static const CGFloat kBookEdgePadding = 38;
             [self.bookCover addSubview:halfBookCoverImageContainer];
             
             halfBookCoverImageContainer.userInteractionEnabled = YES;
-            [halfBookCoverImageContainer addGestureRecognizer:tap];
             if (!self.editMode){
                 [halfBookCoverImageContainer addGestureRecognizer:swipe];
             }
@@ -1096,8 +1049,6 @@ static const CGFloat kBookEdgePadding = 38;
             if (self.editMode){
                 OLImageView *coverImageView = [halfBookCoverImageContainer viewWithTag:18];
                 coverImageView.userInteractionEnabled = YES;
-                [coverImageView addGestureRecognizer:tap];
-                [coverImageView addGestureRecognizer:longPress];
             }
         }
         
@@ -1150,7 +1101,6 @@ static const CGFloat kBookEdgePadding = 38;
             swipe.direction = UISwipeGestureRecognizerDirectionRight;
             [self.bookCover addSubview:halfBookCoverImageContainer];
             halfBookCoverImageContainer.userInteractionEnabled = YES;
-            [halfBookCoverImageContainer addGestureRecognizer:tap];
             [halfBookCoverImageContainer addGestureRecognizer:swipe];
             
             UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:[self productAspectRatio]/2.0 < 1 ? @"book-cover-left" : @"book-cover-left-landscape"]];
@@ -1464,6 +1414,13 @@ static const CGFloat kBookEdgePadding = 38;
                 if (!assetView.dragging && CGRectContainsPoint(assetView.frame, [assetView.superview convertPoint:point fromView:[self viewToAddDraggingAsset]])){
                     return assetView;
                 }
+            }
+        }
+    }
+    else{
+        for (OLArtboardAssetView *assetView in self.coverImageView.assetViews){
+            if (!assetView.dragging && CGRectContainsPoint(assetView.frame, [assetView.superview convertPoint:point fromView:[self viewToAddDraggingAsset]])){
+                return assetView;
             }
         }
     }

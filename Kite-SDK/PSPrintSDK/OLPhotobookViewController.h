@@ -52,6 +52,7 @@
 @property (assign, nonatomic) BOOL startOpen;
 @property (assign, nonatomic, readonly) BOOL bookClosed;
 @property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
+@property (weak, nonatomic) OLArtboardView *coverImageView;
 
 - (void)loadCoverPhoto;
 - (void)saveJobWithCompletionHandler:(void(^)())handler;

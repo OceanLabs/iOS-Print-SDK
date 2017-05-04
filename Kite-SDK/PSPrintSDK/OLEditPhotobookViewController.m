@@ -53,10 +53,6 @@
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionPages = 1;
 
-@interface OLPhotobookViewController ()
-@property (weak, nonatomic) UIImageView *coverImageView;
-@end
-
 @interface OLKitePrintSDK (InternalUtils)
 + (NSString *) instagramRedirectURI;
 + (NSString *) instagramSecret;
