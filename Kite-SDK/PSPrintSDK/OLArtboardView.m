@@ -33,14 +33,23 @@
 #import "OLProduct.h"
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
+#import "OLImagePickerViewController.h"
+#import "OLUserSession.h"
+#import "OLKiteUtils.h"
+#import "OLKiteViewController+Private.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "OLNavigationController.h"
+#import "OLCustomPickerController.h"
 
-@interface OLArtboardView () <UIGestureRecognizerDelegate, OLImageEditViewControllerDelegate>
+@interface OLArtboardView () <UIGestureRecognizerDelegate, OLImageEditViewControllerDelegate, OLImagePickerViewControllerDelegate>
 @property (assign, nonatomic) CGRect sourceAssetViewRect;
 @property (assign, nonatomic) NSUInteger sourceAssetIndex;
 @property (strong, nonatomic) NSTimer *scrollingTimer;
 @property (strong, nonatomic) UIView *draggingView;
 @property (weak, nonatomic) OLArtboardAssetView *sourceAssetView;
 @property (weak, nonatomic) OLArtboardAssetView *targetAssetView;
+@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
+@property (strong, nonatomic) UIViewController *presentedVc;
 @end
 
 @implementation OLArtboardView
@@ -248,32 +257,65 @@
     OLArtboardAssetView *assetView = (OLArtboardAssetView *)sender.view;
     self.sourceAssetView = assetView;
     OLAsset *asset = [OLAsset userSelectedAssets][assetView.index];
-    [asset imageWithSize:vc.view.frame.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+    if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
+        OLImagePickerViewController *imagePicker = [[OLUserSession currentSession].kiteVc.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+        imagePicker.delegate = self;
+        imagePicker.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];;
+        if ([self.delegate respondsToSelector:@selector(maxNumberOfPhotosToPick)]){
+            imagePicker.maximumPhotos = [self.delegate maxNumberOfPhotosToPick];
+        }
+        imagePicker.product = product;
         
-        OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
-        cropVc.borderInsets = product.productTemplate.imageBorder;
-        cropVc.enableCircleMask = product.productTemplate.templateUI == OLTemplateUICircle;
-        cropVc.delegate = self;
-        cropVc.aspectRatio = assetView.frame.size.width / assetView.frame.size.height;
-        cropVc.product = product;
-        
-        cropVc.previewView = [assetView snapshotViewAfterScreenUpdates:YES];
-        cropVc.previewView.frame = [self convertRect:assetView.frame toView:nil];
-        cropVc.previewSourceView = assetView;
-        cropVc.providesPresentationContextTransitionStyle = true;
-        cropVc.definesPresentationContext = true;
-        cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-        [cropVc setFullImage:image];
-        cropVc.edits = asset.edits;
-        
-        [self.delegate willShowImageEditor];
-        
-        [vc presentViewController:cropVc animated:NO completion:NULL];
-        
+        if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+            //Skip the image picker and only show the custom vc
+            
+            self.vcDelegateForCustomVc = imagePicker; //Keep strong reference
+            UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
+            if (!customVc){
+                customVc = [[OLUserSession currentSession].kiteVc.delegate imagePickerViewControllerForName:imagePicker.providerForPresentedVc.name];
+            }        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+            [customVc safePerformSelector:@selector(setProductId:) withObject:product.templateId];
+            [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
+            if ([vc respondsToSelector:@selector(setMaximumPhotos:)] && [self.delegate respondsToSelector:@selector(maxNumberOfPhotosToPick)]){
+                imagePicker.maximumPhotos = [self.delegate maxNumberOfPhotosToPick];
+            }
+            
+            [vc presentViewController:customVc animated:YES completion:NULL];
+            self.presentedVc = customVc;
+            return;
+        }
+        else{
+            [vc presentViewController:[[OLNavigationController alloc] initWithRootViewController:imagePicker] animated:YES completion:NULL];
+        }
+    }
+    else{
+        [asset imageWithSize:vc.view.frame.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+            
+            OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
+            cropVc.borderInsets = product.productTemplate.imageBorder;
+            cropVc.enableCircleMask = product.productTemplate.templateUI == OLTemplateUICircle;
+            cropVc.delegate = self;
+            cropVc.aspectRatio = assetView.frame.size.width / assetView.frame.size.height;
+            cropVc.product = product;
+            
+            cropVc.previewView = [assetView snapshotViewAfterScreenUpdates:YES];
+            cropVc.previewView.frame = [self convertRect:assetView.frame toView:nil];
+            cropVc.previewSourceView = assetView;
+            cropVc.providesPresentationContextTransitionStyle = true;
+            cropVc.definesPresentationContext = true;
+            cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+            [cropVc setFullImage:image];
+            cropVc.edits = asset.edits;
+            
+            [self.delegate willShowImageEditor];
+            
+            [vc presentViewController:cropVc animated:NO completion:NULL];
+            
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackEditPhotoTappedForProductName:product.productTemplate.name];
+            [OLAnalytics trackEditPhotoTappedForProductName:product.productTemplate.name];
 #endif
-    }];
+        }];
+    }
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer{
@@ -283,6 +325,14 @@
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
     OLArtboardAssetView *assetView = (OLArtboardAssetView *)gestureRecognizer.view;
     return assetView.dragging;
+}
+
+- (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet{
+    for (OLArtboardAssetView *assetView in self.assetViews){
+        if ([indexSet containsIndex:assetView.index]){
+            [assetView loadImageWithCompletionHandler:NULL];
+        }
+    }
 }
 
 #pragma mark - OLImageEditViewController delegate
@@ -317,6 +367,41 @@
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
     [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.sourceAssetView.index withObject:asset];
     [self.sourceAssetView loadImageWithCompletionHandler:NULL];
+}
+
+#pragma mark OLImagePickerViewControllerDelegate
+
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    NSIndexSet *changedIndexes = [[OLAsset userSelectedAssets] updateUserSelectedAssetsAtIndex:self.sourceAssetView.index withAddedAssets:addedAssets removedAssets:removedAssets];
+    
+    if ([self.delegate respondsToSelector:@selector(refreshAssetViewsWithIndexSet:)]){
+        [self.delegate refreshAssetViewsWithIndexSet:changedIndexes];
+    }
+    else{
+        [self refreshAssetViewsWithIndexSet:changedIndexes];
+    }
+    
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
 }
 
 @end

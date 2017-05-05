@@ -37,6 +37,11 @@
 - (UIViewController *)viewControllerForPresenting;
 - (void)willShowImageEditor;
 - (void)willDismissImageEditor;
+
+@optional
+- (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet;
+- (NSInteger)maxNumberOfPhotosToPick;
+
 @end
 
 @interface OLArtboardView : UIImageView
@@ -44,4 +49,5 @@
 @property (strong, nonatomic) NSMutableArray<OLArtboardAssetView *> *assetViews;
 - (void)addAssetViewWithRelativeFrame:(CGRect)frame index:(NSUInteger)index;
 - (void)pickUpView:(OLArtboardAssetView *)assetView;
+- (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet;
 @end

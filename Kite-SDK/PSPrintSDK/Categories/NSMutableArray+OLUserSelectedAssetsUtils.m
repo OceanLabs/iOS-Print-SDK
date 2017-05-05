@@ -54,12 +54,14 @@
     }
 }
 
-- (void)updateUserSelectedAssetsAtIndex:(NSInteger)insertIndex withAddedAssets:(NSArray<OLAsset *> *)addedAssets removedAssets:(NSArray<OLAsset *> *)removedAssets{
+- (NSIndexSet *)updateUserSelectedAssetsAtIndex:(NSInteger)insertIndex withAddedAssets:(NSArray<OLAsset *> *)addedAssets removedAssets:(NSArray<OLAsset *> *)removedAssets{
+    NSMutableIndexSet *changedIndexes = [[NSMutableIndexSet alloc] init];
     for (OLAsset *asset in addedAssets){
         for (NSInteger bookPhoto = 0; bookPhoto < self.count; bookPhoto++){
             NSInteger index = (bookPhoto + insertIndex) % self.count;
             if ([[self objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
                 [self replaceObjectAtIndex:index withObject:asset];
+                [changedIndexes addIndex:index];
                 break;
             }
         }
@@ -67,7 +69,10 @@
     for (OLAsset *asset in removedAssets){
         NSInteger index = [self indexOfObjectIdenticalTo:asset];
         [self replaceObjectAtIndex:index withObject:[[OLPlaceholderAsset alloc] init]];
+        [changedIndexes addIndex:index];
     }
+    
+    return changedIndexes;
 }
 
 @end

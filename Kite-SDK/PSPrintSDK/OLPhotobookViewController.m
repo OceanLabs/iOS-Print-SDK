@@ -96,7 +96,7 @@ static const CGFloat kBookEdgePadding = 38;
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate,UIGestureRecognizerDelegate, OLImageViewDelegate, OLImageEditViewControllerDelegate, UINavigationControllerDelegate, OLUpsellViewControllerDelegate, OLImagePickerViewControllerDelegate, OLArtboardDelegate>
+@interface OLPhotobookViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate,UIGestureRecognizerDelegate, OLImageViewDelegate, UINavigationControllerDelegate, OLUpsellViewControllerDelegate, OLImagePickerViewControllerDelegate, OLArtboardDelegate>
 
 @property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL bookClosed;
@@ -1411,6 +1411,27 @@ static const CGFloat kBookEdgePadding = 38;
     if (self.editMode){
         [(id<OLArtboardDelegate>)self.photobookDelegate willDismissImageEditor];
     }
+}
+
+- (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet{
+    if (self.photobookDelegate){
+        [(id<OLArtboardDelegate>)self.photobookDelegate refreshAssetViewsWithIndexSet:indexSet];
+    }
+    else{
+        [self photobookRefreshAssetViewsWithIndexSet:indexSet];
+    }
+}
+
+- (void)photobookRefreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet{
+    for (UIViewController *vc in self.pageController.viewControllers){
+        if ([vc isKindOfClass:[OLPhotobookPageContentViewController class]]){
+            [[(OLPhotobookPageContentViewController *)vc artboardView] refreshAssetViewsWithIndexSet:indexSet];
+        }
+    }
+}
+
+- (NSInteger)maxNumberOfPhotosToPick{
+    return [OLAsset userSelectedAssets].count;
 }
 
 @end

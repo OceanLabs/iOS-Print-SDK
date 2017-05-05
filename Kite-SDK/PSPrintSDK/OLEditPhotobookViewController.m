@@ -349,41 +349,6 @@ static const NSInteger kSectionPages = 1;
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 50, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
 }
 
-#pragma mark - Menu Actions
-
-- (void)editImage{
-    OLAsset *cropPhoto;
-    UIImageView *imageView;
-    if (self.longPressImageIndex == -1){
-        cropPhoto = [OLAsset userSelectedAssets].firstObject;
-        imageView = self.interactionPhotobook.coverImageView;
-    }
-    else{
-        cropPhoto = [[OLAsset userSelectedAssets] objectAtIndex:self.longPressImageIndex];
-        imageView = [self pageControllerForPageIndex:self.longPressImageIndex].artboardView.assetViews.firstObject.imageView;
-    }
-    OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
-    cropVc.delegate = self;
-    cropVc.aspectRatio = imageView.frame.size.height / imageView.frame.size.width;
-    cropVc.product = self.product;
-    
-    cropVc.previewView = [imageView snapshotViewAfterScreenUpdates:YES];
-    cropVc.previewView.frame = [imageView.superview convertRect:imageView.frame toView:nil];
-    cropVc.previewSourceView = imageView;
-    cropVc.providesPresentationContextTransitionStyle = true;
-    cropVc.definesPresentationContext = true;
-    cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    [cropPhoto imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
-        [cropVc setFullImage:image];
-        cropVc.edits = cropPhoto.edits;
-        [self presentViewController:cropVc animated:NO completion:NULL];
-    }];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
-#endif
-}
-
 #pragma mark - User Actions
 
 - (void)onButtonNextClicked{
@@ -657,6 +622,12 @@ static const NSInteger kSectionPages = 1;
     [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
         self.ctaButton.alpha = 1;
     } completion:NULL];
+}
+
+- (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet{
+    for (OLPhotobookViewController *photobook in self.childViewControllers){
+        [photobook photobookRefreshAssetViewsWithIndexSet:indexSet];
+    }
 }
 
 @end
