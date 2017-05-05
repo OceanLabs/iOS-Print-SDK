@@ -120,7 +120,6 @@ static char tasksKey;
     if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
         self.image = [UIImage imageNamedInKiteBundle:@"plus"];
         self.contentMode = UIViewContentModeCenter;
-        self.backgroundColor = [UIColor colorWithWhite: 0.937 alpha: 1];
         if (handler){
             handler();
         }

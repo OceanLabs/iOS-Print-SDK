@@ -370,7 +370,8 @@
 }
 
 - (void)setupBottomBorderTextFieldOnView:(OLCircleMaskCollectionViewCell *)cell{
-    CGFloat heightFactor = cell.imageView.frame.size.height / 212.0;
+    OLArtboardView *artboard = [cell viewWithTag:10];
+    CGFloat heightFactor = artboard.frame.size.height / 212.0;
     UITextField *tf = [[UITextField alloc] init];
     tf.userInteractionEnabled = NO;
     tf.textAlignment = NSTextAlignmentCenter;
@@ -380,15 +381,14 @@
     tf.textColor = [UIColor blackColor];
     tf.tag = 1556;
     
-    [cell.imageView.superview addSubview:tf];
+    [artboard.superview addSubview:tf];
     
-    UIView *imageView = cell.imageView;
     tf.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(tf, imageView);
+    NSDictionary *views = NSDictionaryOfVariableBindings(tf, artboard);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
     NSArray *visuals = @[@"H:|-5-[tf]-5-|",
-                         [NSString stringWithFormat:@"V:[imageView]-%f-[tf(%f)]", 8.0 * heightFactor, 40.0 * heightFactor]];
+                         [NSString stringWithFormat:@"V:[artboard]-%f-[tf(%f)]", 8.0 * heightFactor, 40.0 * heightFactor]];
     
     
     for (NSString *visual in visuals) {
@@ -461,64 +461,10 @@
 }
 
 - (void)editPhoto:(id)sender {
-    UIView *cellContentView;
-    if ([sender isKindOfClass: [UIButton class]]){
-        cellContentView = [(UIButton *)sender superview];
-    }
-    else if ([sender isKindOfClass:[UITapGestureRecognizer class]]){
-        cellContentView = [(UITapGestureRecognizer *)sender view];
-    }
-    UIView *cell = cellContentView.superview;
-    while (![cell isKindOfClass:[UICollectionViewCell class]]){
-        cell = cell.superview;
-    }
-    
-    UIView *printView = [(OLCircleMaskCollectionViewCell *)cell printContainerView];
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:(UICollectionViewCell *)cell];
-    
-    self.editingAsset = [[OLAsset userSelectedAssets] objectAtIndex:indexPath.item];
-    
-    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        [self replacePhoto:sender];
-        return;
-    }
-    
-    [self.editingAsset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
-        
-        OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
-        cropVc.borderInsets = self.product.productTemplate.imageBorder;
-        cropVc.enableCircleMask = self.product.productTemplate.templateUI == OLTemplateUICircle;
-        cropVc.delegate = self;
-        cropVc.aspectRatio = [self productAspectRatio];
-        cropVc.product = self.product;
-        
-        cropVc.previewView = [printView snapshotViewAfterScreenUpdates:YES];
-        cropVc.previewView.frame = [printView.superview convertRect:printView.frame toView:nil];
-        cropVc.previewSourceView = printView;
-        cropVc.providesPresentationContextTransitionStyle = true;
-        cropVc.definesPresentationContext = true;
-        cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-        [cropVc setFullImage:image];
-        cropVc.edits = self.editingAsset.edits;
-        [self presentViewController:cropVc animated:NO completion:NULL];
-        
-        [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
-            self.ctaButton.alpha = 0;
-            self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
-            self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
-        } completion:^(BOOL finished){
-            [self.infoBanner removeFromSuperview];
-            self.infoBanner = nil;
-        }];
-        
-#ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackEditPhotoTappedForProductName:self.product.productTemplate.name];
-#endif
-    }];
-    
+    //TODO
 }
 
-- (IBAction)onButtonNextClicked:(UIBarButtonItem *)sender {
+- (void)onButtonNextClicked:(UIBarButtonItem *)sender {
     if (![self shouldGoToCheckout]){
         return;
     }
@@ -573,13 +519,6 @@
     }
     
     [view.superview addConstraints:con];
-        
-    [cell.activityView startAnimating];
-    
-    cell.imageView.userInteractionEnabled = YES;
-    if (cell.imageView.gestureRecognizers.count == 0){
-        [cell.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editPhoto:)]];
-    }
     
     UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:11];
     [editButton addTarget:self action:@selector(editPhoto:) forControlEvents:UIControlEventTouchUpInside];
@@ -612,39 +551,31 @@
     }
     
     OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:indexPath.item];
-    CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
     
-    UIEdgeInsets b = self.product.productTemplate.imageBorder;
+    OLArtboardView *artboard = [cell viewWithTag:10];
+    [self configureAssetViewsForArtboard:artboard forSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath]];
     
-    cell.imageViewTopCon.constant = b.top * (cellSize.height - [self heightForButtons]);
-    cell.imageViewRightCon.constant = b.right * cellSize.width;
-    cell.imageViewBottomCon.constant = b.bottom * (cellSize.height - [self heightForButtons]);
-    cell.imageViewLeftCon.constant = b.left * cellSize.width;
-    
-    [cell setNeedsLayout];
-    [cell layoutIfNeeded];
-    
-    cell.imageView.assetViews.firstObject.index = indexPath.item;
-    [cell.imageView.assetViews.firstObject loadImageWithCompletionHandler:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [cell.activityView stopAnimating];
-        });
-    }];
+    artboard.assetViews.firstObject.index = indexPath.item;
+    [artboard loadImageOnAllAssetViews];
     
     if (self.product.productTemplate.templateUI == OLTemplateUICircle){
         cell.enableMask = YES;
         [cell setNeedsDisplay];
     }
     
-    cell.printContainerView.backgroundColor = asset.edits.borderColor ? asset.edits.borderColor : [UIColor whiteColor];
-    
-    [[cell.imageView.superview viewWithTag:1556] removeFromSuperview];
+    [[artboard.superview viewWithTag:1556] removeFromSuperview];
     if (asset.edits.bottomBorderText.text){
         [self setupBottomBorderTextFieldOnView:cell];
-        [(UITextView *)[cell.imageView.superview viewWithTag:1556] setText:asset.edits.bottomBorderText.text];
+        [(UITextView *)[artboard.superview viewWithTag:1556] setText:asset.edits.bottomBorderText.text];
     }
     
     return cell;
+}
+
+- (void)configureAssetViewsForArtboard:(OLArtboardView *)artboard forSize:(CGSize)size{
+    UIEdgeInsets b = self.product.productTemplate.imageBorder;
+    
+    artboard.assetViews.firstObject.relativeFrame = CGRectMake(b.right, b.top, 1 - b.right - b.left, 1 - b.top - b.bottom);
 }
 
 - (CGFloat)heightForButtons{
@@ -695,101 +626,6 @@
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
     return 35;
-}
-
-#pragma mark - OLImageEditorViewControllerDelegate methods
-
-- (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
-    [self.editingAsset unloadImage];
-    [cropper dismissViewControllerAnimated:YES completion:^{
-        [UIView animateWithDuration:0.25 animations:^{
-            self.ctaButton.alpha = 1;
-            self.navigationController.navigationBar.alpha = 1;
-        }];
-    }];
-}
-
-- (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
-    [self.editingAsset unloadImage];
-    [UIView animateWithDuration:0.25 animations:^{
-        self.ctaButton.alpha = 1;
-        self.navigationController.navigationBar.alpha = 1;
-    }];
-    [cropper dismissViewControllerAnimated:NO completion:NULL];
-}
-
--(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
-    [self.editingAsset unloadImage];
-    self.editingAsset.edits = cropper.edits;
-    
-    //Find the new previewSourceView for the dismiss animation
-    for (NSInteger i = 0; i < [OLAsset userSelectedAssets].nonPlaceholderAssets.count; i++){
-        if ([[OLAsset userSelectedAssets] objectAtIndex:i] == self.editingAsset){
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
-            if (indexPath){
-                [UIView animateWithDuration:0 animations:^{
-                    [self.collectionView performBatchUpdates:^{
-                        [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-                    } completion:nil];
-                }];
-                OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-                if (!cell){
-                    continue;
-                }
-                cropper.previewSourceView = cell.printContainerView;
-            }
-        }
-    }
-    
-    [cropper dismissViewControllerAnimated:YES completion:^{
-        [UIView animateWithDuration:0.25 animations:^{
-            self.ctaButton.alpha = 1;
-            self.navigationController.navigationBar.alpha = 1;
-        }];
-    }];
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:self.product.productTemplate.name];
-#endif
-}
-
-- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    NSUInteger index = [[OLAsset userSelectedAssets] indexOfObjectIdenticalTo:self.editingAsset];
-    [[OLAsset userSelectedAssets] replaceObjectAtIndex:index withObject:asset];
-    self.editingAsset = asset;
-}
-
-#pragma mark Image Picker Delegate
-
-- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
-    [vc dismissViewControllerAnimated:YES completion:NULL];
-}
-
-- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    OLAsset *asset = addedAssets.lastObject;
-    if (asset){
-        [self imageEditViewController:nil didReplaceAssetWithAsset:asset];
-        
-        //Find the new previewSourceView for the dismiss animation
-        for (NSInteger i = 0; i < [OLAsset userSelectedAssets].nonPlaceholderAssets.count; i++){
-            if ([[OLAsset userSelectedAssets] objectAtIndex:i] == self.editingAsset){
-                NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
-                if (indexPath){
-                    [UIView animateWithDuration:0 animations:^{
-                        [self.collectionView performBatchUpdates:^{
-                            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-                        } completion:nil];
-                    }];
-                    OLCircleMaskCollectionViewCell *cell = (OLCircleMaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-                    if (!cell){
-                        continue;
-                    }
-                }
-            }
-        }
-    }
-    
-    [vc dismissViewControllerAnimated:YES completion:NULL];
 }
 
 @end

@@ -355,74 +355,6 @@ static const NSInteger kSectionPages = 1;
     [self proceedToBookReview];
 }
 
-- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)tappedImageIndex{
-    if (self.animating == YES){
-        return;
-    }
-    self.animating = YES;
-    if (tappedImageIndex == -1){ //Replace Cover
-        if ([[OLAsset userSelectedAssets].firstObject isKindOfClass:[OLPlaceholderAsset class]]){
-            self.addNewPhotosAtIndex = tappedImageIndex;
-            [self showImagePicker];
-            self.animating = NO;
-            return;
-        }
-        else{
-            self.animating = NO;
-            [self photobook:photobook userDidLongPressOnImageWithIndex:tappedImageIndex sender:photobook.coverImageView.gestureRecognizers.firstObject];
-            return;
-        }
-    }
-    
-    if (self.selectedIndexNumber && [self.selectedIndexNumber integerValue] == tappedImageIndex){ //deselect
-        self.animating = NO;
-        [self photobook:photobook userDidLongPressOnImageWithIndex:tappedImageIndex sender:nil];
-    }
-    else if ([[[OLAsset userSelectedAssets] objectAtIndex:tappedImageIndex] isKindOfClass:[OLPlaceholderAsset class]]){ //pick new images
-        self.addNewPhotosAtIndex = tappedImageIndex;
-        [self showImagePicker];
-        self.animating = NO;
-    }
-}
-
-- (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender{
-    [self.infoBanner dismiss];
-    OLImageView *view;
-    if (index == -1){
-        view = (OLImageView *)sender.view;
-    }
-    else{
-        if ([[[OLAsset userSelectedAssets] objectAtIndex:index] isKindOfClass:[OLPlaceholderAsset class]]){
-            return;
-        }
-        view = (OLImageView *)[self pageControllerForPageIndex:index].artboardView.assetViews.firstObject.imageView;
-    }
-    
-    self.longPressImageIndex = index;
-    self.interactionPhotobook = photobook;
-    
-    if ([view respondsToSelector:@selector(setDelegate:)]){
-        view.delegate = self;
-    }
-    if (view.isFirstResponder && [UIMenuController sharedMenuController].isMenuVisible){
-        return;
-    }
-    [view becomeFirstResponder];
-    NSMutableArray *items = [[NSMutableArray alloc] init];
-    
-    if (![OLUserSession currentSession].kiteVc.disableEditingTools){
-        UIMenuItem *cropImageItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") action:@selector(editImage)];
-        [items addObject:cropImageItem];
-    }
-    
-    if (items.count > 0){
-        UIMenuController *mc = [UIMenuController sharedMenuController];
-        [mc setMenuItems:items];
-        [mc setTargetRect:view.frame inView:view];
-        [mc setMenuVisible:YES animated:YES];
-    }
-}
-
 #pragma mark - CollectionView
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -628,6 +560,10 @@ static const NSInteger kSectionPages = 1;
     for (OLPhotobookViewController *photobook in self.childViewControllers){
         [photobook photobookRefreshAssetViewsWithIndexSet:indexSet];
     }
+}
+
+- (UIViewController *)viewControllerForPresenting{
+    return self;
 }
 
 @end

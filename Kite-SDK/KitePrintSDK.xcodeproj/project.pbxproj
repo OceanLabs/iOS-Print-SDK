@@ -1571,6 +1571,23 @@
 			name = LXReorderableCollectionViewFlowLayout;
 			sourceTree = "<group>";
 		};
+		2EDB7BD31E76D10A009B30F0 /* Unity Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				2EB966971EA6172700AD6BBA /* KiteSDK.cs */,
+				2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */,
+				2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */,
+			);
+			name = "Unity Plugin";
+			sourceTree = "<group>";
+		};
+		2EDB7BE01E76E33B009B30F0 /* Docs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Docs;
+			sourceTree = "<group>";
+		};
 		2EE8CF111EA5F87100164AA6 /* Single Image */ = {
 			isa = PBXGroup;
 			children = (
@@ -1614,23 +1631,6 @@
 				2EB919941D23AE20009D0B8F /* OLPhotobookPageBlankContentViewController.m */,
 			);
 			name = Photobook;
-			sourceTree = "<group>";
-		};
-		2EDB7BD31E76D10A009B30F0 /* Unity Plugin */ = {
-			isa = PBXGroup;
-			children = (
-				2EB966971EA6172700AD6BBA /* KiteSDK.cs */,
-				2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */,
-				2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */,
-			);
-			name = "Unity Plugin";
-			sourceTree = "<group>";
-		};
-		2EDB7BE01E76E33B009B30F0 /* Docs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Docs;
 			sourceTree = "<group>";
 		};
 		2EFDD4211E3781E6001B4E83 /* UI Tests */ = {

@@ -85,7 +85,6 @@
 
 - (instancetype)init{
     if (self = [super init]){
-        self.backgroundColor = [UIColor clearColor];
         self.translatesAutoresizingMaskIntoConstraints = NO;
     }
     
@@ -94,12 +93,19 @@
 
 - (void)layoutSubviews{
     for (OLArtboardAssetView *view in self.assetViews){
-        view.frame = CGRectMake(view.relativeFrame.origin.x * self.frame.size.width, view.relativeFrame.origin.y * self.frame.size.height, view.relativeFrame.size.width * self.frame.size.width, view.relativeFrame.size.height * self.frame.size.height);
+        if (!CGRectEqualToRect(view.relativeFrame, CGRectZero)){
+            view.frame = CGRectMake(view.relativeFrame.origin.x * self.frame.size.width, view.relativeFrame.origin.y * self.frame.size.height, view.relativeFrame.size.width * self.frame.size.width, view.relativeFrame.size.height * self.frame.size.height);
+        }
     }
+}
+
+- (void)addAssetView{
+    [self addAssetViewWithRelativeFrame:CGRectZero index:0];
 }
 
 - (void)addAssetViewWithRelativeFrame:(CGRect)frame index:(NSUInteger)index{
     OLArtboardAssetView *view = [[OLArtboardAssetView alloc] init];
+    view.backgroundColor = [UIColor colorWithWhite: 0.937 alpha: 1];
     view.contentMode = UIViewContentModeScaleAspectFill;
     view.clipsToBounds = YES;
     [view setGesturesEnabled:NO];
@@ -308,7 +314,9 @@
             [cropVc setFullImage:image];
             cropVc.edits = asset.edits;
             
-            [self.delegate willShowImageEditor];
+            if ([self.delegate respondsToSelector:@selector(willShowImageEditor)]){
+                [self.delegate willShowImageEditor];
+            }
             
             [vc presentViewController:cropVc animated:NO completion:NULL];
             
@@ -325,7 +333,12 @@
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
     OLArtboardAssetView *assetView = (OLArtboardAssetView *)gestureRecognizer.view;
-    return assetView.dragging;
+    if ([assetView isKindOfClass:[OLArtboardAssetView class]]){
+        return assetView.dragging;
+    }
+    else{
+        return YES;
+    }
 }
 
 - (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet{
@@ -336,15 +349,35 @@
     }
 }
 
+- (void)loadImageOnAllAssetViews{
+    for (OLArtboardAssetView *assetView in self.assetViews){
+        [assetView loadImageWithCompletionHandler:NULL];
+    }
+}
+
+- (OLArtboardAssetView *)findAssetViewAtPoint:(CGPoint)point{
+    for (OLArtboardAssetView *assetView in self.assetViews){
+        if (!assetView.dragging && CGRectContainsPoint(assetView.frame, [assetView.superview convertPoint:point fromView:[self.delegate viewToAddDraggingAsset]])){
+            return assetView;
+        }
+    }
+    
+    return nil;
+}
+
 #pragma mark - OLImageEditViewController delegate
 
 - (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
-    [self.delegate willDismissImageEditor];
+    if ([self.delegate respondsToSelector:@selector(willDismissImageEditor)]){
+        [self.delegate willDismissImageEditor];
+    }
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
-    [self.delegate willDismissImageEditor];
+    if ([self.delegate respondsToSelector:@selector(willDismissImageEditor)]){
+        [self.delegate willDismissImageEditor];
+    }
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 
@@ -355,7 +388,9 @@
 
     [self.sourceAssetView loadImageWithCompletionHandler:NULL];
     
-    [self.delegate willDismissImageEditor];
+    if ([self.delegate respondsToSelector:@selector(willDismissImageEditor)]){
+        [self.delegate willDismissImageEditor];
+    }
     [cropper dismissViewControllerAnimated:YES completion:NULL];
     
 #ifndef OL_NO_ANALYTICS

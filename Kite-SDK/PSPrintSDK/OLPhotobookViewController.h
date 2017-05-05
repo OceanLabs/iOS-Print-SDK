@@ -34,10 +34,6 @@
 @class OLPhotobookViewController;
 
 @protocol OLPhotobookViewControllerDelegate <NSObject>
-
-- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)index;
-- (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender;
-
 @end
 
 @interface OLPhotobookViewController : UIViewController

@@ -55,12 +55,16 @@
     [self setupImageViews];
 }
 
-- (void)setupImageViews{
+- (void)setupImageViews{//TODO position the assetView instead of the artboard
     OLArtboardTemplate *layout = self.product.productTemplate.productRepresentation.pages[self.pageIndex];
     CGRect imageViewPosition = [layout.positions.firstObject CGRectValue];
     
     [self.artboardView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.artboardView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.artboardView.superview attribute:NSLayoutAttributeHeight multiplier:imageViewPosition.size.height constant:0]];
     [self.artboardView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.artboardView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.artboardView.superview attribute:NSLayoutAttributeWidth multiplier:imageViewPosition.size.width constant:0]];
+    
+    for (OLArtboardAssetView *assetView in self.artboardView.assetViews){
+        assetView.backgroundColor = [UIColor whiteColor];
+    }
     
     [self loadImageWithCompletionHandler:NULL];
 }

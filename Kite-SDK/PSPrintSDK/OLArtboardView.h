@@ -35,12 +35,12 @@
 - (UIScrollView *)scrollViewForVerticalScolling;
 - (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
 - (UIViewController *)viewControllerForPresenting;
-- (void)willShowImageEditor;
-- (void)willDismissImageEditor;
 
 @optional
 - (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet;
 - (NSInteger)maxNumberOfPhotosToPick;
+- (void)willShowImageEditor;
+- (void)willDismissImageEditor;
 
 @end
 
@@ -48,6 +48,9 @@
 @property (weak, nonatomic) id<OLArtboardDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray<OLArtboardAssetView *> *assetViews;
 - (void)addAssetViewWithRelativeFrame:(CGRect)frame index:(NSUInteger)index;
+- (void)addAssetView;
 - (void)pickUpView:(OLArtboardAssetView *)assetView;
 - (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet;
+- (void)loadImageOnAllAssetViews;
+- (OLArtboardAssetView *)findAssetViewAtPoint:(CGPoint)point;
 @end
