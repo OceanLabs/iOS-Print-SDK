@@ -110,10 +110,6 @@
     
 }
 
-- (void)deletePage{
-    [self.delegate performSelector:@selector(deletePage)];
-}
-
 - (void)cropImage{
     [self.delegate performSelector:@selector(cropImage)];
 }

@@ -30,8 +30,24 @@
 #import <UIKit/UIKit.h>
 #import "OLArtboardAssetView.h"
 
+@protocol OLArtboardDelegate <NSObject>
+- (UIView *)viewToAddDraggingAsset;
+- (UIScrollView *)scrollViewForVerticalScolling;
+- (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
+- (UIViewController *)viewControllerForPresenting;
+- (void)willShowImageEditor;
+- (void)willDismissImageEditor;
+
+@optional
+- (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet;
+- (NSInteger)maxNumberOfPhotosToPick;
+
+@end
+
 @interface OLArtboardView : UIImageView
+@property (weak, nonatomic) id<OLArtboardDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray<OLArtboardAssetView *> *assetViews;
 - (void)addAssetViewWithRelativeFrame:(CGRect)frame index:(NSUInteger)index;
-
+- (void)pickUpView:(OLArtboardAssetView *)assetView;
+- (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet;
 @end

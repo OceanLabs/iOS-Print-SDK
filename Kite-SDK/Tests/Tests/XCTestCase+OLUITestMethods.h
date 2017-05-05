@@ -112,7 +112,6 @@
 
 @interface OLEditPhotobookViewController ()
 - (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)tappedImageIndex;
-- (void)deletePage;
 - (void)editImage;
 @end
 

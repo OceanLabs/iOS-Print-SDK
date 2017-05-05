@@ -35,6 +35,8 @@
 
 @property (assign, nonatomic) NSUInteger index;
 @property (assign, nonatomic) CGRect relativeFrame;
+@property (assign, nonatomic) BOOL dragging;
+@property (assign, nonatomic) BOOL targeted;
 
 - (void)loadImageWithCompletionHandler:(void(^)())handler;
 

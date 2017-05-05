@@ -28,9 +28,28 @@
 //
 #import "OLArtboardView.h"
 #import "UIView+AutoLayoutHelper.h"
-#import "OLAsset.h"
+#import "OLAsset+Private.h"
+#import "OLImageEditViewController.h"
+#import "OLProduct.h"
+#import "NSObject+Utils.h"
+#import "OLAnalytics.h"
+#import "OLImagePickerViewController.h"
+#import "OLUserSession.h"
+#import "OLKiteUtils.h"
+#import "OLKiteViewController+Private.h"
+#import "OLCustomViewControllerPhotoProvider.h"
+#import "OLNavigationController.h"
+#import "OLCustomPickerController.h"
 
-@interface OLArtboardView ()
+@interface OLArtboardView () <UIGestureRecognizerDelegate, OLImageEditViewControllerDelegate, OLImagePickerViewControllerDelegate>
+@property (assign, nonatomic) CGRect sourceAssetViewRect;
+@property (assign, nonatomic) NSUInteger sourceAssetIndex;
+@property (strong, nonatomic) NSTimer *scrollingTimer;
+@property (strong, nonatomic) UIView *draggingView;
+@property (weak, nonatomic) OLArtboardAssetView *sourceAssetView;
+@property (weak, nonatomic) OLArtboardAssetView *targetAssetView;
+@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
+@property (strong, nonatomic) UIViewController *presentedVc;
 @end
 
 @implementation OLArtboardView
@@ -51,9 +70,22 @@
     return _assetViews;
 }
 
+- (void)setTargetAssetView:(OLArtboardAssetView *)targetAssetView{
+    if (_targetAssetView && _targetAssetView != targetAssetView){
+        _targetAssetView.targeted = NO;
+    }
+    _targetAssetView = targetAssetView;
+}
+
+- (void)setSourceAssetView:(OLArtboardAssetView *)sourceAssetView{
+    _sourceAssetView = sourceAssetView;
+    self.sourceAssetViewRect = [[self.delegate viewToAddDraggingAsset] convertRect:sourceAssetView.frame fromView:sourceAssetView.superview];
+    self.sourceAssetIndex = sourceAssetView.index;
+}
+
 - (instancetype)init{
     if (self = [super init]){
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor clearColor];
         self.translatesAutoresizingMaskIntoConstraints = NO;
     }
     
@@ -76,6 +108,300 @@
     
     view.index = index;
     view.relativeFrame = frame;
+    
+    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+    [view addGestureRecognizer:longPressGesture];
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    panGesture.delegate = self;
+    [view addGestureRecognizer:panGesture];
+    
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    [view addGestureRecognizer:tapGesture];
+}
+
+- (void)pickUpView:(OLArtboardAssetView *)assetView{
+    self.sourceAssetView = assetView;
+    self.draggingView = [[UIView alloc] init];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:assetView.imageView.image];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.clipsToBounds = YES;
+    UIView *viewToAddDraggingAsset = [self.delegate viewToAddDraggingAsset];
+    if (!viewToAddDraggingAsset){
+        return;
+    }
+    
+    [self.draggingView addSubview:imageView];
+    [viewToAddDraggingAsset addSubview:self.draggingView];
+    self.draggingView.frame = [self convertRect:assetView.frame toView:viewToAddDraggingAsset];
+    imageView.frame = CGRectMake(0, 0, self.draggingView.frame.size.width, self.draggingView.frame.size.height);
+    
+    [UIView animateWithDuration:0.15 animations:^{
+        self.draggingView.transform = CGAffineTransformMakeScale(1.1, 1.1);
+        self.draggingView.layer.shadowRadius = 10;
+        self.draggingView.layer.shadowOpacity = 0.5;
+    } completion:^(BOOL finished){
+        assetView.image = nil;
+    }];
+    
+}
+
+- (void)dropView:(UIView *)viewDropped onView:(OLArtboardAssetView *)targetView{
+    UIImageView *swappingView;
+    if (targetView != self.sourceAssetView){
+        swappingView = [[UIImageView alloc] initWithImage:targetView.imageView.image];
+        swappingView.contentMode = [[OLAsset userSelectedAssets][targetView.index] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
+        swappingView.clipsToBounds = YES;
+        UIView *viewToAddDraggingAsset = [self.delegate viewToAddDraggingAsset];
+        [viewToAddDraggingAsset insertSubview:swappingView belowSubview:self.draggingView];
+        swappingView.frame = [viewToAddDraggingAsset convertRect:targetView.frame fromView:targetView.superview];
+    }
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.draggingView.transform = CGAffineTransformIdentity;
+        self.draggingView.layer.shadowRadius = 0;
+        self.draggingView.layer.shadowOpacity = 0.0;
+        self.draggingView.frame = [[self.delegate viewToAddDraggingAsset] convertRect:targetView.frame fromView:targetView.superview];
+        
+        swappingView.frame = self.sourceAssetViewRect;
+    } completion:^(BOOL finished){
+        if (self.sourceAssetIndex == self.sourceAssetView.index){
+            self.sourceAssetView.image = swappingView.image;
+            self.sourceAssetView.imageView.contentMode = [[OLAsset userSelectedAssets][targetView.index] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
+        }
+        if (!self.targetAssetView){
+            self.targetAssetView = self.sourceAssetView;
+        }
+        self.targetAssetView.image = [self.draggingView.subviews.firstObject image];
+        self.targetAssetView.imageView.contentMode = [[OLAsset userSelectedAssets][self.sourceAssetIndex] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
+        self.targetAssetView = nil;
+        
+        [[OLAsset userSelectedAssets] exchangeObjectAtIndex:self.sourceAssetIndex withObjectAtIndex:targetView.index];
+        
+        [self.draggingView removeFromSuperview];
+        [swappingView removeFromSuperview];
+        self.sourceAssetView.dragging = NO;
+        self.sourceAssetView = nil;
+    }];
+}
+
+- (void)handleLongPressGesture:(UILongPressGestureRecognizer *)sender{
+    if (sender.state == UIGestureRecognizerStateBegan){
+        OLArtboardAssetView *assetView = (OLArtboardAssetView *)sender.view;
+        if ([[OLAsset userSelectedAssets][assetView.index] isKindOfClass:[OLPlaceholderAsset class]]){
+            return;
+        }
+        assetView.dragging = YES;
+        [self pickUpView:assetView];
+    }
+    else if(sender.state == UIGestureRecognizerStateEnded){
+        OLArtboardAssetView *target = self.targetAssetView;
+        if (!target){
+            target = self.sourceAssetView;
+        }
+        [self dropView:self.draggingView onView:target];
+    }
+}
+
+- (void)handlePanGesture:(UIPanGestureRecognizer *)sender{
+    if(sender.state == UIGestureRecognizerStateChanged){
+        UIView *viewToAddDraggingAsset = [self.delegate viewToAddDraggingAsset];
+        if (!viewToAddDraggingAsset){
+            return;
+        }
+        CGPoint translation = [sender translationInView:viewToAddDraggingAsset];
+        self.draggingView.transform = CGAffineTransformScale(CGAffineTransformMakeTranslation(translation.x, translation.y), 1.1, 1.1);
+        
+        OLArtboardAssetView *targetView = [self.delegate assetViewAtPoint:CGPointMake(self.draggingView.frame.origin.x + self.draggingView.frame.size.width/2.0, self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0)];
+        if (!targetView.targeted){
+            [targetView setTargeted:YES];
+            self.targetAssetView = targetView;
+        }
+        
+        if (self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0 > self.draggingView.superview.frame.size.height * 0.9){
+            UIScrollView *scrollView = [self.delegate scrollViewForVerticalScolling];
+            if (self.scrollingTimer || !scrollView){
+                return;
+            }
+            self.scrollingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 repeats:YES block:^(NSTimer *timer){
+                scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + 6);
+            }];
+        }
+        else if (self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0 < self.draggingView.superview.frame.size.height * 0.1){
+            UIScrollView *scrollView = [self.delegate scrollViewForVerticalScolling];
+            if (self.scrollingTimer || !scrollView){
+                return;
+            }
+            self.scrollingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 repeats:YES block:^(NSTimer *timer){
+                scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y - 6);
+            }];
+        }
+        else{
+            [self.scrollingTimer invalidate];
+            self.scrollingTimer = nil;
+        }
+    }
+}
+
+- (void)handleTapGesture:(UIPanGestureRecognizer *)sender{
+    UIViewController *vc = [self.delegate viewControllerForPresenting];
+    if (!vc){
+        return;
+    }
+    OLProduct *product = [vc safePerformSelectorWithReturn:@selector(product) withObject:nil];
+    if (!product){
+        return;
+    }
+    
+    OLArtboardAssetView *assetView = (OLArtboardAssetView *)sender.view;
+    self.sourceAssetView = assetView;
+    OLAsset *asset = [OLAsset userSelectedAssets][assetView.index];
+    if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
+        OLImagePickerViewController *imagePicker = [[OLUserSession currentSession].kiteVc.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+        imagePicker.delegate = self;
+        imagePicker.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];;
+        if ([self.delegate respondsToSelector:@selector(maxNumberOfPhotosToPick)]){
+            imagePicker.maximumPhotos = [self.delegate maxNumberOfPhotosToPick];
+        }
+        imagePicker.product = product;
+        
+        if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+            //Skip the image picker and only show the custom vc
+            
+            self.vcDelegateForCustomVc = imagePicker; //Keep strong reference
+            UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
+            if (!customVc){
+                customVc = [[OLUserSession currentSession].kiteVc.delegate imagePickerViewControllerForName:imagePicker.providerForPresentedVc.name];
+            }        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+            [customVc safePerformSelector:@selector(setProductId:) withObject:product.templateId];
+            [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
+            if ([vc respondsToSelector:@selector(setMaximumPhotos:)] && [self.delegate respondsToSelector:@selector(maxNumberOfPhotosToPick)]){
+                imagePicker.maximumPhotos = [self.delegate maxNumberOfPhotosToPick];
+            }
+            
+            [vc presentViewController:customVc animated:YES completion:NULL];
+            self.presentedVc = customVc;
+            return;
+        }
+        else{
+            [vc presentViewController:[[OLNavigationController alloc] initWithRootViewController:imagePicker] animated:YES completion:NULL];
+        }
+    }
+    else{
+        [asset imageWithSize:vc.view.frame.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+            
+            OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
+            cropVc.borderInsets = product.productTemplate.imageBorder;
+            cropVc.enableCircleMask = product.productTemplate.templateUI == OLTemplateUICircle;
+            cropVc.delegate = self;
+            cropVc.aspectRatio = assetView.frame.size.width / assetView.frame.size.height;
+            cropVc.product = product;
+            
+            cropVc.previewView = [assetView snapshotViewAfterScreenUpdates:YES];
+            cropVc.previewView.frame = [self convertRect:assetView.frame toView:nil];
+            cropVc.previewSourceView = assetView;
+            cropVc.providesPresentationContextTransitionStyle = true;
+            cropVc.definesPresentationContext = true;
+            cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+            [cropVc setFullImage:image];
+            cropVc.edits = asset.edits;
+            
+            [self.delegate willShowImageEditor];
+            
+            [vc presentViewController:cropVc animated:NO completion:NULL];
+            
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditPhotoTappedForProductName:product.productTemplate.name];
+#endif
+        }];
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer{
+    return otherGestureRecognizer.view == gestureRecognizer.view && [otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]];
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    OLArtboardAssetView *assetView = (OLArtboardAssetView *)gestureRecognizer.view;
+    return assetView.dragging;
+}
+
+- (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet{
+    for (OLArtboardAssetView *assetView in self.assetViews){
+        if ([indexSet containsIndex:assetView.index]){
+            [assetView loadImageWithCompletionHandler:NULL];
+        }
+    }
+}
+
+#pragma mark - OLImageEditViewController delegate
+
+- (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
+    [self.delegate willDismissImageEditor];
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
+    [self.delegate willDismissImageEditor];
+    [cropper dismissViewControllerAnimated:NO completion:NULL];
+}
+
+-(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+    OLAsset *asset = [OLAsset userSelectedAssets][self.sourceAssetView.index];
+    [asset unloadImage];
+    asset.edits = cropper.edits;
+
+    [self.sourceAssetView loadImageWithCompletionHandler:NULL];
+    
+    [self.delegate willDismissImageEditor];
+    [cropper dismissViewControllerAnimated:YES completion:NULL];
+    
+#ifndef OL_NO_ANALYTICS
+    UIViewController *vc = [self.delegate viewControllerForPresenting];
+    OLProduct *product = [vc safePerformSelectorWithReturn:@selector(product) withObject:nil];
+    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:product.productTemplate.name];
+#endif
+}
+
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.sourceAssetView.index withObject:asset];
+    [self.sourceAssetView loadImageWithCompletionHandler:NULL];
+}
+
+#pragma mark OLImagePickerViewControllerDelegate
+
+- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    NSIndexSet *changedIndexes = [[OLAsset userSelectedAssets] updateUserSelectedAssetsAtIndex:self.sourceAssetView.index withAddedAssets:addedAssets removedAssets:removedAssets];
+    
+    if ([self.delegate respondsToSelector:@selector(refreshAssetViewsWithIndexSet:)]){
+        [self.delegate refreshAssetViewsWithIndexSet:changedIndexes];
+    }
+    else{
+        [self refreshAssetViewsWithIndexSet:changedIndexes];
+    }
+    
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
+    self.vcDelegateForCustomVc = nil;
+    self.presentedVc = nil;
 }
 
 @end

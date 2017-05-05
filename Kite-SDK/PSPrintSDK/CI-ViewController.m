@@ -141,8 +141,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
                         [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
                         [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
                         [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/5.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/6.jpg"]]];
+                        ];
     
     [self printWithAssets:assets];
 }
@@ -368,6 +367,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     vc.userPhone = @"";
     vc.delegate = self;
     vc.qrCodeUploadEnabled = YES;
+    vc.filterProducts = @[@"rpi_wrap_210x210_sm"];
     
     if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]){
         vc.filterProducts = @[[(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]];

@@ -85,7 +85,6 @@ PRODUCT OPTIONS,PRODUCT OPTIONS,
 Promotional Discount,Promotional Discount,
 Receipt,Receipt,
 Recents,Recents,/* Recent photos used */
-Remove,Remove,/* Remove/clear an image */
 Remove?,Remove?,/* Remove [photo]? */
 Rotate,Rotate,/* Rotate image by 90 degrees */
 Save as Copy,Save as Copy,

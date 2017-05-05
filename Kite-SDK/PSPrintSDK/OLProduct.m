@@ -401,6 +401,4 @@ typedef enum {
     return self.labelColor && self.productTemplate.templateUI != OLTemplateUINA;
 }
 
-
-
 @end
