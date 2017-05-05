@@ -238,7 +238,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="reviewCell" id="eUq-Fo-Fq9">
-                                <rect key="frame" x="28" y="0.0" width="320" height="351"/>
+                                <rect key="frame" x="27.5" y="0.0" width="320" height="351"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="351"/>
@@ -288,44 +288,22 @@
                                                 <constraint firstAttribute="width" constant="122" placeholder="YES" id="fIQ-6Q-HLw"/>
                                             </constraints>
                                         </imageView>
-                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="20" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="eaS-Eb-MBu">
+                                        <view tag="20" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CWg-d0-mOQ" customClass="OLArtboardView">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
-                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <collectionViewLayout key="collectionViewLayout" id="9dm-Gi-hzk" customClass="LXReorderableCollectionViewFlowLayout"/>
-                                            <cells>
-                                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="imageCell" id="CVL-3c-j1X">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="110" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SkI-HP-ode" customClass="OLImageView">
-                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                            </imageView>
-                                                        </subviews>
-                                                    </view>
-                                                    <constraints>
-                                                        <constraint firstItem="SkI-HP-ode" firstAttribute="top" secondItem="CVL-3c-j1X" secondAttribute="top" id="X1B-dP-6Fz"/>
-                                                        <constraint firstAttribute="bottom" secondItem="SkI-HP-ode" secondAttribute="bottom" id="X7q-4v-b7W"/>
-                                                        <constraint firstItem="SkI-HP-ode" firstAttribute="leading" secondItem="CVL-3c-j1X" secondAttribute="leading" id="atk-gP-OGe"/>
-                                                        <constraint firstAttribute="trailing" secondItem="SkI-HP-ode" secondAttribute="trailing" id="nwM-gq-mz9"/>
-                                                    </constraints>
-                                                </collectionViewCell>
-                                            </cells>
-                                        </collectionView>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstItem="eaS-Eb-MBu" firstAttribute="leading" secondItem="gx7-0Z-9Be" secondAttribute="leading" placeholder="YES" id="9XA-PI-zGx"/>
                                     <constraint firstItem="dV2-qR-5nM" firstAttribute="bottom" secondItem="Y79-ma-yBT" secondAttribute="bottom" constant="-5" id="A6b-IM-rt0"/>
-                                    <constraint firstItem="Y79-ma-yBT" firstAttribute="trailing" secondItem="eaS-Eb-MBu" secondAttribute="trailing" id="BVv-Gt-433"/>
+                                    <constraint firstItem="Y79-ma-yBT" firstAttribute="top" secondItem="CWg-d0-mOQ" secondAttribute="bottom" constant="10" id="DaY-ji-CKi"/>
                                     <constraint firstItem="dV2-qR-5nM" firstAttribute="leading" secondItem="Y79-ma-yBT" secondAttribute="leading" id="HYd-g3-Kyk"/>
-                                    <constraint firstItem="eaS-Eb-MBu" firstAttribute="top" secondItem="gx7-0Z-9Be" secondAttribute="top" placeholder="YES" id="ceS-N5-hPR"/>
-                                    <constraint firstItem="Y79-ma-yBT" firstAttribute="top" secondItem="eaS-Eb-MBu" secondAttribute="bottom" constant="10" identifier="imageTopCon" id="eGc-69-spx"/>
+                                    <constraint firstItem="CWg-d0-mOQ" firstAttribute="leading" secondItem="Y79-ma-yBT" secondAttribute="leading" id="XNn-4h-5Pl"/>
                                     <constraint firstAttribute="bottom" secondItem="Y79-ma-yBT" secondAttribute="bottom" id="fer-rS-ZH8"/>
-                                    <constraint firstAttribute="trailing" secondItem="eaS-Eb-MBu" secondAttribute="trailing" placeholder="YES" id="sXl-Sg-IfG"/>
-                                    <constraint firstItem="Y79-ma-yBT" firstAttribute="leading" secondItem="eaS-Eb-MBu" secondAttribute="leading" id="yrW-rz-ENr"/>
+                                    <constraint firstItem="CWg-d0-mOQ" firstAttribute="top" secondItem="gx7-0Z-9Be" secondAttribute="top" placeholder="YES" id="g0D-GC-fRB"/>
+                                    <constraint firstItem="CWg-d0-mOQ" firstAttribute="trailing" secondItem="Y79-ma-yBT" secondAttribute="trailing" id="gsF-HY-T7Z"/>
+                                    <constraint firstAttribute="trailing" secondItem="CWg-d0-mOQ" secondAttribute="trailing" placeholder="YES" id="hDC-Pj-DhG"/>
+                                    <constraint firstItem="CWg-d0-mOQ" firstAttribute="leading" secondItem="gx7-0Z-9Be" secondAttribute="leading" placeholder="YES" id="nmS-gN-H5x"/>
                                 </constraints>
                                 <size key="customSize" width="320" height="351"/>
                             </collectionViewCell>

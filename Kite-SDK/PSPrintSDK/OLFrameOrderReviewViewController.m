@@ -210,30 +210,29 @@ CGFloat innerMargin = 3;
     
     [artboard.superview addConstraints:con];
     
-//    if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
-//        cell.contentView.backgroundColor = [UIColor whiteColor];
-//        
-//        CGSize imageSize = [self collectionView:innerCollectionView layout:innerCollectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
-//        UIImageView *imageView = [cell.contentView viewWithTag:1010];
-//        if (indexPath.item < self.product.productTemplate.representationAssets.count){
-//            [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item] size:CGSizeMake(imageSize.width, imageSize.height)];
-//        }
-//        if (self.product.productTemplate.logo){
-//            __weak UIImageView *imageView = [cell.contentView viewWithTag:1011];
-//            [imageView setAndFadeInImageWithURL:self.product.productTemplate.logo size:CGSizeMake(122 * scaleFactor, 56 * scaleFactor)];
-//            [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:37.5 * scaleFactor]];
-//            [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:75 * scaleFactor]];
-//        }
-//        
-//        for (NSLayoutConstraint *con in imageView.constraints){
-//            if ([con.identifier isEqualToString:@"calendarHeightCon"]){
-//                con.constant = 125 * scaleFactor;
-//            }
-//            if ([con.identifier isEqualToString:@"imageTopCon"]){
-//                con.constant = 10 * scaleFactor;
-//            }
-//        }
-//    }
+    if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
+        cell.contentView.backgroundColor = [UIColor whiteColor];
+        
+        UIImageView *imageView = [cell.contentView viewWithTag:1010];
+        if (indexPath.item < self.product.productTemplate.representationAssets.count){
+            [imageView setAndFadeInImageWithURL:self.product.productTemplate.representationAssets[indexPath.item] size:CGSizeMake(side, side)];
+        }
+        if (self.product.productTemplate.logo){
+            __weak UIImageView *imageView = [cell.contentView viewWithTag:1011];
+            [imageView setAndFadeInImageWithURL:self.product.productTemplate.logo size:CGSizeMake(122 * scaleFactor, 56 * scaleFactor)];
+            [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:37.5 * scaleFactor]];
+            [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:75 * scaleFactor]];
+        }
+        
+        for (NSLayoutConstraint *con in imageView.constraints){
+            if ([con.identifier isEqualToString:@"calendarHeightCon"]){
+                con.constant = 125 * scaleFactor;
+            }
+            if ([con.identifier isEqualToString:@"imageTopCon"]){
+                con.constant = 10 * scaleFactor;
+            }
+        }
+    }
     
     return cell;
 }
