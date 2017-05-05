@@ -158,6 +158,7 @@
         swappingView.frame = [viewToAddDraggingAsset convertRect:targetView.frame fromView:targetView.superview];
     }
     
+    targetView.imageView.image = nil;
     [UIView animateWithDuration:0.25 animations:^{
         self.draggingView.transform = CGAffineTransformIdentity;
         self.draggingView.layer.shadowRadius = 0;
