@@ -771,6 +771,7 @@
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
+    cellImageView.image = nil;
     
     OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
