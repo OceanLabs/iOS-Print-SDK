@@ -54,7 +54,6 @@
 #import "OLPhotobookPrintJob.h"
 #import "OLPhotobookViewController.h"
 #import "OLPostcardPrintJob.h"
-#import "OLPosterViewController.h"
 #import "OLPrintJob.h"
 #import "OLPrintOrder+History.h"
 #import "OLPrintOrder.h"
@@ -76,6 +75,7 @@
 #import "OLApparelPrintJob.h"
 #import "OLCaseViewController.h"
 #import "OLKiteViewController+Private.h"
+#import "OLCollagePosterViewController.h"
 
 @import PassKit;
 @import Contacts;
@@ -1646,7 +1646,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         }
     }
     else if (product.productTemplate.templateUI == OLTemplateUIPoster){
-        [OLPosterViewController changeOrderOfPhotosInArray:jobAssets forProduct:product];
+        [OLCollagePosterViewController changeOrderOfPhotosInArray:jobAssets forProduct:product];
     }
     else if (product.productTemplate.templateUI == OLTemplateUIFrame){
         [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:jobAssets forProduct:product];

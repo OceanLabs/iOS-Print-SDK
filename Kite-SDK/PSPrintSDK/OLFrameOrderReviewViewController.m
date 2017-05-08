@@ -81,7 +81,7 @@ CGFloat innerMargin = 3;
     self.title = NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering");
 }
 
-+(void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product{
++ (void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product{
     NSUInteger photosPerRow = sqrt(product.quantityToFulfillOrder);
     NSUInteger numberOfRows = [array count] / photosPerRow;
     

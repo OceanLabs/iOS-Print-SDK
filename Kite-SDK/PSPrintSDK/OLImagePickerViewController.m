@@ -916,7 +916,7 @@
     }
 }
 
--(void)showOrderPreview{
+- (void)showOrderPreview{
     UIViewController* orvc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:self.product photoSelectionScreen:NO];
     
     [orvc safePerformSelector:@selector(setProduct:) withObject:self.product];

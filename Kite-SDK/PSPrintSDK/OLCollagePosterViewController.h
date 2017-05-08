@@ -30,5 +30,5 @@
 #import "OLSingleImagePosterViewController.h"
 
 @interface OLCollagePosterViewController : OLSingleImagePosterViewController
-
++ (void)changeOrderOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
 @end

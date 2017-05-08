@@ -765,7 +765,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
 }
 
--(void)viewWillAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     if (self.fullImage){
         [self setupImage];
@@ -800,7 +800,7 @@ const NSInteger kOLEditTagCrop = 40;
     }];
 }
 
--(void)viewDidLayoutSubviews{
+- (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     if (self.enableCircleMask){
         CAShapeLayer *aCircle=[CAShapeLayer layer];

@@ -51,7 +51,7 @@
 #import "OLKiteViewController+Private.h"
 
 @interface OLPaymentViewController (Private)
--(void)saveAndDismissReviewController;
+- (void)saveAndDismissReviewController;
 @end
 
 @interface OLPrintOrder (Private)
@@ -96,7 +96,7 @@
     return 1.435714286;
 }
 
--(void)viewDidLoad{
+- (void)viewDidLoad{
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
@@ -206,7 +206,7 @@
     } completion:NULL];
 }
 
--(void)viewWillAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
@@ -364,7 +364,7 @@
     return offerToShow;
 }
 
--(void) doCheckout{
+- (void) doCheckout{
     if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 0) {
         if (self.hintView){
             [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];

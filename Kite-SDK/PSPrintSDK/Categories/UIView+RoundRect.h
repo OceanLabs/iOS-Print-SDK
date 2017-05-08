@@ -31,7 +31,7 @@
 
 @interface UIView (RoundRect)
 
--(void) makeRoundRect;
--(void) makeRoundRectWithRadius:(CGFloat)radius;
+- (void) makeRoundRect;
+- (void) makeRoundRectWithRadius:(CGFloat)radius;
 
 @end

@@ -32,7 +32,7 @@
 
 @protocol OLInfoBannerDelegate <NSObject>
 @optional
--(void)infoBannerWillDismiss;
+- (void)infoBannerWillDismiss;
 
 @end
 

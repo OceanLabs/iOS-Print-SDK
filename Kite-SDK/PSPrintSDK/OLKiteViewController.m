@@ -247,7 +247,7 @@ static CGFloat fadeTime = 0.3;
     }
 }
 
--(void)viewDidLoad {
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     if (!self.navigationController){
@@ -321,7 +321,7 @@ static CGFloat fadeTime = 0.3;
     }
 }
 
--(void) dismiss{
+- (void) dismiss{
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackKiteDismissed];
 #endif

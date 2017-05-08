@@ -301,7 +301,7 @@
     }
 }
 
--(void)viewWillAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
     if (!self.downloadedMask && self.product.productTemplate.maskImageURL){
@@ -542,7 +542,7 @@
     }
 }
 
--(void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
+- (void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
     if (!maskImage){
         [targetView.layer.mask removeFromSuperlayer];
         targetView.layer.mask = nil;
@@ -736,7 +736,7 @@
 }
 
 
--(void) doCheckout{
+- (void) doCheckout{
     if (!self.downloadedMask && self.product.productTemplate.maskImageURL) {
         return;
     }

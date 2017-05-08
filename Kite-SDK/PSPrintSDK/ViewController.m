@@ -56,7 +56,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 @implementation ViewController
 
--(void)viewDidAppear:(BOOL)animated{
+- (void)viewDidAppear:(BOOL)animated{
     self.printOrder = [[OLPrintOrder alloc] init];
 }
 

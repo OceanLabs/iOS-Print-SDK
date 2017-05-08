@@ -163,7 +163,7 @@ typedef enum {
     }
 }
 
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView{
+- (void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView{
     UIImage *image;
     if ([self.productPhotos[i] isKindOfClass:[NSString class]]){
         image = [UIImage imageNamedInKiteBundle:self.productPhotos[i]];

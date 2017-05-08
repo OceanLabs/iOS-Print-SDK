@@ -165,7 +165,7 @@
     [OLUserSession currentSession].userSelectedAssets = reversePhotos;
 }
 
-+(void)changeOrderOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product{
++ (void)changeOrderOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product{
     NSMutableArray *subArrays = [[NSMutableArray alloc] init];
     for (NSInteger i = 0; i < array.count / product.quantityToFulfillOrder; i++) {
         [subArrays addObject:[[array subarrayWithRange:NSMakeRange(i*product.quantityToFulfillOrder, product.quantityToFulfillOrder)] mutableCopy]];

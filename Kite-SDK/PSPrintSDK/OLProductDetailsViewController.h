@@ -32,7 +32,7 @@
 
 @protocol OLProductDetailsDelegate <NSObject>
 
--(void)optionsButtonClicked;
+- (void)optionsButtonClicked;
 
 @end
 

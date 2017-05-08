@@ -28,10 +28,9 @@
 //
 
 #import "OLPackProductViewController.h"
-#import "LXReorderableCollectionViewFlowLayout.h"
 
-@interface OLFrameOrderReviewViewController : OLPackProductViewController <LXReorderableCollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface OLFrameOrderReviewViewController : OLPackProductViewController <UICollectionViewDelegateFlowLayout>
 
-+(void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
++ (void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
 
 @end

@@ -65,7 +65,7 @@ static const CGFloat kBookEdgePadding = 38;
 
 @interface OLPaymentViewController (Private)
 
--(void)saveAndDismissReviewController;
+- (void)saveAndDismissReviewController;
 
 @end
 
@@ -969,7 +969,7 @@ static const CGFloat kBookEdgePadding = 38;
     coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
 }
 
--(void) setUpBookCoverViewForFrontCover:(BOOL)front{
+- (void)setUpBookCoverViewForFrontCover:(BOOL)front{
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openBook:)];
     UIView *halfBookCoverImageContainer;
     

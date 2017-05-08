@@ -1074,7 +1074,7 @@
 
 #pragma mark Failing requests
 
--(void)testFailedTemplateSync{
+- (void)testFailedTemplateSync{
     [OLKiteTestHelper mockTemplateServerErrorRequest];
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]]]];

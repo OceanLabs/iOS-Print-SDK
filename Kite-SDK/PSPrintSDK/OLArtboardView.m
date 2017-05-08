@@ -58,7 +58,7 @@
     self.assetViews.firstObject.image = image;
 }
 
--(NSMutableArray *) assetViews{
+- (NSMutableArray *) assetViews{
     if (!_assetViews){
         _assetViews = [[NSMutableArray alloc] init];
     }
@@ -387,7 +387,7 @@
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 
--(void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     OLAsset *asset = [OLAsset userSelectedAssets][self.sourceAssetView.index];
     [asset unloadImage];
     asset.edits = cropper.edits;

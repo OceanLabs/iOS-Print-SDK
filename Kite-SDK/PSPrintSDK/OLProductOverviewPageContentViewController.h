@@ -33,7 +33,7 @@
 
 @protocol OLProductOverviewPageContentViewControllerDelegate <NSObject>
 
--(void)userDidTapOnImage;
+- (void)userDidTapOnImage;
 
 @end
 

@@ -53,7 +53,7 @@
 
 @interface OLPaymentViewController (Private)
 
--(void)saveAndDismissReviewController;
+- (void)saveAndDismissReviewController;
 
 @end
 

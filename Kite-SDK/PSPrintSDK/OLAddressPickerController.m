@@ -84,7 +84,7 @@
     }
 }
 
--(void)addressSelectionControllerDidCancelPicking:(OLAddressSelectionViewController *)vc {
+- (void)addressSelectionControllerDidCancelPicking:(OLAddressSelectionViewController *)vc {
     [self.delegate addressPickerDidCancelPicking:self];
 }
 

@@ -31,13 +31,13 @@
 
 @implementation UIView (RoundRect)
 
--(void) makeRoundRect{
+- (void) makeRoundRect{
     CALayer *layer = [self layer];
     [layer setMasksToBounds:YES];
     [layer setCornerRadius:6.0f];
 }
 
--(void) makeRoundRectWithRadius:(CGFloat)radius{
+- (void) makeRoundRectWithRadius:(CGFloat)radius{
     CALayer *layer = [self layer];
     [layer setMasksToBounds:YES];
     [layer setCornerRadius:radius];

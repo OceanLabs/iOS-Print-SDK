@@ -57,7 +57,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
 
--(NSMutableDictionary *) options{
+- (NSMutableDictionary *) options{
     if (!_options){
         _options = [[NSMutableDictionary alloc] init];
     }
