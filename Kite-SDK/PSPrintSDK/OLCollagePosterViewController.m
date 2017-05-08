@@ -51,8 +51,10 @@
 - (void)saveOrder;
 @end
 
-@interface OLCollagePosterViewController () <OLArtboardDelegate>
-
+@interface OLSingleImagePosterViewController () <OLArtboardDelegate>
+- (void)saveAndDismissReviewController;
+- (IBAction)onButtonDoneTapped:(UIButton *)sender;
+- (IBAction)onButtonNextClicked:(UIButton *)sender;
 @end
 
 @implementation OLCollagePosterViewController
@@ -155,7 +157,7 @@
     }
 }
 
-- (void)setupImage{
+- (void)loadImageFromAsset{
     [self.artboard loadImageOnAllAssetViews];
 }
 
@@ -194,6 +196,29 @@
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
+    NSInteger nullCount = 0;
+    for (OLAsset *asset in [[OLAsset userSelectedAssets] subarrayWithRange:NSMakeRange(0, self.product.quantityToFulfillOrder)]){
+        if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
+            nullCount++;
+        }
+    }
+    
+    if (nullCount == self.product.quantityToFulfillOrder){
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please add some photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+        [self presentViewController:ac animated:YES completion:NULL];
+        return;
+    }
+    
+    if (nullCount > 0){
+        NSInteger selected = [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
+        NSString *title = selected == 1 ? [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photo.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), selected] : [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"You've only selected %d photos.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), selected];
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please add %d more.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Please add [a number] more [photos]"), nullCount] preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleCancel handler:NULL]];
+        [self presentViewController:ac animated:YES completion:NULL];
+        return;
+    }
+    
     [self preparePhotosForCheckout];
     
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];

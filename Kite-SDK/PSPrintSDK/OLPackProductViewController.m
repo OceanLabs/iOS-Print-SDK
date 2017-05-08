@@ -75,7 +75,7 @@
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout, OLImagePickerViewControllerDelegate, OLInfoBannerDelegate>
+@interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout, OLInfoBannerDelegate, OLArtboardDelegate>
 
 @property (weak, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) UIView *addMorePhotosView;
@@ -446,15 +446,6 @@
 #endif
 }
 
-- (void)replacePhoto:(id)sender{
-    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
-    vc.delegate = self;
-    vc.selectedAssets = [[NSMutableArray alloc] init];
-    vc.maximumPhotos = 1;
-    vc.product = self.product;
-    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
-}
-
 - (void)editPhoto:(id)sender {
     //TODO
 }
@@ -548,6 +539,7 @@
     OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:indexPath.item];
     
     OLArtboardView *artboard = [cell viewWithTag:10];
+    artboard.delegate = self;
     [self configureAssetViewsForArtboard:artboard forSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath]];
     
     artboard.assetViews.firstObject.index = indexPath.item;
@@ -621,6 +613,18 @@
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
     return 35;
+}
+
+- (UIView *)viewToAddDraggingAsset{
+    return self.view;
+}
+
+- (UIScrollView *)scrollViewForVerticalScolling{
+    return self.collectionView;
+}
+
+- (UIViewController *)viewControllerForPresenting{
+    return self;
 }
 
 @end

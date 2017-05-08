@@ -167,6 +167,9 @@
 }
 
 - (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body delay:(BOOL)shouldDelay{
+    if (!self.hintView){
+        return;
+    }
     for (NSLayoutConstraint *con in self.view.constraints){
         if ([con.identifier isEqualToString:@"toolBarCon"]){
             [self.view removeConstraint:con];
