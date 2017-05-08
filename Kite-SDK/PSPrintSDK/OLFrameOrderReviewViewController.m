@@ -50,12 +50,14 @@
 - (BOOL) shouldGoToCheckout;
 - (void) doCheckout;
 - (void)preparePhotosForCheckout;
--(NSUInteger) totalNumberOfExtras;
+- (NSUInteger) totalNumberOfExtras;
+- (UIViewController *)viewControllerForPresenting;
+- (UIView *)viewToAddDraggingAsset;
 @property (strong, nonatomic) UIButton *ctaButton;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
 @end
 
-@interface OLFrameOrderReviewViewController () <OLImageEditViewControllerDelegate, OLArtboardDelegate>
+@interface OLFrameOrderReviewViewController () <OLArtboardDelegate>
 @property (weak, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
@@ -298,18 +300,6 @@ CGFloat innerMargin = 3;
 }
 
 #pragma mark OLArtboardDelegate
-
-- (UIView *)viewToAddDraggingAsset{
-    return self.view;
-}
-
-- (UIScrollView *)scrollViewForVerticalScolling{
-    return self.collectionView;
-}
-
-- (UIViewController *)viewControllerForPresenting{
-    return self;
-}
 
 - (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point{
     for (UICollectionViewCell *cell in self.collectionView.visibleCells){

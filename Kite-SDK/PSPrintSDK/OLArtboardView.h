@@ -32,7 +32,6 @@
 
 @protocol OLArtboardDelegate <NSObject>
 - (UIView *)viewToAddDraggingAsset;
-- (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
 - (UIViewController *)viewControllerForPresenting;
 
 @optional
@@ -41,6 +40,7 @@
 - (void)willShowImageEditor;
 - (void)willDismissImageEditor;
 - (UIScrollView *)scrollViewForVerticalScolling;
+- (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
 
 @end
 

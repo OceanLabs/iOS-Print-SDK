@@ -116,6 +116,7 @@
     view.relativeFrame = frame;
     
     UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+    longPressGesture.delegate = self;
     [view addGestureRecognizer:longPressGesture];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
@@ -134,9 +135,6 @@
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.clipsToBounds = YES;
     UIView *viewToAddDraggingAsset = [self.delegate viewToAddDraggingAsset];
-    if (!viewToAddDraggingAsset){
-        return;
-    }
     
     [self.draggingView addSubview:imageView];
     [viewToAddDraggingAsset addSubview:self.draggingView];
@@ -338,6 +336,19 @@
 }
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]){
+        if (![self.delegate respondsToSelector:@selector(assetViewAtPoint:)] || ![self.delegate respondsToSelector:@selector(viewToAddDraggingAsset)]){
+            return NO;
+        }
+        UIView *viewToAddDraggingAsset = [self.delegate viewToAddDraggingAsset];
+        if (!viewToAddDraggingAsset){
+            return NO;
+        }
+        else{
+            return YES;
+        }
+    }
+    
     OLArtboardAssetView *assetView = (OLArtboardAssetView *)gestureRecognizer.view;
     if ([assetView isKindOfClass:[OLArtboardAssetView class]]){
         return assetView.dragging;
