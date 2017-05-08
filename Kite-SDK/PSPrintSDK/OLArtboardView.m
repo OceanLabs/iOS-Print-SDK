@@ -227,7 +227,10 @@
         }
         
         if (self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0 > self.draggingView.superview.frame.size.height * 0.9){
-            UIScrollView *scrollView = [self.delegate scrollViewForVerticalScolling];
+            UIScrollView *scrollView;
+            if ([self.delegate respondsToSelector:@selector(scrollViewForVerticalScolling)]){
+                scrollView = [self.delegate scrollViewForVerticalScolling];
+            }
             if (self.scrollingTimer || !scrollView){
                 return;
             }
@@ -236,7 +239,10 @@
             }];
         }
         else if (self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0 < self.draggingView.superview.frame.size.height * 0.1){
-            UIScrollView *scrollView = [self.delegate scrollViewForVerticalScolling];
+            UIScrollView *scrollView;
+            if ([self.delegate respondsToSelector:@selector(scrollViewForVerticalScolling)]){
+                scrollView = [self.delegate scrollViewForVerticalScolling];
+            }
             if (self.scrollingTimer || !scrollView){
                 return;
             }

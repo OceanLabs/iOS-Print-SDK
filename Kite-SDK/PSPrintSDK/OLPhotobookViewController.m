@@ -765,10 +765,6 @@ static const CGFloat kBookEdgePadding = 38;
         [photoAssets addObject:photoAssets[i % userSelectedAssetCount]];
     }
     
-#ifdef OL_VERBOSE
-    NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
-#endif
-    
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     if (![[OLAsset userSelectedAssets].firstObject isKindOfClass:[OLPlaceholderAsset class]]){

@@ -27,20 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import "OLSingleImagePosterViewController.h"
 
-#import "OLKitePrintSDK.h"
-#import "OLImageEditViewController.h"
-#import "OLArtboardView.h"
-
-@class OLProduct;
-
-@interface OLSingleImageProductReviewViewController : OLImageEditViewController
-
-@property (weak, nonatomic) UIView *hintView;
-@property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
-
-- (void)saveJobWithCompletionHandler:(void(^)())handler;
-- (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body delay:(BOOL)shouldDelay;
+@interface OLCollagePosterViewController : OLSingleImagePosterViewController
 
 @end

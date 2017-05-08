@@ -51,6 +51,7 @@
 #import "OLSingleImagePosterViewController.h"
 #import "OL3DProductViewController.h"
 #import "OLApparelViewController.h"
+#import "OLCollagePosterViewController.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -286,6 +287,9 @@ static CGFloat fadeTime = 0.3;
     }
     else if (templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
         return [[OLSingleImagePosterViewController alloc] init];
+    }
+    else if (templateUI == OLTemplateUIPoster){
+        return [[OLCollagePosterViewController alloc] init];
     }
     else if (templateUI == OLTemplateUIMug){
         return [[OL3DProductViewController alloc] init];

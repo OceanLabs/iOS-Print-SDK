@@ -32,7 +32,6 @@
 
 @protocol OLArtboardDelegate <NSObject>
 - (UIView *)viewToAddDraggingAsset;
-- (UIScrollView *)scrollViewForVerticalScolling;
 - (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
 - (UIViewController *)viewControllerForPresenting;
 
@@ -41,6 +40,7 @@
 - (NSInteger)maxNumberOfPhotosToPick;
 - (void)willShowImageEditor;
 - (void)willDismissImageEditor;
+- (UIScrollView *)scrollViewForVerticalScolling;
 
 @end
 

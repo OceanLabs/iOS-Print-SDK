@@ -233,6 +233,8 @@
 		2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */; };
 		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
 		2E582DA51E714FDA00A6DF4E /* mug.scn in Resources */ = {isa = PBXBuildFile; fileRef = 2E582DA41E714FDA00A6DF4E /* mug.scn */; };
+		2E5B27331EC06A4700F3AED3 /* OLCollagePosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5B27311EC06A4700F3AED3 /* OLCollagePosterViewController.h */; };
+		2E5B27341EC06A4700F3AED3 /* OLCollagePosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5B27321EC06A4700F3AED3 /* OLCollagePosterViewController.m */; };
 		2E65A33D1E6438F500DBE418 /* JDStatusBarNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65A3381E6438F500DBE418 /* JDStatusBarNotification.m */; };
 		2E65A33E1E6438F500DBE418 /* JDStatusBarStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65A33A1E6438F500DBE418 /* JDStatusBarStyle.m */; };
 		2E65A33F1E6438F500DBE418 /* JDStatusBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65A33C1E6438F500DBE418 /* JDStatusBarView.m */; };
@@ -710,6 +712,8 @@
 		2E53E0CB1C1AEAAD00BF7887 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
 		2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
 		2E582DA41E714FDA00A6DF4E /* mug.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = mug.scn; sourceTree = "<group>"; };
+		2E5B27311EC06A4700F3AED3 /* OLCollagePosterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCollagePosterViewController.h; sourceTree = "<group>"; };
+		2E5B27321EC06A4700F3AED3 /* OLCollagePosterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCollagePosterViewController.m; sourceTree = "<group>"; };
 		2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloadDelegate.h; sourceTree = "<group>"; };
 		2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloadDelegate.m; sourceTree = "<group>"; };
 		2E5D95AA1CA984E00080EF07 /* OLUpsellViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUpsellViewController.h; sourceTree = "<group>"; };
@@ -1595,6 +1599,8 @@
 				2E5259001A9C91DF00DBC69B /* OLSingleImageProductReviewViewController.m */,
 				2E1BB37B1E7C2A25008F7217 /* OLSingleImagePosterViewController.h */,
 				2E1BB37C1E7C2A25008F7217 /* OLSingleImagePosterViewController.m */,
+				2E5B27311EC06A4700F3AED3 /* OLCollagePosterViewController.h */,
+				2E5B27321EC06A4700F3AED3 /* OLCollagePosterViewController.m */,
 				2E20BD841AD4229700FB2446 /* OLCaseViewController.h */,
 				2E20BD851AD4229700FB2446 /* OLCaseViewController.m */,
 				2ECA34EA1E82743800D56220 /* OLApparelViewController.h */,
@@ -2016,6 +2022,7 @@
 				2EB8FE501D95685100E26BDF /* OLPhotobookViewController.h in Headers */,
 				2EB8FE7D1D95685100E26BDF /* NSDictionary+RequestParameterData.h in Headers */,
 				2EB8FE651D95685100E26BDF /* rscode.h in Headers */,
+				2E5B27331EC06A4700F3AED3 /* OLCollagePosterViewController.h in Headers */,
 				2EB8FE181D95685100E26BDF /* OLMarkdownParser.h in Headers */,
 				2EB8FDE61D95685100E26BDF /* OLPayPalCard.h in Headers */,
 				2EB8FDF81D95685100E26BDF /* OLProductTemplateOptionChoice.h in Headers */,
@@ -2671,6 +2678,7 @@
 				2E451E0F1D9555870080F1C1 /* OLFacebookSDKWrapper.m in Sources */,
 				2E451E2F1D9555870080F1C1 /* OLCircleSelectedCollectionViewCell.m in Sources */,
 				2E451E041D9555620080F1C1 /* OLLuhn.m in Sources */,
+				2E5B27341EC06A4700F3AED3 /* OLCollagePosterViewController.m in Sources */,
 				2E451E631D9555EF0080F1C1 /* OLCollectionViewController.m in Sources */,
 				2E451DDD1D9555540080F1C1 /* OLImageCachingManager.m in Sources */,
 				2E451E011D9555620080F1C1 /* OLImageDownloader.m in Sources */,

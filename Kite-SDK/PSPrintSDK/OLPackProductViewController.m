@@ -280,13 +280,8 @@
         [photoAssets addObject:[photo copy]];
     }
     
-    // ensure order is maxed out by adding duplicates as necessary
     NSUInteger userSelectedAssetCount = photoAssets.count;
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
-    
-#ifdef OL_VERBOSE
-    NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
-#endif
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     

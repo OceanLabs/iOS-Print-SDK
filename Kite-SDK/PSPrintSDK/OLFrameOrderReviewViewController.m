@@ -247,7 +247,7 @@ CGFloat innerMargin = 3;
     
     CGFloat relativeMargin = innerMargin / size.width;
     
-    CGSize assetViewRelativeSize = CGSizeMake((1 - relativeMargin * (gridX-1.0)) / gridX, (1 - relativeMargin * (gridX-1.0)) / gridX);
+    CGSize assetViewRelativeSize = CGSizeMake((1 - relativeMargin * (gridX-1.0)) / gridX, (1 - relativeMargin * (gridY-1.0)) / gridY);
     
     while(artboard.assetViews.count < gridX * gridY){
         [artboard addAssetView];

@@ -76,7 +76,6 @@
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
 @property (assign, nonatomic) BOOL showingBack;
 @property (assign, nonatomic) CGAffineTransform backupTransform;
-@property (nonatomic, copy) void (^saveJobCompletionHandler)();
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
 @property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
@@ -125,11 +124,11 @@
     [super viewDidLoad];
     
     if ([self isUsingMultiplyBlend]){
-        [self.cropView.assetViews.firstObject setGesturesEnabled:NO];
+        [self.artboard.assetViews.firstObject setGesturesEnabled:NO];
     }
     
     if (self.product.productTemplate.fulfilmentItems.count > 1){
-        self.cropView.backgroundColor = [UIColor clearColor];
+        self.artboard.backgroundColor = [UIColor clearColor];
         
         self.productFlipButton = [[UIButton alloc] init];
         [self.view addSubview:self.productFlipButton];
@@ -148,7 +147,7 @@
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
     
     self.caseVisualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    [self.printContainerView insertSubview:self.caseVisualEffectView aboveSubview:self.cropView];
+    [self.printContainerView insertSubview:self.caseVisualEffectView aboveSubview:self.artboard];
     
     [self.caseVisualEffectView fillSuperView];
     
@@ -307,15 +306,15 @@
     
     if (!self.downloadedMask && self.product.productTemplate.maskImageURL){
         UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
-        [self.cropView removeConstraint:self.aspectRatioConstraint];
-        NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
-        [self.cropView addConstraints:@[con]];
+        [self.artboard removeConstraint:self.aspectRatioConstraint];
+        NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.artboard attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
+        [self.artboard addConstraints:@[con]];
         self.aspectRatioConstraint = con;
         
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
         
-        [self maskWithImage:tempMask targetView:self.cropView];
+        [self maskWithImage:tempMask targetView:self.artboard];
         
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     }
@@ -439,8 +438,6 @@
     if (handler){
         handler();
     }
-    
-    self.saveJobCompletionHandler = nil;
 }
 
 - (UIColor *)containerBackgroundColor{
@@ -450,7 +447,7 @@
 - (void)orderViews{
     [self.view bringSubviewToFront:self.deviceView];
     [self.view bringSubviewToFront:self.printContainerView];
-    [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.artboard];
     [self.view bringSubviewToFront:self.textFieldsView];
     
     if (![self isUsingMultiplyBlend]){
@@ -489,7 +486,7 @@
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
         [self.view layoutIfNeeded];
-        [self maskWithImage:self.maskImage targetView:self.cropView];
+        [self maskWithImage:self.maskImage targetView:self.artboard];
     }completion:^(id <UIViewControllerTransitionCoordinatorContext> context){}];
 }
 
@@ -511,17 +508,17 @@
                 }]];
                 [self presentViewController:ac animated:YES completion:NULL];
             } else {
-                [self.cropView removeConstraint:self.aspectRatioConstraint];
-                NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:[self aspectRatio] constant:0];
-                [self.cropView addConstraints:@[con]];
+                [self.artboard removeConstraint:self.aspectRatioConstraint];
+                NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.artboard attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeWidth multiplier:[self aspectRatio] constant:0];
+                [self.artboard addConstraints:@[con]];
                 
                 [self.view setNeedsLayout];
                 [self.view layoutIfNeeded];
                 
-                self.cropView.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
+                self.artboard.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
                 
                 self.maskImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-                [self maskWithImage:self.maskImage targetView:self.cropView];
+                [self maskWithImage:self.maskImage targetView:self.artboard];
                 
                 [self applyProductImageLayers];
                 
@@ -575,7 +572,7 @@
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
-    self.backupTransform = self.cropView.assetViews.firstObject.imageView.transform;
+    self.backupTransform = self.artboard.assetViews.firstObject.imageView.transform;
     self.editingTools.drawerDoneButton.hidden = YES;
     self.editingTools.halfWidthDrawerDoneButton.hidden = NO;
     self.editingTools.halfWidthDrawerCancelButton.hidden = NO;
@@ -583,7 +580,7 @@
     self.productFlipButton.enabled = NO;
     
     if ([self isUsingMultiplyBlend]){
-        [self.cropView.assetViews.firstObject setGesturesEnabled:YES];
+        [self.artboard.assetViews.firstObject setGesturesEnabled:YES];
     }
     self.gestureView.userInteractionEnabled = YES;
     [self disableOverlay];
@@ -611,15 +608,15 @@
         [self.editingTools.collectionView reloadData];
         [self showDrawerWithCompletionHandler:NULL];
     } completion:^(BOOL finished){
-        self.cropView.clipsToBounds = NO;
-        [self maskWithImage:nil targetView:self.cropView];
-        [self.view sendSubviewToBack:self.cropView];
+        self.artboard.clipsToBounds = NO;
+        [self maskWithImage:nil targetView:self.artboard];
+        [self.view sendSubviewToBack:self.artboard];
     }];
 }
 
 - (void)exitCropMode{
-    self.cropView.clipsToBounds = YES;
-    [self maskWithImage:self.maskImage targetView:self.cropView];
+    self.artboard.clipsToBounds = YES;
+    [self maskWithImage:self.maskImage targetView:self.artboard];
     [self orderViews];
     for (UIView *view in self.cropFrameGuideViews){
         [self.printContainerView bringSubviewToFront:view];
@@ -637,7 +634,7 @@
     } completion:^(BOOL finished){
         [self renderImage];
         if ([self isUsingMultiplyBlend]){
-            [self.cropView.assetViews.firstObject setGesturesEnabled:NO];
+            [self.artboard.assetViews.firstObject setGesturesEnabled:NO];
         }
     }];
 }
@@ -685,7 +682,7 @@
         [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
             [self disableOverlay];
             
-            self.cropView.assetViews.firstObject.imageView.image = nil;
+            self.artboard.assetViews.firstObject.imageView.image = nil;
             self.edits = nil;
             self.fullImage = nil;
             

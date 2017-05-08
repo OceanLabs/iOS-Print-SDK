@@ -70,7 +70,7 @@ extern const NSInteger kOLEditTagCrop;
 @property (strong, nonatomic) OLAsset *asset;
 @property (strong, nonatomic) OLEditingToolsView *editingTools;
 @property (strong, nonatomic) OLProduct *product;
-@property (strong, nonatomic) OLArtboardView *cropView;
+@property (strong, nonatomic) OLArtboardView *artboard;
 @property (strong, nonatomic) UIImage *fullImage;
 @property (strong, nonatomic) UIImageView *deviceView;
 @property (strong, nonatomic) UIImageView *highlightsView;

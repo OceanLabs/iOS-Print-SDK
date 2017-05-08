@@ -48,6 +48,4 @@
     return UIEdgeInsetsMake(0.042195, 0.060605, 0.042195, 0.060605);
 }
 
-
-
 @end

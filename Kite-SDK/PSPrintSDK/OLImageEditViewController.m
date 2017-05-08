@@ -90,10 +90,10 @@ const NSInteger kOLEditTagCrop = 40;
 @property (strong, nonatomic) NSMutableArray *allViews;
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewTopCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewLeftCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewBottomCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewRightCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *artboardTopCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *artboardLeftCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *artboardBottomCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *artboardRightCon;
 @property (strong, nonatomic) UINavigationBar *navigationBar;
 @property (weak, nonatomic) UIView *gestureView;
 
@@ -230,7 +230,7 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)setButtonsHidden:(BOOL)hidden forTextField:(OLPhotoTextField *)tf{
     CGRect frame = tf.frame;
     if (hidden){
-        [self addTextFieldToView:self.cropView existing:tf];
+        [self addTextFieldToView:self.artboard existing:tf];
         tf.frame = frame;
         [tf hideButtons];
         self.textFieldsView.userInteractionEnabled = NO;
@@ -278,12 +278,12 @@ const NSInteger kOLEditTagCrop = 40;
     
     self.textFieldsView = [[OLTouchTolerantView alloc] init];
     self.textFieldsView.userInteractionEnabled = NO;
-    [self.printContainerView insertSubview:self.textFieldsView aboveSubview:self.cropView];
+    [self.printContainerView insertSubview:self.textFieldsView aboveSubview:self.artboard];
     self.textFieldsView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
-    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
-    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeHeight multiplier:1 constant:0]];
+    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
+    [self.textFieldsView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.textFieldsView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeHeight multiplier:1 constant:0]];
     
     self.originalDrawerHeight = self.editingTools.drawerHeightCon.constant;
     
@@ -298,10 +298,10 @@ const NSInteger kOLEditTagCrop = 40;
     }
     
     self.initialOrientation = self.fullImage.imageOrientation;
-    self.cropView.assetViews.firstObject.delegate = self;
+    self.artboard.assetViews.firstObject.delegate = self;
     
     if (self.forceSourceViewDimensions && self.previewSourceView){
-        UIView *view = self.cropView;
+        UIView *view = self.artboard;
         view.translatesAutoresizingMaskIntoConstraints = NO;
         NSDictionary *views = NSDictionaryOfVariableBindings(view);
         NSMutableArray *con = [[NSMutableArray alloc] init];
@@ -375,14 +375,14 @@ const NSInteger kOLEditTagCrop = 40;
     self.ctaButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.ctaButton.titleLabel.minimumScaleFactor = 0.5;
     
-    self.cropView.clipsToBounds = YES;
+    self.artboard.clipsToBounds = YES;
     [self orderViews];
     
     self.printContainerView.backgroundColor = [self containerBackgroundColor];
     
-    [self.cropView removeConstraint:self.aspectRatioConstraint];
-    self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
-    [self.cropView addConstraints:@[self.aspectRatioConstraint]];
+    [self.artboard removeConstraint:self.aspectRatioConstraint];
+    self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.artboard attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
+    [self.artboard addConstraints:@[self.aspectRatioConstraint]];
     
     [self setupProductRepresentation];
     
@@ -403,8 +403,8 @@ const NSInteger kOLEditTagCrop = 40;
     
     [gestureView.superview addConstraints:con];
     
-    [gestureView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self.cropView.assetViews.firstObject action:@selector(panRecognized:)]];
-    [gestureView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.cropView.assetViews.firstObject action:@selector(pinchRecognized:)]];
+    [gestureView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self.artboard.assetViews.firstObject action:@selector(panRecognized:)]];
+    [gestureView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.artboard.assetViews.firstObject action:@selector(pinchRecognized:)]];
     gestureView.userInteractionEnabled = NO;
 }
 
@@ -441,31 +441,19 @@ const NSInteger kOLEditTagCrop = 40;
         [self.deviceView fillSuperView];
     }
     
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] init];
-    activityIndicator.color = [UIColor blackColor];
-    activityIndicator.tag = 1010;
-    activityIndicator.hidesWhenStopped = YES;
-    if (self.deviceView){
-        [self.printContainerView insertSubview:activityIndicator aboveSubview:self.deviceView];
-    }
-    else{
-        [self.printContainerView insertSubview:activityIndicator atIndex:0];
-    }
-    [activityIndicator centerInSuperview];
+    self.artboard = [[OLArtboardView alloc] init];
+    [self.printContainerView addSubview:self.artboard];
+    NSArray *cons = [self.artboard fillSuperView];
+    self.artboardTopCon = cons[0];
+    self.artboardLeftCon = cons[1];
+    self.artboardBottomCon = cons[2];
+    self.artboardRightCon= cons[3];
     
-    self.cropView = [[OLArtboardView alloc] init];
-    [self.printContainerView addSubview:self.cropView];
-    NSArray *cons = [self.cropView fillSuperView];
-    self.cropViewTopCon = cons[0];
-    self.cropViewLeftCon = cons[1];
-    self.cropViewBottomCon = cons[2];
-    self.cropViewRightCon= cons[3];
+    self.artboard.userInteractionEnabled = YES;
+    [self.artboard.assetViews.firstObject setGesturesEnabled:YES];
     
-    self.cropView.userInteractionEnabled = YES;
-    [self.cropView.assetViews.firstObject setGesturesEnabled:YES];
-    
-    self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
-    [self.cropView addConstraint:self.aspectRatioConstraint];
+    self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.artboard attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
+    [self.artboard addConstraint:self.aspectRatioConstraint];
     
     if ([self productHighlightsURL]){
         self.highlightsView = [[UIImageView alloc] init];
@@ -546,8 +534,8 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView addSubview:cornerTL];
     [self.printContainerView sendSubviewToBack:cornerTL];
     cornerTL.translatesAutoresizingMaskIntoConstraints = NO;
-    [cornerTL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTL attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTop multiplier:1 constant:-2]];
-    [cornerTL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTL attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeLeading multiplier:1 constant:-2]];
+    [cornerTL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTL attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeTop multiplier:1 constant:-2]];
+    [cornerTL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTL attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeLeading multiplier:1 constant:-2]];
 
     UIImageView *cornerTR = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-corner-ur"]];
     [cornerTR setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
@@ -556,8 +544,8 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView addSubview:cornerTR];
     [self.printContainerView sendSubviewToBack:cornerTR];
     cornerTR.translatesAutoresizingMaskIntoConstraints = NO;
-    [cornerTR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTR attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTop multiplier:1 constant:-2]];
-    [cornerTR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTR attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:2]];
+    [cornerTR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTR attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeTop multiplier:1 constant:-2]];
+    [cornerTR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerTR attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeTrailing multiplier:1 constant:2]];
     
     UIImageView *cornerBR = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-corner-dr"]];
     [cornerBR setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
@@ -566,8 +554,8 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView addSubview:cornerBR];
     [self.printContainerView sendSubviewToBack:cornerBR];
     cornerBR.translatesAutoresizingMaskIntoConstraints = NO;
-    [cornerBR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBR attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:2]];
-    [cornerBR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBR attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:2]];
+    [cornerBR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBR attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeBottom multiplier:1 constant:2]];
+    [cornerBR.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBR attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeTrailing multiplier:1 constant:2]];
     
     UIImageView *cornerBL = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-corner-dl"]];
     [cornerBL setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
@@ -576,8 +564,8 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView addSubview:cornerBL];
     [self.printContainerView sendSubviewToBack:cornerBL];
     cornerBL.translatesAutoresizingMaskIntoConstraints = NO;
-    [cornerBL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBL attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:2]];
-    [cornerBL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBL attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeLeading multiplier:1 constant:-2]];
+    [cornerBL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBL attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeBottom multiplier:1 constant:2]];
+    [cornerBL.superview addConstraint:[NSLayoutConstraint constraintWithItem:cornerBL attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeLeading multiplier:1 constant:-2]];
     
      UIImageView *lineLeft = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-line-left"]];
     [self.cropFrameGuideViews addObject:lineLeft];
@@ -585,7 +573,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView sendSubviewToBack:lineLeft];
     lineLeft.translatesAutoresizingMaskIntoConstraints = NO;
     [lineLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineLeft attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:5]];
-    [lineLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineLeft attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeLeading multiplier:1 constant:-2]];
+    [lineLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineLeft attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeLeading multiplier:1 constant:-2]];
     [lineLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineLeft attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:cornerBL attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
     [lineLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineLeft attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:cornerTL attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
     
@@ -596,7 +584,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView sendSubviewToBack:lineRight];
     lineRight.translatesAutoresizingMaskIntoConstraints = NO;
     [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:5]];
-    [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:2]];
+    [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeTrailing multiplier:1 constant:2]];
     [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:cornerBR attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
     [lineRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineRight attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:cornerTR attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
 
@@ -606,7 +594,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView sendSubviewToBack:lineTop];
     lineTop.translatesAutoresizingMaskIntoConstraints = NO;
     [lineTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineTop attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:5]];
-    [lineTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineTop attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTop multiplier:1 constant:-2]];
+    [lineTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineTop attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeTop multiplier:1 constant:-2]];
     [lineTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineTop attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:cornerTL attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
     [lineTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineTop attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:cornerTR attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
     
@@ -616,7 +604,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView sendSubviewToBack:lineBottom];
     lineBottom.translatesAutoresizingMaskIntoConstraints = NO;
     [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:5]];
-    [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:2]];
+    [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeBottom multiplier:1 constant:2]];
     [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:cornerBL attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
     [lineBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:lineBottom attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:cornerBR attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
     
@@ -629,7 +617,7 @@ const NSInteger kOLEditTagCrop = 40;
     [darkViewTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewTop attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
     [darkViewTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewTop attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:darkViewTop.superview attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
     [darkViewTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewTop attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:darkViewTop.superview attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
-    [darkViewTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewTop attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+    [darkViewTop.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewTop attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
     darkViewTop.userInteractionEnabled = NO;
     
     UIView *darkViewLeft = [[UIView alloc] init];
@@ -641,7 +629,7 @@ const NSInteger kOLEditTagCrop = 40;
     [darkViewLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewLeft attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:darkViewTop attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
     [darkViewLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewLeft attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:darkViewLeft.superview attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
     [darkViewLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewLeft attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:darkViewLeft.superview attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-    [darkViewLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewLeft attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
+    [darkViewLeft.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewLeft attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
     darkViewLeft.userInteractionEnabled = NO;
 
     UIView *darkViewRight = [[UIView alloc] init];
@@ -653,7 +641,7 @@ const NSInteger kOLEditTagCrop = 40;
     [darkViewRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewRight attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:darkViewTop attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
     [darkViewRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewRight attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:darkViewRight.superview attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
     [darkViewRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewRight attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:darkViewRight.superview attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
-    [darkViewRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewRight attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
+    [darkViewRight.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewRight attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
     darkViewRight.userInteractionEnabled = NO;
 
     UIView *darkViewBottom = [[UIView alloc] init];
@@ -665,7 +653,7 @@ const NSInteger kOLEditTagCrop = 40;
     [darkViewBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewBottom attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.bottomLayoutGuide attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
     [darkViewBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewBottom attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:darkViewLeft attribute:NSLayoutAttributeTrailing multiplier:1 constant:0]];
     [darkViewBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewBottom attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:darkViewRight attribute:NSLayoutAttributeLeading multiplier:1 constant:0]];
-    [darkViewBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewBottom attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    [darkViewBottom.superview addConstraint:[NSLayoutConstraint constraintWithItem:darkViewBottom attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
     darkViewBottom.userInteractionEnabled = NO;
     
     for (UIView *view in self.cropFrameGuideViews){
@@ -676,7 +664,7 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)orderViews{
     [self.view bringSubviewToFront:self.printContainerView];
-    [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.artboard];
     [self.view bringSubviewToFront:self.textFieldsView];
     [self.view bringSubviewToFront:self.previewView];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
@@ -763,17 +751,17 @@ const NSInteger kOLEditTagCrop = 40;
         OLAsset *asset = [OLAsset assetWithImageAsJPEG:image];
         asset.edits.filterName = self.edits.filterName;
         [asset imageWithSize:image.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
-            self.cropView.image = image;
+            self.artboard.image = image;
             [self.view setNeedsLayout];
             [self.view layoutIfNeeded];
-            self.cropView.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
+            self.artboard.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
         }];
     }
     else{
-        self.cropView.image = image;
+        self.artboard.image = image;
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
-        self.cropView.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
+        self.artboard.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
     }
 }
 
@@ -792,11 +780,11 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    self.cropView.assetViews.firstObject.imageView.image = nil;
-    self.edits.cropImageRect = [self.cropView.assetViews.firstObject getImageRect];
-    self.edits.cropImageFrame = [self.cropView.assetViews.firstObject getFrameRect];
-    self.edits.cropImageSize = [self.cropView.assetViews.firstObject croppedImageSize];
-    self.edits.cropTransform = [self.cropView.assetViews.firstObject.imageView transform];
+    self.artboard.assetViews.firstObject.imageView.image = nil;
+    self.edits.cropImageRect = [self.artboard.assetViews.firstObject getImageRect];
+    self.edits.cropImageFrame = [self.artboard.assetViews.firstObject getFrameRect];
+    self.edits.cropImageSize = [self.artboard.assetViews.firstObject croppedImageSize];
+    self.edits.cropTransform = [self.artboard.assetViews.firstObject.imageView transform];
     
     [coordinator animateAlongsideTransition:^(id context){
         [self setupImage];
@@ -816,21 +804,21 @@ const NSInteger kOLEditTagCrop = 40;
     [super viewDidLayoutSubviews];
     if (self.enableCircleMask){
         CAShapeLayer *aCircle=[CAShapeLayer layer];
-        aCircle.path=[UIBezierPath bezierPathWithRoundedRect:self.cropView.bounds cornerRadius:self.cropView.frame.size.height/2].CGPath;
+        aCircle.path=[UIBezierPath bezierPathWithRoundedRect:self.artboard.bounds cornerRadius:self.artboard.frame.size.height/2].CGPath;
         
         aCircle.fillColor=[UIColor blackColor].CGColor;
-        self.cropView.layer.mask=aCircle;
+        self.artboard.layer.mask=aCircle;
     }
     
     UIEdgeInsets b = [self imageInsetsOnContainer];
-    if (self.cropViewTopCon.constant != b.top || self.cropViewRightCon.constant != b.right || self.cropViewBottomCon.constant != b.bottom || self.cropViewLeftCon.constant != b.left){
-        self.cropViewTopCon.constant = b.top;
-        self.cropViewRightCon.constant = b.right;
-        self.cropViewBottomCon.constant = b.bottom;
-        self.cropViewLeftCon.constant = b.left;
+    if (self.artboardTopCon.constant != b.top || self.artboardRightCon.constant != b.right || self.artboardBottomCon.constant != b.bottom || self.artboardLeftCon.constant != b.left){
+        self.artboardTopCon.constant = b.top;
+        self.artboardRightCon.constant = b.right;
+        self.artboardBottomCon.constant = b.bottom;
+        self.artboardLeftCon.constant = b.left;
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
-        self.cropView.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
+        self.artboard.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
     }
     
     if (!self.product.productTemplate.maskImageURL){
@@ -840,7 +828,7 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)setupBottomBorderTextField{
     if (self.product.productTemplate.supportsTextOnBorder && !self.borderTextField){
-        CGFloat heightFactor = self.cropView.frame.size.height / 212.0;
+        CGFloat heightFactor = self.artboard.frame.size.height / 212.0;
         
         UITextField *tf = [[UITextField alloc] init];
         tf.delegate = self;
@@ -856,15 +844,15 @@ const NSInteger kOLEditTagCrop = 40;
         
         [self.printContainerView addSubview:tf];
         
-        UIView *cropView = self.cropView;
+        UIView *artboard = self.artboard;
         tf.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(tf, cropView);
+        NSDictionary *views = NSDictionaryOfVariableBindings(tf, artboard);
         NSMutableArray *con = [[NSMutableArray alloc] init];
         
         UIEdgeInsets insets = [self imageInsetsOnContainer];
         
         NSArray *visuals = @[[NSString stringWithFormat:@"H:|-%f-[tf]-%f-|", insets.left - 5, insets.right - 5],
-                             [NSString stringWithFormat:@"V:[cropView]-%f-[tf(%f)]", 8.0 * heightFactor, 40.0 * heightFactor]];
+                             [NSString stringWithFormat:@"V:[artboard]-%f-[tf(%f)]", 8.0 * heightFactor, 40.0 * heightFactor]];
         
         
         for (NSString *visual in visuals) {
@@ -886,9 +874,9 @@ const NSInteger kOLEditTagCrop = 40;
         [self exitCropMode];
         
         UIEdgeInsets b = [self imageInsetsOnContainer];
-        [self.printContainerView addSubview:self.cropView];
-        self.cropView.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.printContainerView.frame.size.height - b.top - b.bottom);
-        self.cropView.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
+        [self.printContainerView addSubview:self.artboard];
+        self.artboard.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.printContainerView.frame.size.height - b.top - b.bottom);
+        self.artboard.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
         self.previewView  = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
         
         self.previewView.frame = self.printContainerView.frame;
@@ -922,7 +910,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else{
         textField = [[OLPhotoTextField alloc] initWithFrame:CGRectMake(0, 0, 130, 70)];
-        textField.center = self.cropView.center;
+        textField.center = self.artboard.center;
         textField.margins = 10;
         textField.delegate = self;
         textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -983,11 +971,11 @@ const NSInteger kOLEditTagCrop = 40;
     
     if (gesture.state == UIGestureRecognizerStateBegan){
         if ([self shouldEnableGestures]){
-            [self.cropView.assetViews.firstObject setGesturesEnabled:NO];
+            [self.artboard.assetViews.firstObject setGesturesEnabled:NO];
         }
         original = gesture.view.transform;
         originalFrame = gesture.view.frame;
-        CGPoint gesturePoint = [gesture locationInView:self.cropView];
+        CGPoint gesturePoint = [gesture locationInView:self.artboard];
         CGPoint translatedPoint = CGPointMake(gesturePoint.x - original.tx, gesturePoint.y - original.ty);
         originalAngle = [self angleOfTouchPoint:translatedPoint fromPoint:gesture.view.center];
         
@@ -1036,7 +1024,7 @@ const NSInteger kOLEditTagCrop = 40;
         else if (self.rotatingTextField){
             static CGFloat previousAngle;
             
-            CGPoint gesturePoint = [gesture locationInView:self.cropView];
+            CGPoint gesturePoint = [gesture locationInView:self.artboard];
             CGPoint translatedPoint = CGPointMake(gesturePoint.x - original.tx, gesturePoint.y - original.ty);
             CGFloat angle = [self angleOfTouchPoint:translatedPoint fromPoint:gesture.view.center];
             CGFloat deltaAngle = angle - previousAngle;
@@ -1050,9 +1038,9 @@ const NSInteger kOLEditTagCrop = 40;
             gesture.view.transform = transform;
         }
         else{
-            CGFloat minY = gesture.view.frame.size.height/2.0 - self.cropView.frame.size.height / 2.0;
+            CGFloat minY = gesture.view.frame.size.height/2.0 - self.artboard.frame.size.height / 2.0;
             CGFloat maxY = -minY;
-            CGFloat minX = gesture.view.frame.size.width/2.0 - self.cropView.frame.size.width / 2.0;
+            CGFloat minX = gesture.view.frame.size.width/2.0 - self.artboard.frame.size.width / 2.0;
             CGFloat maxX = -minX;
             if (transform.ty < minY){
                 transform.ty = minY;
@@ -1071,7 +1059,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
     else if (gesture.state == UIGestureRecognizerStateEnded){
         if ([self shouldEnableGestures]){
-            [self.cropView.assetViews.firstObject setGesturesEnabled:YES];
+            [self.artboard.assetViews.firstObject setGesturesEnabled:YES];
         }
         self.resizingTextField = NO;
         self.rotatingTextField = NO;
@@ -1198,7 +1186,7 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)setupButton4{
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
         [self.editingTools.button4 removeFromSuperview];
-        [self.cropView.assetViews.firstObject setGesturesEnabled:NO];
+        [self.artboard.assetViews.firstObject setGesturesEnabled:NO];
     }
     else{
         [self.editingTools.button4 setImage:[UIImage imageNamedInKiteBundle:@"crop"] forState:UIControlStateNormal];
@@ -1218,10 +1206,10 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)saveEditsToAsset:(OLAsset *)asset{
-    self.edits.cropImageRect = [self.cropView.assetViews.firstObject getImageRect];
-    self.edits.cropImageFrame = [self.cropView.assetViews.firstObject getFrameRect];
-    self.edits.cropImageSize = [self.cropView.assetViews.firstObject croppedImageSize];
-    self.edits.cropTransform = [self.cropView.assetViews.firstObject.imageView transform];
+    self.edits.cropImageRect = [self.artboard.assetViews.firstObject getImageRect];
+    self.edits.cropImageFrame = [self.artboard.assetViews.firstObject getFrameRect];
+    self.edits.cropImageSize = [self.artboard.assetViews.firstObject croppedImageSize];
+    self.edits.cropTransform = [self.artboard.assetViews.firstObject.imageView transform];
     
     for (OLPhotoTextField *textField in self.textFields){
         if (!textField.text || [textField.text isEqualToString:@""]){
@@ -1255,7 +1243,7 @@ const NSInteger kOLEditTagCrop = 40;
         [self.delegate imageEditViewController:self didReplaceAssetWithAsset:self.asset];
     }
     if ([self.delegate respondsToSelector:@selector(imageEditViewController:didFinishCroppingImage:)]){
-        [self.delegate imageEditViewController:self didFinishCroppingImage:[self.cropView.assetViews.firstObject editedImage]];
+        [self.delegate imageEditViewController:self didFinishCroppingImage:[self.artboard.assetViews.firstObject editedImage]];
     }
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
@@ -1267,11 +1255,11 @@ const NSInteger kOLEditTagCrop = 40;
         [self exitCropMode];
         self.previewSourceView.hidden = NO;
         
-        CGAffineTransform t = [self.cropView.assetViews.firstObject.imageView transform];
+        CGAffineTransform t = [self.artboard.assetViews.firstObject.imageView transform];
         UIEdgeInsets b = [self imageInsetsOnContainer];
-        [self.printContainerView addSubview:self.cropView];
-        self.cropView.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.previewView.frame.size.height - b.top - b.bottom);
-        self.cropView.assetViews.firstObject.imageView.transform = t;
+        [self.printContainerView addSubview:self.artboard];
+        self.artboard.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.previewView.frame.size.height - b.top - b.bottom);
+        self.artboard.assetViews.firstObject.imageView.transform = t;
         self.previewView  = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
         
         self.previewView.frame = self.printContainerView.frame;
@@ -1433,7 +1421,7 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Actions
 
 - (IBAction)onButtonHorizontalFlipClicked:(id)sender {
-    if (self.cropView.assetViews.firstObject.isCorrecting || self.animating || !self.cropView.assetViews.firstObject.imageView.image){
+    if (self.artboard.assetViews.firstObject.isCorrecting || self.animating || !self.artboard.assetViews.firstObject.imageView.image){
         return;
     }
     
@@ -1445,14 +1433,14 @@ const NSInteger kOLEditTagCrop = 40;
     }
     self.activeTextField = nil;
     
-    [self.edits performHorizontalFlipEditFromOrientation:self.cropView.assetViews.firstObject.imageView.image.imageOrientation];
+    [self.edits performHorizontalFlipEditFromOrientation:self.artboard.assetViews.firstObject.imageView.image.imageOrientation];
     
-    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.artboard.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
     
     [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
         
-        [UIView transitionWithView:self.cropView.assetViews.firstObject.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
-            [self.cropView setImage:image];
+        [UIView transitionWithView:self.artboard.assetViews.firstObject.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+            [self.artboard setImage:image];
         }completion:^(BOOL finished){
             self.animating = NO;
             
@@ -1464,7 +1452,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonRotateClicked:(id)sender {
-    if (self.cropView.assetViews.firstObject.isCorrecting || self.animating || !self.cropView.assetViews.firstObject.imageView.image){
+    if (self.artboard.assetViews.firstObject.isCorrecting || self.animating || !self.artboard.assetViews.firstObject.imageView.image){
         return;
     }
     
@@ -1480,15 +1468,15 @@ const NSInteger kOLEditTagCrop = 40;
     [(UIBarButtonItem *)sender setEnabled:NO];
     self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
     
-    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+    UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.artboard.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
     [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
         
         [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            self.cropView.assetViews.firstObject.imageView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+            self.artboard.assetViews.firstObject.imageView.transform = CGAffineTransformMakeRotation(-M_PI_2);
             
         } completion:^(BOOL finished){
-            [self.cropView setImage:image];
-            self.cropView.assetViews.firstObject.imageView.transform = CGAffineTransformIdentity;
+            [self.artboard setImage:image];
+            self.artboard.assetViews.firstObject.imageView.transform = CGAffineTransformIdentity;
             
             [(UIBarButtonItem *)sender setEnabled:YES];
             self.ctaButton.enabled = YES;
@@ -1512,7 +1500,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
-    self.backupTransform = self.cropView.assetViews.firstObject.imageView.transform;
+    self.backupTransform = self.artboard.assetViews.firstObject.imageView.transform;
     self.editingTools.drawerDoneButton.hidden = YES;
     self.editingTools.halfWidthDrawerDoneButton.hidden = NO;
     self.editingTools.halfWidthDrawerCancelButton.hidden = NO;
@@ -1543,19 +1531,19 @@ const NSInteger kOLEditTagCrop = 40;
         [self.editingTools.collectionView reloadData];
         [self showDrawerWithCompletionHandler:NULL];
     } completion:^(BOOL finished){
-        self.cropView.clipsToBounds = NO;
-        [self.view sendSubviewToBack:self.cropView];
+        self.artboard.clipsToBounds = NO;
+        [self.view sendSubviewToBack:self.artboard];
     }];
 }
 
 - (void)onDrawerButtonCancelClicked:(id)sender{
-    self.cropView.assetViews.firstObject.imageView.transform = self.backupTransform;
+    self.artboard.assetViews.firstObject.imageView.transform = self.backupTransform;
 
     [self onDrawerButtonDoneClicked:sender];
 }
 
 - (void)exitCropMode{
-    self.cropView.clipsToBounds = YES;
+    self.artboard.clipsToBounds = YES;
     [self orderViews];
     for (UIView *view in self.cropFrameGuideViews){
         [self.printContainerView bringSubviewToFront:view];
@@ -1880,7 +1868,7 @@ const NSInteger kOLEditTagCrop = 40;
 #endif
         }
         else if (adjustedIndexPathItem == 0){
-            if (!self.cropView.assetViews.firstObject.imageView.image){
+            if (!self.artboard.assetViews.firstObject.imageView.image){
                 return;
             }
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
@@ -1936,10 +1924,10 @@ const NSInteger kOLEditTagCrop = 40;
         self.ctaButton.enabled = YES;
         self.edits.filterName = [self filterNames][indexPath.item];
         
-        UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.cropView.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+        UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.artboard.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
         
         [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
-            self.cropView.assetViews.firstObject.imageView.image = image;
+            self.artboard.assetViews.firstObject.imageView.image = image;
             [self updateProductRepresentationForChoice:nil];
         }];
     }
@@ -2182,7 +2170,7 @@ const NSInteger kOLEditTagCrop = 40;
     else{
         for (UITextField *textField in self.textFields){
             if ([textField isFirstResponder]){
-                CGPoint p = [self.cropView convertRect:textField.frame toView:nil].origin;
+                CGPoint p = [self.artboard convertRect:textField.frame toView:nil].origin;
                 
                 CGFloat diff = p.y + textField.frame.size.height - (self.view.frame.size.height - keyboardHeight);
                 if (diff > 0) {
@@ -2382,11 +2370,11 @@ const NSInteger kOLEditTagCrop = 40;
 
 - (void)loadImageFromAsset{
     self.fullImage = nil;
-    self.cropView.assetViews.firstObject.imageView.image = nil;
+    self.artboard.assetViews.firstObject.imageView.image = nil;
     __weak OLImageEditViewController *welf = self;
     [self.asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:NO progress:^(float progress){
         dispatch_async(dispatch_get_main_queue(), ^{
-            [welf.cropView.assetViews.firstObject setProgress:progress];
+            [welf.artboard.assetViews.firstObject setProgress:progress];
         });
     } completion:^(UIImage *image, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
