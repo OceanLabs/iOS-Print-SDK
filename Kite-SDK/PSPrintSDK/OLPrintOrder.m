@@ -676,7 +676,7 @@ static NSBlockOperation *templateSyncOperation;
                     break;
                 }
             }
-            commonInAllJobs |= foundInJob;
+            commonInAllJobs &= foundInJob;
         }
         if (commonInAllJobs){
             [common addObject:firstJobShippingClass];
