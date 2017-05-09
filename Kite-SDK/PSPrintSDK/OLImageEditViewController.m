@@ -722,7 +722,7 @@ const NSInteger kOLEditTagCrop = 40;
         } completion:^(BOOL finished){
             self.previewSourceView.hidden = YES;
             [UIView animateWithDuration:0.25 animations:^{
-                self.previewView.frame = self.printContainerView.frame;
+                self.previewView.frame = [self.artboard.superview convertRect:self.artboard.frame toView:self.printContainerView.superview];
             }completion:^(BOOL finished){
                 [UIView animateWithDuration:0.25 animations:^{
                     self.view.backgroundColor = [UIColor colorWithWhite:0.227 alpha:1.000];
@@ -873,13 +873,9 @@ const NSInteger kOLEditTagCrop = 40;
     else{
         [self exitCropMode];
         
-        UIEdgeInsets b = [self imageInsetsOnContainer];
-        [self.printContainerView addSubview:self.artboard];
-        self.artboard.frame = CGRectMake(b.left, b.top, self.printContainerView.frame.size.width - b.left - b.right, self.printContainerView.frame.size.height - b.top - b.bottom);
-        self.artboard.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
-        self.previewView  = [self.printContainerView snapshotViewAfterScreenUpdates:YES];
+        self.previewView  = [self.artboard snapshotViewAfterScreenUpdates:YES];
         
-        self.previewView.frame = self.printContainerView.frame;
+        self.previewView.frame = [self.artboard.superview convertRect:self.artboard.frame toView:self.printContainerView.superview];
         [self.view addSubview:self.previewView];
         self.previewSourceView.hidden = YES;
         [UIView animateWithDuration:0.25 animations:^{
