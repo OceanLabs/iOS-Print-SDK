@@ -452,7 +452,7 @@ const NSInteger kOLEditTagCrop = 40;
     self.artboard.userInteractionEnabled = YES;
     [self.artboard.assetViews.firstObject setGesturesEnabled:YES];
     
-    self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.artboard attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
+    self.aspectRatioConstraint = [NSLayoutConstraint constraintWithItem:self.artboard attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeWidth multiplier:self.aspectRatio constant:0];
     [self.artboard addConstraint:self.aspectRatioConstraint];
     
     if ([self productHighlightsURL]){

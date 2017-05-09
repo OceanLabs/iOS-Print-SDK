@@ -306,7 +306,7 @@
             cropVc.borderInsets = product.productTemplate.imageBorder;
             cropVc.enableCircleMask = product.productTemplate.templateUI == OLTemplateUICircle;
             cropVc.delegate = self;
-            cropVc.aspectRatio = assetView.frame.size.width / assetView.frame.size.height;
+            cropVc.aspectRatio = assetView.frame.size.height / assetView.frame.size.width;
             cropVc.product = product;
             
             cropVc.previewView = [assetView snapshotViewAfterScreenUpdates:YES];
