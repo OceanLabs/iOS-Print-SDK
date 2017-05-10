@@ -282,7 +282,7 @@
     OLArtboardAssetView *assetView = (OLArtboardAssetView *)sender.view;
     self.sourceAssetView = assetView;
     OLAsset *asset = [OLAsset userSelectedAssets][assetView.index];
-    if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
+    if ([asset isKindOfClass:[OLPlaceholderAsset class]] || [OLUserSession currentSession].kiteVc.disableEditingTools){
         OLImagePickerViewController *imagePicker = [[OLUserSession currentSession].kiteVc.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
         imagePicker.delegate = self;
         imagePicker.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];;
@@ -302,7 +302,7 @@
             [customVc safePerformSelector:@selector(setProductId:) withObject:product.templateId];
             [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
             if ([vc respondsToSelector:@selector(setMaximumPhotos:)] && [self.delegate respondsToSelector:@selector(maxNumberOfPhotosToPick)]){
-                imagePicker.maximumPhotos = [self.delegate maxNumberOfPhotosToPick];
+                imagePicker.maximumPhotos = imagePicker.maximumPhotos;
             }
             
             [vc presentViewController:customVc animated:YES completion:NULL];
