@@ -62,7 +62,7 @@
 - (void)saveOrder;
 @end
 
-@interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
+@interface OLSingleProductReviewViewController (Private) <UITextFieldDelegate>
 
 - (BOOL)shouldDoCheckout;
 - (UIEdgeInsets)imageInsetsOnContainer;

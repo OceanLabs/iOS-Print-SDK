@@ -275,12 +275,7 @@
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
     [self preparePhotosForCheckout];
     
-    NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
-    for (OLAsset *photo in self.checkoutPhotos) {
-        [photoAssets addObject:[photo copy]];
-    }
-    
-    NSUInteger userSelectedAssetCount = photoAssets.count;
+    NSUInteger userSelectedAssetCount = [OLAsset userSelectedAssets].count;
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
@@ -288,10 +283,10 @@
     for (NSUInteger jobIndex = 0; jobIndex < numOrders; jobIndex++){
         OLProductPrintJob *job;
         if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
-            job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:photoAssets.firstObject backImageOLAsset:photoAssets.lastObject];
+            job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:[OLAsset userSelectedAssets].firstObject backImageOLAsset:[OLAsset userSelectedAssets].lastObject];
         }
         else{
-            job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[photoAssets subarrayWithRange:NSMakeRange(jobIndex * self.product.quantityToFulfillOrder, MIN(self.product.quantityToFulfillOrder, photoAssets.count - jobIndex * self.product.quantityToFulfillOrder))]];
+            job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[[OLAsset userSelectedAssets] subarrayWithRange:NSMakeRange(jobIndex * self.product.quantityToFulfillOrder, MIN(self.product.quantityToFulfillOrder, [OLAsset userSelectedAssets].count - jobIndex * self.product.quantityToFulfillOrder))]];
         }
         NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
         for (id<OLPrintJob> existingJob in jobs){
@@ -459,15 +454,16 @@
 }
 
 - (void)preparePhotosForCheckout{
-    self.checkoutPhotos = [[NSMutableArray alloc] init];
-    [self.checkoutPhotos addObjectsFromArray:[[OLAsset userSelectedAssets] nonPlaceholderAssets]];
+    NSMutableArray *checkoutPhotos = [[NSMutableArray alloc] init];
+    [checkoutPhotos addObjectsFromArray:[[OLAsset userSelectedAssets] nonPlaceholderAssets]];
     for (int i = 0; i < [OLAsset userSelectedAssets].nonPlaceholderAssets.count; i++) {
         NSInteger numberOfCopies = [[[OLAsset userSelectedAssets] objectAtIndex:i] extraCopies];
         for (NSInteger j = 0; j < numberOfCopies; j++){
-            [self.checkoutPhotos addObject:[[OLAsset userSelectedAssets] objectAtIndex:i]];
+            [checkoutPhotos addObject:[[OLAsset userSelectedAssets] objectAtIndex:i]];
         }
         [OLAsset userSelectedAssets][i].extraCopies = 0;
     }
+    [OLUserSession currentSession].userSelectedAssets = checkoutPhotos;
 }
 
 #pragma mark UICollectionView data source and delegate methods

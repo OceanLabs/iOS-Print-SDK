@@ -104,12 +104,12 @@ CGFloat innerMargin = 3;
 
 - (void)preparePhotosForCheckout{
     if (self.product.productTemplate.templateUI != OLTemplateUIFrame){
-        self.checkoutPhotos = [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
-        return;
+        [OLUserSession currentSession].userSelectedAssets = [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
     }
-    NSMutableArray *reversePhotos = [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
-    [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:reversePhotos forProduct:self.product];
-    self.checkoutPhotos = reversePhotos;
+    else{
+        [OLUserSession currentSession].userSelectedAssets = [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
+        [OLFrameOrderReviewViewController reverseRowsOfPhotosInArray:[OLUserSession currentSession].userSelectedAssets forProduct:self.product];
+    }
 }
 
 -(NSUInteger) totalNumberOfExtras{

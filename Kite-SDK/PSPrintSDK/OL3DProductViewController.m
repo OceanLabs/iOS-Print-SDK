@@ -37,8 +37,8 @@
 
 @import SceneKit;
 
-@interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
-- (void)setupImage;
+@interface OLSingleProductReviewViewController (Private) <UITextFieldDelegate>
+- (void)loadImages;
 - (void)onButtonCropClicked:(UIButton *)sender;
 - (void)exitCropMode;
 @end
@@ -175,8 +175,8 @@
     return paddedImage;
 }
 
-- (void)setupImage{
-    [super setupImage];
+- (void)loadImages{
+    [super loadImages];
     
     [self setCropViewImageToMaterial];
 }

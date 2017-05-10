@@ -62,7 +62,7 @@
 #import "OLProductTemplate.h"
 #import "OLProgressHUD.h"
 #import "OLReceiptViewController.h"
-#import "OLSingleImageProductReviewViewController.h"
+#import "OLSingleProductReviewViewController.h"
 #import "OLStripeCard+OLCardIcon.h"
 #import "OLStripeWrapper.h"
 #import "OLUserSession.h"

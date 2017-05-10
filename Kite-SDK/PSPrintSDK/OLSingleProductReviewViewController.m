@@ -42,7 +42,7 @@
 #import "OLProductTemplateOption.h"
 #import "OLImageCropper.h"
 #import "OLImageView.h"
-#import "OLSingleImageProductReviewViewController.h"
+#import "OLSingleProductReviewViewController.h"
 #import "OLUpsellViewController.h"
 #import "OLUserSession.h"
 #import "UIViewController+OLMethods.h"
@@ -65,7 +65,7 @@
 - (void)saveEditsToAsset:(OLAsset *)asset;
 @end
 
-@interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate, OLImageEditViewControllerDelegate>
+@interface OLSingleProductReviewViewController () <OLUpsellViewControllerDelegate, OLImageEditViewControllerDelegate>
 @property (assign, nonatomic) BOOL showingBack;
 @end
 
@@ -82,7 +82,7 @@
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@implementation OLSingleImageProductReviewViewController
+@implementation OLSingleProductReviewViewController
 
 - (OLAsset *)asset{
     if (!super.asset && !self.showingBack){

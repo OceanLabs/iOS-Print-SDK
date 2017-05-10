@@ -36,7 +36,7 @@
 #import "OLProduct.h"
 #import "OLProductOverviewViewController.h"
 #import "OLProductTypeSelectionViewController.h"
-#import "OLSingleImageProductReviewViewController.h"
+#import "OLSingleProductReviewViewController.h"
 #import "OLUserSession.h"
 #import "UIImage+OLUtils.h"
 #import "UIImageView+FadeIn.h"

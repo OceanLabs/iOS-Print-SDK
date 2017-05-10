@@ -738,7 +738,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
 }
 
-- (void)setupImage{
+- (void)loadImages{
     UIImage *image;
     if (self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical){
         image = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.fullImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.fullImage.imageOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
@@ -768,7 +768,7 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     if (self.fullImage){
-        [self setupImage];
+        [self loadImages];
     }
     else{
         [self loadImageFromAsset];
@@ -787,7 +787,7 @@ const NSInteger kOLEditTagCrop = 40;
     self.edits.cropTransform = [self.artboard.assetViews.firstObject.imageView transform];
     
     [coordinator animateAlongsideTransition:^(id context){
-        [self setupImage];
+        [self loadImages];
         [self.editingTools.collectionView.collectionViewLayout invalidateLayout];
     }completion:^(id context){
         NSString *borderString = self.borderTextField.text;
@@ -2386,7 +2386,7 @@ const NSInteger kOLEditTagCrop = 40;
                 [self.edits.textsOnPhoto removeObject:textOnPhoto];
             }
             
-            [welf setupImage];
+            [welf loadImages];
             
             id view = [welf.view viewWithTag:1010];
             if ([view isKindOfClass:[UIActivityIndicatorView class]]){
