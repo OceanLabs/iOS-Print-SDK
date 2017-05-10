@@ -205,6 +205,8 @@
         if (!target){
             target = self.sourceAssetView;
         }
+        [self.scrollingTimer invalidate];
+        self.scrollingTimer = nil;
         [self dropView:self.draggingView onView:target];
     }
 }
@@ -233,7 +235,9 @@
                 return;
             }
             self.scrollingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 repeats:YES block:^(NSTimer *timer){
-                scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + 6);
+                if (scrollView.contentOffset.y - scrollView.contentInset.bottom + scrollView.frame.size.height + 6 < scrollView.contentSize.height){
+                    scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + 6);
+                }
             }];
         }
         else if (self.draggingView.frame.origin.y + self.draggingView.frame.size.height/2.0 < self.draggingView.superview.frame.size.height * 0.1){
@@ -245,7 +249,9 @@
                 return;
             }
             self.scrollingTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 repeats:YES block:^(NSTimer *timer){
-                scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y - 6);
+                if (scrollView.contentOffset.y + scrollView.contentInset.top - 6 > 0){
+                    scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y - 6);
+                }
             }];
         }
         else{
