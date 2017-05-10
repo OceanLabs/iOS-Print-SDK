@@ -37,8 +37,6 @@
 @optional
 - (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet;
 - (NSInteger)maxNumberOfPhotosToPick;
-- (void)willShowImageEditor;
-- (void)willDismissImageEditor;
 - (UIScrollView *)scrollViewForVerticalScolling;
 - (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
 

@@ -1396,18 +1396,6 @@ static const CGFloat kBookEdgePadding = 38;
     }
 }
 
-- (void)willShowImageEditor{
-    if (self.editMode){
-        [(id<OLArtboardDelegate>)self.photobookDelegate willShowImageEditor];
-    }
-}
-
-- (void)willDismissImageEditor{
-    if (self.editMode){
-        [(id<OLArtboardDelegate>)self.photobookDelegate willDismissImageEditor];
-    }
-}
-
 - (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet{
     if (self.photobookDelegate){
         [(id<OLArtboardDelegate>)self.photobookDelegate refreshAssetViewsWithIndexSet:indexSet];

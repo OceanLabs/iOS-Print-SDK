@@ -324,10 +324,6 @@
             [cropVc setFullImage:image];
             cropVc.edits = asset.edits;
             
-            if ([self.delegate respondsToSelector:@selector(willShowImageEditor)]){
-                [self.delegate willShowImageEditor];
-            }
-            
             [vc presentViewController:cropVc animated:NO completion:NULL];
             
 #ifndef OL_NO_ANALYTICS
@@ -391,16 +387,10 @@
 #pragma mark - OLImageEditViewController delegate
 
 - (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
-    if ([self.delegate respondsToSelector:@selector(willDismissImageEditor)]){
-        [self.delegate willDismissImageEditor];
-    }
     [cropper dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper{
-    if ([self.delegate respondsToSelector:@selector(willDismissImageEditor)]){
-        [self.delegate willDismissImageEditor];
-    }
     [cropper dismissViewControllerAnimated:NO completion:NULL];
 }
 
@@ -411,9 +401,6 @@
 
     [self.sourceAssetView loadImageWithCompletionHandler:NULL];
     
-    if ([self.delegate respondsToSelector:@selector(willDismissImageEditor)]){
-        [self.delegate willDismissImageEditor];
-    }
     [cropper dismissViewControllerAnimated:YES completion:NULL];
     
 #ifndef OL_NO_ANALYTICS

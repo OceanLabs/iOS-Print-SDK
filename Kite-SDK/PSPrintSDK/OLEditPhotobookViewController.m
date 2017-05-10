@@ -118,7 +118,7 @@ static const NSInteger kSectionPages = 1;
     
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.ctaButton.frame.size.height, self.collectionView.contentInset.right);
     
-//    [self addInfoBanner];
+    [self addInfoBanner];
 }
 
 - (void)setupCtaButton{
@@ -290,33 +290,17 @@ static const NSInteger kSectionPages = 1;
         UIImageView *left1 = [[UIImageView alloc] initWithImage:leftImage];
         left1.contentMode = UIViewContentModeScaleToFill;
         left1.tag = 11;
-        //        left1.translatesAutoresizingMaskIntoConstraints = NO;
         [view addSubview:left1];
-        
-        //        UIImageView *left2 = [[UIImageView alloc] initWithImage:leftImage];
-        //        left2.contentMode = UIViewContentModeScaleToFill;
-        //        left2.tag = 12;
-        //        left2.translatesAutoresizingMaskIntoConstraints = NO;
-        //        [view addSubview:left2];
         
         UIImageView *right1 = [[UIImageView alloc] initWithImage:rightImage];
         right1.contentMode = UIViewContentModeScaleToFill;
         right1.tag = 21;
-        //        right1.translatesAutoresizingMaskIntoConstraints = NO;
         [view addSubview:right1];
-        
-        //        UIImageView *right2 = [[UIImageView alloc] initWithImage:rightImage];
-        //        right2.contentMode = UIViewContentModeScaleToFill;
-        //        right2.tag = 22;
-        //        right2.translatesAutoresizingMaskIntoConstraints = NO;
-        //        [view addSubview:right2];
         
         CGFloat shadowWidth = view.frame.size.width * 0.3;
         
         left1.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
-        //        left2.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
         right1.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
-        //        right2.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
     }
 }
 
@@ -344,7 +328,12 @@ static const NSInteger kSectionPages = 1;
 }
 
 - (void)addInfoBanner{
-    self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap to swap pages. Hold for more options.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Change", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+    }
+    else{
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit or Hold to Move", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+    }
     self.infoBanner.delegate = self;
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 50, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
 }
@@ -537,23 +526,6 @@ static const NSInteger kSectionPages = 1;
 
 - (UIScrollView *)scrollViewForVerticalScolling{
     return self.collectionView;
-}
-
-- (void)willShowImageEditor{
-    [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
-        self.ctaButton.alpha = 0;
-        self.infoBanner.transform = CGAffineTransformMakeTranslation(0, -self.infoBanner.frame.origin.y);
-        self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top - self.infoBanner.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
-    } completion:^(BOOL finished){
-        [self.infoBanner removeFromSuperview];
-        self.infoBanner = nil;
-    }];
-}
-
-- (void)willDismissImageEditor{
-    [UIView animateWithDuration:0.25 delay:0.25 options:0 animations:^{
-        self.ctaButton.alpha = 1;
-    } completion:NULL];
 }
 
 - (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet{
