@@ -85,6 +85,10 @@
 
 @end
 
+@interface OLArtboardView ()
+- (void)handleTapGesture:(UITapGestureRecognizer *)sender;
+@end
+
 @implementation OLPackProductViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -441,8 +445,16 @@
 #endif
 }
 
-- (void)editPhoto:(id)sender {
-    //TODO
+- (void)editPhoto:(UIButton *)sender {
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[sender.superview convertPoint:sender.frame.origin toView:self.collectionView]];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    OLArtboardView *artboard = [cell viewWithTag:10];
+    for (UIGestureRecognizer *gesture in artboard.assetViews.firstObject.gestureRecognizers){
+        if ([gesture isKindOfClass:[UITapGestureRecognizer class]]){
+            [artboard handleTapGesture:(UITapGestureRecognizer *)gesture];
+            return;
+        }
+    }
 }
 
 - (void)onButtonNextClicked:(UIBarButtonItem *)sender {

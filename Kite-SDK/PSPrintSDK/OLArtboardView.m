@@ -255,7 +255,7 @@
     }
 }
 
-- (void)handleTapGesture:(UIPanGestureRecognizer *)sender{
+- (void)handleTapGesture:(UITapGestureRecognizer *)sender{
     UIViewController *vc = [self.delegate viewControllerForPresenting];
     if (!vc){
         return;
