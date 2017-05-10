@@ -79,7 +79,11 @@
 
 - (void)setSourceAssetView:(OLArtboardAssetView *)sourceAssetView{
     _sourceAssetView = sourceAssetView;
-    self.sourceAssetViewRect = [[self.delegate viewToAddDraggingAsset] convertRect:sourceAssetView.frame fromView:sourceAssetView.superview];
+    UIView *view = [self.delegate viewToAddDraggingAsset];
+    if ([self.delegate respondsToSelector:@selector(scrollViewForVerticalScolling)]){
+        view = [self.delegate scrollViewForVerticalScolling];
+    }
+    self.sourceAssetViewRect = [view convertRect:sourceAssetView.frame fromView:sourceAssetView.superview];
     self.sourceAssetIndex = sourceAssetView.index;
 }
 
@@ -169,7 +173,11 @@
         self.draggingView.layer.shadowOpacity = 0.0;
         self.draggingView.frame = [[self.delegate viewToAddDraggingAsset] convertRect:targetView.frame fromView:targetView.superview];
         
-        swappingView.frame = self.sourceAssetViewRect;
+        UIView *view = [self.delegate viewToAddDraggingAsset];
+        if ([self.delegate respondsToSelector:@selector(scrollViewForVerticalScolling)]){
+            view = [self.delegate scrollViewForVerticalScolling];
+        }
+        swappingView.frame = [view convertRect:self.sourceAssetViewRect toView:[self.delegate viewToAddDraggingAsset]];
     } completion:^(BOOL finished){
         if (self.sourceAssetIndex == self.sourceAssetView.index){
             self.sourceAssetView.image = swappingView.image;
