@@ -49,6 +49,7 @@
 #import "OLImageView.h"
 #import "OLCollagePosterViewController.h"
 #import "OLPhotobookPageContentViewController.h"
+#import "OLQRCodeUploadViewController.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;

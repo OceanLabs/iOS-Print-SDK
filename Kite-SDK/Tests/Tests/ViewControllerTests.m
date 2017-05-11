@@ -50,6 +50,23 @@
     }
 }
 
+- (void)testQRCodeViewController{
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
+    XCTAssert(sb);
+    OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [sb instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [self performUIAction:^{
+        [rootVc presentViewController:nvc animated:YES completion:nil];
+    }];
+    
+    [self performUIAction:^{
+        [vc onBarButtonItemCancelTapped:nil];
+    }];
+}
+
 - (void)testProductDescriptionDrawer{
     OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
     
