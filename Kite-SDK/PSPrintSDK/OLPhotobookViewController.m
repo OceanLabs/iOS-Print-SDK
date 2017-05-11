@@ -963,8 +963,8 @@ static const CGFloat kBookEdgePadding = 38;
     coverImageView.delegate = self;
     self.coverImageView = coverImageView;
     [self loadCoverPhoto];
+    coverImageView.assetViews.firstObject.backgroundColor = [UIColor clearColor];
     coverImageView.tag = 18;
-    coverImageView.clipsToBounds = YES;
     [halfBookCoverImageContainer addSubview:coverImageView];
     coverImageView.translatesAutoresizingMaskIntoConstraints = NO;
 }
