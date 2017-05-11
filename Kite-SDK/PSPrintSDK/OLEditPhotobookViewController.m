@@ -63,14 +63,7 @@ static const NSInteger kSectionPages = 1;
 
 @property (assign, nonatomic) BOOL haveCachedCells;
 @property (assign, nonatomic) BOOL rotating;
-@property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
-@property (assign, nonatomic) NSInteger longPressImageIndex;
-@property (strong, nonatomic) NSNumber *selectedIndexNumber;
-@property (strong, nonatomic) NSArray *userSelectedPhotosCopy;
-@property (weak, nonatomic) OLPhotobookViewController *interactionPhotobook;
 @property (strong, nonatomic) UIButton *ctaButton;
-@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
-@property (strong, nonatomic) UIViewController *presentedVc;
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
 
 @end
