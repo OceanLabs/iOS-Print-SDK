@@ -1,14 +1,12 @@
 machine:
   xcode:
     version: 8.1
-  environment:
-    GYM_CODE_SIGNING_IDENTITY: "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)"
 
 general:
   branches:
     only:
     - master
-    - beta
+    - test
   artifacts:
     - "~/image.png"
 
