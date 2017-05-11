@@ -81,7 +81,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [OLKitePrintSDK setInstagramEnabledWithClientID:@"1af4c208cbdc4d09bbe251704990638f" secret:@"c8a5b1b1806f4586afad2f277cee1d5c" redirectURI:@"kitely://instagram-callback"];
+    [OLKitePrintSDK setInstagramEnabledWithClientID:@"1af4c208cbdc4d09bbe251704990638f" secret:@"c8a5b1b1806f4586afad2f277cee1d5c" redirectURI:@"https://kite.ly/instagram-callback"];
     
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
