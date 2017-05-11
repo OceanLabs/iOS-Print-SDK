@@ -59,9 +59,8 @@ static const NSInteger kSectionPages = 1;
 + (NSString *) instagramClientID;
 @end
 
-@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLImageViewDelegate, UINavigationControllerDelegate, OLImagePickerViewControllerDelegate, UIPopoverPresentationControllerDelegate, OLInfoBannerDelegate, OLArtboardDelegate>
+@interface OLEditPhotobookViewController () <UICollectionViewDelegateFlowLayout, OLPhotobookViewControllerDelegate, OLInfoBannerDelegate, OLArtboardDelegate>
 
-@property (assign, nonatomic) BOOL animating;
 @property (assign, nonatomic) BOOL haveCachedCells;
 @property (assign, nonatomic) BOOL rotating;
 @property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
@@ -77,11 +76,6 @@ static const NSInteger kSectionPages = 1;
 @end
 
 @implementation OLEditPhotobookViewController
-
-- (void)setAnimating:(BOOL)animating{
-    _animating = animating;
-    self.collectionView.scrollEnabled = !animating;
-}
 
 - (void)viewDidLoad{
     [super viewDidLoad];
@@ -263,64 +257,6 @@ static const NSInteger kSectionPages = 1;
     [self.navigationController pushViewController:photobook animated:YES];
 }
 
-- (void)swapImageAtIndex:(NSInteger)index1 withImageAtIndex:(NSInteger)index2{
-    [[OLAsset userSelectedAssets] exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
-}
-
-- (OLPhotobookPageContentViewController *)pageControllerForPageIndex:(NSInteger)index{
-    index--;
-    for (OLPhotobookViewController *photobook in self.childViewControllers){
-        if (photobook.bookClosed){
-            continue;
-        }
-        for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
-            if (page.pageIndex == index){
-                return page;
-            }
-        }
-    }
-    return nil;
-}
-
-- (void)addPageShadowsToView:(UIView *)view{
-    if (self.product.productTemplate.imageBorder.top == 0 && self.product.productTemplate.imageBorder.left == 0){
-        UIImage *leftImage = [UIImage imageNamed:@"page-shadow-left" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:self.traitCollection];
-        UIImage *rightImage = [UIImage imageNamed:@"page-shadow-right" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:self.traitCollection];
-        
-        UIImageView *left1 = [[UIImageView alloc] initWithImage:leftImage];
-        left1.contentMode = UIViewContentModeScaleToFill;
-        left1.tag = 11;
-        [view addSubview:left1];
-        
-        UIImageView *right1 = [[UIImageView alloc] initWithImage:rightImage];
-        right1.contentMode = UIViewContentModeScaleToFill;
-        right1.tag = 21;
-        [view addSubview:right1];
-        
-        CGFloat shadowWidth = view.frame.size.width * 0.3;
-        
-        left1.frame = CGRectMake(view.frame.size.width - shadowWidth, 0, shadowWidth, view.frame.size.height);
-        right1.frame = CGRectMake(0, 0, shadowWidth, view.frame.size.height);
-    }
-}
-
-- (void)setPageShadowAlpha:(UIView *)view forIndex:(NSInteger)index{
-    if (self.product.productTemplate.imageBorder.top == 0 && self.product.productTemplate.imageBorder.left == 0){
-        if (index % 2 == 0){//LEFT
-            [view viewWithTag:21].alpha = 0;
-            [view viewWithTag:22].alpha = 0;
-            [view viewWithTag:11].alpha = 1;
-            [view viewWithTag:12].alpha = 1;
-        }
-        else{
-            [view viewWithTag:11].alpha = 0;
-            [view viewWithTag:12].alpha = 0;
-            [view viewWithTag:21].alpha = 1;
-            [view viewWithTag:22].alpha = 1;
-        }
-    }
-}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     CGRect headerFrame = self.ctaButton.frame;
     headerFrame.origin.y = self.view.frame.size.height - self.ctaButton.frame.size.height + scrollView.contentOffset.y ;
@@ -430,77 +366,6 @@ static const NSInteger kSectionPages = 1;
 - (CGFloat) cellHeightForSize:(CGSize)size{
     CGFloat min = size.width; //MIN(size.width, size.height);
     return MIN((min) / (self.product.productTemplate.sizeCm.width*2 / self.product.productTemplate.sizeCm.height), (self.view.frame.size.height - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height)) * 0.9);
-}
-
-#pragma mark - Adding new images
-
-- (void)showImagePicker{
-    NSInteger max = self.product.quantityToFulfillOrder + 1; //Plus cover photo
-    
-    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
-    vc.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];
-    vc.delegate = self;
-    vc.maximumPhotos = max;
-    vc.product = self.product;
-    
-    if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
-        //Skip the image picker and only show the custom vc
-        
-        self.vcDelegateForCustomVc = vc; //Keep strong reference
-        vc.providerForPresentedVc = [OLUserSession currentSession].kiteVc.customImageProviders.firstObject;
-        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
-        if (!customVc){
-            customVc = [[OLUserSession currentSession].kiteVc.delegate imagePickerViewControllerForName:vc.providerForPresentedVc.name];
-        }
-        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
-        [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
-        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy]];
-        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
-            vc.maximumPhotos = self.product.quantityToFulfillOrder;
-        }
-        
-        [self presentViewController:customVc animated:YES completion:NULL];
-        self.presentedVc = customVc;
-        return;
-    }
-    
-    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
-}
-
-- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
-    [vc dismissViewControllerAnimated:YES completion:NULL];
-}
-
-- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    [[OLAsset userSelectedAssets] updateUserSelectedAssetsAtIndex:MAX(0, self.addNewPhotosAtIndex) withAddedAssets:addedAssets removedAssets:removedAssets];
-    
-    if (self.addNewPhotosAtIndex == -1){
-        for (OLPhotobookViewController *photobook in self.childViewControllers){
-            if ([photobook bookClosed]){
-                [photobook loadCoverPhoto];
-                break;
-            }
-        }
-    }
-
-    for (OLPhotobookViewController *photobook in self.childViewControllers){
-        if (!photobook.bookClosed){
-            for (OLPhotobookPageContentViewController *page in photobook.pageController.viewControllers){
-                [page loadImageWithCompletionHandler:NULL];
-            }
-        }
-    }
-    
-    if (self.presentedVc){
-        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
-    }
-    else{
-        [vc dismissViewControllerAnimated:YES completion:NULL];
-    }
-    
-    self.vcDelegateForCustomVc = nil;
-    self.presentedVc = nil;
-    
 }
 
 #pragma mark Artboard Delegate

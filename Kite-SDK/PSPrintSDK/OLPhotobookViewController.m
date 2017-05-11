@@ -1284,66 +1284,6 @@ static const CGFloat kBookEdgePadding = 38;
     }
 }
 
-#pragma mark - Adding new images
-
-- (void)showImagePicker{
-    OLImagePickerViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
-    vc.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];
-    vc.delegate = self;
-    vc.maximumPhotos = self.product.quantityToFulfillOrder;
-    vc.product = self.product;
-    
-    if ([OLKiteUtils numberOfProvidersAvailable] <= 2 && [[OLUserSession currentSession].kiteVc.customImageProviders.firstObject isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
-        //Skip the image picker and only show the custom vc
-        
-        self.vcDelegateForCustomVc = vc; //Keep strong reference
-        vc.providerForPresentedVc = [OLUserSession currentSession].kiteVc.customImageProviders.firstObject;
-        UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
-        if (!customVc){
-            customVc = [[OLUserSession currentSession].kiteVc.delegate imagePickerViewControllerForName:vc.providerForPresentedVc.name];
-        }
-        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
-        [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
-        [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy]];
-        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
-            vc.maximumPhotos = self.product.quantityToFulfillOrder;
-        }
-        
-        
-        [self presentViewController:customVc animated:YES completion:NULL];
-        self.presentedVc = customVc;
-        return;
-    }
-    
-    [self presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
-}
-
-- (void)imagePickerDidCancel:(OLImagePickerViewController *)vc{
-    [vc dismissViewControllerAnimated:YES completion:NULL];
-}
-
-- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    [[OLAsset userSelectedAssets] updateUserSelectedAssetsAtIndex:MAX(0, self.addNewPhotosAtIndex) withAddedAssets:addedAssets removedAssets:removedAssets];
-    if (self.addNewPhotosAtIndex == -1){
-        if ([self bookClosed]){
-            [self loadCoverPhoto];
-        }
-    }
-    for (OLPhotobookPageContentViewController *page in self.pageController.viewControllers){
-        [page loadImageWithCompletionHandler:NULL];
-    }
-    
-    if (self.presentedVc){
-        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
-    }
-    else{
-        [vc dismissViewControllerAnimated:YES completion:NULL];
-    }
-    
-    self.vcDelegateForCustomVc = nil;
-    self.presentedVc = nil;
-}
-
 #pragma mark Artboard delegate
 
 - (UIView *)viewToAddDraggingAsset{
@@ -1351,16 +1291,15 @@ static const CGFloat kBookEdgePadding = 38;
         return [(id<OLArtboardDelegate>)self.photobookDelegate viewToAddDraggingAsset];
     }
 
-    return self.view;
+    return nil;
 }
 
 - (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point{
     if (self.editMode){
         return [(id<OLArtboardDelegate>)self.photobookDelegate assetViewAtPoint:point];
     }
-    else{
-        return [self findAssetViewAtPoint:point];
-    }
+    
+    return nil;
 }
 
 - (OLArtboardAssetView *)findAssetViewAtPoint:(CGPoint)point{
