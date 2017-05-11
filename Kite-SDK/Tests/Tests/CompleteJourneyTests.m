@@ -134,18 +134,6 @@
                                     forKey:@"orientation"];
     }];
     
-    [self performUIAction:^{
-        [(OLPhotobookViewController *)presentedVc onCoverTapRecognized:nil];
-    }];
-    
-    [self performUIAction:^{
-        [presentedVc.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
-    }];
-    
-    [self performUIAction:^{
-        [(OLPhotobookViewController *)presentedVc onCoverTapRecognized:nil];
-    }];
-    
     [self tapNextOnViewController:presentedVc];
     XCTAssert(!paymentVc.presentedViewController, @"Did not dismiss photobook screen");
     

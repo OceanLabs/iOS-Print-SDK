@@ -48,6 +48,7 @@
 #import "OLAsset+Private.h"
 #import "OLImageView.h"
 #import "OLCollagePosterViewController.h"
+#import "OLPhotobookPageContentViewController.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;
@@ -60,6 +61,10 @@
 - (void)tapNextOnViewController:(UIViewController *)vc;
 - (void)tearDownHelper;
 - (void)templateSyncWithSuccessHandler:(void(^)())handler;
+@end
+
+@interface OLArtboardView ()
+- (void)handleTapGesture:(UITapGestureRecognizer *)sender;
 @end
 
 @interface UIViewController ()
@@ -110,15 +115,8 @@
 - (void) deletePhotoAtIndex:(NSUInteger)index;
 @end
 
-@interface OLEditPhotobookViewController ()
-- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)tappedImageIndex;
-- (void)editImage;
-@end
-
 @interface OLPhotobookViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
-- (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender;
-- (void)onCoverTapRecognized:(UITapGestureRecognizer *)sender;
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer;
 - (void)openBook:(UIGestureRecognizer *)sender;
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;

@@ -984,8 +984,16 @@
     OLEditPhotobookViewController *photobookEditVc = (OLEditPhotobookViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([photobookEditVc isKindOfClass:[OLEditPhotobookViewController class]]);
     
+    OLPhotobookViewController *photobook = photobookEditVc.childViewControllers[1];
+    OLArtboardView *artboard = [(OLPhotobookPageContentViewController *)photobook.pageController.viewControllers.firstObject artboardView];
+    
     [self performUIAction:^{
-        [photobookEditVc photobook:photobookEditVc.childViewControllers[1] userDidTapOnImageWithIndex:1];
+        for (UIGestureRecognizer *gesture in artboard.assetViews.firstObject.gestureRecognizers){
+            if ([gesture isKindOfClass:[UITapGestureRecognizer class]]){
+                [artboard handleTapGesture:(UITapGestureRecognizer *)gesture];
+                return;
+            }
+        }
     }];
     
     XCTAssert([[(UINavigationController *)photobookEditVc.presentedViewController topViewController] isKindOfClass:[OLImagePickerViewController class]], @"Did not show image picker");
@@ -1003,17 +1011,19 @@
     
     [self tapNextOnViewController:photobookEditVc];
     
-    OLPhotobookViewController *photobook = (OLPhotobookViewController *)productHomeVc.navigationController.topViewController;
+    photobook = (OLPhotobookViewController *)productHomeVc.navigationController.topViewController;
     
     [self performUIAction:^{
         [photobook openBook:nil];
     }];
     
-    OLTestTapGestureRecognizer *tap = [[OLTestTapGestureRecognizer alloc] init];
-    tap.customLocationInView = CGPointMake(photobook.view.frame.size.width-100, 100);
-    
     [self performUIAction:^{
-        [photobook onTapGestureRecognized:tap];
+        for (UIGestureRecognizer *gesture in artboard.assetViews.firstObject.gestureRecognizers){
+            if ([gesture isKindOfClass:[UITapGestureRecognizer class]]){
+                [artboard handleTapGesture:(UITapGestureRecognizer *)gesture];
+                return;
+            }
+        }
     }];
     
     picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
@@ -1027,7 +1037,7 @@
         [picker onButtonDoneTapped:nil];
     }];
     
-    XCTAssert([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 2, @"Did not pick 2 images");
+    XCTAssert([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 1, @"Did not pick an image");
 }
 
 - (void)testCountryPicker{
