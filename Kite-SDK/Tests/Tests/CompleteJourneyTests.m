@@ -45,51 +45,6 @@
     XCTAssert([photobookEditVc isKindOfClass:[OLEditPhotobookViewController class]]);
     
     OLPhotobookViewController *photobook = photobookEditVc.childViewControllers[1];
-    OLTestTapGestureRecognizer *tap = [[OLTestTapGestureRecognizer alloc] init];
-    tap.customLocationInView = CGPointMake(100, 100);
-    
-    [self performUIAction:^{
-        [photobook onTapGestureRecognized:tap];
-    }];
-    [self performUIAction:^{
-        [photobook onTapGestureRecognized:tap];
-    }];
-    [self performUIAction:^{
-        [photobook onTapGestureRecognized:tap];
-    }];
-    
-    tap.customLocationInView = CGPointMake(photobook.view.frame.size.width-100, 100);
-    [self performUIAction:^{
-        [photobook onTapGestureRecognized:tap];
-    }];
-    
-    tap.customLocationInView = CGPointMake(100, 100);
-    
-    [self performUIAction:^{
-        [photobook onTapGestureRecognized:tap];
-    }];
-    
-    [self performUIAction:^{
-        [photobookEditVc editImage];
-    }];
-    
-    OLImageEditViewController *editor = (OLImageEditViewController *)photobook.presentedViewController;
-    
-    [self performUIAction:^{
-        [editor.editingTools.button1 sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }];
-    
-    OLImagePickerViewController *picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
-    
-    [self performUIAction:^{
-        OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
-        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:7 inSection:0]];
-    }];
-    
-    [self performUIAction:^{
-        [editor onButtonDoneTapped:nil];
-    }];
-    
     [self tapNextOnViewController:photobookEditVc];
     
     photobook = (OLPhotobookViewController *)productHomeVc.navigationController.topViewController;
@@ -130,28 +85,6 @@
     leftPan.mockVelocity = CGPointMake(-100, 0);
     [self performUIAction:^{
         [photobook onPanGestureRecognized:leftPan];
-    }];
-    
-    [self performUIAction:^{
-        tap.customLocationInView = CGPointMake(photobook.view.frame.size.width-100, 100);
-        [photobook onTapGestureRecognized:tap];
-    }];
-    
-    editor = (OLImageEditViewController *)photobook.presentedViewController;
-    
-    [self performUIAction:^{
-        [editor.editingTools.button1 sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }];
-    
-    picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
-    
-    [self performUIAction:^{
-        OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
-        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:7 inSection:0]];
-    }];
-    
-    [self performUIAction:^{
-        [editor onButtonDoneTapped:nil];
     }];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
@@ -277,7 +210,7 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for case mask to download"];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        while (!caseVc.cropView.image || !caseVc.downloadedMask){
+        while (!caseVc.artboard.assetViews.firstObject.imageView.image || !caseVc.downloadedMask){
             sleep(3);
         }
         [expectation fulfill];
@@ -446,7 +379,7 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for case mask to download"];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        while (!caseVc.cropView.image || !caseVc.downloadedMask){
+        while (!caseVc.artboard.assetViews.firstObject.imageView.image || !caseVc.downloadedMask){
             sleep(3);
         }
         [expectation fulfill];
@@ -729,11 +662,6 @@
     
     [self chooseClass:@"Magnet Wall Frames" onOLProductHomeViewController:productHomeVc];
     
-//    OLProductTypeSelectionViewController *productTypeVc = (OLProductTypeSelectionViewController *)productHomeVc.navigationController.topViewController;
-//    XCTAssert([productTypeVc isKindOfClass:[OLProductTypeSelectionViewController class]]);
-//    
-//    [self chooseProduct:@"Frames 50cm (2x2)" onOLProductTypeSelectionViewController:productTypeVc];
-    
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
     OLImagePickerViewController *photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
@@ -743,35 +671,6 @@
     
     OLFrameOrderReviewViewController *reviewVc = (OLFrameOrderReviewViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([reviewVc isKindOfClass:[OLFrameOrderReviewViewController class]]);
-    
-    UICollectionViewCell *outerCollectionViewCell = [reviewVc.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    OLImageView *imageView = (OLImageView *)[cell viewWithTag:110];
-    
-    [self performUIAction:^{
-        OLTestTapGestureRecognizer *tap = [[OLTestTapGestureRecognizer alloc] init];
-        tap.customLocationInView = [reviewVc.collectionView convertPoint:CGPointMake(10, 10) fromView:imageView];
-        
-        [reviewVc onTapGestureThumbnailTapped:tap];
-    }];
-    
-    OLImageEditViewController *editor = (OLImageEditViewController *)reviewVc.presentedViewController;
-    
-    [self performUIAction:^{
-        [editor.editingTools.button1 sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }];
-    
-    OLImagePickerViewController *picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
-    
-    [self performUIAction:^{
-        OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
-        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:5 inSection:0]];
-    }];
-    
-    [self performUIAction:^{
-        [editor onButtonDoneTapped:nil];
-    }];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];
@@ -890,7 +789,7 @@
     
 }
 
-- (void)testCompletePosterJourney{
+- (void)testCompleteCollagePosterJourney{
     NSArray *urls = @[@"https://s3.amazonaws.com/psps/sdk_static/1.jpg", @"https://s3.amazonaws.com/psps/sdk_static/2.jpg", @"https://s3.amazonaws.com/psps/sdk_static/3.jpg", @"https://s3.amazonaws.com/psps/sdk_static/4.jpg", @"https://s3.amazonaws.com/psps/sdk_static/5.jpg", @"https://s3.amazonaws.com/psps/sdk_static/6.jpg", @"https://s3.amazonaws.com/psps/sdk_static/7.jpg", @"https://s3.amazonaws.com/psps/sdk_static/8.jpg", @"https://s3.amazonaws.com/psps/sdk_static/9.jpg", @"https://s3.amazonaws.com/psps/sdk_static/10.jpg", @"https://s3.amazonaws.com/psps/sdk_static/11.jpg", @"https://s3.amazonaws.com/psps/sdk_static/12.jpg", @"https://s3.amazonaws.com/psps/sdk_static/13.jpg", @"https://s3.amazonaws.com/psps/sdk_static/14.jpg", @"https://s3.amazonaws.com/psps/sdk_static/15.jpg", @"https://s3.amazonaws.com/psps/sdk_static/16.jpg", @"https://s3.amazonaws.com/psps/sdk_static/17.jpg", @"https://s3.amazonaws.com/psps/sdk_static/18.jpg", @"https://s3.amazonaws.com/psps/sdk_static/19.jpg", @"https://s3.amazonaws.com/psps/sdk_static/20.jpg", @"https://s3.amazonaws.com/psps/sdk_static/21.jpg", @"https://s3.amazonaws.com/psps/sdk_static/22.jpg", @"https://s3.amazonaws.com/psps/sdk_static/23.jpg", @"https://s3.amazonaws.com/psps/sdk_static/24.jpg", @"https://s3.amazonaws.com/psps/sdk_static/25.jpg", @"https://s3.amazonaws.com/psps/sdk_static/26.jpg", @"https://s3.amazonaws.com/psps/sdk_static/27.jpg", @"https://s3.amazonaws.com/psps/sdk_static/28.jpg", @"https://s3.amazonaws.com/psps/sdk_static/29.jpg", @"https://s3.amazonaws.com/psps/sdk_static/30.jpg", @"https://s3.amazonaws.com/psps/sdk_static/31.jpg", @"https://s3.amazonaws.com/psps/sdk_static/32.jpg", @"https://s3.amazonaws.com/psps/sdk_static/33.jpg", @"https://s3.amazonaws.com/psps/sdk_static/34.jpg", @"https://s3.amazonaws.com/psps/sdk_static/35.jpg"];
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     for (NSString *s in urls){
@@ -916,41 +815,8 @@
     
     [self tapNextOnViewController:productHomeVc.navigationController.topViewController];
     
-    OLImagePickerViewController *photoVc = (OLImagePickerViewController *)productHomeVc.navigationController.topViewController;
-    XCTAssert([photoVc isKindOfClass:[OLImagePickerViewController class]]);
-    
-    [self tapNextOnViewController:photoVc];
-    
-    OLPosterViewController *reviewVc = (OLPosterViewController *)productHomeVc.navigationController.topViewController;
-    XCTAssert([reviewVc isKindOfClass:[OLPosterViewController class]]);
-    
-    UICollectionViewCell *outerCollectionViewCell = [reviewVc.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    UICollectionView* collectionView = (UICollectionView*)[outerCollectionViewCell.contentView viewWithTag:20];
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    
-    [self performUIAction:^{
-        OLTestTapGestureRecognizer *tap = [[OLTestTapGestureRecognizer alloc] init];
-        tap.customLocationInView = [reviewVc.collectionView convertPoint:CGPointMake(10, 10) fromView:cell];
-        
-        [reviewVc onTapGestureThumbnailTapped:tap];
-    }];
-    
-    OLImageEditViewController *editor = (OLImageEditViewController *)reviewVc.presentedViewController;
-    
-    [self performUIAction:^{
-        [editor.editingTools.button1 sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }];
-    
-    OLImagePickerViewController *picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
-    
-    [self performUIAction:^{
-        OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
-        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:5 inSection:0]];
-    }];
-    
-    [self performUIAction:^{
-        [editor onButtonDoneTapped:nil];
-    }];
+    OLCollagePosterViewController *reviewVc = (OLCollagePosterViewController *)productHomeVc.navigationController.topViewController;
+    XCTAssert([reviewVc isKindOfClass:[OLCollagePosterViewController class]]);
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     printOrder.shippingAddress = [OLAddress kiteTeamAddress];

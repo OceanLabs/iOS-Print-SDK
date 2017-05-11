@@ -38,7 +38,6 @@
 #import "OLImagePickerPhotosPageViewController.h"
 #import "OLButtonCollectionViewCell.h"
 #import "OLPhotoTextField.h"
-#import "OLPosterViewController.h"
 #import "OLBaseRequest.h"
 #import "OLImagePickerLoginPageViewController.h"
 #import "OLMockPanGestureRecognizer.h"
@@ -48,6 +47,7 @@
 #import "OLKiteViewController+Private.h"
 #import "OLAsset+Private.h"
 #import "OLImageView.h"
+#import "OLCollagePosterViewController.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;
