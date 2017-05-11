@@ -184,9 +184,10 @@
 "Start Creating" = "Comenzar a crear";
 "Store Maintenance" = "Mantenimiento de tienda";
 "Swipe to rotate your mug" = "Deslizar para girar tu taza";
-"Tap Image to Change" = "Toca la imagen para cambiar";
-"Tap Image to Edit" = "Toca la imagen para editar";
-"Tap Image to Edit or Hold to Move" = "Tap Image to Edit or Hold to Move";
+"Tap image to change" = "Toca la imagen para cambiar";
+"Tap image to change or hold to move" = "Tap image to change or hold to move";
+"Tap image to edit" = "Toca la imagen para editar";
+"Tap image to edit or hold to move" = "Tap image to edit or hold to move";
 "Tap on this button" = "Aprieta este botón";
 "Text Colour" = "Color del texto";
 "TEXT TOOLS" = "HERRAMIENTAS DE TEXTO";

@@ -123,10 +123,10 @@
 
 - (void)addInfoBanner{
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Change", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap image to change", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     }
     else{
-        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap image to edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     }
     self.infoBanner.delegate = self;
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 50, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);

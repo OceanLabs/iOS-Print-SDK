@@ -329,10 +329,10 @@ static const NSInteger kSectionPages = 1;
 
 - (void)addInfoBanner{
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
-        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Change", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap image to change or hold to move", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     }
     else{
-        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Edit or Hold to Move", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+        self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap image to edit or hold to move", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     }
     self.infoBanner.delegate = self;
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 50, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);

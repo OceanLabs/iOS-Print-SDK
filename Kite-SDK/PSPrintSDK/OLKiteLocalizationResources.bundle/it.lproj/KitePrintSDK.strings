@@ -185,9 +185,10 @@
 "Start Creating" = "Inizia la composizione";
 "Store Maintenance" = "Manutenzione store";
 "Swipe to rotate your mug" = "Scorri per ruotare ";
-"Tap Image to Change" = "Tocca l\immagine per cambiare";
-"Tap Image to Edit" = "Tocca l\immagine per modificare";
-"Tap Image to Edit or Hold to Move" = "Tap Image to Edit or Hold to Move";
+"Tap image to change" = "Tocca l\immagine per cambiare";
+"Tap image to change or hold to move" = "Tap image to change or hold to move";
+"Tap image to edit" = "Tocca l\immagine per modificare";
+"Tap image to edit or hold to move" = "Tap image to edit or hold to move";
 "Tap on this button" = "Tocca questo pulsante";
 "Text Colour" = "Colore del testo";
 "TEXT TOOLS" = "STRUMENTI DI TESTO";

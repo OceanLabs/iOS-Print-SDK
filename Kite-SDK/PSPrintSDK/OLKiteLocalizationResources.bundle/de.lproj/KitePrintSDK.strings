@@ -184,9 +184,10 @@
 "Start Creating" = "Jetzt erstellen";
 "Store Maintenance" = "Wartungsarbeiten im Store";
 "Swipe to rotate your mug" = "Wischen um die Tasse zu drehen";
-"Tap Image to Change" = "Bild antippen zum Ändern";
-"Tap Image to Edit" = "Bild antippen zum Bearbeiten";
-"Tap Image to Edit or Hold to Move" = "Tap Image to Edit or Hold to Move";
+"Tap image to change" = "Bild antippen zum Ändern";
+"Tap image to change or hold to move" = "Tap image to change or hold to move";
+"Tap image to edit" = "Bild antippen zum Bearbeiten";
+"Tap image to edit or hold to move" = "Tap image to edit or hold to move";
 "Tap on this button" = "Auf diesen Button tippen";
 "Text Colour" = "Textfarbe";
 "TEXT TOOLS" = "TEXTWERKZEUGE";
