@@ -30,7 +30,6 @@
 #import "OLQRCodeUploadViewController.h"
 #import "OLQRCodeUploadedImagePoller.h"
 #import "OLURLShortener.h"
-#import "UIImage+MDQRCode.h"
 #import "OLKiteUtils.h"
 
 @interface OLQRCodeUploadViewController ()
