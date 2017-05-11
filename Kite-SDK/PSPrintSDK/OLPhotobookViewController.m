@@ -103,15 +103,11 @@ static const CGFloat kBookEdgePadding = 38;
 @property (assign, nonatomic) BOOL haveSeenViewDidAppear;
 @property (assign, nonatomic) BOOL stranded;
 @property (assign, nonatomic) BOOL userHasOpenedBook;
-@property (assign, nonatomic) NSInteger addNewPhotosAtIndex;
-@property (assign, nonatomic) NSInteger croppingImageIndex;
 @property (strong, nonatomic) IBOutlet UIView *bookCover;
-@property (strong, nonatomic) NSArray<OLAsset *> *userSelectedPhotosCopy;
 @property (strong, nonatomic) NSLayoutConstraint *centerXCon;
 @property (strong, nonatomic) NSLayoutConstraint *centerYCon;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon2;
 @property (strong, nonatomic) NSLayoutConstraint *widthCon;
-@property (strong, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) UIDynamicAnimator* dynamicAnimator;
 @property (strong, nonatomic) UIDynamicItemBehavior* inertiaBehavior;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
@@ -128,8 +124,6 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonBottomCon;
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
-@property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
-@property (strong, nonatomic) UIViewController *presentedVc;
 
 @end
 
