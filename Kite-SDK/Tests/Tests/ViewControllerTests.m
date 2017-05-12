@@ -314,6 +314,8 @@
 }
 
 - (void)testShippingMethodsViewController{
+    [OLKiteTestHelper mockTemplateRequest];
+    
     XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
     [self templateSyncWithSuccessHandler:^{
         [expectation fulfill];
@@ -368,6 +370,8 @@
         [shippingMethodsVc.navigationController popViewControllerAnimated:YES];
         
     }];
+    
+    [OLKiteTestHelper undoMockTemplateRequest];
 }
 
 - (void)testStartWithPrintOrderVariantCheckout{
