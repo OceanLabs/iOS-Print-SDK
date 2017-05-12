@@ -322,6 +322,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [self.paymentButton1 removeFromSuperview];
     }
     
+    if (selectedPaymentMethod == kOLPaymentMethodNone && [OLKiteUtils isApplePayAvailable]){
+        selectedPaymentMethod = kOLPaymentMethodApplePay;
+    }
+    [self updateSelectedPaymentMethodView];
+    
     [self updateViewsBasedOnCostUpdate];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -339,11 +344,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackBasketScreenViewedForOrder:self.printOrder applePayIsAvailable:applePayAvailableStr];
 #endif
-    
-    if (selectedPaymentMethod == kOLPaymentMethodNone && [OLKiteUtils isApplePayAvailable]){
-        selectedPaymentMethod = kOLPaymentMethodApplePay;
-    }
-    [self updateSelectedPaymentMethodView];
     
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.paymentButton1 setBackgroundColor:[UIColor clearColor]];
