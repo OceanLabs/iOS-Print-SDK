@@ -3644,6 +3644,883 @@
       "order_android" : 0,
       "grid_count_x" : 1,
       "template_id" : "i7plus_case",
+      "country_to_region_mapping": {
+        "FLK": "ROW",
+        "SDN": "ROW",
+        "NIC": "ROW",
+        "VUT": "ROW",
+        "MYS": "ROW",
+        "SYR": "ROW",
+        "POL": "EU",
+        "TZA": "ROW",
+        "BDI": "ROW",
+        "GRL": "ROW",
+        "HMD": "ROW",
+        "ERI": "ROW",
+        "GRD": "ROW",
+        "BOL": "ROW",
+        "DEU": "EU",
+        "HTI": "ROW",
+        "SWZ": "ROW",
+        "GRC": "EU",
+        "AFG": "ROW",
+        "BLM": "ROW",
+        "JEY": "EU",
+        "CYM": "ROW",
+        "PRK": "ROW",
+        "KOR": "ROW",
+        "LUX": "EU",
+        "SPM": "ROW",
+        "PRT": "EU",
+        "SHN": "ROW",
+        "BLZ": "ROW",
+        "DMA": "ROW",
+        "MMR": "ROW",
+        "AND": "EU",
+        "KHM": "ROW",
+        "BLR": "EU",
+        "GBR": "UK",
+        "KEN": "ROW",
+        "IMN": "EU",
+        "CAN": "ROW",
+        "HUN": "EU",
+        "PNG": "ROW",
+        "BEL": "EU",
+        "DJI": "ROW",
+        "CAF": "ROW",
+        "MTQ": "ROW",
+        "CIV": "ROW",
+        "ITA": "EU",
+        "BES": "ROW",
+        "TJK": "ROW",
+        "CPV": "ROW",
+        "PCN": "ROW",
+        "OMN": "ROW",
+        "ETH": "ROW",
+        "MLI": "ROW",
+        "SWE": "EU",
+        "GAB": "ROW",
+        "BEN": "ROW",
+        "NFK": "ROW",
+        "MAC": "ROW",
+        "TCA": "ROW",
+        "IDN": "ROW",
+        "TCD": "ROW",
+        "SVK": "EU",
+        "SOM": "ROW",
+        "ZWE": "ROW",
+        "GIN": "ROW",
+        "VGB": "ROW",
+        "BMU": "ROW",
+        "GIB": "EU",
+        "MLT": "EU",
+        "BVT": "ROW",
+        "LBR": "ROW",
+        "EGY": "ROW",
+        "SYC": "ROW",
+        "MDV": "ROW",
+        "CXR": "ROW",
+        "LBY": "ROW",
+        "NLD": "EU",
+        "MWI": "ROW",
+        "LSO": "ROW",
+        "MDA": "EU",
+        "DZA": "ROW",
+        "HKG": "ROW",
+        "MDG": "ROW",
+        "HRV": "EU",
+        "JOR": "ROW",
+        "LBN": "ROW",
+        "RWA": "ROW",
+        "NGA": "ROW",
+        "CHN": "ROW",
+        "CHL": "ROW",
+        "ASM": "ROW",
+        "LKA": "ROW",
+        "SVN": "EU",
+        "CHE": "EU",
+        "BRN": "ROW",
+        "UZB": "ROW",
+        "SXM": "ROW",
+        "MOZ": "ROW",
+        "BFA": "ROW",
+        "KAZ": "ROW",
+        "PHL": "ROW",
+        "GHA": "ROW",
+        "PAN": "ROW",
+        "SLV": "ROW",
+        "ROU": "EU",
+        "PAK": "ROW",
+        "VIR": "ROW",
+        "SEN": "ROW",
+        "NER": "ROW",
+        "LCA": "ROW",
+        "THA": "ROW",
+        "IOT": "ROW",
+        "NOR": "EU",
+        "NPL": "ROW",
+        "PER": "ROW",
+        "COM": "ROW",
+        "COL": "ROW",
+        "COK": "ROW",
+        "MNG": "ROW",
+        "MNE": "EU",
+        "COG": "ROW",
+        "GGY": "EU",
+        "COD": "ROW",
+        "BGR": "EU",
+        "TLS": "ROW",
+        "NZL": "ROW",
+        "MNP": "ROW",
+        "AZE": "ROW",
+        "BGD": "ROW",
+        "PYF": "ROW",
+        "IND": "ROW",
+        "MYT": "ROW",
+        "JPN": "ROW",
+        "GNB": "ROW",
+        "SUR": "ROW",
+        "JAM": "ROW",
+        "KIR": "ROW",
+        "WLF": "ROW",
+        "PRI": "ROW",
+        "ZAF": "ROW",
+        "ARM": "ROW",
+        "GNQ": "ROW",
+        "UMI": "ROW",
+        "ARG": "ROW",
+        "WSM": "ROW",
+        "ARE": "ROW",
+        "BHS": "ROW",
+        "BHR": "ROW",
+        "GUF": "ROW",
+        "TTO": "ROW",
+        "LIE": "EU",
+        "GUM": "ROW",
+        "NAM": "ROW",
+        "CUB": "ROW",
+        "SLE": "ROW",
+        "SLB": "ROW",
+        "VEN": "ROW",
+        "YEM": "ROW",
+        "GUY": "ROW",
+        "ABW": "ROW",
+        "CUW": "ROW",
+        "CYP": "ROW",
+        "LAO": "ROW",
+        "MAF": "ROW",
+        "FIN": "EU",
+        "AUT": "EU",
+        "AUS": "ROW",
+        "STP": "ROW",
+        "GMB": "ROW",
+        "VNM": "ROW",
+        "SMR": "EU",
+        "NIU": "ROW",
+        "TWN": "ROW",
+        "NRU": "ROW",
+        "MAR": "ROW",
+        "HND": "ROW",
+        "VCT": "ROW",
+        "MHL": "ROW",
+        "TGO": "ROW",
+        "UGA": "ROW",
+        "PLW": "ROW",
+        "SSD": "ROW",
+        "VAT": "EU",
+        "TUN": "ROW",
+        "CMR": "ROW",
+        "DNK": "EU",
+        "PRY": "ROW",
+        "BIH": "EU",
+        "GEO": "ROW",
+        "BRA": "ROW",
+        "BWA": "ROW",
+        "LVA": "EU",
+        "BRB": "ROW",
+        "TON": "ROW",
+        "KOS": "EU",
+        "ALA": "EU",
+        "ALB": "EU",
+        "PSE": "ROW",
+        "MCO": "EU",
+        "URY": "ROW",
+        "TUR": "ROW",
+        "SJM": "EU",
+        "ISR": "ROW",
+        "FRA": "EU",
+        "ISL": "EU",
+        "GLP": "ROW",
+        "GTM": "ROW",
+        "SGS": "ROW",
+        "ATF": "ROW",
+        "ATG": "ROW",
+        "ECU": "ROW",
+        "ATA": "ROW",
+        "FRO": "EU",
+        "MSR": "ROW",
+        "KGZ": "ROW",
+        "MUS": "ROW",
+        "TKL": "ROW",
+        "SRB": "EU",
+        "SGP": "ROW",
+        "TKM": "ROW",
+        "FJI": "ROW",
+        "DOM": "ROW",
+        "UKR": "EU",
+        "USA": "US",
+        "AIA": "ROW",
+        "CCK": "ROW",
+        "REU": "ROW",
+        "IRQ": "ROW",
+        "SAU": "ROW",
+        "ESP": "EU",
+        "EST": "EU",
+        "KWT": "ROW",
+        "ESH": "ROW",
+        "NCL": "ROW",
+        "KNA": "ROW",
+        "QAT": "ROW",
+        "TUV": "ROW",
+        "FSM": "ROW",
+        "IRN": "ROW",
+        "MKD": "EU",
+        "IRL": "EU",
+        "MRT": "ROW",
+        "LTU": "EU",
+        "CZE": "EU",
+        "ZMB": "ROW",
+        "AGO": "ROW",
+        "CRI": "ROW",
+        "MEX": "ROW",
+        "RUS": "EU",
+        "BTN": "ROW"
+      },
+      "shipping_regions": {
+        "ROW": {
+          "shipping_classes": [
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "GBP",
+                  "amount": 6.59
+                },
+                {
+                  "currency": "ILS",
+                  "amount": 29.95
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 2607.53
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 8.26
+                },
+                {
+                  "currency": "INR",
+                  "amount": 531.29
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 9297.19
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 113.3
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 57.4
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 11.52
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 11.02
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 11.79
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 10.9
+                },
+                {
+                  "currency": "USD",
+                  "amount": 8.22
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 7.72
+                }
+              ],
+              "id": 16,
+              "class_name": "Tracked",
+              "tracked": true,
+              "max_delivery_time": 10,
+              "mobile_shipping_name": "Tracked",
+              "min_delivery_time": 7
+            },
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "ILS",
+                  "amount": 13.42
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 1155.21
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 3.69
+                },
+                {
+                  "currency": "INR",
+                  "amount": 243.03
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 4203.8
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 48.14
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 25.46
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 5.16
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 4.92
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 5.27
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 4.84
+                },
+                {
+                  "currency": "USD",
+                  "amount": 3.65
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 3.42
+                },
+                {
+                  "currency": "GBP",
+                  "amount": 3
+                }
+              ],
+              "id": 4,
+              "class_name": "Standard",
+              "tracked": false,
+              "max_delivery_time": 10,
+              "mobile_shipping_name": "Standard",
+              "min_delivery_time": 7
+            }
+          ],
+          "name": "Rest of World"
+        },
+        "EU": {
+          "shipping_classes": [
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "GBP",
+                  "amount": 5.99
+                },
+                {
+                  "currency": "ILS",
+                  "amount": 27.23
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 2370.05
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 7.51
+                },
+                {
+                  "currency": "INR",
+                  "amount": 482.9
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 8450.45
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 102.98
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 52.18
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 10.47
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 10.02
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 10.72
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 9.91
+                },
+                {
+                  "currency": "USD",
+                  "amount": 7.47
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 7.02
+                }
+              ],
+              "id": 16,
+              "class_name": "Tracked",
+              "tracked": true,
+              "max_delivery_time": 7,
+              "mobile_shipping_name": "Tracked",
+              "min_delivery_time": 3
+            },
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "ILS",
+                  "amount": 10.73
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 924.17
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 2.95
+                },
+                {
+                  "currency": "INR",
+                  "amount": 194.43
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 3363.04
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 38.51
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 20.37
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 4.13
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 3.93
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 4.21
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 3.87
+                },
+                {
+                  "currency": "USD",
+                  "amount": 2.92
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 2.74
+                },
+                {
+                  "currency": "GBP",
+                  "amount": 2.4
+                }
+              ],
+              "id": 4,
+              "class_name": "Standard",
+              "tracked": false,
+              "max_delivery_time": 7,
+              "mobile_shipping_name": "Standard",
+              "min_delivery_time": 3
+            }
+          ],
+          "name": "Europe"
+        },
+        "UK": {
+          "shipping_classes": [
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "GBP",
+                  "amount": 4.79
+                },
+                {
+                  "currency": "ILS",
+                  "amount": 21.77
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 1895.09
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 6
+                },
+                {
+                  "currency": "INR",
+                  "amount": 386.13
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 6756.98
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 82.35
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 41.72
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 8.38
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 8.01
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 8.57
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 7.92
+                },
+                {
+                  "currency": "USD",
+                  "amount": 5.97
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 5.61
+                }
+              ],
+              "id": 16,
+              "class_name": "Tracked",
+              "tracked": true,
+              "max_delivery_time": 4,
+              "mobile_shipping_name": "Tracked",
+              "min_delivery_time": 2
+            },
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "ILS",
+                  "amount": 10.73
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 924.17
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 2.95
+                },
+                {
+                  "currency": "INR",
+                  "amount": 194.43
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 3363.04
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 38.51
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 20.37
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 4.13
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 3.93
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 4.21
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 3.87
+                },
+                {
+                  "currency": "USD",
+                  "amount": 2.92
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 2.74
+                },
+                {
+                  "currency": "GBP",
+                  "amount": 2.4
+                }
+              ],
+              "id": 4,
+              "class_name": "Standard",
+              "tracked": false,
+              "max_delivery_time": 4,
+              "mobile_shipping_name": "Standard",
+              "min_delivery_time": 2
+            }
+          ],
+          "name": "United Kingdom"
+        },
+        "US": {
+          "shipping_classes": [
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "GBP",
+                  "amount": 6.59
+                },
+                {
+                  "currency": "ILS",
+                  "amount": 29.95
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 2607.53
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 8.26
+                },
+                {
+                  "currency": "INR",
+                  "amount": 531.29
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 9297.19
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 113.3
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 57.4
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 11.52
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 11.02
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 11.79
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 10.9
+                },
+                {
+                  "currency": "USD",
+                  "amount": 10.22
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 7.72
+                }
+              ],
+              "id": 16,
+              "class_name": "Tracked",
+              "tracked": true,
+              "max_delivery_time": 12,
+              "mobile_shipping_name": "Tracked",
+              "min_delivery_time": 2
+            },
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "ILS",
+                  "amount": 13.42
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 1155.21
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 3.69
+                },
+                {
+                  "currency": "INR",
+                  "amount": 243.03
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 4203.8
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 48.14
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 25.46
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 5.16
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 4.92
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 5.27
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 4.84
+                },
+                {
+                  "currency": "USD",
+                  "amount": 1.65
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 3.42
+                },
+                {
+                  "currency": "GBP",
+                  "amount": 3
+                }
+              ],
+              "id": 4,
+              "class_name": "Standard",
+              "tracked": false,
+              "max_delivery_time": 8,
+              "mobile_shipping_name": "Standard",
+              "min_delivery_time": 6
+            },
+            {
+              "display_name": "Da Best Mail",
+              "costs": [
+                {
+                  "currency": "ILS",
+                  "amount": 13.42
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 1155.21
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 3.69
+                },
+                {
+                  "currency": "INR",
+                  "amount": 243.03
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 4203.8
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 48.14
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 25.46
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 5.16
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 4.92
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 5.27
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 4.84
+                },
+                {
+                  "currency": "USD",
+                  "amount": 3.65
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 3.42
+                },
+                {
+                  "currency": "GBP",
+                  "amount": 3
+                }
+              ],
+              "id": 1337,
+              "class_name": "Da Best",
+              "tracked": true,
+              "max_delivery_time": 1,
+              "mobile_shipping_name": "Da Best",
+              "min_delivery_time": 1
+            }
+          ],
+          "name": "United States"
+        }
+      },
       "images_required" : 1,
       "images_per_page" : 1,
       "shipping_costs" : {
@@ -4113,10 +4990,820 @@
       "sandbox_active" : true,
       "grid_count_y" : 1,
       "order_android" : 0,
+      "shipping_regions": {
+        "ROW": {
+          "shipping_classes": [
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "GBP",
+                  "amount": 6.59
+                },
+                {
+                  "currency": "ILS",
+                  "amount": 29.95
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 2607.53
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 8.26
+                },
+                {
+                  "currency": "INR",
+                  "amount": 531.29
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 9297.19
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 113.3
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 57.4
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 11.52
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 11.02
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 11.79
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 10.9
+                },
+                {
+                  "currency": "USD",
+                  "amount": 8.22
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 7.72
+                }
+              ],
+              "id": 16,
+              "class_name": "Tracked",
+              "tracked": true,
+              "max_delivery_time": 10,
+              "mobile_shipping_name": "Tracked",
+              "min_delivery_time": 7
+            },
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "ILS",
+                  "amount": 13.42
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 1155.21
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 3.69
+                },
+                {
+                  "currency": "INR",
+                  "amount": 243.03
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 4203.8
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 48.14
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 25.46
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 5.16
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 4.92
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 5.27
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 4.84
+                },
+                {
+                  "currency": "USD",
+                  "amount": 3.65
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 3.42
+                },
+                {
+                  "currency": "GBP",
+                  "amount": 3
+                }
+              ],
+              "id": 4,
+              "class_name": "Standard",
+              "tracked": false,
+              "max_delivery_time": 10,
+              "mobile_shipping_name": "Standard",
+              "min_delivery_time": 7
+            }
+          ],
+          "name": "Rest of World"
+        },
+        "EU": {
+          "shipping_classes": [
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "GBP",
+                  "amount": 5.99
+                },
+                {
+                  "currency": "ILS",
+                  "amount": 27.23
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 2370.05
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 7.51
+                },
+                {
+                  "currency": "INR",
+                  "amount": 482.9
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 8450.45
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 102.98
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 52.18
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 10.47
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 10.02
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 10.72
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 9.91
+                },
+                {
+                  "currency": "USD",
+                  "amount": 7.47
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 7.02
+                }
+              ],
+              "id": 16,
+              "class_name": "Tracked",
+              "tracked": true,
+              "max_delivery_time": 7,
+              "mobile_shipping_name": "Tracked",
+              "min_delivery_time": 3
+            },
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "ILS",
+                  "amount": 10.73
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 924.17
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 2.95
+                },
+                {
+                  "currency": "INR",
+                  "amount": 194.43
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 3363.04
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 38.51
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 20.37
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 4.13
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 3.93
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 4.21
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 3.87
+                },
+                {
+                  "currency": "USD",
+                  "amount": 2.92
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 2.74
+                },
+                {
+                  "currency": "GBP",
+                  "amount": 2.4
+                }
+              ],
+              "id": 4,
+              "class_name": "Standard",
+              "tracked": false,
+              "max_delivery_time": 7,
+              "mobile_shipping_name": "Standard",
+              "min_delivery_time": 3
+            }
+          ],
+          "name": "Europe"
+        },
+        "UK": {
+          "shipping_classes": [
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "GBP",
+                  "amount": 4.79
+                },
+                {
+                  "currency": "ILS",
+                  "amount": 21.77
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 1895.09
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 6
+                },
+                {
+                  "currency": "INR",
+                  "amount": 386.13
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 6756.98
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 82.35
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 41.72
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 8.38
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 8.01
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 8.57
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 7.92
+                },
+                {
+                  "currency": "USD",
+                  "amount": 5.97
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 5.61
+                }
+              ],
+              "id": 16,
+              "class_name": "Tracked",
+              "tracked": true,
+              "max_delivery_time": 4,
+              "mobile_shipping_name": "Tracked",
+              "min_delivery_time": 2
+            },
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "ILS",
+                  "amount": 10.73
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 924.17
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 2.95
+                },
+                {
+                  "currency": "INR",
+                  "amount": 194.43
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 3363.04
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 38.51
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 20.37
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 4.13
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 3.93
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 4.21
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 3.87
+                },
+                {
+                  "currency": "USD",
+                  "amount": 2.92
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 2.74
+                },
+                {
+                  "currency": "GBP",
+                  "amount": 2.4
+                }
+              ],
+              "id": 4,
+              "class_name": "Standard",
+              "tracked": false,
+              "max_delivery_time": 4,
+              "mobile_shipping_name": "Standard",
+              "min_delivery_time": 2
+            }
+          ],
+          "name": "United Kingdom"
+        },
+        "US": {
+          "shipping_classes": [
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "GBP",
+                  "amount": 6.59
+                },
+                {
+                  "currency": "ILS",
+                  "amount": 29.95
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 2607.53
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 8.26
+                },
+                {
+                  "currency": "INR",
+                  "amount": 531.29
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 9297.19
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 113.3
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 57.4
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 11.52
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 11.02
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 11.79
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 10.9
+                },
+                {
+                  "currency": "USD",
+                  "amount": 8.22
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 7.72
+                }
+              ],
+              "id": 16,
+              "class_name": "Tracked",
+              "tracked": true,
+              "max_delivery_time": 10,
+              "mobile_shipping_name": "Tracked",
+              "min_delivery_time": 4
+            },
+            {
+              "display_name": "Royal Mail",
+              "costs": [
+                {
+                  "currency": "ILS",
+                  "amount": 13.42
+                },
+                {
+                  "currency": "NGN",
+                  "amount": 1155.21
+                },
+                {
+                  "currency": "CHF",
+                  "amount": 3.69
+                },
+                {
+                  "currency": "INR",
+                  "amount": 243.03
+                },
+                {
+                  "currency": "KRW",
+                  "amount": 4203.8
+                },
+                {
+                  "currency": "ZAR",
+                  "amount": 48.14
+                },
+                {
+                  "currency": "DKK",
+                  "amount": 25.46
+                },
+                {
+                  "currency": "SGD",
+                  "amount": 5.16
+                },
+                {
+                  "currency": "CAD",
+                  "amount": 4.92
+                },
+                {
+                  "currency": "NZD",
+                  "amount": 5.27
+                },
+                {
+                  "currency": "AUD",
+                  "amount": 4.84
+                },
+                {
+                  "currency": "USD",
+                  "amount": 3.65
+                },
+                {
+                  "currency": "EUR",
+                  "amount": 3.42
+                },
+                {
+                  "currency": "GBP",
+                  "amount": 3
+                }
+              ],
+              "id": 4,
+              "class_name": "Standard",
+              "tracked": false,
+              "max_delivery_time": 10,
+              "mobile_shipping_name": "Standard",
+              "min_delivery_time": 4
+            }
+          ],
+          "name": "United States"
+        }
+      },
       "grid_count_x" : 1,
       "template_id" : "i7_case",
       "images_required" : 1,
       "images_per_page" : 1,
+      "country_to_region_mapping": {
+        "FLK": "ROW",
+        "SDN": "ROW",
+        "NIC": "ROW",
+        "VUT": "ROW",
+        "MYS": "ROW",
+        "SYR": "ROW",
+        "POL": "EU",
+        "TZA": "ROW",
+        "BDI": "ROW",
+        "GRL": "ROW",
+        "HMD": "ROW",
+        "ERI": "ROW",
+        "GRD": "ROW",
+        "BOL": "ROW",
+        "DEU": "EU",
+        "HTI": "ROW",
+        "SWZ": "ROW",
+        "GRC": "EU",
+        "AFG": "ROW",
+        "BLM": "ROW",
+        "JEY": "EU",
+        "CYM": "ROW",
+        "PRK": "ROW",
+        "KOR": "ROW",
+        "LUX": "EU",
+        "SPM": "ROW",
+        "PRT": "EU",
+        "SHN": "ROW",
+        "BLZ": "ROW",
+        "DMA": "ROW",
+        "MMR": "ROW",
+        "AND": "EU",
+        "KHM": "ROW",
+        "BLR": "EU",
+        "GBR": "UK",
+        "KEN": "ROW",
+        "IMN": "EU",
+        "CAN": "ROW",
+        "HUN": "EU",
+        "PNG": "ROW",
+        "BEL": "EU",
+        "DJI": "ROW",
+        "CAF": "ROW",
+        "MTQ": "ROW",
+        "CIV": "ROW",
+        "ITA": "EU",
+        "BES": "ROW",
+        "TJK": "ROW",
+        "CPV": "ROW",
+        "PCN": "ROW",
+        "OMN": "ROW",
+        "ETH": "ROW",
+        "MLI": "ROW",
+        "SWE": "EU",
+        "GAB": "ROW",
+        "BEN": "ROW",
+        "NFK": "ROW",
+        "MAC": "ROW",
+        "TCA": "ROW",
+        "IDN": "ROW",
+        "TCD": "ROW",
+        "SVK": "EU",
+        "SOM": "ROW",
+        "ZWE": "ROW",
+        "GIN": "ROW",
+        "VGB": "ROW",
+        "BMU": "ROW",
+        "GIB": "EU",
+        "MLT": "EU",
+        "BVT": "ROW",
+        "LBR": "ROW",
+        "EGY": "ROW",
+        "SYC": "ROW",
+        "MDV": "ROW",
+        "CXR": "ROW",
+        "LBY": "ROW",
+        "NLD": "EU",
+        "MWI": "ROW",
+        "LSO": "ROW",
+        "MDA": "EU",
+        "DZA": "ROW",
+        "HKG": "ROW",
+        "MDG": "ROW",
+        "HRV": "EU",
+        "JOR": "ROW",
+        "LBN": "ROW",
+        "RWA": "ROW",
+        "NGA": "ROW",
+        "CHN": "ROW",
+        "CHL": "ROW",
+        "ASM": "ROW",
+        "LKA": "ROW",
+        "SVN": "EU",
+        "CHE": "EU",
+        "BRN": "ROW",
+        "UZB": "ROW",
+        "SXM": "ROW",
+        "MOZ": "ROW",
+        "BFA": "ROW",
+        "KAZ": "ROW",
+        "PHL": "ROW",
+        "GHA": "ROW",
+        "PAN": "ROW",
+        "SLV": "ROW",
+        "ROU": "EU",
+        "PAK": "ROW",
+        "VIR": "ROW",
+        "SEN": "ROW",
+        "NER": "ROW",
+        "LCA": "ROW",
+        "THA": "ROW",
+        "IOT": "ROW",
+        "NOR": "EU",
+        "NPL": "ROW",
+        "PER": "ROW",
+        "COM": "ROW",
+        "COL": "ROW",
+        "COK": "ROW",
+        "MNG": "ROW",
+        "MNE": "EU",
+        "COG": "ROW",
+        "GGY": "EU",
+        "COD": "ROW",
+        "BGR": "EU",
+        "TLS": "ROW",
+        "NZL": "ROW",
+        "MNP": "ROW",
+        "AZE": "ROW",
+        "BGD": "ROW",
+        "PYF": "ROW",
+        "IND": "ROW",
+        "MYT": "ROW",
+        "JPN": "ROW",
+        "GNB": "ROW",
+        "SUR": "ROW",
+        "JAM": "ROW",
+        "KIR": "ROW",
+        "WLF": "ROW",
+        "PRI": "ROW",
+        "ZAF": "ROW",
+        "ARM": "ROW",
+        "GNQ": "ROW",
+        "UMI": "ROW",
+        "ARG": "ROW",
+        "WSM": "ROW",
+        "ARE": "ROW",
+        "BHS": "ROW",
+        "BHR": "ROW",
+        "GUF": "ROW",
+        "TTO": "ROW",
+        "LIE": "EU",
+        "GUM": "ROW",
+        "NAM": "ROW",
+        "CUB": "ROW",
+        "SLE": "ROW",
+        "SLB": "ROW",
+        "VEN": "ROW",
+        "YEM": "ROW",
+        "GUY": "ROW",
+        "ABW": "ROW",
+        "CUW": "ROW",
+        "CYP": "ROW",
+        "LAO": "ROW",
+        "MAF": "ROW",
+        "FIN": "EU",
+        "AUT": "EU",
+        "AUS": "ROW",
+        "STP": "ROW",
+        "GMB": "ROW",
+        "VNM": "ROW",
+        "SMR": "EU",
+        "NIU": "ROW",
+        "TWN": "ROW",
+        "NRU": "ROW",
+        "MAR": "ROW",
+        "HND": "ROW",
+        "VCT": "ROW",
+        "MHL": "ROW",
+        "TGO": "ROW",
+        "UGA": "ROW",
+        "PLW": "ROW",
+        "SSD": "ROW",
+        "VAT": "EU",
+        "TUN": "ROW",
+        "CMR": "ROW",
+        "DNK": "EU",
+        "PRY": "ROW",
+        "BIH": "EU",
+        "GEO": "ROW",
+        "BRA": "ROW",
+        "BWA": "ROW",
+        "LVA": "EU",
+        "BRB": "ROW",
+        "TON": "ROW",
+        "KOS": "EU",
+        "ALA": "EU",
+        "ALB": "EU",
+        "PSE": "ROW",
+        "MCO": "EU",
+        "URY": "ROW",
+        "TUR": "ROW",
+        "SJM": "EU",
+        "ISR": "ROW",
+        "FRA": "EU",
+        "ISL": "EU",
+        "GLP": "ROW",
+        "GTM": "ROW",
+        "SGS": "ROW",
+        "ATF": "ROW",
+        "ATG": "ROW",
+        "ECU": "ROW",
+        "ATA": "ROW",
+        "FRO": "EU",
+        "MSR": "ROW",
+        "KGZ": "ROW",
+        "MUS": "ROW",
+        "TKL": "ROW",
+        "SRB": "EU",
+        "SGP": "ROW",
+        "TKM": "ROW",
+        "FJI": "ROW",
+        "DOM": "ROW",
+        "UKR": "EU",
+        "USA": "US",
+        "AIA": "ROW",
+        "CCK": "ROW",
+        "REU": "ROW",
+        "IRQ": "ROW",
+        "SAU": "ROW",
+        "ESP": "EU",
+        "EST": "EU",
+        "KWT": "ROW",
+        "ESH": "ROW",
+        "NCL": "ROW",
+        "KNA": "ROW",
+        "QAT": "ROW",
+        "TUV": "ROW",
+        "FSM": "ROW",
+        "IRN": "ROW",
+        "MKD": "EU",
+        "IRL": "EU",
+        "MRT": "ROW",
+        "LTU": "EU",
+        "CZE": "EU",
+        "ZMB": "ROW",
+        "AGO": "ROW",
+        "CRI": "ROW",
+        "MEX": "ROW",
+        "RUS": "EU",
+        "BTN": "ROW"
+      },
       "shipping_costs" : {
         "GBR" : {
           "CAD" : {
