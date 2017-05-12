@@ -177,6 +177,18 @@ static NSBlockOperation *templateSyncOperation;
     return self;
 }
 
+- (NSString *)selectedShippingMethod{
+    for (OLShippingClass *shippingClass in [self shippingMethods]){
+        if ([shippingClass.className isEqualToString:_selectedShippingMethod]){
+            return _selectedShippingMethod;
+        }
+    }
+    
+    // The selected method is no longer available/valid, maybe because a new product that doesn't support it was added to the order
+    _selectedShippingMethod = nil;
+    return nil;
+}
+
 - (void)setPromoCode:(NSString *)promoCode{
     _promoCode = promoCode;
 }
@@ -511,7 +523,21 @@ static NSBlockOperation *templateSyncOperation;
     }
     
     for (id<OLPrintJob> printJob in self.jobs) {
-        [jobs addObject:[printJob jsonRepresentation]];
+        NSMutableDictionary *dict = [[printJob jsonRepresentation] mutableCopy];
+        
+        OLProductTemplate *template = [OLProductTemplate templateWithId:printJob.templateId];
+        NSString *region = template.countryMapping[self.shippingAddress.country.codeAlpha3];
+        if (!region){
+            break;
+        }
+        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+            if ([shippingClass.className isEqualToString:self.selectedShippingMethod]){
+                dict[@"shipping_class"] = [NSNumber numberWithInteger:shippingClass.identifier];
+                break;
+            }
+        }
+        
+        [jobs addObject:dict];
     }
     
     if (self.phone){
@@ -560,6 +586,7 @@ static NSBlockOperation *templateSyncOperation;
     hash = 31 * hash + (self.shipToStore ? 39 : 0);
     hash = 31 * hash + (self.payInStore ? 73 : 0);
     hash = 31 * hash + ([OLKiteUtils isApplePayAvailable] ? 47 : 0);
+    hash = 31 * hash + [self.selectedShippingMethod hash];
     for (id<OLPrintJob> job in self.jobs){
         if (job.address.country){
             hash = 32 * hash + [job.address.country.codeAlpha3 hash];
@@ -621,6 +648,139 @@ static NSBlockOperation *templateSyncOperation;
         
     }
     return NO;
+}
+
+- (NSArray<OLShippingClass *> *)shippingMethods{
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    NSMutableArray *common = [[NSMutableArray alloc] init];
+    
+    OLProductTemplate *firstJobTemplate = [OLProductTemplate templateWithId:self.jobs.firstObject.templateId];
+    
+    NSString *firstJobRegion = firstJobTemplate.countryMapping[countryCode];
+    if (!firstJobRegion){
+        return common;
+    }
+    for (OLShippingClass *firstJobShippingClass in firstJobTemplate.shippingClasses[firstJobRegion]){
+        BOOL commonInAllJobs = YES;
+        for (id<OLPrintJob> job in self.jobs){
+            BOOL foundInJob = NO;
+            OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+            NSString *region = template.countryMapping[countryCode];
+            if (!region){
+                break;
+            }
+            for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+                if ([shippingClass.className isEqualToString:firstJobShippingClass.className]){
+                    foundInJob = YES;
+                    break;
+                }
+            }
+            commonInAllJobs &= foundInJob;
+        }
+        if (commonInAllJobs){
+            [common addObject:firstJobShippingClass];
+        }
+    }
+    
+    return common;
+}
+
+- (NSDecimalNumber *)costForShippingMethodName:(NSString *)name{
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    
+    NSDecimalNumber *cost = [NSDecimalNumber decimalNumberWithString:@"0"];
+    for (id<OLPrintJob> job in self.jobs){
+        OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+        NSString *region = template.countryMapping[countryCode];
+        if (!region){
+            return nil;
+        }
+        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+            if ([shippingClass.className isEqualToString:name]){
+                cost = [cost decimalNumberByAdding:[NSDecimalNumber decimalNumberWithDecimal:[shippingClass.costs[self.currencyCode] decimalValue]]];
+                break;
+            }
+        }
+    }
+    
+    return cost;
+}
+
+- (NSInteger)maximumDaysForShippingMethodName:(NSString *)name{
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    
+    NSInteger days = NSIntegerMin;
+    for (id<OLPrintJob> job in self.jobs){
+        OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+        NSString *region = template.countryMapping[countryCode];
+        if (!region){
+            return days;
+        }
+        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+            if ([shippingClass.className isEqualToString:name] && shippingClass.maxDeliveryTime){
+                days = MAX(days, [shippingClass.maxDeliveryTime integerValue]);
+                break;
+            }
+        }
+    }
+    
+    return days;
+}
+
+- (NSInteger)minimumDaysForShippingMethodName:(NSString *)name{
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    
+    NSInteger days = NSIntegerMax;
+    for (id<OLPrintJob> job in self.jobs){
+        OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+        NSString *region = template.countryMapping[countryCode];
+        if (!region){
+            return days;
+        }
+        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+            if ([shippingClass.className isEqualToString:name] && shippingClass.minDeliveryTime){
+                days = MIN(days, [shippingClass.minDeliveryTime integerValue]);
+                break;
+            }
+        }
+    }
+    
+    return days;
+}
+
+- (NSString *)deliveryEstimatedDaysStringForShippingMethodName:(NSString *)name{
+    NSInteger min = [self minimumDaysForShippingMethodName:name];
+    NSInteger max = [self maximumDaysForShippingMethodName:name];
+    
+    if (min != NSIntegerMax && max != NSIntegerMin && min != max){
+        return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d - %d", (int)min, (int)max]];
+    }
+    else if (min == max){
+        if (min == 1){
+            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        }
+        else{
+            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]];
+        }
+    }
+    else if (min != NSIntegerMax){
+        if (min == 1){
+            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        }
+        else{
+            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]];
+        }
+    }
+    else if (max != NSIntegerMin){
+        if (max == 1){
+            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        }
+        else{
+            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)max]];
+        }
+    }
+    
+    return nil;
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods
@@ -749,6 +909,7 @@ static NSBlockOperation *templateSyncOperation;
     [aCoder encodeBool:self.shipToStore forKey:kKeyOrderShipToStore];
     [aCoder encodeBool:self.payInStore forKey:kKeyOrderPayInStore];
     [aCoder encodeObject:self.paymentMethod forKey:kKeyOrderPaymentMethod];
+    [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -773,6 +934,7 @@ static NSBlockOperation *templateSyncOperation;
             _shipToStore = [aDecoder decodeBoolForKey:kKeyOrderShipToStore];
             _payInStore = [aDecoder decodeBoolForKey:kKeyOrderPayInStore];
             _paymentMethod = [aDecoder decodeObjectForKey:kKeyOrderPaymentMethod];
+            _selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
         }
         return self;
         

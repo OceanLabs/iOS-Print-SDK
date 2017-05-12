@@ -32,6 +32,7 @@
 #import "OLUpsellOffer.h"
 #import "OLProductRepresentation.h"
 #import "OLFulfilmentItem.h"
+#import "OLShippingClass.h"
 
 typedef void (^TemplateSyncHandler)(NSError *_Nullable error);
 
@@ -91,7 +92,6 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 @property (strong, nonatomic) NSURL *_Nullable classPhotoURL;
 @property (strong, nonatomic) NSString *_Nullable productDescription;
 @property (strong, nonatomic) NSString *_Nullable productDescriptionMarkdown;
-@property (strong, nonatomic) NSDictionary *_Nullable shippingCosts;
 @property (assign, nonatomic) NSInteger gridCountX;
 @property (assign, nonatomic) NSInteger gridCountY;
 @property (strong, nonatomic) NSArray <OLUpsellOffer *>*_Nullable upsellOffers;
@@ -104,12 +104,11 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 @property (strong, nonatomic) NSURL *_Nullable logo;
 @property (strong, nonatomic) NSMutableArray<OLFulfilmentItem *> *_Nullable fulfilmentItems;
 @property (assign, nonatomic) BOOL supportsTextOnBorder;
+@property (strong, nonatomic) NSDictionary<NSString *, NSArray<OLShippingClass *> *> * _Nullable shippingClasses;
+@property (strong, nonatomic) NSDictionary * _Nullable countryMapping;
 
 - (instancetype _Nonnull)initWithIdentifier:(NSString *_Nonnull)identifier name:(NSString *_Nonnull)name sheetQuantity:(NSUInteger)quantity sheetCostsByCurrencyCode:(NSDictionary<NSString *, NSDecimalNumber *> *_Nullable)costs enabled:(BOOL)enabled;
 - (NSDecimalNumber *_Nullable)costPerSheetInCurrencyCode:(NSString *_Nonnull)currencyCode;
-- (NSDecimalNumber *_Nullable)shippingCostForCountry:(OLCountry *_Nonnull)country;
-- (NSDecimalNumber *_Nullable)originalShippingCostForCountry:(OLCountry *_Nonnull)country;
-- (NSString *_Nonnull)currencyForCurrentLocale;
 - (void)setSupportedOptions:(NSArray *_Nullable)options;
 + (OLTemplateUI)templateUIWithIdentifier:(NSString *_Nonnull)identifier;
 
