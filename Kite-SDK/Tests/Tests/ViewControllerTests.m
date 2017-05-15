@@ -1019,12 +1019,45 @@
     
     [self performUIAction:^{
         OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
+        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:6 inSection:0]];
         [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:7 inSection:0]];
     }];
     
     [self performUIAction:^{
         [picker onButtonDoneTapped:nil];
     }];
+    
+    OLAsset *asset1 = [OLAsset userSelectedAssets].nonPlaceholderAssets[0];
+    XCTAssert(asset1, @"Asset1 missing");
+    OLAsset *asset2 = [OLAsset userSelectedAssets].nonPlaceholderAssets[1];
+    XCTAssert(asset2, @"Asset2 missing");
+    
+    CGSize cellSize = [(id<UICollectionViewDelegateFlowLayout>)photobookEditVc.collectionView.delegate collectionView:photobookEditVc.collectionView layout:photobookEditVc.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    [self performUIAction:^{
+        OLMockLongPressGestureRecognizer *mockLongPress = [[OLMockLongPressGestureRecognizer alloc] initWithTarget:artboard action:@selector(handleLongPressGesture:)];
+        mockLongPress.mockState = UIGestureRecognizerStateBegan;
+        [artboard.assetViews.firstObject addGestureRecognizer:mockLongPress];
+        
+        [artboard handleLongPressGesture:mockLongPress];
+    }];
+    
+    [self performUIAction:^{
+        OLMockPanGestureRecognizer *mockPan = [[OLMockPanGestureRecognizer alloc] initWithTarget:artboard action:@selector(handlePanGesture:)];
+        [artboard.assetViews.firstObject addGestureRecognizer:mockPan];
+        mockPan.mockState = UIGestureRecognizerStateChanged;
+        mockPan.mockTranslation = CGPointMake(cellSize.width / 3.0, cellSize.height);
+        
+        [artboard handlePanGesture:mockPan];
+    }];
+    
+    [self performUIAction:^{
+        OLMockLongPressGestureRecognizer *mockLongPress = [[OLMockLongPressGestureRecognizer alloc] initWithTarget:artboard action:@selector(handleLongPressGesture:)];
+        mockLongPress.mockState = UIGestureRecognizerStateEnded;
+        
+        [artboard handleLongPressGesture:mockLongPress];
+    }];
+    
+    XCTAssert([OLAsset userSelectedAssets].nonPlaceholderAssets[0] == asset2 && [OLAsset userSelectedAssets].nonPlaceholderAssets[1] == asset1, @"Did not move asset");
     
     [self tapNextOnViewController:photobookEditVc];
     
@@ -1047,14 +1080,14 @@
     
     [self performUIAction:^{
         OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
-        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:6 inSection:0]];
+        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:5 inSection:0]];
     }];
     
     [self performUIAction:^{
         [picker onButtonDoneTapped:nil];
     }];
     
-    XCTAssert([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 1, @"Did not pick an image");
+    XCTAssert([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 3, @"Did not pick an image");
 }
 
 - (void)testCountryPicker{

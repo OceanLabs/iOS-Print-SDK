@@ -50,6 +50,7 @@
 #import "OLCollagePosterViewController.h"
 #import "OLPhotobookPageContentViewController.h"
 #import "OLQRCodeUploadViewController.h"
+#import "OLMockLongPressGestureRecognizer.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;
@@ -66,6 +67,8 @@
 
 @interface OLArtboardView ()
 - (void)handleTapGesture:(UITapGestureRecognizer *)sender;
+- (void)handleLongPressGesture:(UILongPressGestureRecognizer *)sender;
+- (void)handlePanGesture:(UIPanGestureRecognizer *)sender;
 @end
 
 @interface UIViewController ()
