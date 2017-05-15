@@ -40,6 +40,7 @@
 #import "OLKiteViewController.h"
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "OLKiteViewController+Private.h"
+#include <sys/sysctl.h>
 
 @interface OLPrintOrder (Private)
 - (void)saveOrder;
@@ -189,21 +190,11 @@
     //TODO: Just check for the specific model and get rid of this image loading business
     
     //Should be [UIScreen mainScreen].scale but the 6 Plus with its 1GB RAM chokes on 3x images.
-    CGFloat scale = [UIScreen mainScreen].scale;
-    if (scale == 2.0 || scale == 1.0){
-        self.screenScale = scale;
+    if ([[self getSysInfoByName:"hw.model"] isEqualToString:@"iPhone7,1"]){
+        self.screenScale = 2.0;
     }
     else{
-        UIImage *ram1GbImage = [UIImage imageNamed:@"ram-1" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:traitCollection];
-        UIImage *ramThisDeviceImage = [UIImage imageNamed:@"ram" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:traitCollection];
-        NSData *ram1Gb = UIImagePNGRepresentation(ram1GbImage);
-        NSData *ramThisDevice = UIImagePNGRepresentation(ramThisDeviceImage);
-        if ([ram1Gb isEqualToData:ramThisDevice]){
-            self.screenScale = 2.0;
-        }
-        else{
-            self.screenScale = scale;
-        }
+        self.screenScale = [UIScreen mainScreen].scale;
     }
 }
 
@@ -216,6 +207,22 @@
     }
     
     return YES;
+}
+
+
+// From: https://github.com/erica/uidevice-extension/blob/master/UIDevice-Hardware.m
+- (NSString *) getSysInfoByName:(char *)typeSpecifier
+{
+    size_t size;
+    sysctlbyname(typeSpecifier, NULL, &size, NULL, 0);
+    
+    char *answer = malloc(size);
+    sysctlbyname(typeSpecifier, answer, &size, NULL, 0);
+    
+    NSString *results = [NSString stringWithCString:answer encoding: NSUTF8StringEncoding];
+    
+    free(answer);
+    return results;
 }
 
 @end
