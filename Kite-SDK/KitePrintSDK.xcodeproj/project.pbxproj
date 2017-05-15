@@ -1271,7 +1271,7 @@
 			children = (
 				2E0A72641A6FB07000BC5AE7 /* OLImageEditViewController.h */,
 				2E0A72651A6FB07000BC5AE7 /* OLImageEditViewController.m */,
-				2EE8CF111EA5F87100164AA6 /* Single Image */,
+				2EE8CF111EA5F87100164AA6 /* Single */,
 				2EE8CF121EA5F88A00164AA6 /* Pack */,
 				2EE8CF131EA5F89100164AA6 /* Photobook */,
 			);
@@ -1510,7 +1510,7 @@
 			name = Docs;
 			sourceTree = "<group>";
 		};
-		2EE8CF111EA5F87100164AA6 /* Single Image */ = {
+		2EE8CF111EA5F87100164AA6 /* Single */ = {
 			isa = PBXGroup;
 			children = (
 				2E5258FF1A9C91DF00DBC69B /* OLSingleProductReviewViewController.h */,
@@ -1526,7 +1526,7 @@
 				2EB0DC741DC8DB7400B556CE /* OL3DProductViewController.h */,
 				2EB0DC751DC8DB7400B556CE /* OL3DProductViewController.m */,
 			);
-			name = "Single Image";
+			name = Single;
 			sourceTree = "<group>";
 		};
 		2EE8CF121EA5F88A00164AA6 /* Pack */ = {
