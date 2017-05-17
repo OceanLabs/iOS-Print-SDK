@@ -268,11 +268,11 @@
 		2E9A77371DA683FE00A50C4D /* CI-ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */; };
 		2E9A77381DA684FA00A50C4D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF77186215790009DE03 /* main.m */; };
 		2E9A77391DA684FB00A50C4D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF77186215790009DE03 /* main.m */; };
+		2E9ACFBB1EC9C71000EA243D /* OLMockLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9ACFBA1EC9C71000EA243D /* OLMockLongPressGestureRecognizer.m */; };
 		2E9CB60F1EADF5F90079F7AE /* OLShippingMethodsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E9CB60D1EADF5F90079F7AE /* OLShippingMethodsViewController.h */; };
 		2E9CB6101EADF5F90079F7AE /* OLShippingMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9CB60E1EADF5F90079F7AE /* OLShippingMethodsViewController.m */; };
 		2E9CB6131EAE22710079F7AE /* OLShippingClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E9CB6111EAE22710079F7AE /* OLShippingClass.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E9CB6141EAE22710079F7AE /* OLShippingClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9CB6121EAE22710079F7AE /* OLShippingClass.m */; };
-		2E9ACFBB1EC9C71000EA243D /* OLMockLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9ACFBA1EC9C71000EA243D /* OLMockLongPressGestureRecognizer.m */; };
 		2E9F13FB1DAD048000D8B1EE /* OLPromoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E9F13F91DAD048000D8B1EE /* OLPromoView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E9F13FC1DAD048000D8B1EE /* OLPromoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */; };
 		2EADD84E1BE79D6D0051CD31 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD550D94188AA20100782D75 /* AssetsLibrary.framework */; };
@@ -761,12 +761,12 @@
 		2E9965A91ABC7035007F010F /* OLNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLNavigationController.m; sourceTree = "<group>"; };
 		2E9AC8221D2127C900BF0A1A /* OLCircleSelectedCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCircleSelectedCollectionViewCell.h; sourceTree = "<group>"; };
 		2E9AC8231D2127C900BF0A1A /* OLCircleSelectedCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCircleSelectedCollectionViewCell.m; sourceTree = "<group>"; };
+		2E9ACFB91EC9C71000EA243D /* OLMockLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OLMockLongPressGestureRecognizer.h; path = Tests/Tests/OLMockLongPressGestureRecognizer.h; sourceTree = SOURCE_ROOT; };
+		2E9ACFBA1EC9C71000EA243D /* OLMockLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OLMockLongPressGestureRecognizer.m; path = Tests/Tests/OLMockLongPressGestureRecognizer.m; sourceTree = SOURCE_ROOT; };
 		2E9CB60D1EADF5F90079F7AE /* OLShippingMethodsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLShippingMethodsViewController.h; sourceTree = "<group>"; };
 		2E9CB60E1EADF5F90079F7AE /* OLShippingMethodsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLShippingMethodsViewController.m; sourceTree = "<group>"; };
 		2E9CB6111EAE22710079F7AE /* OLShippingClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLShippingClass.h; sourceTree = "<group>"; };
 		2E9CB6121EAE22710079F7AE /* OLShippingClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLShippingClass.m; sourceTree = "<group>"; };
-		2E9ACFB91EC9C71000EA243D /* OLMockLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OLMockLongPressGestureRecognizer.h; path = Tests/Tests/OLMockLongPressGestureRecognizer.h; sourceTree = SOURCE_ROOT; };
-		2E9ACFBA1EC9C71000EA243D /* OLMockLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OLMockLongPressGestureRecognizer.m; path = Tests/Tests/OLMockLongPressGestureRecognizer.m; sourceTree = SOURCE_ROOT; };
 		2E9F13F91DAD048000D8B1EE /* OLPromoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPromoView.h; sourceTree = "<group>"; };
 		2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPromoView.m; sourceTree = "<group>"; };
 		2EA008791CB293A900C23DFA /* OLUpsellOffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUpsellOffer.h; sourceTree = "<group>"; };
@@ -2080,7 +2080,7 @@
 				2ECA34EC1E82743800D56220 /* OLApparelViewController.h in Headers */,
 				2E7A8D8F1E9BBE8900AB4736 /* OLArtboardAssetView.h in Headers */,
 				2E9CB6131EAE22710079F7AE /* OLShippingClass.h in Headers */,
-				2EB8FDFC1D95685100E26BDF /* OLPageLayout.h in Headers */,
+				2EB8FDFC1D95685100E26BDF /* OLArtboardTemplate.h in Headers */,
 				2EB8FE731D95685100E26BDF /* UIViewController+OLMethods.h in Headers */,
 				2EB8FE3F1D95685100E26BDF /* OLProductDetailsViewController.h in Headers */,
 				2EB8FE551D95685100E26BDF /* OLCheckoutViewController.h in Headers */,
