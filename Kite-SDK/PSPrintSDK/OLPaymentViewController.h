@@ -33,7 +33,7 @@
 
 @class OLPrintOrder;
 
-@interface OLPaymentViewController : UIViewController
+@interface OLPaymentViewController : OLViewController
 
 @property (weak, nonatomic) id<OLCheckoutDelegate> delegate;
 @property (weak, nonatomic) id<OLKiteDelegate> kiteDelegate;

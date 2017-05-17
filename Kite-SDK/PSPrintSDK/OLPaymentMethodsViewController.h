@@ -28,6 +28,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLViewController.h"
 
 typedef enum {
     kOLPaymentMethodNone,
@@ -44,7 +45,7 @@ typedef enum {
 
 @end
 
-@interface OLPaymentMethodsViewController : UIViewController
+@interface OLPaymentMethodsViewController : OLViewController
 @property (weak, nonatomic) id<OLPaymentMethodsViewControllerDelegate> delegate;
 @property (assign, nonatomic) OLPaymentMethod selectedPaymentMethod;
 @end

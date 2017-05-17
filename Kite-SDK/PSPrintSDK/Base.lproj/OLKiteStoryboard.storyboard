@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cpC-15-nyB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cpC-15-nyB">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="OpenSans-Regular.ttf">
+            <string>OpenSans</string>
+        </array>
+        <array key="OpenSans-Semibold.ttf">
+            <string>OpenSans-Semibold</string>
+        </array>
         <array key="SourceSansPro-Regular.ttf">
             <string>SourceSansPro-Regular</string>
         </array>
@@ -226,7 +232,7 @@
         <scene sceneID="6Dd-YI-JlP">
             <objects>
                 <collectionViewController storyboardIdentifier="FrameOrderReviewViewController" id="Vt9-y8-Spq" customClass="OLFrameOrderReviewViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="J2q-v3-sGg">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="J2q-v3-sGg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1333,7 +1339,7 @@
         <scene sceneID="utb-1P-DTs">
             <objects>
                 <collectionViewController storyboardIdentifier="ProductHomeViewController" id="U81-HI-b1P" customClass="OLProductHomeViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="a6K-tv-eGU">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" id="a6K-tv-eGU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2988,7 +2994,7 @@
         <scene sceneID="kFc-fy-yh6">
             <objects>
                 <collectionViewController storyboardIdentifier="OLPosterViewController" id="AaA-7l-tb4" customClass="OLPosterViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="LuI-LA-fpj">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" dataMode="prototypes" id="LuI-LA-fpj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -4086,8 +4092,109 @@ only Lorem Ipsum</string>
             </objects>
             <point key="canvasLocation" x="-251" y="1678"/>
         </scene>
+        <!--Logout View Controller-->
+        <scene sceneID="1u9-c7-OeF">
+            <objects>
+                <viewController storyboardIdentifier="LogoutViewController" id="i87-Wb-sjv" customClass="OLLogoutViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dDK-uV-Q2I"/>
+                        <viewControllerLayoutGuide type="bottom" id="jSA-5W-y3p"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ZDg-sf-Zu1">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="60" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cy4-pG-i2G">
+                                <rect key="frame" x="174.5" y="300.5" width="26" height="26.5"/>
+                                <fontDescription key="fontDescription" name="OpenSans-Semibold" family="Open Sans" pointSize="22.5"/>
+                                <color key="textColor" red="0.31372549020000001" green="0.31372549020000001" blue="0.31372549020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mXR-Sz-73C">
+                                <rect key="frame" x="15" y="589" width="345" height="50"/>
+                                <color key="backgroundColor" red="0.30980392159999998" green="0.69803921570000005" blue="0.8862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="7w4-yN-nHz"/>
+                                    <constraint firstAttribute="width" constant="345" id="IfW-Rp-h1b"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="19"/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancelLogout:" destination="i87-Wb-sjv" eventType="touchUpInside" id="sly-DO-eh8"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Di-UC-5k0">
+                                <rect key="frame" x="15" y="524" width="345" height="50"/>
+                                <color key="backgroundColor" red="0.58431372550000005" green="0.58431372550000005" blue="0.58431372550000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="345" id="FPu-RM-GJL"/>
+                                    <constraint firstAttribute="height" constant="50" id="X4v-G4-ApM"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="19"/>
+                                <state key="normal" title="Log out">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="onButtonLogoutNowTapped:" destination="i87-Wb-sjv" eventType="touchUpInside" id="KZb-1m-3z1"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Ellipse" translatesAutoresizingMaskIntoConstraints="NO" id="3aM-kb-uRe">
+                                <rect key="frame" x="126" y="109.5" width="123" height="406.5"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Ellipse-shadow" translatesAutoresizingMaskIntoConstraints="NO" id="H4c-yi-xYk">
+                                <rect key="frame" x="132" y="402" width="111" height="7"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Automatically logging you out in" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ZH-Eb-UTI">
+                                <rect key="frame" x="83" y="80" width="209" height="52.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="209.5" id="JfS-Ut-0MW"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="OpenSans-Semibold" family="Open Sans" pointSize="22.5"/>
+                                <color key="textColor" red="0.31372549020000001" green="0.31372549020000001" blue="0.31372549020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="5ZH-Eb-UTI" firstAttribute="top" secondItem="dDK-uV-Q2I" secondAttribute="bottom" constant="60" id="5EL-7z-DFm"/>
+                            <constraint firstItem="3aM-kb-uRe" firstAttribute="top" secondItem="5ZH-Eb-UTI" secondAttribute="bottom" constant="-22.5" id="68h-Vb-6p2"/>
+                            <constraint firstItem="cy4-pG-i2G" firstAttribute="centerX" secondItem="ZDg-sf-Zu1" secondAttribute="centerX" id="Hui-Mw-Hli"/>
+                            <constraint firstItem="H4c-yi-xYk" firstAttribute="top" secondItem="cy4-pG-i2G" secondAttribute="bottom" constant="75" id="KDf-rL-Y4K"/>
+                            <constraint firstItem="2Di-UC-5k0" firstAttribute="centerX" secondItem="ZDg-sf-Zu1" secondAttribute="centerX" id="Meu-Gn-T8l"/>
+                            <constraint firstItem="cy4-pG-i2G" firstAttribute="top" secondItem="5ZH-Eb-UTI" secondAttribute="bottom" constant="8" id="OQR-yb-xR4"/>
+                            <constraint firstItem="jSA-5W-y3p" firstAttribute="top" secondItem="mXR-Sz-73C" secondAttribute="bottom" constant="28" id="OUO-5T-S86"/>
+                            <constraint firstItem="mXR-Sz-73C" firstAttribute="centerX" secondItem="ZDg-sf-Zu1" secondAttribute="centerX" id="ShF-C1-FNE"/>
+                            <constraint firstItem="5ZH-Eb-UTI" firstAttribute="centerX" secondItem="ZDg-sf-Zu1" secondAttribute="centerX" id="Vkc-en-9WA"/>
+                            <constraint firstItem="3aM-kb-uRe" firstAttribute="centerX" secondItem="ZDg-sf-Zu1" secondAttribute="centerX" id="XUn-Jk-dIC"/>
+                            <constraint firstItem="mXR-Sz-73C" firstAttribute="top" secondItem="2Di-UC-5k0" secondAttribute="bottom" constant="15" id="XaE-n0-Ujc"/>
+                            <constraint firstItem="cy4-pG-i2G" firstAttribute="centerY" secondItem="3aM-kb-uRe" secondAttribute="centerY" id="bkI-Ci-Wpn"/>
+                            <constraint firstItem="cy4-pG-i2G" firstAttribute="centerY" secondItem="ZDg-sf-Zu1" secondAttribute="centerY" id="g55-WI-lZS"/>
+                            <constraint firstItem="H4c-yi-xYk" firstAttribute="centerX" secondItem="ZDg-sf-Zu1" secondAttribute="centerX" id="npg-Mp-jgD"/>
+                            <constraint firstItem="2Di-UC-5k0" firstAttribute="top" secondItem="3aM-kb-uRe" secondAttribute="bottom" constant="8" id="nrR-mr-9rT"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="g55-WI-lZS"/>
+                                <exclude reference="OQR-yb-xR4"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="cancelButton" destination="mXR-Sz-73C" id="mAC-gy-Zco"/>
+                        <outlet property="logoutButton" destination="2Di-UC-5k0" id="Vnz-VQ-h0k"/>
+                        <outlet property="secondsLabel" destination="cy4-pG-i2G" id="Xrn-5s-LGH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NKM-qZ-fPP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4516" y="161"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="Ellipse" width="123" height="123"/>
+        <image name="Ellipse-shadow" width="111" height="7"/>
         <image name="OL-tick" width="12" height="9"/>
         <image name="OLCheckmark" width="31" height="31"/>
         <image name="OLCheckmarkBg" width="31" height="31"/>

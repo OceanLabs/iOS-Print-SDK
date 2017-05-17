@@ -27,36 +27,13 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-#import "OLKitePrintSDK.h"
+#import "OLTouchReporterView.h"
 
-@class OLPhotobookPageContentViewController;
-@class OLPhotobookViewController;
+@implementation OLTouchReporterView
 
-@protocol OLPhotobookViewControllerDelegate <NSObject>
-
-- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)index;
-- (void)photobook:(OLPhotobookViewController *)photobook userDidLongPressOnImageWithIndex:(NSInteger)index sender:(UILongPressGestureRecognizer *)sender;
-
-@end
-
-@interface OLPhotobookViewController : OLViewController
-
-@property (strong, nonatomic) OLProduct *product;
-@property (strong, nonatomic) NSMutableArray *photobookPhotos;
-@property (strong, nonatomic) NSNumber *editingPageNumber;
-@property (weak, nonatomic) id<OLKiteDelegate> delegate;
-@property (weak, nonatomic) id<OLPhotobookViewControllerDelegate> photobookDelegate;
-@property (strong, nonatomic) UIPageViewController *pageController;
-
-@property (assign, nonatomic) BOOL editMode;
-@property (assign, nonatomic) BOOL startOpen;
-@property (assign, nonatomic, readonly) BOOL bookClosed;
-@property (strong, nonatomic) OLAsset *coverPhoto;
-@property (weak, nonatomic) IBOutlet UILabel *pagesLabel;
-
-- (void)loadCoverPhoto;
-- (void)setUserSelectedPhotos:(NSMutableArray<OLAsset *> *)userSelectedPhotos;
-- (void)saveJobWithCompletionHandler:(void(^)())handler;
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    [self.delegate reportTouch];
+    return NO;
+}
 
 @end

@@ -112,7 +112,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self];
+    UINavigationController *navController = [[OLNavigationController alloc] initWithRootViewController:self];
     navController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [presentingViewController presentViewController:navController animated:animated completion:completion];
 }
@@ -663,7 +663,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         } else {
             OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];
             editVc.delegate = self;
-            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:editVc];
+            UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:editVc];
             nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:nvc animated:YES completion:nil];
         }

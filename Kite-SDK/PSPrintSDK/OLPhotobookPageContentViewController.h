@@ -28,11 +28,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLViewController.h"
 
 @class OLProduct;
 @class OLRemoteImageView;
 
-@interface OLPhotobookPageContentViewController : UIViewController
+@interface OLPhotobookPageContentViewController : OLViewController
 
 @property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (assign, nonatomic) NSInteger pageIndex;

@@ -47,6 +47,7 @@
 #import "OLProductTypeSelectionViewController.h"
 #import "OLUserSession.h"
 #import "UIImage+OLUtils.h"
+#import "OLLogoutViewController.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -58,6 +59,9 @@ static CGFloat fadeTime = 0.3;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @property (strong, nonatomic) NSArray *fontNames;
+@property (strong, nonatomic) NSTimer *timer;
+@property (strong, nonatomic) NSDate *lastTouchDate;
+@property (weak, nonatomic) UIViewController *lastTouchedViewController;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -450,6 +454,8 @@ static CGFloat fadeTime = 0.3;
     } completion:^(BOOL b){
         [vc endAppearanceTransition];
         self.loadingImageView.image = nil;
+        
+        [self startTimer];
     }];
     
 }
@@ -539,6 +545,45 @@ static CGFloat fadeTime = 0.3;
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionPhotos];
     [OLUserSession currentSession].userSelectedPhotos = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark Kiosk
+
+- (void)startTimer{
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
+}
+
+- (void)stopTimer{
+    [self.timer invalidate];
+}
+
+- (void)updateTimer:(NSTimer *)timer {
+    // has the target time passed?
+    if (self.touchReporter){
+        [self.touchReporter.superview bringSubviewToFront:self.touchReporter];
+    }
+    NSInteger timeout = 30;//was 240;
+        NSLog(@"Auto log out in: %f",timeout+[self.lastTouchDate timeIntervalSinceNow]);
+    if ([self.lastTouchDate timeIntervalSinceNow] <= -timeout) {
+        [timer invalidate];
+        
+        OLLogoutViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"LogoutViewController"];
+        vc.modalPresentationStyle = UIModalPresentationFormSheet;
+        vc.preferredContentSize = CGSizeMake(435, 563);
+        
+        [self.lastTouchedViewController presentViewController:vc animated:YES completion:NULL];
+    }
+}
+
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc{
+    self.lastTouchedViewController = vc;
+    self.lastTouchDate = date;
+}
+
+- (void)kioskLogout{
+    [self.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
+    self.transitionOperation = [[NSBlockOperation alloc] init];
+    [self transitionToNextScreen];
 }
 
 @end

@@ -35,6 +35,10 @@
 
 /* Begin PBXBuildFile section */
 		027DBA136956798E0DAE5FDF /* libPods-Kite-CI-Deploy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4FFD591B0B737D3A6DDA1E /* libPods-Kite-CI-Deploy.a */; };
+		2E0B5B4D1ECC5394005C0C03 /* OLTouchReporterView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0B5B4B1ECC5394005C0C03 /* OLTouchReporterView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E0B5B4E1ECC5394005C0C03 /* OLTouchReporterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B5B4C1ECC5394005C0C03 /* OLTouchReporterView.m */; };
+		2E0B5B511ECC85BE005C0C03 /* OLLogoutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0B5B4F1ECC85BE005C0C03 /* OLLogoutViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2E0B5B521ECC85BE005C0C03 /* OLLogoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B5B501ECC85BE005C0C03 /* OLLogoutViewController.m */; };
 		2E0EB0EC1D9EB43F001A6CC9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF81186215790009DE03 /* ViewController.m */; };
 		2E12DBC81E795511000A6CEF /* UIView+AutoLayoutHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E12DBC61E795511000A6CEF /* UIView+AutoLayoutHelper.h */; };
 		2E12DBC91E795511000A6CEF /* UIView+AutoLayoutHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E12DBC71E795511000A6CEF /* UIView+AutoLayoutHelper.m */; };
@@ -552,6 +556,10 @@
 		2E0804B71C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCustomViewControllerPhotoProvider.m; sourceTree = "<group>"; };
 		2E0A72641A6FB07000BC5AE7 /* OLImageEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageEditViewController.h; sourceTree = "<group>"; };
 		2E0A72651A6FB07000BC5AE7 /* OLImageEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageEditViewController.m; sourceTree = "<group>"; };
+		2E0B5B4B1ECC5394005C0C03 /* OLTouchReporterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTouchReporterView.h; sourceTree = "<group>"; };
+		2E0B5B4C1ECC5394005C0C03 /* OLTouchReporterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTouchReporterView.m; sourceTree = "<group>"; };
+		2E0B5B4F1ECC85BE005C0C03 /* OLLogoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLLogoutViewController.h; sourceTree = "<group>"; };
+		2E0B5B501ECC85BE005C0C03 /* OLLogoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLLogoutViewController.m; sourceTree = "<group>"; };
 		2E0E250D1A77997E00808ED8 /* OLAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAnalytics.h; sourceTree = "<group>"; };
 		2E0E250E1A77997E00808ED8 /* OLAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAnalytics.m; sourceTree = "<group>"; };
 		2E0FF2E11D2A9003007093C0 /* OLButtonCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLButtonCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1105,6 +1113,8 @@
 				2EF718331D589DB60036502D /* OLInfoBanner.m */,
 				2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */,
 				2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */,
+				2E0B5B4B1ECC5394005C0C03 /* OLTouchReporterView.h */,
+				2E0B5B4C1ECC5394005C0C03 /* OLTouchReporterView.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1359,6 +1369,8 @@
 				2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */,
 				2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */,
 				2E65FEA71E4E143B00A301BB /* OLOrderHistoryViewController.m */,
+				2E0B5B4F1ECC85BE005C0C03 /* OLLogoutViewController.h */,
+				2E0B5B501ECC85BE005C0C03 /* OLLogoutViewController.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1983,6 +1995,7 @@
 				2EB8FE2E1D95685100E26BDF /* OLOAuth2Request.h in Headers */,
 				2EB8FE3B1D95685100E26BDF /* OLProductHomeViewController.h in Headers */,
 				2EB8FDEE1D95685100E26BDF /* OLPostcardPrintJob.h in Headers */,
+				2E0B5B4D1ECC5394005C0C03 /* OLTouchReporterView.h in Headers */,
 				2EB8FE171D95685100E26BDF /* OLTransitionEnumerations.h in Headers */,
 				2EB8FE281D95685100E26BDF /* OLOAuth2Connection.h in Headers */,
 				2EB8FE691D95685100E26BDF /* UIView+RMUtils.h in Headers */,
@@ -2030,6 +2043,7 @@
 				2EB8FE4D1D95685100E26BDF /* OLFrameOrderReviewViewController.h in Headers */,
 				2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */,
 				2EB8FDEB1D95685100E26BDF /* OLUserSession.h in Headers */,
+				2E0B5B511ECC85BE005C0C03 /* OLLogoutViewController.h in Headers */,
 				2EB8FE0A1D95685100E26BDF /* OLInstagramImagePickerConstants.h in Headers */,
 				2EB0DC761DC8DB7400B556CE /* OL3DProductViewController.h in Headers */,
 				2EB8FE1B1D95685100E26BDF /* OLIndefiniteAnimatedView.h in Headers */,
@@ -2555,6 +2569,7 @@
 				2EB8FE881D95692000E26BDF /* UIImage+ImageNamedInKiteBundle.m in Sources */,
 				2ED2B7B51DB8B4D90036B536 /* OLHPSDKWrapper.m in Sources */,
 				2E451E271D9555870080F1C1 /* OLColorSelectionCollectionViewCell.m in Sources */,
+				2E0B5B4E1ECC5394005C0C03 /* OLTouchReporterView.m in Sources */,
 				2E451DD81D9555540080F1C1 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				2E451E381D9555870080F1C1 /* OLImagePickerViewController.m in Sources */,
 				2E451E5E1D9555EF0080F1C1 /* OLKiteViewController.m in Sources */,
@@ -2629,6 +2644,7 @@
 				2E451E101D9555870080F1C1 /* OLAnimation.m in Sources */,
 				2E451DF81D95555D0080F1C1 /* OLProduct.m in Sources */,
 				2E451E341D9555870080F1C1 /* OLProductOverviewViewController.m in Sources */,
+				2E0B5B521ECC85BE005C0C03 /* OLLogoutViewController.m in Sources */,
 				2E451DF61D95555D0080F1C1 /* OLUpsellOffer.m in Sources */,
 				2EB8FE831D95692000E26BDF /* NSString+Formatting.m in Sources */,
 				2E451DE31D9555580080F1C1 /* OLPayPalCard.m in Sources */,

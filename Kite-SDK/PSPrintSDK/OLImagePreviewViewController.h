@@ -29,8 +29,9 @@
 
 #import <UIKit/UIKit.h>
 #import "OLRemoteImageView.h"
+#import "OLViewController.h"
 
-@interface OLImagePreviewViewController : UIViewController
+@interface OLImagePreviewViewController : OLViewController
 
 @property (strong, nonatomic) OLRemoteImageView *imageView;
 

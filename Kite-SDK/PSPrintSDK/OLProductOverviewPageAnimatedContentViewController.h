@@ -30,10 +30,11 @@
 
 #import <UIKit/UIKit.h>
 #import "OLProduct.h"
+#import "OLViewController.h"
 
 @protocol OLProductOverviewPageContentViewControllerDelegate;
 
-@interface OLProductOverviewPageAnimatedContentViewController : UIViewController
+@interface OLProductOverviewPageAnimatedContentViewController : OLViewController
 @property (assign, nonatomic) NSUInteger pageIndex;
 @property (strong, nonatomic) OLProduct *product;
 @property (weak, nonatomic) id<OLProductOverviewPageContentViewControllerDelegate> delegate;

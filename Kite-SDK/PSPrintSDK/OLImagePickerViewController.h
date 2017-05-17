@@ -44,7 +44,7 @@
 
 @end
 
-@interface OLImagePickerViewController : UIViewController
+@interface OLImagePickerViewController : OLViewController
 
 @property (strong, nonatomic) OLProduct *product;
 @property (weak, nonatomic) IBOutlet UIButton *nextButton;

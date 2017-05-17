@@ -312,7 +312,7 @@
         [self.costLabel setFont:font];
     }
     
-    UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:self.productDetails];
+    UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:self.productDetails];
     nvc.navigationBarHidden = YES;
     
     UIVisualEffect *blurEffect;
