@@ -1,6 +1,5 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
 %@ days,%@ days,"/* Examples: 2-5 days, 7 days */"
-%@ Shipping,%@ Shipping,"/* examples: Standard Shipping, Tracked Shipping */"
 %ldx%ld Collage,%ldx%ld Collage,/* example: 5x7 Collage */
 1 day,1 day,
 Add %ld %@!,Add %ld %@!,

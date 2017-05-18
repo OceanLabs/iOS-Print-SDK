@@ -238,19 +238,12 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
  */
 @property (strong, nonatomic, readonly) NSString *submitStatusErrorMessage;
 
-
-/**
- The shipping method that the user has selected
- */
-@property (strong, nonatomic) NSString *selectedShippingMethod;
-
-
 /**
  Find the common shipping classes between all jobs in this order.
 
  @return The array of common shipping classes.
  */
-- (NSArray<OLShippingClass *> *)shippingMethods;
+- (NSArray<OLShippingClass *> *)shippingMethodsForJobs:(NSArray<id<OLPrintJob>>*)jobs;
 
 /**
  Return the cost for all items in the basket for a given shipping method name
@@ -258,7 +251,7 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
  @param name The name of the shipping method
  @return The total cost of shipping
  */
-- (NSDecimalNumber *)costForShippingMethodName:(NSString *)name;
+- (NSDecimalNumber *)costForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;;
 
 
 /**
@@ -267,7 +260,7 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
  @param name The name of the delivery method
  @return Number of days
  */
-- (NSInteger)minimumDaysForShippingMethodName:(NSString *)name;
+- (NSInteger)minimumDaysForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;
 
 /**
  The estimated maximum amount of days for the delivery method
@@ -275,7 +268,7 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
  @param name The name of the delivery method
  @return Number of days
  */
-- (NSInteger)maximumDaysForShippingMethodName:(NSString *)name;
+- (NSInteger)maximumDaysForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;
 
 
 /**
@@ -284,7 +277,7 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
  @param name The name of the delivery method
  @return The estimated time in string form
  */
-- (NSString *)deliveryEstimatedDaysStringForShippingMethodName:(NSString *)name;
+- (NSString *)deliveryEstimatedDaysStringForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;;
 
 /**
  *  Request the cost of the print order from Kite

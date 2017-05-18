@@ -29,16 +29,5 @@
 
 #import <UIKit/UIKit.h>
 
-@class OLShippingMethodsViewController;
-@class OLShippingClass;
-
-@protocol OLShippingMethodsViewControllerDelegate <NSObject>
-
-- (void)shippingMethodsViewController:(OLShippingMethodsViewController *)vc didPickShippingMethod:(OLShippingClass *)method;
-
-@end
-
-
 @interface OLShippingMethodsViewController : UIViewController
-@property (weak, nonatomic) id<OLShippingMethodsViewControllerDelegate> delegate;
 @end

@@ -83,20 +83,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     
     NSMutableArray *basket = [[NSMutableArray alloc] initWithCapacity:order.jobs.count];
     for (id<OLPrintJob> job in order.jobs){
-        NSMutableDictionary *dict = [[job jsonRepresentation] mutableCopy];
-        
-        OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
-        NSString *region = template.countryMapping[shippingCountryCode];
-        if (region){
-            for(OLShippingClass *shippingClass in template.shippingClasses[region]){
-                if ([shippingClass.className isEqualToString:order.selectedShippingMethod]){
-                    dict[@"shipping_class"] = [NSNumber numberWithInteger:shippingClass.identifier];
-                    break;
-                }
-            }
-        }
-        
-        [basket addObject:dict];
+        [basket addObject:[[job jsonRepresentation] mutableCopy]];
     }
 
     NSDictionary *dict = @{@"basket" : basket,

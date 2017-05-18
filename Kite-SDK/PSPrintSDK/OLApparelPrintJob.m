@@ -56,6 +56,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 @synthesize uuid;
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
+@synthesize selectedShippingMethodIdentifier;
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -176,6 +177,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     objectCopy.options = self.options;
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
+    objectCopy.selectedShippingMethodIdentifier = self.selectedShippingMethodIdentifier;
     return objectCopy;
 }
 
