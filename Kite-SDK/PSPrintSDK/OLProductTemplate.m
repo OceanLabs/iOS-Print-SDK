@@ -324,9 +324,9 @@ static BOOL partial = NO;
     else if ([identifier isEqualToString:@"APPAREL"]){
         return OLTemplateUIApparel;
     }
-//    else if ([identifier isEqualToString:@"MUG"]){
-//        return OLTemplateUIMug;
-//    }
+    else if ([identifier isEqualToString:@"MUG"]){
+        return OLTemplateUIMug;
+    }
     return OLTemplateUINA;
 }
 

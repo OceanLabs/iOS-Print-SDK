@@ -470,6 +470,7 @@
 		2ED42EC11D9D79E3003B9AD0 /* bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E96BAC41D2FC109002F5F74 /* bitstream.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EE4BC8E1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */; };
 		2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */; };
+		2EEAEF3B1ECD7F9400C40B71 /* mug.dae in Resources */ = {isa = PBXBuildFile; fileRef = 2EEAEF3A1ECD7F9400C40B71 /* mug.dae */; };
 		2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */; };
 		2EEF0D0C1D9A781700C81086 /* OLCustomPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D0B1D9A781700C81086 /* OLCustomPickerController.h */; };
 		B7106FC2FDFC534AFB2516F3 /* libPods-KiteSDK-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CFE5B84A94297F8524AE7764 /* libPods-KiteSDK-Demo.a */; };
@@ -870,6 +871,7 @@
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
 		2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductOverviewPageAnimatedContentViewController.h; sourceTree = "<group>"; };
 		2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductOverviewPageAnimatedContentViewController.m; sourceTree = "<group>"; };
+		2EEAEF3A1ECD7F9400C40B71 /* mug.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = mug.dae; sourceTree = "<group>"; };
 		2EEB52FA1D6C8F4C0066B802 /* OLKiteViewController+Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OLKiteViewController+Theme.h"; sourceTree = "<group>"; };
 		2EEB52FE1D7062870066B802 /* OLProductTemplateOptionChoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateOptionChoice.h; sourceTree = "<group>"; };
 		2EEB52FF1D7062870066B802 /* OLProductTemplateOptionChoice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductTemplateOptionChoice.m; sourceTree = "<group>"; };
@@ -1573,13 +1575,6 @@
 			name = "Unity Plugin";
 			sourceTree = "<group>";
 		};
-		2EDB7BE01E76E33B009B30F0 /* Docs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Docs;
-			sourceTree = "<group>";
-		};
 		2EFDD4211E3781E6001B4E83 /* UI Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1906,8 +1901,8 @@
 		E29C862E1BE3C4640041D4CF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				2EDB7BE01E76E33B009B30F0 /* Docs */,
 				2E582DA41E714FDA00A6DF4E /* mug.scn */,
+				2EEAEF3A1ECD7F9400C40B71 /* mug.dae */,
 				2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */,
 				2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
@@ -2270,6 +2265,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EEAEF3B1ECD7F9400C40B71 /* mug.dae in Resources */,
 				2EBDF4CE1E434A0B004775BD /* OLKiteLocalizationResources.bundle in Resources */,
 				2E451E931D9564140080F1C1 /* kite_corrupt.jpg in Resources */,
 				2E582DA51E714FDA00A6DF4E /* mug.scn in Resources */,

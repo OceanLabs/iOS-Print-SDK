@@ -58,7 +58,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    SCNScene *scene = [SCNScene sceneWithURL:[[OLKiteUtils kiteResourcesBundle] URLForResource:@"mug" withExtension:@"scn"]
+    SCNScene *scene = [SCNScene sceneWithURL:[[OLKiteUtils kiteResourcesBundle] URLForResource:@"mug" withExtension:@"dae"]
  options:NULL error:nil];
     
     self.tube = [SCNTube tubeWithInnerRadius:1 outerRadius:1 height:1.95];
@@ -73,6 +73,7 @@
     [[scene rootNode] enumerateChildNodesUsingBlock:^(SCNNode *node, BOOL *stop){
         if ([node.name isEqualToString:@"mug"]){
             self.mug = node;
+            self.mug.pivot = SCNMatrix4MakeTranslation(-0.038, 0, -0.05);
         }
         if ([node.name isEqualToString:@"Camera"]){
             self.camera = node;
