@@ -1518,13 +1518,6 @@
 			name = "Unity Plugin";
 			sourceTree = "<group>";
 		};
-		2EDB7BE01E76E33B009B30F0 /* Docs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Docs;
-			sourceTree = "<group>";
-		};
 		2EE8CF111EA5F87100164AA6 /* Single */ = {
 			isa = PBXGroup;
 			children = (
