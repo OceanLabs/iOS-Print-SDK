@@ -58,7 +58,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    SCNScene *scene = [SCNScene sceneWithURL:[[OLKiteUtils kiteResourcesBundle] URLForResource:@"mug" withExtension:@"dae"]
+    SCNScene *scene = [SCNScene sceneWithURL:[[OLKiteUtils kiteResourcesBundle] URLForResource:@"mug" withExtension:@"scn"]
  options:NULL error:nil];
     
     self.tube = [SCNTube tubeWithInnerRadius:1 outerRadius:1 height:1.95];
