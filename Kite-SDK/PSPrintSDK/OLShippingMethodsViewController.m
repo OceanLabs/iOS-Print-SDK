@@ -99,13 +99,17 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     id<OLPrintJob> job = printOrder.jobs[indexPath.section];
-    OLShippingClass *shippingMethod = [[OLUserSession currentSession].printOrder shippingMethodsForJobs:@[job]][indexPath.section];
+    OLShippingClass *shippingMethod = [[OLUserSession currentSession].printOrder shippingMethodsForJobs:@[job]][indexPath.item];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackShippingMethodSelected:[OLUserSession currentSession].printOrder methodName:shippingMethod.className];
 #endif
     printOrder.jobs[indexPath.section].selectedShippingMethodIdentifier = shippingMethod.identifier;
     
-    [self.collectionView reloadData];
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < [self collectionView:collectionView numberOfItemsInSection:indexPath.section]; i++){
+        [indexPaths addObject:[NSIndexPath indexPathForItem:i inSection:indexPath.section]];
+    }
+    [collectionView reloadItemsAtIndexPaths:indexPaths];
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{

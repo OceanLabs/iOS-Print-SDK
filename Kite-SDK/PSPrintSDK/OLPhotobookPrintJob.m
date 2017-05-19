@@ -173,7 +173,8 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
     
-    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[self.address.country.codeAlpha3];
+    NSString *countryCode = self.address.country ? [self.address.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[countryCode];
     if (region){
         json[@"shipping_class"] = [NSNumber numberWithInteger:self.selectedShippingMethodIdentifier];
     }

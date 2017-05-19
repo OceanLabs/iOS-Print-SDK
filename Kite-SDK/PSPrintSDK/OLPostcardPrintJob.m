@@ -190,7 +190,8 @@ static id stringOrEmptyString(NSString *str) {
         [json setObject:shippingAddress forKey:@"shipping_address"];
     }
     
-    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[self.address.country.codeAlpha3];
+    NSString *countryCode = self.address.country ? [self.address.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[countryCode];
     if (region){
         json[@"shipping_class"] = [NSNumber numberWithInteger:self.selectedShippingMethodIdentifier];
     }
