@@ -73,6 +73,7 @@
     [[scene rootNode] enumerateChildNodesUsingBlock:^(SCNNode *node, BOOL *stop){
         if ([node.name isEqualToString:@"mug"]){
             self.mug = node;
+            self.mug.pivot = SCNMatrix4MakeTranslation(-0.038, 0, -0.05);
         }
         if ([node.name isEqualToString:@"Camera"]){
             self.camera = node;
