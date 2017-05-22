@@ -27,8 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import <KiteSDK/KiteSDK.h>
 
-@interface OLLogoutViewController : UIViewController
+@interface OLKioskLandingViewController : OLViewController
 
 @end

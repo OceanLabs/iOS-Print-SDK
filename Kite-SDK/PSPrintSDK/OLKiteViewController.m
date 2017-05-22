@@ -48,6 +48,7 @@
 #import "OLUserSession.h"
 #import "UIImage+OLUtils.h"
 #import "OLLogoutViewController.h"
+#import "OLKioskLandingViewController.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -314,6 +315,11 @@ static CGFloat fadeTime = 0.3;
                 [welf presentViewController:ac animated:YES completion:NULL];
             return;
         }
+        else if ([OLKitePrintSDK isKiosk]){
+            OLKioskLandingViewController *vc = [[OLKioskLandingViewController alloc] init];
+            [welf fadeToViewController:[[OLNavigationController alloc] initWithRootViewController:vc]];
+            return;
+        }
         else if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
             BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[[OLUserSession currentSession].printOrder.jobs firstObject] assetsForUploading]];
             OLProduct *product = [OLProduct productWithTemplateId:[[[OLUserSession currentSession].printOrder.jobs firstObject] templateId]];
@@ -448,14 +454,15 @@ static CGFloat fadeTime = 0.3;
     
     [view.superview addConstraints:con];
     
-    
     [UIView animateWithDuration:fadeTime animations:^(void){
         vc.view.alpha = 1;
     } completion:^(BOOL b){
         [vc endAppearanceTransition];
         self.loadingImageView.image = nil;
         
-        [self startTimer];
+        if ([OLKitePrintSDK isKiosk]){
+            [(UINavigationController *)vc navigationBar].alpha = 0;
+        }
     }];
     
 }
@@ -581,7 +588,9 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)kioskLogout{
-    [self.presentedViewController dismissViewControllerAnimated:YES completion:NULL];
+    [self.presentedViewController dismissViewControllerAnimated:YES completion:^{
+        [self.childViewControllers.firstObject removeFromParentViewController];
+    }];
     self.transitionOperation = [[NSBlockOperation alloc] init];
     [self transitionToNextScreen];
 }

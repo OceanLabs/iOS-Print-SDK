@@ -273,11 +273,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     NSLog(@"%@", info);
 #endif
     
-    NSString *status = info[kOLAnalyticsEventName];
-    if ([info[kOLAnalyticsEventLevel] integerValue] != 1){
-        status = [@"*" stringByAppendingString:status];
-    }
-    [JDStatusBarNotification showWithStatus:status dismissAfter:2];
+//    NSString *status = info[kOLAnalyticsEventName];
+//    if ([info[kOLAnalyticsEventLevel] integerValue] != 1){
+//        status = [@"*" stringByAppendingString:status];
+//    }
+//    [JDStatusBarNotification showWithStatus:status dismissAfter:2];
 }
 
 - (void)setupCIDeploymentWithAssets:(NSArray *)assets{
@@ -357,6 +357,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         s = [(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"];
     }
     [OLKitePrintSDK setAPIKey:s withEnvironment:[self environment]];
+    
+    [OLKitePrintSDK setIsKiosk:YES]; //TODO delete
     
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
