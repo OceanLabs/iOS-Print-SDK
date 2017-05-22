@@ -366,6 +366,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     vc.userPhone = @"";
     vc.delegate = self;
     vc.qrCodeUploadEnabled = YES;
+    vc.filterProducts = @[@"mug_bone_wrap"];
     
     if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]){
         vc.filterProducts = @[[(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]];
