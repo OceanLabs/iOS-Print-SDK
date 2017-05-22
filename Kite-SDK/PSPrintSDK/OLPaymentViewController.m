@@ -158,7 +158,7 @@ static OLPaymentMethod selectedPaymentMethod;
 @interface OLPaymentViewController () <
 UITableViewDataSource, UITableViewDelegate,
 PKPaymentAuthorizationViewControllerDelegate,
-UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate, OLPaymentMethodsViewControllerDelegate, OLShippingMethodsViewControllerDelegate>
+UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate, OLPaymentMethodsViewControllerDelegate>
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
@@ -601,8 +601,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [self.totalCostActivityIndicator startAnimating];
         shouldAnimate = YES;
     }
-    
-    [self updateShippingView];
     
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         [self.totalCostActivityIndicator stopAnimating];
@@ -1102,11 +1100,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             }
         }
         
-        NSMutableArray *shippingMethods = [self applePayShippingMethods];
-        if (shippingMethods.count > 0){
-            paymentRequest.shippingMethods = shippingMethods;
-        }
-        
         [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         paymentRequest.paymentSummaryItems = lineItems;
         paymentRequest.requiredShippingAddressFields = PKAddressFieldPostalAddress | PKAddressFieldName | PKAddressFieldEmail | PKAddressFieldPhone;
@@ -1116,21 +1109,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
         [self presentViewController:paymentController animated:YES completion:nil];
     }];
-}
-
-- (NSMutableArray *)applePayShippingMethods{
-    NSMutableArray *shippingMethods = [[NSMutableArray alloc] init];
-    for (OLShippingClass *class in self.printOrder.shippingMethods){
-        PKShippingMethod *method = [PKShippingMethod summaryItemWithLabel:class.className amount:[self.printOrder costForShippingMethodName:class.className]];
-        method.identifier = class.className;
-        method.detail = [self.printOrder deliveryEstimatedDaysStringForShippingMethodName:class.className];
-        [shippingMethods addObject:method];
-        
-        if ([class.className isEqualToString:self.printOrder.selectedShippingMethod]){
-            [shippingMethods exchangeObjectAtIndex:0 withObjectAtIndex:[shippingMethods indexOfObjectIdenticalTo:method]];
-        }
-    }
-    return shippingMethods;
 }
 
 - (IBAction)onButtonMinusClicked:(UIButton *)sender {
@@ -1325,33 +1303,8 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 
 - (IBAction)onShippingMethodGestureRecognized:(id)sender {
     OLShippingMethodsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLShippingMethodsViewController"];
-    vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
 }
-
-- (void)shippingMethodsViewController:(OLShippingMethodsViewController *)vc didPickShippingMethod:(OLShippingClass *)method{
-    [OLUserSession currentSession].printOrder.selectedShippingMethod = method.className;
-    [self updateShippingView];
-}
-
-- (void)updateShippingView{
-    if ([OLUserSession currentSession].printOrder.selectedShippingMethod){
-        self.shippingLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"examples: Standard Shipping, Tracked Shipping"), [OLUserSession currentSession].printOrder.selectedShippingMethod];
-    }
-    else{
-        self.shippingLabel.text = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-    }
-    
-    if ([OLUserSession currentSession].printOrder.shippingMethods.count > 1 && selectedPaymentMethod != kOLPaymentMethodApplePay){
-        self.shippingMethodChevron.hidden = NO;
-        self.shippingMethodTapGesture.enabled = YES;
-    }
-    else{
-        self.shippingMethodChevron.hidden = YES;
-        self.shippingMethodTapGesture.enabled = NO;
-    }
-}
-
 
 #pragma mark - PayPalPaymentDelegate methods
 
@@ -1484,7 +1437,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         
         [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
         if (!error){
-            completion(PKPaymentAuthorizationStatusSuccess, [self applePayShippingMethods], lineItems);
+            completion(PKPaymentAuthorizationStatusSuccess, nil, lineItems);
         }
         else{
             self.printOrder.shippingAddress = nil;
@@ -1494,7 +1447,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(PKShippingMethod *)shippingMethod completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKPaymentSummaryItem *> * _Nonnull))completion{
-    self.printOrder.selectedShippingMethod = shippingMethod.identifier;
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
         [self costCalculationCompletedWithError:error];
         NSMutableArray *lineItems = [[NSMutableArray alloc] init];

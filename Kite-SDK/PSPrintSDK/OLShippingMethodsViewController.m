@@ -33,6 +33,10 @@
 #import "OLUserSession.h"
 #import "OLShippingClass.h"
 #import "NSDecimalNumber+CostFormatter.h"
+#import "OLProductTemplate.h"
+#import "OLPrintJob.h"
+#import "OLPrintOrderCost.h"
+#import "OLPaymentLineItem.h"
 
 @interface OLShippingMethodsViewController () <UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -77,13 +81,13 @@
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    NSInteger sections = [OLUserSession currentSession].printOrder.shippingMethods.count;
-    
-    return sections;
+    return [OLUserSession currentSession].printOrder.jobs.count;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return 1;
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+    id<OLPrintJob> job = printOrder.jobs[section];
+    return [printOrder shippingMethodsForJobs:@[job]].count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -93,24 +97,50 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    OLShippingClass *shippingMethod = [OLUserSession currentSession].printOrder.shippingMethods[indexPath.section];
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+    id<OLPrintJob> job = printOrder.jobs[indexPath.section];
+    OLShippingClass *shippingMethod = [[OLUserSession currentSession].printOrder shippingMethodsForJobs:@[job]][indexPath.item];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackShippingMethodSelected:[OLUserSession currentSession].printOrder methodName:shippingMethod.className];
 #endif
-    [self.delegate shippingMethodsViewController:self didPickShippingMethod:shippingMethod];
-    [self.collectionView reloadData];
+    printOrder.jobs[indexPath.section].selectedShippingMethodIdentifier = shippingMethod.identifier;
+    
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < [self collectionView:collectionView numberOfItemsInSection:indexPath.section]; i++){
+        [indexPaths addObject:[NSIndexPath indexPathForItem:i inSection:indexPath.section]];
+    }
+    [collectionView reloadItemsAtIndexPaths:indexPaths];
+}
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
+    UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"sectionHeader" forIndexPath:indexPath];
+    
+    UILabel *label = (UILabel *)[cell viewWithTag:10];
+    
+    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+    id<OLPrintJob> job = printOrder.jobs[indexPath.section];
+    [printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+        for (OLPaymentLineItem *item in cost.lineItems){
+            if ([item.identifier isEqualToString:[job uuid]]){
+                label.text = item.description;
+            }
+        }
+    }];
+    
+    return cell;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"shippingMethodCell" forIndexPath:indexPath];
     
-    OLShippingClass *shippingClass = [OLUserSession currentSession].printOrder.shippingMethods[indexPath.section];
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+    id<OLPrintJob> job = printOrder.jobs[indexPath.section];
+    OLShippingClass *shippingClass = [printOrder shippingMethodsForJobs:@[job]][indexPath.item];
     
-    [cell viewWithTag:10].hidden = ![printOrder.selectedShippingMethod isEqualToString:shippingClass.className];
-    [(UILabel *)[cell viewWithTag:20] setText:shippingClass.className];
-    [(UILabel *)[cell viewWithTag:30] setText:[[printOrder costForShippingMethodName:shippingClass.className] formatCostForCurrencyCode:printOrder.currencyCode]];
-    [(UILabel *)[cell viewWithTag:40] setText:[printOrder deliveryEstimatedDaysStringForShippingMethodName:shippingClass.className]];
+    [cell viewWithTag:10].hidden = job.selectedShippingMethodIdentifier != shippingClass.identifier;
+    [(UILabel *)[cell viewWithTag:20] setText:shippingClass.displayName];
+    [(UILabel *)[cell viewWithTag:30] setText:[[printOrder costForShippingMethodName:shippingClass.className forJobs:@[job]] formatCostForCurrencyCode:printOrder.currencyCode]];
+    [(UILabel *)[cell viewWithTag:40] setText:[printOrder deliveryEstimatedDaysStringForShippingMethodName:shippingClass.className forJobs:@[job]]];
     
     return cell;
 }

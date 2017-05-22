@@ -31,6 +31,7 @@
 #import "OLProductTemplate.h"
 #import "OLAsset.h"
 #import "OLAddress.h"
+#import "OLCountry.h"
 
 static NSString *const kKeyApparelProductTemplateId = @"co.oceanlabs.pssdk.kKeyApparelProductTemplateId";
 static NSString *const kKeyApparelImages = @"co.oceanlabs.pssdk.kKeyApparelImages";
@@ -56,6 +57,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 @synthesize uuid;
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
+@synthesize selectedShippingMethodIdentifier;
 
 - (NSMutableDictionary *) options{
     if (!_options){
@@ -107,6 +109,12 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     json[@"options"] = self.options;
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
+    
+    NSString *countryCode = self.address.country ? [self.address.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[countryCode];
+    if (region){
+        json[@"shipping_class"] = [NSNumber numberWithInteger:self.selectedShippingMethodIdentifier];
+    }
     
     return json;
 }
@@ -176,6 +184,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     objectCopy.options = self.options;
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
+    objectCopy.selectedShippingMethodIdentifier = self.selectedShippingMethodIdentifier;
     return objectCopy;
 }
 

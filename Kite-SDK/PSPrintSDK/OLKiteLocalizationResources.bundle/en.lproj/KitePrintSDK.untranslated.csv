@@ -1,6 +1,5 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
 %@ days,%@ days,"/* Examples: 2-5 days, 7 days */"
-%@ Shipping,%@ Shipping,"/* examples: Standard Shipping, Tracked Shipping */"
 %ldx%ld Collage,%ldx%ld Collage,/* example: 5x7 Collage */
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!","**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!",
 1 day,1 day,

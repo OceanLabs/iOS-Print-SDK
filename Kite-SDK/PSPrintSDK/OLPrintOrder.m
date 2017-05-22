@@ -177,18 +177,6 @@ static NSBlockOperation *templateSyncOperation;
     return self;
 }
 
-- (NSString *)selectedShippingMethod{
-    for (OLShippingClass *shippingClass in [self shippingMethods]){
-        if ([shippingClass.className isEqualToString:_selectedShippingMethod]){
-            return _selectedShippingMethod;
-        }
-    }
-    
-    // The selected method is no longer available/valid, maybe because a new product that doesn't support it was added to the order
-    _selectedShippingMethod = nil;
-    return nil;
-}
-
 - (void)setPromoCode:(NSString *)promoCode{
     _promoCode = promoCode;
 }
@@ -523,21 +511,7 @@ static NSBlockOperation *templateSyncOperation;
     }
     
     for (id<OLPrintJob> printJob in self.jobs) {
-        NSMutableDictionary *dict = [[printJob jsonRepresentation] mutableCopy];
-        
-        OLProductTemplate *template = [OLProductTemplate templateWithId:printJob.templateId];
-        NSString *region = template.countryMapping[self.shippingAddress.country.codeAlpha3];
-        if (!region){
-            break;
-        }
-        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
-            if ([shippingClass.className isEqualToString:self.selectedShippingMethod]){
-                dict[@"shipping_class"] = [NSNumber numberWithInteger:shippingClass.identifier];
-                break;
-            }
-        }
-        
-        [jobs addObject:dict];
+        [jobs addObject:[[printJob jsonRepresentation] mutableCopy]];
     }
     
     if (self.phone){
@@ -586,7 +560,6 @@ static NSBlockOperation *templateSyncOperation;
     hash = 31 * hash + (self.shipToStore ? 39 : 0);
     hash = 31 * hash + (self.payInStore ? 73 : 0);
     hash = 31 * hash + ([OLKiteUtils isApplePayAvailable] ? 47 : 0);
-    hash = 31 * hash + [self.selectedShippingMethod hash];
     for (id<OLPrintJob> job in self.jobs){
         if (job.address.country){
             hash = 32 * hash + [job.address.country.codeAlpha3 hash];
@@ -650,11 +623,11 @@ static NSBlockOperation *templateSyncOperation;
     return NO;
 }
 
-- (NSArray<OLShippingClass *> *)shippingMethods{
+- (NSArray<OLShippingClass *> *)shippingMethodsForJobs:(NSArray<id<OLPrintJob>>*)jobs;{
     NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
     NSMutableArray *common = [[NSMutableArray alloc] init];
     
-    OLProductTemplate *firstJobTemplate = [OLProductTemplate templateWithId:self.jobs.firstObject.templateId];
+    OLProductTemplate *firstJobTemplate = [OLProductTemplate templateWithId:jobs.firstObject.templateId];
     
     NSString *firstJobRegion = firstJobTemplate.countryMapping[countryCode];
     if (!firstJobRegion){
@@ -662,7 +635,7 @@ static NSBlockOperation *templateSyncOperation;
     }
     for (OLShippingClass *firstJobShippingClass in firstJobTemplate.shippingClasses[firstJobRegion]){
         BOOL commonInAllJobs = YES;
-        for (id<OLPrintJob> job in self.jobs){
+        for (id<OLPrintJob> job in jobs){
             BOOL foundInJob = NO;
             OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
             NSString *region = template.countryMapping[countryCode];
@@ -685,7 +658,7 @@ static NSBlockOperation *templateSyncOperation;
     return common;
 }
 
-- (NSDecimalNumber *)costForShippingMethodName:(NSString *)name{
+- (NSDecimalNumber *)costForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;{
     NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
     
     NSDecimalNumber *cost = [NSDecimalNumber decimalNumberWithString:@"0"];
@@ -706,11 +679,11 @@ static NSBlockOperation *templateSyncOperation;
     return cost;
 }
 
-- (NSInteger)maximumDaysForShippingMethodName:(NSString *)name{
+- (NSInteger)maximumDaysForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;{
     NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
     
     NSInteger days = NSIntegerMin;
-    for (id<OLPrintJob> job in self.jobs){
+    for (id<OLPrintJob> job in jobs){
         OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
         NSString *region = template.countryMapping[countryCode];
         if (!region){
@@ -727,7 +700,7 @@ static NSBlockOperation *templateSyncOperation;
     return days;
 }
 
-- (NSInteger)minimumDaysForShippingMethodName:(NSString *)name{
+- (NSInteger)minimumDaysForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;{
     NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
     
     NSInteger days = NSIntegerMax;
@@ -748,9 +721,9 @@ static NSBlockOperation *templateSyncOperation;
     return days;
 }
 
-- (NSString *)deliveryEstimatedDaysStringForShippingMethodName:(NSString *)name{
-    NSInteger min = [self minimumDaysForShippingMethodName:name];
-    NSInteger max = [self maximumDaysForShippingMethodName:name];
+- (NSString *)deliveryEstimatedDaysStringForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;{
+    NSInteger min = [self minimumDaysForShippingMethodName:name forJobs:jobs];
+    NSInteger max = [self maximumDaysForShippingMethodName:name forJobs:jobs];
     
     if (min != NSIntegerMax && max != NSIntegerMin && min != max){
         return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d - %d", (int)min, (int)max]];
@@ -909,7 +882,6 @@ static NSBlockOperation *templateSyncOperation;
     [aCoder encodeBool:self.shipToStore forKey:kKeyOrderShipToStore];
     [aCoder encodeBool:self.payInStore forKey:kKeyOrderPayInStore];
     [aCoder encodeObject:self.paymentMethod forKey:kKeyOrderPaymentMethod];
-    [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -934,7 +906,6 @@ static NSBlockOperation *templateSyncOperation;
             _shipToStore = [aDecoder decodeBoolForKey:kKeyOrderShipToStore];
             _payInStore = [aDecoder decodeBoolForKey:kKeyOrderPayInStore];
             _paymentMethod = [aDecoder decodeObjectForKey:kKeyOrderPaymentMethod];
-            _selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
         }
         return self;
         
