@@ -65,6 +65,7 @@
 "Edit Address" = "Edit Address";
 "Edit Poster" = "Edit Poster";
 "Email" = "Email";
+"End Session" = "End Session";
 "Enter a valid card number" = "Enter a valid card number";
 "Enter a valid CVV number" = "Enter a valid CVV number";
 "Enter a valid expiry date" = "Enter a valid expiry date";
@@ -199,6 +200,7 @@
 "There was an error trying to validate the card. Please try again later." = "There was an error trying to validate the card. Please try again later.";
 "This is the 3-4 digit verification number/security code normally found on the back of your card" = "This is the 3-4 digit verification number/security code normally found on the back of your card";
 "This will discard your edits." = "This will discard your edits.";
+"This will log out of any accounts, clear selected photos and start over" = "This will log out of any accounts, clear selected photos and start over";
 "Total" = "Total";
 "Uploading book" = "Uploading book";
 "Uploading Images \n%lu / %lu" = "Uploading Images \n%lu / %lu";

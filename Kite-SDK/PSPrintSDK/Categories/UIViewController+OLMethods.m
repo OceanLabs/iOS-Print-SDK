@@ -41,12 +41,17 @@
 #import "UIView+RoundRect.h"
 #import "OLUserSession.h"
 #import "OLImageDownloader.h"
+#import "OLKitePrintSDK.h"
 
 @interface OLPaymentViewController ()
 - (void)onBarButtonOrdersClicked;
 - (void)dismiss;
 @property (assign, nonatomic) BOOL presentedModally;
 @property (strong, nonatomic) NSArray *currentUserSelectedPhotos;
+@end
+
+@interface OLKiteViewController ()
+- (void)kioskLogout;
 @end
 
 @implementation UIViewController (OLMethods)
@@ -100,6 +105,53 @@
     }
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:basketButton];
+    
+    if ([OLKitePrintSDK isKiosk]){
+        UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 133.5, 32)];
+        UIButton *startAgain = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 133.5, 32)];
+        [buttonView addSubview:startAgain];
+        startAgain.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *views = NSDictionaryOfVariableBindings(startAgain);
+        NSMutableArray *con = [[NSMutableArray alloc] init];
+        
+        NSArray *visuals = @[@"H:[startAgain(133.5)]",
+                             @"V:[startAgain(32)]"];
+        
+        
+        for (NSString *visual in visuals) {
+            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+        }
+        
+        [startAgain.superview addConstraints:con];
+        [startAgain.superview addConstraint:[NSLayoutConstraint constraintWithItem:startAgain attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:startAgain.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+        [startAgain.superview addConstraint:[NSLayoutConstraint constraintWithItem:startAgain attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:startAgain.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
+        
+        if ([OLKiteABTesting sharedInstance].theme.burgerMenuHeader){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLKiteABTesting sharedInstance].theme.startScreenLandscape withCompletionHandler:^(UIImage *image, NSError *error){
+                [startAgain setImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] forState:UIControlStateNormal];
+            }];
+        }
+        else{
+            [startAgain setImage:[UIImage imageNamedInKiteBundle:@"endsession"] forState:UIControlStateNormal];
+        }
+        [startAgain addTarget:self action:@selector(kioskLogoutButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+        
+        if (self.navigationItem.rightBarButtonItem){
+            self.navigationItem.rightBarButtonItems = @[self.navigationItem.rightBarButtonItem, [[UIBarButtonItem alloc] initWithCustomView:buttonView]];
+        }
+        else{
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
+        }
+    }
+}
+
+- (void)kioskLogoutButtonTapped{
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will log out of any accounts, clear selected photos and start over", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"End Session", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
+        [[OLUserSession currentSession].kiteVc kioskLogout];
+    }]];
+    [self presentViewController:ac animated:YES completion:NULL];
 }
 
 - (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {
