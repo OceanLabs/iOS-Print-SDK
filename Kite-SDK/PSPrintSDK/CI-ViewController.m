@@ -353,9 +353,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
-    if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"]){
-        s = [(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"];
-    }
     [OLKitePrintSDK setAPIKey:s withEnvironment:[self environment]];
     
     [OLKitePrintSDK setIsKiosk:YES]; //TODO delete

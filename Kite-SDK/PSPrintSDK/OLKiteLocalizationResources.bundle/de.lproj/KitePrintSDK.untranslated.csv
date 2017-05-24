@@ -1,3 +1,7 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+%@ days,%@ days,"/* Examples: 2-5 days, 7 days */"
+1 day,1 day,
 End Session,End Session,
+From,From,
+Shipping Method,Shipping Method,
 "This will log out of any accounts, clear selected photos and start over","This will log out of any accounts, clear selected photos and start over",

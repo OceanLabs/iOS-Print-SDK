@@ -75,6 +75,7 @@
 #import "Util.h"
 #import "OLApparelPrintJob.h"
 #import "OLCaseViewController.h"
+#import "OLShippingMethodsViewController.h"
 
 @import PassKit;
 @import Contacts;
@@ -177,8 +178,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 @property (weak, nonatomic) IBOutlet UILabel *promoCodeCostLabel;
 @property (weak, nonatomic) IBOutlet UILabel *shippingCostLabel;
 @property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
-@property (weak, nonatomic) IBOutlet UILabel *shippingTypeLabel;
-@property (weak, nonatomic) IBOutlet UIButton *shippingButton;
+@property (weak, nonatomic) IBOutlet UILabel *shippingLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *promoBoxBottomCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *promoBoxTopCon;
@@ -186,8 +186,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 @property (weak, nonatomic) IBOutlet UILabel *poweredByKiteLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *poweredByKiteLabelBottomCon;
 @property (weak, nonatomic) IBOutlet UIView *shippingDetailsBox;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *shippingDetailsCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *deliveryDetailsCon;
 @property (weak, nonatomic) IBOutlet UILabel *deliveryDetailsLabel;
+@property (weak, nonatomic) IBOutlet UIButton *shippingMethodChevron;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *totalCostActivityIndicator;
 @property (assign, nonatomic) CGFloat keyboardAnimationPercent;
 @property (assign, nonatomic) BOOL authorizedApplePay;
@@ -199,7 +200,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 @property (weak, nonatomic) IBOutlet UIView *addPaymentBox;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *paymentMethodBottomCon;
 @property (strong, nonatomic) NSArray *currentUserSelectedPhotos;
-
+@property (strong, nonatomic) IBOutlet UITapGestureRecognizer *shippingMethodTapGesture;
 @property (strong, nonatomic) NSOperation *viewDidAppearOperation;
 @property (strong, nonatomic) NSOperation *costCalculationOperation;
 @property (strong, nonatomic) NSOperation *reloadTableViewOperation;
@@ -255,7 +256,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                                                                             action:nil];
     
     self.poweredByKiteLabel.text = NSLocalizedStringFromTableInBundle(@"Powered by Kite.ly", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-    [self.shippingButton setTitle:NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     [self.paymentButton1 setTitle:NSLocalizedStringFromTableInBundle(@"Continue Shopping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     self.reloadTableViewOperation = [NSBlockOperation blockOperationWithBlock:^{
@@ -314,13 +314,18 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     
     
     if (![OLKiteUtils isApplePayAvailable]){
-        self.shippingDetailsCon.constant = 2;
+        self.deliveryDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
     
     if ([OLUserSession currentSession].kiteVc.hideContinueShoppingButton || [OLKiteABTesting sharedInstance].launchedWithPrintOrder || self.navigationController.viewControllers.firstObject == self){
         [self.paymentButton1 removeFromSuperview];
     }
+    
+    if (selectedPaymentMethod == kOLPaymentMethodNone && [OLKiteUtils isApplePayAvailable]){
+        selectedPaymentMethod = kOLPaymentMethodApplePay;
+    }
+    [self updateSelectedPaymentMethodView];
     
     [self updateViewsBasedOnCostUpdate];
     
@@ -339,11 +344,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackBasketScreenViewedForOrder:self.printOrder applePayIsAvailable:applePayAvailableStr];
 #endif
-    
-    if (selectedPaymentMethod == kOLPaymentMethodNone && [OLKiteUtils isApplePayAvailable]){
-        selectedPaymentMethod = kOLPaymentMethodApplePay;
-    }
-    [self updateSelectedPaymentMethodView];
     
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.paymentButton1 setBackgroundColor:[UIColor clearColor]];
@@ -560,7 +560,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     if (selectedPaymentMethod == kOLPaymentMethodNone){
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Add Payment Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         self.payingWithImageView.hidden = YES;
-        self.shippingDetailsCon.constant = 2;
+        self.deliveryDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
     else if (selectedPaymentMethod == kOLPaymentMethodCreditCard){
@@ -568,21 +568,21 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Paying with [PayPal/Credit Card]") forState:UIControlStateNormal];
         self.payingWithImageView.image = [existingCard cardIcon];
         self.payingWithImageView.hidden = NO;
-        self.shippingDetailsCon.constant = 2;
+        self.deliveryDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
     else if (selectedPaymentMethod == kOLPaymentMethodApplePay){
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Paying with [PayPal/Credit Card]") forState:UIControlStateNormal];
         self.payingWithImageView.image = [UIImage imageNamedInKiteBundle:@"apple-pay-method"];
         self.payingWithImageView.hidden = NO;
-        self.shippingDetailsCon.constant = -50;
+        self.deliveryDetailsCon.constant = -50;
         self.shippingDetailsBox.alpha = 0;
     }
     else if (selectedPaymentMethod == kOLPaymentMethodPayPal){
         [self.addPaymentMethodButton setTitle:NSLocalizedStringFromTableInBundle(@"Paying With", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Paying with [PayPal/Credit Card]") forState:UIControlStateNormal];
         self.payingWithImageView.image = [UIImage imageNamedInKiteBundle:@"paypal-method"];
         self.payingWithImageView.hidden = NO;
-        self.shippingDetailsCon.constant = 2;
+        self.deliveryDetailsCon.constant = 2;
         self.shippingDetailsBox.alpha = 1;
     }
     
@@ -634,7 +634,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [self.paymentButton2 setTitle:NSLocalizedStringFromTableInBundle(@"Checkout for Free!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
             
             self.paymentMethodBottomCon.constant = 2 - self.addPaymentBox.frame.size.height;
-            self.shippingDetailsCon.constant = 2;
+            self.deliveryDetailsCon.constant = 2;
             self.shippingDetailsBox.alpha = 1;
             [UIView animateWithDuration:0.25 animations:^{
                 [self.view layoutIfNeeded];
@@ -645,11 +645,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             
             self.paymentMethodBottomCon.constant = 2;
             if (selectedPaymentMethod == kOLPaymentMethodApplePay){
-                self.shippingDetailsCon.constant = -50;
+                self.deliveryDetailsCon.constant = -50;
                 self.shippingDetailsBox.alpha = 0;
             }
             else{
-                self.shippingDetailsCon.constant = 2;
+                self.deliveryDetailsCon.constant = 2;
                 self.shippingDetailsBox.alpha = 1;
             }
             [UIView animateWithDuration:0.25 animations:^{
@@ -1308,6 +1308,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }];
 }
 
+- (IBAction)onShippingMethodGestureRecognized:(id)sender {
+    OLShippingMethodsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLShippingMethodsViewController"];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 #pragma mark - PayPalPaymentDelegate methods
 
 - (void)payPalPaymentDidCancel:(id)paymentViewController {
@@ -1443,7 +1448,44 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         }
         else{
             self.printOrder.shippingAddress = nil;
-            completion(PKPaymentAuthorizationStatusFailure, nil, nil);
+            completion(PKPaymentAuthorizationStatusFailure, nil, lineItems);
+        }
+    }];
+}
+
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(PKShippingMethod *)shippingMethod completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKPaymentSummaryItem *> * _Nonnull))completion{
+    [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
+        [self costCalculationCompletedWithError:error];
+        NSMutableArray *lineItems = [[NSMutableArray alloc] init];
+        for (OLPaymentLineItem *item in cost.lineItems){
+            [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:item.description  amount:[item costInCurrency:self.printOrder.currencyCode]]];
+        }
+        
+        // if a special discount exists, then add a Discount line item
+        if (cost.specialPromoDiscount){
+            NSDecimalNumber *currencyDiscount = cost.specialPromoDiscount[self.printOrder.currencyCode];
+            if ([currencyDiscount doubleValue] != 0) {
+                if ([currencyDiscount doubleValue] > 0) {
+                    currencyDiscount = [currencyDiscount decimalNumberByMultiplyingBy:(NSDecimalNumber *)[NSDecimalNumber numberWithInteger:-1]];
+                }
+                
+                for (PKPaymentSummaryItem *item in lineItems){
+                    if ([item.amount doubleValue] < 0){
+                        [lineItems removeObject:item];
+                    }
+                }
+                
+                [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:NSLocalizedStringFromTableInBundle(@"Promotional Discount", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") amount:currencyDiscount]];
+            }
+        }
+        
+        [lineItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:[OLKitePrintSDK applePayPayToString] amount:[cost totalCostInCurrency:self.printOrder.currencyCode]]];
+        if (!error){
+            completion(PKPaymentAuthorizationStatusSuccess, lineItems);
+        }
+        else{
+            self.printOrder.shippingAddress = nil;
+            completion(PKPaymentAuthorizationStatusFailure, lineItems);
         }
     }];
 }
