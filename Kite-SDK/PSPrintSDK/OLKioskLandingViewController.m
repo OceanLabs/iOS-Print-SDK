@@ -61,22 +61,48 @@
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognized:)];
     [self.imageView addGestureRecognizer:tap];
-    self.imageView.userInteractionEnabled = YES;    
+    self.imageView.userInteractionEnabled = YES;
+    
+    NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
+    if (!url){
+        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+        NSString *bundleName = nil;
+        if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
+            bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
+        } else {
+            bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
+        }
+        self.title = bundleName;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    self.navigationController.navigationBar.alpha = 0;
     [[OLUserSession currentSession].kiteVc stopTimer];
 }
 
-- (void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     
-    [UIView animateWithDuration:0.15 animations:^{
-        self.navigationController.navigationBar.alpha = 1;
-    }];
+    NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
+    if (url && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:url] && !([self.navigationItem.titleView isKindOfClass:[UIImageView class]] || [self.parentViewController.navigationItem.titleView isKindOfClass:[UIImageView class]])){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
+            if (error){
+                return;
+            }
+            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
+                titleImageView.alpha = 0;
+                self.navigationItem.titleView = titleImageView;
+                titleImageView.alpha = 0;
+                [UIView animateWithDuration:0.5 animations:^{
+                    titleImageView.alpha = 1;
+                }];
+            });
+        }];
+    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{

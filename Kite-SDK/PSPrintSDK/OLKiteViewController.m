@@ -459,10 +459,6 @@ static CGFloat fadeTime = 0.3;
     } completion:^(BOOL b){
         [vc endAppearanceTransition];
         self.loadingImageView.image = nil;
-        
-        if ([OLKitePrintSDK isKiosk]){
-            [(UINavigationController *)vc navigationBar].alpha = 0;
-        }
     }];
     
 }
