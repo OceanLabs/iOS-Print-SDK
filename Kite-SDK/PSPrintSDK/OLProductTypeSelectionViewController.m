@@ -41,6 +41,9 @@
 #import "UIImage+OLUtils.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
+#import "UIView+RoundRect.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIView+AutoLayoutHelper.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -50,6 +53,7 @@
 @property (strong, nonatomic) NSMutableArray *allPosterProducts;
 @property (strong, nonatomic) NSMutableDictionary *collections;
 @property (assign, nonatomic) BOOL fromRotation;
+@property (strong, nonatomic) UIView *bannerView;
 
 @end
 
@@ -100,6 +104,32 @@
     return _products;
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    if (self.bannerView){
+        [UIView animateWithDuration:0.25 animations:^{
+            self.bannerView.transform = CGAffineTransformMakeTranslation(0, 0);
+            [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 0, 0)];
+        }completion:^(BOOL finished){
+            self.bannerView.hidden = YES;
+            self.bannerView.transform = CGAffineTransformIdentity;
+        }];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (self.bannerView){
+        self.bannerView.hidden = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+            self.bannerView.transform = CGAffineTransformMakeTranslation(0, -70);
+            [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 40, 0)];
+        }completion:NULL];
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
@@ -136,6 +166,15 @@
     
     if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
         [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+    }
+    
+    if ([OLKitePrintSDK isKiosk]){
+        for (OLProduct *product in self.products){
+            if (product.productTemplate.printInStore || YES){
+                [self setupBannerView];
+                break;
+            }
+        }
     }
     
 #ifndef OL_NO_ANALYTICS
@@ -380,7 +419,103 @@
         }
     }
     
+    UIImageView *printInStoreIndicator = [cell.contentView viewWithTag:777];
+    if ([OLKitePrintSDK isKiosk] && product.productTemplate.printInStore){
+        if (!printInStoreIndicator){
+            printInStoreIndicator = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"availableintstore"]];
+            printInStoreIndicator.frame = CGRectMake(0, 0, 40, 40);
+            printInStoreIndicator.contentMode = UIViewContentModeCenter;
+            printInStoreIndicator.tag = 777;
+            printInStoreIndicator.backgroundColor = [product labelColor];
+            [cell.contentView addSubview:printInStoreIndicator];
+            
+            [printInStoreIndicator trailingToSuperview:20 relation:NSLayoutRelationEqual];
+            [printInStoreIndicator topFromSuperview:20 relation:NSLayoutRelationEqual];
+            [printInStoreIndicator widthConstraint:40];
+            [printInStoreIndicator heightConstraint:40];
+        }
+        
+        CGRect frame = printInStoreIndicator.frame;
+        [printInStoreIndicator makeRoundRectWithRadius:frame.size.height/2.0];
+        printInStoreIndicator.hidden = NO;
+    }
+    else{
+        [cell.contentView viewWithTag:777].hidden = YES;
+    }
+    
     return cell;
+}
+
+- (void)setupBannerView{
+    self.bannerView = [[UIView alloc] init];
+    UIView *bannerView = self.bannerView;
+    bannerView.backgroundColor = [UIColor colorWithRed:0.310 green:0.698 blue:0.886 alpha:1.000];
+    
+    bannerView.layer.shadowColor = [[UIColor blackColor] CGColor];
+    bannerView.layer.shadowOpacity = .3;
+    bannerView.layer.shadowOffset = CGSizeMake(0,-2);
+    bannerView.layer.shadowRadius = 2;
+    
+    UILabel *label = [[UILabel alloc] init];
+    [bannerView addSubview:label];
+    
+    [self.navigationController.view addSubview:bannerView];
+    
+    bannerView.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(bannerView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[bannerView]-0-|",
+                         @"V:[bannerView(40)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [bannerView.superview addConstraints:con];
+    
+    [self.navigationController.view addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.navigationController.view attribute:NSLayoutAttributeBottom multiplier:1 constant:70]];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"availableintstore"]];
+    imageView.contentMode = UIViewContentModeCenter;
+    [imageView makeRoundRectWithRadius:2];
+    imageView.backgroundColor = [UIColor colorWithRed:0.310 green:0.698 blue:0.886 alpha:1.000];
+    
+    [bannerView addSubview:imageView];
+    [bannerView addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:label attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [bannerView addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    
+    [bannerView addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationLessThanOrEqual toItem:imageView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0]];
+    [bannerView addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:label attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0]];
+    
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    views = NSDictionaryOfVariableBindings(label, imageView);
+    con = [[NSMutableArray alloc] init];
+    
+    visuals = @[@"H:[imageView(30)]-0-[label]",
+                @"V:|-0-[label]-0-|", @"V:[imageView(30)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [label.superview addConstraints:con];
+    
+    label.tag = 10;
+    label.minimumScaleFactor = 0.5;
+    label.adjustsFontSizeToFitWidth = YES;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.numberOfLines = 3;
+    label.textColor = [UIColor whiteColor];
+    label.font = [UIFont systemFontOfSize:15.5];
+    label.text = NSLocalizedString(@"*Printed in store in less than 20 minutes!", @"");
+    label.minimumScaleFactor = 0.5;
+    if ([label respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]){
+        label.allowsDefaultTighteningForTruncation = YES;
+    }
 }
 
 - (void)onButtonCallToActionTapped:(UIButton *)sender{
