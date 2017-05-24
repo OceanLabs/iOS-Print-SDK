@@ -34,6 +34,7 @@
 #import "OLKiteABTesting.h"
 #import "OLImageDownloader.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIImage+OLUtils.h"
 
 @interface OLKiteViewController ()
 - (void)startTimer;
@@ -52,6 +53,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     self.imageView = [[UIImageView alloc] init];
+    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     [self.view addSubview:self.imageView];
     [self.imageView fillSuperView];
     
@@ -90,20 +92,24 @@
         if ([OLKiteABTesting sharedInstance].theme.startScreenLandscape){
             [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLKiteABTesting sharedInstance].theme.startScreenLandscape withCompletionHandler:^(UIImage *image, NSError *error){
                 self.imageView.image = [UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp];
+                self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
             }];
         }
         else{
             self.imageView.image = [UIImage imageNamedInKiteBundle:@"kiosk-landing-landscape"];
+            self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
         }
     }
     else{
         if ([OLKiteABTesting sharedInstance].theme.startScreenPortrait){
             [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLKiteABTesting sharedInstance].theme.startScreenPortrait withCompletionHandler:^(UIImage *image, NSError *error){
                 self.imageView.image = [UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp];
+                self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
             }];
         }
         else{
             self.imageView.image = [UIImage imageNamedInKiteBundle:@"kiosk-landing-portrait"];
+            self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
         }
     }
 }

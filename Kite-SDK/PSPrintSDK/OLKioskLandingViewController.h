@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import <KiteSDK/KiteSDK.h>
+#import "OLViewController.h"
 
 @interface OLKioskLandingViewController : OLViewController
 
