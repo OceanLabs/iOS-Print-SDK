@@ -1309,6 +1309,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (IBAction)onShippingMethodGestureRecognized:(id)sender {
+    if (self.printOrder.jobs.count == 0){
+        return;
+    }
+    
     OLShippingMethodsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLShippingMethodsViewController"];
     [self.navigationController pushViewController:vc animated:YES];
 }
