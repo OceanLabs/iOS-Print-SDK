@@ -34,6 +34,8 @@
 
 @interface OLKiteViewController ()
 - (void)kioskLogout;
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
+- (void)startTimer;
 @end
 
 @interface OLLogoutViewController ()
@@ -92,8 +94,12 @@ static const NSInteger startTime = 60;
 }
 
 - (IBAction)cancelLogout:(id)sender {
+    UIViewController *vc = self.presentingViewController;
     [self.timer invalidate];
-    [self dismissViewControllerAnimated:YES completion:NULL];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:vc];
+        [[OLUserSession currentSession].kiteVc startTimer];
+    }];
 }
 
 @end
