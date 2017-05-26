@@ -170,7 +170,7 @@
     
     if ([OLKitePrintSDK isKiosk]){
         for (OLProduct *product in self.products){
-            if (product.productTemplate.printInStore || YES){
+            if (product.productTemplate.printInStore){
                 [self setupBannerView];
                 break;
             }
