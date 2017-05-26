@@ -42,6 +42,7 @@
 #import "OLUserSession.h"
 #import "OLImageDownloader.h"
 #import "OLKitePrintSDK.h"
+#import "UIView+AutoLayoutHelper.h"
 
 @interface OLPaymentViewController ()
 - (void)onBarButtonOrdersClicked;
@@ -59,6 +60,14 @@
 - (void)addBasketIconToTopRight{
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         return;
+    }
+    
+    UIColor *color;
+    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        color = [OLKiteABTesting sharedInstance].lightThemeColor1;
+    }
+    else{
+        color = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
     }
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
@@ -86,12 +95,7 @@
         qtyLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)count];
         qtyLabel.minimumScaleFactor = 0.5;
         qtyLabel.adjustsFontSizeToFitWidth = YES;
-        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
-            qtyLabel.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
-        }
-        else{
-            qtyLabel.backgroundColor = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
-        }
+        qtyLabel.backgroundColor = color;
         [qtyLabel makeRoundRectWithRadius:6.5];
         
         [basketButton addSubview:qtyLabel];
@@ -109,22 +113,17 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:basketButton];
     
     if ([OLKitePrintSDK isKiosk]){
-        UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 133.5, 32)];
-        UIButton *startAgain = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 133.5, 32)];
+        UIView *buttonView = [[UIView alloc] init];
+        [buttonView makeRoundRectWithRadius:2];
+        buttonView.backgroundColor = color;
+        UIButton *startAgain = [[UIButton alloc] init];
+        startAgain.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 20);
+        startAgain.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, -10);
+        [startAgain setTitle:NSLocalizedStringFromTableInBundle(@"End Session", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+        
         [buttonView addSubview:startAgain];
         startAgain.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(startAgain);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
         
-        NSArray *visuals = @[@"H:[startAgain(133.5)]",
-                             @"V:[startAgain(32)]"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [startAgain.superview addConstraints:con];
         [startAgain.superview addConstraint:[NSLayoutConstraint constraintWithItem:startAgain attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:startAgain.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
         [startAgain.superview addConstraint:[NSLayoutConstraint constraintWithItem:startAgain attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:startAgain.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
         
@@ -136,6 +135,10 @@
         else{
             [startAgain setImage:[UIImage imageNamedInKiteBundle:@"endsession"] forState:UIControlStateNormal];
         }
+        
+        [startAgain sizeToFit];
+        buttonView.frame = startAgain.frame;
+        
         [startAgain addTarget:self action:@selector(kioskLogoutButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         
         if (self.navigationItem.rightBarButtonItem){
