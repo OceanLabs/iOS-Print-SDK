@@ -64,6 +64,7 @@
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     UIButton *basketButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(6, 3, 44, 44)];
+    imageView.tag = 10;
     imageView.contentMode = UIViewContentModeRight;
     [basketButton addSubview:imageView];
     basketButton.frame = CGRectMake(0,0,50,50);
@@ -78,6 +79,7 @@
         }
         
         UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(37, 14, 13, 13)];
+        qtyLabel.tag = 20;
         qtyLabel.font = [UIFont systemFontOfSize:9];
         qtyLabel.textAlignment = NSTextAlignmentCenter;
         qtyLabel.textColor = [UIColor whiteColor];
