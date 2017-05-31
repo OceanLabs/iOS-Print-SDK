@@ -673,7 +673,7 @@ static NSString *nonNilStr(NSString *str) {
 
 + (void)trackImagePickerScreenHitBack:(NSString *)productName{
     NSString *eventName = kOLAnalyticsEventNameImagePickerScreenHitBack;
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @2}];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName ? productName : @"", kOLAnalyticsEventLevel : @2}];
 }
 
 + (void)trackPhotobookEditScreenHitBack:(NSString *)productName{
