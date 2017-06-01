@@ -126,18 +126,13 @@
         
         [startAgain.superview addConstraint:[NSLayoutConstraint constraintWithItem:startAgain attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:startAgain.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
         [startAgain.superview addConstraint:[NSLayoutConstraint constraintWithItem:startAgain attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:startAgain.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
-        
-        if ([OLKiteABTesting sharedInstance].theme.burgerMenuHeader){
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLKiteABTesting sharedInstance].theme.startScreenLandscape withCompletionHandler:^(UIImage *image, NSError *error){
-                [startAgain setImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] forState:UIControlStateNormal];
-            }];
-        }
-        else{
-            [startAgain setImage:[UIImage imageNamedInKiteBundle:@"endsession"] forState:UIControlStateNormal];
-        }
+        [startAgain setImage:[UIImage imageNamedInKiteBundle:@"endsession"] forState:UIControlStateNormal];
+        startAgain.tintColor = [UIColor whiteColor];
         
         [startAgain sizeToFit];
-        buttonView.frame = startAgain.frame;
+        CGRect frame = startAgain.frame;
+        frame.size.height = 32;
+        buttonView.frame = frame;
         
         [startAgain addTarget:self action:@selector(kioskLogoutButtonTapped) forControlEvents:UIControlEventTouchUpInside];
         
