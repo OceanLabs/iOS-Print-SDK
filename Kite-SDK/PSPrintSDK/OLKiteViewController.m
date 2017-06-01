@@ -590,6 +590,7 @@ static CGFloat fadeTime = 0.3;
         }
         [self.childViewControllers.firstObject removeFromParentViewController];
     }];
+    [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionAll];
     self.transitionOperation = [[NSBlockOperation alloc] init];
     [self transitionToNextScreen];
 }
