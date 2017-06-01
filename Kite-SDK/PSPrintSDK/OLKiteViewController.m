@@ -585,6 +585,9 @@ static CGFloat fadeTime = 0.3;
 
 - (void)kioskLogout{
     [self.presentedViewController dismissViewControllerAnimated:YES completion:^{
+        if (self.presentedViewController){
+            [self dismissViewControllerAnimated:NO completion:NULL];
+        }
         [self.childViewControllers.firstObject removeFromParentViewController];
     }];
     self.transitionOperation = [[NSBlockOperation alloc] init];
