@@ -1,3 +1,6 @@
+### 6.5.5
+- Fixed crash when reloading Kite
+
 ### 6.5.4
 - Fixed crash when reloading Kite
 

@@ -482,19 +482,15 @@ static CGFloat fadeTime = 0.3;
             if ([OLKiteABTesting sharedInstance].userConfig[@"theme"]){
                 __weak OLKiteViewController *welf = self;
                 [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
-                    if (![welf.remoteThemePlistSyncOperation isExecuting] && ![welf.remoteThemePlistSyncOperation isFinished]){
+                    if (!welf.remoteThemePlistSyncOperation.executing && !welf.remoteThemePlistSyncOperation.finished && ![self.operationQueue.operations containsObject:self.remoteThemePlistSyncOperation]){
                         [welf.remoteThemePlistSyncOperation addExecutionBlock:^{}];
-                    }
-                    if (![welf.remoteThemePlistSyncOperation isExecuting] && ![welf.remoteThemePlistSyncOperation isFinished]){
                         [welf.operationQueue addOperation:welf.remoteThemePlistSyncOperation];
                     }
                 }];
             }
             else{
-                if (!self.remoteThemePlistSyncOperation.executing && !self.remoteThemePlistSyncOperation.finished){
+                if (!self.remoteThemePlistSyncOperation.executing && !self.remoteThemePlistSyncOperation.finished && ![self.operationQueue.operations containsObject:self.remoteThemePlistSyncOperation]){
                     [self.remoteThemePlistSyncOperation addExecutionBlock:^{}];
-                }
-                if (!self.remoteThemePlistSyncOperation.executing && !self.remoteThemePlistSyncOperation.finished){
                     [self.operationQueue addOperation:self.remoteThemePlistSyncOperation];
                 }
             }
