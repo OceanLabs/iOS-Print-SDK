@@ -359,10 +359,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-    vc.userEmail = @"";
-    vc.userPhone = @"";
     vc.delegate = self;
-    vc.qrCodeUploadEnabled = YES;
 //    vc.filterProducts = @[@""];
     
     if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]){
