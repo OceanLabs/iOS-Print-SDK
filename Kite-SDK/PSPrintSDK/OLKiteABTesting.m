@@ -594,6 +594,9 @@ static dispatch_once_t srand48OnceToken;
 
 - (void)setupProgressiveTemplateLoadingTest{
     self.progressiveTemplateLoading = NO;
+    if ([OLKitePrintSDK isKiosk]){
+        return;
+    }
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProgressiveTemplateLoading];
     if (!experimentDict) {
         experimentDict = @{@"Yes" : @0, @"No" : @1};
