@@ -177,7 +177,7 @@ static CGFloat fadeTime = 0.3;
     [self addCustomPhotoProviderWithViewController:vc name:name icon:icon prepopulatedAssets:nil];
 }
 
-- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *> *_Nullable)assets{
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nullable)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *> *_Nullable)assets{
     OLCustomViewControllerPhotoProvider *customProvider = [[OLCustomViewControllerPhotoProvider alloc] initWithController:vc name:name icon:icon];
     [customProvider.collections.firstObject addAssets:assets unique:NO];
     customProvider.preselectedAssets = assets;
@@ -221,7 +221,9 @@ static CGFloat fadeTime = 0.3;
         [self.operationQueue addOperation:loadingHandlerOperation];
     }
     
-    [OLProductTemplate resetTemplates];
+    if (!self.preserveExistingTemplates){
+        [OLProductTemplate resetTemplates];
+    }
     
     if ([OLProductTemplate templates].count > 0){
         fadeTime = 0;
@@ -229,6 +231,7 @@ static CGFloat fadeTime = 0.3;
         
         [self.operationQueue addOperation:self.templateSyncOperation];
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
+        [self.operationQueue addOperation:self.remoteThemePlistSyncOperation];
     }
     else{
         __weak OLKiteViewController *welf = self;
@@ -310,6 +313,7 @@ static CGFloat fadeTime = 0.3;
         else if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
             BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[[OLUserSession currentSession].printOrder.jobs firstObject] assetsForUploading]];
             OLProduct *product = [OLProduct productWithTemplateId:[[[OLUserSession currentSession].printOrder.jobs firstObject] templateId]];
+            product.uuid = [[OLUserSession currentSession].printOrder.jobs firstObject].uuid;
             NSString *identifier;
             if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"] && [product isValidProductForUI]){
                 identifier = @"OLProductOverviewViewController";
@@ -481,17 +485,21 @@ static CGFloat fadeTime = 0.3;
         if (!self.remoteThemePlistSyncOperation.finished && ![self.operationQueue.operations containsObject:self.remoteThemePlistSyncOperation]){
             if ([OLKiteABTesting sharedInstance].userConfig[@"theme"]){
                 __weak OLKiteViewController *welf = self;
-                    [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
+                [[OLKiteABTesting sharedInstance] fetchRemotePlistsWithCompletionHandler:^{
+                    if (!welf.remoteThemePlistSyncOperation.executing && !welf.remoteThemePlistSyncOperation.finished && ![self.operationQueue.operations containsObject:self.remoteThemePlistSyncOperation]){
                         [welf.remoteThemePlistSyncOperation addExecutionBlock:^{}];
                         [welf.operationQueue addOperation:welf.remoteThemePlistSyncOperation];
-                    }];
+                    }
+                }];
             }
             else{
-                [self.remoteThemePlistSyncOperation addExecutionBlock:^{}];
-                [self.operationQueue addOperation:self.remoteThemePlistSyncOperation];
+                if (!self.remoteThemePlistSyncOperation.executing && !self.remoteThemePlistSyncOperation.finished && ![self.operationQueue.operations containsObject:self.remoteThemePlistSyncOperation]){
+                    [self.remoteThemePlistSyncOperation addExecutionBlock:^{}];
+                    [self.operationQueue addOperation:self.remoteThemePlistSyncOperation];
+                }
             }
         }
-        if (!self.templateSyncOperation.finished){
+        if (!self.templateSyncOperation.executing && !self.templateSyncOperation.finished){
             [self.operationQueue addOperation:self.templateSyncOperation];
         }
         
