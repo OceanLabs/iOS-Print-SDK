@@ -110,11 +110,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (NSString *)environment {
-    NSString *environment = @"Live";
-#ifdef PAYMENT_SANDBOX
-    environment = @"Development";
-#endif
-    return environment;
+    return [OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive ? @"Live" : @"Development";
 }
 
 + (void)addPushDeviceToken:(NSData *)deviceToken {
