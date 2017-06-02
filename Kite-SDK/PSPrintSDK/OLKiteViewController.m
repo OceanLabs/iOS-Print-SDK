@@ -569,7 +569,7 @@ static CGFloat fadeTime = 0.3;
     if (self.touchReporter){
         [self.touchReporter.superview bringSubviewToFront:self.touchReporter];
     }
-    NSInteger timeout = 30;//was 240;
+    NSInteger timeout = 240;
         NSLog(@"Auto log out in: %f",timeout+[self.lastTouchDate timeIntervalSinceNow]);
     if ([self.lastTouchDate timeIntervalSinceNow] <= -timeout) {
         [timer invalidate];
