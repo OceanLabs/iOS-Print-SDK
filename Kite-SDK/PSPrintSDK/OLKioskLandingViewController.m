@@ -50,6 +50,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionAll];
+    
     self.view.backgroundColor = [UIColor whiteColor];
     
     self.imageView = [[UIImageView alloc] init];
