@@ -1041,6 +1041,10 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupButton1{
+    if ([OLKiteUtils numberOfProvidersAvailable] == 0){
+        [self.editingTools.button1 removeFromSuperview];
+        return;
+    }
     [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"add-image-icon"] forState:UIControlStateNormal];
     self.editingTools.button1.tag = kOLEditTagImages;
     [self.editingTools.button1 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
