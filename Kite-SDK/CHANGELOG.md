@@ -8,12 +8,18 @@
 - Collage Posters are now limited to a single product at a time.
 - Adding more than the maximum amount of photos to a prints pack will create a second basket item.
 
+### 6.5.5
+- Fixed crash when reloading Kite
+
+### 6.5.4
+- Fixed crash when reloading Kite
+
 ### 6.5.3
-- Handle Print at Home delegate calls internally if OLKiteDelegate doesn’t handle them.
+- Handle Print at Home SDK delegate calls internally if OLKiteDelegate doesn’t handle them.
 - First release of the Unity plugin
 
 ### 6.5.2
-- Fixed: Xib file was not included in the resource bundle when installing via Cocoapods.
+- Fixed xib file not being including in the resource bundle when installing via Cocoapods.
 
 ### 6.5.1
 - Fixed: Submitting orders without UI.
