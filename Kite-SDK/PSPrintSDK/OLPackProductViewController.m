@@ -127,6 +127,9 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 - (void)addInfoBanner{
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools && ![OLKiteUtils imageProvidersAvailable]){
+        return;
+    }
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
         self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Change", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     }
@@ -633,11 +636,14 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     [cell.activityView startAnimating];
     
     cell.imageView.userInteractionEnabled = YES;
-    if (cell.imageView.gestureRecognizers.count == 0){
+    if (cell.imageView.gestureRecognizers.count == 0 && ![OLUserSession currentSession].kiteVc.disableEditingTools){
         [cell.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editPhoto:)]];
     }
     
     UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:11];
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        [editButton removeFromSuperview];
+    }
     [editButton addTarget:self action:@selector(editPhoto:) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor2){
         [editButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
