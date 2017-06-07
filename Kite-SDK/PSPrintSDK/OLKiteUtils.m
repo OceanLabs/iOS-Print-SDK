@@ -45,9 +45,9 @@
 
 @interface OLKitePrintSDK (Private)
 + (NSString *)appleMerchantID;
-+ (NSString *) instagramRedirectURI;
-+ (NSString *) instagramSecret;
-+ (NSString *) instagramClientID;
++ (NSString *)instagramRedirectURI;
++ (NSString *)instagramSecret;
++ (NSString *)instagramClientID;
 @end
 
 @implementation OLKiteUtils
@@ -133,7 +133,7 @@
 }
 
 +(BOOL)isApplePayAvailable{
-    if (![OLStripeWrapper isStripeAvailable]){
+    if (![OLStripeWrapper isStripeAvailable] || ![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""]){
         return NO;
     }
     
