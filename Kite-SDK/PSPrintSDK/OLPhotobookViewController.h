@@ -50,7 +50,7 @@
 @property (weak, nonatomic) OLArtboardView *coverImageView;
 
 - (void)loadCoverPhoto;
-- (void)saveJobWithCompletionHandler:(void(^)())handler;
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler;
 - (OLArtboardAssetView *)findAssetViewAtPoint:(CGPoint)point;
 - (void)photobookRefreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet;
 

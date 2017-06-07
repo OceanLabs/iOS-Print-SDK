@@ -364,7 +364,7 @@
     }];
 }
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler{
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     [self saveEditsToAsset:self.asset];
     
     OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject copy];
@@ -402,7 +402,7 @@
     }];
 }
 
-- (void)saveJobNowWithCompletionHandler:(void(^)())handler {
+- (void)saveJobNowWithCompletionHandler:(void(^)(void))handler {
     if (self.product.productTemplate.collectionName && self.product.productTemplate.collectionId){
         NSString *templateId = self.product.selectedOptions[self.product.productTemplate.collectionId];
         if (templateId){

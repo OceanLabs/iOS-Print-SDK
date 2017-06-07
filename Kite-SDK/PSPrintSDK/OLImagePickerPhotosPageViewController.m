@@ -226,6 +226,11 @@ CGFloat OLImagePickerMargin = 1.5;
     return previewVc;
 }
 
+- (void) previewingContext:(nonnull id<UIViewControllerPreviewing>)previewingContext commitViewController:(nonnull UIViewController *)viewControllerToCommit {
+    // Do nothing
+}
+
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.numberOfCellsPerRow = 0;
@@ -655,9 +660,9 @@ CGFloat OLImagePickerMargin = 1.5;
     }
     
     if ((self.provider.providerType == OLImagePickerProviderTypeInstagram || self.provider.providerType == OLImagePickerProviderTypeFacebook) && self.collectionView.contentInset.top == self.topInset){
-//        if (self.collectionView.contentSize.height < self.collectionView.frame.size.height - self.topInset){
-//            self.collectionView.contentSize = CGSizeMake(self.collectionView.contentSize.height, self.collectionView.frame.size.height - self.topInset);
-//        }
+        //        if (self.collectionView.contentSize.height < self.collectionView.frame.size.height - self.topInset){
+        //            self.collectionView.contentSize = CGSizeMake(self.collectionView.contentSize.height, self.collectionView.frame.size.height - self.topInset);
+        //        }
         
         self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 45, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
     }
@@ -788,9 +793,8 @@ CGFloat OLImagePickerMargin = 1.5;
         
         [self.imagePicker reloadPageController];
     }]];
-     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
     [self.imagePicker presentViewController:ac animated:YES completion:NULL];
 }
-
 
 @end

@@ -72,7 +72,7 @@ static CGFloat fadeTime = 0.3;
 @property (strong, nonatomic) NSBlockOperation *remoteThemePlistSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
 
-@property (copy, nonatomic) void (^loadingHandler)();
+@property (copy, nonatomic) void (^loadingHandler)(void);
 
 @end
 
@@ -193,7 +193,7 @@ static CGFloat fadeTime = 0.3;
     self.fontNames = fontNames;
 }
 
-- (void)startLoadingWithCompletionHandler:(void(^)())handler{
+- (void)startLoadingWithCompletionHandler:(void(^)(void))handler{
     if (!handler){
         return;
     }

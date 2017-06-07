@@ -38,6 +38,6 @@
 @property (assign, nonatomic) BOOL dragging;
 @property (assign, nonatomic) BOOL targeted;
 
-- (void)loadImageWithCompletionHandler:(void(^)())handler;
+- (void)loadImageWithCompletionHandler:(void(^)(void))handler;
 
 @end

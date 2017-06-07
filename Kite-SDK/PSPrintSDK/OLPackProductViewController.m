@@ -276,7 +276,7 @@
     return YES;
 }
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler{
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     [self preparePhotosForCheckout];
     
     NSUInteger userSelectedAssetCount = [OLAsset userSelectedAssets].count;
