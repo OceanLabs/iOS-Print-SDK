@@ -1041,7 +1041,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupButton1{
-    if ([OLKiteUtils imageProvidersAvailable]){
+    if (![OLKiteUtils imageProvidersAvailable]){
         [self.editingTools.button1 removeFromSuperview];
         return;
     }
