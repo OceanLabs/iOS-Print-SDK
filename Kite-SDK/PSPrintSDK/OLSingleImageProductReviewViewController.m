@@ -469,7 +469,7 @@
         else{
             [self saveJobWithCompletionHandler:^{
                 OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-                UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+                UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]]];
                 [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
                 [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
                 NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];

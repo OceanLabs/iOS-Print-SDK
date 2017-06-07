@@ -319,7 +319,7 @@ static CGFloat fadeTime = 0.3;
                 identifier = @"OLProductOverviewViewController";
             }
             else if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] && [product isValidProductForUI]){
-                identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:welf]];
+                identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
             }
             else{
                 [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
@@ -520,7 +520,7 @@ static CGFloat fadeTime = 0.3;
         return @"OLTypeSelectionViewController";
     }
     else if ([OLKiteABTesting sharedInstance].disableProductCategories && [OLKiteABTesting sharedInstance].skipProductOverview){
-        return [OLKiteUtils reviewViewControllerIdentifierForProduct:group.products.firstObject photoSelectionScreen:YES];
+        return [OLKiteUtils reviewViewControllerIdentifierForProduct:group.products.firstObject photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
     }
     else{
         return @"OLProductOverviewViewController";
