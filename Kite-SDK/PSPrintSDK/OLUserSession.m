@@ -113,8 +113,10 @@
     [self.recentPhotos removeAllObjects];
     
     for (OLImagePickerProvider *provider in self.kiteVc.customImageProviders){
-        for (OLImagePickerProviderCollection *collection in provider.collections){
-            [collection.array removeAllObjects];
+        if ([provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
+            for (OLImagePickerProviderCollection *collection in provider.collections){
+                [collection.array removeAllObjects];
+            }
         }
     }
 }
