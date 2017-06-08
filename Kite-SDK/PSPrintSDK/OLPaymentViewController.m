@@ -536,7 +536,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (void)costCalculationCompletedWithError:(NSError *)error {
-    if (!self.costCalculationOperation.finished){
+    if (!self.costCalculationOperation.finished && !self.costCalculationOperation.isExecuting && ![[NSOperationQueue mainQueue].operations containsObject:self.costCalculationOperation]){
         [[NSOperationQueue mainQueue] addOperation:self.costCalculationOperation];
     }
     
