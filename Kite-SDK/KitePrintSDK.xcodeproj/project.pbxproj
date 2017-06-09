@@ -222,6 +222,7 @@
 		2E451E9A1D9565D40080F1C1 /* OLKitePrintSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFB218635F170009DE03 /* OLKitePrintSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */; };
 		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
+		2E582DA51E714FDA00A6DF4E /* mug.scn in Resources */ = {isa = PBXBuildFile; fileRef = 2E582DA41E714FDA00A6DF4E /* mug.scn */; };
 		2E5B27331EC06A4700F3AED3 /* OLCollagePosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5B27311EC06A4700F3AED3 /* OLCollagePosterViewController.h */; };
 		2E5B27341EC06A4700F3AED3 /* OLCollagePosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5B27321EC06A4700F3AED3 /* OLCollagePosterViewController.m */; };
 		2E65A33D1E6438F500DBE418 /* JDStatusBarNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65A3381E6438F500DBE418 /* JDStatusBarNotification.m */; };
@@ -696,6 +697,7 @@
 		2E5259001A9C91DF00DBC69B /* OLSingleProductReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSingleProductReviewViewController.m; sourceTree = "<group>"; };
 		2E53E0CB1C1AEAAD00BF7887 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
 		2E53E0CC1C1AEAAD00BF7887 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
+		2E582DA41E714FDA00A6DF4E /* mug.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = mug.scn; sourceTree = "<group>"; };
 		2E5B27311EC06A4700F3AED3 /* OLCollagePosterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCollagePosterViewController.h; sourceTree = "<group>"; };
 		2E5B27321EC06A4700F3AED3 /* OLCollagePosterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCollagePosterViewController.m; sourceTree = "<group>"; };
 		2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloadDelegate.h; sourceTree = "<group>"; };
@@ -1516,6 +1518,13 @@
 				2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */,
 			);
 			name = "Unity Plugin";
+			sourceTree = "<group>";
+		};
+		2EDB7BE01E76E33B009B30F0 /* Docs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Docs;
 			sourceTree = "<group>";
 		};
 		2EE8CF111EA5F87100164AA6 /* Single */ = {
