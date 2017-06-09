@@ -1,5 +1,7 @@
+"%@ days" = "%@ days";
 "%ldx%ld Collage" = "%ldx%ld Kollagen";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "** Qualitätsgarantie ** \nUnsere Produkte sind von höchster Qualität und wir sind sicher, dass du sie lieben wirst. Wenn nicht, bieten wir eine Geld zurück Garantie. Viel Spaß beim Shoppen!";
+"1 day" = "1 day";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Unerlaubter Anforderungsfehler beim Versuch, eine Datei hochzuladen. Bitte überprüfe, ob du einen Autorisierungs-Header integriert hast und dass die mitgelieferten auth-Anmeldeinformationen korrekt sind.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Interner Server Fehler beim Hochladen. Bitte noch einmal probieren";
 "Add" = "Hinzufügen";
@@ -84,6 +86,7 @@
 "Fonts" = "Schriftarten";
 "For only %@ extra" = "Für nur 10 mehr";
 "FREE" = "KOSTENLOS";
+"From" = "From";
 "FRONT" = "VORDERSEITE";
 "Great gifts for all the family" = "Großartige Geschenke für die ganze Familie";
 "Image Is Too Small" = "Bild ist zu klein";
@@ -179,6 +182,7 @@
 "Search for Address" = "Nach Adresse suchen";
 "Select Size" = "Größe auswählen";
 "Shipping" = "Versand";
+"Shipping Method" = "Shipping Method";
 "Single Photo Poster" = "Einzelfoto Poster";
 "Size" = "Größe";
 "Small" = "Klein";
@@ -200,6 +204,7 @@
 "This is the 3-4 digit verification number/security code normally found on the back of your card" = "Dies ist die 3- oder 4- stellige Prüfnummer auf der Rückseite deiner Karte";
 "This will discard your edits." = "Das wird deine Änderungen verwerfen.";
 "Total" = "Summe";
+"Tracked" = "Tracked";
 "Uploading book" = "Buch hochladen";
 "Uploading Images \n%lu / %lu" = "Bilder hochladen \n%lu / %lu";
 "View Item" = "Artikel ansehen";

@@ -1,5 +1,7 @@
+"%@ days" = "%@ days";
 "%ldx%ld Collage" = "%ldx%ld Collage";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Garantie de Qualité**\nNos produits sont de la plus haute qualité et nous sommes certains que vous aimerez le vôtre. Sinon, nous offrons une garantie de remboursement. Profitez-en ! !";
+"1 day" = "1 day";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "Une erreur 401 Requête non autorisée est survenue durant le téléchargement. Veuillez réessayer.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "Une erreur 500 Serveur Interne est survenue durant le téléchargement. Veuillez réessayer.";
 "Add" = "Ajouter";
@@ -84,6 +86,7 @@
 "Fonts" = "Polices";
 "For only %@ extra" = "Pour seulement %@ de plus";
 "FREE" = "GRATUIT";
+"From" = "From";
 "FRONT" = "DEVANT";
 "Great gifts for all the family" = "Supers cadeaux pour toute la famille";
 "Image Is Too Small" = "La taille de l’image est insuffisante";
@@ -179,6 +182,7 @@
 "Search for Address" = "Rechercher une adresse";
 "Select Size" = "Choisis la taille";
 "Shipping" = "Livraison";
+"Shipping Method" = "Shipping Method";
 "Single Photo Poster" = "Affiche avec une seule photo";
 "Size" = "Taille";
 "Small" = "Petit";
@@ -200,6 +204,7 @@
 "This is the 3-4 digit verification number/security code normally found on the back of your card" = "Il s'agit du numéro de vérification / code de sécurité de 3 à 4 chiffres qui se trouve normalement au dos de votre carte";
 "This will discard your edits." = "Ceci annulera vos modifications.";
 "Total" = "Total";
+"Tracked" = "Tracked";
 "Uploading book" = "Chargement du livre";
 "Uploading Images \n%lu / %lu" = "Images en cours de téléchargement \n%lu / %lu";
 "View Item" = "Voir les éléments";
