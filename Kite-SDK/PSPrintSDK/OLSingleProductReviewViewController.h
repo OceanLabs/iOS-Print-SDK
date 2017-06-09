@@ -27,10 +27,20 @@
 //  THE SOFTWARE.
 //
 
-#import "OLPackProductViewController.h"
+#import <UIKit/UIKit.h>
 
-@interface OLFrameOrderReviewViewController : OLPackProductViewController <UICollectionViewDelegateFlowLayout>
+#import "OLKitePrintSDK.h"
+#import "OLImageEditViewController.h"
+#import "OLArtboardView.h"
 
-+ (void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
+@class OLProduct;
+
+@interface OLSingleProductReviewViewController : OLImageEditViewController
+
+@property (weak, nonatomic) UIView *hintView;
+@property (strong, nonatomic) id<OLPrintJob> editingPrintJob;
+
+- (void)saveJobWithCompletionHandler:(void(^)())handler;
+- (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body delay:(BOOL)shouldDelay;
 
 @end

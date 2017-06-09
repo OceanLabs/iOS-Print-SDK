@@ -50,6 +50,23 @@
     }
 }
 
+- (void)testQRCodeViewController{
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
+    XCTAssert(sb);
+    OLQRCodeUploadViewController *vc = (OLQRCodeUploadViewController *) [sb instantiateViewControllerWithIdentifier:@"OLQRCodeUploadViewController"];
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    [self performUIAction:^{
+        [rootVc presentViewController:nvc animated:YES completion:nil];
+    }];
+    
+    [self performUIAction:^{
+        [vc onBarButtonItemCancelTapped:nil];
+    }];
+}
+
 - (void)testProductDescriptionDrawer{
     OLProduct *product = [OLProduct productWithTemplateId:@"squares"];
     
@@ -221,11 +238,8 @@
         vc.promoCodeTextField.text = @"unit-test-promo-code-2014";
     }];
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:4 action:^{
         [vc onBackgroundClicked];
-    }];
-    
-    [self performUIAction:^{
     }];
     
     [self performUIAction:^{
@@ -314,6 +328,67 @@
     }];
     
     XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLPaymentViewController class]]);
+}
+
+- (void)testShippingMethodsViewController{
+    [OLKiteTestHelper mockTemplateRequest];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
+    [self templateSyncWithSuccessHandler:^{
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"i7_case" OLAssets:[OLKiteTestHelper urlAssets]];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    XCTAssert([printOrder.shippingAddress.description isEqualToString:@"Kite Team, Eastcastle House, 27-28 Eastcastle St, London, W1W 8DH, United Kingdom"]);
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
+    XCTAssert(sb);
+    
+    OLPaymentViewController *vc = [sb instantiateViewControllerWithIdentifier:@"OLPaymentViewController"];
+    vc.printOrder = printOrder;
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [vc onButtonAddPaymentMethodClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)vc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:2]];
+        
+        [paymentMethodsVc.navigationController popViewControllerAnimated:YES];
+    }];
+    
+    [self performUIAction:^{
+        [vc onShippingMethodGestureRecognized:nil];
+    }];
+    
+    [self performUIAction:^{
+        OLShippingMethodsViewController *shippingMethodsVc = (OLShippingMethodsViewController *)[(OLNavigationController *)vc.navigationController topViewController];
+        XCTAssert([shippingMethodsVc isKindOfClass:[OLShippingMethodsViewController class]], @"Did not show Shipping Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)shippingMethodsVc collectionView:shippingMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:1]];
+        
+        [shippingMethodsVc.navigationController popViewControllerAnimated:YES];
+        
+    }];
+    
+    [OLKiteTestHelper undoMockTemplateRequest];
 }
 
 - (void)testStartWithPrintOrderVariantCheckout{
@@ -984,8 +1059,16 @@
     OLEditPhotobookViewController *photobookEditVc = (OLEditPhotobookViewController *)productHomeVc.navigationController.topViewController;
     XCTAssert([photobookEditVc isKindOfClass:[OLEditPhotobookViewController class]]);
     
+    OLPhotobookViewController *photobook = photobookEditVc.childViewControllers[1];
+    OLArtboardView *artboard = [(OLPhotobookPageContentViewController *)photobook.pageController.viewControllers.firstObject artboardView];
+    
     [self performUIAction:^{
-        [photobookEditVc photobook:photobookEditVc.childViewControllers[1] userDidTapOnImageWithIndex:1];
+        for (UIGestureRecognizer *gesture in artboard.assetViews.firstObject.gestureRecognizers){
+            if ([gesture isKindOfClass:[UITapGestureRecognizer class]]){
+                [artboard handleTapGesture:(UITapGestureRecognizer *)gesture];
+                return;
+            }
+        }
     }];
     
     XCTAssert([[(UINavigationController *)photobookEditVc.presentedViewController topViewController] isKindOfClass:[OLImagePickerViewController class]], @"Did not show image picker");
@@ -994,6 +1077,7 @@
     
     [self performUIAction:^{
         OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
+        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:6 inSection:0]];
         [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:7 inSection:0]];
     }];
     
@@ -1001,33 +1085,67 @@
         [picker onButtonDoneTapped:nil];
     }];
     
+    OLAsset *asset1 = [OLAsset userSelectedAssets].nonPlaceholderAssets[0];
+    XCTAssert(asset1, @"Asset1 missing");
+    OLAsset *asset2 = [OLAsset userSelectedAssets].nonPlaceholderAssets[1];
+    XCTAssert(asset2, @"Asset2 missing");
+    
+    CGSize cellSize = [(id<UICollectionViewDelegateFlowLayout>)photobookEditVc.collectionView.delegate collectionView:photobookEditVc.collectionView layout:photobookEditVc.collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    [self performUIAction:^{
+        OLMockLongPressGestureRecognizer *mockLongPress = [[OLMockLongPressGestureRecognizer alloc] initWithTarget:artboard action:@selector(handleLongPressGesture:)];
+        mockLongPress.mockState = UIGestureRecognizerStateBegan;
+        [artboard.assetViews.firstObject addGestureRecognizer:mockLongPress];
+        
+        [artboard handleLongPressGesture:mockLongPress];
+    }];
+    
+    [self performUIAction:^{
+        OLMockPanGestureRecognizer *mockPan = [[OLMockPanGestureRecognizer alloc] initWithTarget:artboard action:@selector(handlePanGesture:)];
+        [artboard.assetViews.firstObject addGestureRecognizer:mockPan];
+        mockPan.mockState = UIGestureRecognizerStateChanged;
+        mockPan.mockTranslation = CGPointMake(cellSize.width / 3.0, cellSize.height);
+        
+        [artboard handlePanGesture:mockPan];
+    }];
+    
+    [self performUIAction:^{
+        OLMockLongPressGestureRecognizer *mockLongPress = [[OLMockLongPressGestureRecognizer alloc] initWithTarget:artboard action:@selector(handleLongPressGesture:)];
+        mockLongPress.mockState = UIGestureRecognizerStateEnded;
+        
+        [artboard handleLongPressGesture:mockLongPress];
+    }];
+    
+    XCTAssert([OLAsset userSelectedAssets].nonPlaceholderAssets[0] == asset2 && [OLAsset userSelectedAssets].nonPlaceholderAssets[1] == asset1, @"Did not move asset");
+    
     [self tapNextOnViewController:photobookEditVc];
     
-    OLPhotobookViewController *photobook = (OLPhotobookViewController *)productHomeVc.navigationController.topViewController;
+    photobook = (OLPhotobookViewController *)productHomeVc.navigationController.topViewController;
     
     [self performUIAction:^{
         [photobook openBook:nil];
     }];
     
-    OLTestTapGestureRecognizer *tap = [[OLTestTapGestureRecognizer alloc] init];
-    tap.customLocationInView = CGPointMake(photobook.view.frame.size.width-100, 100);
-    
     [self performUIAction:^{
-        [photobook onTapGestureRecognized:tap];
+        for (UIGestureRecognizer *gesture in artboard.assetViews.firstObject.gestureRecognizers){
+            if ([gesture isKindOfClass:[UITapGestureRecognizer class]]){
+                [artboard handleTapGesture:(UITapGestureRecognizer *)gesture];
+                return;
+            }
+        }
     }];
     
     picker = (OLImagePickerViewController *)[(UINavigationController *)[OLUserSession currentSession].kiteVc.presentedViewController topViewController];
     
     [self performUIAction:^{
         OLImagePickerPhotosPageViewController *pageVc = (OLImagePickerPhotosPageViewController *)picker.pageController.viewControllers.firstObject;
-        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:6 inSection:0]];
+        [pageVc collectionView:pageVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:5 inSection:0]];
     }];
     
     [self performUIAction:^{
         [picker onButtonDoneTapped:nil];
     }];
     
-    XCTAssert([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 2, @"Did not pick 2 images");
+    XCTAssert([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 3, @"Did not pick an image");
 }
 
 - (void)testCountryPicker{
@@ -1074,7 +1192,7 @@
 
 #pragma mark Failing requests
 
--(void)testFailedTemplateSync{
+- (void)testFailedTemplateSync{
     [OLKiteTestHelper mockTemplateServerErrorRequest];
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]]]];

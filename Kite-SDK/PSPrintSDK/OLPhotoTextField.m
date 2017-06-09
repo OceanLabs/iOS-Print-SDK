@@ -184,7 +184,7 @@
     [self setNeedsDisplay];
 }
 
--(void)drawRect:(CGRect)rect
+- (void)drawRect:(CGRect)rect
 {
     if (self.borderLayer){
         [self.borderLayer removeFromSuperlayer];

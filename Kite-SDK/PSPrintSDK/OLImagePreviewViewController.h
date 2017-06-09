@@ -28,7 +28,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
 
 @class OLAsset;
 

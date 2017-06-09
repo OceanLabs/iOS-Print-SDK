@@ -160,63 +160,6 @@ static BOOL partial = NO;
     return self.costsByCurrencyCode[currencyCode];
 }
 
-- (NSDecimalNumber *)shippingCostForCountry:(OLCountry *)country{
-    NSString *currencyCode = [self currencyForCurrentLocale];
-    
-    if ([[self.shippingCosts allKeys] containsObject:country.codeAlpha3]){
-        NSString *cost = self.shippingCosts[country.codeAlpha3][currencyCode][@"amount"];
-        return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
-    }
-    else if (country.isInEurope){
-        NSString *cost = self.shippingCosts[@"europe"][currencyCode][@"amount"];
-        return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
-    }
-    else{
-        NSString *cost = self.shippingCosts[@"rest_of_world"][currencyCode][@"amount"];
-        return cost? [NSDecimalNumber decimalNumberWithString:cost] : nil;
-    }
-}
-
-- (NSDecimalNumber *)originalShippingCostForCountry:(OLCountry *)country{
-    NSString *currencyCode = [self currencyForCurrentLocale];
-    
-    if ([[self.shippingCosts allKeys] containsObject:country.codeAlpha3]){
-        NSString *cost = self.shippingCosts[country.codeAlpha3][currencyCode][@"original_amount"];
-        return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
-    }
-    else if (country.isInEurope){
-        NSString *cost = self.shippingCosts[@"europe"][currencyCode][@"original_amount"];
-        return cost ? [NSDecimalNumber decimalNumberWithString:cost] : nil;
-    }
-    else{
-        NSString *cost = self.shippingCosts[@"rest_of_world"][currencyCode][@"original_amount"];
-        return cost? [NSDecimalNumber decimalNumberWithString:cost] : nil;
-    }
-}
-
-- (NSString *)currencyForCurrentLocale {
-    NSString *code = [OLCountry countryForCurrentLocale].currencyCode;
-    if ([self.currenciesSupported containsObject:code]) {
-        return code;
-    }
-    
-    if ([self.currenciesSupported containsObject:@"USD"]) {
-        return @"USD";
-    }
-    
-    if ([self.currenciesSupported containsObject:@"GBP"]) {
-        return @"GBP";
-    }
-    
-    if ([self.currenciesSupported containsObject:@"EUR"]) {
-        return @"EUR";
-    }
-    
-    NSAssert(self.currenciesSupported.count > 0, @"This template has no costs associated with it.");
-    code = self.currenciesSupported[0]; // return the first currency supported if the user hasn't specified one explicitly
-    return code;
-}
-
 - (NSArray *)currenciesSupported {
     return self.costsByCurrencyCode.allKeys;
 }
@@ -356,7 +299,6 @@ static BOOL partial = NO;
     [aCoder encodeObject:self.productDescription forKey:kkeyDescription];
     [aCoder encodeObject:self.productDescriptionMarkdown forKey:kkeyDescriptionMarkdown];
     [aCoder encodeObject:self.classPhotoURL forKey:kKeyClassPhotoURL];
-    [aCoder encodeObject:self.shippingCosts forKey:kKeyShippingCosts];
     [aCoder encodeInteger:self.gridCountX forKey:kKeyGridCountX];
     [aCoder encodeInteger:self.gridCountY forKey:kKeyGridCountY];
     [aCoder encodeObject:self.supportedOptions forKey:kKeySupportedOptions];
@@ -368,6 +310,8 @@ static BOOL partial = NO;
     [aCoder encodeObject:self.logo forKey:kKeyLogo];
     [aCoder encodeObject:self.fulfilmentItems forKey:kKeyFulfilmentItems];
     [aCoder encodeBool:self.supportsTextOnBorder forKey:kKeySupportsTextOnBorder];
+    [aCoder encodeObject:self.shippingClasses forKey:@"shippingClasses"];
+    [aCoder encodeObject:self.countryMapping forKey:@"countryMapping"];
 }
 
 - (NSString *)description{
@@ -400,7 +344,6 @@ static BOOL partial = NO;
         _classPhotoURL = [aDecoder decodeObjectForKey:kKeyClassPhotoURL];
         _productDescription = [aDecoder decodeObjectForKey:kkeyDescription];
         _productDescriptionMarkdown = [aDecoder decodeObjectForKey:kkeyDescriptionMarkdown];
-        _shippingCosts = [aDecoder decodeObjectForKey:kKeyShippingCosts];
         _gridCountX = [aDecoder decodeIntegerForKey:kKeyGridCountX];
         _gridCountY = [aDecoder decodeIntegerForKey:kKeyGridCountY];
         self.supportedOptions = [aDecoder decodeObjectForKey:kKeySupportedOptions];
@@ -412,6 +355,8 @@ static BOOL partial = NO;
         self.logo = [aDecoder decodeObjectForKey:kKeyLogo];
         self.fulfilmentItems = [aDecoder decodeObjectForKey:kKeyFulfilmentItems];
         self.supportsTextOnBorder = [aDecoder decodeBoolForKey:kKeySupportsTextOnBorder];
+        self.shippingClasses = [aDecoder decodeObjectForKey:@"shippingClasses"];
+        self.countryMapping = [aDecoder decodeObjectForKey:@"countryMapping"];
     }
     
     return self;

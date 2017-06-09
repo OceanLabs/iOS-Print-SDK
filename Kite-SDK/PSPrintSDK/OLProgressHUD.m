@@ -1180,7 +1180,7 @@ static const CGFloat OLProgressHUDUndefinedProgress = -1;
     if (!_isInitializing) _defaultMaskType = maskType;
 }
 
--(void)setDefaultAnimationType:(OLProgressHUDAnimationType)animationType {
+- (void)setDefaultAnimationType:(OLProgressHUDAnimationType)animationType {
     if (!_isInitializing) _defaultAnimationType = animationType;
 }
 

@@ -29,7 +29,7 @@
 
 #import "OLImageDownloader.h"
 #import "OLCaseViewController.h"
-#import "OLRemoteImageCropper.h"
+#import "OLImageCropper.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImage+OLUtils.h"
 #import "OLUserSession.h"
@@ -62,7 +62,7 @@
 - (void)saveOrder;
 @end
 
-@interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
+@interface OLSingleProductReviewViewController (Private) <UITextFieldDelegate>
 
 - (BOOL)shouldDoCheckout;
 - (UIEdgeInsets)imageInsetsOnContainer;
@@ -76,7 +76,6 @@
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
 @property (assign, nonatomic) BOOL showingBack;
 @property (assign, nonatomic) CGAffineTransform backupTransform;
-@property (nonatomic, copy) void (^saveJobCompletionHandler)();
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
 @property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
@@ -125,11 +124,11 @@
     [super viewDidLoad];
     
     if ([self isUsingMultiplyBlend]){
-        [self.cropView setGesturesEnabled:NO];
+        [self.artboard.assetViews.firstObject setGesturesEnabled:NO];
     }
     
     if (self.product.productTemplate.fulfilmentItems.count > 1){
-        self.cropView.backgroundColor = [UIColor clearColor];
+        self.artboard.backgroundColor = [UIColor clearColor];
         
         self.productFlipButton = [[UIButton alloc] init];
         [self.view addSubview:self.productFlipButton];
@@ -148,7 +147,7 @@
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
     
     self.caseVisualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    [self.printContainerView insertSubview:self.caseVisualEffectView aboveSubview:self.cropView];
+    [self.printContainerView insertSubview:self.caseVisualEffectView aboveSubview:self.artboard];
     
     [self.caseVisualEffectView fillSuperView];
     
@@ -302,20 +301,20 @@
     }
 }
 
--(void)viewWillAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
     if (!self.downloadedMask && self.product.productTemplate.maskImageURL){
         UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];
-        [self.cropView removeConstraint:self.aspectRatioConstraint];
-        NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
-        [self.cropView addConstraints:@[con]];
+        [self.artboard removeConstraint:self.aspectRatioConstraint];
+        NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.artboard attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeWidth multiplier:tempMask.size.height / tempMask.size.width constant:0];
+        [self.artboard addConstraints:@[con]];
         self.aspectRatioConstraint = con;
         
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
         
-        [self maskWithImage:tempMask targetView:self.cropView];
+        [self maskWithImage:tempMask targetView:self.artboard];
         
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     }
@@ -368,7 +367,7 @@
 - (void)saveJobWithCompletionHandler:(void(^)())handler{
     [self saveEditsToAsset:self.asset];
     
-    OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.lastObject copy];
+    OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject copy];
     OLAsset *backAsset = [self.backAsset copy];
     if (!asset){
         asset = backAsset;
@@ -414,7 +413,7 @@
         }
     }
     
-    OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.lastObject copy];
+    OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject copy];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[asset]];
@@ -439,8 +438,6 @@
     if (handler){
         handler();
     }
-    
-    self.saveJobCompletionHandler = nil;
 }
 
 - (UIColor *)containerBackgroundColor{
@@ -450,7 +447,7 @@
 - (void)orderViews{
     [self.view bringSubviewToFront:self.deviceView];
     [self.view bringSubviewToFront:self.printContainerView];
-    [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.artboard];
     [self.view bringSubviewToFront:self.textFieldsView];
     
     if (![self isUsingMultiplyBlend]){
@@ -489,7 +486,7 @@
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context){
         [self.view layoutIfNeeded];
-        [self maskWithImage:self.maskImage targetView:self.cropView];
+        [self maskWithImage:self.maskImage targetView:self.artboard];
     }completion:^(id <UIViewControllerTransitionCoordinatorContext> context){}];
 }
 
@@ -511,17 +508,17 @@
                 }]];
                 [self presentViewController:ac animated:YES completion:NULL];
             } else {
-                [self.cropView removeConstraint:self.aspectRatioConstraint];
-                NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.cropView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.cropView attribute:NSLayoutAttributeWidth multiplier:[self aspectRatio] constant:0];
-                [self.cropView addConstraints:@[con]];
+                [self.artboard removeConstraint:self.aspectRatioConstraint];
+                NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.artboard attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.artboard attribute:NSLayoutAttributeWidth multiplier:[self aspectRatio] constant:0];
+                [self.artboard addConstraints:@[con]];
                 
                 [self.view setNeedsLayout];
                 [self.view layoutIfNeeded];
                 
-                self.cropView.imageView.transform = self.edits.cropTransform;
+                self.artboard.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
                 
                 self.maskImage = [image shrinkToSize:[UIScreen mainScreen].bounds.size forScreenScale:[OLUserSession currentSession].screenScale];
-                [self maskWithImage:self.maskImage targetView:self.cropView];
+                [self maskWithImage:self.maskImage targetView:self.artboard];
                 
                 [self applyProductImageLayers];
                 
@@ -545,7 +542,7 @@
     }
 }
 
--(void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
+- (void) maskWithImage:(UIImage*) maskImage targetView:(UIView*) targetView{
     if (!maskImage){
         [targetView.layer.mask removeFromSuperlayer];
         targetView.layer.mask = nil;
@@ -575,7 +572,7 @@
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
-    self.backupTransform = self.cropView.imageView.transform;
+    self.backupTransform = self.artboard.assetViews.firstObject.imageView.transform;
     self.editingTools.drawerDoneButton.hidden = YES;
     self.editingTools.halfWidthDrawerDoneButton.hidden = NO;
     self.editingTools.halfWidthDrawerCancelButton.hidden = NO;
@@ -583,7 +580,7 @@
     self.productFlipButton.enabled = NO;
     
     if ([self isUsingMultiplyBlend]){
-        [self.cropView setGesturesEnabled:YES];
+        [self.artboard.assetViews.firstObject setGesturesEnabled:YES];
     }
     self.gestureView.userInteractionEnabled = YES;
     [self disableOverlay];
@@ -611,15 +608,15 @@
         [self.editingTools.collectionView reloadData];
         [self showDrawerWithCompletionHandler:NULL];
     } completion:^(BOOL finished){
-        self.cropView.clipsToBounds = NO;
-        [self maskWithImage:nil targetView:self.cropView];
-        [self.view sendSubviewToBack:self.cropView];
+        self.artboard.clipsToBounds = NO;
+        [self maskWithImage:nil targetView:self.artboard];
+        [self.view sendSubviewToBack:self.artboard];
     }];
 }
 
 - (void)exitCropMode{
-    self.cropView.clipsToBounds = YES;
-    [self maskWithImage:self.maskImage targetView:self.cropView];
+    self.artboard.clipsToBounds = YES;
+    [self maskWithImage:self.maskImage targetView:self.artboard];
     [self orderViews];
     for (UIView *view in self.cropFrameGuideViews){
         [self.printContainerView bringSubviewToFront:view];
@@ -637,14 +634,14 @@
     } completion:^(BOOL finished){
         [self renderImage];
         if ([self isUsingMultiplyBlend]){
-            [self.cropView setGesturesEnabled:NO];
+            [self.artboard.assetViews.firstObject setGesturesEnabled:NO];
         }
     }];
 }
 
 - (void)showExtraChargeHint{
     if (self.product.productTemplate.fulfilmentItems.count > 1){
-        if ((self.showingBack && [OLAsset userSelectedAssets].nonPlaceholderAssets.lastObject && !self.backAsset) || (!self.showingBack && self.backAsset && ![OLAsset userSelectedAssets].nonPlaceholderAssets.lastObject)){
+        if ((self.showingBack && [OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject && !self.backAsset) || (!self.showingBack && self.backAsset && ![OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject)){
             for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
                 if (((([item.identifier isEqualToString:@"center_back"] || [item.identifier isEqualToString:@"back_image"]) && self.showingBack) || (([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]) && !self.showingBack)) && [item hasCostForCurrency:[self.product currencyCode]]){
                     [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Add a photo\non this side", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"this side [of the shirt]") body:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"For only %@ extra", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"[Add a photo on this side of the shirt] for only $4.00 extra"), [[item costForCurrency:self.product.currencyCode] formatCostForCurrencyCode:self.product.currencyCode]] delay:NO];
@@ -671,7 +668,7 @@
         self.asset = self.backAsset;
     }
     else{
-        self.asset = [OLAsset userSelectedAssets].nonPlaceholderAssets.lastObject;
+        self.asset = [OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject;
     }
     
     
@@ -685,7 +682,7 @@
         [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
             [self disableOverlay];
             
-            self.cropView.imageView.image = nil;
+            self.artboard.assetViews.firstObject.imageView.image = nil;
             self.edits = nil;
             self.fullImage = nil;
             
@@ -739,7 +736,7 @@
 }
 
 
--(void) doCheckout{
+- (void) doCheckout{
     if (!self.downloadedMask && self.product.productTemplate.maskImageURL) {
         return;
     }
@@ -778,7 +775,7 @@
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    OLAsset *asset = addedAssets.lastObject;
+    OLAsset *asset = addedAssets.firstObject;
     if (self.showingBack){
         self.backAsset = asset;
     }

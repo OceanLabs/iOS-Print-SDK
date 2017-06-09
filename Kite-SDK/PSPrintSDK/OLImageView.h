@@ -29,16 +29,13 @@
 
 #import <UIKit/UIKit.h>
 
-#import "OLKitePrintSDK.h"
-#import "OLImageEditViewController.h"
+@protocol OLImageViewDelegate <NSObject>
 
-@class OLProduct;
+@end
 
-@interface OLSingleImageProductReviewViewController : OLImageEditViewController
+@interface OLImageView : UIImageView
 
-@property (weak, nonatomic) IBOutlet UIView *hintView;
-
-- (void)saveJobWithCompletionHandler:(void(^)())handler;
-- (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body delay:(BOOL)shouldDelay;
+- (void)setProgress:(float)progress;
+@property (weak, nonatomic) id<OLImageViewDelegate> delegate;
 
 @end

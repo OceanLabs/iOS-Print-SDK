@@ -28,10 +28,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLRemoteImageCropper.h"
+#import "OLImageCropper.h"
 #import "OLViewController.h"
 #import "OLEditingToolsView.h"
 #import "OLProduct.h"
+#import "OLArtboardView.h"
 
 @class OLImageEditViewController;
 @class OLPhotoEdits;
@@ -69,7 +70,7 @@ extern const NSInteger kOLEditTagCrop;
 @property (strong, nonatomic) OLAsset *asset;
 @property (strong, nonatomic) OLEditingToolsView *editingTools;
 @property (strong, nonatomic) OLProduct *product;
-@property (strong, nonatomic) OLRemoteImageCropper *cropView;
+@property (strong, nonatomic) OLArtboardView *artboard;
 @property (strong, nonatomic) UIImage *fullImage;
 @property (strong, nonatomic) UIImageView *deviceView;
 @property (strong, nonatomic) UIImageView *highlightsView;

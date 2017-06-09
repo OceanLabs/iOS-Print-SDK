@@ -48,7 +48,6 @@
 - (NSURL *)productBackgroundURL;
 - (NSURL *)productHighlightsURL;
 - (void)onButtonDoneTapped:(id)sender;
-@property (nonatomic, copy) void (^saveJobCompletionHandler)();
 @property (strong, nonatomic) OLAsset *backAsset;
 @end
 
@@ -108,7 +107,7 @@
         }
     }
     
-    OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.lastObject copy];
+    OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject copy];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLProductPrintJob *job;
@@ -151,9 +150,7 @@
     
     if (handler){
         handler();
-    }
-    
-    self.saveJobCompletionHandler = nil;
+    }    
 }
 
 - (void)setupButton4{

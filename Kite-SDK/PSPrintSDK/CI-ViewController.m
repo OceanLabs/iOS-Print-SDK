@@ -66,7 +66,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 @implementation CIViewController
 
--(void)viewDidAppear:(BOOL)animated{
+- (void)viewDidAppear:(BOOL)animated{
     self.printOrder = [[OLPrintOrder alloc] init];
     
     if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties]){
@@ -81,7 +81,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [OLKitePrintSDK setInstagramEnabledWithClientID:@"1af4c208cbdc4d09bbe251704990638f" secret:@"c8a5b1b1806f4586afad2f277cee1d5c" redirectURI:@"kitely://instagram-callback"];
+    [OLKitePrintSDK setInstagramEnabledWithClientID:@"1af4c208cbdc4d09bbe251704990638f" secret:@"c8a5b1b1806f4586afad2f277cee1d5c" redirectURI:@"https://kite.ly/instagram-callback"];
     
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
@@ -354,9 +354,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
-    if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"]){
-        s = [(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"];
-    }
     [OLKitePrintSDK setAPIKey:s withEnvironment:[self environment]];
     
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
@@ -367,7 +364,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     vc.userPhone = @"";
     vc.delegate = self;
     vc.qrCodeUploadEnabled = YES;
-//    vc.filterProducts = @[@""];
     
     if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]){
         vc.filterProducts = @[[(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]];

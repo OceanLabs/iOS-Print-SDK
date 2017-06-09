@@ -27,10 +27,17 @@
 //  THE SOFTWARE.
 //
 
-#import "OLPackProductViewController.h"
+#import "OLImageCropper.h"
+#import "OLImageView.h"
 
-@interface OLFrameOrderReviewViewController : OLPackProductViewController <UICollectionViewDelegateFlowLayout>
+@interface OLImageCropper ()
 
-+ (void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
+@end
+
+@implementation OLImageCropper
+
+- (void)setProgress:(float)progress{
+    [self.imageView setProgress:progress];
+}
 
 @end

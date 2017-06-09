@@ -30,7 +30,6 @@
 #import "OLQRCodeUploadViewController.h"
 #import "OLQRCodeUploadedImagePoller.h"
 #import "OLURLShortener.h"
-#import "UIImage+MDQRCode.h"
 #import "OLKiteUtils.h"
 
 @interface OLQRCodeUploadViewController ()
@@ -56,7 +55,7 @@
     self.alternateInstructionsLabel.text = NSLocalizedStringFromTableInBundle(@"Alternatively type the following URL into your mobile browser's address bar", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
     NSString *uuid = [[NSUUID UUID] UUIDString];;
-    NSString *uploadURL = [NSString stringWithFormat:@"http://api.kite.ly/public_upload/%@", uuid];
+    NSString *uploadURL = [NSString stringWithFormat:@"https://api.kite.ly/public_upload/%@", uuid];
     NSString *downloadURL = [NSString stringWithFormat:@"https://s3-eu-west-1.amazonaws.com/co.oceanlabs.ps/kiosk/%@.jpeg", uuid];
     
     self.urlShortner = [[OLURLShortener alloc] init];
@@ -81,7 +80,7 @@
                 self.urlLabel.text = shortenedURL;
             }
             
-            self.qrCodeImageView.image = [UIImage mdQRCodeForString:uploadURL size:self.qrCodeImageView.bounds.size.width fillColor:[UIColor blackColor]];
+            self.qrCodeImageView.image = [self generateQRCodeImage:uploadURL];
             self.imagePoller = [[OLQRCodeUploadedImagePoller alloc] init];
             [self.imagePoller startPollingImageURL:[NSURL URLWithString:downloadURL] onImageDownloadProgress:^(NSInteger receivedSize, NSInteger expectedSize) {
                 if (self.downloadProgressView.hidden) {
@@ -99,6 +98,15 @@
             }];
         }
     }];
+}
+
+- (UIImage *)generateQRCodeImage:(NSString *)input{
+    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    [filter setValue:[input dataUsingEncoding:NSISOLatin1StringEncoding allowLossyConversion:NO] forKey:@"inputMessage"];
+    
+    CGAffineTransform transform = CGAffineTransformMakeScale(12, 12);
+    UIImage *image = [UIImage imageWithCIImage:[filter.outputImage imageByApplyingTransform: transform]];
+    return image;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{

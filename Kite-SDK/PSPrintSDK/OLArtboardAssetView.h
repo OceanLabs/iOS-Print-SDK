@@ -26,16 +26,18 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
-
 #import <UIKit/UIKit.h>
-#import "OLRemoteImageView.h"
+#import "OLImageCropper.h"
 
-@protocol OLImageViewDelegate <NSObject>
+@class OLAsset;
 
-@end
+@interface OLArtboardAssetView : OLImageCropper
 
-@interface OLPopupOptionsImageView : OLRemoteImageView
+@property (assign, nonatomic) NSUInteger index;
+@property (assign, nonatomic) CGRect relativeFrame;
+@property (assign, nonatomic) BOOL dragging;
+@property (assign, nonatomic) BOOL targeted;
 
-@property (weak, nonatomic) id<OLImageViewDelegate> delegate;
+- (void)loadImageWithCompletionHandler:(void(^)())handler;
 
 @end

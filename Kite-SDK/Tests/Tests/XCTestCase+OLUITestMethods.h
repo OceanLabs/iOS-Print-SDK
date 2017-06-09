@@ -38,7 +38,6 @@
 #import "OLImagePickerPhotosPageViewController.h"
 #import "OLButtonCollectionViewCell.h"
 #import "OLPhotoTextField.h"
-#import "OLPosterViewController.h"
 #import "OLBaseRequest.h"
 #import "OLImagePickerLoginPageViewController.h"
 #import "OLMockPanGestureRecognizer.h"
@@ -47,7 +46,12 @@
 #import "OLAddressSelectionViewController.h"
 #import "OLKiteViewController+Private.h"
 #import "OLAsset+Private.h"
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
+#import "OLCollagePosterViewController.h"
+#import "OLPhotobookPageContentViewController.h"
+#import "OLQRCodeUploadViewController.h"
+#import "OLShippingMethodsViewController.h"
+#import "OLMockLongPressGestureRecognizer.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;
@@ -60,6 +64,12 @@
 - (void)tapNextOnViewController:(UIViewController *)vc;
 - (void)tearDownHelper;
 - (void)templateSyncWithSuccessHandler:(void(^)())handler;
+@end
+
+@interface OLArtboardView ()
+- (void)handleTapGesture:(UITapGestureRecognizer *)sender;
+- (void)handleLongPressGesture:(UILongPressGestureRecognizer *)sender;
+- (void)handlePanGesture:(UIPanGestureRecognizer *)sender;
 @end
 
 @interface UIViewController ()
@@ -110,16 +120,8 @@
 - (void) deletePhotoAtIndex:(NSUInteger)index;
 @end
 
-@interface OLEditPhotobookViewController ()
-- (void)photobook:(OLPhotobookViewController *)photobook userDidTapOnImageWithIndex:(NSInteger)tappedImageIndex;
-- (void)deletePage;
-- (void)editImage;
-@end
-
 @interface OLPhotobookViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
-- (void)onTapGestureRecognized:(UITapGestureRecognizer *)sender;
-- (void)onCoverTapRecognized:(UITapGestureRecognizer *)sender;
 - (void)onPanGestureRecognized:(UIPanGestureRecognizer *)recognizer;
 - (void)openBook:(UIGestureRecognizer *)sender;
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
@@ -157,6 +159,7 @@
 - (void)payPalPaymentDidCancel:(id)paymentViewController;
 - (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method;
 - (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment paymentMethod:(NSString *)paymentMethod completion:(id)handler;
+- (IBAction)onShippingMethodGestureRecognized:(id)sender;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
@@ -190,6 +193,10 @@
 @end
 
 @interface OLPaymentMethodsViewController ()
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@end
+
+@interface OLShippingMethodsViewController ()
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @end
 

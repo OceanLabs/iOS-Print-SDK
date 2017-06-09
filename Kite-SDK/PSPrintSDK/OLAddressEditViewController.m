@@ -145,7 +145,7 @@ static const NSUInteger kTagTextField = 99;
     }
 }
 
--(BOOL)isValidAddress{
+- (BOOL)isValidAddress{
     BOOL flag = YES;
     NSString *errorMessage;
     if ([self.textFieldFirstName.text isEqualToString:@""] || [self.textFieldLastName.text isEqualToString:@""]){

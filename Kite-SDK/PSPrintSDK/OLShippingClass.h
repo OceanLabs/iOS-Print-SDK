@@ -27,10 +27,16 @@
 //  THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-@interface OLRemoteImageView : UIImageView 
+@interface OLShippingClass : NSObject <NSCoding>
 
-- (void)setProgress:(float)progress;
+@property (strong, nonatomic) NSString *displayName;
+@property (strong, nonatomic) NSNumber *minDeliveryTime;
+@property (strong, nonatomic) NSNumber *maxDeliveryTime;
+@property (assign, nonatomic) NSInteger identifier;
+@property (assign, nonatomic) BOOL tracked;
+@property (strong, nonatomic) NSString *className;
+@property (strong, nonatomic) NSDictionary<NSString *, NSNumber *> *costs;
 
 @end

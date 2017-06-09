@@ -511,7 +511,7 @@ static NSBlockOperation *templateSyncOperation;
     }
     
     for (id<OLPrintJob> printJob in self.jobs) {
-        [jobs addObject:[printJob jsonRepresentation]];
+        [jobs addObject:[[printJob jsonRepresentation] mutableCopy]];
     }
     
     if (self.phone){
@@ -621,6 +621,139 @@ static NSBlockOperation *templateSyncOperation;
         
     }
     return NO;
+}
+
+- (NSArray<OLShippingClass *> *)shippingMethodsForJobs:(NSArray<id<OLPrintJob>>*)jobs;{
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    NSMutableArray *common = [[NSMutableArray alloc] init];
+    
+    OLProductTemplate *firstJobTemplate = [OLProductTemplate templateWithId:jobs.firstObject.templateId];
+    
+    NSString *firstJobRegion = firstJobTemplate.countryMapping[countryCode];
+    if (!firstJobRegion){
+        return common;
+    }
+    for (OLShippingClass *firstJobShippingClass in firstJobTemplate.shippingClasses[firstJobRegion]){
+        BOOL commonInAllJobs = YES;
+        for (id<OLPrintJob> job in jobs){
+            BOOL foundInJob = NO;
+            OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+            NSString *region = template.countryMapping[countryCode];
+            if (!region){
+                break;
+            }
+            for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+                if ([shippingClass.className isEqualToString:firstJobShippingClass.className]){
+                    foundInJob = YES;
+                    break;
+                }
+            }
+            commonInAllJobs &= foundInJob;
+        }
+        if (commonInAllJobs){
+            [common addObject:firstJobShippingClass];
+        }
+    }
+    
+    return common;
+}
+
+- (NSDecimalNumber *)costForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;{
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    
+    NSDecimalNumber *cost = [NSDecimalNumber decimalNumberWithString:@"0"];
+    for (id<OLPrintJob> job in self.jobs){
+        OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+        NSString *region = template.countryMapping[countryCode];
+        if (!region){
+            return nil;
+        }
+        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+            if ([shippingClass.className isEqualToString:name]){
+                cost = [cost decimalNumberByAdding:[NSDecimalNumber decimalNumberWithDecimal:[shippingClass.costs[self.currencyCode] decimalValue]]];
+                break;
+            }
+        }
+    }
+    
+    return cost;
+}
+
+- (NSInteger)maximumDaysForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;{
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    
+    NSInteger days = NSIntegerMin;
+    for (id<OLPrintJob> job in jobs){
+        OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+        NSString *region = template.countryMapping[countryCode];
+        if (!region){
+            return days;
+        }
+        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+            if ([shippingClass.className isEqualToString:name] && shippingClass.maxDeliveryTime){
+                days = MAX(days, [shippingClass.maxDeliveryTime integerValue]);
+                break;
+            }
+        }
+    }
+    
+    return days;
+}
+
+- (NSInteger)minimumDaysForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;{
+    NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    
+    NSInteger days = NSIntegerMax;
+    for (id<OLPrintJob> job in self.jobs){
+        OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
+        NSString *region = template.countryMapping[countryCode];
+        if (!region){
+            return days;
+        }
+        for(OLShippingClass *shippingClass in template.shippingClasses[region]){
+            if ([shippingClass.className isEqualToString:name] && shippingClass.minDeliveryTime){
+                days = MIN(days, [shippingClass.minDeliveryTime integerValue]);
+                break;
+            }
+        }
+    }
+    
+    return days;
+}
+
+- (NSString *)deliveryEstimatedDaysStringForShippingMethodName:(NSString *)name forJobs:(NSArray<id<OLPrintJob>>*)jobs;{
+    NSInteger min = [self minimumDaysForShippingMethodName:name forJobs:jobs];
+    NSInteger max = [self maximumDaysForShippingMethodName:name forJobs:jobs];
+    
+    if (min != NSIntegerMax && max != NSIntegerMin && min != max){
+        return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d - %d", (int)min, (int)max]];
+    }
+    else if (min == max){
+        if (min == 1){
+            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        }
+        else{
+            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]];
+        }
+    }
+    else if (min != NSIntegerMax){
+        if (min == 1){
+            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        }
+        else{
+            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]];
+        }
+    }
+    else if (max != NSIntegerMin){
+        if (max == 1){
+            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        }
+        else{
+            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)max]];
+        }
+    }
+    
+    return nil;
 }
 
 #pragma mark - OLAssetUploadRequestDelegate methods

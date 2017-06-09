@@ -29,15 +29,15 @@
 
 
 #import "OLCircularProgressView.h"
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
 
-@interface OLRemoteImageView ()
+@interface OLImageView ()
 
 @property (strong, nonatomic) OLCircularProgressView *loadingView;
 
 @end
 
-@implementation OLRemoteImageView
+@implementation OLImageView
 
 - (void)initializeViews{
     self.loadingView = [[OLCircularProgressView alloc] initWithFrame:CGRectMake(10, 10, 20, 20)];
@@ -92,6 +92,26 @@
     if (progress == 1){
             self.loadingView.hidden = YES;
     }
+}
+
+- (BOOL)canBecomeFirstResponder{
+    return YES;
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender{
+    NSArray *whiteList = @[@"deletePage", @"addPage", @"cropImage", @"replaceImage"];
+    
+    if ([self respondsToSelector:action] && [self.delegate respondsToSelector:action] && [whiteList containsObject:NSStringFromSelector(action)]){
+        return YES;
+    }
+    else{
+        return NO;
+    }
+    
+}
+
+- (void)cropImage{
+    [self.delegate performSelector:@selector(cropImage)];
 }
 
 @end

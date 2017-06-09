@@ -40,9 +40,9 @@
 #import "OLPaymentViewController.h"
 #import "OLProductPrintJob.h"
 #import "OLProductTemplateOption.h"
-#import "OLRemoteImageCropper.h"
-#import "OLRemoteImageView.h"
-#import "OLSingleImageProductReviewViewController.h"
+#import "OLImageCropper.h"
+#import "OLImageView.h"
+#import "OLSingleProductReviewViewController.h"
 #import "OLUpsellViewController.h"
 #import "OLUserSession.h"
 #import "UIViewController+OLMethods.h"
@@ -51,7 +51,7 @@
 #import "OLKiteViewController+Private.h"
 
 @interface OLPaymentViewController (Private)
--(void)saveAndDismissReviewController;
+- (void)saveAndDismissReviewController;
 @end
 
 @interface OLPrintOrder (Private)
@@ -65,8 +65,7 @@
 - (void)saveEditsToAsset:(OLAsset *)asset;
 @end
 
-@interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate, OLImageEditViewControllerDelegate>
-@property (nonatomic, copy) void (^saveJobCompletionHandler)();
+@interface OLSingleProductReviewViewController () <OLUpsellViewControllerDelegate, OLImageEditViewControllerDelegate>
 @property (assign, nonatomic) BOOL showingBack;
 @end
 
@@ -83,11 +82,11 @@
 @property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
-@implementation OLSingleImageProductReviewViewController
+@implementation OLSingleProductReviewViewController
 
 - (OLAsset *)asset{
     if (!super.asset && !self.showingBack){
-        super.asset = [[OLAsset userSelectedAssets] nonPlaceholderAssets].lastObject;
+        super.asset = [[OLAsset userSelectedAssets] nonPlaceholderAssets].firstObject;
     }
     
     return super.asset;
@@ -97,7 +96,7 @@
     return 1.435714286;
 }
 
--(void)viewDidLoad{
+- (void)viewDidLoad{
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
@@ -168,6 +167,9 @@
 }
 
 - (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body delay:(BOOL)shouldDelay{
+    if (!self.hintView){
+        return;
+    }
     for (NSLayoutConstraint *con in self.view.constraints){
         if ([con.identifier isEqualToString:@"toolBarCon"]){
             [self.view removeConstraint:con];
@@ -207,7 +209,7 @@
     } completion:NULL];
 }
 
--(void)viewWillAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
@@ -311,9 +313,7 @@
     
     if (handler){
         handler();
-    }
-    
-    self.saveJobCompletionHandler = nil;
+    }    
 }
 
 - (BOOL)shouldDoCheckout{
@@ -367,9 +367,16 @@
     return offerToShow;
 }
 
--(void) doCheckout{
+- (void) doCheckout{
     if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 0) {
-        [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
+        if (self.hintView){
+            [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
+        }
+        else{
+            UIAlertController *av = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Please add some images.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+            [av addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:NULL]];
+            [self presentViewController:av animated:YES completion:NULL];
+        }
         return;
     }
     [self saveJobWithCompletionHandler:^{

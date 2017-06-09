@@ -84,21 +84,21 @@ static NSOperationQueue *imageOperationQueue;
 
 @implementation OLAsset
 
--(OLPhotoEdits *) edits{
+- (OLPhotoEdits *) edits{
     if (!_edits){
         _edits = [[OLPhotoEdits alloc] init];
     }
     return _edits;
 }
 
--(NSString *) uuid{
+- (NSString *) uuid{
     if (!_uuid){
         _uuid = [[NSUUID UUID] UUIDString];
     }
     return _uuid;
 }
 
-+(NSOperationQueue *) imageOperationQueue{
++ (NSOperationQueue *) imageOperationQueue{
     if (!imageOperationQueue){
         imageOperationQueue = [[NSOperationQueue alloc] init];
         imageOperationQueue.maxConcurrentOperationCount = 1;

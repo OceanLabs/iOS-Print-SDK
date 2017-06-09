@@ -27,15 +27,31 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+#import "OLArtboardAssetView.h"
+#import "UIImageView+FadeIn.h"
+#import "OLPlaceholderAsset.h"
+#import "OLAsset+Private.h"
+#import "OLImageView.h"
 
-@interface OLPageLayout : NSObject
+@implementation OLArtboardAssetView
 
-/**
- *  Array of NSValues of CGRect. The values in the CGRect are relative. The number of NSValues in the array shows the number of photos.
- */
-@property (strong, nonatomic) NSArray<NSValue *> *positions;
+- (void)loadImageWithCompletionHandler:(void(^)())handler{
+    OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:self.index];
+    __weak OLArtboardAssetView *welf = self;
+    [self.imageView setAndFadeInImageWithOLAsset:asset size:self.frame.size applyEdits:YES placeholder:nil progress:^(float progress){
+        [(OLImageView *)welf.imageView setProgress:progress];
+    }completionHandler:handler];
+}
 
-- (NSInteger)numberOfPhotos;
+- (void)setTargeted:(BOOL)targeted{
+    _targeted = targeted;
+    if (targeted){
+        self.layer.borderColor = self.tintColor.CGColor;
+        self.layer.borderWidth = 3.0;
+    }
+    else{
+        self.layer.borderWidth = 0;
+    }
+}
 
 @end

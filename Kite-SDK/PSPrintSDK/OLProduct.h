@@ -43,19 +43,19 @@
 
 + (NSArray *)products;
 + (NSArray *)productsWithFilters:(NSArray *)allowedTemplateIds;
-- (instancetype)initWithTemplate:(OLProductTemplate *)productTemplate;
-- (NSUInteger)quantityToFulfillOrder;
++ (OLProduct *)productWithTemplateId:(NSString *)templateId;
+- (BOOL)isMultipack;
+- (BOOL)isValidProductForUI;
+- (NSDecimalNumber*) originalUnitCostDecimalNumber;
+- (NSString *)detailsString;
+- (NSString *)dimensions;
+- (NSString *)originalUnitCost;
+- (NSString *)packInfo;
 - (NSString *)templateId;
 - (NSString *)unitCost;
-- (NSString *)originalUnitCost;
-- (NSDecimalNumber*) originalUnitCostDecimalNumber;
-- (NSString *)packInfo;
-- (BOOL)isMultipack;
-- (NSString *)dimensions;
-- (NSString *)detailsString;
-- (BOOL)isValidProductForUI;
+- (NSUInteger)quantityToFulfillOrder;
 - (OLAsset *)classImageAsset;
 - (OLAsset *)coverPhotoAsset;
-+(OLProduct *)productWithTemplateId:(NSString *)templateId;
+- (instancetype)initWithTemplate:(OLProductTemplate *)productTemplate;
 
 @end

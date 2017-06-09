@@ -27,10 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#import "OLPackProductViewController.h"
+#import "OLSingleImagePosterViewController.h"
 
-@interface OLFrameOrderReviewViewController : OLPackProductViewController <UICollectionViewDelegateFlowLayout>
-
-+ (void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
-
+@interface OLCollagePosterViewController : OLSingleImagePosterViewController
++ (void)changeOrderOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
 @end

@@ -26,11 +26,10 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+#import "RMImageCropper.h"
 
-#import "OLPackProductViewController.h"
+@interface OLImageCropper : RMImageCropper
 
-@interface OLFrameOrderReviewViewController : OLPackProductViewController <UICollectionViewDelegateFlowLayout>
-
-+ (void)reverseRowsOfPhotosInArray:(NSMutableArray*)array forProduct:(OLProduct *)product;
+- (void)setProgress:(float)progress;
 
 @end

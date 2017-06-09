@@ -26,10 +26,13 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
-#import "RMImageCropper.h"
 
-@interface OLRemoteImageCropper : RMImageCropper
+#import "OLArtboardTemplate.h"
 
-- (void)setProgress:(float)progress;
+@implementation OLArtboardTemplate
+
+- (NSInteger)numberOfPhotos{
+    return self.positions.count;
+}
 
 @end

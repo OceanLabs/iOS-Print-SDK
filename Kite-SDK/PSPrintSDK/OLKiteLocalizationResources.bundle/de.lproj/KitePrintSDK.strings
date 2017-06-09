@@ -1,5 +1,7 @@
+"%@ days" = "%@ days";
 "%ldx%ld Collage" = "%ldx%ld Kollagen";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "** Qualitätsgarantie ** \nUnsere Produkte sind von höchster Qualität und wir sind sicher, dass du sie lieben wirst. Wenn nicht, bieten wir eine Geld zurück Garantie. Viel Spaß beim Shoppen!";
+"1 day" = "1 day";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Unerlaubter Anforderungsfehler beim Versuch, eine Datei hochzuladen. Bitte überprüfe, ob du einen Autorisierungs-Header integriert hast und dass die mitgelieferten auth-Anmeldeinformationen korrekt sind.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Interner Server Fehler beim Hochladen. Bitte noch einmal probieren";
 "Add" = "Hinzufügen";
@@ -63,7 +65,6 @@
 "Done" = "Erledigt";
 "Edit" = "Bearbeiten";
 "Edit Address" = "Adresse bearbeiten";
-"Edit Poster" = "Poster bearbeiten";
 "Email" = "E-Mail";
 "Enter a valid card number" = "Bitte gib eine gültige Kartennummer ein";
 "Enter a valid CVV number" = "Bitte gib eine gültige Prüfnummer ein";
@@ -84,6 +85,7 @@
 "Fonts" = "Schriftarten";
 "For only %@ extra" = "Für nur 10 mehr";
 "FREE" = "KOSTENLOS";
+"From" = "From";
 "FRONT" = "VORDERSEITE";
 "Great gifts for all the family" = "Großartige Geschenke für die ganze Familie";
 "Image Is Too Small" = "Bild ist zu klein";
@@ -129,6 +131,8 @@
 "Payment Method" = "Zahlungsmethode";
 "Phone" = "Telefonnummer";
 "Please add %d more." = "Bitte füge %d mehr hinzu.";
+"Please add some images." = "Please add some images.";
+"Please add some photos" = "Please add some photos";
 "Please add some photos to your photo book" = "Bitte füge deinem Fotobuch einige Fotos hinzu";
 "Please choose an address to have your order shipped to" = "Bitte Lieferadresse wählen";
 "Please enter a card expiry date in the future" = "Bitte ein Kartenablaufdatum in der Zukunft eingeben";
@@ -163,7 +167,6 @@
 "Quantity" = "Anzahl";
 "Receipt" = "Eingang";
 "Recents" = "Kürzlich verwendet";
-"Remove" = "Entfernen";
 "Remove?" = "Entfernen?";
 "Required by the postal service in case there are any issues during delivery." = "Für die Postzustellung erforderlich, um Probleme bei der Zustellung zu vermeiden.";
 "Retry" = "Erneut versuchen";
@@ -177,6 +180,7 @@
 "Search for Address" = "Nach Adresse suchen";
 "Select Size" = "Größe auswählen";
 "Shipping" = "Versand";
+"Shipping Method" = "Shipping Method";
 "Single Photo Poster" = "Einzelfoto Poster";
 "Size" = "Größe";
 "Small" = "Klein";
@@ -184,11 +188,11 @@
 "Start Creating" = "Jetzt erstellen";
 "Store Maintenance" = "Wartungsarbeiten im Store";
 "Swipe to rotate your mug" = "Wischen um die Tasse zu drehen";
-"Tap Image to Change" = "Bild antippen zum Ändern";
-"Tap Image to Edit" = "Bild antippen zum Bearbeiten";
-"Tap Image to Edit or Hold to Rearrange" = "Bild antippen zum Bearbeiten or halten zum Neuordnen";
+"Tap image to change" = "Bild antippen zum Ändern";
+"Tap image to change or hold to move" = "Tap image to change or hold to move";
+"Tap image to edit" = "Bild antippen zum Bearbeiten";
+"Tap image to edit or hold to move" = "Tap image to edit or hold to move";
 "Tap on this button" = "Auf diesen Button tippen";
-"Tap to swap pages. Hold for more options." = "Antippen zum Verschieben der Seiten. Halten für mehr Optionen. ";
 "Text Colour" = "Textfarbe";
 "TEXT TOOLS" = "TEXTWERKZEUGE";
 "There was a problem getting Print Shop products. Check your Internet connectivity or try again later." = "Es gab ein Problem mit den Printshop Produkten. Überprüfe deine Internetverbindung oder versuche es später erneut.";

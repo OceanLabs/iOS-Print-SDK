@@ -91,6 +91,11 @@
     expected = @"1234 5678 9abc defg";
     actual = [NSString stringByFormattingCreditCardNumber:input];
     XCTAssert([actual isEqualToString:expected], @"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
+    
+    input = @"373456789abcdefghij";
+    expected = @"3734 56789a bcdef";
+    actual = [NSString stringByFormattingCreditCardNumber:input];
+    XCTAssert([actual isEqualToString:expected], @"Credit card number formatter does not work properly. Expected: %@ but got: %@", expected, actual);
 }
 
 - (void)testOLCountries{

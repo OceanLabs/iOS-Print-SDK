@@ -41,7 +41,7 @@
 #import "OLProductOverviewPageContentViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "OLProductTypeSelectionViewController.h"
-#import "OLSingleImageProductReviewViewController.h"
+#import "OLSingleProductReviewViewController.h"
 #import "OLUpsellViewController.h"
 #import "OLUserSession.h"
 #import "UIViewController+OLMethods.h"
@@ -75,7 +75,7 @@
 @end
 
 @interface OLProduct (Private)
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+- (void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
 - (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 @end
 
@@ -512,7 +512,7 @@
         }];
 }
 
--(void)userDidTapOnImage{
+- (void)userDidTapOnImage{
     if (self.detailsBoxTopCon.constant != self.originalBoxConstraint){
         [self onLabelDetailsTapped:nil useSpringAnimation:YES];
     }

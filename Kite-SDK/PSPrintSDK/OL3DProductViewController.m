@@ -37,8 +37,8 @@
 
 @import SceneKit;
 
-@interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
-- (void)setupImage;
+@interface OLSingleProductReviewViewController (Private) <UITextFieldDelegate>
+- (void)loadImages;
 - (void)onButtonCropClicked:(UIButton *)sender;
 - (void)exitCropMode;
 @end
@@ -119,7 +119,7 @@
 
 - (void)orderViews{
     [self.view bringSubviewToFront:self.printContainerView];
-    [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.artboard];
     [self.view bringSubviewToFront:self.scene];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
@@ -134,7 +134,7 @@
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        UIImage *image = [self addBorderToImage:[self.cropView editedImage]];
+        UIImage *image = [self addBorderToImage:[self.artboard.assetViews.firstObject editedImage]];
         
         if (!image){
             return;
@@ -176,8 +176,8 @@
     return paddedImage;
 }
 
-- (void)setupImage{
-    [super setupImage];
+- (void)loadImages{
+    [super loadImages];
     
     [self setCropViewImageToMaterial];
 }

@@ -66,6 +66,7 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize uuid;
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
+@synthesize selectedShippingMethodIdentifier;
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -189,6 +190,12 @@ static id stringOrEmptyString(NSString *str) {
         [json setObject:shippingAddress forKey:@"shipping_address"];
     }
     
+    NSString *countryCode = self.address.country ? [self.address.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[countryCode];
+    if (region){
+        json[@"shipping_class"] = [NSNumber numberWithInteger:self.selectedShippingMethodIdentifier];
+    }
+    
     return json;
 }
 
@@ -198,18 +205,19 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (NSUInteger) hash{
-    NSUInteger result = 17;
-    if (self.templateId) result *= [self.templateId hash];
-    if (self.frontImageAsset) result *= [self.frontImageAsset hash];
-    if (self.backImageAsset) result *= [self.backImageAsset hash];
-    if (self.insideRightImageAsset) result *= [self.insideRightImageAsset hash];
-    if (self.insideLeftImageAsset) result *= [self.insideLeftImageAsset hash];
-    if (self.message && [self.message hash] > 0) result *= [self.message hash];
-    if (self.address) result *= [self.address hash];
-    if (self.extraCopies) result *= self.extraCopies+1;
-    result = 18 * result + [self.options hash];
-    result = 41 * result + [self.uuid hash];
-    return result;
+    NSUInteger val = 17;
+    if (self.templateId) val *= [self.templateId hash];
+    if (self.frontImageAsset) val *= [self.frontImageAsset hash];
+    if (self.backImageAsset) val *= [self.backImageAsset hash];
+    if (self.insideRightImageAsset) val *= [self.insideRightImageAsset hash];
+    if (self.insideLeftImageAsset) val *= [self.insideLeftImageAsset hash];
+    if (self.message && [self.message hash] > 0) val *= [self.message hash];
+    if (self.address) val *= [self.address hash];
+    if (self.extraCopies) val *= self.extraCopies+1;
+    val = 18 * val + [self.options hash];
+    val = 41 * val + [self.uuid hash];
+    val = 42 * val + self.selectedShippingMethodIdentifier;
+    return val;
 }
 
 - (BOOL)isEqual:(id)object {
@@ -247,6 +255,7 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
     [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
+    [aCoder encodeInteger:self.selectedShippingMethodIdentifier forKey:@"selectedShippingMethodIdentifier"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -262,6 +271,7 @@ static id stringOrEmptyString(NSString *str) {
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
+        self.selectedShippingMethodIdentifier = [aDecoder decodeIntegerForKey:@"selectedShippingMethodIdentifier"];
     }
     
     return self;

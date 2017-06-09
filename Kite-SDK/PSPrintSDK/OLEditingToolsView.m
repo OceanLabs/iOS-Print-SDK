@@ -40,7 +40,7 @@
     [self.ctaButton setBackgroundColor:color];
 }
 
--(id)initWithFrame:(CGRect)frame{
+- (id)initWithFrame:(CGRect)frame{
     if ((self = [super initWithFrame:frame])){
         UIView *view = [[[OLKiteUtils kiteResourcesBundle] loadNibNamed:@"OLEditingToolsView"
                                                       owner:self

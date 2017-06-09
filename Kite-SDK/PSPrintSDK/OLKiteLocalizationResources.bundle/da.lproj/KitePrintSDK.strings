@@ -1,5 +1,7 @@
+"%@ days" = "%@ days";
 "%ldx%ld Collage" = "%ldx%ld Collage";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Kvalitetsgaranti**\nVores produkter er af højeste kvalitet og vi er sikre på du vil elske dem. Hvis ikke, så tilbyder vi dig dine penge tilbage.";
+"1 day" = "1 day";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 interne serverfejl under uploadingforsøg af et aktiv. Prøv venligst igen.";
 "Add" = "Tilføj";
@@ -63,7 +65,6 @@
 "Done" = "Færdig";
 "Edit" = "Rediger";
 "Edit Address" = "Rediger adresse";
-"Edit Poster" = "Edit Poster";
 "Email" = "E-mail";
 "Enter a valid card number" = "Enter a valid card number";
 "Enter a valid CVV number" = "Indtast et gyldigt CVV nummer";
@@ -84,6 +85,7 @@
 "Fonts" = "Fonts";
 "For only %@ extra" = "For only %@ extra";
 "FREE" = "FREE";
+"From" = "From";
 "FRONT" = "FRONT";
 "Great gifts for all the family" = "Great gifts for all the family";
 "Image Is Too Small" = "Billedet er for lille";
@@ -129,6 +131,8 @@
 "Payment Method" = "Betalingsmetoder";
 "Phone" = "Telefon";
 "Please add %d more." = "Please add %d more.";
+"Please add some images." = "Please add some images.";
+"Please add some photos" = "Please add some photos";
 "Please add some photos to your photo book" = "Tilføj venligst nogle billeder til dit fotoalbum";
 "Please choose an address to have your order shipped to" = "Vælg venligst den adresse du vil have din ordre sendt til";
 "Please enter a card expiry date in the future" = "Indtast venligst en kortudløbsdato i fremtiden";
@@ -163,7 +167,6 @@
 "Quantity" = "Antal";
 "Receipt" = "Receipt";
 "Recents" = "Recents";
-"Remove" = "Remove";
 "Remove?" = "Remove?";
 "Required by the postal service in case there are any issues during delivery." = "Krævet af postvæsenet, i tilfælde af problemer under levering.";
 "Retry" = "Prøv igen";
@@ -177,6 +180,7 @@
 "Search for Address" = "Søg efter adresse";
 "Select Size" = "Select Size";
 "Shipping" = "Forsendelse";
+"Shipping Method" = "Shipping Method";
 "Single Photo Poster" = "Single Foto Plakat";
 "Size" = "Størrelse";
 "Small" = "Small";
@@ -184,11 +188,11 @@
 "Start Creating" = "Start Creating";
 "Store Maintenance" = "Butik vedligeholdelse";
 "Swipe to rotate your mug" = "Swipe to rotate your mug";
-"Tap Image to Change" = "Tap Image to Change";
-"Tap Image to Edit" = "Tap Image to Edit";
-"Tap Image to Edit or Hold to Rearrange" = "Tap Image to Edit or Hold to Rearrange";
+"Tap image to change" = "Tap image to change";
+"Tap image to change or hold to move" = "Tap image to change or hold to move";
+"Tap image to edit" = "Tap image to edit";
+"Tap image to edit or hold to move" = "Tap image to edit or hold to move";
 "Tap on this button" = "Tap on this button";
-"Tap to swap pages. Hold for more options." = "Tryk for at skifte side. Hold for flere oplysning.";
 "Text Colour" = "Text Colour";
 "TEXT TOOLS" = "TEXT TOOLS";
 "There was a problem getting Print Shop products. Check your Internet connectivity or try again later." = "There was a problem getting Print Shop products. Check your Internet connectivity or try again later.";

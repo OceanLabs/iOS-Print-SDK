@@ -27,12 +27,15 @@
 //  THE SOFTWARE.
 //
 
-#import "OLPageLayout.h"
+#import <Foundation/Foundation.h>
 
-@implementation OLPageLayout
+@interface OLArtboardTemplate : NSObject
 
-- (NSInteger)numberOfPhotos{
-    return self.positions.count;
-}
+/**
+ *  Array of NSValues of CGRect. The values in the CGRect are relative. The number of NSValues in the array shows the number of photos.
+ */
+@property (strong, nonatomic) NSArray<NSValue *> *positions;
+
+- (NSInteger)numberOfPhotos;
 
 @end

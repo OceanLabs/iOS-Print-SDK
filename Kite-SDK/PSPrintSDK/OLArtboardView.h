@@ -27,60 +27,28 @@
 //  THE SOFTWARE.
 //
 
-#import "OLRemoteImageCropper.h"
-#import "OLRemoteImageView.h"
+#import <UIKit/UIKit.h>
+#import "OLArtboardAssetView.h"
 
-@interface OLRemoteImageCropper ()
+@protocol OLArtboardDelegate <NSObject>
+- (UIView *)viewToAddDraggingAsset;
+- (UIViewController *)viewControllerForPresenting;
 
-@property (strong, nonatomic) OLRemoteImageView *remoteImageView;
+@optional
+- (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet;
+- (NSInteger)maxNumberOfPhotosToPick;
+- (UIScrollView *)scrollViewForVerticalScolling;
+- (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point;
 
 @end
 
-@implementation OLRemoteImageCropper
-
-- (void)initializeViews{
-    self.remoteImageView = [[OLRemoteImageView alloc] init];
-    [self addSubview:self.remoteImageView];
-    
-    UIView *view = self.remoteImageView;
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                         @"V:|-0-[view]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [view.superview addConstraints:con];
-}
-
-- (void)awakeFromNib{
-    [super awakeFromNib];
-    [self initializeViews];
-}
-
-- (instancetype)init{
-    self = [super init];
-    if (self){
-        [self initializeViews];
-    }
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame{
-    self = [super initWithFrame:frame];
-    if (self){
-        [self initializeViews];
-    }
-    return self;
-}
-
-- (void)setProgress:(float)progress{
-    [self.remoteImageView setProgress:progress];
-}
-
+@interface OLArtboardView : UIImageView
+@property (weak, nonatomic) id<OLArtboardDelegate> delegate;
+@property (strong, nonatomic) NSMutableArray<OLArtboardAssetView *> *assetViews;
+- (void)addAssetViewWithRelativeFrame:(CGRect)frame index:(NSUInteger)index;
+- (void)addAssetView;
+- (void)pickUpView:(OLArtboardAssetView *)assetView;
+- (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet;
+- (void)loadImageOnAllAssetViews;
+- (OLArtboardAssetView *)findAssetViewAtPoint:(CGPoint)point;
 @end

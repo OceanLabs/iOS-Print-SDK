@@ -1,5 +1,7 @@
+"%@ days" = "%@ days";
 "%ldx%ld Collage" = "%ldx%ld Collage";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Garantía de calidad**\nNuestros productos son de la más alta calidad y estamos seguros de que usted amará el suyo. Si no, ofrecemos una garantía de devolución de dinero. ¡Disfruta!";
+"1 day" = "1 day";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Error de solicitud no autorizada al intentar cargar un recurso. Compruebe que incluyó un encabezado de autorización y que las credenciales de autenticación suministradas son correctas.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Error interno del servidor al intentar cargar un activo. Vuelve a intentarlo.";
 "Add" = "Añadir";
@@ -63,7 +65,6 @@
 "Done" = "Està hecho";
 "Edit" = "Editar";
 "Edit Address" = "Editar dirección";
-"Edit Poster" = "Editar el póster";
 "Email" = "Correo electrónico";
 "Enter a valid card number" = "Ingresa un número de tarjeta válido";
 "Enter a valid CVV number" = "Ingrese un número válido de CVV";
@@ -84,6 +85,7 @@
 "Fonts" = "Fuentes";
 "For only %@ extra" = "Por sólo %@ de más";
 "FREE" = "GRATIS";
+"From" = "From";
 "FRONT" = "FRENTE";
 "Great gifts for all the family" = "Grandes regalos para toda la familia";
 "Image Is Too Small" = "La imagen es demasiado pequeña";
@@ -129,6 +131,8 @@
 "Payment Method" = "Método de pago";
 "Phone" = "Teléfono";
 "Please add %d more." = "Por favor, Agregue %d más.";
+"Please add some images." = "Please add some images.";
+"Please add some photos" = "Please add some photos";
 "Please add some photos to your photo book" = "Por favor, añade algunas fotos a su libro de fotos";
 "Please choose an address to have your order shipped to" = "Por favor, elija una dirección para que su pedido sea enviado a";
 "Please enter a card expiry date in the future" = "Por favor, ingrese una fecha de caducidad de la tarjeta en el futuro";
@@ -163,7 +167,6 @@
 "Quantity" = "Cantidad";
 "Receipt" = "Recibo";
 "Recents" = "Recientes";
-"Remove" = "Retirar";
 "Remove?" = "¿Retirar?";
 "Required by the postal service in case there are any issues during delivery." = "Requerido por el servicio postal en caso de que haya problemas durante la entrega.";
 "Retry" = "Inténtarlo de nuevo";
@@ -177,6 +180,7 @@
 "Search for Address" = "Buscar dirección";
 "Select Size" = "Selecciona el tamaño";
 "Shipping" = "Envío";
+"Shipping Method" = "Shipping Method";
 "Single Photo Poster" = "Poster con una sola foto";
 "Size" = "Tamaño";
 "Small" = "Pequeña";
@@ -184,11 +188,11 @@
 "Start Creating" = "Comenzar a crear";
 "Store Maintenance" = "Mantenimiento de tienda";
 "Swipe to rotate your mug" = "Deslizar para girar tu taza";
-"Tap Image to Change" = "Toca la imagen para cambiar";
-"Tap Image to Edit" = "Toca la imagen para editar";
-"Tap Image to Edit or Hold to Rearrange" = "Toca Imagen para editar o Mantén presionada para reorganizar";
+"Tap image to change" = "Toca la imagen para cambiar";
+"Tap image to change or hold to move" = "Tap image to change or hold to move";
+"Tap image to edit" = "Toca la imagen para editar";
+"Tap image to edit or hold to move" = "Tap image to edit or hold to move";
 "Tap on this button" = "Aprieta este botón";
-"Tap to swap pages. Hold for more options." = "Toca para intercambiar páginas. Mantén para obtener más opciones.";
 "Text Colour" = "Color del texto";
 "TEXT TOOLS" = "HERRAMIENTAS DE TEXTO";
 "There was a problem getting Print Shop products. Check your Internet connectivity or try again later." = "Se ha producido un problema al obtener los productos de la Imprenta. Compruebe su conexión a Internet o vuelva a intentarlo más tarde.";
