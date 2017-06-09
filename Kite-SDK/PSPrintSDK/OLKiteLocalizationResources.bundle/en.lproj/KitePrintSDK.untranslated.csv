@@ -1,6 +1,8 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+%@ days,%@ days,"/* Examples: 2-5 days, 7 days */"
 %ldx%ld Collage,%ldx%ld Collage,/* example: 5x7 Collage */
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!","**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!",
+1 day,1 day,
 401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,
 500 Internal Server Error whilst trying to upload an asset. Please try again.,500 Internal Server Error whilst trying to upload an asset. Please try again.,
 Add,Add,
@@ -84,6 +86,7 @@ Flip,Flip,/* Horizontally flip image */
 Fonts,Fonts,
 For only %@ extra,For only %@ extra,/* [Add a photo on this side of the shirt] for only $4.00 extra */
 FREE,FREE,"/* Free, no cost */"
+From,From,
 FRONT,FRONT,/* Front of the photo */
 Great gifts for all the family,Great gifts for all the family,
 Image Is Too Small,Image Is Too Small,
@@ -179,6 +182,7 @@ Scan QR Code,Scan QR Code,
 Search for Address,Search for Address,
 Select Size,Select Size,/* Example: Shirt size */
 Shipping,Shipping,
+Shipping Method,Shipping Method,
 Single Photo Poster,Single Photo Poster,
 Size,Size,/* Physical size of the product */
 Small,Small,
@@ -200,6 +204,7 @@ There was an error trying to validate the card. Please try again later.,There wa
 This is the 3-4 digit verification number/security code normally found on the back of your card,This is the 3-4 digit verification number/security code normally found on the back of your card,
 This will discard your edits.,This will discard your edits.,"/* The image edits, like crop, filters, etc */"
 Total,Total,
+Tracked,Tracked,
 Uploading book,Uploading book,
 Uploading Images \n%lu / %lu,Uploading Images \n%lu / %lu,
 View Item,View Item,/* View [basket] item */
