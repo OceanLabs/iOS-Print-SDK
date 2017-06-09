@@ -450,17 +450,11 @@
                 if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Checkout"]){
                     [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:(OLKiteViewController *)vc action:@selector(dismiss)]];
                 }
-                [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
-                [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
-                [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
                 [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
                 [self.navigationController pushViewController:vc animated:YES];
             }];
             return;
         }
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
-        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
         [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
         [self.navigationController pushViewController:vc animated:YES];
         return;
@@ -474,7 +468,6 @@
     
     UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]]];
     
-    [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
     
     [self.navigationController pushViewController:vc animated:YES];
@@ -626,7 +619,6 @@
         [self saveJobWithCompletionHandler:^{
             OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
             UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]]];
-            [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
             [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
             NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
             [stack removeObject:self];

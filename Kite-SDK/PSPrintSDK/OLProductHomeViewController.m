@@ -51,6 +51,7 @@
 #import "UIImage+OLUtils.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
+#import "OLRemoteImageView.h"
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
@@ -75,6 +76,8 @@
 @property (strong, nonatomic) UIView *headerView;
 @property (strong, nonatomic) NSString *bannerString;
 @property (strong, nonatomic) NSDate *countdownDate;
+
+@property (strong, nonatomic) NSArray<OLAsset *> *assets; //TODO: remove
 @end
 
 @implementation OLProductHomeViewController
@@ -89,6 +92,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    
+    /// TODO remove start
+    NSArray *urls = @[@"https://s3.amazonaws.com/psps/sdk_static/1.jpg", @"https://s3.amazonaws.com/psps/sdk_static/2.jpg", @"https://s3.amazonaws.com/psps/sdk_static/3.jpg", @"https://s3.amazonaws.com/psps/sdk_static/4.jpg", @"https://s3.amazonaws.com/psps/sdk_static/5.jpg", @"https://s3.amazonaws.com/psps/sdk_static/6.jpg", @"https://s3.amazonaws.com/psps/sdk_static/7.jpg", @"https://s3.amazonaws.com/psps/sdk_static/8.jpg", @"https://s3.amazonaws.com/psps/sdk_static/9.jpg", @"https://s3.amazonaws.com/psps/sdk_static/10.jpg", @"https://s3.amazonaws.com/psps/sdk_static/11.jpg", @"https://s3.amazonaws.com/psps/sdk_static/12.jpg", @"https://s3.amazonaws.com/psps/sdk_static/13.jpg", @"https://s3.amazonaws.com/psps/sdk_static/14.jpg", @"https://s3.amazonaws.com/psps/sdk_static/15.jpg", @"https://s3.amazonaws.com/psps/sdk_static/16.jpg", @"https://s3.amazonaws.com/psps/sdk_static/17.jpg", @"https://s3.amazonaws.com/psps/sdk_static/18.jpg", @"https://s3.amazonaws.com/psps/sdk_static/19.jpg", @"https://s3.amazonaws.com/psps/sdk_static/20.jpg", @"https://s3.amazonaws.com/psps/sdk_static/21.jpg", @"https://s3.amazonaws.com/psps/sdk_static/22.jpg", @"https://s3.amazonaws.com/psps/sdk_static/23.jpg", @"https://s3.amazonaws.com/psps/sdk_static/24.jpg", @"https://s3.amazonaws.com/psps/sdk_static/25.jpg", @"https://s3.amazonaws.com/psps/sdk_static/26.jpg", @"https://s3.amazonaws.com/psps/sdk_static/27.jpg", @"https://s3.amazonaws.com/psps/sdk_static/28.jpg", @"https://s3.amazonaws.com/psps/sdk_static/29.jpg", @"https://s3.amazonaws.com/psps/sdk_static/30.jpg", @"https://s3.amazonaws.com/psps/sdk_static/31.jpg", @"https://s3.amazonaws.com/psps/sdk_static/32.jpg", @"https://s3.amazonaws.com/psps/sdk_static/33.jpg", @"https://s3.amazonaws.com/psps/sdk_static/34.jpg", @"https://s3.amazonaws.com/psps/sdk_static/35.jpg", @"https://s3.amazonaws.com/psps/sdk_static/36.jpg", @"https://s3.amazonaws.com/psps/sdk_static/37.jpg", @"https://s3.amazonaws.com/psps/sdk_static/38.jpg", @"https://s3.amazonaws.com/psps/sdk_static/39.jpg", @"https://s3.amazonaws.com/psps/sdk_static/40.jpg", @"https://s3.amazonaws.com/psps/sdk_static/41.jpg", @"https://s3.amazonaws.com/psps/sdk_static/42.jpg", @"https://s3.amazonaws.com/psps/sdk_static/43.jpg", @"https://s3.amazonaws.com/psps/sdk_static/44.jpg", @"https://s3.amazonaws.com/psps/sdk_static/45.jpg", @"https://s3.amazonaws.com/psps/sdk_static/46.jpg", @"https://s3.amazonaws.com/psps/sdk_static/47.jpg", @"https://s3.amazonaws.com/psps/sdk_static/48.jpg", @"https://s3.amazonaws.com/psps/sdk_static/49.jpg", @"https://s3.amazonaws.com/psps/sdk_static/50.jpg"];
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (NSString *s in urls){
+        OLAsset *asset = [OLAsset assetWithURL:[NSURL URLWithString:s]];
+        [assets addObject:asset];
+    }
+    self.assets = assets;
+    /// TODO remove end
 
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackCategoryListScreenViewed];
@@ -467,7 +481,6 @@
     OLProduct *product = [self.productGroups[indexPath.item] products].firstObject;
     
     OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-    vc.delegate = self.delegate;
     [vc safePerformSelector:@selector(setProduct:) withObject:product];
     
     [self.navigationController pushViewController:vc animated:YES];
@@ -516,6 +529,15 @@
     }
     
     [self.collectionView insertItemsAtIndexPaths:array];
+}
+
+- (NSString *)collectionViewCellIdentifier{
+    if (YES){
+        return @"horizontalScrolling";
+    }
+    else{
+        return [OLKiteABTesting sharedInstance].productTileStyle;
+    }
 }
 
 #pragma mark Banner Section
@@ -601,11 +623,15 @@
     
     CGFloat height = 233;
     
-    if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"ThemeColor"]){
+    if([[self collectionViewCellIdentifier] isEqualToString:@"ThemeColor"]){
         height = 200;
     }
     
-    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) {
+    if (collectionView != self.collectionView){
+        CGFloat dimension = height * (size.width / 320.0);
+        return CGSizeMake(dimension, dimension);
+    }
+    else if ((self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) || [[self collectionViewCellIdentifier] isEqualToString:@"horizontalScrolling"]) {
         if (numberOfCells == 2){
             return CGSizeMake(size.width, halfScreenHeight);
         }
@@ -714,8 +740,6 @@
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
     }
     
-    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
-    [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
     
@@ -725,6 +749,10 @@
 #pragma mark - UICollectionViewDataSource Methods
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    if (collectionView != self.collectionView) {
+        return 1;
+    }
+    
     if (self.isOffScreen){
         return 0;
     }
@@ -737,6 +765,10 @@
 }
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (collectionView != self.collectionView) {
+        return self.assets.count;
+    }
+    
     NSInteger productSection = [self includeBannerSection] ? 1 : 0;
     if (section == 0 && [self includeBannerSection]){
         return [self collectionView:collectionView numberOfItemsInBannerSection:section];
@@ -757,102 +789,122 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    NSInteger productSection = [self includeBannerSection] ? 1 : 0;
-    if (indexPath.section == 0 && [self includeBannerSection]){
-        return [self collectionView:collectionView bannerSectionCellForIndexPath:indexPath];
-    }
-    else if (indexPath.section == productSection + 1){
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"loadingCell" forIndexPath:indexPath];
-        UIActivityIndicatorView *activity = [cell viewWithTag:10];
-        [activity startAnimating];
-        return cell;
-    }
-    
-    if (indexPath.item >= self.productGroups.count){
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
-        UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-        UILabel *label = [cell.contentView viewWithTag:50];
-        label.text = NSLocalizedStringFromTableInBundle(@"MORE ITEMS\nCOMING SOON!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder-loc.png"] withCompletionHandler:^(UIImage *image, NSError *error){
-            if (error) return;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                cellImageView.image = image;
-                cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
-            });
-        }];
-        if (self.fromRotation){
-            self.fromRotation = NO;
-            cell.alpha = 0;
-            [UIView animateWithDuration:0.3 animations:^{
-                cell.alpha = 1;
-            }];
+    if (collectionView == self.collectionView){
+        NSInteger productSection = [self includeBannerSection] ? 1 : 0;
+        if (indexPath.section == 0 && [self includeBannerSection]){
+            return [self collectionView:collectionView bannerSectionCellForIndexPath:indexPath];
         }
-        return cell;
-    }
-    
-    NSString *identifier = [NSString stringWithFormat:@"ProductCell%@", [OLKiteABTesting sharedInstance].productTileStyle];
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    
-    UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
-    
-    OLProductGroup *group = self.productGroups[indexPath.item];
-    OLProduct *product = [group.products firstObject];
-    
-    [cellImageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:OLAssetMaximumSize applyEdits:NO placeholder:nil progress:nil completionHandler:NULL];
-    
-    UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
-    
-    productTypeLabel.text = product.productTemplate.templateClass;
-    
-    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
-    if (font){
-        productTypeLabel.font = font;
-    }
-    
-    UIActivityIndicatorView *activityIndicator = (id)[cell.contentView viewWithTag:41];
-    [activityIndicator startAnimating];
-    
-    if ([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"Classic"]){
-        productTypeLabel.backgroundColor = [product labelColor];
-    }
-    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"MinimalWhite"]){
-        UILabel *priceLabel = [cell.contentView viewWithTag:301];
-        UILabel *detailsLabel = [cell.contentView viewWithTag:302];
+        else if (indexPath.section == productSection + 1){
+            UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"loadingCell" forIndexPath:indexPath];
+            UIActivityIndicatorView *activity = [cell viewWithTag:10];
+            [activity startAnimating];
+            return cell;
+        }
         
-        priceLabel.text = @"";
+        if (indexPath.item >= self.productGroups.count){
+            UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
+            UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
+            UILabel *label = [cell.contentView viewWithTag:50];
+            label.text = NSLocalizedStringFromTableInBundle(@"MORE ITEMS\nCOMING SOON!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder-loc.png"] withCompletionHandler:^(UIImage *image, NSError *error){
+                if (error) return;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    cellImageView.image = image;
+                    cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
+                });
+            }];
+            if (self.fromRotation){
+                self.fromRotation = NO;
+                cell.alpha = 0;
+                [UIView animateWithDuration:0.3 animations:^{
+                    cell.alpha = 1;
+                }];
+            }
+            return cell;
+        }
+        
+        if ([[self collectionViewCellIdentifier] isEqualToString:@"horizontalScrolling"]){
+            UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"horizontalScrolling" forIndexPath:indexPath];
+            UICollectionView *innerCollectionView = [cell viewWithTag:10];
+            innerCollectionView.dataSource = self;
+            innerCollectionView.delegate = self;
+            
+            return cell;
+        }
+        
+        NSString *identifier = [NSString stringWithFormat:@"ProductCell%@", [self collectionViewCellIdentifier]];
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        
+        UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
+        
+        OLProductGroup *group = self.productGroups[indexPath.item];
+        OLProduct *product = [group.products firstObject];
+        
+        [cellImageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:OLAssetMaximumSize applyEdits:NO placeholder:nil progress:nil completionHandler:NULL];
+        
+        UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
+        
+        productTypeLabel.text = product.productTemplate.templateClass;
         
         UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
         if (font){
-            detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
+            productTypeLabel.font = font;
         }
         
-        NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:product.productTemplate.productDescription] mutableCopy];
-        detailsLabel.text = attributedString.string;
+        UIActivityIndicatorView *activityIndicator = (id)[cell.contentView viewWithTag:41];
+        [activityIndicator startAnimating];
         
-        if (![OLKiteABTesting sharedInstance].skipProductOverview){
-            [[cell.contentView viewWithTag:303] removeFromSuperview];
+        if ([[self collectionViewCellIdentifier] isEqualToString:@"Classic"]){
+            productTypeLabel.backgroundColor = [product labelColor];
         }
-    }
-    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"ThemeColor"]){
-        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        else if([[self collectionViewCellIdentifier] isEqualToString:@"MinimalWhite"]){
+            UILabel *priceLabel = [cell.contentView viewWithTag:301];
             UILabel *detailsLabel = [cell.contentView viewWithTag:302];
-            detailsLabel.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+            
+            priceLabel.text = @"";
+            
+            UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+            if (font){
+                detailsLabel.font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:15];
+            }
+            
+            NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:product.productTemplate.productDescription] mutableCopy];
+            detailsLabel.text = attributedString.string;
+            
+            if (![OLKiteABTesting sharedInstance].skipProductOverview){
+                [[cell.contentView viewWithTag:303] removeFromSuperview];
+            }
         }
+        else if([[self collectionViewCellIdentifier] isEqualToString:@"ThemeColor"]){
+            if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+                UILabel *detailsLabel = [cell.contentView viewWithTag:302];
+                detailsLabel.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+            }
+        }
+        else{
+            UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
+            if (button.layer.shadowOpacity == 0){
+                button.layer.shadowColor = [[UIColor blackColor] CGColor];
+                button.layer.shadowOpacity = .3;
+                button.layer.shadowOffset = CGSizeMake(0,2);
+                button.layer.shadowRadius = 2;
+                
+                [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
+            }
+            button.backgroundColor = [product labelColor];
+        }
+        
+        return cell;
     }
     else{
-        UIButton *button = (UIButton *)[cell.contentView viewWithTag:390];
-        if (button.layer.shadowOpacity == 0){
-            button.layer.shadowColor = [[UIColor blackColor] CGColor];
-            button.layer.shadowOpacity = .3;
-            button.layer.shadowOffset = CGSizeMake(0,2);
-            button.layer.shadowRadius = 2;
-            
-            [button addTarget:self action:@selector(onButtonCallToActionTapped:) forControlEvents:UIControlEventTouchUpInside];
-        }
-        button.backgroundColor = [product labelColor];
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"productCell" forIndexPath:indexPath];
+        __weak OLRemoteImageView *imageView = [cell viewWithTag:10];
+        [imageView setAndFadeInImageWithOLAsset:self.assets[indexPath.item] size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:NO placeholder:nil progress:^(float progress){
+            [imageView setProgress:progress];
+        }completionHandler:NULL];
+        
+        return cell;
     }
-    
-    return cell;
 }
 
 - (void)onButtonCallToActionTapped:(UIButton *)sender{

@@ -224,7 +224,6 @@
         identifier = @"OLProductOverviewViewController";
     }
     OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
-    vc.delegate = self.delegate;
     
     if (product.productTemplate.collectionName && product.productTemplate.collectionId){
         NSMutableArray *options = [[NSMutableArray alloc] init];

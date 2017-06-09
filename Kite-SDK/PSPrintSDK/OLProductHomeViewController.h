@@ -34,7 +34,6 @@
 
 @interface OLProductHomeViewController : OLCollectionViewController
 
-@property (strong, nonatomic) NSMutableArray *assets;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
 @property (copy, nonatomic) NSString *userEmail;
