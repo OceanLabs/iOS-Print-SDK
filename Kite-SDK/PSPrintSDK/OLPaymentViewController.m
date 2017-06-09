@@ -691,7 +691,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }];
 }
 
-- (void(^)())transistionToReceiptBlock{
+- (void(^)(void))transistionToReceiptBlock{
     __weak OLPaymentViewController *welf = self;
     return ^{
         [[OLUserSession currentSession] clearUserSelectedPhotos];
