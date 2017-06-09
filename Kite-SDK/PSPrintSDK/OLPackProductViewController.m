@@ -122,6 +122,9 @@
 }
 
 - (void)addInfoBanner{
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools && ![OLKiteUtils imageProvidersAvailable]){
+        return;
+    }
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
         self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap image to change", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     }
@@ -515,6 +518,9 @@
     [view.superview addConstraints:con];
     
     UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:11];
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        [editButton removeFromSuperview];
+    }
     [editButton addTarget:self action:@selector(editPhoto:) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor2){
         [editButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];

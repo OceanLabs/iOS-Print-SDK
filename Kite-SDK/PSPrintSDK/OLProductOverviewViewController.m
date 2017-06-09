@@ -440,7 +440,7 @@
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != OLTemplateUINonCustomizable){
         UIViewController *vc;
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
-            vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]];
+            vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
         }
         else{
             [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
@@ -469,7 +469,7 @@
         return;
     }
     
-    UIViewController *vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]];
+    UIViewController *vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
     
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
@@ -622,8 +622,7 @@
     [vc dismissViewControllerAnimated:NO completion:^{
         [self saveJobWithCompletionHandler:^{
             OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-            UIViewController *nextVc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]];
-            [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
+            UIViewController *nextVc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
             [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
             NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
             [stack removeObject:self];

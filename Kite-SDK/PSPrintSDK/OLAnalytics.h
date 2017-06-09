@@ -51,7 +51,9 @@ static NSString *const kOLAnalyticsEventNameBasketScreenViewed = @"Basket Screen
 static NSString *const kOLAnalyticsEventNamePaymentCompleted = @"Payment Completed";
 static NSString *const kOLAnalyticsEventNamePrintOrderSubmission = @"Print Order Submission";
 static NSString *const kOLAnalyticsEventNamePaymentMethodScreenViewed = @"Payment Method Screen Viewed";
+static NSString *const kOLAnalyticsEventNameShippingMethodScreenViewed = @"Shipping Method Screen Viewed";
 static NSString *const kOLAnalyticsEventNamePaymentMethodSelected = @"Payment Method Selected";
+static NSString *const kOLAnalyticsEventNameShippingMethodSelected = @"Shipping Method Selected";
 
 // Secondary Events - Not Sent to MixPanel
 static NSString *const kOLAnalyticsEventNameProductListScreenHitBack = @"Product List Screen Hit Back";
@@ -86,6 +88,7 @@ static NSString *const kOLAnalyticsEventNameUpsellScreenViewed = @"Upsell Screen
 static NSString *const kOLAnalyticsEventNameUpsellScreenDismissed = @"Upsell Screen Dismissed";
 static NSString *const kOLAnalyticsEventNameBasketIconTapped = @"Basket Icon Tapped";
 static NSString *const kOLAnalyticsEventNamePaymentMethodScreenHitBack = @"Payment Method Screen Hit Back";
+static NSString *const kOLAnalyticsEventNameShippingMethodScreenHitBack = @"Shipping Method Screen Hit Back";
 static NSString *const kOLAnalyticsEventNameEditScreenDidCancel = @"Edit Screen Did Cancel";
 static NSString *const kOLAnalyticsEventNameEditScreenButtonTapped = @"Edit Screen Button Tapped";
 
@@ -164,6 +167,9 @@ static NSString *const kOLAnalyticsButtonName = @"Button Name";
 + (void)trackPaymentMethodScreenViewed:(OLPrintOrder *)printOrder;
 + (void)trackPaymentMethodSelected:(OLPrintOrder *)printOrder methodName:(NSString *)methodName;
 + (void)trackPaymentMethodScreenHitBack:(OLPrintOrder *)printOrder;
++ (void)trackShippingMethodScreenViewed:(OLPrintOrder *)printOrder;
++ (void)trackShippingMethodSelected:(OLPrintOrder *)printOrder methodName:(NSString *)methodName;
++ (void)trackShippingMethodScreenHitBack:(OLPrintOrder *)printOrder;
 + (void)trackEditScreenDidCancel;
 + (void)trackEditScreenButtonTapped:(NSString *)buttonName;
 

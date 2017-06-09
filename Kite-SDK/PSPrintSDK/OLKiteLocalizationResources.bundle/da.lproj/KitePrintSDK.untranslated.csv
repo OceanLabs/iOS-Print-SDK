@@ -1,5 +1,7 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+%@ days,%@ days,"/* Examples: 2-5 days, 7 days */"
 %ldx%ld Collage,%ldx%ld Collage,/* example: 5x7 Collage */
+1 day,1 day,
 Add %ld %@!,Add %ld %@!,
 Add a %@!,Add a %@!,
 Add a photo\non this side,Add a photo\non this side,/* this side [of the shirt] */
@@ -42,6 +44,7 @@ Flip,Flip,/* Horizontally flip image */
 Fonts,Fonts,
 For only %@ extra,For only %@ extra,/* [Add a photo on this side of the shirt] for only $4.00 extra */
 FREE,FREE,"/* Free, no cost */"
+From,From,
 FRONT,FRONT,/* Front of the photo */
 Great gifts for all the family,Great gifts for all the family,
 IMAGE TOOLS,IMAGE TOOLS,
@@ -91,6 +94,7 @@ Rotate,Rotate,/* Rotate image by 90 degrees */
 Save as Copy,Save as Copy,
 Scan QR Code,Scan QR Code,
 Select Size,Select Size,/* Example: Shirt size */
+Shipping Method,Shipping Method,
 Small,Small,
 Start by tapping this button,Start by tapping this button,
 Start Creating,Start Creating,/* Start Creating [your product] */
@@ -106,6 +110,7 @@ There was a problem getting Print Shop products. Check your Internet connectivit
 There was an error getting one of your photos. Please remove or replace it.,There was an error getting one of your photos. Please remove or replace it.,
 There was an error trying to validate the card. Please try again later.,There was an error trying to validate the card. Please try again later.,
 This will discard your edits.,This will discard your edits.,"/* The image edits, like crop, filters, etc */"
+Tracked,Tracked,
 Uploading book,Uploading book,
 View Item,View Item,/* View [basket] item */
 WE HAVE RECEIVED\nYOUR ORDER,WE HAVE RECEIVED\nYOUR ORDER,

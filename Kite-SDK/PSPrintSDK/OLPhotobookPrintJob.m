@@ -31,6 +31,7 @@
 #import "OLProductTemplate.h"
 #import "OLAsset.h"
 #import "OLAddress.h"
+#import "OLCountry.h"
 
 static NSString *const kKeyPhotobookProductTemplateId = @"co.oceanlabs.pssdk.kKeyPhotobookProductTemplateId";
 static NSString *const kKeyPhotobookImages = @"co.oceanlabs.pssdk.kKeyPhotobookImages";
@@ -60,6 +61,7 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
 @synthesize uuid;
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
+@synthesize selectedShippingMethodIdentifier;
 
 -(NSMutableSet *) declinedOffers{
     if (!_declinedOffers){
@@ -171,6 +173,12 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
     
+    NSString *countryCode = self.address.country ? [self.address.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[countryCode];
+    if (region){
+        json[@"shipping_class"] = [NSNumber numberWithInteger:self.selectedShippingMethodIdentifier];
+    }
+    
     return json;
 }
 
@@ -221,6 +229,7 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
     
     val = 40 * val + [self.address hash];
     val = 41 * val + [self.uuid hash];
+    val = 42 * val + self.selectedShippingMethodIdentifier;
     
     return val;
 }
@@ -254,6 +263,7 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
     objectCopy.declinedOffers = self.declinedOffers;
     objectCopy.acceptedOffers = self.acceptedOffers;
     objectCopy.redeemedOffer = self.redeemedOffer;
+    objectCopy.selectedShippingMethodIdentifier = self.selectedShippingMethodIdentifier;
     return objectCopy;
 }
 
@@ -272,6 +282,7 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
     [aCoder encodeObject:self.declinedOffers forKey:kKeyDeclinedOffers];
     [aCoder encodeObject:self.acceptedOffers forKey:kKeyAcceptedOffers];
     [aCoder encodeObject:self.redeemedOffer forKey:kKeyRedeemedOffer];
+    [aCoder encodeInteger:self.selectedShippingMethodIdentifier forKey:@"selectedShippingMethodIdentifier"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -288,6 +299,7 @@ static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffe
         self.declinedOffers = [aDecoder decodeObjectForKey:kKeyDeclinedOffers];
         self.acceptedOffers = [aDecoder decodeObjectForKey:kKeyAcceptedOffers];
         self.redeemedOffer = [aDecoder decodeObjectForKey:kKeyRedeemedOffer];
+        self.selectedShippingMethodIdentifier = [aDecoder decodeIntegerForKey:@"selectedShippingMethodIdentifier"];
     }
     
     return self;

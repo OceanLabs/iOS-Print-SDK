@@ -1,7 +1,12 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+%@ days,%@ days,"/* Examples: 2-5 days, 7 days */"
+1 day,1 day,
 Discard Edits,Discard Edits,
+From,From,
 Please add some images.,Please add some images.,
 Please add some photos,Please add some photos,
 Save as Copy,Save as Copy,
+Shipping Method,Shipping Method,
 Tap image to change or hold to move,Tap image to change or hold to move,
 Tap image to edit or hold to move,Tap image to edit or hold to move,
+Tracked,Tracked,

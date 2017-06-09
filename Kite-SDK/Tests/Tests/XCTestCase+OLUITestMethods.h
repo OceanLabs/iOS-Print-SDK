@@ -50,6 +50,7 @@
 #import "OLCollagePosterViewController.h"
 #import "OLPhotobookPageContentViewController.h"
 #import "OLQRCodeUploadViewController.h"
+#import "OLShippingMethodsViewController.h"
 #import "OLMockLongPressGestureRecognizer.h"
 
 @interface XCTestCase (OLUITestMethods)
@@ -158,6 +159,7 @@
 - (void)payPalPaymentDidCancel:(id)paymentViewController;
 - (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method;
 - (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment paymentMethod:(NSString *)paymentMethod completion:(id)handler;
+- (IBAction)onShippingMethodGestureRecognized:(id)sender;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
@@ -191,6 +193,10 @@
 @end
 
 @interface OLPaymentMethodsViewController ()
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@end
+
+@interface OLShippingMethodsViewController ()
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @end
 

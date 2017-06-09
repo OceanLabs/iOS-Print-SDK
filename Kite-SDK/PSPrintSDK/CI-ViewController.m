@@ -354,19 +354,13 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
-    if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"]){
-        s = [(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"];
-    }
     [OLKitePrintSDK setAPIKey:s withEnvironment:[self environment]];
     
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-    vc.userEmail = @"";
-    vc.userPhone = @"";
     vc.delegate = self;
-    vc.qrCodeUploadEnabled = YES;
 //    vc.filterProducts = @[@""];
     
     if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]){

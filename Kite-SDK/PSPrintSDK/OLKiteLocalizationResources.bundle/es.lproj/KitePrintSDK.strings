@@ -1,5 +1,7 @@
+"%@ days" = "%@ days";
 "%ldx%ld Collage" = "%ldx%ld Collage";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Garantía de calidad**\nNuestros productos son de la más alta calidad y estamos seguros de que usted amará el suyo. Si no, ofrecemos una garantía de devolución de dinero. ¡Disfruta!";
+"1 day" = "1 day";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Error de solicitud no autorizada al intentar cargar un recurso. Compruebe que incluyó un encabezado de autorización y que las credenciales de autenticación suministradas son correctas.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Error interno del servidor al intentar cargar un activo. Vuelve a intentarlo.";
 "Add" = "Añadir";
@@ -83,6 +85,7 @@
 "Fonts" = "Fuentes";
 "For only %@ extra" = "Por sólo %@ de más";
 "FREE" = "GRATIS";
+"From" = "From";
 "FRONT" = "FRENTE";
 "Great gifts for all the family" = "Grandes regalos para toda la familia";
 "Image Is Too Small" = "La imagen es demasiado pequeña";
@@ -177,6 +180,7 @@
 "Search for Address" = "Buscar dirección";
 "Select Size" = "Selecciona el tamaño";
 "Shipping" = "Envío";
+"Shipping Method" = "Shipping Method";
 "Single Photo Poster" = "Poster con una sola foto";
 "Size" = "Tamaño";
 "Small" = "Pequeña";
@@ -197,6 +201,7 @@
 "This is the 3-4 digit verification number/security code normally found on the back of your card" = "Este es el número de verificación de 3-4 dígitos / código de seguridad que normalmente se encuentra en la parte posterior de su tarjeta";
 "This will discard your edits." = "Esto descartará sus ediciones.";
 "Total" = "Total";
+"Tracked" = "Tracked";
 "Uploading book" = "Cargando el libro";
 "Uploading Images \n%lu / %lu" = "Subiendo Imágenes \n%lu / %lu";
 "View Item" = "Ver elemento";

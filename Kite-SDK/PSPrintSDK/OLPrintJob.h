@@ -106,6 +106,11 @@
  */
 @property (strong, nonatomic) NSDate *dateAddedToBasket;
 
+/**
+ The shipping method identifier
+ */
+@property (assign, nonatomic) NSInteger selectedShippingMethodIdentifier;
+
 @end
 
 /**

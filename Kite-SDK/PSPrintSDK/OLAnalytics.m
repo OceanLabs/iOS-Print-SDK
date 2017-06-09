@@ -512,6 +512,19 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsApplePayAvailable : applePayIsAvailable, kOLAnalyticsEventLevel : @1}];
 }
 
++ (void)trackShippingMethodScreenViewed:(OLPrintOrder *)printOrder{
+    NSString *eventName = kOLAnalyticsEventNameShippingMethodScreenViewed;
+    NSString *applePayIsAvailable = [OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No" ;
+    
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
+    NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
+    [dict[@"properties"] addEntriesFromDictionary:p];
+    [dict[@"properties"] setObject:applePayIsAvailable forKey:@"Apple Pay Available"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+    
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsApplePayAvailable : applePayIsAvailable, kOLAnalyticsEventLevel : @1}];
+}
+
 + (void)trackPaymentMethodSelected:(OLPrintOrder *)printOrder methodName:(NSString *)methodName{
     NSString *eventName = kOLAnalyticsEventNamePaymentMethodSelected;
     NSString *applePayIsAvailable = [OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No" ;
@@ -521,6 +534,20 @@ static NSString *nonNilStr(NSString *str) {
     [dict[@"properties"] addEntriesFromDictionary:p];
     [dict[@"properties"] setObject:applePayIsAvailable forKey:@"Apple Pay Available"];
     [dict[@"properties"] setObject:methodName forKey:@"Payment Method Name"];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+    
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsApplePayAvailable : applePayIsAvailable, kOLAnalyticsPaymentMethod : methodName,kOLAnalyticsEventLevel : @1}];
+}
+
++ (void)trackShippingMethodSelected:(OLPrintOrder *)printOrder methodName:(NSString *)methodName{
+    NSString *eventName = kOLAnalyticsEventNameShippingMethodSelected;
+    NSString *applePayIsAvailable = [OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No" ;
+    
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
+    NSMutableDictionary *p = [self propertiesForPrintOrder:printOrder];
+    [dict[@"properties"] addEntriesFromDictionary:p];
+    [dict[@"properties"] setObject:applePayIsAvailable forKey:@"Apple Pay Available"];
+    [dict[@"properties"] setObject:methodName forKey:@"Shipping Method Name"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
     
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsApplePayAvailable : applePayIsAvailable, kOLAnalyticsPaymentMethod : methodName,kOLAnalyticsEventLevel : @1}];
@@ -665,6 +692,10 @@ static NSString *nonNilStr(NSString *str) {
 
 + (void)trackPaymentMethodScreenHitBack:(OLPrintOrder *)printOrder{
     [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNamePaymentMethodScreenHitBack job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
+}
+
++ (void)trackShippingMethodScreenHitBack:(OLPrintOrder *)printOrder{
+    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameShippingMethodScreenHitBack job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
 }
 
 + (void)trackEditScreenDidCancel{

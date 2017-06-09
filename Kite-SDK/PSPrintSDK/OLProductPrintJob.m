@@ -64,6 +64,7 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize uuid;
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
+@synthesize selectedShippingMethodIdentifier;
 
 -(NSMutableSet *) declinedOffers{
     if (!_declinedOffers){
@@ -228,6 +229,12 @@ static id stringOrEmptyString(NSString *str) {
         [json setObject:shippingAddress forKey:@"shipping_address"];
     }
     
+    NSString *countryCode = self.address.country ? [self.address.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
+    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[countryCode];
+    if (region){
+        json[@"shipping_class"] = [NSNumber numberWithInteger:self.selectedShippingMethodIdentifier];
+    }
+    
     return json;
 }
 
@@ -243,6 +250,7 @@ static id stringOrEmptyString(NSString *str) {
     objectCopy.declinedOffers = self.declinedOffers;
     objectCopy.acceptedOffers = self.acceptedOffers;
     objectCopy.redeemedOffer = self.redeemedOffer;
+    objectCopy.selectedShippingMethodIdentifier = self.selectedShippingMethodIdentifier;
     return objectCopy;
 }
 
@@ -260,6 +268,7 @@ static id stringOrEmptyString(NSString *str) {
     
     val = 40 * val + [self.address hash];
     val = 41 * val + [self.uuid hash];
+    val = 42 * val + self.selectedShippingMethodIdentifier;
 
     return val;
 }
@@ -291,6 +300,7 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.declinedOffers forKey:kKeyDeclinedOffers];
     [aCoder encodeObject:self.acceptedOffers forKey:kKeyAcceptedOffers];
     [aCoder encodeObject:self.redeemedOffer forKey:kKeyRedeemedOffer];
+    [aCoder encodeInteger:self.selectedShippingMethodIdentifier forKey:@"selectedShippingMethodIdentifier"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -305,6 +315,7 @@ static id stringOrEmptyString(NSString *str) {
         self.declinedOffers = [aDecoder decodeObjectForKey:kKeyDeclinedOffers];
         self.acceptedOffers = [aDecoder decodeObjectForKey:kKeyAcceptedOffers];
         self.redeemedOffer = [aDecoder decodeObjectForKey:kKeyRedeemedOffer];
+        self.selectedShippingMethodIdentifier = [aDecoder decodeIntegerForKey:@"selectedShippingMethodIdentifier"];
     }
     
     return self;
