@@ -92,7 +92,7 @@ extern NSString *const kOLMimeTypePDF;
 /**
  *  This object holds the image data to be sent for printing. Supports various formats such as jpeg/png data, UIIMage, URLs, ALAssets, PHAssets and file paths
  */
-@interface OLAsset : NSObject <NSCoding>
+@interface OLAsset : NSObject <NSSecureCoding>
 
 /**
  *  Create an asset with a UIImage

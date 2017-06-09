@@ -41,7 +41,7 @@
 #import "OLNavigationController.h"
 #import "OLCustomPickerController.h"
 
-@interface OLArtboardView () <UIGestureRecognizerDelegate, OLImageEditViewControllerDelegate, OLImagePickerViewControllerDelegate>
+@interface OLArtboardView () <UIGestureRecognizerDelegate, OLImageEditViewControllerDelegate, OLImagePickerViewControllerDelegate, UIDragInteractionDelegate>
 @property (assign, nonatomic) CGRect sourceAssetViewRect;
 @property (assign, nonatomic) NSUInteger sourceAssetIndex;
 @property (strong, nonatomic) NSTimer *scrollingTimer;
@@ -119,9 +119,15 @@
     view.index = index;
     view.relativeFrame = frame;
     
-    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-    longPressGesture.delegate = self;
-    [view addGestureRecognizer:longPressGesture];
+    if (@available(iOS 11.0, *)) {
+        UIDragInteraction *dragInteraction = [[UIDragInteraction alloc] initWithDelegate:self];
+        [view addInteraction:dragInteraction];
+    }
+    else {
+        UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+        longPressGesture.delegate = self;
+        [view addGestureRecognizer:longPressGesture];
+    }
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     panGesture.delegate = self;
@@ -456,6 +462,16 @@
     
     self.vcDelegateForCustomVc = nil;
     self.presentedVc = nil;
+}
+
+- (nonnull NSArray<UIDragItem *> *) dragInteraction:(nonnull UIDragInteraction *)interaction itemsForBeginningSession:(nonnull id<UIDragSession>)session {
+    OLAsset *asset = [OLAsset userSelectedAssets][[(OLArtboardAssetView *)interaction.view index]];
+    if (asset){
+        NSItemProvider *itemProvider = [[NSItemProvider alloc] initWithItem:asset typeIdentifier:@"ly.kite.olasset"];
+        UIDragItem *dragItem = [[UIDragItem alloc] initWithItemProvider:itemProvider];
+        return @[dragItem];
+    }
+    return @[];
 }
 
 @end

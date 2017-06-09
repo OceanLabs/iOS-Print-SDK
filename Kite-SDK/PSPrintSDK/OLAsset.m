@@ -717,7 +717,7 @@ static NSOperationQueue *imageOperationQueue;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
-        NSString *mimeType = [aDecoder decodeObjectForKey:kKeyMimeType];
+        NSString *mimeType = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyMimeType];
         if ([kOLMimeTypeJPEG isEqualToString:mimeType]) {
             _mimeType = kOLMimeTypeJPEG;
         } else if ([kOLMimeTypePNG isEqualToString:mimeType]) {
@@ -727,22 +727,26 @@ static NSOperationQueue *imageOperationQueue;
         } else {
             _mimeType = kOLMimeTypePNG;
         }
-        self.imageFilePath = [aDecoder decodeObjectForKey:kKeyImageFilePath];
-        self.imageData = [aDecoder decodeObjectForKey:kKeyImageData];
-        self.dataSource = [aDecoder decodeObjectForKey:kKeyDataSource];
-        self.imageURL = [aDecoder decodeObjectForKey:kKeyImageURL];
-        self.edits = [aDecoder decodeObjectForKey:kKeyImageEdits];
-        self.assetId = [[aDecoder decodeObjectForKey:kKeyKiteAssetId] longLongValue];
-        self.previewURL = [aDecoder decodeObjectForKey:kKeyKitePreviewURL];
-        self.uuid = [aDecoder decodeObjectForKey:kKeyAssetUUID];
+        self.imageFilePath = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyImageFilePath];
+        self.imageData = [aDecoder decodeObjectOfClass:[NSData class] forKey:kKeyImageData];
+        self.dataSource = [aDecoder decodeObjectOfClass:[NSObject<OLAssetDataSource> class] forKey:kKeyDataSource];
+        self.imageURL = [aDecoder decodeObjectOfClass:[NSURL class] forKey:kKeyImageURL];
+        self.edits = [aDecoder decodeObjectOfClass:[OLPhotoEdits class] forKey:kKeyImageEdits];
+        self.assetId = [[aDecoder decodeObjectOfClass:[NSNumber class] forKey:kKeyKiteAssetId] longLongValue];
+        self.previewURL = [aDecoder decodeObjectOfClass:[NSURL class] forKey:kKeyKitePreviewURL];
+        self.uuid = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyAssetUUID];
         
-        NSString *localId = [aDecoder decodeObjectForKey:kKeyPHAssetLocalId];
+        NSString *localId = [aDecoder decodeObjectOfClass:[NSString class] forKey:kKeyPHAssetLocalId];
         if (localId){
             self.phAsset = [[PHAsset fetchAssetsWithLocalIdentifiers:@[localId] options:nil] firstObject];
         }
     }
     
     return self;
+}
+
++ (BOOL)supportsSecureCoding{
+    return YES;
 }
 
 @end
