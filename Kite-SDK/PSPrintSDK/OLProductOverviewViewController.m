@@ -443,7 +443,7 @@
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != OLTemplateUINonCustomizable){
         UIViewController *vc;
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
-            vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]]];
         }
         else{
             [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
@@ -472,7 +472,7 @@
         return;
     }
     
-    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]]];
     
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
@@ -625,7 +625,7 @@
     [vc dismissViewControllerAnimated:NO completion:^{
         [self saveJobWithCompletionHandler:^{
             OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]]];
             [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
             [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
             NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];

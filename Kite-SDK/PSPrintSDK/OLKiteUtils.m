@@ -119,7 +119,7 @@
     return providers;
 }
 
-+ (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
++ (BOOL)imageProvidersAvailable{
     if ([OLUserSession currentSession].kiteVc.disallowUserToAddMorePhotos){
         return NO;
     }

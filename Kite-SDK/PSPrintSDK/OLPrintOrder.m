@@ -663,7 +663,7 @@ static NSBlockOperation *templateSyncOperation;
     NSString *countryCode = self.shippingAddress.country ? [self.shippingAddress.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
     
     NSDecimalNumber *cost = [NSDecimalNumber decimalNumberWithString:@"0"];
-    for (id<OLPrintJob> job in self.jobs){
+    for (id<OLPrintJob> job in jobs){
         OLProductTemplate *template = [OLProductTemplate templateWithId:job.templateId];
         NSString *region = template.countryMapping[countryCode];
         if (!region){

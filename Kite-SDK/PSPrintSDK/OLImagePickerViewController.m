@@ -1015,7 +1015,7 @@
             [[(OLProductPrintJob *)job acceptedOffers] addObject:vc.offer];
             
             OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]]];
             [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
             NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
             [stack removeObject:self];

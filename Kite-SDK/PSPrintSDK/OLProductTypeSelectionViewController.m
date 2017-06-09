@@ -256,7 +256,7 @@
         }
     }
     else if ([OLKiteABTesting sharedInstance].skipProductOverview && ![OLKiteABTesting sharedInstance].launchedWithPrintOrder && product.productTemplate.templateUI != OLTemplateUINonCustomizable){
-        identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]];
+        identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
     }
     
     if (!identifier){
