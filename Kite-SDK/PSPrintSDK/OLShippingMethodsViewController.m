@@ -138,7 +138,12 @@
     OLShippingClass *shippingClass = [printOrder shippingMethodsForJobs:@[job]][indexPath.item];
     
     [cell viewWithTag:10].hidden = job.selectedShippingMethodIdentifier != shippingClass.identifier;
-    [(UILabel *)[cell viewWithTag:20] setText:shippingClass.displayName];
+    if (shippingClass.tracked){
+        [(UILabel *)[cell viewWithTag:20] setText:[NSString stringWithFormat:@"%@ (%@)", shippingClass.displayName, NSLocalizedStringFromTableInBundle(@"Tracked", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")]];
+    }
+    else{
+        [(UILabel *)[cell viewWithTag:20] setText:shippingClass.displayName];
+    }
     [(UILabel *)[cell viewWithTag:30] setText:[[printOrder costForShippingMethodName:shippingClass.className forJobs:@[job]] formatCostForCurrencyCode:printOrder.currencyCode]];
     [(UILabel *)[cell viewWithTag:40] setText:[printOrder deliveryEstimatedDaysStringForShippingMethodName:shippingClass.className forJobs:@[job]]];
     

@@ -624,7 +624,7 @@ static const CGFloat kBookEdgePadding = 38;
         else{
             [self saveJobWithCompletionHandler:^{
                 OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-                UIViewController *nextVc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]];
+                UIViewController *nextVc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
                 [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
                 NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
                 [stack removeObject:self];

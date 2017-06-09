@@ -529,7 +529,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (void)costCalculationCompletedWithError:(NSError *)error {
-    if (!self.costCalculationOperation.finished){
+    if (!self.costCalculationOperation.finished && !self.costCalculationOperation.isExecuting && ![[NSOperationQueue mainQueue].operations containsObject:self.costCalculationOperation]){
         [[NSOperationQueue mainQueue] addOperation:self.costCalculationOperation];
     }
     
@@ -1302,6 +1302,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (IBAction)onShippingMethodGestureRecognized:(id)sender {
+    if (self.printOrder.jobs.count == 0){
+        return;
+    }
+    
     OLShippingMethodsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLShippingMethodsViewController"];
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -1721,7 +1725,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     [[OLAsset userSelectedAssets] removeAllObjects];
     [[OLAsset userSelectedAssets] addObjectsFromArray:userSelectedPhotos];
     
-    if ([OLKiteUtils imageProvidersAvailable:self] && product.productTemplate.templateUI != OLTemplateUIMug && product.productTemplate.templateUI != OLTemplateUICase && product.productTemplate.templateUI != OLTemplateUIApparel && product.productTemplate.templateUI != OLTemplateUIPhotobook && product.productTemplate.templateUI != OLTemplateUIPostcard && product.productTemplate.templateUI != OLTemplateUIPoster){
+    if ([OLKiteUtils imageProvidersAvailable] && product.productTemplate.templateUI != OLTemplateUIMug && product.productTemplate.templateUI != OLTemplateUICase && product.productTemplate.templateUI != OLTemplateUIApparel && product.productTemplate.templateUI != OLTemplateUIPhotobook && product.productTemplate.templateUI != OLTemplateUIPostcard && product.productTemplate.templateUI != OLTemplateUIPoster){
         OLImagePickerViewController *photoVc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
         photoVc.product = product;
         photoVc.overrideImagePickerMode = YES;

@@ -201,6 +201,7 @@
 "This is the 3-4 digit verification number/security code normally found on the back of your card" = "Il s'agit du numéro de vérification / code de sécurité de 3 à 4 chiffres qui se trouve normalement au dos de votre carte";
 "This will discard your edits." = "Ceci annulera vos modifications.";
 "Total" = "Total";
+"Tracked" = "Tracked";
 "Uploading book" = "Chargement du livre";
 "Uploading Images \n%lu / %lu" = "Images en cours de téléchargement \n%lu / %lu";
 "View Item" = "Voir les éléments";

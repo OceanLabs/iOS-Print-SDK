@@ -1,8 +1,11 @@
 ## 6.6.0
+- New Product: Mugs
+- Added: Shipping methods, including tracked shipping and estimated shipping times, per item.
 - Added: A way to preserve templates and remote config data between OLKiteViewController launches
 - Added: A way to provide a custom image picker view controller when it is needed rather than providing it when launching the SDK.
 - Minor design tweaks.
 - Custom theme now extends to more places.
+- Fixed: Address Search
 - Fixed: Layout issues on Order History screen.
 - Fixed: Apple Pay sheet not showing in some cases.
 - Collage Posters are now limited to a single product at a time.
