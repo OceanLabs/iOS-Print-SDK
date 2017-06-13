@@ -482,12 +482,28 @@
     }];
 }
 
+- (void)dragInteraction:(UIDragInteraction *)interaction item:(UIDragItem *)item willAnimateCancelWithAnimator:(id<UIDragAnimating>)animator{
+    [animator addCompletion:^(UIViewAnimatingPosition position){
+        [[OLDragAndDropHelper sharedInstance].sourceAssetView loadImageWithCompletionHandler:NULL];
+    }];
+}
+
 //- (UITargetedDragPreview *)dragInteraction:(UIDragInteraction *)interaction previewForCancellingItem:(UIDragItem *)item withDefault:(UITargetedDragPreview *)defaultPreview{
-//
+//    return [[UITargetedDragPreview alloc] initWithView:interaction.view];
 //}
 
 - (BOOL) dropInteraction:(UIDropInteraction *)interaction canHandleSession:(id<UIDropSession>)session{
     return [session hasItemsConformingToTypeIdentifiers:@[@"ly.kite.olasset"]];
+}
+
+- (void)dragInteraction:(UIDragInteraction *)interaction sessionDidMove:(id<UIDragSession>)session{
+    OLArtboardAssetView *view = [OLDragAndDropHelper sharedInstance].targetAssetView;
+    if (view){
+        CGPoint dropLocation = [session locationInView:view];
+        if (!CGRectContainsPoint(view.frame, dropLocation)){
+            view.targeted = NO;
+        }
+    }
 }
 
 - (UIDropProposal *)dropInteraction:(UIDropInteraction *)interaction sessionDidUpdate:(id<UIDropSession>)session{
@@ -504,9 +520,9 @@
             operation = session.localDragSession == nil ? UIDropOperationCopy : UIDropOperationMove;
             break;
         }
-        else{
-            view.targeted = NO;
-        }
+//        else{
+//            view.targeted = NO;
+//        }
     }
     
     if (@available(iOS 11.0, *)) {
