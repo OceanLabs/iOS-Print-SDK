@@ -510,7 +510,7 @@
     UIDropOperation operation = UIDropOperationCancel;
     
     for (OLArtboardAssetView *view in self.assetViews){
-        CGPoint dropLocation = [session locationInView:view];
+        CGPoint dropLocation = [session locationInView:self];
         if (CGRectContainsPoint(view.frame, dropLocation)){
             self.targetAssetView = view;
             if (view != [OLDragAndDropHelper sharedInstance].sourceAssetView){
@@ -520,9 +520,6 @@
             operation = session.localDragSession == nil ? UIDropOperationCopy : UIDropOperationMove;
             break;
         }
-//        else{
-//            view.targeted = NO;
-//        }
     }
     
     if (@available(iOS 11.0, *)) {
