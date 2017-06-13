@@ -129,6 +129,12 @@ CGFloat OLImagePickerMargin = 1.5;
     else{
         self.albumLabel.text = @"";
     }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        self.albumLabel.font = font;
+    }
+    
+    
     self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
     
     self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
@@ -279,7 +285,7 @@ CGFloat OLImagePickerMargin = 1.5;
             
             qtyLabel.backgroundColor = self.nextButton.backgroundColor;
             qtyLabel.textColor = [UIColor whiteColor];
-            qtyLabel.font = [UIFont systemFontOfSize:11];
+            qtyLabel.font = [UIFont systemFontOfSize:13];
             qtyLabel.textAlignment = NSTextAlignmentCenter;
             
             [cell.contentView addSubview:qtyLabel];
@@ -287,8 +293,8 @@ CGFloat OLImagePickerMargin = 1.5;
             NSDictionary *views = NSDictionaryOfVariableBindings(qtyLabel);
             NSMutableArray *con = [[NSMutableArray alloc] init];
             
-            NSArray *visuals = @[@"H:[qtyLabel(22)]-8-|",
-                                 @"V:|-8-[qtyLabel(22)]"];
+            NSArray *visuals = @[@"H:[qtyLabel(28)]-(6.5)-|",
+                                 @"V:|-(6.5)-[qtyLabel(28)]"];
             
             
             for (NSString *visual in visuals) {
@@ -296,7 +302,7 @@ CGFloat OLImagePickerMargin = 1.5;
             }
             
             [qtyLabel.superview addConstraints:con];
-            [qtyLabel makeRoundRectWithRadius:11];
+            [qtyLabel makeRoundRectWithRadius:14];
         }
         
         if (asset.extraCopies > 0){
@@ -333,6 +339,10 @@ CGFloat OLImagePickerMargin = 1.5;
         label.text = self.provider.collections[indexPath.item].name;
         if ([OLKiteABTesting sharedInstance].lightThemeColor2){
             label.superview.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor2;
+        }
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+        if (font){
+            label.font = font;
         }
     }
     

@@ -353,32 +353,21 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
-    if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"]){
-        s = [(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"api_key"];
-    }
     [OLKitePrintSDK setAPIKey:s withEnvironment:[self environment]];
     
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-    vc.userEmail = @"";
-    vc.userPhone = @"";
     vc.delegate = self;
-    vc.qrCodeUploadEnabled = YES;
+//    vc.filterProducts = @[@""];
     
     if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]){
         vc.filterProducts = @[[(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties][@"filter"]];
     }
     
     [self addCatsAndDogsImagePickersToKite:vc];
-    
-    KITAssetsPickerController *customVc = [[KITAssetsPickerController alloc] init];
-    self.customDataSources = @[[[CustomAssetCollectionDataSource alloc] init]];
-    customVc.collectionDataSources = self.customDataSources;
-    
-    [vc addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *)customVc name:@"External" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
-    
+        
     [self presentViewController:vc animated:YES completion:NULL];
 }
 
@@ -392,15 +381,19 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     vc.disableCameraRoll = YES;
     [OLKitePrintSDK setInstagramEnabledWithClientID:@"" secret:@"" redirectURI:@""];
     
-    KITAssetsPickerController *customVc = [[KITAssetsPickerController alloc] init];
-    self.customDataSources = @[[[CustomAssetCollectionDataSource alloc] init]];
-    customVc.collectionDataSources = self.customDataSources;
-    
-    [vc addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *)customVc name:@"External" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
+    [vc addCustomPhotoProviderWithViewController:nil name:@"External" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
     
     [ipvc dismissViewControllerAnimated:YES completion:^{
         [self presentViewController:vc animated:YES completion:NULL];
     }];
+}
+
+- (UIViewController<OLCustomPickerController> *_Nonnull)imagePickerViewControllerForName:(NSString *_Nonnull)name{
+    KITAssetsPickerController *customVc = [[KITAssetsPickerController alloc] init];
+    self.customDataSources = @[[[CustomAssetCollectionDataSource alloc] init]];
+    customVc.collectionDataSources = self.customDataSources;
+    
+    return (UIViewController<OLCustomPickerController> *)customVc;
 }
 
 @end

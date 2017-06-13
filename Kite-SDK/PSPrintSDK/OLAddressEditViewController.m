@@ -80,7 +80,9 @@ static const NSUInteger kTagTextField = 99;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackAddEditAddressScreenViewed];
+#endif
 }
 
 - (void)viewDidLoad {

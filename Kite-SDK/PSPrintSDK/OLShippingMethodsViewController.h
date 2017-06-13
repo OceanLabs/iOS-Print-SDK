@@ -28,19 +28,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLPrintOrder.h"
-#import "OLImageEditViewController.h"
-#import "OLKiteViewController.h"
-#import "OLCollectionViewController.h"
 
-@class OLProduct;
-
-@interface OLPackProductViewController : OLCollectionViewController <UINavigationControllerDelegate, OLImageEditViewControllerDelegate>
-
-@property (nonatomic, strong) OLProduct *product;
-@property (weak, nonatomic) id<OLKiteDelegate> delegate;
-@property (strong, nonatomic) NSMutableArray *checkoutPhotos;
-
-- (void)saveJobWithCompletionHandler:(void(^)())handler;
-
+@interface OLShippingMethodsViewController : UIViewController
 @end

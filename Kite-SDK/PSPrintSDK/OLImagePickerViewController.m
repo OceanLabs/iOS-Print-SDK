@@ -51,6 +51,7 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIViewController+OLMethods.h"
 #import <Photos/Photos.h>
+#import "UIView+RoundRect.h"
 
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSMutableArray <OLCustomViewControllerPhotoProvider *> *customImageProviders;
@@ -143,6 +144,18 @@
     
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         self.nextButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+    }
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
+    if (font){
+        [self.nextButton.titleLabel setFont:font];
+    }
+    
+    NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
+    if (cornerRadius){
+        [self.nextButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
     
     NSMutableArray<OLImagePickerProvider *> *providers = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
@@ -247,7 +260,7 @@
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
-    if ((self.product.productTemplate.templateUI == OLTemplateUICalendar || self.product.productTemplate.templateUI == OLTemplateUIDoubleSided) && self.maximumPhotos == 0){
+    if ((self.product.productTemplate.templateUI == OLTemplateUICalendar || self.product.productTemplate.templateUI == OLTemplateUIDoubleSided || self.product.productTemplate.templateUI == OLTemplateUIPoster) && self.maximumPhotos == 0){
         self.maximumPhotos = self.product.quantityToFulfillOrder;
     }
 }
@@ -663,6 +676,9 @@
     }
     else if (provider.providerType == OLImagePickerProviderTypeViewController && [provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
         UIViewController<OLCustomPickerController> *vc = [(OLCustomViewControllerPhotoProvider *)provider vc];
+        if (!vc){
+            vc = [[OLUserSession currentSession].kiteVc.delegate imagePickerViewControllerForName:provider.name];
+        }
         vc.delegate = self;
         [vc safePerformSelector:@selector(setSelectedAssets:) withObject:[self.selectedAssets mutableCopy]];
         [vc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
@@ -727,6 +743,11 @@
     UILabel *label = [cell viewWithTag:20];
     imageView.image = self.providers[indexPath.item].icon;
     label.text = self.providers[indexPath.item].name;
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:12];
+    if (font){
+        label.font = font;
+    }
     
     return cell;
 }
@@ -994,7 +1015,7 @@
             [[(OLProductPrintJob *)job acceptedOffers] addObject:vc.offer];
             
             OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+            UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]]];
             [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
             NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
             [stack removeObject:self];

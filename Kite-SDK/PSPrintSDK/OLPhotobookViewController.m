@@ -132,6 +132,10 @@ static const CGFloat kBookEdgePadding = 38;
 @property (weak, nonatomic) IBOutlet UIView *openbookView;
 @property (weak, nonatomic) IBOutlet UIView *pagesLabelContainer;
 @property (weak, nonatomic) NSLayoutConstraint *topMarginCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonTrailingCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonLeadingCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonHeightCon;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *ctaButtonBottomCon;
 @property (weak, nonatomic) OLPopupOptionsImageView *coverImageView;
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) UIPanGestureRecognizer *pageControllerPanGesture;
@@ -142,18 +146,6 @@ static const CGFloat kBookEdgePadding = 38;
 @end
 
 @implementation OLPhotobookViewController
-
--(id<OLPrintJob>)editingPrintJob{
-    if (_editingPrintJob){
-        return _editingPrintJob;
-    }
-    else if([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        self.product.uuid = [[OLUserSession currentSession].printOrder.jobs.firstObject uuid];
-        return [[OLUserSession currentSession].printOrder.jobs firstObject];
-    }
-    
-    return nil;
-}
 
 -(UIDynamicAnimator*) dynamicAnimator{
     if (!_dynamicAnimator) _dynamicAnimator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
@@ -231,11 +223,6 @@ static const CGFloat kBookEdgePadding = 38;
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
             [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         }
-        
-        if(!self.editingPrintJob){
-            self.editingPrintJob = [[OLUserSession currentSession].printOrder.jobs firstObject];
-            self.product.uuid = self.editingPrintJob.uuid;
-        }
     }
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
@@ -250,7 +237,10 @@ static const CGFloat kBookEdgePadding = 38;
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
-    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:18];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:18];
+    }
     if (font){
         [self.ctaButton.titleLabel setFont:font];
     }
@@ -400,6 +390,31 @@ static const CGFloat kBookEdgePadding = 38;
         self.topMarginCon.constant = 10;
         self.bottomMarginCon.constant = 0;
     }
+    
+    [self setupCtaButtonConstraints];
+}
+
+- (void)setupCtaButtonConstraints{
+    if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact){
+        self.ctaButtonTrailingCon.constant = 0;
+        self.ctaButtonLeadingCon.constant = 0;
+        self.ctaButtonBottomCon.constant = 0;
+        self.ctaButtonHeightCon.constant = 40;
+        
+        [self.ctaButton makeRoundRectWithRadius:0];
+    }
+    else{
+        self.ctaButtonTrailingCon.constant = 5;
+        self.ctaButtonLeadingCon.constant = 5;
+        self.ctaButtonBottomCon.constant = 5;
+        self.ctaButtonHeightCon.constant = 50;
+        
+        NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
+        if (cornerRadius){
+            [self.ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+        }
+
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -533,6 +548,8 @@ static const CGFloat kBookEdgePadding = 38;
     [self.view addConstraint:self.widthCon];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
+        [self setupCtaButtonConstraints];
+        
         [self setUpBookCoverViewForFrontCover:YES];
         if (size.width > size.height){
             self.containerView.transform = CGAffineTransformIdentity;
@@ -668,7 +685,7 @@ static const CGFloat kBookEdgePadding = 38;
         else{
             [self saveJobWithCompletionHandler:^{
                 OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-                UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+                UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]]];
                 [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
                 [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
                 NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
@@ -888,16 +905,13 @@ static const CGFloat kBookEdgePadding = 38;
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             job.dateAddedToBasket = [existingJob dateAddedToBasket];
             job.extraCopies = existingJob.extraCopies;
-            job.uuid = self.product.uuid;
             [printOrder removePrintJob:existingJob];
         }
     }
     [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
-    self.product.uuid = job.uuid;
-    self.editingPrintJob = job;
-    [printOrder addPrintJob:self.editingPrintJob];
+    [printOrder addPrintJob:job];
     
     [printOrder saveOrder];
     
@@ -1537,6 +1551,9 @@ static const CGFloat kBookEdgePadding = 38;
         self.vcDelegateForCustomVc = vc; //Keep strong reference
         vc.providerForPresentedVc = [OLUserSession currentSession].kiteVc.customImageProviders.firstObject;
         UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
+        if (!customVc){
+            customVc = [[OLUserSession currentSession].kiteVc.delegate imagePickerViewControllerForName:vc.providerForPresentedVc.name];
+        }
         [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
         [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[OLUserSession currentSession].userSelectedPhotos mutableCopy]];

@@ -24,7 +24,6 @@
 #import "OLCreditCardCaptureViewController.h"
 #import "OLEditPhotobookViewController.h"
 #import "OLKiteABTesting.h"
-#import "OLIntegratedCheckoutViewController.h"
 #import "OLAddressEditViewController.h"
 #import "OLTestTapGestureRecognizer.h"
 #import "OLCustomViewControllerPhotoProvider.h"
@@ -47,6 +46,7 @@
 #import "OL3DProductViewController.h"
 #import "OLAddressLookupViewController.h"
 #import "OLAddressSelectionViewController.h"
+#import "OLShippingMethodsViewController.h"
 
 @interface XCTestCase (OLUITestMethods)
 - (NSInteger)findIndexForProductName:(NSString *)name inOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)vc;
@@ -167,6 +167,7 @@
 - (void)payPalPaymentDidCancel:(id)paymentViewController;
 - (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method;
 - (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment paymentMethod:(NSString *)paymentMethod completion:(id)handler;
+- (IBAction)onShippingMethodGestureRecognized:(id)sender;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *promoCodeTextField;
@@ -200,6 +201,10 @@
 @end
 
 @interface OLPaymentMethodsViewController ()
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@end
+
+@interface OLShippingMethodsViewController ()
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @end
 

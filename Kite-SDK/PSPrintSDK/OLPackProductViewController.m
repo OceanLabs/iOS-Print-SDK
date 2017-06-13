@@ -36,7 +36,6 @@
 #import "OLImagePickerViewController.h"
 #import "OLImagePreviewViewController.h"
 #import "OLInfoBanner.h"
-#import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
@@ -50,6 +49,7 @@
 #import "OLUserSession.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
+#import "UIView+RoundRect.h"
 
 @interface OLPaymentViewController (Private)
 
@@ -127,6 +127,9 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 }
 
 - (void)addInfoBanner{
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools && ![OLKiteUtils imageProvidersAvailable]){
+        return;
+    }
     if ([OLUserSession currentSession].kiteVc.disableEditingTools){
         self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Tap Image to Change", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
     }
@@ -143,7 +146,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 
 - (void)setupCtaButton{
     self.nextButton = [[UIButton alloc] init];
-    [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
     [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     [self.nextButton addTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
@@ -153,21 +155,28 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
     }
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.nextButton.frame = CGRectMake(0, self.view.frame.size.height - 40 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width, 40);
-    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    self.nextButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
     if (font){
         [self.nextButton.titleLabel setFont:font];
     }
+    else{
+        [self.nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+    }
+    
+    NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
+    if (cornerRadius){
+        [self.nextButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+    }
+    
     [self.collectionView addSubview:self.nextButton];
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
             [self.nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        }
-        
-        if(!self.editingPrintJob){
-            self.editingPrintJob = [[OLUserSession currentSession].printOrder.jobs firstObject];
-            self.product.uuid = self.editingPrintJob.uuid;
         }
     }
     
@@ -286,10 +295,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     // ensure order is maxed out by adding duplicates as necessary
     NSUInteger userSelectedAssetCount = photoAssets.count;
     NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
-    NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
-    for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [photoAssets addObject:photoAssets[i % userSelectedAssetCount]];
-    }
     
 #ifdef OL_VERBOSE
     NSLog(@"Adding %lu duplicates", (unsigned long)duplicatesToFillOrder);
@@ -297,28 +302,27 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
-    OLProductPrintJob *job;
-    if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
-        job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:photoAssets.firstObject backImageOLAsset:photoAssets.lastObject];
-    }
-    else{
-        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    }
-    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-    for (id<OLPrintJob> existingJob in jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            job.dateAddedToBasket = [existingJob dateAddedToBasket];
-            job.extraCopies = existingJob.extraCopies;
-            job.uuid = self.product.uuid;
-            [printOrder removePrintJob:existingJob];
+    for (NSUInteger jobIndex = 0; jobIndex < numOrders; jobIndex++){
+        OLProductPrintJob *job;
+        if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+            job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:photoAssets.firstObject backImageOLAsset:photoAssets.lastObject];
         }
+        else{
+            job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[photoAssets subarrayWithRange:NSMakeRange(jobIndex * self.product.quantityToFulfillOrder, MIN(self.product.quantityToFulfillOrder, photoAssets.count - jobIndex * self.product.quantityToFulfillOrder))]];
+        }
+        NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
+        for (id<OLPrintJob> existingJob in jobs){
+            if ([existingJob.uuid isEqualToString:self.product.uuid]){
+                job.dateAddedToBasket = [existingJob dateAddedToBasket];
+                job.extraCopies = existingJob.extraCopies;
+                [printOrder removePrintJob:existingJob];
+            }
+        }
+        [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
+        [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
+        job.redeemedOffer = self.product.redeemedOffer;
+        [printOrder addPrintJob:job];
     }
-    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
-    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
-    job.redeemedOffer = self.product.redeemedOffer;
-    self.product.uuid = job.uuid;
-    self.editingPrintJob = job;
-    [printOrder addPrintJob:self.editingPrintJob];
     
     [printOrder saveOrder];
     
@@ -581,10 +585,6 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     [self doCheckout];
 }
 
-- (IBAction)onButtonImageClicked:(UIButton *)sender {
-    [self editPhoto:sender];
-}
-
 - (void)preparePhotosForCheckout{
     self.checkoutPhotos = [[NSMutableArray alloc] init];
     [self.checkoutPhotos addObjectsFromArray:[OLUserSession currentSession].userSelectedPhotos];
@@ -593,6 +593,7 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         for (NSInteger j = 0; j < numberOfCopies; j++){
             [self.checkoutPhotos addObject:[OLUserSession currentSession].userSelectedPhotos[i]];
         }
+        [OLUserSession currentSession].userSelectedPhotos[i].extraCopies = 0;
     }
 }
 
@@ -635,16 +636,23 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     [cell.activityView startAnimating];
     
     cell.imageView.userInteractionEnabled = YES;
-    if (cell.imageView.gestureRecognizers.count == 0){
+    if (cell.imageView.gestureRecognizers.count == 0 && ![OLUserSession currentSession].kiteVc.disableEditingTools){
         [cell.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editPhoto:)]];
     }
     
     UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:11];
+    if ([OLUserSession currentSession].kiteVc.disableEditingTools){
+        [editButton removeFromSuperview];
+    }
     [editButton addTarget:self action:@selector(editPhoto:) forControlEvents:UIControlEventTouchUpInside];
     if ([OLKiteABTesting sharedInstance].lightThemeColor2){
         [editButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor2];
     }
     [editButton setTitle:NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit image") forState:UIControlStateNormal];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font){
+        [editButton.titleLabel setFont:font];
+    }
     
     UIButton *upButton = (UIButton *)[cell.contentView viewWithTag:12];
     [upButton addTarget:self action:@selector(onButtonUpArrowClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -655,9 +663,14 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[OLUserSession currentSession].userSelectedPhotos[indexPath.item] extraCopies]+1]];
     if ([OLKiteABTesting sharedInstance].lightThemeColor3){
-        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
         [upButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
         [downButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+    }
+    if ([OLKiteABTesting sharedInstance].lightThemeColorReviewCounter){
+        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColorReviewCounter];
+    }
+    else if ([OLKiteABTesting sharedInstance].lightThemeColor3){
+        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
     }
     
     OLAsset *asset = (OLAsset*)[[OLUserSession currentSession].userSelectedPhotos objectAtIndex:indexPath.item];

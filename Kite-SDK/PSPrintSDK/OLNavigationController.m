@@ -36,7 +36,10 @@
     [super viewDidLoad];
     
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
     if (font){
         [attributes setObject:font forKey:NSFontAttributeName];
         self.navigationBar.titleTextAttributes = attributes;

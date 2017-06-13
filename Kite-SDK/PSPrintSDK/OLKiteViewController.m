@@ -177,7 +177,7 @@ static CGFloat fadeTime = 0.3;
     [self addCustomPhotoProviderWithViewController:vc name:name icon:icon prepopulatedAssets:nil];
 }
 
-- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *> *_Nullable)assets{
+- (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nullable)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon prepopulatedAssets:(NSArray <OLAsset *> *_Nullable)assets{
     OLCustomViewControllerPhotoProvider *customProvider = [[OLCustomViewControllerPhotoProvider alloc] initWithController:vc name:name icon:icon];
     [customProvider.collections.firstObject addAssets:assets unique:NO];
     customProvider.preselectedAssets = assets;
@@ -221,7 +221,9 @@ static CGFloat fadeTime = 0.3;
         [self.operationQueue addOperation:loadingHandlerOperation];
     }
     
-    [OLProductTemplate resetTemplates];
+    if (!self.preserveExistingTemplates){
+        [OLProductTemplate resetTemplates];
+    }
     
     if ([OLProductTemplate templates].count > 0){
         fadeTime = 0;
@@ -229,6 +231,7 @@ static CGFloat fadeTime = 0.3;
         
         [self.operationQueue addOperation:self.templateSyncOperation];
         [self.operationQueue addOperation:self.remotePlistSyncOperation];
+        [self.operationQueue addOperation:self.remoteThemePlistSyncOperation];
     }
     else{
         __weak OLKiteViewController *welf = self;
@@ -310,12 +313,13 @@ static CGFloat fadeTime = 0.3;
         else if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
             BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[[OLUserSession currentSession].printOrder.jobs firstObject] assetsForUploading]];
             OLProduct *product = [OLProduct productWithTemplateId:[[[OLUserSession currentSession].printOrder.jobs firstObject] templateId]];
+            product.uuid = [[OLUserSession currentSession].printOrder.jobs firstObject].uuid;
             NSString *identifier;
             if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"] && [product isValidProductForUI]){
                 identifier = @"OLProductOverviewViewController";
             }
             else if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] && [product isValidProductForUI]){
-                identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:welf]];
+                identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
             }
             else{
                 [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
@@ -499,8 +503,7 @@ static CGFloat fadeTime = 0.3;
             [self.operationQueue addOperation:self.templateSyncOperation];
         }
         
-        UINavigationController *vc = self.childViewControllers.firstObject;
-        [vc.viewControllers.firstObject safePerformSelector:@selector(templateSyncDidUpdate) withObject:nil];
+        [self.viewControllers.firstObject safePerformSelector:@selector(templateSyncDidUpdate) withObject:nil];
     }
 }
 
@@ -508,12 +511,16 @@ static CGFloat fadeTime = 0.3;
     return [(UINavigationController *)self.childViewControllers.firstObject viewControllers];
 }
 
+- (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder{
+    return [[OLReceiptViewController alloc] initWithPrintOrder:printOrder];
+}
+
 + (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
     if (group.products.count > 1){
         return @"OLTypeSelectionViewController";
     }
     else if ([OLKiteABTesting sharedInstance].disableProductCategories && [OLKiteABTesting sharedInstance].skipProductOverview){
-        return [OLKiteUtils reviewViewControllerIdentifierForProduct:group.products.firstObject photoSelectionScreen:YES];
+        return [OLKiteUtils reviewViewControllerIdentifierForProduct:group.products.firstObject photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
     }
     else{
         return @"OLProductOverviewViewController";

@@ -27,3 +27,5 @@ There are 2 ways to offer custom photo sources:
   ```
 
   Like the first method, you can call this method as many times as you like, and multiple photo sources will show up next to the standard ones.
+
+If you pass nil to the view controller argument, then the OLKiteDelegate object will be asked for it when it is needed. All you need to do is implement imagePickerViewControllerForName: and return your view controller. This is preferable because it means that your view controller will not stay in memory needlessly and can be destroyed when the user is done with it.

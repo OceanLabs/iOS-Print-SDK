@@ -118,6 +118,40 @@
     }
     
     [self setupBannerView];
+    
+    if ([OLKiteABTesting sharedInstance].lightThemeSecretRevealURL){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:[OLKiteABTesting sharedInstance].lightThemeSecretRevealURL] withCompletionHandler:^(UIImage *image, NSError *error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.topSurpriseImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                self.topSurpriseImageView.image = image;
+                CGRect f = self.topSurpriseImageView.frame;
+                
+                f.size.height = (self.view.frame.size.width / f.size.width) * f.size.height;
+                f.size.width = self.view.frame.size.width;
+                
+                f.origin.y = -f.size.height;
+                self.topSurpriseImageView.frame = f;
+                self.topSurpriseImageView.contentMode = UIViewContentModeScaleAspectFill;
+                self.topSurpriseImageView.clipsToBounds = YES;
+                
+                [self.collectionView addSubview:self.topSurpriseImageView];
+            });
+        }];
+    }
+}
+
+- (void)viewDidLayoutSubviews{
+    [super viewDidLayoutSubviews];
+    
+    if (self.topSurpriseImageView){
+        CGRect f = self.topSurpriseImageView.frame;
+        
+        f.size.height = (self.view.frame.size.width / f.size.width) * f.size.height;
+        f.size.width = self.view.frame.size.width;
+        
+        f.origin.y = -f.size.height;
+        self.topSurpriseImageView.frame = f;
+    }
 }
 
 - (void)setupBannerView{
@@ -374,9 +408,11 @@
     [super viewDidAppear:animated];
     
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
-    if (url && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:url] && [self isMemberOfClass:[OLProductHomeViewController class]]){
+    if (url && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:url] && !([self.navigationItem.titleView isKindOfClass:[UIImageView class]] || [self.parentViewController.navigationItem.titleView isKindOfClass:[UIImageView class]])){
         [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
-            if (error) return;
+            if (error){
+                return;
+            }
             image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
@@ -525,7 +561,9 @@
 
 - (void)collectionView:(UICollectionView *)collectionView actionForBannerSectionForIndexPath:(NSIndexPath *)indexPath{
     if ([self printAtHomeAvailable]){
+#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackPrintAtHomeTapped];
+#endif
         OLAsset *asset = [OLUserSession currentSession].appAssets.firstObject;
         [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
             id printItem = [OLHPSDKWrapper printItemWithAsset:[UIImage imageWithData:data scale:1]];
@@ -562,6 +600,10 @@
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;
     
     CGFloat height = 233;
+    
+    if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"ThemeColor"]){
+        height = 200;
+    }
     
     if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width) {
         if (numberOfCells == 2){
@@ -789,6 +831,12 @@
         
         if (![OLKiteABTesting sharedInstance].skipProductOverview){
             [[cell.contentView viewWithTag:303] removeFromSuperview];
+        }
+    }
+    else if([[OLKiteABTesting sharedInstance].productTileStyle isEqualToString:@"ThemeColor"]){
+        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+            UILabel *detailsLabel = [cell.contentView viewWithTag:302];
+            detailsLabel.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
         }
     }
     else{

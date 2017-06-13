@@ -119,11 +119,6 @@
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
             [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         }
-        
-        if(!self.editingPrintJob){
-            self.editingPrintJob = [[OLUserSession currentSession].printOrder.jobs firstObject];
-            self.product.uuid = self.editingPrintJob.uuid;
-        }
     }
     
     [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
@@ -138,7 +133,10 @@
     
     self.ctaButton.enabled = YES;
     
-    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
     if (font){
         [self.ctaButton.titleLabel setFont:font];
     }
@@ -178,10 +176,26 @@
     [self.view addConstraint:con];
     
     if (header){
-        [(UILabel *)[self.hintView viewWithTag:20] setText:header];
+        UILabel *label = (UILabel *)[self.hintView viewWithTag:20];
+        [label setText:header];
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:25];
+        if (!font){
+            font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:25];
+        }
+        
+        if (font){
+            [label setFont:font];
+        }
     }
     if (body){
-        [(UILabel *)[self.hintView viewWithTag:30] setText:body];
+        UILabel *label = (UILabel *)[self.hintView viewWithTag:30];
+        [label setText:body];
+        
+        UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:13];
+        if (font){
+            [label setFont:font];
+        }
     }
     
     NSTimeInterval delay = shouldDelay ? 1 : 0;
@@ -283,16 +297,13 @@
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             job.dateAddedToBasket = [existingJob dateAddedToBasket];
             job.extraCopies = existingJob.extraCopies;
-            job.uuid = self.product.uuid;
             [printOrder removePrintJob:existingJob];
         }
     }
     [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
-    self.product.uuid = job.uuid;
-    self.editingPrintJob = job;
-    [printOrder addPrintJob:self.editingPrintJob];
+    [printOrder addPrintJob:job];
     
     [printOrder saveOrder];
     
@@ -458,7 +469,7 @@
         else{
             [self saveJobWithCompletionHandler:^{
                 OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-                UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable:self]]];
+                UIViewController *nextVc = [self.storyboard instantiateViewControllerWithIdentifier:[OLKiteUtils reviewViewControllerIdentifierForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]]];
                 [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
                 [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
                 NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];

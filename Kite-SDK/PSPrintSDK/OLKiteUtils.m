@@ -33,7 +33,6 @@
 #import "OLPaymentViewController.h"
 #import "OLKiteABTesting.h"
 #import "OLCheckoutViewController.h"
-#import "OLIntegratedCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
 #import "OLPayPalWrapper.h"
@@ -45,9 +44,9 @@
 
 @interface OLKitePrintSDK (Private)
 + (NSString *)appleMerchantID;
-+ (NSString *) instagramRedirectURI;
-+ (NSString *) instagramSecret;
-+ (NSString *) instagramClientID;
++ (NSString *)instagramRedirectURI;
++ (NSString *)instagramSecret;
++ (NSString *)instagramClientID;
 @end
 
 @interface OLKiteViewController (Private)
@@ -120,7 +119,7 @@
     return providers;
 }
 
-+ (BOOL)imageProvidersAvailable:(UIViewController *)topVc{
++ (BOOL)imageProvidersAvailable{
     if ([OLUserSession currentSession].kiteVc.disallowUserToAddMorePhotos){
         return NO;
     }
@@ -137,7 +136,7 @@
 }
 
 +(BOOL)isApplePayAvailable{
-    if (![OLStripeWrapper isStripeAvailable]){
+    if (![OLStripeWrapper isStripeAvailable] || ![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""]){
         return NO;
     }
     
@@ -166,13 +165,7 @@
 }
 
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
-    OLCheckoutViewController *vc;
-    if ([[OLKiteABTesting sharedInstance].checkoutScreenType isEqualToString:@"Classic"]){
-        vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    }
-    else{
-        vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    }
+    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
     handler(vc);
 }
 

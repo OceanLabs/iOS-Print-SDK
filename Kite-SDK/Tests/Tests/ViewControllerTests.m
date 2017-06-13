@@ -97,25 +97,6 @@
     [[OLUserSession currentSession].kiteVc dismiss];
 }
 
-- (void)testIntegratedCheckoutViewController{
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
-    printOrder.email = @"ios_unit_test@kite.ly";
-    printOrder.phone = @"1234123412";
-    
-    OLIntegratedCheckoutViewController *vc = [[OLIntegratedCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-    
-    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-    
-    [self performUIAction:^{
-        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
-    }];
-    [self performUIAction:^{
-            [vc onButtonDoneClicked];
-    }];
-}
-
 - (void)testAddressEditViewController{
     OLAddressEditViewController *vc = [[OLAddressEditViewController alloc] initWithAddress:[OLAddress kiteTeamAddress]];
     
@@ -240,26 +221,9 @@
         vc.promoCodeTextField.text = @"unit-test-promo-code-2014";
     }];
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:4 action:^{
         [vc onBackgroundClicked];
     }];
-    
-    [self performUIAction:^{
-    }];
-    
-    [OLKiteABTesting sharedInstance].checkoutScreenType = @"Integrated";
-    
-    [self performUIAction:^{
-        [vc onShippingDetailsGestureRecognized:nil];
-    }];
-    
-    XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLIntegratedCheckoutViewController class]] ,@"");
-    
-    [self performUIAction:^{
-        [(OLNavigationController *)vc.navigationController popViewControllerAnimated:YES];
-    }];
-    
-    [OLKiteABTesting sharedInstance].checkoutScreenType = @"Classic";
     
     [self performUIAction:^{
         [vc onShippingDetailsGestureRecognized:nil];
@@ -347,6 +311,67 @@
     }];
     
     XCTAssert([[(OLNavigationController *)vc.navigationController topViewController] isKindOfClass:[OLPaymentViewController class]]);
+}
+
+- (void)testShippingMethodsViewController{
+    [OLKiteTestHelper mockTemplateRequest];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Template Sync Completed"];
+    [self templateSyncWithSuccessHandler:^{
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:120 handler:NULL];
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"i7_case" OLAssets:[OLKiteTestHelper urlAssets]];
+    
+    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
+    [printOrder addPrintJob:job];
+    printOrder.shippingAddress = [OLAddress kiteTeamAddress];
+    printOrder.email = @"ios_unit_test@kite.ly";
+    printOrder.phone = @"1234123412";
+    
+    XCTAssert([printOrder.shippingAddress.description isEqualToString:@"Kite Team, Eastcastle House, 27-28 Eastcastle St, London, W1W 8DH, United Kingdom"]);
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[NSBundle bundleForClass:[OLKiteViewController class]]];
+    XCTAssert(sb);
+    
+    OLPaymentViewController *vc = [sb instantiateViewControllerWithIdentifier:@"OLPaymentViewController"];
+    vc.printOrder = printOrder;
+    
+    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+    [self performUIAction:^{
+        [rootVc.topViewController presentViewController:nvc animated:YES completion:NULL];
+    }];
+    
+    [self performUIAction:^{
+        [vc onButtonAddPaymentMethodClicked:nil];
+    }];
+    
+    [self performUIAction:^{
+        OLPaymentMethodsViewController *paymentMethodsVc = (OLPaymentMethodsViewController *)[(OLNavigationController *)vc.navigationController topViewController];
+        XCTAssert([paymentMethodsVc isKindOfClass:[OLPaymentMethodsViewController class]], @"Did not show Payment Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)paymentMethodsVc collectionView:paymentMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:2]];
+        
+        [paymentMethodsVc.navigationController popViewControllerAnimated:YES];
+    }];
+    
+    [self performUIAction:^{
+        [vc onShippingMethodGestureRecognized:nil];
+    }];
+    
+    [self performUIAction:^{
+        OLShippingMethodsViewController *shippingMethodsVc = (OLShippingMethodsViewController *)[(OLNavigationController *)vc.navigationController topViewController];
+        XCTAssert([shippingMethodsVc isKindOfClass:[OLShippingMethodsViewController class]], @"Did not show Shipping Methods ViewController");
+        
+        [(id<UICollectionViewDelegate>)shippingMethodsVc collectionView:shippingMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:1]];
+        
+        [shippingMethodsVc.navigationController popViewControllerAnimated:YES];
+        
+    }];
+    
+    [OLKiteTestHelper undoMockTemplateRequest];
 }
 
 - (void)testStartWithPrintOrderVariantCheckout{

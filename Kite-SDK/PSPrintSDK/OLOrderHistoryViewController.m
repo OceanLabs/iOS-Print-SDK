@@ -36,9 +36,15 @@
 #import "OLPrintOrder+History.h"
 #import "OLKiteUtils.h"
 #import "OLAnalytics.h"
+#import "OLKiteViewController.h"
+#import "OLUserSession.h"
 
 @interface OLOrderHistoryViewController ()
 @property (strong, nonatomic) NSArray *printOrderHistory;
+@end
+
+@interface OLKiteViewController ()
+- (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder;
 @end
 
 @implementation OLOrderHistoryViewController
@@ -52,8 +58,11 @@
     self.printOrderHistory = [OLPrintOrder printOrderHistory];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
-    
+#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackOrderHistoryScreenViewed];
+#endif
+    
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"") style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 
 - (void)dismiss{
@@ -61,7 +70,9 @@
 }
 
 - (void)dealloc{
+#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackOrderHistoryScreenDismissed];
+#endif
 }
 
 #pragma mark - UITableViewDataSource methods
@@ -130,7 +141,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSArray *printOrders = self.printOrderHistory;
     OLPrintOrder *order = printOrders[printOrders.count - (indexPath.row + 1)];
-    OLReceiptViewController *receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:order];
+    OLReceiptViewController *receiptVC = [[OLUserSession currentSession].kiteVc receiptViewControllerForPrintOrder:order];
+    if (!receiptVC){
+        receiptVC = [[OLReceiptViewController alloc] initWithPrintOrder:order];
+    }
     [self.navigationController pushViewController:receiptVC animated:YES];
 }
 

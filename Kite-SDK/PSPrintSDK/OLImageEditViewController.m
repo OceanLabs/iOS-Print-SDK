@@ -1022,6 +1022,15 @@ const NSInteger kOLEditTagCrop = 40;
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.editingTools setColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
+    
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
+    if (!font){
+        font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    }
+    if (font){
+        [self.editingTools.drawerDoneButton.titleLabel setFont:font];
+        [self.editingTools.ctaButton.titleLabel setFont:font];
+    }
 }
 
 - (void)setupCtaButtons{
@@ -1032,6 +1041,10 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupButton1{
+    if (![OLKiteUtils imageProvidersAvailable]){
+        [self.editingTools.button1 removeFromSuperview];
+        return;
+    }
     [self.editingTools.button1 setImage:[UIImage imageNamedInKiteBundle:@"add-image-icon"] forState:UIControlStateNormal];
     self.editingTools.button1.tag = kOLEditTagImages;
     [self.editingTools.button1 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -2197,7 +2210,9 @@ const NSInteger kOLEditTagCrop = 40;
         
         self.vcDelegateForCustomVc = vc; //Keep strong reference
         UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
-        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+        if (!customVc){
+            customVc = [[OLUserSession currentSession].kiteVc.delegate imagePickerViewControllerForName:vc.providerForPresentedVc.name];
+        }        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
         [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
         if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){

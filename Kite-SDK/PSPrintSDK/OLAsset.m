@@ -50,6 +50,8 @@ static NSString *const kKeyPHAssetLocalId = @"co.oceanlabs.pssdk.kKeyPHAssetLoca
 static NSString *const kKeyImageEdits = @"co.oceanlabs.pssdk.kKeyImageEdits";
 static NSString *const kKeyKiteAssetId = @"co.oceanlabs.pssdk.kKeyKiteAssetId";
 static NSString *const kKeyKitePreviewURL = @"co.oceanlabs.pssdk.kKeyKitePreviewURL";
+static NSString *const kKeyAssetUUID = @"co.oceanlabs.pssdk.kKeyAssetUUID";
+
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
@@ -472,31 +474,34 @@ static NSOperationQueue *imageOperationQueue;
             }];
         }
         else if (self.assetType == kOLAssetTypeRemoteImageURL) {
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:self.imageURL progress:^(NSInteger currentProgress, NSInteger total){
+            [[OLImageDownloader sharedInstance] downloadDataAtURL:self.imageURL priority:0.5 progress:^(NSInteger currentProgress, NSInteger total){
                 if (progress) {
                     progress(MAX(0.05f, (float)currentProgress / (float) total));
                 }
-            }withCompletionHandler:^(UIImage *image, NSError *error){
-                [self resizeImage:image size:size applyEdits:applyEdits completion:^(UIImage *image){
-                    if (!error) {
-                        if (!fullResolution){
-                            self.cachedEditedImage = image;
-                            
-                            // Decompress image to improve performance
-                            // Source: http://stackoverflow.com/questions/10790183/setting-image-property-of-uiimageview-causes-major-lag
-                            if (image) {
-                                UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
-                                [image drawAtPoint:CGPointZero];
-                                image = UIGraphicsGetImageFromCurrentImageContext();
-                                UIGraphicsEndImageContext();
+            }withCompletionHandler:^(NSData *data, NSError *error){
+                NSBlockOperation *downloadedBlock = [NSBlockOperation blockOperationWithBlock:^{
+                    [self resizeImage:[UIImage imageWithData:data] size:size applyEdits:applyEdits completion:^(UIImage *image){
+                        if (!error) {
+                            if (!fullResolution){
+                                self.cachedEditedImage = image;
+                                
+                                // Decompress image to improve performance
+                                // Source: http://stackoverflow.com/questions/10790183/setting-image-property-of-uiimageview-causes-major-lag
+                                if (image) {
+                                    UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
+                                    [image drawAtPoint:CGPointZero];
+                                    image = UIGraphicsGetImageFromCurrentImageContext();
+                                    UIGraphicsEndImageContext();
+                                }
                             }
-                        }
                             if (progress){
                                 progress(1);
                             }
                             handler(image, nil);
-                    }
+                        }
+                    }];
                 }];
+                [[OLAsset imageOperationQueue] addOperation:downloadedBlock];
             }];
         }
         else if (self.assetType == kOLAssetTypeDataSource){
@@ -703,6 +708,7 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeObject:self.edits forKey:kKeyImageEdits];
     [aCoder encodeObject:self.previewURL forKey:kKeyKitePreviewURL];
     [aCoder encodeObject:[NSNumber numberWithLongLong:self.assetId] forKey:kKeyKiteAssetId];
+    [aCoder encodeObject:self.uuid forKey:kKeyAssetUUID];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -724,6 +730,7 @@ static NSOperationQueue *imageOperationQueue;
         self.edits = [aDecoder decodeObjectForKey:kKeyImageEdits];
         self.assetId = [[aDecoder decodeObjectForKey:kKeyKiteAssetId] longLongValue];
         self.previewURL = [aDecoder decodeObjectForKey:kKeyKitePreviewURL];
+        self.uuid = [aDecoder decodeObjectForKey:kKeyAssetUUID];
         
         NSString *localId = [aDecoder decodeObjectForKey:kKeyPHAssetLocalId];
         if (localId){

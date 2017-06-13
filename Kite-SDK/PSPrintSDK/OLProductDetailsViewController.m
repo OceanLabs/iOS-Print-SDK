@@ -69,7 +69,18 @@
     }
     self.detailsLabel.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product Details");
     
-    NSMutableAttributedString *attributedString = [[[OLMarkDownParser standardParser] attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
+    OLMarkDownParser *mdParser = [OLMarkDownParser standardParser];
+    font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:13];
+    if (font){
+        mdParser.strongFont = font;
+    }
+    
+    font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:12];
+    if (font) {
+        mdParser.paragraphFont = font;
+    }
+    
+    NSMutableAttributedString *attributedString = [[mdParser attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
     [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
     
