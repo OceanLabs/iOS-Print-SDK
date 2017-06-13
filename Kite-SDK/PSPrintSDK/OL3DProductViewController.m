@@ -58,6 +58,7 @@
     [super viewDidLoad];
     
     self.scene = [[SCNView alloc] init];
+    self.scene.antialiasingMode = SCNAntialiasingModeMultisampling4X;
     self.scene.backgroundColor = self.view.backgroundColor;
     [self.view addSubview:self.scene];
     [self.scene leadingFromSuperview:0 relation:NSLayoutRelationEqual];
