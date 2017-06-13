@@ -44,6 +44,7 @@
 		2E1BB37D1E7C2A25008F7217 /* OLSingleImagePosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1BB37B1E7C2A25008F7217 /* OLSingleImagePosterViewController.h */; };
 		2E1BB37E1E7C2A25008F7217 /* OLSingleImagePosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1BB37C1E7C2A25008F7217 /* OLSingleImagePosterViewController.m */; };
 		2E23EB9B1D5091FC00E2BF42 /* CI-Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */; };
+		2E2D10A11EEED88900C2F582 /* OLDragAndDropHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D109F1EEED88300C2F582 /* OLDragAndDropHelper.m */; };
 		2E3084AE1E813672008218BF /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084A81E813672008218BF /* 1.jpg */; };
 		2E3084AF1E813672008218BF /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084A91E813672008218BF /* 2.png */; };
 		2E3084B01E813672008218BF /* 3.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084AA1E813672008218BF /* 3.pdf */; };
@@ -598,6 +599,8 @@
 		2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerPhotosPageViewController.m; sourceTree = "<group>"; };
 		2E2BF4451CCDFAF100725561 /* OLKiteTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteTheme.h; sourceTree = "<group>"; };
 		2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteTheme.m; sourceTree = "<group>"; };
+		2E2D109E1EEED88300C2F582 /* OLDragAndDropHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLDragAndDropHelper.h; sourceTree = "<group>"; };
+		2E2D109F1EEED88300C2F582 /* OLDragAndDropHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OLDragAndDropHelper.m; sourceTree = "<group>"; };
 		2E2E61E51C21826D005CB729 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
 		2E2E61E61C21826D005CB729 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
 		2E3084A81E813672008218BF /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 1.jpg; path = Tests/Resources/1.jpg; sourceTree = SOURCE_ROOT; };
@@ -1614,6 +1617,8 @@
 				2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */,
 				2EB715D31CFDD12900618C7B /* OLLuhn.h */,
 				2EB715D41CFDD12900618C7B /* OLLuhn.m */,
+				2E2D109E1EEED88300C2F582 /* OLDragAndDropHelper.h */,
+				2E2D109F1EEED88300C2F582 /* OLDragAndDropHelper.m */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -2602,6 +2607,7 @@
 				2E12DBC91E795511000A6CEF /* UIView+AutoLayoutHelper.m in Sources */,
 				2E451E231D9555870080F1C1 /* OLOAuth2FileStreamWrapper.m in Sources */,
 				2E451DF91D95555D0080F1C1 /* OLArtboardTemplate.m in Sources */,
+				2E2D10A11EEED88900C2F582 /* OLDragAndDropHelper.m in Sources */,
 				2E451E351D9555870080F1C1 /* OLProductOverviewPageContentViewController.m in Sources */,
 				2E451E0B1D9555860080F1C1 /* OLFacebookAlbum.m in Sources */,
 				2E451E5D1D9555EC0080F1C1 /* OLQRCodeUploadViewController.m in Sources */,

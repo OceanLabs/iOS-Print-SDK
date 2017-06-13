@@ -40,14 +40,11 @@
 #import "OLCustomViewControllerPhotoProvider.h"
 #import "OLNavigationController.h"
 #import "OLCustomPickerController.h"
+#import "OLDragAndDropHelper.h"
 
-@interface OLArtboardView () <UIGestureRecognizerDelegate, OLImageEditViewControllerDelegate, OLImagePickerViewControllerDelegate, UIDragInteractionDelegate>
-@property (assign, nonatomic) CGRect sourceAssetViewRect;
-@property (assign, nonatomic) NSUInteger sourceAssetIndex;
+@interface OLArtboardView () <UIGestureRecognizerDelegate, OLImageEditViewControllerDelegate, OLImagePickerViewControllerDelegate, UIDragInteractionDelegate, UIDropInteractionDelegate>
 @property (strong, nonatomic) NSTimer *scrollingTimer;
 @property (strong, nonatomic) UIView *draggingView;
-@property (weak, nonatomic) OLArtboardAssetView *sourceAssetView;
-@property (weak, nonatomic) OLArtboardAssetView *targetAssetView;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
 @property (strong, nonatomic) UIViewController *presentedVc;
 @end
@@ -71,20 +68,20 @@
 }
 
 - (void)setTargetAssetView:(OLArtboardAssetView *)targetAssetView{
-    if (_targetAssetView && _targetAssetView != targetAssetView){
-        _targetAssetView.targeted = NO;
+    if ([OLDragAndDropHelper sharedInstance].targetAssetView && [OLDragAndDropHelper sharedInstance].targetAssetView != targetAssetView){
+        [OLDragAndDropHelper sharedInstance].targetAssetView.targeted = NO;
     }
-    _targetAssetView = targetAssetView;
+    [OLDragAndDropHelper sharedInstance].targetAssetView = targetAssetView;
 }
 
 - (void)setSourceAssetView:(OLArtboardAssetView *)sourceAssetView{
-    _sourceAssetView = sourceAssetView;
+    [OLDragAndDropHelper sharedInstance].sourceAssetView = sourceAssetView;
     UIView *view = [self.delegate viewToAddDraggingAsset];
     if ([self.delegate respondsToSelector:@selector(scrollViewForVerticalScolling)]){
         view = [self.delegate scrollViewForVerticalScolling];
     }
-    self.sourceAssetViewRect = [view convertRect:sourceAssetView.frame fromView:sourceAssetView.superview];
-    self.sourceAssetIndex = sourceAssetView.index;
+    [OLDragAndDropHelper sharedInstance].sourceAssetViewRect = [view convertRect:sourceAssetView.frame fromView:sourceAssetView.superview];
+    [OLDragAndDropHelper sharedInstance].sourceAssetIndex = sourceAssetView.index;
 }
 
 - (instancetype)init{
@@ -122,6 +119,9 @@
     if (@available(iOS 11.0, *)) {
         UIDragInteraction *dragInteraction = [[UIDragInteraction alloc] initWithDelegate:self];
         [view addInteraction:dragInteraction];
+        
+        UIDropInteraction *dropInteraction = [[UIDropInteraction alloc] initWithDelegate:self];
+        [view addInteraction:dropInteraction];
     }
     else {
         UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
@@ -163,7 +163,7 @@
 
 - (void)dropView:(UIView *)viewDropped onView:(OLArtboardAssetView *)targetView{
     UIImageView *swappingView;
-    if (targetView != self.sourceAssetView){
+    if (targetView != [OLDragAndDropHelper sharedInstance].sourceAssetView){
         swappingView = [[UIImageView alloc] initWithImage:targetView.imageView.image];
         swappingView.contentMode = [[OLAsset userSelectedAssets][targetView.index] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
         swappingView.clipsToBounds = YES;
@@ -183,24 +183,24 @@
         if ([self.delegate respondsToSelector:@selector(scrollViewForVerticalScolling)]){
             view = [self.delegate scrollViewForVerticalScolling];
         }
-        swappingView.frame = [view convertRect:self.sourceAssetViewRect toView:[self.delegate viewToAddDraggingAsset]];
+        swappingView.frame = [view convertRect:[OLDragAndDropHelper sharedInstance].sourceAssetViewRect toView:[self.delegate viewToAddDraggingAsset]];
     } completion:^(BOOL finished){
-        if (self.sourceAssetIndex == self.sourceAssetView.index){
-            self.sourceAssetView.image = swappingView.image;
-            self.sourceAssetView.imageView.contentMode = [[OLAsset userSelectedAssets][targetView.index] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
+        if ([OLDragAndDropHelper sharedInstance].sourceAssetIndex == [OLDragAndDropHelper sharedInstance].sourceAssetView.index){
+            [OLDragAndDropHelper sharedInstance].sourceAssetView.image = swappingView.image;
+            [OLDragAndDropHelper sharedInstance].sourceAssetView.imageView.contentMode = [[OLAsset userSelectedAssets][targetView.index] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
         }
-        if (!self.targetAssetView){
-            self.targetAssetView = self.sourceAssetView;
+        if (![OLDragAndDropHelper sharedInstance].targetAssetView){
+            self.targetAssetView = [OLDragAndDropHelper sharedInstance].sourceAssetView;
         }
-        self.targetAssetView.image = [self.draggingView.subviews.firstObject image];
-        self.targetAssetView.imageView.contentMode = [[OLAsset userSelectedAssets][self.sourceAssetIndex] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
+        [OLDragAndDropHelper sharedInstance].targetAssetView.image = [self.draggingView.subviews.firstObject image];
+        [OLDragAndDropHelper sharedInstance].targetAssetView.imageView.contentMode = [[OLAsset userSelectedAssets][[OLDragAndDropHelper sharedInstance].sourceAssetIndex] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
         self.targetAssetView = nil;
         
-        [[OLAsset userSelectedAssets] exchangeObjectAtIndex:self.sourceAssetIndex withObjectAtIndex:targetView.index];
+        [[OLAsset userSelectedAssets] exchangeObjectAtIndex:[OLDragAndDropHelper sharedInstance].sourceAssetIndex withObjectAtIndex:targetView.index];
         
         [self.draggingView removeFromSuperview];
         [swappingView removeFromSuperview];
-        self.sourceAssetView.dragging = NO;
+        [OLDragAndDropHelper sharedInstance].sourceAssetView.dragging = NO;
         self.sourceAssetView = nil;
     }];
 }
@@ -215,9 +215,9 @@
         [self pickUpView:assetView];
     }
     else if(sender.state == UIGestureRecognizerStateEnded){
-        OLArtboardAssetView *target = self.targetAssetView;
+        OLArtboardAssetView *target = [OLDragAndDropHelper sharedInstance].targetAssetView;
         if (!target){
-            target = self.sourceAssetView;
+            target = [OLDragAndDropHelper sharedInstance].sourceAssetView;
         }
         [self.scrollingTimer invalidate];
         self.scrollingTimer = nil;
@@ -409,11 +409,11 @@
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
-    OLAsset *asset = [OLAsset userSelectedAssets][self.sourceAssetView.index];
+    OLAsset *asset = [OLAsset userSelectedAssets][[OLDragAndDropHelper sharedInstance].sourceAssetView.index];
     [asset unloadImage];
     asset.edits = cropper.edits;
 
-    [self.sourceAssetView loadImageWithCompletionHandler:NULL];
+    [[OLDragAndDropHelper sharedInstance].sourceAssetView loadImageWithCompletionHandler:NULL];
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
     
@@ -425,8 +425,8 @@
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.sourceAssetView.index withObject:asset];
-    [self.sourceAssetView loadImageWithCompletionHandler:NULL];
+    [[OLAsset userSelectedAssets] replaceObjectAtIndex:[OLDragAndDropHelper sharedInstance].sourceAssetView.index withObject:asset];
+    [[OLDragAndDropHelper sharedInstance].sourceAssetView loadImageWithCompletionHandler:NULL];
 }
 
 #pragma mark OLImagePickerViewControllerDelegate
@@ -444,7 +444,7 @@
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    NSIndexSet *changedIndexes = [[OLAsset userSelectedAssets] updateUserSelectedAssetsAtIndex:self.sourceAssetView.index withAddedAssets:addedAssets removedAssets:removedAssets];
+    NSIndexSet *changedIndexes = [[OLAsset userSelectedAssets] updateUserSelectedAssetsAtIndex:[OLDragAndDropHelper sharedInstance].sourceAssetView.index withAddedAssets:addedAssets removedAssets:removedAssets];
     
     if ([self.delegate respondsToSelector:@selector(refreshAssetViewsWithIndexSet:)]){
         [self.delegate refreshAssetViewsWithIndexSet:changedIndexes];
@@ -464,14 +464,112 @@
     self.presentedVc = nil;
 }
 
+#pragma mark Drag & Drop delegates
+
 - (nonnull NSArray<UIDragItem *> *) dragInteraction:(nonnull UIDragInteraction *)interaction itemsForBeginningSession:(nonnull id<UIDragSession>)session {
+    
+    self.sourceAssetView = interaction.view;
     OLAsset *asset = [OLAsset userSelectedAssets][[(OLArtboardAssetView *)interaction.view index]];
-    if (asset){
-        NSItemProvider *itemProvider = [[NSItemProvider alloc] initWithItem:asset typeIdentifier:@"ly.kite.olasset"];
-        UIDragItem *dragItem = [[UIDragItem alloc] initWithItemProvider:itemProvider];
-        return @[dragItem];
+    NSItemProvider *itemProvider = [[NSItemProvider alloc] initWithItem:asset typeIdentifier:@"ly.kite.olasset"];
+    UIDragItem *dragItem = [[UIDragItem alloc] initWithItemProvider:itemProvider];
+    return @[dragItem];
+}
+
+- (void)dragInteraction:(UIDragInteraction *)interaction willAnimateLiftWithAnimator:(id<UIDragAnimating>)animator session:(id<UIDragSession>)session{
+    OLArtboardAssetView *view = interaction.view;
+    [animator addCompletion:^(UIViewAnimatingPosition position){
+        view.image = nil;
+    }];
+}
+
+//- (UITargetedDragPreview *)dragInteraction:(UIDragInteraction *)interaction previewForCancellingItem:(UIDragItem *)item withDefault:(UITargetedDragPreview *)defaultPreview{
+//
+//}
+
+- (BOOL) dropInteraction:(UIDropInteraction *)interaction canHandleSession:(id<UIDropSession>)session{
+    return [session hasItemsConformingToTypeIdentifiers:@[@"ly.kite.olasset"]];
+}
+
+- (UIDropProposal *)dropInteraction:(UIDropInteraction *)interaction sessionDidUpdate:(id<UIDropSession>)session{
+    UIDropOperation operation = UIDropOperationCancel;
+    
+    for (OLArtboardAssetView *view in self.assetViews){
+        CGPoint dropLocation = [session locationInView:view];
+        if (CGRectContainsPoint(view.frame, dropLocation)){
+            self.targetAssetView = view;
+            if (view != [OLDragAndDropHelper sharedInstance].sourceAssetView){
+                view.targeted = YES;
+            }
+            
+            operation = session.localDragSession == nil ? UIDropOperationCopy : UIDropOperationMove;
+            break;
+        }
+        else{
+            view.targeted = NO;
+        }
     }
-    return @[];
+    
+    if (@available(iOS 11.0, *)) {
+        return [[UIDropProposal alloc] initWithDropOperation:operation];
+    } else {
+        return nil;
+    }
+}
+
+- (void)dropInteraction:(UIDropInteraction *)interaction performDrop:(id<UIDropSession>)session{
+    NSItemProvider *itemProvider = session.items.firstObject.itemProvider;
+    [itemProvider loadItemForTypeIdentifier:@"ly.kite.olasset" options:nil completionHandler:^(id item, NSError *error){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            OLAsset *asset = item;
+            
+            OLArtboardAssetView *destAssetView = interaction.view;
+            NSUInteger sourceIndex = [[OLAsset userSelectedAssets] indexOfObject:asset];
+            
+            [[OLAsset userSelectedAssets] exchangeObjectAtIndex:destAssetView.index withObjectAtIndex:sourceIndex];
+            [destAssetView loadImageWithCompletionHandler:NULL];
+        });
+    }];
+    
+}
+
+- (UITargetedDragPreview *)dropInteraction:(UIDropInteraction *)interaction previewForDroppingItem:(UIDragItem *)item withDefault:(UITargetedDragPreview *)defaultPreview{
+    return [[UITargetedDragPreview alloc] initWithView:interaction.view];
+}
+
+- (void)dropInteraction:(UIDropInteraction *)interaction item:(UIDragItem *)item willAnimateDropWithAnimator:(id<UIDragAnimating>)animator{
+    OLArtboardAssetView *destAssetView = interaction.view;
+    destAssetView.targeted = NO;
+    
+    UIImageView *swappingView;
+    if (destAssetView != [OLDragAndDropHelper sharedInstance].sourceAssetView){
+        swappingView = [[UIImageView alloc] initWithImage:destAssetView.imageView.image];
+        swappingView.contentMode = [[OLAsset userSelectedAssets][destAssetView.index] isKindOfClass:[OLPlaceholderAsset class]] ? UIViewContentModeCenter : UIViewContentModeScaleAspectFill;
+        swappingView.clipsToBounds = YES;
+        UIView *viewToAddDraggingAsset = [self.delegate viewToAddDraggingAsset];
+        [viewToAddDraggingAsset addSubview:swappingView];
+        swappingView.frame = [viewToAddDraggingAsset convertRect:destAssetView.frame fromView:destAssetView.superview];
+    }
+    [animator addAnimations:^{
+        UIView *view = [self.delegate viewToAddDraggingAsset];
+        if ([self.delegate respondsToSelector:@selector(scrollViewForVerticalScolling)]){
+            view = [self.delegate scrollViewForVerticalScolling];
+        }
+        swappingView.frame = [view convertRect:[OLDragAndDropHelper sharedInstance].sourceAssetViewRect toView:[self.delegate viewToAddDraggingAsset]];
+    }];
+    [animator addCompletion:^(UIViewAnimatingPosition position){
+        if ([OLDragAndDropHelper sharedInstance].sourceAssetIndex == [OLDragAndDropHelper sharedInstance].sourceAssetView.index){
+            [OLDragAndDropHelper sharedInstance].sourceAssetView.image = swappingView.image;
+        }
+        if (![OLDragAndDropHelper sharedInstance].targetAssetView){
+            self.targetAssetView = [OLDragAndDropHelper sharedInstance].sourceAssetView;
+        }
+        
+        [destAssetView loadImageWithCompletionHandler:NULL];
+        [[OLDragAndDropHelper sharedInstance].sourceAssetView loadImageWithCompletionHandler:NULL];
+        
+        [swappingView removeFromSuperview];
+        self.sourceAssetView = nil;
+    }];
 }
 
 @end

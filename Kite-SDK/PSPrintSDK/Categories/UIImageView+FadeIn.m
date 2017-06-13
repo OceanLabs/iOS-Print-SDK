@@ -63,7 +63,9 @@ static char tasksKey;
         size = [UIScreen mainScreen].bounds.size;
     }
     
-    self.alpha = 0;
+    if (!self.image){
+        self.alpha = 0;
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSURLSessionTask *task = [[OLImageDownloader sharedInstance] downloadImageAtURL:url progress:^(NSInteger downloaded, NSInteger total){
             if (progressHandler){
@@ -150,7 +152,9 @@ static char tasksKey;
         }
         
         self.contentMode = UIViewContentModeScaleAspectFill;
-        self.alpha = 0;
+        if (!self.image){
+            self.alpha = 0;
+        }
         self.image = image;
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.alpha = 1;
@@ -171,7 +175,9 @@ static char tasksKey;
         }
     }
     
-    self.alpha = 0;
+    if (!self.image){
+        self.alpha = 0;
+    }
     
     if (progressHandler){
         options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
