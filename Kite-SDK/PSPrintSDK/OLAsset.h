@@ -82,11 +82,22 @@ extern NSString *const kOLMimeTypePDF;
  *  @param handler Handler to provide the data of the image asynchronously
  */
 - (void)dataWithCompletionHandler:(GetDataHandler)handler;
+
 @optional
+
 /**
  *  Optional method to cancel loading of the image (for example downloading from the network)
  */
 - (void)cancelAnyLoadingOfData;
+
+
+/**
+ Provide the image at the requested size.
+
+ @param size The requested size
+ @param handler Handler to provide the image asynchronously
+ */
+- (void)imageForSize:(CGSize)size completionHandler:(void(^)(UIImage *image, NSError *error))handler;
 @end
 
 /**
