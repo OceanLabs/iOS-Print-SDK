@@ -528,11 +528,10 @@
 
 - (void)dropInteraction:(UIDropInteraction *)interaction performDrop:(id<UIDropSession>)session{
     NSItemProvider *itemProvider = session.items.firstObject.itemProvider;
+    OLArtboardAssetView *destAssetView = interaction.view;
     if ([itemProvider hasItemConformingToTypeIdentifier:@"ly.kite.olasset"]){
         [itemProvider loadItemForTypeIdentifier:@"ly.kite.olasset" options:nil completionHandler:^(id item, NSError *error){
             dispatch_async(dispatch_get_main_queue(), ^{
-                OLArtboardAssetView *destAssetView = interaction.view;
-                
                 [[OLAsset userSelectedAssets] exchangeObjectAtIndex:destAssetView.index withObjectAtIndex:[OLDragAndDropHelper sharedInstance].sourceAssetIndex];
                 [destAssetView loadImageWithCompletionHandler:NULL];
             });
@@ -541,8 +540,6 @@
     else if ([itemProvider hasItemConformingToTypeIdentifier:@"public.jpeg"]){
         [itemProvider loadItemForTypeIdentifier:@"public.jpeg" options:nil completionHandler:^(id item, NSError *error){
             if ([item isKindOfClass:[NSURL class]]){
-                OLArtboardAssetView *destAssetView = interaction.view;
-                
                 NSString *uuid = [[NSUUID UUID] UUIDString];
                 NSString *filePath = [NSString stringWithFormat:@"%@/%@.jpg", [OLConstants tempImagesFilePath], uuid];
                 NSURL *destinationURL = [NSURL fileURLWithPath:filePath];
@@ -551,11 +548,15 @@
                 OLAsset *asset = [OLAsset assetWithFilePath:[destinationURL relativePath]];
                 asset.uuid = uuid;
                 [[OLAsset userSelectedAssets] replaceObjectAtIndex:destAssetView.index withObject:asset];
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [destAssetView loadImageWithCompletionHandler:NULL];
-                });
             }
+            else if ([item isKindOfClass:[NSData class]]){
+                OLAsset *asset = [OLAsset assetWithDataAsJPEG:item];
+                [[OLAsset userSelectedAssets] replaceObjectAtIndex:destAssetView.index withObject:asset];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [destAssetView loadImageWithCompletionHandler:NULL];
+            });
         }];
     }
     
