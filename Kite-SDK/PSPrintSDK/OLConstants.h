@@ -73,5 +73,5 @@ extern const NSInteger kOLKiteSDKErrorCodeUnauthorized;
 extern const NSInteger kOLKiteSDKErrorCodeUnexpectedResponse;
 
 @interface OLConstants : NSObject
-
++ (NSString *_Nonnull)tempImagesFilePath;
 @end

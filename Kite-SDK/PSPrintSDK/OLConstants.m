@@ -34,6 +34,7 @@ NSString *const kOLKiteSDKErrorDomain = @"co.oceanlabs.kOLKiteSDKErrorDomain";
 NSString *const kNotificationTemplateSyncComplete = @"co.oceanlabs.pssdk.notification.kNotificationSyncComplete";
 NSString *const kNotificationTemplateSyncPartialComplete = @"co.oceanlabs.pssdk.notification.kNotificationTemplateSyncPartialComplete";
 NSString *const kNotificationKeyTemplateSyncError = @"co.oceanlabs.pssdk.notification.kNotificationKeyTemplateSyncError";
+NSString *const kOLKiteTempPhotosDirectory = @"kite-temp-photos";
 const NSInteger kOLKiteSDKErrorCodeRequestInProgress = 98;
 const NSInteger kOLKiteSDKErrorCodeFullDetailsFetchFailed = 99;
 const NSInteger kOLKiteSDKErrorCodeServerFault = 100;
@@ -54,5 +55,11 @@ NSString *const kOLKiteSDKErrorMessageRequestInProgress = @"A request to get cos
 
 @implementation OLConstants
 
++ (NSString *_Nonnull)tempImagesFilePath {
+    NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+    NSString *documentDirPath = [[(NSURL *)[urls objectAtIndex:0] path] stringByAppendingPathComponent:kOLKiteTempPhotosDirectory];
+    [[NSFileManager defaultManager] createDirectoryAtPath:documentDirPath withIntermediateDirectories:YES attributes:nil error:nil];
+    return documentDirPath;
+}
 
 @end
