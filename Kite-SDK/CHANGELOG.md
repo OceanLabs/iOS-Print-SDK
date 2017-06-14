@@ -1,3 +1,6 @@
+### 6.6.1
+- Added a way for image providers to supply thumbnails.
+
 ## 6.6.0
 - New Product: Mugs
 - Added: Shipping methods, including tracked shipping and estimated shipping times, per item.
