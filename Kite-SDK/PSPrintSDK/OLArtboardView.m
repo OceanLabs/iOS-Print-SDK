@@ -533,12 +533,9 @@
     NSItemProvider *itemProvider = session.items.firstObject.itemProvider;
     [itemProvider loadItemForTypeIdentifier:@"ly.kite.olasset" options:nil completionHandler:^(id item, NSError *error){
         dispatch_async(dispatch_get_main_queue(), ^{
-            OLAsset *asset = item;
-            
             OLArtboardAssetView *destAssetView = interaction.view;
-            NSUInteger sourceIndex = [[OLAsset userSelectedAssets] indexOfObject:asset];
             
-            [[OLAsset userSelectedAssets] exchangeObjectAtIndex:destAssetView.index withObjectAtIndex:sourceIndex];
+            [[OLAsset userSelectedAssets] exchangeObjectAtIndex:destAssetView.index withObjectAtIndex:[OLDragAndDropHelper sharedInstance].sourceAssetIndex];
             [destAssetView loadImageWithCompletionHandler:NULL];
         });
     }];
@@ -577,7 +574,6 @@
             self.targetAssetView = [OLDragAndDropHelper sharedInstance].sourceAssetView;
         }
         
-        [destAssetView loadImageWithCompletionHandler:NULL];
         [[OLDragAndDropHelper sharedInstance].sourceAssetView loadImageWithCompletionHandler:NULL];
         
         [swappingView removeFromSuperview];
