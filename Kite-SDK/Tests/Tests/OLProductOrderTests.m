@@ -151,7 +151,7 @@
 
 - (void)testMultipleJobsOrder{
     OLProductPrintJob *job1 = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:[OLKiteTestHelper urlAssets]];
-    OLProductPrintJob *job2 = [OLPrintJob printJobWithTemplateId:@"s9_magnets" OLAssets:[OLKiteTestHelper urlAssets]];
+    OLProductPrintJob *job2 = [OLPrintJob printJobWithTemplateId:@"squares_mini" OLAssets:[OLKiteTestHelper urlAssets]];
     [self submitJobs:@[job1, job2]];
 }
 

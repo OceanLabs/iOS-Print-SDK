@@ -357,7 +357,7 @@
         [paymentMethodsVc.navigationController popViewControllerAnimated:YES];
     }];
     
-    [self performUIAction:^{
+    [self performUIActionWithDelay:3 action:^{
         [vc onShippingMethodGestureRecognized:nil];
     }];
     
@@ -365,7 +365,9 @@
         OLShippingMethodsViewController *shippingMethodsVc = (OLShippingMethodsViewController *)[(OLNavigationController *)vc.navigationController topViewController];
         XCTAssert([shippingMethodsVc isKindOfClass:[OLShippingMethodsViewController class]], @"Did not show Shipping Methods ViewController");
         
-        [(id<UICollectionViewDelegate>)shippingMethodsVc collectionView:shippingMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:1]];
+        if ([shippingMethodsVc.collectionView numberOfItemsInSection:0] >0 ){
+            [(id<UICollectionViewDelegate>)shippingMethodsVc collectionView:shippingMethodsVc.collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+        }
         
         [shippingMethodsVc.navigationController popViewControllerAnimated:YES];
         
