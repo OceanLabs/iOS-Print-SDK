@@ -153,6 +153,11 @@
 
 
 /**
+ Set to disable things like filters and text-on-photo editing tools while preserving basics like crop and rotate.
+ */
+@property (assign, nonatomic) BOOL disableAdvancedEditingTools;
+
+/**
  *  Set to disable the ability to edit images.
  */
 @property (assign, nonatomic) BOOL disableEditingTools;

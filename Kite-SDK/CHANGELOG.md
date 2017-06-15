@@ -1,3 +1,6 @@
+### 6.6.2
+- Added the ability to disable filters and text-on-photo.
+
 ### 6.6.1
 - Added a way for image providers to supply thumbnails.
 
