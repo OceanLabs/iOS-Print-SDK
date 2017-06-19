@@ -40,6 +40,11 @@
 		2E025DE21EF7F1BF006B15EE /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
 		2E025DE31EF7F2B7006B15EE /* UIView+AutoLayoutHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E12DBC71E795511000A6CEF /* UIView+AutoLayoutHelper.m */; };
 		2E025DE41EF7F2BD006B15EE /* UIView+AutoLayoutHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E12DBC61E795511000A6CEF /* UIView+AutoLayoutHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E025DE51EF7F7FD006B15EE /* OLImageDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E025DE61EF7F802006B15EE /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
+		2E025DE71EF7F808006B15EE /* OLImageDownloadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E025DE81EF7F82F006B15EE /* OLImageDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */; };
+		2E025DE91EF7F83E006B15EE /* UIImageView+FadeIn.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8122EF1A75A46D004E7297 /* UIImageView+FadeIn.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E0EB0EC1D9EB43F001A6CC9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF81186215790009DE03 /* ViewController.m */; };
 		2E12DBC81E795511000A6CEF /* UIView+AutoLayoutHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E12DBC61E795511000A6CEF /* UIView+AutoLayoutHelper.h */; };
 		2E12DBC91E795511000A6CEF /* UIView+AutoLayoutHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E12DBC71E795511000A6CEF /* UIView+AutoLayoutHelper.m */; };
@@ -1939,6 +1944,9 @@
 			files = (
 				2E025DE11EF7F1B3006B15EE /* UIColor+OLHexString.h in Headers */,
 				2E025DD01EF7F132006B15EE /* KiteUtils.h in Headers */,
+				2E025DE91EF7F83E006B15EE /* UIImageView+FadeIn.h in Headers */,
+				2E025DE71EF7F808006B15EE /* OLImageDownloadDelegate.h in Headers */,
+				2E025DE51EF7F7FD006B15EE /* OLImageDownloader.h in Headers */,
 				2E025DE41EF7F2BD006B15EE /* UIView+AutoLayoutHelper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2547,6 +2555,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E025DE21EF7F1BF006B15EE /* UIColor+OLHexString.m in Sources */,
+				2E025DE81EF7F82F006B15EE /* OLImageDownloadDelegate.m in Sources */,
+				2E025DE61EF7F802006B15EE /* OLImageDownloader.m in Sources */,
 				2E025DE31EF7F2B7006B15EE /* UIView+AutoLayoutHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2850,6 +2860,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					KITE_UTILS,
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = KiteUtils/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2880,6 +2895,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREPROCESSOR_DEFINITIONS = KITE_UTILS;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = KiteUtils/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -3500,6 +3516,7 @@
 				2E025DD21EF7F132006B15EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2E451DCF1D9554B40080F1C1 /* Build configuration list for PBXNativeTarget "KiteSDK" */ = {
 			isa = XCConfigurationList;

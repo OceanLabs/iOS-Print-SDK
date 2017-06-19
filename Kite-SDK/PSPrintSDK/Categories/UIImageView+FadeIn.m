@@ -27,15 +27,17 @@
 //  THE SOFTWARE.
 //
 
-#import "OLImageDownloader.h"
-
 #import "UIImageView+FadeIn.h"
+
 #import "OLImageDownloader.h"
 #import "objc/runtime.h"
+
+#ifndef KITE_UTILS
 #import "UIImage+OLUtils.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#endif
 
 static char tasksKey;
 
@@ -102,13 +104,7 @@ static char tasksKey;
     });
 }
 
-- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options{
-    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:nil progress:nil completionHandler:NULL];
-}
-
-- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder{
-    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:placeholder progress:nil completionHandler:NULL];
-}
+#ifndef KITE_UTILS
 
 - (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
     for (id key in self.tasks.allKeys){
@@ -160,6 +156,14 @@ static char tasksKey;
             }
         }];
     }];
+}
+
+- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options{
+    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:nil progress:nil completionHandler:NULL];
+}
+
+- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder{
+    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:placeholder progress:nil completionHandler:NULL];
 }
 
 - (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
@@ -217,6 +221,8 @@ static char tasksKey;
     }];
     self.tasks[asset.localIdentifier] = [NSNumber numberWithLong:requestID];
 }
+
+#endif
 
 - (NSMutableDictionary *)tasks{
     NSMutableDictionary *tasks = objc_getAssociatedObject(self, &tasksKey);
