@@ -35,6 +35,11 @@
 
 /* Begin PBXBuildFile section */
 		027DBA136956798E0DAE5FDF /* libPods-Kite-CI-Deploy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BF4FFD591B0B737D3A6DDA1E /* libPods-Kite-CI-Deploy.a */; };
+		2E025DD01EF7F132006B15EE /* KiteUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E025DCE1EF7F132006B15EE /* KiteUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E025DE11EF7F1B3006B15EE /* UIColor+OLHexString.h in Headers */ = {isa = PBXBuildFile; fileRef = E237FA621D63035600A7912E /* UIColor+OLHexString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E025DE21EF7F1BF006B15EE /* UIColor+OLHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = E237FA631D63035600A7912E /* UIColor+OLHexString.m */; };
+		2E025DE31EF7F2B7006B15EE /* UIView+AutoLayoutHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E12DBC71E795511000A6CEF /* UIView+AutoLayoutHelper.m */; };
+		2E025DE41EF7F2BD006B15EE /* UIView+AutoLayoutHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E12DBC61E795511000A6CEF /* UIView+AutoLayoutHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E0EB0EC1D9EB43F001A6CC9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF81186215790009DE03 /* ViewController.m */; };
 		2E12DBC81E795511000A6CEF /* UIView+AutoLayoutHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E12DBC61E795511000A6CEF /* UIView+AutoLayoutHelper.h */; };
 		2E12DBC91E795511000A6CEF /* UIView+AutoLayoutHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E12DBC71E795511000A6CEF /* UIView+AutoLayoutHelper.m */; };
@@ -544,6 +549,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2E025DCC1EF7F132006B15EE /* KiteUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KiteUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E025DCE1EF7F132006B15EE /* KiteUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KiteUtils.h; sourceTree = "<group>"; };
+		2E025DCF1EF7F132006B15EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E0804B61C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCustomViewControllerPhotoProvider.h; sourceTree = "<group>"; };
 		2E0804B71C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCustomViewControllerPhotoProvider.m; sourceTree = "<group>"; };
 		2E0A72641A6FB07000BC5AE7 /* OLImageEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageEditViewController.h; sourceTree = "<group>"; };
@@ -994,6 +1002,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2E025DC81EF7F132006B15EE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2E451DC41D9554B40080F1C1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1071,6 +1086,16 @@
 				C69363223A86C6A26FD18921 /* Pods-KiteSDK-Demo.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		2E025DCD1EF7F132006B15EE /* Kite Utils */ = {
+			isa = PBXGroup;
+			children = (
+				2E025DCE1EF7F132006B15EE /* KiteUtils.h */,
+				2E025DCF1EF7F132006B15EE /* Info.plist */,
+			);
+			name = "Kite Utils";
+			path = KiteUtils;
 			sourceTree = "<group>";
 		};
 		2E0DB88E1A6402D9001032E3 /* View */ = {
@@ -1644,6 +1669,7 @@
 				CD73BF90186215790009DE03 /* Tests */,
 				2E451DC91D9554B40080F1C1 /* Kite Framework */,
 				2EDB7BD31E76D10A009B30F0 /* Unity Plugin */,
+				2E025DCD1EF7F132006B15EE /* Kite Utils */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 				01A3969341E0D10D83284FD0 /* Pods */,
@@ -1657,6 +1683,7 @@
 				2EADD8651BE79D6D0051CD31 /* KiteSDK-Demo.app */,
 				2E898CEA1CC518180041CCD8 /* Kite-CI-Deploy.app */,
 				2E451DC81D9554B40080F1C1 /* KiteSDK.framework */,
+				2E025DCC1EF7F132006B15EE /* KiteUtils.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1906,6 +1933,16 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		2E025DC91EF7F132006B15EE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E025DE11EF7F1B3006B15EE /* UIColor+OLHexString.h in Headers */,
+				2E025DD01EF7F132006B15EE /* KiteUtils.h in Headers */,
+				2E025DE41EF7F2BD006B15EE /* UIView+AutoLayoutHelper.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2E451DC51D9554B40080F1C1 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -2098,6 +2135,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		2E025DCB1EF7F132006B15EE /* KiteUtils */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E025DD31EF7F132006B15EE /* Build configuration list for PBXNativeTarget "KiteUtils" */;
+			buildPhases = (
+				2E025DC71EF7F132006B15EE /* Sources */,
+				2E025DC81EF7F132006B15EE /* Frameworks */,
+				2E025DC91EF7F132006B15EE /* Headers */,
+				2E025DCA1EF7F132006B15EE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KiteUtils;
+			productName = KiteUtils;
+			productReference = 2E025DCC1EF7F132006B15EE /* KiteUtils.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		2E451DC71D9554B40080F1C1 /* KiteSDK */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E451DCF1D9554B40080F1C1 /* Build configuration list for PBXNativeTarget "KiteSDK" */;
@@ -2191,6 +2246,11 @@
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = Kite.ly;
 				TargetAttributes = {
+					2E025DCB1EF7F132006B15EE = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = L78L4U72YJ;
+						ProvisioningStyle = Automatic;
+					};
 					2E451DC71D9554B40080F1C1 = {
 						CreatedOnToolsVersion = 8.0;
 						ProvisioningStyle = Manual;
@@ -2243,11 +2303,19 @@
 				CD73BF88186215790009DE03 /* Tests */,
 				2E4CAF081BC25F0A0089FA26 /* Docs */,
 				2EDB7BCC1E76D05D009B30F0 /* Unity-Plugin */,
+				2E025DCB1EF7F132006B15EE /* KiteUtils */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2E025DCA1EF7F132006B15EE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2E451DC61D9554B40080F1C1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2474,6 +2542,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2E025DC71EF7F132006B15EE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E025DE21EF7F1BF006B15EE /* UIColor+OLHexString.m in Sources */,
+				2E025DE31EF7F2B7006B15EE /* UIView+AutoLayoutHelper.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2E451DC31D9554B40080F1C1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2759,6 +2836,65 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2E025DD11EF7F132006B15EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = KiteUtils/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KiteUtils;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2E025DD21EF7F132006B15EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = L78L4U72YJ;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = KiteUtils/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KiteUtils;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		2E451DCD1D9554B40080F1C1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3357,6 +3493,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2E025DD31EF7F132006B15EE /* Build configuration list for PBXNativeTarget "KiteUtils" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E025DD11EF7F132006B15EE /* Debug */,
+				2E025DD21EF7F132006B15EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		2E451DCF1D9554B40080F1C1 /* Build configuration list for PBXNativeTarget "KiteSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
