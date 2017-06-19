@@ -20,4 +20,5 @@ FOUNDATION_EXPORT const unsigned char KiteUtilsVersionString[];
 #import <KiteUtils/UIView+AutoLayoutHelper.h>
 #import "OLImageDownloader.h"
 #import "OLImageDownloadDelegate.h"
+#import "UIImage+OLUtils.h"
 #import "UIImageView+FadeIn.h"

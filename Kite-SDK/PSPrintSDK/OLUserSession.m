@@ -189,8 +189,6 @@
 }
 
 - (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection{
-    //TODO: Just check for the specific model and get rid of this image loading business
-    
     //Should be [UIScreen mainScreen].scale but the 6 Plus with its 1GB RAM chokes on 3x images.
     if ([[self getSysInfoByName:"hw.model"] isEqualToString:@"iPhone7,1"]){
         self.screenScale = 2.0;

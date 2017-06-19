@@ -45,6 +45,7 @@
 		2E025DE71EF7F808006B15EE /* OLImageDownloadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E025DE81EF7F82F006B15EE /* OLImageDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */; };
 		2E025DE91EF7F83E006B15EE /* UIImageView+FadeIn.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8122EF1A75A46D004E7297 /* UIImageView+FadeIn.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E025E1F1EF806AC006B15EE /* UIImageView+FadeIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122F01A75A46D004E7297 /* UIImageView+FadeIn.m */; };
 		2E0EB0EC1D9EB43F001A6CC9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF81186215790009DE03 /* ViewController.m */; };
 		2E12DBC81E795511000A6CEF /* UIView+AutoLayoutHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E12DBC61E795511000A6CEF /* UIView+AutoLayoutHelper.h */; };
 		2E12DBC91E795511000A6CEF /* UIView+AutoLayoutHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E12DBC71E795511000A6CEF /* UIView+AutoLayoutHelper.m */; };
@@ -468,6 +469,8 @@
 		2EBDF4CE1E434A0B004775BD /* OLKiteLocalizationResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */; };
 		2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */; };
 		2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */; };
+		2EC481A81EF8091F00E6CB6F /* UIImage+OLUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EF53E391B55421A00BF936A /* UIImage+OLUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2EC481A91EF8092600E6CB6F /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		2ECA34EC1E82743800D56220 /* OLApparelViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2ECA34EA1E82743800D56220 /* OLApparelViewController.h */; };
 		2ECA34ED1E82743800D56220 /* OLApparelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECA34EB1E82743800D56220 /* OLApparelViewController.m */; };
 		2ED2B7B41DB8B4D90036B536 /* OLHPSDKWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2ED2B7B21DB8B4D90036B536 /* OLHPSDKWrapper.h */; };
@@ -1946,6 +1949,7 @@
 				2E025DD01EF7F132006B15EE /* KiteUtils.h in Headers */,
 				2E025DE91EF7F83E006B15EE /* UIImageView+FadeIn.h in Headers */,
 				2E025DE71EF7F808006B15EE /* OLImageDownloadDelegate.h in Headers */,
+				2EC481A81EF8091F00E6CB6F /* UIImage+OLUtils.h in Headers */,
 				2E025DE51EF7F7FD006B15EE /* OLImageDownloader.h in Headers */,
 				2E025DE41EF7F2BD006B15EE /* UIView+AutoLayoutHelper.h in Headers */,
 			);
@@ -2554,8 +2558,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EC481A91EF8092600E6CB6F /* UIImage+OLUtils.m in Sources */,
 				2E025DE21EF7F1BF006B15EE /* UIColor+OLHexString.m in Sources */,
 				2E025DE81EF7F82F006B15EE /* OLImageDownloadDelegate.m in Sources */,
+				2E025E1F1EF806AC006B15EE /* UIImageView+FadeIn.m in Sources */,
 				2E025DE61EF7F802006B15EE /* OLImageDownloader.m in Sources */,
 				2E025DE31EF7F2B7006B15EE /* UIView+AutoLayoutHelper.m in Sources */,
 			);
@@ -2871,6 +2877,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KiteUtils;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2902,6 +2912,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.KiteUtils;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

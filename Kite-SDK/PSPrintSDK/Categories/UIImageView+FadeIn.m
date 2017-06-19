@@ -31,9 +31,9 @@
 
 #import "OLImageDownloader.h"
 #import "objc/runtime.h"
+#import "UIImage+OLUtils.h"
 
 #ifndef KITE_UTILS
-#import "UIImage+OLUtils.h"
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
@@ -42,6 +42,15 @@
 static char tasksKey;
 
 @implementation UIImageView (FadeIn)
+
+- (CGFloat)screenScale{
+#ifndef KITE_UTILS
+    return [OLUserSession currentSession].screenScale;
+#else
+    return [UIScreen mainScreen].scale;
+#endif
+}
+
 - (void)setAndFadeInImageWithURL:(NSURL *)url {
     [self setAndFadeInImageWithURL:url size:CGSizeZero placeholder:nil progress:NULL completionHandler:NULL];
 }
@@ -85,7 +94,7 @@ static char tasksKey;
             [self.tasks removeObjectForKey:url];
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                UIImage *resizedImage = [image shrinkToSize:size forScreenScale:[OLUserSession currentSession].screenScale aspectFit:self.contentMode == UIViewContentModeScaleAspectFit];
+                UIImage *resizedImage = [image shrinkToSize:size forScreenScale:[self screenScale] aspectFit:self.contentMode == UIViewContentModeScaleAspectFit];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.image = resizedImage;
                     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
