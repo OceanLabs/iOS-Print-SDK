@@ -1,3 +1,6 @@
+### 6.6.3
+- Fixed missing mug asset when installing via Cocoapods
+
 ### 6.6.2
 - Added the ability to disable filters and text-on-photo.
 

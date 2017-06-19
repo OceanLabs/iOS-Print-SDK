@@ -29,7 +29,7 @@
 
 #import "OLConstants.h"
 
-NSString *const kOLKiteSDKVersion = @"6.6.2";
+NSString *const kOLKiteSDKVersion = @"6.6.3";
 NSString *const kOLKiteSDKErrorDomain = @"co.oceanlabs.kOLKiteSDKErrorDomain";
 NSString *const kNotificationTemplateSyncComplete = @"co.oceanlabs.pssdk.notification.kNotificationSyncComplete";
 NSString *const kNotificationTemplateSyncPartialComplete = @"co.oceanlabs.pssdk.notification.kNotificationTemplateSyncPartialComplete";
