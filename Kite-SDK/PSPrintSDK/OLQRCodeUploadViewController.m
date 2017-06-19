@@ -56,7 +56,7 @@
     self.alternateInstructionsLabel.text = NSLocalizedStringFromTableInBundle(@"Alternatively type the following URL into your mobile browser's address bar", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
     NSString *uuid = [[NSUUID UUID] UUIDString];;
-    NSString *uploadURL = [NSString stringWithFormat:@"http://api.kite.ly/public_upload/%@", uuid];
+    NSString *uploadURL = [NSString stringWithFormat:@"https://api.kite.ly/public_upload/%@", uuid];
     NSString *downloadURL = [NSString stringWithFormat:@"https://s3-eu-west-1.amazonaws.com/co.oceanlabs.ps/kiosk/%@.jpeg", uuid];
     
     self.urlShortner = [[OLURLShortener alloc] init];
