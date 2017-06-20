@@ -55,6 +55,8 @@
 		2E1BB37D1E7C2A25008F7217 /* OLSingleImagePosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1BB37B1E7C2A25008F7217 /* OLSingleImagePosterViewController.h */; };
 		2E1BB37E1E7C2A25008F7217 /* OLSingleImagePosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1BB37C1E7C2A25008F7217 /* OLSingleImagePosterViewController.m */; };
 		2E23EB9B1D5091FC00E2BF42 /* CI-Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */; };
+		2E2EFC6E1EF8FF6F0065A68C /* KiteCheckout.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E2EFC6D1EF8FF6F0065A68C /* KiteCheckout.storyboard */; };
+		2E2EFC6F1EF8FF6F0065A68C /* KiteCheckout.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E2EFC6D1EF8FF6F0065A68C /* KiteCheckout.storyboard */; };
 		2E3084AE1E813672008218BF /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084A81E813672008218BF /* 1.jpg */; };
 		2E3084AF1E813672008218BF /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084A91E813672008218BF /* 2.png */; };
 		2E3084B01E813672008218BF /* 3.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084AA1E813672008218BF /* 3.pdf */; };
@@ -616,6 +618,7 @@
 		2E2BF4461CCDFAF100725561 /* OLKiteTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteTheme.m; sourceTree = "<group>"; };
 		2E2E61E51C21826D005CB729 /* UIViewController+OLMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+OLMethods.h"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.h"; sourceTree = "<group>"; };
 		2E2E61E61C21826D005CB729 /* UIViewController+OLMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+OLMethods.m"; path = "PSPrintSDK/Categories/UIViewController+OLMethods.m"; sourceTree = "<group>"; };
+		2E2EFC6D1EF8FF6F0065A68C /* KiteCheckout.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = KiteCheckout.storyboard; sourceTree = "<group>"; };
 		2E3084A81E813672008218BF /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 1.jpg; path = Tests/Resources/1.jpg; sourceTree = SOURCE_ROOT; };
 		2E3084A91E813672008218BF /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 2.png; path = Tests/Resources/2.png; sourceTree = SOURCE_ROOT; };
 		2E3084AA1E813672008218BF /* 3.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = 3.pdf; path = Tests/Resources/3.pdf; sourceTree = SOURCE_ROOT; };
@@ -1931,6 +1934,7 @@
 				2E480ADD1D92DBEF006C0EE6 /* OLProgressHUD.bundle */,
 				3D6CDAAC1B1F41AE00786478 /* kite_corrupt.jpg */,
 				2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */,
+				2E2EFC6D1EF8FF6F0065A68C /* KiteCheckout.storyboard */,
 				2E434AE81D36675700D1BD06 /* OLEditingToolsView.xib */,
 				2E8E19B71E93E0BF0003905E /* OLHintView.xib */,
 				CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */,
@@ -2325,6 +2329,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E2EFC6F1EF8FF6F0065A68C /* KiteCheckout.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2334,6 +2339,7 @@
 			files = (
 				2EBDF4CE1E434A0B004775BD /* OLKiteLocalizationResources.bundle in Resources */,
 				2E451E931D9564140080F1C1 /* kite_corrupt.jpg in Resources */,
+				2E2EFC6E1EF8FF6F0065A68C /* KiteCheckout.storyboard in Resources */,
 				2EEAEF3D1ECDA1B700C40B71 /* mug.scn in Resources */,
 				2E451E951D9564620080F1C1 /* OLKiteStoryboard.storyboard in Resources */,
 				2E8E19B91E93E0BF0003905E /* OLHintView.xib in Resources */,
