@@ -141,7 +141,7 @@
     if (![CNContact class]){
         return NO;
     }
-    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
+    return [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
 }
 
 + (NSArray<NSString *> *)supportedPKPaymentNetworks {
