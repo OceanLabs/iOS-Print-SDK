@@ -216,7 +216,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder {
-    if ((self = [[UIStoryboard storyboardWithName:@"KiteCheckout" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLPaymentViewController"])) {
+    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLPaymentViewController"])) {
         self.printOrder = printOrder;
     }
     
