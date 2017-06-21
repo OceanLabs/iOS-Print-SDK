@@ -36,6 +36,9 @@
 - (void)startPollingImageURL:(NSURL *)imageURL
      onImageDownloadProgress:(void(^)(NSInteger receivedSize, NSInteger expectedSize))progressHandler
     onImageDownloadedHandler:(void (^)(OLAsset *asset))downloadedHandler;
+- (void)startPollingURL:(NSURL *)url
+ onDataDownloadProgress:(void(^)(NSInteger receivedSize, NSInteger expectedSize))progressHandler
+onDataDownloadedHandler:(void (^)(NSData *data))downloadedHandler;
 - (void)stopPolling;
 
 @end
