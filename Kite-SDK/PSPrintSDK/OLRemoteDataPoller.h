@@ -31,14 +31,11 @@
 
 @class OLAsset;
 
-typedef void (^OLQRCodeUploadedImageDownloadProgressHandler)(NSInteger receivedSize, NSInteger expectedSize);
-typedef void (^OLQRCodeUploadedImageFoundHandler)(OLAsset *asset);
-
-@interface OLQRCodeUploadedImagePoller : NSObject
+@interface OLRemoteDataPoller : NSObject
 
 - (void)startPollingImageURL:(NSURL *)imageURL
-     onImageDownloadProgress:(OLQRCodeUploadedImageDownloadProgressHandler)progressHandler
-    onImageDownloadedHandler:(OLQRCodeUploadedImageFoundHandler)downloadedHandler;
+     onImageDownloadProgress:(void(^)(NSInteger receivedSize, NSInteger expectedSize))progressHandler
+    onImageDownloadedHandler:(void (^)(OLAsset *asset))downloadedHandler;
 - (void)stopPolling;
 
 @end

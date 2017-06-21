@@ -28,7 +28,7 @@
 //
 
 #import "OLQRCodeUploadViewController.h"
-#import "OLQRCodeUploadedImagePoller.h"
+#import "OLRemoteDataPoller.h"
 #import "OLURLShortener.h"
 #import "UIImage+MDQRCode.h"
 #import "OLKiteUtils.h"
@@ -42,7 +42,7 @@
 @property (nonatomic, retain) IBOutlet UIProgressView *downloadProgressView;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *activityIndicator;
 
-@property (nonatomic, strong) OLQRCodeUploadedImagePoller *imagePoller;
+@property (nonatomic, strong) OLRemoteDataPoller *imagePoller;
 @property (nonatomic, strong) OLURLShortener *urlShortner;
 @end
 
@@ -82,7 +82,7 @@
             }
             
             self.qrCodeImageView.image = [UIImage mdQRCodeForString:uploadURL size:self.qrCodeImageView.bounds.size.width fillColor:[UIColor blackColor]];
-            self.imagePoller = [[OLQRCodeUploadedImagePoller alloc] init];
+            self.imagePoller = [[OLRemoteDataPoller alloc] init];
             [self.imagePoller startPollingImageURL:[NSURL URLWithString:downloadURL] onImageDownloadProgress:^(NSInteger receivedSize, NSInteger expectedSize) {
                 if (self.downloadProgressView.hidden) {
                     self.downloadProgressView.hidden = NO;

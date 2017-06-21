@@ -87,7 +87,7 @@
 		2E451DD71D9555540080F1C1 /* OLPrintOrderCostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E8C29EC1B18D1AC0045DC21 /* OLPrintOrderCostRequest.m */; };
 		2E451DD81D9555540080F1C1 /* OLPrintOrderSubmitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */; };
 		2E451DD91D9555540080F1C1 /* OLAddressSearchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA91863180A0009DE03 /* OLAddressSearchRequest.m */; };
-		2E451DDA1D9555540080F1C1 /* OLQRCodeUploadedImagePoller.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */; };
+		2E451DDA1D9555540080F1C1 /* OLRemoteDataPoller.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA141C6DFC160007C1D7 /* OLRemoteDataPoller.m */; };
 		2E451DDB1D9555540080F1C1 /* OLURLShortener.m in Sources */ = {isa = PBXBuildFile; fileRef = E2AABA181C6FC6650007C1D7 /* OLURLShortener.m */; };
 		2E451DDC1D9555540080F1C1 /* OLAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = CDAFE007186D9C6C003572FE /* OLAsset.m */; };
 		2E451DDD1D9555540080F1C1 /* OLImageCachingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF8BA9E1B99E9E4009BC73B /* OLImageCachingManager.m */; };
@@ -298,7 +298,7 @@
 		2EB8FDD91D95685100E26BDF /* OLPrintOrderCostRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E8C29EB1B18D1AC0045DC21 /* OLPrintOrderCostRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FDDA1D95685100E26BDF /* OLPrintOrderSubmitStatusRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EF439291BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FDDB1D95685100E26BDF /* OLAddressSearchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFA81863180A0009DE03 /* OLAddressSearchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2EB8FDDC1D95685100E26BDF /* OLQRCodeUploadedImagePoller.h in Headers */ = {isa = PBXBuildFile; fileRef = E2AABA131C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2EB8FDDC1D95685100E26BDF /* OLRemoteDataPoller.h in Headers */ = {isa = PBXBuildFile; fileRef = E2AABA131C6DFC160007C1D7 /* OLRemoteDataPoller.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FDDD1D95685100E26BDF /* OLURLShortener.h in Headers */ = {isa = PBXBuildFile; fileRef = E2AABA171C6FC6650007C1D7 /* OLURLShortener.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FDDE1D95685100E26BDF /* OLAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = CDAFE006186D9C6C003572FE /* OLAsset.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FDDF1D95685100E26BDF /* OLAsset+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = CDFFA781189D2DF40083BCE7 /* OLAsset+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -1013,8 +1013,8 @@
 		E244531E1BFD2C910086BF03 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		E2AABA0F1C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLQRCodeUploadViewController.h; sourceTree = "<group>"; };
 		E2AABA101C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLQRCodeUploadViewController.m; sourceTree = "<group>"; };
-		E2AABA131C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLQRCodeUploadedImagePoller.h; sourceTree = "<group>"; };
-		E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLQRCodeUploadedImagePoller.m; sourceTree = "<group>"; };
+		E2AABA131C6DFC160007C1D7 /* OLRemoteDataPoller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLRemoteDataPoller.h; sourceTree = "<group>"; };
+		E2AABA141C6DFC160007C1D7 /* OLRemoteDataPoller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLRemoteDataPoller.m; sourceTree = "<group>"; };
 		E2AABA171C6FC6650007C1D7 /* OLURLShortener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLURLShortener.h; sourceTree = "<group>"; };
 		E2AABA181C6FC6650007C1D7 /* OLURLShortener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLURLShortener.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1842,8 +1842,8 @@
 				2EF4392A1BF4D15E0006C123 /* OLPrintOrderSubmitStatusRequest.m */,
 				CD73BFA81863180A0009DE03 /* OLAddressSearchRequest.h */,
 				CD73BFA91863180A0009DE03 /* OLAddressSearchRequest.m */,
-				E2AABA131C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.h */,
-				E2AABA141C6DFC160007C1D7 /* OLQRCodeUploadedImagePoller.m */,
+				E2AABA131C6DFC160007C1D7 /* OLRemoteDataPoller.h */,
+				E2AABA141C6DFC160007C1D7 /* OLRemoteDataPoller.m */,
 				E2AABA171C6FC6650007C1D7 /* OLURLShortener.h */,
 				E2AABA181C6FC6650007C1D7 /* OLURLShortener.m */,
 			);
@@ -2124,7 +2124,7 @@
 				2EB8FE021D95685100E26BDF /* OLKiteUtils.h in Headers */,
 				2EB8FE5D1D95685100E26BDF /* OLAddressEditViewController.h in Headers */,
 				2EB8FE701D95685100E26BDF /* OLCollectionViewController.h in Headers */,
-				2EB8FDDC1D95685100E26BDF /* OLQRCodeUploadedImagePoller.h in Headers */,
+				2EB8FDDC1D95685100E26BDF /* OLRemoteDataPoller.h in Headers */,
 				2EB8FE1F1D95685100E26BDF /* NSString+OLOAuth2.h in Headers */,
 				2EB8FE151D95685100E26BDF /* OLFlipViewController.h in Headers */,
 				2E12DBC81E795511000A6CEF /* UIView+AutoLayoutHelper.h in Headers */,
@@ -2698,7 +2698,7 @@
 				2E451E3D1D9555870080F1C1 /* OLImagePickerLoginPageViewController.m in Sources */,
 				2E451E141D9555870080F1C1 /* OLMarkdownParser.m in Sources */,
 				2E451E191D9555870080F1C1 /* OLRadialGradientLayer.m in Sources */,
-				2E451DDA1D9555540080F1C1 /* OLQRCodeUploadedImagePoller.m in Sources */,
+				2E451DDA1D9555540080F1C1 /* OLRemoteDataPoller.m in Sources */,
 				2E451E611D9555EF0080F1C1 /* OLNavigationController.m in Sources */,
 				2E451DE11D9555540080F1C1 /* OLImagePickerProviderCollection.m in Sources */,
 				2E451E481D9555D30080F1C1 /* OLPosterViewController.m in Sources */,
