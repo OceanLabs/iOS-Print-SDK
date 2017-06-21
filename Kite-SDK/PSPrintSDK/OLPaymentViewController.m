@@ -496,12 +496,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
     
     NSString *deliveryDetailsTitle = NSLocalizedStringFromTableInBundle(@"Delivery Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-    NSMutableSet *addresses = [[NSMutableSet alloc] init];
-    for (id<OLPrintJob> job in self.printOrder.jobs){
-        if ([job address]){
-            [addresses addObject:[job address]];
-        }
-    }
     if ([self.printOrder.shippingAddress isValidAddress]){
         deliveryDetailsTitle = [self.printOrder.shippingAddress descriptionWithoutRecipient];
     }
@@ -543,10 +537,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
 }
 
 - (void)updateSelectedPaymentMethodView{
