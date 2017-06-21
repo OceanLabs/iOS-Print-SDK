@@ -124,7 +124,7 @@
             }];
         }
         else{
-            self.imageView.image = [UIImage imageNamedInKiteBundle:@"kiosk-landing-landscape"];
+            self.imageView.image = [UIImage imageNamed:@"kiosk-landing-landscape"];
             self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
         }
     }
@@ -136,7 +136,7 @@
             }];
         }
         else{
-            self.imageView.image = [UIImage imageNamedInKiteBundle:@"kiosk-landing-portrait"];
+            self.imageView.image = [UIImage imageNamed:@"kiosk-landing-portrait"];
             self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
         }
     }
