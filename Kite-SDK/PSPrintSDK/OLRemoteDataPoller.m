@@ -57,7 +57,7 @@
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (!self.cancelled) {
+            if (!self.cancelled && progressHandler) {
                 progressHandler(receivedSize, expectedSize);
             }
         });
