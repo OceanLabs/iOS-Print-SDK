@@ -771,7 +771,7 @@
     XCTAssert(editVc.editingTools.collectionView.tag == 30/*kOLEditTagImageTools*/, @"Image Tools not shown");
     
     [self performUIAction:^{
-        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] onButtonTouchUpInside];
+        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:2 inSection:0]] onButtonTouchUpInside];
     }];
     XCTAssert(editVc.editingTools.collectionView.tag == 34/*kOLEditTagFilters*/, @"Filters not shown");
     
@@ -786,12 +786,12 @@
     XCTAssert(editVc.editingTools.collectionView.tag == 30/*kOLEditTagImageTools*/, @"Image Tools not restored");
     
     [self performUIActionWithDelay:5 action:^{
-        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] onButtonTouchUpInside];
+        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]] onButtonTouchUpInside];
     }];
     XCTAssert(editVc.edits.flipVertical || editVc.edits.flipHorizontal, @"Image not flipped");
     
     [self performUIActionWithDelay:5 action:^{
-        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:2 inSection:0]] onButtonTouchUpInside];
+        [(OLButtonCollectionViewCell *)[editVc.editingTools.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0]] onButtonTouchUpInside];
     }];
     XCTAssert(editVc.edits.counterClockwiseRotations > 0, @"Image not rotated");
     

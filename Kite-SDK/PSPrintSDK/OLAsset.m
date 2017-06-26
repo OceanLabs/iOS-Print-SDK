@@ -505,14 +505,26 @@ static NSOperationQueue *imageOperationQueue;
             }];
         }
         else if (self.assetType == kOLAssetTypeDataSource){
-            [self.dataSource dataWithCompletionHandler:^(NSData *data, NSError *error){
-                [self resizeImage:[UIImage imageWithData:data] size:size applyEdits:applyEdits completion:^(UIImage *image){
-                    if (!fullResolution){
-                        self.cachedEditedImage = image;
-                    }
-                    handler(image, nil);
+            if ([self.dataSource respondsToSelector:@selector(imageForSize:completionHandler:)] && !CGSizeEqualToSize(size, OLAssetMaximumSize)){
+                [self.dataSource imageForSize:size completionHandler:^(UIImage *image, NSError *error){
+                    [self resizeImage:image size:size applyEdits:applyEdits completion:^(UIImage *image){
+                        if (!fullResolution){
+                            self.cachedEditedImage = image;
+                        }
+                        handler(image, nil);
+                    }];
                 }];
-            }];
+            }
+            else{
+                [self.dataSource dataWithCompletionHandler:^(NSData *data, NSError *error){
+                    [self resizeImage:[UIImage imageWithData:data] size:size applyEdits:applyEdits completion:^(UIImage *image){
+                        if (!fullResolution){
+                            self.cachedEditedImage = image;
+                        }
+                        handler(image, nil);
+                    }];
+                }];
+            }
         }
         else if (self.assetType == kOLAssetTypeCorrupt){
             NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteResourcesBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
