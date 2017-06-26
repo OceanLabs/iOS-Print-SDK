@@ -148,7 +148,7 @@ static OLPaymentMethod selectedPaymentMethod;
 - (BOOL)hasCachedCost;
 - (void)saveOrder;
 @property (strong, nonatomic, readwrite) NSString *submitStatusErrorMessage;
-@property (strong, nonatomic, readwrite) NSString *submitStatus;
+@property (assign, nonatomic, readwrite) OLPrintOrderSubmitStatus submitStatus;
 @property (nonatomic, readwrite) NSString *receipt;
 @property (strong, nonatomic) OLPrintOrderCost *finalCost;
 @property (nonatomic, strong) OLPrintOrderCostRequest *costReq;
@@ -1486,6 +1486,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         }
     }];
 }
+
+- (void)paymentAuthorizationViewController:(nonnull PKPaymentAuthorizationViewController *)controller didAuthorizePayment:(nonnull PKPayment *)payment handler:(nonnull void (^)(PKPaymentAuthorizationResult * _Nonnull))completion {
+    <#statements#>
+}
+
 
 #pragma mark - UITableViewDataSource methods
 
