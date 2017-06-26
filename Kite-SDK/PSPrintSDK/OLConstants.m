@@ -48,7 +48,7 @@ const NSInteger kOLKiteSDKErrorCodeURLShorteningFailed = 801;
 
 NSString *const kOLKiteSDKErrorMessageUnauthorized = @"Unauthorized Kite Print SDK Request. Did you set your API Key and Environment correctly using [OLKitePrintSDK setAPIKey:withEnvironment:]";
 
-NSString *const kOLKiteSDKErrorMessageMaintenanceMode = @"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.";
+NSString *const kOLKiteSDKErrorMessageMaintenanceMode = @"Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.";
 
 NSString *const kOLKiteSDKErrorMessageRequestInProgress = @"A request to get costs is already in progress.";
 
