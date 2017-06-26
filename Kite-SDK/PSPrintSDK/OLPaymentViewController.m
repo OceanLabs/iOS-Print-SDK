@@ -713,7 +713,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     };
 }
 
-- (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment paymentMethod:(NSString *)paymentMethod completion:(void (^)(PKPaymentAuthorizationStatus)) handler{
+- (void)submitOrderForPrintingWithProofOfPayment:(NSString *)proofOfPayment paymentMethod:(NSString *)paymentMethod completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray<NSError *> *errors)) handler{
     [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -739,7 +739,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
         if (!handlerUsed) {
-            handler(PKPaymentAuthorizationStatusSuccess);
+            handler(PKPaymentAuthorizationStatusSuccess, nil);
             handlerUsed = YES;
         }
         
@@ -840,7 +840,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         }
         
         if (!handlerUsed) {
-            handler(PKPaymentAuthorizationStatusSuccess);
+            handler(PKPaymentAuthorizationStatusSuccess, nil);
             handlerUsed = YES;
         }
         
@@ -998,7 +998,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                 return;
             }
             
-            [self submitOrderForPrintingWithProofOfPayment:proofOfPayment paymentMethod:@"Credit Card" completion:^void(PKPaymentAuthorizationStatus status){}];
+            [self submitOrderForPrintingWithProofOfPayment:proofOfPayment paymentMethod:@"Credit Card" completion:^(PKPaymentAuthorizationStatus status, NSArray <NSError *> *errors){}];
             [card saveAsLastUsedCard];
         }];
     }];
@@ -1017,7 +1017,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                 return;
             }
             
-            [self submitOrderForPrintingWithProofOfPayment:proofOfPayment paymentMethod:@"Credit Card" completion:^void(PKPaymentAuthorizationStatus status){}];
+            [self submitOrderForPrintingWithProofOfPayment:proofOfPayment paymentMethod:@"Credit Card" completion:^(PKPaymentAuthorizationStatus status, NSArray<NSError *> *errors){}];
             [card saveAsLastUsedCard];
         }];
     }];
@@ -1248,7 +1248,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                 return;
             }
             // The user must have a promo code which reduces this order cost to nothing, lucky user :)
-            [self submitOrderForPrintingWithProofOfPayment:nil paymentMethod:@"Free Checkout" completion:^void(PKPaymentAuthorizationStatus status){}];
+            [self submitOrderForPrintingWithProofOfPayment:nil paymentMethod:@"Free Checkout" completion:^(PKPaymentAuthorizationStatus status, NSArray<NSError *> *errors){}];
         }
         else if (selectedPaymentMethod == kOLPaymentMethodNone){
             [UIView animateWithDuration:0.1 animations:^{
@@ -1323,7 +1323,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     [self dismissViewControllerAnimated:YES completion:nil];
     NSString *token = [OLPayPalWrapper confirmationWithPayment:completedPayment][@"response"][@"id"];
     token = [token stringByReplacingCharactersInRange:NSMakeRange(0, 3) withString:@"PAUTH"];
-    [self submitOrderForPrintingWithProofOfPayment:token paymentMethod:@"PayPal" completion:^void(PKPaymentAuthorizationStatus status){}];
+    [self submitOrderForPrintingWithProofOfPayment:token paymentMethod:@"PayPal" completion:^(PKPaymentAuthorizationStatus status, NSArray<NSError *> *errors){}];
 }
 
 #pragma mark - Apple Pay Delegate Methods
@@ -1332,7 +1332,16 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
     self.authorizedApplePay = YES;
-    [self handlePaymentAuthorizationWithPayment:payment completion:completion];
+    [self handlePaymentAuthorizationWithPayment:payment completion:^(PKPaymentAuthorizationStatus status, NSArray<NSError *> *errors){
+        completion(status);
+    }];
+}
+
+- (void)paymentAuthorizationViewController:(nonnull PKPaymentAuthorizationViewController *)controller didAuthorizePayment:(nonnull PKPayment *)payment handler:(nonnull void (^)(PKPaymentAuthorizationResult * _Nonnull))completion {
+    self.authorizedApplePay = YES;
+    [self handlePaymentAuthorizationWithPayment:payment completion:^(PKPaymentAuthorizationStatus status, NSArray<NSError *> *errors){
+        completion([[PKPaymentAuthorizationResult alloc] initWithStatus:status errors:errors]);
+    }];
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
@@ -1361,7 +1370,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
-                                   completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+                                   completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray<NSError *> *errors))completion {
     if (![OLKiteUtils isApplePayAvailable]){
         return;
     }
@@ -1387,17 +1396,17 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     self.printOrder.phone = phone;
     
     if (![self.printOrder.shippingAddress isValidAddress]){
-        completion(PKPaymentAuthorizationStatusInvalidShippingPostalAddress);
+        completion(PKPaymentAuthorizationStatusInvalidShippingPostalAddress, nil);
         return;
     }
     if (![OLCheckoutViewController validateEmail:email] && [OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
-        completion(PKPaymentAuthorizationStatusInvalidShippingContact);
+        completion(PKPaymentAuthorizationStatusInvalidShippingContact, nil);
         return;
     }
     id client = [OLStripeWrapper initSTPAPIClientWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
     [OLStripeWrapper client:client createTokenWithPayment:payment completion:^(id token, NSError *error) {
         if (error) {
-            completion(PKPaymentAuthorizationStatusFailure);
+            completion(PKPaymentAuthorizationStatusFailure, nil);
             return;
         }
         [self submitOrderForPrintingWithProofOfPayment:[OLStripeWrapper tokenIdFromToken:token] paymentMethod:@"Apple Pay" completion:completion];
@@ -1486,11 +1495,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         }
     }];
 }
-
-- (void)paymentAuthorizationViewController:(nonnull PKPaymentAuthorizationViewController *)controller didAuthorizePayment:(nonnull PKPayment *)payment handler:(nonnull void (^)(PKPaymentAuthorizationResult * _Nonnull))completion {
-    <#statements#>
-}
-
 
 #pragma mark - UITableViewDataSource methods
 
