@@ -90,6 +90,7 @@ static OLPaymentMethod selectedPaymentMethod;
 
 @interface OLKiteViewController ()
 - (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder;
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
 @end
 
 @interface OLProductTemplate ()
@@ -1607,6 +1608,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackBasketScreenDidTapOnPromoCodeBoxforOrder:self.printOrder];
 #endif
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
+    return YES;
 }
 
 - (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
