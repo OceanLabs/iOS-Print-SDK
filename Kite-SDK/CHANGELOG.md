@@ -1,3 +1,12 @@
+### 6.6.3
+- Fixed missing mug asset when installing via Cocoapods
+
+### 6.6.2
+- Added the ability to disable filters and text-on-photo.
+
+### 6.6.1
+- Added a way for image providers to supply thumbnails.
+
 ## 6.6.0
 - New Product: Mugs
 - Added: Shipping methods, including tracked shipping and estimated shipping times, per item.

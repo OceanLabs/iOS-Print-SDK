@@ -1613,14 +1613,18 @@ const NSInteger kOLEditTagCrop = 40;
         return self.fonts.count;
     }
     else if (collectionView.tag == kOLEditTagImageTools){
-        if (self.product.productTemplate.templateUI == OLTemplateUIMug){
-            return 3;
+        NSInteger numberOfTools = 4;
+        if ([OLUserSession currentSession].kiteVc.disableAdvancedEditingTools){
+            numberOfTools -= 2; // Remove filters and text on photo
         }
-        NSInteger numberOfItems = 4;
+        else if (self.product.productTemplate.templateUI == OLTemplateUIMug){
+            numberOfTools--; // Remove text on photo
+        }
+        
         if ([self cropIsInImageEditingTools]){
-            numberOfItems++;
+            numberOfTools++;
         }
-        return numberOfItems;
+        return numberOfTools;
     }
     else if (collectionView.tag == kOLEditTagFilters){
         return [self filterNames].count;
@@ -1661,16 +1665,16 @@ const NSInteger kOLEditTagCrop = 40;
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Crop image")];
         }
         else if (adjustedIndexPathItem == 0){
-            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"filters"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image filters")];
-        }
-        else if (adjustedIndexPathItem == 1){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"flip"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Flip", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Horizontally flip image")];
         }
-        else if (adjustedIndexPathItem == 2){
+        else if (adjustedIndexPathItem == 1){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"rotate"]];
             [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Rotate", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Rotate image by 90 degrees")];
+        }
+        else if (adjustedIndexPathItem == 2){
+            [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"filters"]];
+            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Filters", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Image filters")];
         }
         else if (adjustedIndexPathItem == 3){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Tt"]];
@@ -1868,6 +1872,18 @@ const NSInteger kOLEditTagCrop = 40;
 #endif
         }
         else if (adjustedIndexPathItem == 0){
+            [self onButtonHorizontalFlipClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Flip"];
+#endif
+        }
+        else if (adjustedIndexPathItem == 1){
+            [self onButtonRotateClicked:nil];
+#ifndef OL_NO_ANALYTICS
+            [OLAnalytics trackEditScreenButtonTapped:@"Rotate"];
+#endif
+        }
+        else if (adjustedIndexPathItem == 2){
             if (!self.artboard.assetViews.firstObject.imageView.image){
                 return;
             }
@@ -1880,18 +1896,6 @@ const NSInteger kOLEditTagCrop = 40;
             }];
 #ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Filters"];
-#endif
-        }
-        else if (adjustedIndexPathItem == 1){
-            [self onButtonHorizontalFlipClicked:nil];
-#ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackEditScreenButtonTapped:@"Flip"];
-#endif
-        }
-        else if (adjustedIndexPathItem == 2){
-            [self onButtonRotateClicked:nil];
-#ifndef OL_NO_ANALYTICS
-            [OLAnalytics trackEditScreenButtonTapped:@"Rotate"];
 #endif
         }
         else if (adjustedIndexPathItem == 3){

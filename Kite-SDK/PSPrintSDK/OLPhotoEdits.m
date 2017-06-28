@@ -236,6 +236,7 @@ static NSString *const kKeyFilterName = @"co.oceanlabs.psprintstudio.kKeyFilterN
     copy.borderColor = [self.borderColor copyWithZone:zone];
     copy.bottomBorderText = [self.bottomBorderText copyWithZone:zone];
     copy.filterName = [self.filterName copyWithZone:zone];
+    copy.bottomBorderText = [self.bottomBorderText copyWithZone:zone];
 
     return copy;
 }
