@@ -95,6 +95,12 @@ static char tasksKey;
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 UIImage *resizedImage = [image shrinkToSize:size forScreenScale:[self screenScale] aspectFit:self.contentMode == UIViewContentModeScaleAspectFit];
+                if (resizedImage) {
+                    UIGraphicsBeginImageContextWithOptions(resizedImage.size, NO, resizedImage.scale);
+                    [resizedImage drawAtPoint:CGPointZero];
+                    resizedImage = UIGraphicsGetImageFromCurrentImageContext();
+                    UIGraphicsEndImageContext();
+                }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.image = resizedImage;
                     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
