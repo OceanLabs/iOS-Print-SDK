@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#define KITE_UTILS
+
 //! Project version number for KiteUtils.
 FOUNDATION_EXPORT double KiteUtilsVersionNumber;
 
@@ -22,3 +24,8 @@ FOUNDATION_EXPORT const unsigned char KiteUtilsVersionString[];
 #import "OLImageDownloadDelegate.h"
 #import "UIImage+OLUtils.h"
 #import "UIImageView+FadeIn.h"
+#import "OLAddress.h"
+#import "OLCountry.h"
+#import "OLStripeCard.h"
+#import "OLStripeCard+OLCardIcon.h"
+#import "OLLuhn.h"

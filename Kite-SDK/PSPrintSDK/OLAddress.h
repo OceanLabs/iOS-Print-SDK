@@ -29,16 +29,22 @@
 
 #import <Foundation/Foundation.h>
 
+#ifndef KITE_UTILS
 #import "OLAddressSearchRequest.h"
+#endif
 
 @class OLAddress;
+@class OLCountry;
 
 @interface OLAddress : NSObject <NSCopying, NSCoding>
 
 + (OLAddress *)kiteTeamAddress;
 
+#ifndef KITE_UTILS
 + (OLAddressSearchRequest *)searchForAddressWithCountry:(OLCountry *)country query:(NSString *)q delegate:(id<OLAddressSearchRequestDelegate>)delegate;
 + (OLAddressSearchRequest *)searchForAddress:(OLAddress *)address delegate:(id<OLAddressSearchRequestDelegate>)delegate;
+@property (nonatomic, readonly, getter = isSearchRequiredForFullDetails) BOOL searchRequiredForFullDetails;
+#endif
 
 @property (nonatomic, copy) NSString *recipientFirstName;
 @property (nonatomic, copy) NSString *recipientLastName;
@@ -48,8 +54,6 @@
 @property (nonatomic, copy) NSString *stateOrCounty;
 @property (nonatomic, copy) NSString *zipOrPostcode;
 @property (nonatomic, strong) OLCountry *country;
-
-@property (nonatomic, readonly, getter = isSearchRequiredForFullDetails) BOOL searchRequiredForFullDetails;
 
 @property (nonatomic, readonly) NSString *descriptionWithoutRecipient;
 

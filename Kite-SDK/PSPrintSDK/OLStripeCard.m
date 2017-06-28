@@ -29,17 +29,18 @@
 
 #import "OLStripeCard.h"
 #import "NSString+Formatting.h"
+
+#ifndef KITE_UTILS
 #import "OLKiteUtils.h"
+
+#define kErrorMessageGeneric NSLocalizedStringFromTableInBundle(@"There was an error trying to validate the card. Please try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
+#else
+#define kErrorMessageGeneric NSLocalizedString(@"There was an error trying to validate the card. Please try again later.", @"")
+#endif
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.Stripe.kKeyNumberMasked";
 static NSString *const kKeyCustomerId = @"co.oceanlabs.Stripe.kKeyCustomerId";
-
 static NSString *const kOLErrorDomainStripe = @"co.oceanlabs.Stripe.kOLErrorDomainStripe";
-
-#define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
-#define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
-
-
 static NSString *clientId;
 
 typedef void (^OLStripeCardAccessTokenCompletionHandler)(NSString *accessToken, NSError *error);
@@ -131,7 +132,7 @@ static OLStripeCard *lastUsedCard;
                 NSError *error;
                 NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
                 if (error){
-                    handler(nil, [NSError errorWithDomain:@"com.stripe" code:400 userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error trying to validate the card. Please try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}]);
+                    handler(nil, [NSError errorWithDomain:@"com.stripe" code:400 userInfo:@{NSLocalizedDescriptionKey : kErrorMessageGeneric}]);
                 }
                 else if (json[@"error"]){
                     handler(nil, [NSError errorWithDomain:@"com.stripe" code:400 userInfo:@{NSLocalizedDescriptionKey : json[@"error"][@"message"]}]);
