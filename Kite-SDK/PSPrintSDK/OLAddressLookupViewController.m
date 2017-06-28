@@ -58,6 +58,10 @@
 
 @end
 
+@interface OLKiteViewController ()
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
+@end
+
 @implementation OLAddressLookupViewController
 
 - (id)init {
@@ -282,6 +286,7 @@
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
+    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
     NSString *searchString = searchController.searchBar.text;
     
     if (searchString.length == 0) {
