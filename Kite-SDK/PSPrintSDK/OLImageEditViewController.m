@@ -61,6 +61,7 @@ const NSInteger kOLEditTagCrop = 40;
 @interface OLKiteViewController ()
 @property (strong, nonatomic) NSArray *fontNames;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
 @end
 
 @interface OLProductOverviewViewController ()
@@ -2115,6 +2116,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
     self.ctaButton.enabled = YES;
     return YES;
 }
