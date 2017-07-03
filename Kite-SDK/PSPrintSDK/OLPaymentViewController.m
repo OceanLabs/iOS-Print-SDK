@@ -341,6 +341,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
     
+    if ([OLUserSession currentSession].kiteVc.hidePromoCodeField){
+        self.promoBox.hidden = YES;
+    }
+    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackBasketScreenViewedForOrder:self.printOrder applePayIsAvailable:applePayAvailableStr];
 #endif
