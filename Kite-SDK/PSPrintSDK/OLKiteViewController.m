@@ -58,6 +58,7 @@ static CGFloat fadeTime = 0.3;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @property (strong, nonatomic) NSArray *fontNames;
 @property (strong, nonatomic) NSTimer *timer;
@@ -308,7 +309,7 @@ static CGFloat fadeTime = 0.3;
         NSString *nextVcNavIdentifier;
         OLProduct *product;
         if (groups.count == 0 && !([OLProductTemplate templates].count != 0 && [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Store Maintenance", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Store Maintenance", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                     [welf dismiss];
                 }]];
@@ -478,7 +479,7 @@ static CGFloat fadeTime = 0.3;
         NSError *error = n.userInfo[kNotificationKeyTemplateSyncError];
         NSString *message = NSLocalizedStringFromTableInBundle(@"There was a problem getting Print Shop products. Check your Internet connectivity or try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         if (error.code == kOLKiteSDKErrorCodeMaintenanceMode) {
-            message = NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintence so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            message = NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){

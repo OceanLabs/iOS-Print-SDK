@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cpC-15-nyB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cpC-15-nyB">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -220,6 +220,7 @@
                     </view>
                     <connections>
                         <outlet property="customNavigationItem" destination="BQx-e8-ao7" id="zWh-eg-7HC"/>
+                        <outlet property="loadingActivityIndicator" destination="Pmz-Ej-3cl" id="oPV-4t-dhG"/>
                         <outlet property="loadingImageView" destination="UMU-vU-w01" id="MEY-eI-KuG"/>
                         <outlet property="navigationBar" destination="Gf0-5K-EaB" id="VuD-wt-zWy"/>
                     </connections>
@@ -3002,7 +3003,7 @@
         <scene sceneID="kFc-fy-yh6">
             <objects>
                 <collectionViewController storyboardIdentifier="OLPosterViewController" id="AaA-7l-tb4" customClass="OLPosterViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" dataMode="prototypes" id="LuI-LA-fpj">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="LuI-LA-fpj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.90729904174804688" green="0.92126071453094482" blue="0.93601524829864502" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

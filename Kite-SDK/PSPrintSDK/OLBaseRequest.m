@@ -164,7 +164,7 @@ static NSString *httpMethodString(OLHTTPMethod method) {
     NSError *parsingError;
     id json = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:&parsingError];
     
-    if (self.responseHTTPStatusCode == 503 /*Heroku maintence mode status code*/) {
+    if (self.responseHTTPStatusCode == 503 /*Heroku maintenance mode status code*/) {
         parsingError = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeMaintenanceMode userInfo:@{NSLocalizedDescriptionKey: kOLKiteSDKErrorMessageMaintenanceMode}];
     }
     

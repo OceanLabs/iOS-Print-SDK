@@ -1,3 +1,8 @@
+### 6.6.4
+- Added ability to hide promo code text field
+- Added access to the activity indicator on the loading view
+- Fixed Italian translation file
+
 ### 6.6.3
 - Fixed missing mug asset when installing via Cocoapods
 
