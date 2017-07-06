@@ -33,13 +33,6 @@ typedef void (^OLPayPalCardStoreCompletionHandler)(NSError *error);
 typedef void (^OLPayPalCardChargeCompletionHandler)(NSString *proofOfPayment, NSError *error);
 
 typedef enum {
-    kOLPayPalCardTypeVisa,
-    kOLPayPalCardTypeMastercard,
-    kOLPayPalCardTypeDiscover,
-    kOLPayPalCardTypeAmex
-} OLPayPalCardType;
-
-typedef enum {
     kOLPayPalEnvironmentSandbox,
     kOLPayPalEnvironmentLive
 } OLPayPalEnvironment;

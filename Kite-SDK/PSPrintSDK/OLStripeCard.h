@@ -32,6 +32,13 @@
 typedef void (^OLStripeCardStoreCompletionHandler)(NSError *error);
 typedef void (^OLStripeCardChargeCompletionHandler)(NSString *proofOfPayment, NSError *error);
 
+typedef enum {
+    kOLStripeCardTypeVisa,
+    kOLStripeCardTypeMastercard,
+    kOLStripeCardTypeDiscover,
+    kOLStripeCardTypeAmex
+} OLStripeCardType;
+
 @interface OLStripeCard : NSObject
 
 + (void)setClientId:(NSString *)clientId;

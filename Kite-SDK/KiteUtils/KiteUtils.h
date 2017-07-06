@@ -29,3 +29,5 @@ FOUNDATION_EXPORT const unsigned char KiteUtilsVersionString[];
 #import "OLStripeCard.h"
 #import "OLStripeCard+OLCardIcon.h"
 #import "OLLuhn.h"
+#import "OLPaymentMethodsViewController.h"
+#import "OLCreditCardCaptureViewController.h"

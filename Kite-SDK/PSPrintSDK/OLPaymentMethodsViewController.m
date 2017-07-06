@@ -27,18 +27,22 @@
 //  THE SOFTWARE.
 //
 
+#import <PassKit/PassKit.h>
 #import "OLPaymentMethodsViewController.h"
-#import "OLPaymentViewController.h"
 #import "OLStripeCard.h"
-#import "OLPayPalCard.h"
+#import "OLStripeCard+OLCardIcon.h"
 #import "OLCreditCardCaptureViewController.h"
+
+
+#ifndef KITE_UTILS
+#import "OLPaymentViewController.h"
+#import "OLPayPalCard.h"
 #import "OLKiteUtils.h"
 #import "OLKitePrintSDK.h"
 #import "OLPayPalCard+OLCardIcon.h"
-#import "OLStripeCard+OLCardIcon.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLUserSession.h"
-#import "OLPaymentViewController.h"
+#endif
 
 @interface OLPaymentMethodsViewController () <UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, OLCreditCardCaptureDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -46,6 +50,7 @@
 
 @end
 
+#ifndef KITE_UTILS
 @interface OLPaymentViewController ()
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @end
@@ -53,6 +58,7 @@
 @interface OLKitePrintSDK ()
 + (BOOL)useStripeForCreditCards;
 @end
+#endif
 
 @implementation OLPaymentMethodsViewController
 
@@ -70,20 +76,26 @@
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Payment Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-    
+#ifndef KITE_UTILS
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPaymentMethodScreenViewed:[(OLPaymentViewController *)self.delegate printOrder]];
 #endif
+    self.title = NSLocalizedStringFromTableInBundle(@"Payment Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+#else
+    self.title = NSLocalizedString(@"Payment Method", @"");
+#endif
+    
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
-    
+#ifndef KITE_UTILS
 #ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackPaymentMethodScreenHitBack:[(OLPaymentViewController *)self.delegate printOrder]];
     }
+#endif
 #endif
 }
 
@@ -98,9 +110,20 @@
     }];
 }
 
+#ifdef KITE_UTILS
+- (BOOL)isApplePayAvailable{
+    NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
+    if ((&PKPaymentNetworkDiscover) != NULL) {
+        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
+    }
+    return [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:supportedNetworks];
+}
+#endif
+
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     NSInteger sections = 1; //Credit Cards for everyone!
     
+#ifndef KITE_UTILS
     if ([OLKiteUtils isApplePayAvailable]){
         sections++;
     }
@@ -108,12 +131,26 @@
     if ([OLKiteUtils isPayPalAvailable]){
         sections++;
     }
+#else
+    NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
+    if ((&PKPaymentNetworkDiscover) != NULL) {
+        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
+    }
+    if ([PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:supportedNetworks]){
+        sections++;
+    }
+    
+#endif
     
     return sections;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+#ifndef KITE_UTILS
     id existingCard = [OLKitePrintSDK useStripeForCreditCards] ? [OLStripeCard lastUsedCard] : [OLPayPalCard lastUsedCard];
+#else
+    OLStripeCard *existingCard = [OLStripeCard lastUsedCard];
+#endif
     if (section == 0 && existingCard){
         return 2;
     }
@@ -135,7 +172,11 @@
     }
     
     OLPaymentMethod method = [self paymentMethodForSection:indexPath.section];
+#ifndef KITE_UTILS
     id existingCard = [OLKitePrintSDK useStripeForCreditCards] ? [OLStripeCard lastUsedCard] : [OLPayPalCard lastUsedCard];
+#else
+    OLStripeCard *existingCard = [OLStripeCard lastUsedCard];
+#endif
     if (method == kOLPaymentMethodCreditCard && indexPath.row == 0 && existingCard){
         imageView.image = [existingCard cardIcon];
         label.text = [NSString stringWithFormat:[existingCard isAmex] ? @"•••• •••••• •%@" : @"•••• •••• •••• %@", [[existingCard numberMasked] substringFromIndex:[[existingCard numberMasked] length] - 4]];
@@ -151,12 +192,24 @@
         [cell addGestureRecognizer:gesture];
     }
     else if (method == kOLPaymentMethodCreditCard){
+#ifndef KITE_UTILS
         imageView.image = [UIImage imageNamedInKiteBundle:@"add-payment"];
+#else
+        imageView.image = [UIImage imageNamed:@"add-payment"];
+#endif
+#ifndef KITE_UTILS
         label.text = NSLocalizedStringFromTableInBundle(@"Add Credit/Debit Card", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+#else
+        label.text = NSLocalizedString(@"Add Credit/Debit Card", @"");
+#endif
         [cell viewWithTag:30].hidden = YES;
     }
     else if (method == kOLPaymentMethodApplePay){
+#ifndef KITE_UTILS
         imageView.image = [UIImage imageNamedInKiteBundle:@"apple-pay-method"];
+#else
+        imageView.image = [UIImage imageNamed:@"apple-pay-method"];
+#endif
         label.text = @"Apple Pay";
         
         if (self.selectedPaymentMethod == kOLPaymentMethodNone){
@@ -171,7 +224,11 @@
         }
     }
     else if (method == kOLPaymentMethodPayPal){
-        imageView.image = [UIImage imageNamedInKiteBundle:@"paypal-method"];
+#ifndef KITE_UTILS
+        imageView.image = [UIImage imageNamedInKiteBundle:@"add-payment"];
+#else
+        imageView.image = [UIImage imageNamed:@"add-payment"];
+#endif
         label.text = @"PayPal";
         if (self.selectedPaymentMethod == kOLPaymentMethodPayPal){
             [cell viewWithTag:30].hidden = NO;
@@ -190,7 +247,11 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     OLPaymentMethod method = [self paymentMethodForSection:indexPath.section];
+#ifndef KITE_UTILS
     id existingCard = [OLKitePrintSDK useStripeForCreditCards] ? [OLStripeCard lastUsedCard] : [OLPayPalCard lastUsedCard];
+#else
+    OLStripeCard *existingCard = [OLStripeCard lastUsedCard];
+#endif
     if (method == kOLPaymentMethodCreditCard && (indexPath.item > 0 || !existingCard)){
         [self addNewCard];
     }
@@ -222,6 +283,7 @@
     if (section == 0){
         return kOLPaymentMethodCreditCard;
     }
+#ifndef KITE_UTILS
     else if (section == 1 && [OLKiteUtils isApplePayAvailable]){
         return kOLPaymentMethodApplePay;
     }
@@ -231,6 +293,14 @@
     else if (section == 2 && [OLKiteUtils isPayPalAvailable]){
         return kOLPaymentMethodPayPal;
     }
+#else
+    else if (section == 1 && [self isApplePayAvailable]){
+        return kOLPaymentMethodApplePay;
+    }
+    else if (section == 1 || section == 2){
+        return kOLPaymentMethodPayPal;
+    }
+#endif
     NSAssert(NO, @"Should not reach here");
     return kOLPaymentMethodNone;
 }
@@ -245,7 +315,9 @@
 - (void)addNewCard {
     OLCreditCardCaptureViewController *ccCaptureController = [[OLCreditCardCaptureViewController alloc] init];
     ccCaptureController.delegate = self;
+#ifndef KITE_UTILS
     ccCaptureController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
+#endif
     [self presentViewController:ccCaptureController animated:YES completion:nil];
 }
 - (IBAction)swipeLeftGestureRecognized:(UISwipeGestureRecognizer *)sender {
@@ -257,7 +329,9 @@
 
 - (IBAction)onButtonDeleteCardTapped:(UIButton *)sender {
     [OLStripeCard clearLastUsedCard];
+#ifndef KITE_UTILS
     [OLPayPalCard clearLastUsedCard];
+#endif
     
     if (self.selectedPaymentMethod == kOLPaymentMethodCreditCard){
         self.selectedPaymentMethod = kOLPaymentMethodNone;

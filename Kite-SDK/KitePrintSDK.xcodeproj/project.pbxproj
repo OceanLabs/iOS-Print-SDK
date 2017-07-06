@@ -54,6 +54,8 @@
 		2E18C5FD1E7ADB4100B06075 /* OLKiteViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E18C5FC1E7ADABA00B06075 /* OLKiteViewController+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2E1BB37D1E7C2A25008F7217 /* OLSingleImagePosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1BB37B1E7C2A25008F7217 /* OLSingleImagePosterViewController.h */; };
 		2E1BB37E1E7C2A25008F7217 /* OLSingleImagePosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1BB37C1E7C2A25008F7217 /* OLSingleImagePosterViewController.m */; };
+		2E20DA291F0E20EF00C4198A /* OLCreditCardCaptureViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E20DA2A1F0E20F300C4198A /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
 		2E23EB9B1D5091FC00E2BF42 /* CI-Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */; };
 		2E2EFC831EF962100065A68C /* OLAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA31862FC510009DE03 /* OLAddress.m */; };
 		2E2EFC841EF962190065A68C /* OLAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFA21862FC510009DE03 /* OLAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -476,6 +478,8 @@
 		2EB9669B1EA62A0700AD6BBA /* KiteSDKLoader.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */; };
 		2EB9669C1EA62A0900AD6BBA /* KiteSDKLoader.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */; };
 		2EB9669D1EA62A3800AD6BBA /* KiteSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; };
+		2EB9B7EB1F0E530E0001DA9C /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
+		2EB9B7EC1F0E53110001DA9C /* UIView+RoundRect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EBDF4CE1E434A0B004775BD /* OLKiteLocalizationResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */; };
 		2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */; };
 		2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */; };
@@ -491,6 +495,8 @@
 		2EEAEF3D1ECDA1B700C40B71 /* mug.scn in Resources */ = {isa = PBXBuildFile; fileRef = 2EEAEF3C1ECDA12300C40B71 /* mug.scn */; };
 		2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */; };
 		2EEF0D0C1D9A781700C81086 /* OLCustomPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D0B1D9A781700C81086 /* OLCustomPickerController.h */; };
+		2EF3A8981F0D0FF30064AC15 /* OLPaymentMethodsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB1978F1CF872F200648696 /* OLPaymentMethodsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2EF3A8991F0D11B40064AC15 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
 		B7106FC2FDFC534AFB2516F3 /* libPods-KiteSDK-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CFE5B84A94297F8524AE7764 /* libPods-KiteSDK-Demo.a */; };
 		CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF8A186215790009DE03 /* XCTest.framework */; };
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
@@ -1959,13 +1965,16 @@
 				2E2EFC8A1EF96DEC0065A68C /* OLStripeCard.h in Headers */,
 				2E8AC4DC1EFBCBB90040BF00 /* OLStripeCard+OLCardIcon.h in Headers */,
 				2E025DD01EF7F132006B15EE /* KiteUtils.h in Headers */,
+				2EB9B7EC1F0E53110001DA9C /* UIView+RoundRect.h in Headers */,
 				2E2EFC841EF962190065A68C /* OLAddress.h in Headers */,
 				2E025DE91EF7F83E006B15EE /* UIImageView+FadeIn.h in Headers */,
 				2E025DE71EF7F808006B15EE /* OLImageDownloadDelegate.h in Headers */,
 				2E2EFC851EF962980065A68C /* OLCountry.h in Headers */,
+				2EF3A8981F0D0FF30064AC15 /* OLPaymentMethodsViewController.h in Headers */,
 				2EC481A81EF8091F00E6CB6F /* UIImage+OLUtils.h in Headers */,
 				2E8AC4D91EFBC3070040BF00 /* OLLuhn.h in Headers */,
 				2E025DE51EF7F7FD006B15EE /* OLImageDownloader.h in Headers */,
+				2E20DA291F0E20EF00C4198A /* OLCreditCardCaptureViewController.h in Headers */,
 				2E025DE41EF7F2BD006B15EE /* UIView+AutoLayoutHelper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2573,8 +2582,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E20DA2A1F0E20F300C4198A /* OLCreditCardCaptureViewController.m in Sources */,
 				2EC481A91EF8092600E6CB6F /* UIImage+OLUtils.m in Sources */,
 				2E025DE21EF7F1BF006B15EE /* UIColor+OLHexString.m in Sources */,
+				2EB9B7EB1F0E530E0001DA9C /* UIView+RoundRect.m in Sources */,
+				2EF3A8991F0D11B40064AC15 /* OLPaymentMethodsViewController.m in Sources */,
 				2E025DE81EF7F82F006B15EE /* OLImageDownloadDelegate.m in Sources */,
 				2E2EFC871EF96DD80065A68C /* OLStripeCard.m in Sources */,
 				2E025E1F1EF806AC006B15EE /* UIImageView+FadeIn.m in Sources */,
