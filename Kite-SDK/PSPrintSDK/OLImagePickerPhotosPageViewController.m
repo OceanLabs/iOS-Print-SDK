@@ -383,7 +383,7 @@ CGFloat OLImagePickerMargin = 1.5;
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
         __weak OLRemoteImageView *weakImageView = imageView;
-        [imageView setAndFadeInImageWithOLAsset:asset size:imageView.frame.size applyEdits:NO placeholder:nil progress:^(float progress){
+        [imageView setAndFadeInImageWithOLAsset:asset size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathWithIndex:0]] applyEdits:NO placeholder:nil progress:^(float progress){
             [weakImageView setProgress:progress];
         } completionHandler:NULL];
     }

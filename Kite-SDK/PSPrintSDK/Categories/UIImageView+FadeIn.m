@@ -130,7 +130,7 @@ static char tasksKey;
     
     self.alpha = 0;
     self.tasks[asset.uuid] = [NSNull null];
-    [asset imageWithSize:self.frame.size applyEdits:applyEdits progress:^(float progress){
+    [asset imageWithSize:size applyEdits:applyEdits progress:^(float progress){
         if (progressHandler){
             if (!self.tasks[asset.uuid]){
                 progressHandler(1);
