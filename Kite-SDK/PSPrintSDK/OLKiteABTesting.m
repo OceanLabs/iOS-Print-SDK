@@ -187,7 +187,7 @@ static dispatch_once_t srand48OnceToken;
 }
 
 - (NSString *)backButtonText{
-    return self.minimalNavigationBar ? @"" : NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    return self.minimalNavigationBar ? @"" : OLLocalizedString(@"Back", @"");
 }
 
 - (NSString *)headerLogoURL{

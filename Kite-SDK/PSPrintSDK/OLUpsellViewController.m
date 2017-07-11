@@ -65,10 +65,10 @@
     self.offerContainerView.transform = CGAffineTransformMakeTranslation(self.view.frame.size.width, 0);
     
     [self.acceptButton makeRoundRectWithRadius:2];
-    [self.acceptButton setTitle:NSLocalizedStringFromTableInBundle(@"Yes Please", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    [self.acceptButton setTitle:OLLocalizedString(@"Yes Please", @"") forState:UIControlStateNormal];
     
     [self.declineButton makeRoundRectWithRadius:2];
-    [self.declineButton setTitle:NSLocalizedStringFromTableInBundle(@"No Thanks", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    [self.declineButton setTitle:OLLocalizedString(@"No Thanks", @"") forState:UIControlStateNormal];
     
     self.product = [OLProduct productWithTemplateId:self.offer.offerTemplate];
     [self.imageView setAndFadeInImageWithOLAsset:[self.product coverPhotoAsset] size:OLAssetMaximumSize applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
@@ -91,22 +91,22 @@
     }
     else if ([self.triggeredProduct.templateId isEqualToString:self.offer.offerTemplate]){
         if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == OLTemplateUIRectagle || self.product.productTemplate.templateUI == OLTemplateUICircle)){
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add %ld %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create another pack for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:OLLocalizedString(@"Add %ld %@!", @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:OLLocalizedString(@"Create another pack for\nonly %@ %@", @""), self.product.unitCost, discountedString];
         }
         else{
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add another %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create another %@ for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:OLLocalizedString(@"Add another %@!", @""), self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:OLLocalizedString(@"Create another %@ for\nonly %@ %@", @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
         }
     }
     else{
         if (self.product.quantityToFulfillOrder > 1 && (self.product.productTemplate.templateUI == OLTemplateUIRectagle || self.product.productTemplate.templateUI == OLTemplateUICircle)){
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add %ld %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create a pack for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:OLLocalizedString(@"Add %ld %@!", @""), self.product.quantityToFulfillOrder, self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:OLLocalizedString(@"Create a pack for\nonly %@ %@", @""), self.product.unitCost, discountedString];
         }
         else{
-            self.headerLabel.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Add a %@!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name];
-            bodyString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Create a %@ for\nonly %@ %@", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
+            self.headerLabel.text = [NSString stringWithFormat:OLLocalizedString(@"Add a %@!", @""), self.product.productTemplate.name];
+            bodyString = [NSString stringWithFormat:OLLocalizedString(@"Create a %@ for\nonly %@ %@", @""), self.product.productTemplate.name, self.product.unitCost, discountedString];
         }
     }
     

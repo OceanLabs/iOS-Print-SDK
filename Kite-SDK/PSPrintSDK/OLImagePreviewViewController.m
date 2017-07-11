@@ -67,7 +67,7 @@
     
     if ([self.asset isEdited]){
         if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized){
-            UIPreviewAction *saveAction = [UIPreviewAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Save as Copy", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIPreviewActionStyleDefault handler:^(UIPreviewAction *action, id context){
+            UIPreviewAction *saveAction = [UIPreviewAction actionWithTitle:OLLocalizedString(@"Save as Copy", @"") style:UIPreviewActionStyleDefault handler:^(UIPreviewAction *action, id context){
                 [self.asset imageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
                     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
                         PHAssetChangeRequest *changeRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
@@ -78,7 +78,7 @@
             [actions addObject:saveAction];
         }
         
-        UIPreviewAction *discardAction = [UIPreviewAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Discard Edits", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIPreviewActionStyleDestructive handler:^(UIPreviewAction *action, id context){
+        UIPreviewAction *discardAction = [UIPreviewAction actionWithTitle:OLLocalizedString(@"Discard Edits", @"") style:UIPreviewActionStyleDestructive handler:^(UIPreviewAction *action, id context){
             self.asset.edits = nil;
         }];
         [actions addObject:discardAction];

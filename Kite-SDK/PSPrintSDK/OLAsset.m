@@ -295,7 +295,7 @@ static NSOperationQueue *imageOperationQueue;
         [[self.kiteImageUploadURLSession uploadTaskWithRequest:request fromData:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
             NSInteger httpStatusCode = [(NSHTTPURLResponse *)response statusCode];
             if ((httpStatusCode < 200 || httpStatusCode > 299) && httpStatusCode != 0) {
-                NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Image upload failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (unsigned long) httpStatusCode]);
+                NSString *errorMessage = ([NSString stringWithFormat:OLLocalizedString(@"Image upload failed with a %lu HTTP response status code. Please try again.", @""), (unsigned long) httpStatusCode]);
                 
                 error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
             }
@@ -373,7 +373,7 @@ static NSOperationQueue *imageOperationQueue;
         }
         else{
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error getting one of your photos. Please remove or replace it.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), @"asset" : self}]);
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : OLLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
             });
         }
     }];
@@ -452,7 +452,7 @@ static NSOperationQueue *imageOperationQueue;
                 else{
                     self.corrupt = YES;
                     NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteResourcesBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-                    handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error getting one of your photos. Please remove or replace it.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), @"asset" : self}]);
+                    handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : OLLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
                 }
             }];
         }
@@ -528,7 +528,7 @@ static NSOperationQueue *imageOperationQueue;
         }
         else if (self.assetType == kOLAssetTypeCorrupt){
             NSData *data = [NSData dataWithContentsOfFile:[[OLKiteUtils kiteResourcesBundle] pathForResource:@"kite_corrupt" ofType:@"jpg"]];
-            handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error getting one of your photos. Please remove or replace it.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), @"asset" : self}]);
+            handler([UIImage imageWithData:data], [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : OLLocalizedString(@"There was an error getting one of your photos. Please remove or replace it.", @""), @"asset" : self}]);
         }
         
     }];

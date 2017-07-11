@@ -95,7 +95,7 @@ CGFloat OLImagePickerMargin = 1.5;
     if (!self.logoutButton && (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram)){
         self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(0, -45, self.collectionView.frame.size.width, 45)];
         [self.logoutButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-        [self.logoutButton setTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+        [self.logoutButton setTitle:OLLocalizedString(@"Log out", @"") forState:UIControlStateNormal];
         [self.collectionView addSubview:self.logoutButton];
         [self.logoutButton addTarget:self action:@selector(onButtonLogoutTapped) forControlEvents:UIControlEventTouchUpInside];
         
@@ -555,14 +555,14 @@ CGFloat OLImagePickerMargin = 1.5;
         
         if ([self.imagePicker.selectedAssets containsObject:asset]){ //Photo is selected
             if ([asset isEdited]){
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"The image edits, like crop, filters, etc") preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:OLLocalizedString(@"Are you sure?", @"") message:OLLocalizedString(@"This will discard your edits.", @"The image edits, like crop, filters, etc") preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"Yes", @"") style:UIAlertActionStyleDestructive handler:^(id action){
                     [self.imagePicker.selectedAssets removeObject:asset];
                     asset.edits = nil;
                     asset.extraCopies = 0;
                     [collectionView reloadItemsAtIndexPaths:@[indexPath]];
                 }]];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+                [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"No", @"") style:UIAlertActionStyleCancel handler:NULL]];
                 [self presentViewController:ac animated:YES completion:NULL];
             }
             else{
@@ -575,18 +575,18 @@ CGFloat OLImagePickerMargin = 1.5;
         else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.assetCount >= self.imagePicker.maximumPhotos){ //Maximum reached
             NSString *message;
             if (self.imagePicker.maximumPhotos != self.imagePicker.minimumPhotos && self.imagePicker.maximumPhotos != 1){
-                message = [NSString stringWithFormat:self.imagePicker.maximumPhotos == 1 ? NSLocalizedStringFromTableInBundle(@"Please select only %ld photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") : NSLocalizedStringFromTableInBundle(@"Please select up to %ld photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (long)self.imagePicker.maximumPhotos];
+                message = [NSString stringWithFormat:self.imagePicker.maximumPhotos == 1 ? OLLocalizedString(@"Please select only %ld photo", @"") : OLLocalizedString(@"Please select up to %ld photos", @""), (long)self.imagePicker.maximumPhotos];
             }
             else{
-                message = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Please select %ld photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (long)self.imagePicker.maximumPhotos];
+                message = [NSString stringWithFormat:OLLocalizedString(@"Please select %ld photos", @""), (long)self.imagePicker.maximumPhotos];
             }
             UIAlertController *alert =
-            [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Maximum Photos Reached", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
+            [UIAlertController alertControllerWithTitle:OLLocalizedString(@"Maximum Photos Reached", @"")
                                                 message:message
                                          preferredStyle:UIAlertControllerStyleAlert];
             
             UIAlertAction *action =
-            [UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.")
+            [UIAlertAction actionWithTitle:OLLocalizedString(@"OK", @"Acknowledgent to an alert dialog.")
                                      style:UIAlertActionStyleDefault
                                    handler:nil];
             
@@ -777,8 +777,8 @@ CGFloat OLImagePickerMargin = 1.5;
         serviceName = @"Instagram";
     }
     
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Do you want to log out of %@?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Log out of Instagram/Facebook"), serviceName] preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:OLLocalizedString(@"Log out", @"") message:[NSString stringWithFormat:OLLocalizedString(@"Do you want to log out of %@?", @"Log out of Instagram/Facebook"), serviceName] preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"Yes", @"") style:UIAlertActionStyleDestructive handler:^(id action){
         if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
             [[OLUserSession currentSession] logoutOfFacebook];
         }
@@ -788,7 +788,7 @@ CGFloat OLImagePickerMargin = 1.5;
         
         [self.imagePicker reloadPageController];
     }]];
-     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+    [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"No", @"") style:UIAlertActionStyleCancel handler:NULL]];
     [self.imagePicker presentViewController:ac animated:YES completion:NULL];
 }
 

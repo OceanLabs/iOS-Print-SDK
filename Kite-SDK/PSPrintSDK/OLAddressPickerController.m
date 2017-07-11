@@ -29,7 +29,10 @@
 
 #import "OLAddressPickerController.h"
 #import "OLAddressSelectionViewController.h"
+
+#ifndef KITE_UTILS
 #import "OLKiteABTesting.h"
+#endif
 
 @interface OLAddressPickerController () <OLAddressSelectionViewControllerDelegate>
 @property (strong, nonatomic) OLAddressSelectionViewController *selectionVC;

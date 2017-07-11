@@ -50,7 +50,7 @@
     self.nextMediaRequest = [[OLInstagramMediaRequest alloc] init];
     self.overflowMedia = @[];
     [self.collectionView reloadData];
-    [self.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:@[] name:NSLocalizedStringFromTableInBundle(@"All Photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")]];
+    [self.provider.collections addObject:[[OLImagePickerProviderCollection alloc] initWithArray:@[] name:OLLocalizedString(@"All Photos", @"")]];
     [self loadNextInstagramPage];
 }
 
@@ -77,8 +77,8 @@
                 
                 [welf.imagePicker reloadPageController];
             } else {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.")  style:UIAlertActionStyleDefault handler:NULL]];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:OLLocalizedString(@"Oops!", @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"OK", @"Acknowledgent to an alert dialog.")  style:UIAlertActionStyleDefault handler:NULL]];
                 [self.imagePicker presentViewController:ac animated:YES completion:NULL];
             }
             

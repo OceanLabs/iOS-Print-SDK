@@ -52,7 +52,7 @@
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
     
-    self.title = NSLocalizedStringFromTableInBundle(@"Shipping Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.title = OLLocalizedString(@"Shipping Method", @"");
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackShippingMethodScreenViewed:[OLUserSession currentSession].printOrder];
@@ -139,7 +139,7 @@
     
     [cell viewWithTag:10].hidden = job.selectedShippingMethodIdentifier != shippingClass.identifier;
     if (shippingClass.tracked){
-        [(UILabel *)[cell viewWithTag:20] setText:[NSString stringWithFormat:@"%@ (%@)", shippingClass.displayName, NSLocalizedStringFromTableInBundle(@"Tracked", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")]];
+        [(UILabel *)[cell viewWithTag:20] setText:[NSString stringWithFormat:@"%@ (%@)", shippingClass.displayName, OLLocalizedString(@"Tracked", @"")]];
     }
     else{
         [(UILabel *)[cell viewWithTag:20] setText:shippingClass.displayName];

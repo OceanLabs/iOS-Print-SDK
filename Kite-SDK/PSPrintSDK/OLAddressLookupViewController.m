@@ -62,7 +62,7 @@
 
 - (id)init {
     if (self = [super initWithStyle:UITableViewStylePlain]) {
-        self.title = NSLocalizedStringFromTableInBundle(@"Address Search", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        self.title = OLLocalizedString(@"Address Search", @"");
     }
     
     return self;
@@ -91,7 +91,7 @@
     self.countryPickerView = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CountryPickerView"];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 110, 44)];
-    label.text = NSLocalizedStringFromTableInBundle(@"Country", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    label.text = OLLocalizedString(@"Country", @"");
     
     self.labelCountry = [[UILabel alloc] initWithFrame:CGRectMake(110, 0, 320 - 110, 44)];
     self.labelCountry.adjustsFontSizeToFitWidth = YES;
@@ -130,9 +130,9 @@
     _country = country;
     self.labelCountry.text = country.name;
     if ([country.codeAlpha3 isEqualToString:@"USA"]) {
-        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by street, address or ZIP code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        self.searchBar.placeholder = OLLocalizedString(@"Search by street, address or ZIP code", @"");
     } else {
-        self.searchBar.placeholder = NSLocalizedStringFromTableInBundle(@"Search by postcode, street or address", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        self.searchBar.placeholder = OLLocalizedString(@"Search by postcode, street or address", @"");
     }
 }
 
@@ -273,8 +273,8 @@
         return;
     }
     
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:OLLocalizedString(@"Oops!", @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"OK", @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
     [self presentViewController:ac animated:YES completion:NULL];
 }
 

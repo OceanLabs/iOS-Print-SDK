@@ -67,7 +67,7 @@
     if (font){
         [self.detailsLabel setFont:font];
     }
-    self.detailsLabel.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product Details");
+    self.detailsLabel.text = OLLocalizedString(@"Details", @"Product Details");
     
     OLMarkDownParser *mdParser = [OLMarkDownParser standardParser];
     font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:13];

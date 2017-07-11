@@ -81,11 +81,11 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
     NSInteger errorCode = kOLKiteSDKErrorCodeServerFault;
     switch (httpStatusCode) {
         case 401:
-            errorMessage = NSLocalizedStringFromTableInBundle(@"401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            errorMessage = OLLocalizedString(@"401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.", @"");
             errorCode = kOLKiteSDKErrorCodeUnauthorized;
             break;
         case 500:
-            errorMessage = NSLocalizedStringFromTableInBundle(@"500 Internal Server Error whilst trying to upload an asset. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            errorMessage = OLLocalizedString(@"500 Internal Server Error whilst trying to upload an asset. Please try again.", @"");
             break;
         default:
             break;
@@ -148,7 +148,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
         }
         
         if (!error && registeredAssetCount != expectedRegisteredAssetCount) {
-            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Only registered %d/%d image URLs with the asset endpoint", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), registeredAssetCount, expectedRegisteredAssetCount]}];
+            error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeRegisteredAssetCountDiscrepency userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:OLLocalizedString(@"Only registered %d/%d image URLs with the asset endpoint", @""), registeredAssetCount, expectedRegisteredAssetCount]}];
         }
         
         handler(error);
@@ -220,7 +220,7 @@ typedef void (^UploadAssetsCompletionHandler)(NSError *error);
         if (zelf.cancelled) return;
         NSInteger httpStatusCode = [(NSHTTPURLResponse *)response statusCode];
         if ((httpStatusCode < 200 || httpStatusCode > 299) && httpStatusCode != 0) {
-            NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Image upload failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (unsigned long) httpStatusCode]);
+            NSString *errorMessage = ([NSString stringWithFormat:OLLocalizedString(@"Image upload failed with a %lu HTTP response status code. Please try again.", @""), (unsigned long) httpStatusCode]);
             
             error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
         }

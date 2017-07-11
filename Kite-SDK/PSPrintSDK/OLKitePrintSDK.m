@@ -174,7 +174,7 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (NSString *)qualityGuaranteeString{
-    return NSLocalizedStringFromTableInBundle(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    return OLLocalizedString(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"");
 }
 
 + (void)setIsKiosk:(BOOL)enabled{

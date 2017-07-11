@@ -43,17 +43,17 @@
 - (id)initWithFrame:(CGRect)frame{
     if ((self = [super initWithFrame:frame])){
         UIView *view = [[[OLKiteUtils kiteResourcesBundle] loadNibNamed:@"OLEditingToolsView"
-                                                      owner:self
-                                                    options:nil] objectAtIndex:0];
+                                                                  owner:self
+                                                                options:nil] objectAtIndex:0];
         view.frame = self.bounds;
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:view];
         
         [self.collectionView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizer:)]];
         
-        [self.drawerDoneButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        [self.halfWidthDrawerDoneButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        [self.halfWidthDrawerCancelButton setTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+        [self.drawerDoneButton setTitle:OLLocalizedString(@"Done", @"") forState:UIControlStateNormal];
+        [self.halfWidthDrawerDoneButton setTitle:OLLocalizedString(@"Done", @"") forState:UIControlStateNormal];
+        [self.halfWidthDrawerCancelButton setTitle:OLLocalizedString(@"Cancel", @"") forState:UIControlStateNormal];
     }
     return self;
 }

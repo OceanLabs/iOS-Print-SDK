@@ -128,7 +128,7 @@
             }];
         }
         else{
-            [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:vc action:@selector(dismiss)];
+            [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:OLLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:vc action:@selector(dismiss)];
         }
         
         OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];

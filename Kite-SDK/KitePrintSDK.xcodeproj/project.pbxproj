@@ -297,6 +297,12 @@
 		2E9CB6141EAE22710079F7AE /* OLShippingClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9CB6121EAE22710079F7AE /* OLShippingClass.m */; };
 		2E9F13FB1DAD048000D8B1EE /* OLPromoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E9F13F91DAD048000D8B1EE /* OLPromoView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E9F13FC1DAD048000D8B1EE /* OLPromoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */; };
+		2E9FB2511F14B800001B0A41 /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
+		2E9FB2521F14B802001B0A41 /* OLAddressPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB2B18783B8E00316492 /* OLAddressPickerController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2E9FB2531F14B86B001B0A41 /* OLAddressSelectionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB2E187842AB00316492 /* OLAddressSelectionViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2E9FB2541F14B871001B0A41 /* OLAddressSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2F187842AB00316492 /* OLAddressSelectionViewController.m */; };
+		2E9FB2561F14BB14001B0A41 /* OLDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E9FB2551F14BB14001B0A41 /* OLDefines.h */; };
+		2E9FB2571F14BB14001B0A41 /* OLDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E9FB2551F14BB14001B0A41 /* OLDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EADD84E1BE79D6D0051CD31 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD550D94188AA20100782D75 /* AssetsLibrary.framework */; };
 		2EADD84F1BE79D6D0051CD31 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD93BB35187869A100316492 /* AddressBook.framework */; };
 		2EADD8501BE79D6D0051CD31 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD93BB36187869A100316492 /* AddressBookUI.framework */; };
@@ -497,6 +503,16 @@
 		2EEF0D0C1D9A781700C81086 /* OLCustomPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D0B1D9A781700C81086 /* OLCustomPickerController.h */; };
 		2EF3A8981F0D0FF30064AC15 /* OLPaymentMethodsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB1978F1CF872F200648696 /* OLPaymentMethodsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EF3A8991F0D11B40064AC15 /* OLPaymentMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB197901CF872F200648696 /* OLPaymentMethodsViewController.m */; };
+		2EFE5D251F13A115003E3F74 /* NSDecimalNumber+CostFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */; };
+		2EFE5D261F13A117003E3F74 /* NSDecimalNumber+CostFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E455DFE1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2EFE5D271F13B5DD003E3F74 /* OLCheckoutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CDA8BF5518D70D0F00D835BB /* OLCheckoutViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2EFE5D281F13B5E4003E3F74 /* OLCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CDA8BF5118D70D0F00D835BB /* OLCheckoutViewController.m */; };
+		2EFE5D291F13CA63003E3F74 /* OLAddress+AddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3318785D3B00316492 /* OLAddress+AddressBook.m */; };
+		2EFE5D2A1F13CA68003E3F74 /* OLAddress+AddressBook.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB3218785D3B00316492 /* OLAddress+AddressBook.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2EFE5D2B1F13CB52003E3F74 /* OLAddressEditViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB3C187882A300316492 /* OLAddressEditViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2EFE5D2C1F13CB60003E3F74 /* OLAddressEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3D187882A300316492 /* OLAddressEditViewController.m */; };
+		2EFE5D2D1F13CBC7003E3F74 /* OLCountryPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB431878DFA300316492 /* OLCountryPickerController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2EFE5D2E1F13CBCC003E3F74 /* OLCountryPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB441878DFA300316492 /* OLCountryPickerController.m */; };
 		B7106FC2FDFC534AFB2516F3 /* libPods-KiteSDK-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CFE5B84A94297F8524AE7764 /* libPods-KiteSDK-Demo.a */; };
 		CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF8A186215790009DE03 /* XCTest.framework */; };
 		CD73BF8C186215790009DE03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
@@ -800,6 +816,7 @@
 		2E9CB6121EAE22710079F7AE /* OLShippingClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLShippingClass.m; sourceTree = "<group>"; };
 		2E9F13F91DAD048000D8B1EE /* OLPromoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPromoView.h; sourceTree = "<group>"; };
 		2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPromoView.m; sourceTree = "<group>"; };
+		2E9FB2551F14BB14001B0A41 /* OLDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLDefines.h; sourceTree = "<group>"; };
 		2EA008791CB293A900C23DFA /* OLUpsellOffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLUpsellOffer.h; sourceTree = "<group>"; };
 		2EA0087A1CB293A900C23DFA /* OLUpsellOffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLUpsellOffer.m; sourceTree = "<group>"; };
 		2EA13E1E1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ImageNamedInKiteBundle.h"; path = "PSPrintSDK/Categories/UIImage+ImageNamedInKiteBundle.h"; sourceTree = "<group>"; };
@@ -1649,6 +1666,7 @@
 			children = (
 				CD73BFAF18634ED50009DE03 /* OLConstants.h */,
 				CD73BFB018634ED50009DE03 /* OLConstants.m */,
+				2E9FB2551F14BB14001B0A41 /* OLDefines.h */,
 				2E0E250D1A77997E00808ED8 /* OLAnalytics.h */,
 				2E0E250E1A77997E00808ED8 /* OLAnalytics.m */,
 				2EB1C40F1B551D6000EFE0D0 /* OLKiteABTesting.h */,
@@ -1963,18 +1981,26 @@
 			files = (
 				2E025DE11EF7F1B3006B15EE /* UIColor+OLHexString.h in Headers */,
 				2E2EFC8A1EF96DEC0065A68C /* OLStripeCard.h in Headers */,
+				2E9FB2531F14B86B001B0A41 /* OLAddressSelectionViewController.h in Headers */,
 				2E8AC4DC1EFBCBB90040BF00 /* OLStripeCard+OLCardIcon.h in Headers */,
+				2E9FB2571F14BB14001B0A41 /* OLDefines.h in Headers */,
 				2E025DD01EF7F132006B15EE /* KiteUtils.h in Headers */,
 				2EB9B7EC1F0E53110001DA9C /* UIView+RoundRect.h in Headers */,
 				2E2EFC841EF962190065A68C /* OLAddress.h in Headers */,
+				2EFE5D261F13A117003E3F74 /* NSDecimalNumber+CostFormatter.h in Headers */,
 				2E025DE91EF7F83E006B15EE /* UIImageView+FadeIn.h in Headers */,
+				2EFE5D271F13B5DD003E3F74 /* OLCheckoutViewController.h in Headers */,
 				2E025DE71EF7F808006B15EE /* OLImageDownloadDelegate.h in Headers */,
+				2EFE5D2D1F13CBC7003E3F74 /* OLCountryPickerController.h in Headers */,
 				2E2EFC851EF962980065A68C /* OLCountry.h in Headers */,
 				2EF3A8981F0D0FF30064AC15 /* OLPaymentMethodsViewController.h in Headers */,
 				2EC481A81EF8091F00E6CB6F /* UIImage+OLUtils.h in Headers */,
+				2EFE5D2B1F13CB52003E3F74 /* OLAddressEditViewController.h in Headers */,
 				2E8AC4D91EFBC3070040BF00 /* OLLuhn.h in Headers */,
 				2E025DE51EF7F7FD006B15EE /* OLImageDownloader.h in Headers */,
+				2E9FB2521F14B802001B0A41 /* OLAddressPickerController.h in Headers */,
 				2E20DA291F0E20EF00C4198A /* OLCreditCardCaptureViewController.h in Headers */,
+				2EFE5D2A1F13CA68003E3F74 /* OLAddress+AddressBook.h in Headers */,
 				2E025DE41EF7F2BD006B15EE /* UIView+AutoLayoutHelper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2001,6 +2027,7 @@
 				2EB8FE221D95685100E26BDF /* OLOAuth2AccessToken.h in Headers */,
 				2EB8FE201D95685100E26BDF /* NSData+OLOAuth2.h in Headers */,
 				2EB8FDF71D95685100E26BDF /* OLProductTemplateOption.h in Headers */,
+				2E9FB2561F14BB14001B0A41 /* OLDefines.h in Headers */,
 				2ED2B7B41DB8B4D90036B536 /* OLHPSDKWrapper.h in Headers */,
 				2EB8FDE01D95685100E26BDF /* OLImageCachingManager.h in Headers */,
 				2EB8FE231D95685100E26BDF /* OLOAuth2Account.h in Headers */,
@@ -2582,18 +2609,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EFE5D2C1F13CB60003E3F74 /* OLAddressEditViewController.m in Sources */,
 				2E20DA2A1F0E20F300C4198A /* OLCreditCardCaptureViewController.m in Sources */,
 				2EC481A91EF8092600E6CB6F /* UIImage+OLUtils.m in Sources */,
+				2EFE5D291F13CA63003E3F74 /* OLAddress+AddressBook.m in Sources */,
 				2E025DE21EF7F1BF006B15EE /* UIColor+OLHexString.m in Sources */,
 				2EB9B7EB1F0E530E0001DA9C /* UIView+RoundRect.m in Sources */,
 				2EF3A8991F0D11B40064AC15 /* OLPaymentMethodsViewController.m in Sources */,
+				2EFE5D281F13B5E4003E3F74 /* OLCheckoutViewController.m in Sources */,
+				2EFE5D251F13A115003E3F74 /* NSDecimalNumber+CostFormatter.m in Sources */,
 				2E025DE81EF7F82F006B15EE /* OLImageDownloadDelegate.m in Sources */,
+				2E9FB2541F14B871001B0A41 /* OLAddressSelectionViewController.m in Sources */,
 				2E2EFC871EF96DD80065A68C /* OLStripeCard.m in Sources */,
 				2E025E1F1EF806AC006B15EE /* UIImageView+FadeIn.m in Sources */,
 				2E8AC4DB1EFBCBB50040BF00 /* OLStripeCard+OLCardIcon.m in Sources */,
 				2E8AC4DA1EFBC30C0040BF00 /* OLLuhn.m in Sources */,
+				2EFE5D2E1F13CBCC003E3F74 /* OLCountryPickerController.m in Sources */,
 				2E2EFC831EF962100065A68C /* OLAddress.m in Sources */,
 				2E2EFC861EF9629D0065A68C /* OLCountry.m in Sources */,
+				2E9FB2511F14B800001B0A41 /* OLAddressPickerController.m in Sources */,
 				2E025DE61EF7F802006B15EE /* OLImageDownloader.m in Sources */,
 				2E025DE31EF7F2B7006B15EE /* UIView+AutoLayoutHelper.m in Sources */,
 			);
@@ -2902,6 +2936,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 					KITE_UTILS,
+					OL_NO_ANALYTICS,
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = KiteUtils/Info.plist;
@@ -2937,7 +2972,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREPROCESSOR_DEFINITIONS = KITE_UTILS;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					KITE_UTILS,
+					OL_NO_ANALYTICS,
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = KiteUtils/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

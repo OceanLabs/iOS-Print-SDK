@@ -79,7 +79,7 @@
     
     self.scene.scene = scene;
     
-    self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:NSLocalizedStringFromTableInBundle(@"Swipe to rotate your mug", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+    self.infoBanner = [OLInfoBanner showInfoBannerOnViewController:self withTitle:OLLocalizedString(@"Swipe to rotate your mug", @"")];
     
     [[scene rootNode] enumerateChildNodesUsingBlock:^(SCNNode *node, BOOL *stop){
         if ([node.name isEqualToString:@"mug"]){

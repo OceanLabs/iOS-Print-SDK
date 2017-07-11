@@ -180,7 +180,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
             }
             
             self.req = nil;
-            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to get the price of the order. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}]);
+            handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: OLLocalizedString(@"Failed to get the price of the order. Please try again.", @"")}]);
         }
     }];
 }
@@ -225,7 +225,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     NSDictionary *totalCosts = [self createCostsDictionaryFromJSON:json[@"total"]];
     NSDictionary *totalShippingCosts = [self createCostsDictionaryFromJSON:json[@"total_shipping_cost"]];
     
-    OLPaymentLineItem *shippingItem = [[OLPaymentLineItem alloc] initWithDescription:NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") costs:totalShippingCosts];
+    OLPaymentLineItem *shippingItem = [[OLPaymentLineItem alloc] initWithDescription:OLLocalizedString(@"Shipping", @"") costs:totalShippingCosts];
     [lineItems addObject:shippingItem];
     
     NSDictionary *discount = [self createCostsDictionaryFromJSON:json[@"promo_code"][@"discount"]];
@@ -238,7 +238,7 @@ static NSUInteger cacheOrderHash; // cached response is only valid for orders wi
     for (NSString *currencyCode in discount) {
         NSDecimalNumber *currencyDiscount = discount[currencyCode];
         if ([currencyDiscount doubleValue] != 0) {
-            OLPaymentLineItem *discountItem = [[OLPaymentLineItem alloc] initWithDescription:NSLocalizedStringFromTableInBundle(@"Promotional Discount", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") costs:[self makeAllDiscountValuesNegative: discount]];
+            OLPaymentLineItem *discountItem = [[OLPaymentLineItem alloc] initWithDescription:OLLocalizedString(@"Promotional Discount", @"") costs:[self makeAllDiscountValuesNegative: discount]];
             [lineItems addObject:discountItem];
             break;
         }

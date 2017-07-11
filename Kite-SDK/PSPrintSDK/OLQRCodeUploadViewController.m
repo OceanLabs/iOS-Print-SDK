@@ -49,10 +49,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    self.titleLabel.text = NSLocalizedStringFromTableInBundle(@"Scan QR Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-    self.instructionsLabel.text = NSLocalizedStringFromTableInBundle(@"Please scan the QR code using a QR reader app on your device.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-    self.alternateInstructionsLabel.text = NSLocalizedStringFromTableInBundle(@"Alternatively type the following URL into your mobile browser's address bar", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    
+    self.titleLabel.text = OLLocalizedString(@"Scan QR Code", @"");
+    self.instructionsLabel.text = OLLocalizedString(@"Please scan the QR code using a QR reader app on your device.", @"");
+    self.alternateInstructionsLabel.text = OLLocalizedString(@"Alternatively type the following URL into your mobile browser's address bar", @"");
     
     NSString *uuid = [[NSUUID UUID] UUIDString];;
     NSString *uploadURL = [NSString stringWithFormat:@"https://api.kite.ly/public_upload/%@", uuid];
@@ -62,8 +62,8 @@
     [self.urlShortner shortenURL:uploadURL handler:^(NSString *shortenedURL, NSError *error) {
         if (error) {
             [self dismissViewControllerAnimated:YES completion:^{
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:OLLocalizedString(@"Oops!", @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"OK", @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
                 [self presentViewController:ac animated:YES completion:NULL];
             }];
         } else {

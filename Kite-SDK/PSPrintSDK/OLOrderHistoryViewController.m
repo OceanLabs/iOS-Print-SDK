@@ -48,13 +48,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setTitle:NSLocalizedStringFromTableInBundle(@"Order History", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+    [self setTitle:OLLocalizedString(@"Order History", @"")];
     
     NSAssert(self.navigationController, @"Should be shown as part of a UINavigationController");
     
     self.printOrderHistory = [OLPrintOrder printOrderHistory];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:OLLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackOrderHistoryScreenViewed];
 #endif
@@ -75,7 +75,7 @@
 #pragma mark - UITableViewDataSource methods
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return NSLocalizedStringFromTableInBundle(@"Completed Orders", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    return OLLocalizedString(@"Completed Orders", @"");
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

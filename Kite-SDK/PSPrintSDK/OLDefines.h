@@ -27,50 +27,16 @@
 //  THE SOFTWARE.
 //
 
-#import "OLImagePickerPageViewController.h"
+#ifndef KITE_UTILS
 #import "OLKiteUtils.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
-@implementation OLImagePickerPageViewController
+#define OLLocalizedString(key, comment) NSLocalizedStringFromTableInBundle((key), @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], (comment))
+#define OLImageNamed(imageName) [UIImage imageNamedInKiteBundle:(imageName)]
 
-- (void)viewDidLoad{
-    [super viewDidLoad];
-    
-    UIButton *ctaButton = [[UIButton alloc] init];
-    self.ctaButton = ctaButton;
-    [ctaButton setTitle:OLLocalizedString(@"Next", @"") forState:UIControlStateNormal];
-    [ctaButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
-    [ctaButton addTarget:self.imagePicker action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [ctaButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
-    ctaButton.hidden = YES;
-    
-    
-    [self.view addSubview:ctaButton];
-    
-    ctaButton.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(ctaButton);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-5-[ctaButton]-5-|",
-                         @"V:[ctaButton(50)]-5-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [ctaButton.superview addConstraints:con];
+#else
 
-}
+#define OLLocalizedString(key, comment) NSLocalizedString((key), (comment))
+#define OLImageNamed(imageName) [UIImage imageNamed:(imageName)]
 
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    
-    if (self.imagePicker.ctaButton.hidden){
-        self.ctaButton.hidden = NO;
-    }
-    else{
-        self.ctaButton.hidden = YES;
-    }
-}
-
-@end
+#endif

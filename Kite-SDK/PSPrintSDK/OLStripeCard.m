@@ -29,14 +29,13 @@
 
 #import "OLStripeCard.h"
 #import "NSString+Formatting.h"
+#import "OLDefines.h"
 
 #ifndef KITE_UTILS
 #import "OLKiteUtils.h"
-
-#define kErrorMessageGeneric NSLocalizedStringFromTableInBundle(@"There was an error trying to validate the card. Please try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
-#else
-#define kErrorMessageGeneric NSLocalizedString(@"There was an error trying to validate the card. Please try again later.", @"")
 #endif
+
+#define kErrorMessageGeneric OLLocalizedString(@"There was an error trying to validate the card. Please try again later.", @"")
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.Stripe.kKeyNumberMasked";
 static NSString *const kKeyCustomerId = @"co.oceanlabs.Stripe.kKeyCustomerId";

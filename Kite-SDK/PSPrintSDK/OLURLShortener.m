@@ -53,7 +53,7 @@
                     handler([dictionary objectForKey:@"shorturl"], nil);
                 }
                 else{
-                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedStringFromTableInBundle(@"Failed to get upload URL. Try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}];
+                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey:OLLocalizedString(@"Failed to get upload URL. Try again later.", @"")}];
                     handler(nil, error);
                 }
             }

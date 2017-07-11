@@ -254,7 +254,7 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         UILabel *label = [cell.contentView viewWithTag:50];
-        label.text = NSLocalizedStringFromTableInBundle(@"MORE ITEMS\nCOMING SOON!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        label.text = OLLocalizedString(@"MORE ITEMS\nCOMING SOON!", @"");
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder-loc.png"] withCompletionHandler:^(UIImage *image, NSError *error){
             dispatch_async(dispatch_get_main_queue(), ^{
                 cellImageView.image = image;
@@ -312,14 +312,14 @@
     
     if (product.productTemplate.templateUI == OLTemplateUIPoster && !self.subtypeSelection){
         if (product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
-            textView.text = NSLocalizedStringFromTableInBundle(@"Single Photo Poster", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            textView.text = OLLocalizedString(@"Single Photo Poster", @"");
         }
         else{
-            textView.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%ldx%ld Collage", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"example: 5x7 Collage"), (long)product.productTemplate.gridCountX, (long)product.productTemplate.gridCountY];
+            textView.text = [NSString stringWithFormat:OLLocalizedString(@"%ldx%ld Collage", @"example: 5x7 Collage"), (long)product.productTemplate.gridCountX, (long)product.productTemplate.gridCountY];
         }
     }
     else if (inSizeCollectionFlag){
-        textView.text = [[[[product.productTemplate.templateType stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Small", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@"Small product size"] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Medium", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@"Medium Product size"] stringByReplacingOccurrencesOfString:NSLocalizedStringFromTableInBundle(@"Large", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") withString:@"Large Product Size"] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+        textView.text = [[[[product.productTemplate.templateType stringByReplacingOccurrencesOfString:OLLocalizedString(@"Small", @"") withString:@"Small product size"] stringByReplacingOccurrencesOfString:OLLocalizedString(@"Medium", @"") withString:@"Medium Product size"] stringByReplacingOccurrencesOfString:OLLocalizedString(@"Large", @"") withString:@"Large Product Size"] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
     }
     else{
         textView.text = product.productTemplate.templateType;

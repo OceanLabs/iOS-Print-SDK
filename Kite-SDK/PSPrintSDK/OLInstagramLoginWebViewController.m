@@ -51,7 +51,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     [self addInstagramLoginObservers];
-    self.title = NSLocalizedStringFromTableInBundle(@"Log In", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.title = OLLocalizedString(@"Log In", @"");
     
     self.webView = [[UIWebView alloc] init];
     self.webView.backgroundColor = [UIColor whiteColor];
@@ -86,7 +86,7 @@
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.view attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.activityIndicator attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
     
     
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:OLLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonCancelClicked)];
     self.navigationItem.leftBarButtonItem = cancelButton;
 }
 
@@ -132,9 +132,9 @@
 #pragma mark - Instagram Oauth notification callbacks
 
 - (void)onInstagramOAuthAuthenticateFail:(NSNotification *)notification {
-    NSString *localizedErrorMessage = NSLocalizedStringFromTableInBundle(@"Failed to log in to Instagram. Please check your internet connectivity and try again", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:localizedErrorMessage preferredStyle:UIAlertControllerStyleAlert];
-    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+    NSString *localizedErrorMessage = OLLocalizedString(@"Failed to log in to Instagram. Please check your internet connectivity and try again", @"");
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:OLLocalizedString(@"Oops!", @"") message:localizedErrorMessage preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"OK", @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
         [self dismissViewControllerAnimated:YES completion:NULL];
     }]];
     [self presentViewController:ac animated:YES completion:NULL];
@@ -162,14 +162,14 @@
             NSString *errorDescription = [self url:request.URL queryValueForName:@"error_description"];
             
             if ([errorCode isEqualToString:@"access_denied"] && [errorReason isEqualToString:@"user_denied"]) {
-                errorDescription = NSLocalizedStringFromTableInBundle(@"You need to authorize the app to access your Instagram account if you want to import photos from there.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+                errorDescription = OLLocalizedString(@"You need to authorize the app to access your Instagram account if you want to import photos from there.", @"");
             } else {
                 errorDescription = [errorDescription stringByReplacingOccurrencesOfString:@"+" withString:@" "];
                 errorDescription = [errorDescription stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             }
             
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:errorReason message:errorDescription preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.")  style:UIAlertActionStyleDefault handler:NULL]];
+            [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"OK", @"Acknowledgent to an alert dialog.")  style:UIAlertActionStyleDefault handler:NULL]];
             [self.imagePicker presentViewController:ac animated:YES completion:NULL];
             [self dismissViewControllerAnimated:YES completion:NULL];
         }

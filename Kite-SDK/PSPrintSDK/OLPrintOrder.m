@@ -726,30 +726,30 @@ static NSBlockOperation *templateSyncOperation;
     NSInteger max = [self maximumDaysForShippingMethodName:name forJobs:jobs];
     
     if (min != NSIntegerMax && max != NSIntegerMin && min != max){
-        return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d - %d", (int)min, (int)max]];
+        return [NSString stringWithFormat:OLLocalizedString(@"%@ days", @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d - %d", (int)min, (int)max]];
     }
     else if (min == max){
         if (min == 1){
-            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            return OLLocalizedString(@"1 day", @"");
         }
         else{
-            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]];
+            return [NSString stringWithFormat:OLLocalizedString(@"%@ days", @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]];
         }
     }
     else if (min != NSIntegerMax){
         if (min == 1){
-            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            return OLLocalizedString(@"1 day", @"");
         }
         else{
-            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]];
+            return [NSString stringWithFormat:OLLocalizedString(@"%@ days", @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)min]];
         }
     }
     else if (max != NSIntegerMin){
         if (max == 1){
-            return NSLocalizedStringFromTableInBundle(@"1 day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            return OLLocalizedString(@"1 day", @"");
         }
         else{
-            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)max]];
+            return [NSString stringWithFormat:OLLocalizedString(@"%@ days", @"Examples: 2-5 days, 7 days"), [NSString stringWithFormat:@"%d", (int)max]];
         }
     }
     
@@ -827,7 +827,7 @@ static NSBlockOperation *templateSyncOperation;
 - (void)validateOrderSubmissionWithCompletionHandler:(void(^)(NSString *orderIdReceipt, NSError *error))handler{
     if (self.numberOfTimesPolledForSubmissionStatus > 60){
         self.numberOfTimesPolledForSubmissionStatus = 0;
-        handler(self.receipt, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Error validating the order. Please try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}]);
+        handler(self.receipt, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeServerFault userInfo:@{NSLocalizedDescriptionKey: OLLocalizedString(@"Error validating the order. Please try again later.", @"")}]);
         return;
     }
     

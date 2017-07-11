@@ -32,11 +32,15 @@
 #import "OLAddress+AddressBook.h"
 #import "OLCountry.h"
 #import "OLAddressEditViewController.h"
-#import "OLAddressLookupViewController.h"
+#import "OLDefines.h"
+
+#ifndef KITE_UTILS
 #import "OLConstants.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
+#import "OLAddressLookupViewController.h"
+#endif
 
 static const NSInteger kSectionAddressList = 0;
 static const NSInteger kSectionAddAddress = 1;
@@ -58,7 +62,7 @@ static const NSInteger kRowAddAddressManually = 0;
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = NSLocalizedStringFromTableInBundle(@"Choose Address", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        self.title = OLLocalizedString(@"Choose Address", @"");
         self.selectedAddresses = [[NSMutableSet alloc] init];
     }
     return self;
@@ -67,15 +71,23 @@ static const NSInteger kRowAddAddressManually = 0;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+#ifndef KITE_UTILS
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
+#else
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:OLLocalizedString(@"Back", @"")
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
+#endif
     
     self.tableView.allowsMultipleSelection = self.allowMultipleSelection;
     self.allowMultipleSelection = _allowMultipleSelection;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
-    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:OLLocalizedString(@"Done", @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonCancelClicked)];
+
+#ifndef KITE_UTILS
     UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
     if (color1){
         self.navigationItem.rightBarButtonItem.tintColor = color1;
@@ -84,6 +96,7 @@ static const NSInteger kRowAddAddressManually = 0;
     if (font){
         [self.navigationItem.rightBarButtonItem setTitleTextAttributes:@{NSFontAttributeName : font} forState:UIControlStateNormal];
     }
+#endif
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
@@ -150,9 +163,9 @@ static const NSInteger kRowAddAddressManually = 0;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if ([OLAddress addressBook].count == 0) { ++section; }
     if (section == 0) {
-        return [OLAddress addressBook].count > 0 ? NSLocalizedStringFromTableInBundle(@"Address Book", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], "") : nil;
+        return [OLAddress addressBook].count > 0 ? OLLocalizedString(@"Address Book", "") : nil;
     } else {
-        return NSLocalizedStringFromTableInBundle(@"Add New Address", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        return OLLocalizedString(@"Add New Address", @"");
     }
 }
 
@@ -170,7 +183,7 @@ static const NSInteger kRowAddAddressManually = 0;
         
         OLAddress *address = [OLAddress addressBook][indexPath.row];
         
-        cell.imageView.image = [self.selectedAddresses containsObject:address] ? [UIImage imageNamedInKiteBundle:@"checkmark_on"] : nil;
+        cell.imageView.image = [self.selectedAddresses containsObject:address] ? OLImageNamed(@"checkmark_on") : nil;
         cell.textLabel.text = address.fullNameFromFirstAndLast;
         cell.detailTextLabel.text = address.descriptionWithoutRecipient;
     } else {
@@ -182,9 +195,9 @@ static const NSInteger kRowAddAddressManually = 0;
         }
         
         if (indexPath.row == kRowAddAddressSearch) {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Search for Address", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            cell.textLabel.text = OLLocalizedString(@"Search for Address", @"");
         } else {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Enter Address Manually", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            cell.textLabel.text = OLLocalizedString(@"Enter Address Manually", @"");
         }
         
         cell.textLabel.adjustsFontSizeToFitWidth = YES;
@@ -234,15 +247,18 @@ static const NSInteger kRowAddAddressManually = 0;
             }
             
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.imageView.image = selected ? [UIImage imageNamedInKiteBundle:@"checkmark_on"] : nil;
+            cell.imageView.image = selected ? OLImageNamed(@"checkmark_on") : nil;
         }
     } else if (indexPath.section == kSectionAddAddress) {
         
         if (indexPath.row == kRowAddAddressManually) {
             [self.navigationController pushViewController:[[OLAddressEditViewController alloc] init] animated:YES];
-        } else if (indexPath.row == kRowAddAddressSearch) {
+        }
+#ifndef KITE_UTILS
+        else if (indexPath.row == kRowAddAddressSearch) {
             [self.navigationController pushViewController:[[OLAddressLookupViewController alloc] init] animated:YES];
         }
+#endif
     }
 }
 

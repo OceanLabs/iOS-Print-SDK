@@ -89,7 +89,7 @@
 
 - (void)onButtonDoneTapped:(id)sender{
     if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count != 0 && self.product.productTemplate.templateUI == OLTemplateUIApparel && !self.product.selectedOptions[@"garment_size"]) {
-        [self showHintViewForView:self.editingTools.button2 header:NSLocalizedStringFromTableInBundle(@"Select Size", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Example: Shirt size") body:NSLocalizedStringFromTableInBundle(@"Tap on this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
+        [self showHintViewForView:self.editingTools.button2 header:OLLocalizedString(@"Select Size", @"Example: Shirt size") body:OLLocalizedString(@"Tap on this button", @"")delay:NO];
         return;
     }
     

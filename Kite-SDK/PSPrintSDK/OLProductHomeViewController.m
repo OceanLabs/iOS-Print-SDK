@@ -81,11 +81,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackCategoryListScreenViewed];
 #endif
-
+    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
@@ -93,10 +93,10 @@
     NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
     if (!url && [self isMemberOfClass:[OLProductHomeViewController class]]){
         if ([self isPushed]){
-            self.parentViewController.title = NSLocalizedStringFromTableInBundle(@"Print Shop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            self.parentViewController.title = OLLocalizedString(@"Print Shop", @"");
         }
         else{
-            self.title = NSLocalizedStringFromTableInBundle(@"Print Shop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            self.title = OLLocalizedString(@"Print Shop", @"");
         }
     }
     
@@ -522,10 +522,10 @@
     if ([self printAtHomeAvailable]){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"PrintAtHomeCell" forIndexPath:indexPath];
         UILabel *ctaLabel = [cell viewWithTag:300];
-        ctaLabel.text = NSLocalizedStringFromTableInBundle(@"PRINT AT HOME", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        ctaLabel.text = OLLocalizedString(@"PRINT AT HOME", @"");
         
         UILabel *orLabel = [cell viewWithTag:400];
-        orLabel.text = NSLocalizedStringFromTableInBundle(@"Or print on a product below ▼", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        orLabel.text = OLLocalizedString(@"Or print on a product below ▼", @"");
         
         return cell;
     }
@@ -749,7 +749,7 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
         UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         UILabel *label = [cell.contentView viewWithTag:50];
-        label.text = NSLocalizedStringFromTableInBundle(@"MORE ITEMS\nCOMING SOON!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        label.text = OLLocalizedString(@"MORE ITEMS\nCOMING SOON!", @"");
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder-loc.png"] withCompletionHandler:^(UIImage *image, NSError *error){
             if (error) return;
             dispatch_async(dispatch_get_main_queue(), ^{

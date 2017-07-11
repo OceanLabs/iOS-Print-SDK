@@ -131,7 +131,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = NSLocalizedStringFromTableInBundle(@"Receipt", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.title = OLLocalizedString(@"Receipt", @"");
     
     [self setupHeader];
     
@@ -178,7 +178,7 @@ static const NSUInteger kSectionErrorRetry = 2;
         
         [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:self.printOrder.printed ? 0 : 35]];
         [label.superview addConstraint:[NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:label.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
-        label.text = self.printOrder.printed ? NSLocalizedStringFromTableInBundle(@"WE HAVE RECEIVED\nYOUR ORDER", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") : NSLocalizedStringFromTableInBundle(@"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        label.text = self.printOrder.printed ? OLLocalizedString(@"WE HAVE RECEIVED\nYOUR ORDER", @"") : OLLocalizedString(@"OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW", @"");
     }
 }
 
@@ -202,7 +202,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     [super viewWillAppear:animated];
     
     if (self.presentedModally || [OLKiteABTesting sharedInstance].launchedWithPrintOrder) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:OLLocalizedString(@"Done", @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
         
         UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
         if (color1){
@@ -236,26 +236,26 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)onButtonRetryClicked{
     if (self.printOrder.submitStatus == OLPrintOrderSubmitStatusError){
         [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:self.printOrder.submitStatusErrorMessage preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"New Payment", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(id action){
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:OLLocalizedString(@"Oops!", @"") message:self.printOrder.submitStatusErrorMessage preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"New Payment", @"") style:UIAlertActionStyleDefault handler:^(id action){
             OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:self.printOrder];
             vc.delegate = self;
             OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
             nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:nvc animated:YES completion:NULL];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+        [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:NULL]];
         [self presentViewController:ac animated:YES completion:NULL];
         return;
     }
     else if (self.printOrder.submitStatus == OLPrintOrderSubmitStatusAccepted || self.printOrder.submitStatus == OLPrintOrderSubmitStatusReceived){
         [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
-        [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Processing the order")];
+        [OLProgressHUD showWithStatus:OLLocalizedString(@"Processing", @"Processing the order")];
         [self.printOrder validateOrderSubmissionWithCompletionHandler:^(NSString *orderReceipt, NSError *error){
             [OLProgressHUD dismiss];
             if (error){
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:NULL]];
+                UIAlertController *ac = [UIAlertController alertControllerWithTitle:OLLocalizedString(@"Oops!", @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+                [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"OK", @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:NULL]];
                 [self presentViewController:ac animated:YES completion:NULL];
                 
             }
@@ -273,21 +273,21 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)retrySubmittingOrderForPrinting {
     [self.printOrder cancelSubmissionOrPreemptedAssetUpload];
     [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
-    [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Processing", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Processing the order")];
+    [OLProgressHUD showWithStatus:OLLocalizedString(@"Processing", @"Processing the order")];
     [self.printOrder submitForPrintingWithProgressHandler:^(NSUInteger totalAssetsUploaded, NSUInteger totalAssetsToUpload,
                                                             long long totalAssetBytesWritten, long long totalAssetBytesExpectedToWrite,
                                                             long long totalBytesWritten, long long totalBytesExpectedToWrite) {
         const float step = (1.0f / totalAssetsToUpload);
         float progress = totalAssetsUploaded * step + (totalAssetBytesWritten / (float) totalAssetBytesExpectedToWrite) * step;
         [OLProgressHUD setDefaultMaskType:OLProgressHUDMaskTypeBlack];
-        [OLProgressHUD showProgress:progress status:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Uploading Images \n%lu / %lu", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload]];
+        [OLProgressHUD showProgress:progress status:[NSString stringWithFormat:OLLocalizedString(@"Uploading Images \n%lu / %lu", @""), (unsigned long) totalAssetsUploaded + 1, (unsigned long) totalAssetsToUpload]];
     } completionHandler:^(NSString *orderIdReceipt, NSError *error) {
         [self.printOrder saveToHistory]; // save again as the print order has it's receipt set if it was successful, otherwise last error is set
         [OLProgressHUD dismiss];
         
         if (error) {
-            UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-            [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:OLLocalizedString(@"Oops!", @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"OK", @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){}]];
             [self presentViewController:ac animated:YES completion:NULL];
         } else {
             [self retryWasSuccessful];
@@ -349,9 +349,9 @@ static const NSUInteger kSectionErrorRetry = 2;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == kSectionOrderSummary) {
-        return NSLocalizedStringFromTableInBundle(@"Order Summary", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        return OLLocalizedString(@"Order Summary", @"");
     } else if (section == kSectionOrderId) {
-        return NSLocalizedStringFromTableInBundle(@"Order Id", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        return OLLocalizedString(@"Order Id", @"");
     }
     
     return nil;
@@ -423,7 +423,7 @@ static const NSUInteger kSectionErrorRetry = 2;
                     NSDecimalNumber *cost;
                     NSString *currencyCode = self.printOrder.currencyCode;
                     if (total) {
-                        cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Total", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+                        cell.textLabel.text = OLLocalizedString(@"Total", @"");
                         cell.textLabel.font = [UIFont boldSystemFontOfSize:cell.textLabel.font.pointSize];
                         cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:cell.detailTextLabel.font.pointSize];
                         
@@ -461,7 +461,7 @@ static const NSUInteger kSectionErrorRetry = 2;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
-        cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        cell.textLabel.text = OLLocalizedString(@"Retry", @"");
     }
     
     return cell;

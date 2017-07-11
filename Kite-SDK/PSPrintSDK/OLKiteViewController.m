@@ -252,7 +252,7 @@ static CGFloat fadeTime = 0.3;
     
     if (!self.navigationController){
         self.navigationBar.hidden = NO;
-        self.customNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
+        self.customNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:OLLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
     }
 
     if (!self.loadingHandler){
@@ -352,11 +352,11 @@ static CGFloat fadeTime = 0.3;
         NSString *nextVcNavIdentifier;
         OLProduct *product;
         if (groups.count == 0 && !([OLProductTemplate templates].count != 0 && [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Store Maintenance", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                    [welf dismiss];
-                }]];
-                [welf presentViewController:ac animated:YES completion:NULL];
+            UIAlertController *ac = [UIAlertController alertControllerWithTitle:OLLocalizedString(@"Store Maintenance", @"") message:OLLocalizedString(@"Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.", @"") preferredStyle:UIAlertControllerStyleAlert];
+            [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"OK", @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [welf dismiss];
+            }]];
+            [welf presentViewController:ac animated:YES completion:NULL];
             return;
         }
         else if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
@@ -382,12 +382,12 @@ static CGFloat fadeTime = 0.3;
                             [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
                                 if (error) return;
                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                   ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
+                                    ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
                                 });
                             }];
                         }
                         else{
-                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                            ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:OLLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                         }
                         [welf fadeToViewController:nvc];
                     }
@@ -419,7 +419,7 @@ static CGFloat fadeTime = 0.3;
                     }];
                 }
                 else{
-                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:OLLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                 }
                 [welf fadeToViewController:nvc];
             }
@@ -456,7 +456,7 @@ static CGFloat fadeTime = 0.3;
                 }];
             }
             else{
-                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:OLLocalizedString(@"Cancel", @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
             }
             [welf fadeToViewController:nvc];
         }
@@ -467,7 +467,7 @@ static CGFloat fadeTime = 0.3;
         //Prefetch themed-SDK images
         [[OLKiteABTesting sharedInstance] prefetchRemoteImages];
     }];
-        
+    
     [self.operationQueue addOperation:self.transitionOperation];
 }
 
@@ -516,15 +516,15 @@ static CGFloat fadeTime = 0.3;
         }
         
         NSError *error = n.userInfo[kNotificationKeyTemplateSyncError];
-        NSString *message = NSLocalizedStringFromTableInBundle(@"There was a problem getting Print Shop products. Check your Internet connectivity or try again later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+        NSString *message = OLLocalizedString(@"There was a problem getting Print Shop products. Check your Internet connectivity or try again later.", @"");
         if (error.code == kOLKiteSDKErrorCodeMaintenanceMode) {
-            message = NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            message = OLLocalizedString(@"Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.", @"");
         }
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+        [alert addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"Cancel", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
             [self dismiss];
         }]];
-        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        [alert addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"Retry", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
             [OLProductTemplate sync];
         }]];
         [self presentViewController:alert animated:YES completion:^(void){}];

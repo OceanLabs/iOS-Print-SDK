@@ -32,6 +32,7 @@
 #import "OLStripeCard.h"
 #import "OLStripeCard+OLCardIcon.h"
 #import "OLCreditCardCaptureViewController.h"
+#import "OLDefines.h"
 
 
 #ifndef KITE_UTILS
@@ -72,20 +73,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
     
-#ifndef KITE_UTILS
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPaymentMethodScreenViewed:[(OLPaymentViewController *)self.delegate printOrder]];
 #endif
-    self.title = NSLocalizedStringFromTableInBundle(@"Payment Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-#else
-    self.title = NSLocalizedString(@"Payment Method", @"");
-#endif
-    
-
+    self.title = OLLocalizedString(@"Payment Method", @"");
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -192,24 +187,12 @@
         [cell addGestureRecognizer:gesture];
     }
     else if (method == kOLPaymentMethodCreditCard){
-#ifndef KITE_UTILS
-        imageView.image = [UIImage imageNamedInKiteBundle:@"add-payment"];
-#else
-        imageView.image = [UIImage imageNamed:@"add-payment"];
-#endif
-#ifndef KITE_UTILS
-        label.text = NSLocalizedStringFromTableInBundle(@"Add Credit/Debit Card", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-#else
-        label.text = NSLocalizedString(@"Add Credit/Debit Card", @"");
-#endif
+        imageView.image = OLImageNamed(@"add-payment");
+        label.text = OLLocalizedString(@"Add Credit/Debit Card", @"");
         [cell viewWithTag:30].hidden = YES;
     }
     else if (method == kOLPaymentMethodApplePay){
-#ifndef KITE_UTILS
-        imageView.image = [UIImage imageNamedInKiteBundle:@"apple-pay-method"];
-#else
-        imageView.image = [UIImage imageNamed:@"apple-pay-method"];
-#endif
+        imageView.image = OLImageNamed(@"apple-pay-method");
         label.text = @"Apple Pay";
         
         if (self.selectedPaymentMethod == kOLPaymentMethodNone){
@@ -224,11 +207,7 @@
         }
     }
     else if (method == kOLPaymentMethodPayPal){
-#ifndef KITE_UTILS
-        imageView.image = [UIImage imageNamedInKiteBundle:@"add-payment"];
-#else
-        imageView.image = [UIImage imageNamed:@"add-payment"];
-#endif
+        imageView.image = OLImageNamed(@"add-payment");
         label.text = @"PayPal";
         if (self.selectedPaymentMethod == kOLPaymentMethodPayPal){
             [cell viewWithTag:30].hidden = NO;

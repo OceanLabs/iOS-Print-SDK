@@ -28,9 +28,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#ifndef KITE_UTILS
 #import "OLPrintEnvironment.h"
-#import "OLCheckoutDelegate.h"
 #import "OLKiteViewController.h"
+#endif
+#import "OLCheckoutDelegate.h"
 @class OLPrintOrder;
 @class OLAddress;
 
@@ -51,7 +53,9 @@ static const NSUInteger kTagInputFieldLabel = 100;
 @property (copy, nonatomic) NSString *userEmail;
 @property (copy, nonatomic) NSString *userPhone;
 
+#ifndef KITE_UTILS
 - (id)initWithPrintOrder:(OLPrintOrder *)printOrder;
 - (id)initWithAPIKey:(NSString *)apiKey environment:(OLKitePrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder;
+#endif
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion;
 @end

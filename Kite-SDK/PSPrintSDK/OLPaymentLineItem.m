@@ -66,7 +66,7 @@ static NSString *const kKeyLineItemShippingCosts = @"ly.kite.iossdk.kKeyLineItem
 - (NSString *)costStringInCurrency:(NSString *)currencyCode {
     NSDecimalNumber *cost = [self costInCurrency:currencyCode];
     if ([cost isEqualToNumber:@0]){
-        return NSLocalizedStringFromTableInBundle(@"FREE", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Free, no cost");
+        return OLLocalizedString(@"FREE", @"Free, no cost");
     } else {
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
         [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
@@ -78,7 +78,7 @@ static NSString *const kKeyLineItemShippingCosts = @"ly.kite.iossdk.kKeyLineItem
 - (NSString *)discountedCostStringInCurrency:(NSString *)currencyCode {
     NSDecimalNumber *cost = [self discountedCostInCurrency:currencyCode];
     if ([cost isEqualToNumber:@0]){
-        return NSLocalizedStringFromTableInBundle(@"FREE", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Free, no cost");
+        return OLLocalizedString(@"FREE", @"Free, no cost");
     } else {
         NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
         [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
