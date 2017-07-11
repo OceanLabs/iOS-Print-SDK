@@ -44,6 +44,7 @@
 #import "NSObject+Utils.h"
 #import "OLCustomPickerController.h"
 #import "OLKiteViewController+Private.h"
+#import "OLDefines.h"
 
 @interface OLPackProductViewController (Private) <OLInfoBannerDelegate, OLImagePickerViewControllerDelegate>
 - (void)updateTitleBasedOnSelectedPhotoQuanitity;

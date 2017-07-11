@@ -43,6 +43,7 @@
 #import "OLKiteABTesting.h"
 #import "UIView+AutoLayoutHelper.h"
 #import "UIColor+OLHexString.h"
+#import "OLDefines.h"
 
 @interface OLProduct ()
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;

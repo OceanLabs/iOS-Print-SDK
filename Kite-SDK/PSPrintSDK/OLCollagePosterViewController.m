@@ -33,6 +33,7 @@
 #import "OLKiteABTesting.h"
 #import "UIView+RoundRect.h"
 #import "OLUserSession.h"
+#import "OLDefines.h"
 
 @interface OLProduct ()
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;

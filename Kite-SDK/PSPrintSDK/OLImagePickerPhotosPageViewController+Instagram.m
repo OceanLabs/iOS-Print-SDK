@@ -33,6 +33,7 @@
 #import "OLInstagramImage.h"
 #import "OLImagePickerProviderCollection.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;

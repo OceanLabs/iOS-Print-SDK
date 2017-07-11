@@ -39,6 +39,7 @@
 #import "OLImageDownloader.h"
 #import "OLImageRenderOptions.h"
 #import "UIColor+OLHexString.h"
+#import "OLDefines.h"
 
 static NSString *const kKeyMimeType = @"co.oceanlabs.pssdk.kKeyMimeType";
 static NSString *const kKeyImageData = @"co.oceanlabs.pssdk.kKeyImageData";

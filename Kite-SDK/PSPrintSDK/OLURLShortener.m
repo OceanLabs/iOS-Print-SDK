@@ -30,6 +30,7 @@
 #import "OLURLShortener.h"
 #import "OLConstants.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 @implementation OLURLShortener
 

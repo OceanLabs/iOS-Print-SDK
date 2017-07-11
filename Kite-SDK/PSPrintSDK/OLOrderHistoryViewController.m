@@ -39,6 +39,7 @@
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
 #import "OLKiteViewController+Private.h"
+#import "OLDefines.h"
 
 @interface OLOrderHistoryViewController ()
 @property (strong, nonatomic) NSArray *printOrderHistory;

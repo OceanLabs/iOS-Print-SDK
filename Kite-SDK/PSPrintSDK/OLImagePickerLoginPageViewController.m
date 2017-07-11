@@ -37,6 +37,7 @@
 #import "OLKiteUtils.h"
 #import "OLFacebookSDKWrapper.h"
 #import "OLKiteABTesting.h"
+#import "OLDefines.h"
 
 @interface OLImagePickerLoginPageViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;

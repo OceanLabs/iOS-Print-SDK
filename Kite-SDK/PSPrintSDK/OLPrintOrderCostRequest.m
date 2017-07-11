@@ -39,6 +39,7 @@
 #import "NSObject+Utils.h"
 #import "OLKiteUtils.h"
 #import "OLPaymentViewController.h"
+#import "OLDefines.h"
 
 @interface OLKitePrintSDK (Private)
 

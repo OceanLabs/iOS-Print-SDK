@@ -41,6 +41,7 @@
 #import "OLProductTemplateCollection.h"
 #import "OLUserSession.h"
 #import "OLShippingClass.h"
+#import "OLDefines.h"
 
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;

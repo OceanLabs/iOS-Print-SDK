@@ -37,6 +37,13 @@ typedef enum {
     kOLPayPalEnvironmentLive
 } OLPayPalEnvironment;
 
+typedef enum {
+    kOLPayPalCardTypeVisa,
+    kOLPayPalCardTypeMastercard,
+    kOLPayPalCardTypeDiscover,
+    kOLPayPalCardTypeAmex
+} OLPayPalCardType;
+
 @interface OLPayPalCard : NSObject <NSCoding>
 
 + (void)setClientId:(NSString *)clientId withEnvironment:(OLPayPalEnvironment)environment;

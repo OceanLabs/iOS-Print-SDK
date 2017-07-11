@@ -39,6 +39,7 @@
 #import "OLKiteUtils.h"
 #import "OLKiteABTesting.h"
 #import "OLImagePreviewViewController.h"
+#import "OLDefines.h"
 
 @interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerPreviewingDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;

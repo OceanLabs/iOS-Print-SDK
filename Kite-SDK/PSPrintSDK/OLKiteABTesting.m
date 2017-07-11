@@ -33,7 +33,7 @@
 #import "OLKiteUtils.h"
 #import "UIColor+OLHexString.h"
 #include <stdlib.h>
-
+#import "OLDefines.h"
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
 static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";

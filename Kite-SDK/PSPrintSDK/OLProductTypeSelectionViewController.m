@@ -42,6 +42,7 @@
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
 #import "OLKiteViewController+Private.h"
+#import "OLDefines.h"
 
 @interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout>
 

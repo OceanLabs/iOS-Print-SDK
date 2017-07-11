@@ -41,6 +41,7 @@
 #import "UIView+RoundRect.h"
 #import "OLUserSession.h"
 #import "OLImageDownloader.h"
+#import "OLDefines.h"
 
 @interface OLPaymentViewController ()
 - (void)onBarButtonOrdersClicked;

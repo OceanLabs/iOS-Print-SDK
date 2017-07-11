@@ -31,6 +31,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLPrintOrder.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 @interface OLKitePrintSDK (Private)
 

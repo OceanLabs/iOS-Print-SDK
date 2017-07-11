@@ -53,6 +53,7 @@
 #import <Photos/Photos.h>
 #import "OLKiteViewController+Private.h"
 #import "UIView+RoundRect.h"
+#import "OLDefines.h"
 
 @interface OLKitePrintSDK ()
 + (NSString *)instagramRedirectURI;

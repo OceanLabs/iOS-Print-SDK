@@ -49,6 +49,7 @@
 #import "OLUserSession.h"
 #import "UIView+RoundRect.h"
 #import "UIViewController+OLMethods.h"
+#import "OLDefines.h"
 
 static const NSInteger kSectionCover = 0;
 static const NSInteger kSectionPages = 1;

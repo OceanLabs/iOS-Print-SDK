@@ -2,14 +2,15 @@ command -v iconv >/dev/null 2>&1 || { exit 0; }
 
 cd PSPrintSDK/OLKiteLocalizationResources.bundle/
 
-find ../ -name \*.m | xargs genstrings -o .
-rm Localizable.strings
+find ../ -name \*.m | xargs genstrings -s OLLocalizedString -o .
 
 filename="KitePrintSDK.strings"
 translated="KitePrintSDK.translated.csv"
 converted="KitePrintSDK.converted.strings"
 untranslated="KitePrintSDK.untranslated.csv"
 result="KitePrintSDK.result.strings"
+
+mv Localizable.strings $filename
 
 iconv -f UTF-16 -t UTF-8 $filename > $converted
 if [ ! -f $converted ]; then

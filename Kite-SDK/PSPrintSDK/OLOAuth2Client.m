@@ -264,31 +264,31 @@ NSString * const OLOAuth2ClientConnectionContextTokenRefresh = @"tokenRefresh";
         
         if ([errorString caseInsensitiveCompare:@"invalid_request"] == NSOrderedSame) {
             errorCode = OLOAuth2InvalidRequestErrorCode;
-            localizedError = NSLocalizedString(@"Invalid request to OAuth2 Server", @"OLOAuth2InvalidRequestErrorCode description");
+            localizedError = @"Invalid request to OAuth2 Server"; //LocalizedString(@"Invalid request to OAuth2 Server", @"OLOAuth2InvalidRequestErrorCode description");
             
         } else if ([errorString caseInsensitiveCompare:@"invalid_client"] == NSOrderedSame) {
             errorCode = OLOAuth2InvalidClientErrorCode;
-            localizedError = NSLocalizedString(@"Invalid OAuth2 Client", @"OLOAuth2InvalidClientErrorCode description");
+            localizedError = @"Invalid OAuth2 Client"; //LocalizedString(@"Invalid OAuth2 Client", @"OLOAuth2InvalidClientErrorCode description");
             
         } else if ([errorString caseInsensitiveCompare:@"unauthorized_client"] == NSOrderedSame) {
             errorCode = OLOAuth2UnauthorizedClientErrorCode;
-            localizedError = NSLocalizedString(@"Unauthorized Client", @"OLOAuth2UnauthorizedClientErrorCode description");
+            localizedError = @"Unauthorized Client"; //LocalizedString(@"Unauthorized Client", @"OLOAuth2UnauthorizedClientErrorCode description");
             
         } else if ([errorString caseInsensitiveCompare:@"redirect_uri_mismatch"] == NSOrderedSame) {
             errorCode = OLOAuth2RedirectURIMismatchErrorCode;
-            localizedError = NSLocalizedString(@"Redirect URI mismatch", @"OLOAuth2RedirectURIMismatchErrorCode description");
+            localizedError = @"Redirect URI mismatch"; //LocalizedString(@"Redirect URI mismatch", @"OLOAuth2RedirectURIMismatchErrorCode description");
             
         } else if ([errorString caseInsensitiveCompare:@"access_denied"] == NSOrderedSame) {
             errorCode = OLOAuth2AccessDeniedErrorCode;
-            localizedError = NSLocalizedString(@"Access denied", @"OLOAuth2AccessDeniedErrorCode description");
+            localizedError = @"Access denied"; //LocalizedString(@"Access denied", @"OLOAuth2AccessDeniedErrorCode description");
             
         } else if ([errorString caseInsensitiveCompare:@"unsupported_response_type"] == NSOrderedSame) {
             errorCode = OLOAuth2UnsupportedResponseTypeErrorCode;
-            localizedError = NSLocalizedString(@"Unsupported response type", @"OLOAuth2UnsupportedResponseTypeErrorCode description");
+            localizedError = @"Unsupported response type"; //LocalizedString(@"Unsupported response type", @"OLOAuth2UnsupportedResponseTypeErrorCode description");
             
         } else if ([errorString caseInsensitiveCompare:@"invalid_scope"] == NSOrderedSame) {
             errorCode = OLOAuth2InvalidScopeErrorCode;
-            localizedError = NSLocalizedString(@"Invalid scope", @"OLOAuth2InvalidScopeErrorCode description");
+            localizedError = @"Invalid scope"; //LocalizedString(@"Invalid scope", @"OLOAuth2InvalidScopeErrorCode description");
         }
         
         if (errorCode != 0) {
@@ -545,7 +545,7 @@ NSString * const OLOAuth2ClientConnectionContextTokenRefresh = @"tokenRefresh";
                 NSError *retryFailedError = [NSError errorWithDomain:OLOAuth2ErrorDomain
                                                                 code:OLOAuth2CouldNotRefreshTokenErrorCode
                                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                      NSLocalizedString(@"Access token could not be refreshed", @"OLOAuth2CouldNotRefreshTokenErrorCode description"), NSLocalizedDescriptionKey,
+                                                                      @"Access token could not be refreshed", NSLocalizedDescriptionKey,
                                                                       nil]];
                 
                 NSArray *failedConnections = [waitingConnections copy];

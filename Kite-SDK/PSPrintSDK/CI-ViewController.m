@@ -290,21 +290,21 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     }
     
     if (shouldOfferAPIChange){
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Possible API key detected in clipboard", @"") message:NSLocalizedString(@"Do you want to use this instead of the built-in ones?", @"") preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"No", @"") style:UIAlertActionStyleDefault handler:^(id action){
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Possible API key detected in clipboard" message:@"Do you want to use this instead of the built-in ones?" preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault handler:^(id action){
 #define STRINGIZE(x) #x
 #define STRINGIZE2(x) STRINGIZE(x)
 #define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
             [self showKiteVcForAPIKey:OL_KITE_CI_DEPLOY_KEY assets:assets];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDefault handler:^(id action){
+        [ac addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(id action){
             [self showKiteVcForAPIKey:pasteboard.string assets:assets];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and use staging", @"") style:UIAlertActionStyleDefault handler:^(id action){
+        [ac addAction:[UIAlertAction actionWithTitle:@"Yes and use staging" style:UIAlertActionStyleDefault handler:^(id action){
             [OLKitePrintSDK setUseStaging:YES];
             [self showKiteVcForAPIKey:pasteboard.string assets:assets];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and LC mode", @"") style:UIAlertActionStyleDefault handler:^(id action){
+        [ac addAction:[UIAlertAction actionWithTitle:@"Yes and LC mode" style:UIAlertActionStyleDefault handler:^(id action){
             [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
             
             [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
@@ -317,7 +317,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             
             [self presentViewController:customVc animated:YES completion:NULL];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes but mock templates", @"") style:UIAlertActionStyleDefault handler:^(id action){
+        [ac addAction:[UIAlertAction actionWithTitle:@"Yes but mock templates" style:UIAlertActionStyleDefault handler:^(id action){
             [OLKiteTestHelper mockTemplateRequest];
             
             [self showKiteVcForAPIKey:pasteboard.string assets:assets];

@@ -29,6 +29,7 @@
 
 #import "OLImagePickerPageViewController.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 @implementation OLImagePickerPageViewController
 

@@ -29,6 +29,7 @@
 
 #import "OLEditingToolsView.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 @implementation OLEditingToolsView
 

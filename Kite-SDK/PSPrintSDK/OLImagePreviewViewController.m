@@ -31,6 +31,7 @@
 #import "UIView+AutoLayoutHelper.h"
 #import "OLAsset+Private.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 #import <Photos/Photos.h>
 

@@ -38,6 +38,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
+#import "OLDefines.h"
 
 typedef enum {
     kSizeUnitsInches,

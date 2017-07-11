@@ -34,6 +34,7 @@
 #import "UIImageView+FadeIn.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLImageDownloader.h"
+#import "OLDefines.h"
 
 @interface OLPromoView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (strong, nonatomic) NSArray <OLAsset *>*assets;

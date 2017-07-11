@@ -29,6 +29,7 @@
 
 #import "OLImagePickerPhotosPageViewController+Facebook.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;

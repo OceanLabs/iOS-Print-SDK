@@ -31,6 +31,7 @@
 #import "OLQRCodeUploadedImagePoller.h"
 #import "OLURLShortener.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 @interface OLQRCodeUploadViewController ()
 @property (nonatomic, retain) IBOutlet UIImageView *qrCodeImageView;

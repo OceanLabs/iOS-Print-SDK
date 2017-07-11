@@ -28,6 +28,7 @@
 //
 
 #import "OLPayPalCard.h"
+#import "OLDefines.h"
 
 #ifndef KITE_UTILS
 #import "OLConstants.h"

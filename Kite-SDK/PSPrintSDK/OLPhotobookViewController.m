@@ -57,6 +57,7 @@
 #import "UIImageView+FadeIn.h"
 #import "UIView+RoundRect.h"
 #import "UIViewController+OLMethods.h"
+#import "OLDefines.h"
 
 static const NSUInteger kTagLeft = 10;
 static const NSUInteger kTagRight = 20;

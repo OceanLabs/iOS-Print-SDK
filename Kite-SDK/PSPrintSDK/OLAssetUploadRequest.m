@@ -34,6 +34,7 @@
 #import "OLAsset.h"
 #import "OLAsset+Private.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 @interface OLKitePrintSDK (Private)
 

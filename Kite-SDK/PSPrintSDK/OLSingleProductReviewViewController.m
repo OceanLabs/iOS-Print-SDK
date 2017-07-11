@@ -49,6 +49,7 @@
 #import "UIView+AutoLayoutHelper.h"
 #import "UIColor+OLHexString.h"
 #import "OLKiteViewController+Private.h"
+#import "OLDefines.h"
 
 @interface OLPaymentViewController (Private)
 - (void)saveAndDismissReviewController;

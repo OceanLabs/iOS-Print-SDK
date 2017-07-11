@@ -32,6 +32,7 @@
 #import "OLOAuth2.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 @interface OLKitePrintSDK ()
 + (NSString *)instagramRedirectURI;

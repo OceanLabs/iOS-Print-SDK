@@ -38,6 +38,7 @@
 #import "OLKiteUtils.h"
 #import "OLKiteABTesting.h"
 #import "OLUserSession.h"
+#import "OLDefines.h"
 
 //static const NSUInteger kMaxInFlightRequests = 5;
 

@@ -51,6 +51,7 @@
 #import "OLKiteViewController+Private.h"
 #import "OLImageDownloader.h"
 #import "UIImage+OLUtils.h"
+#import "OLDefines.h"
 
 const NSInteger kOLEditTagImages = 10;
 const NSInteger kOLEditTagProductOptionsTab = 20;

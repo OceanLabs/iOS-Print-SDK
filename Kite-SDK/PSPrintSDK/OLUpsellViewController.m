@@ -36,6 +36,7 @@
 #import "OLKiteUtils.h"
 #import "UIImageView+FadeIn.h"
 #import "OLAsset.h"
+#import "OLDefines.h"
 
 @interface OLUpsellViewController ()
 

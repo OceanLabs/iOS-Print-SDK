@@ -37,6 +37,7 @@
 #import "OLPrintJob.h"
 #import "OLPrintOrderCost.h"
 #import "OLPaymentLineItem.h"
+#import "OLDefines.h"
 
 @interface OLShippingMethodsViewController () <UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;

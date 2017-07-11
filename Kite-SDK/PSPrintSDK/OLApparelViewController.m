@@ -34,6 +34,7 @@
 #import "OLImageDownloader.h"
 #import "UIImage+OLUtils.h"
 #import "OLAsset+Private.h"
+#import "OLDefines.h"
 
 @interface OLImageEditViewController ()
 - (void)setupButton4;

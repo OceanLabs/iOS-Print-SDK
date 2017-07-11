@@ -47,6 +47,7 @@
 #import "OLNavigationController.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
+#import "OLDefines.h"
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;

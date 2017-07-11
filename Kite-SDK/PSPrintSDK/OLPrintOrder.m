@@ -43,6 +43,7 @@
 #import "OLPrintOrderSubmitStatusRequest.h"
 #import "OLPaymentViewController.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 static NSString *const kKeyProofOfPayment = @"co.oceanlabs.pssdk.kKeyProofOfPayment";
 static NSString *const kKeyVoucherCode = @"co.oceanlabs.pssdk.kKeyVoucherCode";

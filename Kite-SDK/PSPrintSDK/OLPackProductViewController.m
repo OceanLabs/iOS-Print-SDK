@@ -50,6 +50,7 @@
 #import "UIViewController+OLMethods.h"
 #import "OLKiteViewController+Private.h"
 #import "UIView+RoundRect.h"
+#import "OLDefines.h"
 
 @interface OLPaymentViewController (Private)
 

@@ -29,6 +29,7 @@
 
 #import "OLPaymentLineItem.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 static NSString *const kKeyLineItemDescription = @"ly.kite.iossdk.kKeyLineItemDescription";
 static NSString *const kKeyLineItemCosts = @"ly.kite.iossdk.kKeyLineItemCosts";

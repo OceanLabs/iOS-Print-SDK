@@ -333,7 +333,7 @@ UITableViewDataSource, UITextFieldDelegate>
     }
     else{
         OLPayPalCard *card = [[OLPayPalCard alloc] init];
-        card.type = paypalCard;
+        card.type = (OLPayPalCardType)stripeCard;
         card.number = [self cardNumber];
         card.expireMonth = expireMonth;
         card.expireYear = expireYear;

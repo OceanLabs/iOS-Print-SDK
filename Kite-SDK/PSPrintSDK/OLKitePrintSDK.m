@@ -34,6 +34,7 @@
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
+#import "OLDefines.h"
 
 static NSString *apiKey = nil;
 static NSString *applePayMerchantID = nil;

@@ -33,6 +33,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLPrintOrder.h"
 #import "OLKiteUtils.h"
+#import "OLDefines.h"
 
 @interface OLPrintOrder (FriendInterface)
 @property (nonatomic, readonly) NSDictionary *jsonRepresentation;

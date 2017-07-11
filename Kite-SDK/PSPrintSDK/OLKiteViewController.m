@@ -52,6 +52,7 @@
 #import "OL3DProductViewController.h"
 #import "OLApparelViewController.h"
 #import "OLCollagePosterViewController.h"
+#import "OLDefines.h"
 
 static CGFloat fadeTime = 0.3;
 

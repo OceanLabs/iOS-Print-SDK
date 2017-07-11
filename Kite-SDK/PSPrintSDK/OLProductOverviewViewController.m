@@ -50,6 +50,7 @@
 #import "OLAsset+Private.h"
 #import "UIColor+OLHexString.h"
 #import "UIView+RoundRect.h"
+#import "OLDefines.h"
 
 @interface OLProduct ()
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;

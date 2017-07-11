@@ -473,7 +473,7 @@ sendingProgressHandler:(OLOAuth2ConnectionSendingProgressHandler)aSendingProgres
             }
         }
         
-        NSString *localizedError = [NSString stringWithFormat:NSLocalizedString(@"HTTP Error: %d", @"OLOAuth2HTTPErrorDomain description"), self.statusCode];
+        NSString *localizedError = [NSString stringWithFormat:@"HTTP Error: %d", (int)self.statusCode];
         NSDictionary *errorUserInfo = [NSDictionary dictionaryWithObject:localizedError forKey:NSLocalizedDescriptionKey];
         NSError *error = [NSError errorWithDomain:OLOAuth2HTTPErrorDomain
                                              code:self.statusCode
