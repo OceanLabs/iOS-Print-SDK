@@ -39,7 +39,7 @@
 - First release of the Unity plugin
 
 ### 6.5.2
-- Fixed xib file not being including in the resource bundle when installing via Cocoapods.
+- Fixed xib file not being included in the resource bundle when installing via Cocoapods.
 
 ### 6.5.1
 - Fixed: Submitting orders without UI.
