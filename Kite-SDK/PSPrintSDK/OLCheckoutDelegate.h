@@ -30,6 +30,7 @@
 #import <Foundation/Foundation.h>
 
 @class OLCheckoutViewController;
+@class OLAddress;
 
 @protocol OLCheckoutDelegate <NSObject>
 
@@ -38,6 +39,8 @@
 - (BOOL)receiptViewControllerShouldBeDismissable;
 - (BOOL)shouldDismissPaymentViewControllerAfterPayment;
 
-- (void)checkoutViewControllerDidCancel:(OLCheckoutViewController *)controller;
+- (void)checkoutViewControllerDidCancel:(OLCheckoutViewController *_Nonnull)controller;
+
+- (void)checkoutViewController:(OLCheckoutViewController *_Nonnull)vc didPickAddress:(OLAddress *_Nonnull)address email:(NSString *_Nonnull)email phone:(NSString *_Nullable)phone;
 
 @end

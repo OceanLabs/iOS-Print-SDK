@@ -495,6 +495,7 @@
 		2ECA34ED1E82743800D56220 /* OLApparelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECA34EB1E82743800D56220 /* OLApparelViewController.m */; };
 		2ED2B7B41DB8B4D90036B536 /* OLHPSDKWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2ED2B7B21DB8B4D90036B536 /* OLHPSDKWrapper.h */; };
 		2ED2B7B51DB8B4D90036B536 /* OLHPSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED2B7B31DB8B4D90036B536 /* OLHPSDKWrapper.m */; };
+		2ED80F5F1F163CF800D5AE88 /* OLCheckoutDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5E0C141993840600C34D5C /* OLCheckoutDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EE04A041EEAE12600E6A16B /* OLArtboardTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E37B1791D227EDA003DAA84 /* OLArtboardTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EE4BC8E1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */; };
 		2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */; };
@@ -1985,6 +1986,7 @@
 				2E8AC4DC1EFBCBB90040BF00 /* OLStripeCard+OLCardIcon.h in Headers */,
 				2E9FB2571F14BB14001B0A41 /* OLDefines.h in Headers */,
 				2E025DD01EF7F132006B15EE /* KiteUtils.h in Headers */,
+				2ED80F5F1F163CF800D5AE88 /* OLCheckoutDelegate.h in Headers */,
 				2EB9B7EC1F0E53110001DA9C /* UIView+RoundRect.h in Headers */,
 				2E2EFC841EF962190065A68C /* OLAddress.h in Headers */,
 				2EFE5D261F13A117003E3F74 /* NSDecimalNumber+CostFormatter.h in Headers */,

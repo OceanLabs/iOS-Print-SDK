@@ -206,7 +206,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         self.navigationItem.leftBarButtonItem = nil;
         self.navigationItem.rightBarButtonItem = nil;
     }
-    #endif
+#endif
     self.title = OLLocalizedString(@"Shipping", @"");
 
     UITapGestureRecognizer *tgr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onBackgroundClicked)];
@@ -216,16 +216,16 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 0)];
-    [self.tableView.tableFooterView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.tableView.tableFooterView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
     
     self.kiteLabel = [[UILabel alloc] init];
+    self.kiteLabel.text = OLLocalizedString(@"Powered by Kite.ly", @"");
     self.kiteLabel.font = [UIFont systemFontOfSize:13];
     self.kiteLabel.textColor = [UIColor lightGrayColor];
     self.kiteLabel.textAlignment = NSTextAlignmentCenter;
     [self.tableView.tableFooterView addSubview:self.kiteLabel];
     self.kiteLabel.translatesAutoresizingMaskIntoConstraints = NO;
     
-    self.kiteLabel.text = OLLocalizedString(@"Powered by Kite.ly", @"");
+    [self.tableView.tableFooterView addConstraint:[NSLayoutConstraint constraintWithItem:self.kiteLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.tableView.tableFooterView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
 
 #ifndef KITE_UTILS
     [self.printOrder costWithCompletionHandler:nil]; // ignore outcome, internally printOrder caches the result and this will speed up things when we hit the PaymentScreen *if* the user doesn't change destination shipping country as the voids shipping price
@@ -329,11 +329,16 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         [defaults setObject:phone forKey:kKeyPhone];
         [defaults synchronize];
     }
-#else
-    
-#endif
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
+#else
+    if ([self.delegate respondsToSelector:@selector(checkoutViewController:didPickAddress:email:phone:)]){
+        [self.delegate checkoutViewController:self didPickAddress:self.shippingAddress email:email phone:phone];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:email forKey:kKeyEmailAddress];
+        [defaults setObject:phone forKey:kKeyPhone];
+        [defaults synchronize];
+    }
+#endif
 }
 
 #ifndef KITE_UTILS
