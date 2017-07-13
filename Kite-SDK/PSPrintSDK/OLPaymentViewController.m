@@ -1113,16 +1113,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [ac addAction:[UIAlertAction actionWithTitle:OLLocalizedString(@"Yes", @"") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action){
             [self.printOrder removePrintJob:printJob];
             
-            NSMutableSet *addresses = [[NSMutableSet alloc] init];
-            for (id<OLPrintJob> job in self.printOrder.jobs){
-                if ([job address]){
-                    [addresses addObject:[job address]];
-                }
-            }
-            if (addresses.count == 1){
-                self.printOrder.shippingAddress = [addresses anyObject];
-            }
-            
             [self.printOrder saveOrder];
             [self updateViewsBasedOnCostUpdate];
             
@@ -1605,16 +1595,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
         [self.printOrder removePrintJob:job];
-        
-        NSMutableSet *addresses = [[NSMutableSet alloc] init];
-        for (id<OLPrintJob> job in self.printOrder.jobs){
-            if ([job address]){
-                [addresses addObject:[job address]];
-            }
-        }
-        if (addresses.count == 1){
-            self.printOrder.shippingAddress = [addresses anyObject];
-        }
         
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.printOrder saveOrder];
