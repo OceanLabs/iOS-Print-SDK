@@ -34,3 +34,4 @@ FOUNDATION_EXPORT const unsigned char KiteUtilsVersionString[];
 #import "OLCreditCardCaptureViewController.h"
 #import "NSDecimalNumber+CostFormatter.h"
 #import "OLCheckoutViewController.h"
+#import "OLDefines.h"
