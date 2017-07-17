@@ -222,7 +222,7 @@
         self.selectedProviderIndicator = [[UIView alloc] init];
         self.selectedProviderIndicator.backgroundColor = self.sourcesCollectionView.tintColor;
         
-        [self.visualEffectView addSubview:self.selectedProviderIndicator];
+        [self.visualEffectView.contentView addSubview:self.selectedProviderIndicator];
         view = self.selectedProviderIndicator;
         
         view.translatesAutoresizingMaskIntoConstraints = NO;
