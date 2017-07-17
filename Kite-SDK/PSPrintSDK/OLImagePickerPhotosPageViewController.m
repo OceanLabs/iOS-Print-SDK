@@ -352,7 +352,7 @@ CGFloat OLImagePickerMargin = 1.5;
 - (void)setAssetOfCollection:(OLImagePickerProviderCollection *)collection withIndex:(NSInteger)index toImageView:(OLRemoteImageView *)imageView forCollectionView:(UICollectionView *)collectionView{
     id asset = [collection objectAtIndex:index];
     
-    for (OLAsset *selectedAsset in self.imagePicker.selectedAssets){
+    for (OLAsset *selectedAsset in [self.imagePicker.selectedAssets copy]){
         if ([asset isKindOfClass:[PHAsset class]]){
             if ([asset isEqual:[selectedAsset isKindOfClass:[OLAsset class]] ? selectedAsset.phAsset : selectedAsset]){
                 asset = selectedAsset;
@@ -495,7 +495,7 @@ CGFloat OLImagePickerMargin = 1.5;
         asset = potentialAsset;
     }
     
-    for (OLAsset *potentialAsset in self.imagePicker.selectedAssets){
+    for (OLAsset *potentialAsset in [self.imagePicker.selectedAssets copy]){
         if ([asset isEqual:potentialAsset ignoreEdits:YES]){
             asset = potentialAsset;
             break;
