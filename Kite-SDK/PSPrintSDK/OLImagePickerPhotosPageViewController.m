@@ -259,8 +259,8 @@ CGFloat OLImagePickerMargin = 1.5;
             asset = [OLAsset assetWithPHAsset:potentialAsset];
             
             //If it's already selected use the existing OLAsset instead of the newly created one
-            if ([self.imagePicker.selectedAssets containsObject:asset]){
-                asset = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:asset]];
+            if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){
+                asset = self.imagePicker.selectedAssets[[[self.imagePicker.selectedAssets copy] indexOfObject:asset]];
             }
         }
         else if ([potentialAsset isKindOfClass:[OLAsset class]]){
@@ -271,7 +271,7 @@ CGFloat OLImagePickerMargin = 1.5;
             checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
         }
         
-        if ([self.imagePicker.selectedAssets containsObject:asset]){
+        if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){
             checkmark.hidden = NO;
         }
         else{
@@ -487,8 +487,8 @@ CGFloat OLImagePickerMargin = 1.5;
     OLAsset *asset;
     if ([potentialAsset isKindOfClass:[PHAsset class]]){
         asset = [OLAsset assetWithPHAsset:potentialAsset];
-        if ([self.imagePicker.selectedAssets containsObject:asset]){
-            asset = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:asset]];
+        if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){
+            asset = self.imagePicker.selectedAssets[[[self.imagePicker.selectedAssets copy] indexOfObject:asset]];
         }
     }
     else if ([potentialAsset isKindOfClass:[OLAsset class]]){
@@ -514,7 +514,7 @@ CGFloat OLImagePickerMargin = 1.5;
     if (collectionView.tag == 10){ //Images collection view
         OLAsset *asset = [self assetForIndexPath:indexPath];
         
-        if ([self.imagePicker.selectedAssets containsObject:asset]){ //Photo is selected
+        if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){ //Photo is selected
             if ([asset isEdited]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"The image edits, like crop, filters, etc") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
