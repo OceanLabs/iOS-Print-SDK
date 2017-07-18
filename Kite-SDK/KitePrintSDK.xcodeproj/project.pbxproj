@@ -55,6 +55,12 @@
 		2E1BB37D1E7C2A25008F7217 /* OLSingleImagePosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1BB37B1E7C2A25008F7217 /* OLSingleImagePosterViewController.h */; };
 		2E1BB37E1E7C2A25008F7217 /* OLSingleImagePosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1BB37C1E7C2A25008F7217 /* OLSingleImagePosterViewController.m */; };
 		2E23EB9B1D5091FC00E2BF42 /* CI-Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */; };
+		2E2EFC831EF962100065A68C /* OLAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA31862FC510009DE03 /* OLAddress.m */; };
+		2E2EFC841EF962190065A68C /* OLAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFA21862FC510009DE03 /* OLAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E2EFC851EF962980065A68C /* OLCountry.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFA5186306550009DE03 /* OLCountry.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E2EFC861EF9629D0065A68C /* OLCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA6186306550009DE03 /* OLCountry.m */; };
+		2E2EFC871EF96DD80065A68C /* OLStripeCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E482B781BEB4C7D007460EA /* OLStripeCard.m */; };
+		2E2EFC8A1EF96DEC0065A68C /* OLStripeCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E482B771BEB4C7D007460EA /* OLStripeCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E3084AE1E813672008218BF /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084A81E813672008218BF /* 1.jpg */; };
 		2E3084AF1E813672008218BF /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084A91E813672008218BF /* 2.png */; };
 		2E3084B01E813672008218BF /* 3.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084AA1E813672008218BF /* 3.pdf */; };
@@ -267,6 +273,10 @@
 		2E898CD91CC518180041CCD8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6F186215790009DE03 /* UIKit.framework */; };
 		2E898CDA1CC518180041CCD8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		2E898CE11CC518180041CCD8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF83186215790009DE03 /* Images.xcassets */; };
+		2E8AC4D91EFBC3070040BF00 /* OLLuhn.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB715D31CFDD12900618C7B /* OLLuhn.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E8AC4DA1EFBC30C0040BF00 /* OLLuhn.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB715D41CFDD12900618C7B /* OLLuhn.m */; };
+		2E8AC4DB1EFBCBB50040BF00 /* OLStripeCard+OLCardIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB715DA1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m */; };
+		2E8AC4DC1EFBCBB90040BF00 /* OLStripeCard+OLCardIcon.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB715D91CFDD36600618C7B /* OLStripeCard+OLCardIcon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E8E19B91E93E0BF0003905E /* OLHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E8E19B71E93E0BF0003905E /* OLHintView.xib */; };
 		2E9A77281DA6838E00A50C4D /* KiteSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; };
 		2E9A77291DA6838E00A50C4D /* KiteSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -1946,10 +1956,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E025DE11EF7F1B3006B15EE /* UIColor+OLHexString.h in Headers */,
+				2E2EFC8A1EF96DEC0065A68C /* OLStripeCard.h in Headers */,
+				2E8AC4DC1EFBCBB90040BF00 /* OLStripeCard+OLCardIcon.h in Headers */,
 				2E025DD01EF7F132006B15EE /* KiteUtils.h in Headers */,
+				2E2EFC841EF962190065A68C /* OLAddress.h in Headers */,
 				2E025DE91EF7F83E006B15EE /* UIImageView+FadeIn.h in Headers */,
 				2E025DE71EF7F808006B15EE /* OLImageDownloadDelegate.h in Headers */,
+				2E2EFC851EF962980065A68C /* OLCountry.h in Headers */,
 				2EC481A81EF8091F00E6CB6F /* UIImage+OLUtils.h in Headers */,
+				2E8AC4D91EFBC3070040BF00 /* OLLuhn.h in Headers */,
 				2E025DE51EF7F7FD006B15EE /* OLImageDownloader.h in Headers */,
 				2E025DE41EF7F2BD006B15EE /* UIView+AutoLayoutHelper.h in Headers */,
 			);
@@ -2561,7 +2576,12 @@
 				2EC481A91EF8092600E6CB6F /* UIImage+OLUtils.m in Sources */,
 				2E025DE21EF7F1BF006B15EE /* UIColor+OLHexString.m in Sources */,
 				2E025DE81EF7F82F006B15EE /* OLImageDownloadDelegate.m in Sources */,
+				2E2EFC871EF96DD80065A68C /* OLStripeCard.m in Sources */,
 				2E025E1F1EF806AC006B15EE /* UIImageView+FadeIn.m in Sources */,
+				2E8AC4DB1EFBCBB50040BF00 /* OLStripeCard+OLCardIcon.m in Sources */,
+				2E8AC4DA1EFBC30C0040BF00 /* OLLuhn.m in Sources */,
+				2E2EFC831EF962100065A68C /* OLAddress.m in Sources */,
+				2E2EFC861EF9629D0065A68C /* OLCountry.m in Sources */,
 				2E025DE61EF7F802006B15EE /* OLImageDownloader.m in Sources */,
 				2E025DE31EF7F2B7006B15EE /* UIView+AutoLayoutHelper.m in Sources */,
 			);
