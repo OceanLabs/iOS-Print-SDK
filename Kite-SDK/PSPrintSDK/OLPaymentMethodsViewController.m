@@ -127,11 +127,7 @@
         sections++;
     }
 #else
-    NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
-    if ((&PKPaymentNetworkDiscover) != NULL) {
-        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
-    }
-    if ([PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:supportedNetworks]){
+    if ([self isApplePayAvailable]){
         sections++;
     }
     
