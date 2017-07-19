@@ -94,6 +94,10 @@
 		2E31C0161C7B2237009C1E42 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C0151C7B2237009C1E42 /* QuartzCore.framework */; };
 		2E31C0191C7B2253009C1E42 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E244531C1BFD2C8C0086BF03 /* MobileCoreServices.framework */; };
 		2E31C01B1C7B2267009C1E42 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E31C01A1C7B2267009C1E42 /* libc++.tbd */; };
+		2E4402671F1F6C9D0093EF4B /* NSString+Formatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D171A964881000F1E66 /* NSString+Formatting.m */; };
+		2E4402681F1F6CA00093EF4B /* NSString+Formatting.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DEF0D161A964881000F1E66 /* NSString+Formatting.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2E4402691F1F736A0093EF4B /* UITextField+Selection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF0D1A1A964B4E000F1E66 /* UITextField+Selection.m */; };
+		2E44026A1F1F736D0093EF4B /* UITextField+Selection.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2E451DCC1D9554B40080F1C1 /* KiteSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E451DCA1D9554B40080F1C1 /* KiteSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E451DD01D95554D0080F1C1 /* OLAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BFA31862FC510009DE03 /* OLAddress.m */; };
 		2E451DD11D95554D0080F1C1 /* OLAddress+AddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3318785D3B00316492 /* OLAddress+AddressBook.m */; };
@@ -1981,6 +1985,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E025DE11EF7F1B3006B15EE /* UIColor+OLHexString.h in Headers */,
+				2E44026A1F1F736D0093EF4B /* UITextField+Selection.h in Headers */,
 				2E2EFC8A1EF96DEC0065A68C /* OLStripeCard.h in Headers */,
 				2E9FB2531F14B86B001B0A41 /* OLAddressSelectionViewController.h in Headers */,
 				2E8AC4DC1EFBCBB90040BF00 /* OLStripeCard+OLCardIcon.h in Headers */,
@@ -1989,6 +1994,7 @@
 				2ED80F5F1F163CF800D5AE88 /* OLCheckoutDelegate.h in Headers */,
 				2EB9B7EC1F0E53110001DA9C /* UIView+RoundRect.h in Headers */,
 				2E2EFC841EF962190065A68C /* OLAddress.h in Headers */,
+				2E4402681F1F6CA00093EF4B /* NSString+Formatting.h in Headers */,
 				2EFE5D261F13A117003E3F74 /* NSDecimalNumber+CostFormatter.h in Headers */,
 				2E025DE91EF7F83E006B15EE /* UIImageView+FadeIn.h in Headers */,
 				2EFE5D271F13B5DD003E3F74 /* OLCheckoutViewController.h in Headers */,
@@ -2613,9 +2619,11 @@
 			files = (
 				2EFE5D2C1F13CB60003E3F74 /* OLAddressEditViewController.m in Sources */,
 				2E20DA2A1F0E20F300C4198A /* OLCreditCardCaptureViewController.m in Sources */,
+				2E4402671F1F6C9D0093EF4B /* NSString+Formatting.m in Sources */,
 				2EC481A91EF8092600E6CB6F /* UIImage+OLUtils.m in Sources */,
 				2EFE5D291F13CA63003E3F74 /* OLAddress+AddressBook.m in Sources */,
 				2E025DE21EF7F1BF006B15EE /* UIColor+OLHexString.m in Sources */,
+				2E4402691F1F736A0093EF4B /* UITextField+Selection.m in Sources */,
 				2EB9B7EB1F0E530E0001DA9C /* UIView+RoundRect.m in Sources */,
 				2EF3A8991F0D11B40064AC15 /* OLPaymentMethodsViewController.m in Sources */,
 				2EFE5D281F13B5E4003E3F74 /* OLCheckoutViewController.m in Sources */,
