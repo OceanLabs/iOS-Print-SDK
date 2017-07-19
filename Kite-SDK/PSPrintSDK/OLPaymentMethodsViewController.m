@@ -135,6 +135,8 @@
         sections++;
     }
     
+    sections++; //PayPal
+    
 #endif
     
     return sections;
@@ -207,7 +209,7 @@
         }
     }
     else if (method == kOLPaymentMethodPayPal){
-        imageView.image = OLImageNamed(@"add-payment");
+        imageView.image = OLImageNamed(@"paypal-method");
         label.text = @"PayPal";
         if (self.selectedPaymentMethod == kOLPaymentMethodPayPal){
             [cell viewWithTag:30].hidden = NO;
