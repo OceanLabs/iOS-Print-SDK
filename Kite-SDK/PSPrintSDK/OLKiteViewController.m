@@ -589,6 +589,7 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)kioskLogout{
+    [self.timer invalidate];
     [self.presentedViewController dismissViewControllerAnimated:YES completion:^{
         if (self.presentedViewController){
             [self dismissViewControllerAnimated:NO completion:NULL];
