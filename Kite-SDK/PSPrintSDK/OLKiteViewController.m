@@ -590,15 +590,30 @@ static CGFloat fadeTime = 0.3;
 
 - (void)kioskLogout{
     [self.timer invalidate];
+    
+    void (^logout)() = ^{
+        [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionAll];
+        self.transitionOperation = [[NSBlockOperation alloc] init];
+        [self transitionToNextScreen];
+    };
+    
+    if (self.presentedViewController){
     [self.presentedViewController dismissViewControllerAnimated:YES completion:^{
         if (self.presentedViewController){
-            [self dismissViewControllerAnimated:NO completion:NULL];
+            [self dismissViewControllerAnimated:NO completion:^{
+                logout();
+            }];
+        }
+        else{
+            logout();
         }
         [self.childViewControllers.firstObject removeFromParentViewController];
     }];
-    [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionAll];
-    self.transitionOperation = [[NSBlockOperation alloc] init];
-    [self transitionToNextScreen];
+    }
+    else{
+        logout();
+    }
+    
 }
 
 @end
