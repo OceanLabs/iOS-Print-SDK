@@ -58,4 +58,5 @@ static const NSUInteger kTagInputFieldLabel = 100;
 - (id)initWithAPIKey:(NSString *)apiKey environment:(OLKitePrintSDKEnvironment)env printOrder:(OLPrintOrder *)printOrder;
 #endif
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion;
++ (BOOL)validateEmail:(NSString *)candidate;
 @end
