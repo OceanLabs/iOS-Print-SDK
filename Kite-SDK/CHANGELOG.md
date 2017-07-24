@@ -1,8 +1,6 @@
-### 6.6.6
-- Added: 'Lite' podspec that does not include mugs
-
 ### 6.6.5
 - Added: Polish localization
+- Added: 'Lite' podspec that does not include mugs
 
 ### 6.6.4
 - Added: Ability to hide promo code text field
