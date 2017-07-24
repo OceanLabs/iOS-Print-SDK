@@ -195,9 +195,11 @@
     else if (templateUI == OLTemplateUINonCustomizable){
         return @"OLPaymentViewController";
     }
+#ifndef OL_KITE_LITE
     else if (templateUI == OLTemplateUIMug){
         return @"OL3DProductViewController";
     }
+#endif
     else if (photoSelectionScreen){
         return @"OLImagePickerViewController";
     }
