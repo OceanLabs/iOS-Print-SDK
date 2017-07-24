@@ -61,6 +61,12 @@ const NSInteger kOLEditTagImageTools = 30;
 /**/const NSInteger kOLEditTagFilters = 34;
 const NSInteger kOLEditTagCrop = 40;
 
+@interface OLKiteViewController ()
+@property (strong, nonatomic) NSArray *fontNames;
+@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
+@end
+
 @interface OLProductOverviewViewController ()
 - (void)setupProductRepresentation;
 @end
@@ -670,6 +676,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self.view bringSubviewToFront:self.editingTools.drawerView];
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.gestureView];
+    [self.view bringSubviewToFront:self.touchReporter];
 }
 
 - (UIColor *)containerBackgroundColor{
@@ -2214,6 +2221,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
     self.ctaButton.enabled = YES;
     return YES;
 }

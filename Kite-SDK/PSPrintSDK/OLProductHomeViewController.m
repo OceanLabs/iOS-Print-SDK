@@ -126,6 +126,10 @@
             });
         }];
     }
+    
+    if ([OLKitePrintSDK isKiosk]){
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] init]];
+    }
 }
 
 - (void)viewDidLayoutSubviews{
@@ -433,6 +437,10 @@
             [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 40, 0)];
         }completion:NULL];
     }
+    
+    if ([OLKitePrintSDK isKiosk]){
+        self.navigationController.viewControllers = @[self];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -726,7 +734,7 @@
     NSInteger numberOfProducts = [self.productGroups count];
     
     CGSize size = self.view.frame.size;
-    if (!(numberOfProducts % 2 == 0) && (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact || size.height < size.width)){
+    if (![OLProductTemplate isSyncInProgress] && !numberOfProducts % 2 != 0 && (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact || size.height < size.width)){
         extras = 1;
     }
     

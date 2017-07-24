@@ -77,6 +77,7 @@
 #import "OLKiteViewController+Private.h"
 #import "OLCollagePosterViewController.h"
 #import "OLShippingMethodsViewController.h"
+#import "OLKioskLandingViewController.h"
 
 @import PassKit;
 @import Contacts;
@@ -87,6 +88,11 @@ static NSString *const kSectionPayment = @"kSectionPayment";
 static NSString *const kSectionContinueShopping = @"kSectionContinueShopping";
 
 static OLPaymentMethod selectedPaymentMethod;
+
+@interface OLKiteViewController ()
+- (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder;
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
+@end
 
 @interface OLProductTemplate ()
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
@@ -372,7 +378,12 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                 break;
             }
         }
-        [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
+        if ([navigationStack.firstObject isKindOfClass:[OLKioskLandingViewController class]]){
+            [self.navigationController setViewControllers:@[navigationStack[0], navigationStack[1], self] animated:NO];
+        }
+        else{
+            [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
+        }
         [[OLUserSession currentSession] clearUserSelectedPhotos];
     }
     
@@ -853,21 +864,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (void)popToHome{
-    // Try as best we can to go to the beginning of the app
-    NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-    if (navigationStack.count > 1) {
-        NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
-        for (UIViewController *vc in self.navigationController.viewControllers){
-            [viewControllers addObject:vc];
-            if ([vc isKindOfClass:[OLKiteViewController class]]){
-                [self.navigationController setViewControllers:viewControllers animated:YES];
-                break;
-            }
-        }
-        [self.navigationController popToRootViewControllerAnimated:YES];
-    }
-    else if (navigationStack.firstObject == self){
+    if (self.navigationController.viewControllers.firstObject == self){
         [self dismiss];
+    }
+    else{
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
@@ -1599,6 +1600,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackBasketScreenDidTapOnPromoCodeBoxforOrder:self.printOrder];
 #endif
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
+    return YES;
 }
 
 - (BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{

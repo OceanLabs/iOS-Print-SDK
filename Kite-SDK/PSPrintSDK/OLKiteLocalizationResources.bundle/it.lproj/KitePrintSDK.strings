@@ -66,6 +66,7 @@
 "Edit" = "Fatto";
 "Edit Address" = "Modifica indirizzo";
 "Email" = "Email";
+"End Session" = "End Session";
 "Enter a valid card number" = "Inserisci un numero di carta valido";
 "Enter a valid CVV number" = "Inserisci un codice CVV valido";
 "Enter a valid expiry date" = "Inserisci una data di scadenza valida";
@@ -200,6 +201,7 @@
 "There was an error trying to validate the card. Please try again later." = "Si è verificato un errore nel tentativo di verificare la tua carta. Riprova più tardi";
 "This is the 3-4 digit verification number/security code normally found on the back of your card" = "È il codice di verifica/codice di sicurezza di 3-4 cifre che si trova in genere sul retro della carta.";
 "This will discard your edits." = "Così facendo le modifiche saranno annullate.";
+"This will log out of any accounts, clear selected photos and start over" = "This will log out of any accounts, clear selected photos and start over";
 "Total" = "Totale";
 "Tracked" = "Tracked";
 "Uploading book" = "Caricamento album";

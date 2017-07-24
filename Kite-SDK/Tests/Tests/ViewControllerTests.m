@@ -137,7 +137,7 @@
     
     UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
     [self performUIAction:^{
-        [rootVc.topViewController presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
+        [rootVc.topViewController presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
     }];
     
     vc.searchController.searchBar.text = @"457 Finchley Road, NW3 6HN, London";

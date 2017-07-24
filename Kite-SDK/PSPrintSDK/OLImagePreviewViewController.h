@@ -29,9 +29,12 @@
 
 #import <UIKit/UIKit.h>
 #import "OLImageView.h"
+#import "OLViewController.h"
 
 @class OLAsset;
 
-@interface OLImagePreviewViewController : UIViewController
+@interface OLImagePreviewViewController : OLViewController
+
 @property (strong, nonatomic) OLAsset *asset;
+
 @end

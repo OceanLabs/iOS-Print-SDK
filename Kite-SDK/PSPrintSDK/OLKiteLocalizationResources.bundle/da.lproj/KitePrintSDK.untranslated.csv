@@ -33,6 +33,7 @@ Description,Description,/* Product description */
 Discard Edits,Discard Edits,
 Do you want to log out of %@?,Do you want to log out of %@?,/* Log out of Instagram/Facebook */
 Do you want to remove this photo?,Do you want to remove this photo?,
+End Session,End Session,
 Enter a valid card number,Enter a valid card number,
 Error validating the order. Please try again later.,Error validating the order. Please try again later.,
 Failed to download phone case mask. Please check your internet connectivity and try again,Failed to download phone case mask. Please check your internet connectivity and try again,
@@ -110,6 +111,7 @@ There was a problem getting Print Shop products. Check your Internet connectivit
 There was an error getting one of your photos. Please remove or replace it.,There was an error getting one of your photos. Please remove or replace it.,
 There was an error trying to validate the card. Please try again later.,There was an error trying to validate the card. Please try again later.,
 This will discard your edits.,This will discard your edits.,"/* The image edits, like crop, filters, etc */"
+"This will log out of any accounts, clear selected photos and start over","This will log out of any accounts, clear selected photos and start over",
 Tracked,Tracked,
 Uploading book,Uploading book,
 View Item,View Item,/* View [basket] item */

@@ -29,6 +29,7 @@
 
 #import <UIKit/UIKit.h>
 #import "OLProduct.h"
+#import "OLViewController.h"
 
 @protocol OLProductDetailsDelegate <NSObject>
 
@@ -36,7 +37,7 @@
 
 @end
 
-@interface OLProductDetailsViewController : UIViewController
+@interface OLProductDetailsViewController : OLViewController
 
 @property (weak, nonatomic) IBOutlet UILabel *detailsTextLabel;
 @property (strong, nonatomic) OLProduct *product;

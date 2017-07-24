@@ -355,7 +355,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 - (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
     [OLKitePrintSDK setAPIKey:s withEnvironment:[self environment]];
-    
+        
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
     

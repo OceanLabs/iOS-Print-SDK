@@ -31,7 +31,7 @@
 #import "OLImagePickerProvider.h"
 #import "OLImagePickerViewController.h"
 
-@interface OLImagePickerPageViewController : UIViewController
+@interface OLImagePickerPageViewController : OLViewController
 
 @property (assign, nonatomic) NSInteger pageIndex;
 @property (strong, nonatomic) OLImagePickerProvider* provider;

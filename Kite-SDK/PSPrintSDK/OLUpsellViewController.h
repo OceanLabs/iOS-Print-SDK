@@ -29,6 +29,7 @@
 
 #import <UIKit/UIKit.h>
 #import "OLUpsellOffer.h"
+#import "OLViewController.h"
 
 @class OLUpsellViewController;
 @class OLProduct;
@@ -39,7 +40,7 @@
 
 @end
 
-@interface OLUpsellViewController : UIViewController
+@interface OLUpsellViewController : OLViewController
 
 @property (weak, nonatomic) id<OLUpsellViewControllerDelegate> delegate;
 @property (strong, nonatomic) OLUpsellOffer *offer;

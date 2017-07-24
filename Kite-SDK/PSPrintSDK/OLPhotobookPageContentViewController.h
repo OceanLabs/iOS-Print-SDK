@@ -28,12 +28,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLViewController.h"
 
 @class OLProduct;
 @class OLArtboardView;
 @protocol OLArtboardDelegate;
 
-@interface OLPhotobookPageContentViewController : UIViewController
+@interface OLPhotobookPageContentViewController : OLViewController
 
 @property (assign, nonatomic) NSInteger pageIndex;
 @property (weak, nonatomic) IBOutlet OLArtboardView *artboardView;

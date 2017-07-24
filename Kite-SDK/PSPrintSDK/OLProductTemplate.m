@@ -180,7 +180,7 @@ static BOOL partial = NO;
                 if (handler){
                     handler(nil, error);
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncPartialComplete object:self userInfo:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncPartialComplete object:self userInfo:@{kNotificationKeyTemplateSyncError: error}];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:@{kNotificationKeyTemplateSyncError: error}];
             } else {
                 [self saveTemplatesAsLatest:templates_];

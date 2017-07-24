@@ -44,6 +44,7 @@
 #import "OLLuhn.h"
 #import "OLImageDownloader.h"
 #import "OLKiteABTesting.h"
+#import "OLUserSession.h"
 
 static const NSUInteger kOLSectionCardNumber = 0;
 static const NSUInteger kOLSectionExpiryDate = 1;
@@ -105,6 +106,10 @@ static CardType getCardType(NSString *cardNumber) {
 
 @interface OLKitePrintSDK (Private)
 + (BOOL)useStripeForCreditCards;
+@end
+
+@interface OLKiteViewController ()
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
 @end
 
 @interface OLCreditCardCaptureRootController : UITableViewController <UITableViewDelegate,
@@ -427,6 +432,7 @@ UITableViewDataSource, UITextFieldDelegate>
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
     if (textField == self.textFieldExpiryDate) {
         self.textFieldExpiryDate.text = [NSString stringByFormattingCreditCardExpiry:[self.textFieldExpiryDate.text stringByReplacingCharactersInRange:range withString:string]];
         if (string.length == 0 && self.textFieldExpiryDate.text.length == 3) {

@@ -27,18 +27,14 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@class OLAsset;
+@protocol OLTouchReporterDelegate <NSObject>
 
-typedef void (^OLQRCodeUploadedImageDownloadProgressHandler)(NSInteger receivedSize, NSInteger expectedSize);
-typedef void (^OLQRCodeUploadedImageFoundHandler)(OLAsset *asset);
+- (void)reportTouch;
 
-@interface OLQRCodeUploadedImagePoller : NSObject
+@end
 
-- (void)startPollingImageURL:(NSURL *)imageURL
-     onImageDownloadProgress:(OLQRCodeUploadedImageDownloadProgressHandler)progressHandler
-    onImageDownloadedHandler:(OLQRCodeUploadedImageFoundHandler)downloadedHandler;
-- (void)stopPolling;
-
+@interface OLTouchReporterView : UIView
+@property (weak, nonatomic) id<OLTouchReporterDelegate> delegate;
 @end

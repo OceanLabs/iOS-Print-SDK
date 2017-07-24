@@ -28,8 +28,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLViewController.h"
 
-@interface OLInfoPageViewController : UIViewController
+@interface OLInfoPageViewController : OLViewController
 @property (strong, nonatomic) NSString *imageName;
 @property (strong, nonatomic) NSString *titleText;
 

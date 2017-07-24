@@ -110,11 +110,7 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (NSString *)environment {
-    NSString *environment = @"Live";
-#ifdef PAYMENT_SANDBOX
-    environment = @"Development";
-#endif
-    return environment;
+    return [OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive ? @"Live" : @"Development";
 }
 
 + (void)addPushDeviceToken:(NSData *)deviceToken {
@@ -673,7 +669,7 @@ static NSString *nonNilStr(NSString *str) {
 
 + (void)trackImagePickerScreenHitBack:(NSString *)productName{
     NSString *eventName = kOLAnalyticsEventNameImagePickerScreenHitBack;
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @2}];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName ? productName : @"", kOLAnalyticsEventLevel : @2}];
 }
 
 + (void)trackPhotobookEditScreenHitBack:(NSString *)productName{

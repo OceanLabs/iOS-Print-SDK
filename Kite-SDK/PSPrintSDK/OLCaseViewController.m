@@ -344,24 +344,7 @@
         return;
     }
     
-    [self saveJobWithCompletionHandler:^{
-        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-            [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
-            [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
-            [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-            [self.navigationController pushViewController:vc animated:YES];
-        }
-        else{
-            OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-            [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-                [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-                [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-                
-                [self.navigationController pushViewController:vc animated:YES];
-            }];
-        }
-    }];
+    [self doCheckout];
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)())handler{

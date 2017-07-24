@@ -66,6 +66,7 @@
 "Edit" = "Rediger";
 "Edit Address" = "Rediger adresse";
 "Email" = "E-mail";
+"End Session" = "End Session";
 "Enter a valid card number" = "Enter a valid card number";
 "Enter a valid CVV number" = "Indtast et gyldigt CVV nummer";
 "Enter a valid expiry date" = "Indtast en gyldig udløbsdato";
@@ -200,6 +201,7 @@
 "There was an error trying to validate the card. Please try again later." = "There was an error trying to validate the card. Please try again later.";
 "This is the 3-4 digit verification number/security code normally found on the back of your card" = "Dette er det 3-4 cifrede kontrolnummer / sikkerhedskode der normalt findes på bagsiden af dit kort";
 "This will discard your edits." = "This will discard your edits.";
+"This will log out of any accounts, clear selected photos and start over" = "This will log out of any accounts, clear selected photos and start over";
 "Total" = "Total";
 "Tracked" = "Tracked";
 "Uploading book" = "Uploading book";

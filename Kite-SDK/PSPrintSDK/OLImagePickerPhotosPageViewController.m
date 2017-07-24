@@ -298,8 +298,8 @@ CGFloat OLImagePickerMargin = 1.5;
             asset = [OLAsset assetWithPHAsset:potentialAsset];
             
             //If it's already selected use the existing OLAsset instead of the newly created one
-            if ([self.imagePicker.selectedAssets containsObject:asset]){
-                asset = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:asset]];
+            if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){
+                asset = self.imagePicker.selectedAssets[[[self.imagePicker.selectedAssets copy] indexOfObject:asset]];
             }
         }
         else if ([potentialAsset isKindOfClass:[OLAsset class]]){
@@ -310,7 +310,7 @@ CGFloat OLImagePickerMargin = 1.5;
             checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
         }
         
-        if ([self.imagePicker.selectedAssets containsObject:asset]){
+        if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){
             checkmark.hidden = NO;
         }
         else{
@@ -391,7 +391,7 @@ CGFloat OLImagePickerMargin = 1.5;
 - (void)setAssetOfCollection:(OLImagePickerProviderCollection *)collection withIndex:(NSInteger)index toImageView:(OLImageView *)imageView forCollectionView:(UICollectionView *)collectionView{
     id asset = [collection objectAtIndex:index];
     
-    for (OLAsset *selectedAsset in self.imagePicker.selectedAssets){
+    for (OLAsset *selectedAsset in [self.imagePicker.selectedAssets copy]){
         if ([asset isKindOfClass:[PHAsset class]]){
             if ([asset isEqual:[selectedAsset isKindOfClass:[OLAsset class]] ? selectedAsset.phAsset : selectedAsset]){
                 asset = selectedAsset;
@@ -422,7 +422,7 @@ CGFloat OLImagePickerMargin = 1.5;
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
         __weak OLImageView *weakImageView = imageView;
-        [imageView setAndFadeInImageWithOLAsset:asset size:imageView.frame.size applyEdits:NO placeholder:nil progress:^(float progress){
+        [imageView setAndFadeInImageWithOLAsset:asset size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathWithIndex:0]] applyEdits:NO placeholder:nil progress:^(float progress){
             [weakImageView setProgress:progress];
         } completionHandler:NULL];
     }
@@ -526,15 +526,15 @@ CGFloat OLImagePickerMargin = 1.5;
     OLAsset *asset;
     if ([potentialAsset isKindOfClass:[PHAsset class]]){
         asset = [OLAsset assetWithPHAsset:potentialAsset];
-        if ([self.imagePicker.selectedAssets containsObject:asset]){
-            asset = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:asset]];
+        if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){
+            asset = self.imagePicker.selectedAssets[[[self.imagePicker.selectedAssets copy] indexOfObject:asset]];
         }
     }
     else if ([potentialAsset isKindOfClass:[OLAsset class]]){
         asset = potentialAsset;
     }
     
-    for (OLAsset *potentialAsset in self.imagePicker.selectedAssets){
+    for (OLAsset *potentialAsset in [self.imagePicker.selectedAssets copy]){
         if ([asset isEqual:potentialAsset ignoreEdits:YES]){
             asset = potentialAsset;
             break;
@@ -553,7 +553,7 @@ CGFloat OLImagePickerMargin = 1.5;
     if (collectionView.tag == 10){ //Images collection view
         OLAsset *asset = [self assetForIndexPath:indexPath];
         
-        if ([self.imagePicker.selectedAssets containsObject:asset]){ //Photo is selected
+        if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){ //Photo is selected
             if ([asset isEdited]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"The image edits, like crop, filters, etc") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){

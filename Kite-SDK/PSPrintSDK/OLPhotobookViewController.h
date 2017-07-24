@@ -36,7 +36,7 @@
 @protocol OLPhotobookViewControllerDelegate <NSObject>
 @end
 
-@interface OLPhotobookViewController : UIViewController
+@interface OLPhotobookViewController : OLViewController
 
 @property (strong, nonatomic) OLProduct *product;
 @property (strong, nonatomic) NSNumber *editingPageNumber;

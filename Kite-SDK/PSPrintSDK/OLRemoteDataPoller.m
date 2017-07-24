@@ -27,39 +27,47 @@
 //  THE SOFTWARE.
 //
 
-#import "OLQRCodeUploadedImagePoller.h"
+#import "OLRemoteDataPoller.h"
 #import "OLAsset.h"
 #import "OLImageDownloader.h"
 
-@interface OLQRCodeUploadedImagePoller ()
+@interface OLRemoteDataPoller ()
 @property (nonatomic, strong) NSURLSessionDownloadTask *op;
 @property (nonatomic, assign) BOOL cancelled;
 @end
 
-@implementation OLQRCodeUploadedImagePoller
+@implementation OLRemoteDataPoller
 
 - (void)startPollingImageURL:(NSURL *)imageURL
-     onImageDownloadProgress:(OLQRCodeUploadedImageDownloadProgressHandler)progressHandler
-    onImageDownloadedHandler:(OLQRCodeUploadedImageFoundHandler)downloadedHandler {
+     onImageDownloadProgress:(void(^)(NSInteger receivedSize, NSInteger expectedSize))progressHandler
+    onImageDownloadedHandler:(void (^)(OLAsset *asset))downloadedHandler {
+    [self startPollingURL:imageURL onDataDownloadProgress:progressHandler onDataDownloadedHandler:^(NSData *data){
+        OLAsset *asset = [OLAsset assetWithImageAsJPEG:[UIImage imageWithData:data]];
+        downloadedHandler(asset);
+    }];
+}
 
-    self.op = [[OLImageDownloader sharedInstance] downloadImageAtURL:imageURL progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+- (void)startPollingURL:(NSURL *)url
+     onDataDownloadProgress:(void(^)(NSInteger receivedSize, NSInteger expectedSize))progressHandler
+    onDataDownloadedHandler:(void (^)(NSData *data))downloadedHandler {
+
+    self.op = [[OLImageDownloader sharedInstance] downloadDataAtURL:url priority:1 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         if (expectedSize < 0) {
             return;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (!self.cancelled) {
+            if (!self.cancelled && progressHandler) {
                 progressHandler(receivedSize, expectedSize);
             }
         });
-    } withCompletionHandler:^(UIImage *image, NSError *error) {
+    } withCompletionHandler:^(NSData *data, NSError *error) {
         self.op = nil;
-        if (image != nil) {
+        if (data != nil) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!self.cancelled) {
                     [self stopPolling];
-                    OLAsset *asset = [OLAsset assetWithURL:imageURL];
-                    downloadedHandler(asset);
+                    downloadedHandler(data);
                 }
             });
         } else if (error) {
@@ -67,7 +75,7 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.op cancel];
                 if (!self.cancelled){
-                    [self startPollingImageURL:imageURL onImageDownloadProgress:progressHandler onImageDownloadedHandler:downloadedHandler];
+                    [self startPollingURL:url onDataDownloadProgress:progressHandler onDataDownloadedHandler:downloadedHandler];
                 }
             });
         }

@@ -29,10 +29,11 @@
 
 #import <UIKit/UIKit.h>
 #import "OLCustomImagePickerViewControllerDelegate.h"
+#import "OLViewController.h"
 
 @class OLAsset;
 
-@interface OLQRCodeUploadViewController : UIViewController
+@interface OLQRCodeUploadViewController : OLViewController
 @property (nonatomic, weak) id<OLCustomImagePickerViewControllerDelegate> delegate;
 - (void)onBarButtonItemCancelTapped:(id)sender;
 @end

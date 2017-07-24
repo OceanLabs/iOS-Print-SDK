@@ -664,7 +664,7 @@
     self.indicatorDestFrame = CGRectZero;
     
 #ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackPhotoProviderPicked:self.providers[[self.pageController.viewControllers[0] pageIndex]].name forProductName:self.product.productTemplate.name];
+    [OLAnalytics trackPhotoProviderPicked:self.providers[[self.pageController.viewControllers[0] pageIndex]].name forProductName:self.product ? self.product.productTemplate.name : @""];
 #endif
 
 }
@@ -802,7 +802,7 @@
         [welf positionSelectedProviderIndicator];
         
 #ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackPhotoProviderPicked:welf.providers[[welf.pageController.viewControllers[0] pageIndex]].name forProductName:welf.product.productTemplate.name];
+        [OLAnalytics trackPhotoProviderPicked:welf.providers[[welf.pageController.viewControllers[0] pageIndex]].name forProductName:welf.product ? welf.product.productTemplate.name : @""];
 #endif
     }];
 }

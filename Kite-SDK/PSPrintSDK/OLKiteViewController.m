@@ -52,6 +52,8 @@
 #import "OL3DProductViewController.h"
 #import "OLApparelViewController.h"
 #import "OLCollagePosterViewController.h"
+#import "OLLogoutViewController.h"
+#import "OLKioskLandingViewController.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -64,6 +66,9 @@ static CGFloat fadeTime = 0.3;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @property (strong, nonatomic) NSArray *fontNames;
+@property (strong, nonatomic) NSTimer *timer;
+@property (strong, nonatomic) NSDate *lastTouchDate;
+@property (weak, nonatomic) UIViewController *lastTouchedViewController;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -360,6 +365,11 @@ static CGFloat fadeTime = 0.3;
                 [welf presentViewController:ac animated:YES completion:NULL];
             return;
         }
+        else if ([OLKitePrintSDK isKiosk]){
+            OLKioskLandingViewController *vc = [[OLKioskLandingViewController alloc] init];
+            [welf fadeToViewController:[[OLNavigationController alloc] initWithRootViewController:vc]];
+            return;
+        }
         else if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
             BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[[OLUserSession currentSession].printOrder.jobs firstObject] assetsForUploading]];
             OLProduct *product = [OLProduct productWithTemplateId:[[[OLUserSession currentSession].printOrder.jobs firstObject] templateId]];
@@ -494,7 +504,6 @@ static CGFloat fadeTime = 0.3;
     
     [view.superview addConstraints:con];
     
-    
     [UIView animateWithDuration:fadeTime animations:^(void){
         vc.view.alpha = 1;
     } completion:^(BOOL b){
@@ -593,6 +602,67 @@ static CGFloat fadeTime = 0.3;
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionPhotos];
     [OLUserSession currentSession].userSelectedAssets = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark Kiosk
+
+- (void)startTimer{
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
+}
+
+- (void)stopTimer{
+    [self.timer invalidate];
+}
+
+- (void)updateTimer:(NSTimer *)timer {
+    // has the target time passed?
+    if (self.touchReporter){
+        [self.touchReporter.superview bringSubviewToFront:self.touchReporter];
+    }
+    NSInteger timeout = 240;
+        NSLog(@"Auto log out in: %f",timeout+[self.lastTouchDate timeIntervalSinceNow]);
+    if ([self.lastTouchDate timeIntervalSinceNow] <= -timeout) {
+        [timer invalidate];
+        
+        OLLogoutViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"LogoutViewController"];
+        vc.modalPresentationStyle = UIModalPresentationFormSheet;
+        vc.preferredContentSize = CGSizeMake(435, 563);
+        
+        [self.lastTouchedViewController presentViewController:vc animated:YES completion:NULL];
+    }
+}
+
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc{
+    self.lastTouchedViewController = vc;
+    self.lastTouchDate = date;
+}
+
+- (void)kioskLogout{
+    [self.timer invalidate];
+    
+    void (^logout)() = ^{
+        [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionAll];
+        self.transitionOperation = [[NSBlockOperation alloc] init];
+        [self transitionToNextScreen];
+    };
+    
+    if (self.presentedViewController){
+    [self.presentedViewController dismissViewControllerAnimated:YES completion:^{
+        if (self.presentedViewController){
+            [self dismissViewControllerAnimated:NO completion:^{
+                logout();
+            }];
+        }
+        else{
+            logout();
+        }
+        [self.childViewControllers.firstObject removeFromParentViewController];
+    }];
+    }
+    else{
+        logout();
+    }
+    
 }
 
 @end
