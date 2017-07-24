@@ -1,3 +1,6 @@
+### 6.6.6
+- Added: 'Lite' podspec that does not include mugs
+
 ### 6.6.5
 - Added: Polish localization
 
