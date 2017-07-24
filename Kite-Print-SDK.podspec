@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'Lite' do |lite|
     lite.source_files      = ['Kite-SDK/PSPrintSDK/OL*.{h,m}', 'Kite-SDK/PSPrintSDK/CardIO*.h', 'Kite-SDK/PSPrintSDK/RMImageCropper/*.{h,m}', 'Kite-SDK/PSPrintSDK/Categories/*.{h,m}', 'Kite-SDK/PSPrintSDK/LXReorderableCollectionViewFlowLayout.{h,m}', 'Kite-SDK/PSPrintSDK/QREncoder/*.{h,m,c}']
-    lite.xcconfig =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_LITE'
+    lite.xcconfig =  { 'OTHER_CFLAGS' => '$(inherited) -DOL_KITE_LITE' }
     lite.resource_bundles  = { 'OLKiteResources' => ['Kite-SDK/PSPrintSDK/KitePrintSDK.xcassets', 'Kite-SDK/PSPrintSDK/Base.lproj/OLEditingToolsView.xib', 'Kite-SDK/PSPrintSDK/Base.lproj/OLHintView.xib', 'Kite-SDK/PSPrintSDK/kite_corrupt.jpg', 'Kite-SDK/PSPrintSDK/Base.lproj/OLKiteStoryboard.storyboard'] }
   end
 
