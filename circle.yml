@@ -6,7 +6,7 @@ general:
   branches:
     only:
     - master
-    - test
+    - develop
   artifacts:
     - "~/image.png"
 
