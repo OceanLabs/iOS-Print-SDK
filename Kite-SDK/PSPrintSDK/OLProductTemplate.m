@@ -267,9 +267,11 @@ static BOOL partial = NO;
     else if ([identifier isEqualToString:@"APPAREL"]){
         return OLTemplateUIApparel;
     }
+#ifndef OL_KITE_LITE
     else if ([identifier isEqualToString:@"MUG"]){
         return OLTemplateUIMug;
     }
+#endif
     return OLTemplateUINA;
 }
 
