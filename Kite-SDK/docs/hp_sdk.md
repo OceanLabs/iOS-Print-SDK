@@ -16,7 +16,7 @@ Enable by setting the showPrintAtHome property of OLKiteViewController to true.
 Objective-C:
 ```obj-c
 OLKiteViewController *kiteViewController = [[OLKiteViewController alloc] initWithAssets:assets];
-kiteViewController.showPrintAtHome = YES
+kiteViewController.showPrintAtHome = YES;
 [self presentViewController:kiteViewController animated:YES completion:NULL];
 ```
 Swift:

@@ -1,11 +1,20 @@
+### 6.6.5
+- Added: Polish localization
+- Added: 'Lite' podspec that does not include mugs
+
+### 6.6.4
+- Added: Ability to hide promo code text field
+- Added: Access to the activity indicator on the loading view
+- Fixed: Italian translation file
+
 ### 6.6.3
-- Fixed missing mug asset when installing via Cocoapods
+- Fixed: Missing mug asset when installing via Cocoapods
 
 ### 6.6.2
-- Added the ability to disable filters and text-on-photo.
+- Added: Ability to disable filters and text-on-photo.
 
 ### 6.6.1
-- Added a way for image providers to supply thumbnails.
+- Added: A way for image providers to supply thumbnails.
 
 ## 6.6.0
 - New Product: Mugs
@@ -31,7 +40,7 @@
 - First release of the Unity plugin
 
 ### 6.5.2
-- Fixed xib file not being including in the resource bundle when installing via Cocoapods.
+- Fixed xib file not being included in the resource bundle when installing via Cocoapods.
 
 ### 6.5.1
 - Fixed: Submitting orders without UI.

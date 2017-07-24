@@ -19,6 +19,7 @@
 		<string>es</string>
 		<string>de</string>
 		<string>it</string>
+		<string>pl</string>
 	</array>
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
@@ -41,7 +42,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>9</string>
+	<string>1</string>
 	<key>FacebookAppID</key>
 	<string>298749663586228</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

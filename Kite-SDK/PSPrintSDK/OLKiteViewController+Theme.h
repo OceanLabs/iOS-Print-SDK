@@ -46,4 +46,9 @@
  */
 @property (weak, nonatomic, nullable) IBOutlet UIImageView *loadingImageView;
 
+/**
+ The loading activity indicator
+ */
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
+
 @end

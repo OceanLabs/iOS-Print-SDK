@@ -277,6 +277,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     self.promoCodeCostLabel.text = @"";
     self.promoCodeTextField.placeholder = NSLocalizedStringFromTableInBundle(@"Promo Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     self.promoCodeTextField.text = self.printOrder.promoCode;
+    self.shippingLabel.text = NSLocalizedStringFromTableInBundle(@"Shipping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
     NSString *applePayAvailableStr;
     if ([OLKiteUtils isApplePayAvailable]){
@@ -330,6 +331,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]){
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
+    
+    if ([OLUserSession currentSession].kiteVc.hidePromoCodeField){
+        self.promoBox.hidden = YES;
     }
     
 #ifndef OL_NO_ANALYTICS

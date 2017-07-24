@@ -125,6 +125,10 @@
  */
 @property (assign, nonatomic) BOOL showOptOutOfEmailsCheckbox;
 
+/**
+ Set to hide the promo code field on the basket screen
+ */
+@property (assign, nonatomic) BOOL hidePromoCodeField;
 
 /**
  Show the Print at Home tile if the HP SDK is installed
