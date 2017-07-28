@@ -192,7 +192,7 @@
         [OLAddress clearAddressBook];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionAll) == OLUserSessionCleanupOptionAll){
-        [self cleanupUserSession:OLUserSessionCleanupOptionPhotos | OLUserSessionCleanupOptionBasket | OLUserSessionCleanupOptionSocial | OLUserSessionCleanupOptionPersonal];
+        [self cleanupUserSession:OLUserSessionCleanupOptionPhotos | OLUserSessionCleanupOptionBasket | OLUserSessionCleanupOptionSocial | OLUserSessionCleanupOptionPersonal | OLUserSessionCleanupOptionPayment];
     }
     
 }
