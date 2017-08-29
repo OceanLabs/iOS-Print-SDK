@@ -1,3 +1,6 @@
+### 6.6.7
+- All headers are public
+
 ### 6.6.6
 - Fixed: Public header files in podspec
 
