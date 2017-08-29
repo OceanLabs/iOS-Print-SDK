@@ -1,3 +1,9 @@
+### 6.6.7
+- All headers are public
+
+### 6.6.6
+- Fixed: Public header files in podspec
+
 ### 6.6.5
 - Added: Polish localization
 - Added: 'Lite' podspec that does not include mugs
