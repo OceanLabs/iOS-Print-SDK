@@ -2852,7 +2852,7 @@
                                         </connections>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Product Details" lineBreakMode="tailTruncation" numberOfLines="9999" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="AlQ-Es-3y4">
-                                        <rect key="frame" x="20" y="55" width="335" height="21"/>
+                                        <rect key="frame" x="20" y="70" width="335" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -2862,7 +2862,7 @@
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="450" id="8lZ-F5-gff"/>
-                                    <constraint firstItem="AlQ-Es-3y4" firstAttribute="top" secondItem="kWa-iF-wa4" secondAttribute="bottom" priority="750" constant="5" id="BYa-Et-9d0"/>
+                                    <constraint firstItem="AlQ-Es-3y4" firstAttribute="top" secondItem="kWa-iF-wa4" secondAttribute="bottom" priority="750" constant="20" id="BYa-Et-9d0"/>
                                     <constraint firstItem="kWa-iF-wa4" firstAttribute="leading" secondItem="EiN-2l-gIw" secondAttribute="leading" id="Bs6-gO-39R"/>
                                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="AlQ-Es-3y4" secondAttribute="bottom" constant="110" id="J3x-Qn-Xdx"/>
                                     <constraint firstAttribute="trailing" secondItem="AlQ-Es-3y4" secondAttribute="trailing" constant="20" id="ZPr-yc-kyL"/>
