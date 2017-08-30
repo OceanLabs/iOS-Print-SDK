@@ -100,6 +100,13 @@
 
 @implementation OLProductOverviewViewController
 
+- (void)setProduct:(OLProduct *)product{
+    _product = product;
+    self.productDetails.product = _product;
+    
+    [self setupProductRepresentation];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -107,8 +114,7 @@
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
-    
-    [self setupProductRepresentation];
+    [self setupDetailsView];
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;
@@ -116,7 +122,10 @@
     self.pageController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height + 37);
     
     self.pageControl.numberOfPages = self.product.productPhotos.count;
-    [self.pageController setViewControllers:@[[self viewControllerAtIndex:0]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    UIViewController *vc = [self viewControllerAtIndex:0];
+    if (vc){
+        [self.pageController setViewControllers:@[vc] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    }
     [self addChildViewController:self.pageController];
     [self.view insertSubview:self.pageController.view belowSubview:self.pageControl];
     [self.pageController didMoveToParentViewController:self];
@@ -129,7 +138,7 @@
     pageControl.backgroundColor = [UIColor clearColor];
     pageControl.frame = CGRectMake(0, -200, 100, 100);
     
-    UIViewController *vc = self.parentViewController;
+    vc = self.parentViewController;
     while (vc) {
         if ([vc isKindOfClass:[OLKiteViewController class]]){
             break;
@@ -182,8 +191,6 @@
 }
 
 - (void)setupProductRepresentation{
-    [self setupDetailsView];
-    
     if ([self isPushed]){
         self.parentViewController.title = self.product.productTemplate.name;
     }
@@ -283,7 +290,7 @@
     NSString *imageURL = self.product.productTemplate.productPhotographyURLs[index % [self.product.productTemplate.productPhotographyURLs count]];
     OLProductOverviewPageContentViewController *vc;
     if ([imageURL hasSuffix:@"mp4"]){
-       vc = (OLProductOverviewPageContentViewController *)[[OLProductOverviewPageAnimatedContentViewController alloc] init];
+        vc = (OLProductOverviewPageContentViewController *)[[OLProductOverviewPageAnimatedContentViewController alloc] init];
     }
     else{
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ProductOverviewPageContentViewController"];
@@ -344,7 +351,7 @@
     con = [[NSMutableArray alloc] init];
     
     visuals = @[@"H:|-0-[detailsVcView]-0-|",
-                         @"V:|-0-[detailsVcView]-0-|"];
+                @"V:|-0-[detailsVcView]-0-|"];
     
     
     for (NSString *visual in visuals) {
@@ -504,12 +511,12 @@
     [self saveJobWithCompletionHandler:NULL];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-        [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-            
-            [self.navigationController pushViewController:vc animated:YES];
-        }];
+    [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+        
+        [self.navigationController pushViewController:vc animated:YES];
+    }];
 }
 
 - (void)userDidTapOnImage{
@@ -647,7 +654,7 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
     OLProductOverviewPageContentViewController *vc = (OLProductOverviewPageContentViewController *) viewController;
     vc.delegate = self;
-
+    
     NSUInteger index = (vc.pageIndex + 1) % self.product.productPhotos.count;
     return [self viewControllerAtIndex:index];
 }

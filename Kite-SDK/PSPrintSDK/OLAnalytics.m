@@ -357,11 +357,11 @@ static NSString *nonNilStr(NSString *str) {
 + (void)trackProductDetailsScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice{
     NSString *eventName = kOLAnalyticsEventNameProductDetailsScreenViewed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
-    [dict[@"properties"] setObject:productName forKey:@"Product Name"];
+    [dict[@"properties"] setObject:nonNilStr(productName) forKey:@"Product Name"];
     [dict[@"properties"] setObject:hidePrice ? @"YES" : @"NO" forKey:@"Hide Price on Product Description"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
     
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @1}];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : nonNilStr(productName), kOLAnalyticsEventLevel : @1}];
 }
 
 + (void)trackProductListScreenViewedWithTemplateClass:(NSString *)templateClassString{
