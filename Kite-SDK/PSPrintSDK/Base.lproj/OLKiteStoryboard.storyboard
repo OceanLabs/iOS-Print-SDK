@@ -3506,7 +3506,7 @@ only Lorem Ipsum</string>
                                 <color key="currentPageIndicatorTintColor" red="0.59607843140000005" green="0.59607843140000005" blue="0.59215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </pageControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y0x-Gv-fxJ" userLabel="Details view">
-                                <rect key="frame" x="0.0" y="568" width="375" height="450"/>
+                                <rect key="frame" x="0.0" y="558" width="375" height="450"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <constraints>
@@ -3517,18 +3517,18 @@ only Lorem Ipsum</string>
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ewi-GK-x4I">
-                                <rect key="frame" x="0.0" y="564" width="375" height="4"/>
+                                <rect key="frame" x="0.0" y="554" width="375" height="4"/>
                                 <color key="backgroundColor" red="0.95294117649999999" green="0.47450980390000003" blue="0.37647058820000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="4" id="c0Y-bl-wxY"/>
                                 </constraints>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="white gradient" translatesAutoresizingMaskIntoConstraints="NO" id="o7X-JN-dxV">
-                                <rect key="frame" x="0.0" y="612" width="375" height="100"/>
+                                <rect key="frame" x="0.0" y="602" width="375" height="100"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ra5-Gi-wGw">
-                                <rect key="frame" x="5" y="612" width="365" height="50"/>
+                                <rect key="frame" x="15" y="602" width="345" height="50"/>
                                 <color key="backgroundColor" red="0.12549019610000001" green="0.49803921569999998" blue="0.65490196079999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="Yz0-ae-PVI"/>
@@ -3548,7 +3548,7 @@ only Lorem Ipsum</string>
                             <constraint firstAttribute="trailing" secondItem="SlG-Jg-rlG" secondAttribute="trailing" constant="20" id="2rX-pR-UGS"/>
                             <constraint firstAttribute="trailing" secondItem="y0x-Gv-fxJ" secondAttribute="trailing" id="Er1-8G-WoM"/>
                             <constraint firstAttribute="trailing" secondItem="o7X-JN-dxV" secondAttribute="trailing" id="GPa-6g-9d3"/>
-                            <constraint firstItem="Ra5-Gi-wGw" firstAttribute="leading" secondItem="Sea-Bt-Vbv" secondAttribute="leading" constant="5" id="M0X-Ir-r2s"/>
+                            <constraint firstItem="Ra5-Gi-wGw" firstAttribute="leading" secondItem="Sea-Bt-Vbv" secondAttribute="leading" constant="15" id="M0X-Ir-r2s"/>
                             <constraint firstItem="ewi-GK-x4I" firstAttribute="leading" secondItem="Sea-Bt-Vbv" secondAttribute="leading" id="O3f-km-EFA"/>
                             <constraint firstItem="o7X-JN-dxV" firstAttribute="top" secondItem="Ra5-Gi-wGw" secondAttribute="top" id="Q4v-e9-QRd"/>
                             <constraint firstItem="SlG-Jg-rlG" firstAttribute="leading" secondItem="Sea-Bt-Vbv" secondAttribute="leading" constant="20" id="U2t-wa-cfM"/>
@@ -3556,10 +3556,10 @@ only Lorem Ipsum</string>
                             <constraint firstItem="y0x-Gv-fxJ" firstAttribute="top" secondItem="ewi-GK-x4I" secondAttribute="bottom" id="Vsg-6v-aBW"/>
                             <constraint firstItem="Ra5-Gi-wGw" firstAttribute="top" secondItem="y0x-Gv-fxJ" secondAttribute="top" constant="44" id="WoK-8u-hxW"/>
                             <constraint firstAttribute="trailing" secondItem="ewi-GK-x4I" secondAttribute="trailing" id="bvf-9r-lig"/>
-                            <constraint firstAttribute="trailing" secondItem="Ra5-Gi-wGw" secondAttribute="trailing" constant="5" id="ig7-CT-E3Z"/>
+                            <constraint firstAttribute="trailing" secondItem="Ra5-Gi-wGw" secondAttribute="trailing" constant="15" id="ig7-CT-E3Z"/>
                             <constraint firstItem="7PH-0m-QXn" firstAttribute="top" secondItem="y0x-Gv-fxJ" secondAttribute="top" constant="75" id="imU-cX-ZTp"/>
                             <constraint firstItem="o7X-JN-dxV" firstAttribute="leading" secondItem="Sea-Bt-Vbv" secondAttribute="leading" id="kEn-EV-a01"/>
-                            <constraint firstItem="7PH-0m-QXn" firstAttribute="top" secondItem="Ra5-Gi-wGw" secondAttribute="bottom" constant="5" id="mmh-ta-my4"/>
+                            <constraint firstItem="7PH-0m-QXn" firstAttribute="top" secondItem="Ra5-Gi-wGw" secondAttribute="bottom" constant="15" id="mmh-ta-my4"/>
                             <constraint firstItem="7PH-0m-QXn" firstAttribute="top" secondItem="SlG-Jg-rlG" secondAttribute="bottom" constant="101" id="pGG-qG-bta"/>
                         </constraints>
                         <variation key="default">
