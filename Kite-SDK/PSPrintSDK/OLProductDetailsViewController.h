@@ -46,6 +46,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *arrowCenterXCon;
+
 - (CGFloat)recommendedDetailsBoxHeight;
 
 @end
