@@ -660,9 +660,7 @@
     OLProduct *product = [group.products firstObject];
     product.uuid = nil;
     
-    NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
-    
-    id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
+    id vc = [[OLUserSession currentSession].kiteVc viewControllerForGroupSelected:group];
     [vc safePerformSelector:@selector(setProduct:) withObject:product];
     
     if ([vc isKindOfClass:[OLProductTypeSelectionViewController class]] && product.productTemplate.collectionName && product.productTemplate.collectionId){

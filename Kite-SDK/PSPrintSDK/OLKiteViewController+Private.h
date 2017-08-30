@@ -41,5 +41,6 @@
 - (UIViewController *)reviewViewControllerForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
 - (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder;
 - (void)dismiss;
-+ (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
+- (UIViewController *)viewControllerForGroupSelected:(OLProductGroup *)group;
+- (UIViewController *)productDescriptionViewController;
 @end

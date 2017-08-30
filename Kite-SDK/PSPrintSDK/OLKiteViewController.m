@@ -355,7 +355,7 @@ static CGFloat fadeTime = 0.3;
         NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];
         
         UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]];
-        NSString *nextVcNavIdentifier;
+        UIViewController *vc;
         OLProduct *product;
         if (groups.count == 0 && !([OLProductTemplate templates].count != 0 && [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Store Maintenance", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
@@ -442,13 +442,12 @@ static CGFloat fadeTime = 0.3;
         else if (groups.count == 1) {
             OLProductGroup *group = groups[0];
             product = [group.products firstObject];
-            nextVcNavIdentifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
+            vc = [self viewControllerForGroupSelected:group];
         }
         else {
             // Launch the product home view controller where the top level groups will be displayed
-            nextVcNavIdentifier = @"ProductHomeViewController";
+            vc = [sb instantiateViewControllerWithIdentifier:@"ProductHomeViewController"];
         }
-        UIViewController *vc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
         [vc safePerformSelector:@selector(setDelegate:) withObject:welf.delegate];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
@@ -574,15 +573,19 @@ static CGFloat fadeTime = 0.3;
     return [[OLReceiptViewController alloc] initWithPrintOrder:printOrder];
 }
 
-+ (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
+- (UIViewController *)productDescriptionViewController{
+    return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+}
+
+- (UIViewController *)viewControllerForGroupSelected:(OLProductGroup *)group{
     if (group.products.count > 1){
-        return @"OLTypeSelectionViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
     }
     else if ([OLKiteABTesting sharedInstance].disableProductCategories && [OLKiteABTesting sharedInstance].skipProductOverview){
-        return [[OLUserSession currentSession].kiteVc reviewViewControllerIdentifierForProduct:group.products.firstObject photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
+        return [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:group.products.firstObject photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
     }
     else{
-        return @"OLProductOverviewViewController";
+        return [self productDescriptionViewController];
     }
 }
 

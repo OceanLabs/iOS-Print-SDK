@@ -45,6 +45,7 @@
 #import "UIView+RoundRect.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIView+AutoLayoutHelper.h"
+#import "OLKiteViewController+Private.h"
 
 @interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout>
 
@@ -244,7 +245,7 @@
     }
     
     if (!vc){
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+        vc = [[OLUserSession currentSession].kiteVc productDescriptionViewController];
     }
     ((OLProductOverviewViewController *)vc).delegate = self.delegate;
     
