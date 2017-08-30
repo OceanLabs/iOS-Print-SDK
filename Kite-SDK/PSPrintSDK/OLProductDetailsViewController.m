@@ -47,6 +47,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *chevron;
 @property (weak, nonatomic) IBOutlet UILabel *detailsLabel;
 
+@property (assign, nonatomic) BOOL hasSetupProductDetails;
+
 @end
 
 @interface OLProductOverViewViewController
@@ -62,12 +64,21 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
-    
+    self.detailsLabel.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product Details");
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    if (!self.hasSetupProductDetails){
+        self.hasSetupProductDetails = YES;
+        [self setupProductDetails];
+    }
+}
+
+- (void)setupProductDetails{
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
     if (font){
         [self.detailsLabel setFont:font];
     }
-    self.detailsLabel.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product Details");
     
     OLMarkDownParser *mdParser = [OLMarkDownParser standardParser];
     font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:13];
