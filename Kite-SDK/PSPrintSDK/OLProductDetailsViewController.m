@@ -46,6 +46,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *optionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *chevron;
 @property (weak, nonatomic) IBOutlet UILabel *detailsLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *line;
 
 @property (assign, nonatomic) BOOL hasSetupProductDetails;
 
