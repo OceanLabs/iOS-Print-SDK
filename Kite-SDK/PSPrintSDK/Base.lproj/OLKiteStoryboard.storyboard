@@ -3502,7 +3502,7 @@ only Lorem Ipsum</string>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <pageControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="SlG-Jg-rlG">
-                                <rect key="frame" x="20" y="520" width="335" height="37"/>
+                                <rect key="frame" x="20" y="510" width="335" height="37"/>
                                 <color key="currentPageIndicatorTintColor" red="0.59607843140000005" green="0.59607843140000005" blue="0.59215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </pageControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y0x-Gv-fxJ" userLabel="Details view">
@@ -3560,7 +3560,7 @@ only Lorem Ipsum</string>
                             <constraint firstItem="7PH-0m-QXn" firstAttribute="top" secondItem="y0x-Gv-fxJ" secondAttribute="top" constant="75" id="imU-cX-ZTp"/>
                             <constraint firstItem="o7X-JN-dxV" firstAttribute="leading" secondItem="Sea-Bt-Vbv" secondAttribute="leading" id="kEn-EV-a01"/>
                             <constraint firstItem="7PH-0m-QXn" firstAttribute="top" secondItem="Ra5-Gi-wGw" secondAttribute="bottom" constant="15" id="mmh-ta-my4"/>
-                            <constraint firstItem="7PH-0m-QXn" firstAttribute="top" secondItem="SlG-Jg-rlG" secondAttribute="bottom" constant="110" id="pGG-qG-bta"/>
+                            <constraint firstItem="7PH-0m-QXn" firstAttribute="top" secondItem="SlG-Jg-rlG" secondAttribute="bottom" constant="120" id="pGG-qG-bta"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">

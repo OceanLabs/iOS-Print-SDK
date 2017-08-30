@@ -121,7 +121,6 @@
     self.pageController.delegate = self;
     self.pageController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height + 37);
     
-    self.pageControl.numberOfPages = self.product.productPhotos.count;
     UIViewController *vc = [self viewControllerAtIndex:0];
     if (vc){
         [self.pageController setViewControllers:@[vc] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
@@ -197,6 +196,8 @@
     else{
         self.title = self.product.productTemplate.name;
     }
+    
+    self.pageControl.numberOfPages = self.product.productPhotos.count;
     
     if (self.pageController){
         [self.pageController setViewControllers:@[[self viewControllerAtIndex:0]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:NULL];
