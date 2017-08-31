@@ -46,6 +46,7 @@ static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal"
 static NSString *const kOLKiteABTestPaymentScreen = @"ly.kite.abtest.payment_screen";
 static NSString *const kOLKiteABTestCoverPhotoVariants = @"ly.kite.abtest.cover_photo_variants";
 static NSString *const kOLKiteABTestProgressiveTemplateLoading = @"ly.kite.abtest.progressive_template_loading";
+static NSString *const kOLKiteABTestPackReviewStyle = @"ly.kite.abtest.pack.review.style";
 
 static NSString *const kOLKiteABTestSkipProductOverview = @"ly.kite.abtest.skip_product_overview";
 static NSString *const kOLKiteABTestDisableProductCategories = @"ly.kite.abtest.disable_product_categories";
@@ -73,6 +74,7 @@ static dispatch_once_t srand48OnceToken;
 @property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
 @property (strong, nonatomic, readwrite) NSString *paymentScreen;
 @property (strong, nonatomic, readwrite) NSString *coverPhotoId;
+@property (strong, nonatomic, readwrite) NSString *packReviewStyle;
 
 @end
 
@@ -479,6 +481,22 @@ static dispatch_once_t srand48OnceToken;
                                 }];
 }
 
+- (void)setupPackReviewStyleTest{
+    self.packReviewStyle = nil;
+    
+    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestPackReviewStyle];
+    if (!experimentDict) {
+        experimentDict = @{@"Classic" : @1, @"Mini" : @0};
+    }
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestProductTileStyle
+                            conditions:@{
+                                         @"Classic" : safeObject(experimentDict[@"Classic"]),
+                                         @"Mini" : safeObject(experimentDict[@"Mini"])
+                                         } block:^(id choice) {
+                                             self.packReviewStyle = choice;
+                                         }];
+}
+
 - (void)setupPaymentScreenTest{
     self.paymentScreen = nil;
     
@@ -671,6 +689,7 @@ static dispatch_once_t srand48OnceToken;
 - (void)setupABTestVariants{
     [self setupQualityBannerTypeTest];
     [self setupProductTileStyleTest];
+    [self setupPackReviewStyleTest];
     [self setupPromoBannerTextTest];
     [self setupHidePriceTest];
     [self setupShowProductDescriptionScreenBeforeShippingTest];

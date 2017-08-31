@@ -71,6 +71,7 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @property (strong, nonatomic, readonly) NSString *launchWithPrintOrderVariant;
 @property (strong, nonatomic, readonly) NSString *paymentScreen;
 @property (strong, nonatomic, readonly) NSString *coverPhotoId;
+@property (strong, nonatomic, readonly) NSString *packReviewStyle;
 
 @property (strong, nonatomic, readonly) NSString *headerLogoURL;
 @property (strong, nonatomic, readonly) NSString *receiptSuccessURL;

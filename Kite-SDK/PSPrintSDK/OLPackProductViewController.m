@@ -63,6 +63,11 @@
 
 @end
 
+typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
+    OLPackReviewStyleClassic,
+    OLPackReviewStyleMini,
+};
+
 @interface OLProduct ()
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
@@ -119,6 +124,10 @@
     
     self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.ctaButton.frame.size.height, self.collectionView.contentInset.right);
     [self addInfoBanner];
+}
+
+- (OLPackReviewStyle)reviewStyle{
+    return [[OLKiteABTesting sharedInstance].packReviewStyle isEqualToString:@"Classic"] ? OLPackReviewStyleClassic : OLPackReviewStyleMini;
 }
 
 - (void)addInfoBanner{
@@ -499,6 +508,9 @@
         label.text = indexPath.item == 0 ? NSLocalizedStringFromTableInBundle(@"FRONT", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Front of the photo") : NSLocalizedStringFromTableInBundle(@"BACK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Back of the photo");
         
     }
+    else if ([self reviewStyle] == OLPackReviewStyleMini){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"miniPhotoCell" forIndexPath:indexPath];
+    }
     else{
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reviewPhotoCell" forIndexPath:indexPath];
     }
@@ -540,8 +552,15 @@
     UILabel *countLabel = (UILabel *)[cell.contentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] extraCopies]+1]];
     if ([OLKiteABTesting sharedInstance].lightThemeColor3){
-        [upButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
-        [downButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+        if ([self reviewStyle] == OLPackReviewStyleMini){
+            [[cell viewWithTag:100] setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+            [upButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+            [downButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+        }
+        else{
+            [upButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+            [downButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+        }
     }
     if ([OLKiteABTesting sharedInstance].lightThemeColorReviewCounter){
         [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColorReviewCounter];
@@ -583,6 +602,9 @@
     if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
         return 30;
     }
+    else if ([self reviewStyle] == OLPackReviewStyleMini){
+        return 45;
+    }
     return 51;
 }
 
@@ -594,13 +616,8 @@
     
     UIEdgeInsets sectionInsets = UIEdgeInsetsMake(15, 15, 15, 15);
     CGFloat width = self.view.frame.size.width;
-    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height > self.view.frame.size.width){
-        width = self.view.frame.size.width;
-    }
-    else{
-        width = MIN(width, 340);
-    }
     width -= sectionInsets.left + sectionInsets.right;
+    width = MIN(width / [self numberOfCellsPerRow], 320.0);
     width -= (NSInteger)((self.view.frame.size.width / width)-1) * margin;
     
     CGFloat height = (width * (1.0 - b.left - b.right)) * [self productAspectRatio];
@@ -608,6 +625,19 @@
     height += [self heightForButtons];
     
     return CGSizeMake(width, height);
+}
+
+- (NSUInteger)numberOfCellsPerRow{
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height > self.view.frame.size.width && [self reviewStyle] == OLPackReviewStyleClassic){
+        return 1;
+    }
+    if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && self.view.frame.size.height > self.view.frame.size.width && [self reviewStyle] == OLPackReviewStyleMini){
+        return 2;
+    }
+    
+    UIEdgeInsets sectionInsets = UIEdgeInsetsMake(15, 15, 15, 15);
+    return (self.view.frame.size.width - sectionInsets.left - sectionInsets.right) / 320.0;
+    
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
