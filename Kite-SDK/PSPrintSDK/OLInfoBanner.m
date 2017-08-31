@@ -31,6 +31,7 @@
 #import "OLInfoBanner.h"
 #import "OLKiteABTesting.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIColor+OLHexString.h"
 
 @implementation OLInfoBanner
 
@@ -58,8 +59,10 @@
     
     if ([OLKiteABTesting sharedInstance].lightThemeColor4){
         banner.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColor4;
-        label.textColor = [UIColor whiteColor];
-        x.tintColor = [UIColor whiteColor];
+        
+        UIColor *textColor = [UIColor textColorForBackGroundColor:[OLKiteABTesting sharedInstance].lightThemeColor4];
+        label.textColor = textColor;
+        x.tintColor = textColor;
     }
     else{
         banner.backgroundColor = [UIColor colorWithRed:1.000 green:0.776 blue:0.043 alpha:0.900];

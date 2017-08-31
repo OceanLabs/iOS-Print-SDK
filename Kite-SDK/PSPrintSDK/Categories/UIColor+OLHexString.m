@@ -69,4 +69,14 @@
             lroundf(a * 255)];
 }
 
++ (UIColor *) textColorForBackGroundColor:(UIColor *)color{
+    NSString *colorString = color.hexString;
+    CGFloat red   = [UIColor colorComponentFrom: colorString start: 0 length: 1] * 255.0;
+    CGFloat green = [UIColor colorComponentFrom: colorString start: 1 length: 1] * 255.0;
+    CGFloat blue  = [UIColor colorComponentFrom: colorString start: 2 length: 1] * 255.0;
+    
+    //Formula taken from: https://stackoverflow.com/a/3943023/3265861
+    return (red*0.299 + green*0.587 + blue*0.114) > 186 ? [UIColor blackColor] : [UIColor whiteColor];
+}
+
 @end
