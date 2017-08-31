@@ -1898,7 +1898,7 @@
                                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </view>
                                         <imageView userInteractionEnabled="NO" tag="100" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="review-pencil" translatesAutoresizingMaskIntoConstraints="NO" id="ktT-Pb-zgd">
-                                            <rect key="frame" x="0.0" y="0.0" width="13" height="13"/>
+                                            <rect key="frame" x="20" y="20" width="13" height="13"/>
                                         </imageView>
                                         <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="84Y-Pd-eC9">
                                             <rect key="frame" x="105" y="321" width="30" height="30"/>
@@ -1937,7 +1937,7 @@
                                     <constraint firstItem="B0X-gI-x0R" firstAttribute="width" secondItem="84Y-Pd-eC9" secondAttribute="width" id="Djv-a9-6Bm"/>
                                     <constraint firstItem="B0X-gI-x0R" firstAttribute="top" secondItem="84Y-Pd-eC9" secondAttribute="top" id="JP9-1g-ZM5"/>
                                     <constraint firstItem="xqn-0M-jNn" firstAttribute="top" secondItem="84Y-Pd-eC9" secondAttribute="top" id="KBh-7Y-eRz"/>
-                                    <constraint firstItem="ktT-Pb-zgd" firstAttribute="leading" secondItem="ArW-Dh-M8O" secondAttribute="leading" id="O5g-NR-t2L"/>
+                                    <constraint firstItem="ktT-Pb-zgd" firstAttribute="leading" secondItem="ArW-Dh-M8O" secondAttribute="leading" constant="20" id="O5g-NR-t2L"/>
                                     <constraint firstItem="84Y-Pd-eC9" firstAttribute="top" secondItem="PSl-FZ-cXh" secondAttribute="bottom" constant="15" id="Ob1-Wh-Nyh"/>
                                     <constraint firstItem="xqn-0M-jNn" firstAttribute="bottom" secondItem="84Y-Pd-eC9" secondAttribute="bottom" id="OhW-Cs-WUz"/>
                                     <constraint firstAttribute="bottom" secondItem="84Y-Pd-eC9" secondAttribute="bottom" id="QMc-F8-Q0C"/>
@@ -1945,7 +1945,7 @@
                                     <constraint firstItem="B0X-gI-x0R" firstAttribute="leading" secondItem="xqn-0M-jNn" secondAttribute="trailing" constant="10" id="W8W-Yx-7Pf"/>
                                     <constraint firstItem="xqn-0M-jNn" firstAttribute="width" secondItem="84Y-Pd-eC9" secondAttribute="width" id="Zpu-4X-peB"/>
                                     <constraint firstItem="xqn-0M-jNn" firstAttribute="centerX" secondItem="ArW-Dh-M8O" secondAttribute="centerX" id="eCx-IP-CY8"/>
-                                    <constraint firstItem="ktT-Pb-zgd" firstAttribute="top" secondItem="ArW-Dh-M8O" secondAttribute="top" id="nm4-P0-sFQ"/>
+                                    <constraint firstItem="ktT-Pb-zgd" firstAttribute="top" secondItem="ArW-Dh-M8O" secondAttribute="top" constant="20" id="nm4-P0-sFQ"/>
                                     <constraint firstItem="B0X-gI-x0R" firstAttribute="bottom" secondItem="84Y-Pd-eC9" secondAttribute="bottom" id="q35-7f-73i"/>
                                     <constraint firstItem="PSl-FZ-cXh" firstAttribute="leading" secondItem="ArW-Dh-M8O" secondAttribute="leading" identifier="leadingCon" id="xc6-c5-LrT"/>
                                 </constraints>

@@ -553,7 +553,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     [countLabel setText: [NSString stringWithFormat:@"%ld", (long)[[[OLAsset userSelectedAssets] objectAtIndex:indexPath.item] extraCopies]+1]];
     if ([OLKiteABTesting sharedInstance].lightThemeColor3){
         if ([self reviewStyle] == OLPackReviewStyleMini){
-            [[cell viewWithTag:100] setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+            [[cell viewWithTag:100] setBackgroundColor:[[OLKiteABTesting sharedInstance].lightThemeColor3 colorWithAlphaComponent:0.9]];
             [upButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
             [downButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
         }
@@ -562,11 +562,22 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
             [downButton setTintColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
         }
     }
+    
     if ([OLKiteABTesting sharedInstance].lightThemeColorReviewCounter){
-        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColorReviewCounter];
+        if ([self reviewStyle] == OLPackReviewStyleMini){
+            [countLabel setTextColor:[OLKiteABTesting sharedInstance].lightThemeColorReviewCounter];
+        }
+        else{
+            [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColorReviewCounter];
+        }
     }
     else if ([OLKiteABTesting sharedInstance].lightThemeColor3){
-        [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+        if ([self reviewStyle] == OLPackReviewStyleMini){
+            [countLabel setTextColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+        }
+        else{
+            [countLabel setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor3];
+        }
     }
     
     OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:indexPath.item];
