@@ -38,7 +38,8 @@
     if ([OLUserSession currentSession].prioritizeMainBundleImages){
         image = [UIImage imageNamed:name];
     }
-    else{
+    
+    if (!image){
         image = [UIImage imageNamed:name inBundle:[OLKiteUtils kiteResourcesBundle] compatibleWithTraitCollection:nil];
     }
     
