@@ -228,7 +228,13 @@
         [view.superview addConstraints:con];
         
         self.selectedProviderIndicator = [[UIView alloc] init];
-        self.selectedProviderIndicator.backgroundColor = self.sourcesCollectionView.tintColor;
+        
+        if ([OLKiteABTesting sharedInstance].lightThemeColorPickerTick){
+            self.selectedProviderIndicator.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorPickerTick;
+        }
+        else{
+            self.selectedProviderIndicator.backgroundColor = self.sourcesCollectionView.tintColor;
+        }
         
         [self.visualEffectView.contentView addSubview:self.selectedProviderIndicator];
         view = self.selectedProviderIndicator;

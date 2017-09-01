@@ -272,6 +272,16 @@ static dispatch_once_t srand48OnceToken;
     return color;
 }
 
+- (UIColor *)lightThemeColorPickerTick{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:kOLKiteLightThemeColorPickerTick];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    return color;
+}
+
 - (UIColor *)lightThemeColorReviewCounter{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     UIColor *color;
@@ -351,6 +361,7 @@ static dispatch_once_t srand48OnceToken;
     [defaults removeObjectForKey:kOLKiteLightThemeColor2];
     [defaults removeObjectForKey:kOLKiteLightThemeColor3];
     [defaults removeObjectForKey:kOLKiteLightThemeColor4];
+    [defaults removeObjectForKey:kOLKiteLightThemeColorPickerTick];
     [defaults removeObjectForKey:kOLKiteLightThemeColorReviewCounter];
     [defaults removeObjectForKey:kOLKiteLightThemeColorDescriptionSeparator];
     [defaults removeObjectForKey:kOLKiteLightThemeTitleColor1];
