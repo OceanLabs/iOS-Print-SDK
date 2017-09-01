@@ -310,7 +310,10 @@ CGFloat OLImagePickerMargin = 1.5;
             asset = potentialAsset;
         }
         
-        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        if ([OLKiteABTesting sharedInstance].lightThemeColorPickerTick){
+            checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColorPickerTick;
+        }
+        else if ([OLKiteABTesting sharedInstance].lightThemeColor1){
             checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
         }
         
