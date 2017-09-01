@@ -3467,8 +3467,8 @@ only Lorem Ipsum</string>
                                                             <rect key="frame" x="10" y="10" width="30" height="30"/>
                                                             <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="30" id="PZb-RY-udh"/>
-                                                                <constraint firstAttribute="width" constant="30" id="XKc-BC-6FR"/>
+                                                                <constraint firstAttribute="height" constant="30" placeholder="YES" id="PZb-RY-udh"/>
+                                                                <constraint firstAttribute="width" constant="30" placeholder="YES" id="XKc-BC-6FR"/>
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem Ipsum" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h85-rl-sB9">
