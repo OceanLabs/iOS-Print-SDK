@@ -178,6 +178,10 @@
         [self.ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
     
+    if ([OLUserSession currentSession].capitalizeCtaTitles){
+        [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+    }
+    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductDetailsScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
 #endif

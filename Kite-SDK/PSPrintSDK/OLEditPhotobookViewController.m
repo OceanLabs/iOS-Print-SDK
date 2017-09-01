@@ -132,6 +132,10 @@ static const NSInteger kSectionPages = 1;
     [self.ctaButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.ctaButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
     [self.collectionView addSubview:self.ctaButton];
+    
+    if ([OLUserSession currentSession].capitalizeCtaTitles){
+        [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{

@@ -192,6 +192,10 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
             [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
         }
     }
+    
+    if ([OLUserSession currentSession].capitalizeCtaTitles){
+        [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{

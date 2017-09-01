@@ -53,6 +53,7 @@ typedef NSUInteger OLUserSessionCleanupOption;
 @property (assign, nonatomic) CGFloat screenScale;
 @property (weak, nonatomic) OLKiteViewController *kiteVc;
 @property (assign, nonatomic) BOOL prioritizeMainBundleImages;
+@property (assign, nonatomic) BOOL capitalizeCtaTitles;
 + (instancetype)currentSession;
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions;
 - (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;

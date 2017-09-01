@@ -29,6 +29,7 @@
 
 #import "OLImagePickerPageViewController.h"
 #import "OLKiteUtils.h"
+#import "OLUserSession.h"
 
 @implementation OLImagePickerPageViewController
 
@@ -43,6 +44,9 @@
     [ctaButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
     ctaButton.hidden = YES;
     
+    if ([OLUserSession currentSession].capitalizeCtaTitles){
+        [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+    }
     
     [self.view addSubview:ctaButton];
     

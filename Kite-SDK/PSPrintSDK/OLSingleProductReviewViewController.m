@@ -142,6 +142,10 @@
         [self.ctaButton.titleLabel setFont:font];
     }
     
+    if ([OLUserSession currentSession].capitalizeCtaTitles){
+        [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+    }
+    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil

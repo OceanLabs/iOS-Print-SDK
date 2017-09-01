@@ -211,6 +211,10 @@ static const CGFloat kBookEdgePadding = 38;
         [self.ctaButton.titleLabel setFont:font];
     }
     
+    if ([OLUserSession currentSession].capitalizeCtaTitles){
+        [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+    }
+    
 #ifndef OL_NO_ANALYTICS
     if (!self.editMode){
         [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];

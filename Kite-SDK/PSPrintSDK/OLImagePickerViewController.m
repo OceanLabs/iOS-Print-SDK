@@ -166,6 +166,10 @@
         [self.ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
     }
     
+    if ([OLUserSession currentSession].capitalizeCtaTitles){
+        [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+    }
+    
     NSMutableArray<OLImagePickerProvider *> *providers = [[NSMutableArray<OLImagePickerProvider *> alloc] init];
     self.providers = providers;
     [self setupProviders];

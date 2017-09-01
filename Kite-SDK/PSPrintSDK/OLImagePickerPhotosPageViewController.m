@@ -142,6 +142,10 @@ CGFloat OLImagePickerMargin = 1.5;
     self.ctaButton.titleLabel.font = self.imagePicker.ctaButton.titleLabel.font;
     [self.ctaButton setTitle:self.imagePicker.ctaButton.currentTitle forState:UIControlStateNormal];
     
+    if ([OLUserSession currentSession].capitalizeCtaTitles){
+        [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+    }
+    
     UIVisualEffect *blurEffect;
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
     
