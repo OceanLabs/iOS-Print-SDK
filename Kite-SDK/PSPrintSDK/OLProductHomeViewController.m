@@ -548,6 +548,12 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView sizeForBannerSectionCellForIndexPath:(NSIndexPath *)indexPath{
     CGSize size = self.view.frame.size;
+    
+    if ([OLUserSession currentSession].prioritizeMainBundleImages){
+        UIImage *image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
+        return CGSizeMake(size.width, size.width * (image.size.height / image.size.width));
+    }
+    
     CGFloat height = [self printAtHomeAvailable] ? 233 : 110;
     if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width){
         height = (self.view.frame.size.width * height) / 375.0;
