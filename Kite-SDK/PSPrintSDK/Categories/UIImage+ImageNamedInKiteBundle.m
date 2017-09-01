@@ -29,11 +29,20 @@
 
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"
+#import "OLUserSession.h"
 
 @implementation UIImage (ImageNamedInKiteBundle)
 
 + (UIImage*)imageNamedInKiteBundle:(NSString*)name{
-    return [UIImage imageNamed:name inBundle:[OLKiteUtils kiteResourcesBundle] compatibleWithTraitCollection:nil];
+    UIImage *image;
+    if ([OLUserSession currentSession].prioritizeMainBundleImages){
+        image = [UIImage imageNamed:name];
+    }
+    else{
+        image = [UIImage imageNamed:name inBundle:[OLKiteUtils kiteResourcesBundle] compatibleWithTraitCollection:nil];
+    }
+    
+    return image;
 }
 
 @end
