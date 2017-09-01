@@ -2771,7 +2771,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="365" height="534"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="poster_shadow" translatesAutoresizingMaskIntoConstraints="NO" id="XqY-KB-pDQ">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XqY-KB-pDQ">
                                             <rect key="frame" x="0.0" y="15.5" width="365" height="507"/>
                                         </imageView>
                                         <view contentMode="scaleToFill" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="MMm-3c-qfy" userLabel="Container View">
@@ -3515,7 +3515,7 @@ only Lorem Ipsum</string>
                                 </variation>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nAS-1v-6Ot">
-                                <rect key="frame" x="5" y="612" width="365" height="50"/>
+                                <rect key="frame" x="15" y="602" width="345" height="50"/>
                                 <color key="backgroundColor" red="0.12549019610000001" green="0.49803921569999998" blue="0.65490196079999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="akT-l2-oHK"/>
@@ -3531,15 +3531,15 @@ only Lorem Ipsum</string>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="bottomMargin" secondItem="nAS-1v-6Ot" secondAttribute="bottom" constant="5" id="64N-7J-oJh"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="nAS-1v-6Ot" secondAttribute="bottom" constant="15" id="64N-7J-oJh"/>
                             <constraint firstAttribute="trailing" secondItem="rFW-UE-yVX" secondAttribute="trailing" id="84X-fa-oHU"/>
                             <constraint firstItem="rFW-UE-yVX" firstAttribute="leading" secondItem="q4M-bi-WPQ" secondAttribute="leading" id="GPq-Cq-GEm"/>
-                            <constraint firstAttribute="trailing" secondItem="nAS-1v-6Ot" secondAttribute="trailing" constant="5" id="P71-5m-cUg"/>
+                            <constraint firstAttribute="trailing" secondItem="nAS-1v-6Ot" secondAttribute="trailing" constant="15" id="P71-5m-cUg"/>
                             <constraint firstItem="MRf-TX-G0C" firstAttribute="top" secondItem="UQF-9l-dhC" secondAttribute="bottom" id="QLF-O7-J7X"/>
                             <constraint firstItem="quo-PW-002" firstAttribute="top" secondItem="rFW-UE-yVX" secondAttribute="bottom" id="Tds-JE-uYR"/>
                             <constraint firstItem="rFW-UE-yVX" firstAttribute="top" secondItem="q4M-bi-WPQ" secondAttribute="topMargin" id="WgM-YN-tRN"/>
                             <constraint firstItem="MRf-TX-G0C" firstAttribute="leading" secondItem="q4M-bi-WPQ" secondAttribute="leading" id="cf0-SH-N2q"/>
-                            <constraint firstItem="nAS-1v-6Ot" firstAttribute="leading" secondItem="q4M-bi-WPQ" secondAttribute="leading" constant="5" id="hKO-6C-YHe"/>
+                            <constraint firstItem="nAS-1v-6Ot" firstAttribute="leading" secondItem="q4M-bi-WPQ" secondAttribute="leading" constant="15" id="hKO-6C-YHe"/>
                             <constraint firstAttribute="trailing" secondItem="MRf-TX-G0C" secondAttribute="trailing" id="lRE-Ap-khO"/>
                         </constraints>
                     </view>
@@ -4021,7 +4021,6 @@ only Lorem Ipsum</string>
         <image name="page-shadow-right" width="99" height="389"/>
         <image name="pencil" width="9" height="9"/>
         <image name="photo_frame_1" width="316" height="224"/>
-        <image name="poster_shadow" width="16" height="16"/>
         <image name="print-at-home" width="715" height="477"/>
         <image name="review-pencil" width="13" height="13"/>
         <image name="right chevron" width="12" height="19"/>

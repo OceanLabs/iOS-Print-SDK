@@ -159,7 +159,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
         [self.ctaButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
     }
     [self.ctaButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.ctaButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
+    self.ctaButton.frame = CGRectMake(15, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-30, 50);
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
     if (!font){
         font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];

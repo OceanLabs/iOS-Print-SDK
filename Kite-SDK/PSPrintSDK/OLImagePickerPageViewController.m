@@ -54,8 +54,8 @@
     NSDictionary *views = NSDictionaryOfVariableBindings(ctaButton);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-5-[ctaButton]-5-|",
-                         @"V:[ctaButton(50)]-5-|"];
+    NSArray *visuals = @[@"H:|-15-[ctaButton]-15-|",
+                         @"V:[ctaButton(50)]-15-|"];
     
     
     for (NSString *visual in visuals) {
