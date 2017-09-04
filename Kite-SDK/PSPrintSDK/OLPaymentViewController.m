@@ -1521,7 +1521,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         UIButton *minusButton = (UIButton *)[cell.contentView viewWithTag:10];
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:20];
         UILabel *quantityLabel = (UILabel *)[cell.contentView viewWithTag:30];
-        UIButton *plusButton = (UIButton *)[cell.contentView viewWithTag:10];
+        UIButton *plusButton = (UIButton *)[cell.contentView viewWithTag:40];
         UILabel *productNameLabel = (UILabel *)[cell.contentView viewWithTag:50];
         productNameLabel.text = @"";
         UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:60];
