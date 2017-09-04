@@ -279,6 +279,9 @@ const NSInteger kOLEditTagCrop = 40;
     self.editingTools.collectionView.dataSource = self;
     self.editingTools.collectionView.delegate = self;
     [self.editingTools.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    if ([OLUserSession currentSession].capitalizeCtaTitles){
+        [self.editingTools.ctaButton setTitle:[[self.editingTools.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+    }
     
     [self setupCropGuides];
     
@@ -531,13 +534,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupCropGuides{
-    UIColor *backgroundColor;
-    if ([OLKiteABTesting sharedInstance].lightThemeColorImageEditBg){
-        backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorImageEditBg;
-    }
-    else{
-        backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
-    }
+    UIColor *cropGuidesColor = [UIColor colorWithWhite:0.227 alpha:0.750];
     
     self.cropFrameGuideViews = [[NSMutableArray alloc] init];
     
@@ -624,7 +621,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     UIView *darkViewTop = [[UIView alloc] init];
     darkViewTop.translatesAutoresizingMaskIntoConstraints = NO;
-    darkViewTop.backgroundColor = backgroundColor;
+    darkViewTop.backgroundColor = cropGuidesColor;
     [self.view addSubview:darkViewTop];
     [self.view sendSubviewToBack:darkViewTop];
     [self.cropFrameGuideViews addObject:darkViewTop];
@@ -636,7 +633,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     UIView *darkViewLeft = [[UIView alloc] init];
     darkViewLeft.translatesAutoresizingMaskIntoConstraints = NO;
-    darkViewLeft.backgroundColor = backgroundColor;
+    darkViewLeft.backgroundColor = cropGuidesColor;
     [self.view addSubview:darkViewLeft];
     [self.view sendSubviewToBack:darkViewLeft];
     [self.cropFrameGuideViews addObject:darkViewLeft];
@@ -648,7 +645,7 @@ const NSInteger kOLEditTagCrop = 40;
 
     UIView *darkViewRight = [[UIView alloc] init];
     darkViewRight.translatesAutoresizingMaskIntoConstraints = NO;
-    darkViewRight.backgroundColor = backgroundColor;
+    darkViewRight.backgroundColor = cropGuidesColor;
     [self.view addSubview:darkViewRight];
     [self.view sendSubviewToBack:darkViewRight];
     [self.cropFrameGuideViews addObject:darkViewRight];
@@ -660,7 +657,7 @@ const NSInteger kOLEditTagCrop = 40;
 
     UIView *darkViewBottom = [[UIView alloc] init];
     darkViewBottom.translatesAutoresizingMaskIntoConstraints = NO;
-    darkViewBottom.backgroundColor = backgroundColor;
+    darkViewBottom.backgroundColor = cropGuidesColor;
     [self.view addSubview:darkViewBottom];
     [self.view sendSubviewToBack:darkViewBottom];
     [self.cropFrameGuideViews addObject:darkViewBottom];
@@ -740,7 +737,12 @@ const NSInteger kOLEditTagCrop = 40;
                 self.previewView.frame = [self.artboard.superview convertRect:self.artboard.frame toView:self.printContainerView.superview];
             }completion:^(BOOL finished){
                 [UIView animateWithDuration:0.25 animations:^{
-                    self.view.backgroundColor = [UIColor colorWithWhite:0.227 alpha:1.000];
+                    if ([OLKiteABTesting sharedInstance].lightThemeColorImageEditBg){
+                        self.view.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorImageEditBg;
+                    }
+                    else{
+                        self.view.backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
+                    }
                     for (UIView *view in self.allViews){
                         view.alpha = 1;
                     }
