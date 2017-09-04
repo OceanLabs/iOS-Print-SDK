@@ -78,6 +78,7 @@
 #import "OLCollagePosterViewController.h"
 #import "OLShippingMethodsViewController.h"
 #import "OLKioskLandingViewController.h"
+#import "UIColor+OLHexString.h"
 
 @import PassKit;
 @import Contacts;
@@ -347,12 +348,19 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     [OLAnalytics trackBasketScreenViewedForOrder:self.printOrder applePayIsAvailable:applePayAvailableStr];
 #endif
     
+    
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
-        [self.paymentButton1 setBackgroundColor:[UIColor clearColor]];
-        [self.paymentButton1 setTitleColor:[OLKiteABTesting sharedInstance].lightThemeColor1 forState:UIControlStateNormal];
-        self.paymentButton1.layer.cornerRadius = 2;
-        self.paymentButton1.layer.borderColor = [OLKiteABTesting sharedInstance].lightThemeColor1.CGColor;
-        self.paymentButton1.layer.borderWidth = 1;
+        if ([OLKiteABTesting sharedInstance].lightThemeColorBasketContinueShopping){
+            self.paymentButton1.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorBasketContinueShopping;
+            [self.paymentButton1 setTitleColor:[UIColor textColorForBackGroundColor:[OLKiteABTesting sharedInstance].lightThemeColorBasketContinueShopping] forState:UIControlStateNormal];
+        }
+        else{
+            [self.paymentButton1 setBackgroundColor:[UIColor clearColor]];
+            [self.paymentButton1 setTitleColor:[OLKiteABTesting sharedInstance].lightThemeColor1 forState:UIControlStateNormal];
+            self.paymentButton1.layer.cornerRadius = 2;
+            self.paymentButton1.layer.borderColor = [OLKiteABTesting sharedInstance].lightThemeColor1.CGColor;
+            self.paymentButton1.layer.borderWidth = 1;
+        }
         
         [self.paymentButton2 setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
@@ -1510,13 +1518,20 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
     else if (indexPath.section == 0 && self.printOrder.jobs.count > 0){
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"jobCell"];
+        UIButton *minusButton = (UIButton *)[cell.contentView viewWithTag:10];
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:20];
         UILabel *quantityLabel = (UILabel *)[cell.contentView viewWithTag:30];
+        UIButton *plusButton = (UIButton *)[cell.contentView viewWithTag:10];
         UILabel *productNameLabel = (UILabel *)[cell.contentView viewWithTag:50];
         productNameLabel.text = @"";
         UIButton *editButton = (UIButton *)[cell.contentView viewWithTag:60];
         UIButton *largeEditButton = (UIButton *)[cell.contentView viewWithTag:61];
         UILabel *priceLabel = (UILabel *)[cell.contentView viewWithTag:70];
+        
+        if ([OLKiteABTesting sharedInstance].lightThemeColorBasketQtyButtons){
+            minusButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorBasketQtyButtons;
+            plusButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorBasketQtyButtons;
+        }
         
         id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
         
@@ -1584,7 +1599,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 75;
+    return 95;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {

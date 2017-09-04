@@ -322,6 +322,26 @@ static dispatch_once_t srand48OnceToken;
     return color;
 }
 
+- (UIColor *)lightThemeColorBasketQtyButtons{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:kOLKiteLightThemeColorBasketQtyButtons];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    return color;
+}
+
+- (UIColor *)lightThemeColorBasketContinueShopping{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    UIColor *color;
+    NSString *hex = [defaults objectForKey:kOLKiteLightThemeColorBasketContinueShopping];
+    if (hex){
+        color = [UIColor colorWithHexString:hex];
+    }
+    return color;
+}
+
 - (UIColor *)lightThemeTitleColor1{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     UIColor *color;

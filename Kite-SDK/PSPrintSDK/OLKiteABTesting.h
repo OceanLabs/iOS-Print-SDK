@@ -51,6 +51,8 @@ static NSString *const kOLKiteLightThemeColorReviewCounter = @"ly.kite.theme.lig
 static NSString *const kOLKiteLightThemeColorDescriptionSeparator = @"ly.kite.theme.light.color.descriptionSeparator";
 static NSString *const kOLKiteLightThemeColorImageEditBg = @"ly.kite.theme.light.color.imageedit.bg";
 static NSString *const kOLKiteLightThemeColorImageEditCta = @"ly.kite.theme.light.color.imageedit.cta";
+static NSString *const kOLKiteLightThemeColorBasketQtyButtons = @"ly.kite.theme.light.color.basket.qtybuttons";
+static NSString *const kOLKiteLightThemeColorBasketContinueShopping = @"ly.kite.theme.light.color.basket.continueshopping";
 static NSString *const kOLKiteLightThemeTitleColor1 = @"ly.kite.theme.light.titleColor.1";
 static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 static NSString *const kOLKiteLightThemeHeavyFont1 = @"ly.kite.theme.light.font.1.heavy";
@@ -93,6 +95,8 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @property (strong, nonatomic, readonly) UIColor *lightThemeColorDescriptionSeparator;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColorImageEditBg;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColorImageEditCta;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColorBasketQtyButtons;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColorBasketContinueShopping;
 @property (strong, nonatomic, readonly) UIColor *lightThemeTitleColor1;
 @property (strong, nonatomic, readonly) NSNumber *lightThemeButtonRoundCorners;
 - (UIFont *)lightThemeFont1WithSize:(CGFloat)size;
