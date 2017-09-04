@@ -2324,7 +2324,7 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Image Picker
 
 - (void)showImagePicker{
-    OLImagePickerViewController *vc = [[OLUserSession currentSession].kiteVc.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    OLImagePickerViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     vc.delegate = self;
     vc.selectedAssets = [[NSMutableArray alloc] init];
     vc.maximumPhotos = 1;
