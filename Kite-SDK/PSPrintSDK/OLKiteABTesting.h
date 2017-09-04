@@ -49,6 +49,8 @@ static NSString *const kOLKiteLightThemeColor4 = @"ly.kite.theme.light.color.4";
 static NSString *const kOLKiteLightThemeColorPickerTick = @"ly.kite.theme.light.color.picker.tick";
 static NSString *const kOLKiteLightThemeColorReviewCounter = @"ly.kite.theme.light.color.reviewCounter";
 static NSString *const kOLKiteLightThemeColorDescriptionSeparator = @"ly.kite.theme.light.color.descriptionSeparator";
+static NSString *const kOLKiteLightThemeColorImageEditBg = @"ly.kite.theme.light.color.imageedit.bg";
+static NSString *const kOLKiteLightThemeColorImageEditCta = @"ly.kite.theme.light.color.imageedit.cta";
 static NSString *const kOLKiteLightThemeTitleColor1 = @"ly.kite.theme.light.titleColor.1";
 static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 static NSString *const kOLKiteLightThemeHeavyFont1 = @"ly.kite.theme.light.font.1.heavy";
@@ -89,6 +91,8 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @property (strong, nonatomic, readonly) UIColor *lightThemeColorPickerTick;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColorReviewCounter;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColorDescriptionSeparator;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColorImageEditBg;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColorImageEditCta;
 @property (strong, nonatomic, readonly) UIColor *lightThemeTitleColor1;
 @property (strong, nonatomic, readonly) NSNumber *lightThemeButtonRoundCorners;
 - (UIFont *)lightThemeFont1WithSize:(CGFloat)size;

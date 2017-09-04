@@ -29,6 +29,7 @@
 
 #import "OLEditingToolsView.h"
 #import "OLKiteUtils.h"
+#import "OLUserSession.h"
 
 @implementation OLEditingToolsView
 
@@ -51,9 +52,17 @@
         
         [self.collectionView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizer:)]];
         
+        [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         [self.drawerDoneButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         [self.halfWidthDrawerDoneButton setTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         [self.halfWidthDrawerCancelButton setTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+        
+        if ([OLUserSession currentSession].capitalizeCtaTitles){
+            [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+            [self.drawerDoneButton setTitle:[[self.drawerDoneButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+            [self.halfWidthDrawerDoneButton setTitle:[[self.halfWidthDrawerDoneButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+            [self.halfWidthDrawerCancelButton setTitle:[[self.halfWidthDrawerCancelButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+        }
     }
     return self;
 }

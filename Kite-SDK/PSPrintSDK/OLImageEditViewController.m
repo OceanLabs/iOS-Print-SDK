@@ -531,6 +531,14 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupCropGuides{
+    UIColor *backgroundColor;
+    if ([OLKiteABTesting sharedInstance].lightThemeColorImageEditBg){
+        backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorImageEditBg;
+    }
+    else{
+        backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
+    }
+    
     self.cropFrameGuideViews = [[NSMutableArray alloc] init];
     
     UIImageView *cornerTL = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"crop-corner-ul"]];
@@ -616,7 +624,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     UIView *darkViewTop = [[UIView alloc] init];
     darkViewTop.translatesAutoresizingMaskIntoConstraints = NO;
-    darkViewTop.backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
+    darkViewTop.backgroundColor = backgroundColor;
     [self.view addSubview:darkViewTop];
     [self.view sendSubviewToBack:darkViewTop];
     [self.cropFrameGuideViews addObject:darkViewTop];
@@ -628,7 +636,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     UIView *darkViewLeft = [[UIView alloc] init];
     darkViewLeft.translatesAutoresizingMaskIntoConstraints = NO;
-    darkViewLeft.backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
+    darkViewLeft.backgroundColor = backgroundColor;
     [self.view addSubview:darkViewLeft];
     [self.view sendSubviewToBack:darkViewLeft];
     [self.cropFrameGuideViews addObject:darkViewLeft];
@@ -640,7 +648,7 @@ const NSInteger kOLEditTagCrop = 40;
 
     UIView *darkViewRight = [[UIView alloc] init];
     darkViewRight.translatesAutoresizingMaskIntoConstraints = NO;
-    darkViewRight.backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
+    darkViewRight.backgroundColor = backgroundColor;
     [self.view addSubview:darkViewRight];
     [self.view sendSubviewToBack:darkViewRight];
     [self.cropFrameGuideViews addObject:darkViewRight];
@@ -652,7 +660,7 @@ const NSInteger kOLEditTagCrop = 40;
 
     UIView *darkViewBottom = [[UIView alloc] init];
     darkViewBottom.translatesAutoresizingMaskIntoConstraints = NO;
-    darkViewBottom.backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
+    darkViewBottom.backgroundColor = backgroundColor;
     [self.view addSubview:darkViewBottom];
     [self.view sendSubviewToBack:darkViewBottom];
     [self.cropFrameGuideViews addObject:darkViewBottom];
@@ -1135,7 +1143,10 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Buttons
 
 - (void)setupTheme{
-    if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+    if ([OLKiteABTesting sharedInstance].lightThemeColorImageEditCta){
+        [self.editingTools setColor:[OLKiteABTesting sharedInstance].lightThemeColorImageEditCta];
+    }
+    else if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.editingTools setColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
     
