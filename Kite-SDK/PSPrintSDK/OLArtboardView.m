@@ -283,7 +283,7 @@
     self.sourceAssetView = assetView;
     OLAsset *asset = [OLAsset userSelectedAssets][assetView.index];
     if ([asset isKindOfClass:[OLPlaceholderAsset class]] || [OLUserSession currentSession].kiteVc.disableEditingTools){
-        OLImagePickerViewController *imagePicker = [[OLUserSession currentSession].kiteVc.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+        OLImagePickerViewController *imagePicker = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
         imagePicker.delegate = self;
         imagePicker.selectedAssets = [[[OLAsset userSelectedAssets] nonPlaceholderAssets] mutableCopy];;
         if ([self.delegate respondsToSelector:@selector(maxNumberOfPhotosToPick)]){
