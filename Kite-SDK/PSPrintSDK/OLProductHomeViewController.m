@@ -551,7 +551,7 @@
     
     if ([OLUserSession currentSession].prioritizeMainBundleImages){
         UIImage *image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
-        return CGSizeMake(size.width, size.width * (image.size.height / image.size.width));
+        return CGSizeMake(size.width, image.size.height);
     }
     
     CGFloat height = [self printAtHomeAvailable] ? 233 : 110;
