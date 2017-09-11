@@ -586,7 +586,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     
     OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:indexPath.item];
     
-    OLArtboardView *artboard = [cell viewWithTag:10];
+    OLArtboardView *artboard = cell.imageView;
     artboard.delegate = self;
     [self configureAssetViewsForArtboard:artboard forSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath]];
     
