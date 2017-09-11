@@ -28,7 +28,6 @@
 //
 
 #import "OLSingleImagePosterViewController.h"
-#import "OLAsset+Private.h"
 
 @interface OLSingleImagePosterViewController ()
 
