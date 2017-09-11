@@ -63,6 +63,9 @@
 - (void)orderViews;
 - (void)onButtonClicked:(UIButton *)sender;
 - (void)saveEditsToAsset:(OLAsset *)asset;
+- (void)loadImageFromAsset;
+- (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice;
+@property (strong, nonatomic) UIViewController *presentedVc;
 @end
 
 @interface OLSingleProductReviewViewController () <OLUpsellViewControllerDelegate, OLImageEditViewControllerDelegate>
@@ -418,6 +421,31 @@
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage{
     //Do nothing
+}
+
+- (void)imagePicker:(UIViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    OLAsset *asset = addedAssets.firstObject;
+    if (!asset) { return; }
+    
+    if ([OLAsset userSelectedAssets].count > 0){
+        [[OLAsset userSelectedAssets] replaceObjectAtIndex:0 withObject:asset];
+    }
+    else{
+        [[OLAsset userSelectedAssets] addObject:asset];
+    }
+    
+    [self loadImageFromAsset];
+    
+    if (self.presentedVc){
+        [self.presentedVc dismissViewControllerAnimated:YES completion:^{
+            [self updateProductRepresentationForChoice:nil];
+        }];
+    }
+    else{
+        [vc dismissViewControllerAnimated:YES completion:^{
+            [self updateProductRepresentationForChoice:nil];
+        }];
+    }
 }
 
 #pragma mark OLUpsellViewControllerDelegate
