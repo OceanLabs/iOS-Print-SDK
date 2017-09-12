@@ -534,7 +534,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
     else{
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
-            [self.navigationController popViewControllerAnimated:YES];
+            [self popToHome];
         }]];
         
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Retry", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
