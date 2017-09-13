@@ -399,8 +399,8 @@ const NSInteger kOLEditTagCrop = 40;
     
     [self.editingTools leadingFromSuperview:0 relation:NSLayoutRelationEqual];
     [self.editingTools trailingToSuperview:0 relation:NSLayoutRelationEqual];
-    [self.editingTools bottomToSuperview:0 relation:NSLayoutRelationEqual];
     [self.editingTools heightConstraint:45];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.editingTools attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.bottomLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
     
     [self.printContainerView verticalSpacingToView:self.editingTools constant:20 relation:NSLayoutRelationGreaterThanOrEqual];
     
