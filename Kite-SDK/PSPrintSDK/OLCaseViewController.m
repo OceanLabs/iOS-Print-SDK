@@ -757,48 +757,6 @@
     self.highlightsView.hidden = YES;
 }
 
-- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    OLAsset *asset = addedAssets.firstObject;
-    if (self.showingBack){
-        self.backAsset = asset;
-    }
-    self.asset = asset;
-    self.edits = [asset.edits copy];
-    if (asset){
-        if ([self.delegate respondsToSelector:@selector(imageEditViewController:didReplaceAssetWithAsset:)]){
-            [self.delegate imageEditViewController:self didReplaceAssetWithAsset:asset];
-        }
-        
-        self.ctaButton.enabled = YES;
-        id view = [self.view viewWithTag:1010];
-        if ([view isKindOfClass:[UIActivityIndicatorView class]]){
-            [(UIActivityIndicatorView *)view startAnimating];
-        }
-        
-        [self loadImageFromAsset];
-    }
-    
-    if (self.presentedVc){
-        [self.presentedVc dismissViewControllerAnimated:YES completion:^{
-            [self updateProductRepresentationForChoice:nil];
-        }];
-    }
-    else{
-        [vc dismissViewControllerAnimated:YES completion:^{
-            [self updateProductRepresentationForChoice:nil];
-        }];
-    }
-    
-    self.vcDelegateForCustomVc = nil;
-    self.presentedVc = nil;
-}
-
-- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
-    if (!self.showingBack){
-        [[OLAsset userSelectedAssets] addObject:asset];
-    }
-}
-
 #pragma mark - RMImageCropperDelegate methods
 
 - (void)imageCropperDidTransformImage:(RMImageCropper *)imageCropper {

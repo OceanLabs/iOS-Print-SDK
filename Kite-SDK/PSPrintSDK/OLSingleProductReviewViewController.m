@@ -70,6 +70,7 @@
 
 @interface OLSingleProductReviewViewController () <OLUpsellViewControllerDelegate, OLImageEditViewControllerDelegate>
 @property (assign, nonatomic) BOOL showingBack;
+@property (strong, nonatomic) OLAsset *backAsset;
 @end
 
 @interface OLProduct ()
@@ -423,18 +424,31 @@
     //Do nothing
 }
 
-- (void)imagePicker:(UIViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
     OLAsset *asset = addedAssets.firstObject;
-    if (!asset) { return; }
-    
-    if ([OLAsset userSelectedAssets].count > 0){
-        [[OLAsset userSelectedAssets] replaceObjectAtIndex:0 withObject:asset];
+    NSInteger assetIndex = 0;
+    if (self.showingBack){
+        self.backAsset = asset;
+        assetIndex = 1;
     }
-    else{
-        [[OLAsset userSelectedAssets] addObject:asset];
+    if (asset) {
+        self.asset = asset;
+        
+        if ([OLAsset userSelectedAssets].count > assetIndex && vc.maximumPhotos == 1){
+            [[OLAsset userSelectedAssets] replaceObjectAtIndex:assetIndex withObject:asset];
+        }
+        else{
+            [[OLAsset userSelectedAssets] addObject:asset];
+        }
+        
+        self.ctaButton.enabled = YES;
+        id view = [self.view viewWithTag:1010];
+        if ([view isKindOfClass:[UIActivityIndicatorView class]]){
+            [(UIActivityIndicatorView *)view startAnimating];
+        }
+        
+        [self loadImageFromAsset];
     }
-    
-    [self loadImageFromAsset];
     
     if (self.presentedVc){
         [self.presentedVc dismissViewControllerAnimated:YES completion:^{
