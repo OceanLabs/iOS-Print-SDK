@@ -512,9 +512,15 @@
         if (self.viewWillDisappear && !self.navigationController){
             return;
         }
-        ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainerTopCon.constant = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height;
+        ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainerTopCon.constant = self.sourcesCollectionView.frame.size.height;
         
-        CGFloat offset = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + self.sourcesCollectionView.frame.size.height + ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainer.frame.size.height;
+        CGFloat offset = self.sourcesCollectionView.frame.size.height + ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainer.frame.size.height;
+        
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] < 11.0){
+            offset += [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
+            ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainerTopCon.constant += [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
+        }
+        
         ((OLImagePickerPhotosPageViewController *)vc).collectionView.contentInset = UIEdgeInsetsMake(offset, 0, 70, 0);
         ((OLImagePickerPhotosPageViewController *)vc).collectionView.contentOffset = CGPointMake(0, -offset);
         ((OLImagePickerPhotosPageViewController *)vc).albumsContainerHeight.constant = self.view.frame.size.height;
