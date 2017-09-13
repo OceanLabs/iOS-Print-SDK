@@ -371,9 +371,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    
+- (void)dropNavigationStack{
     //Drop previous screens from the navigation stack
     NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
     if (navigationStack.count > 1) {
@@ -394,6 +392,12 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         }
         [[OLUserSession currentSession] clearUserSelectedPhotos];
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    [self dropNavigationStack];
     
     if ([OLUserSession currentSession].kiteVc.discardDeliveryAddresses){
         [OLAddress clearAddressBook];
@@ -875,6 +879,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [self dismiss];
     }
     else{
+        [self dropNavigationStack];
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
