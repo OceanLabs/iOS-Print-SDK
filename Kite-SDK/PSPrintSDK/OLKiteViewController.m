@@ -557,7 +557,7 @@ static CGFloat fadeTime = 0.3;
                 }
             }
         }
-        if (!self.templateSyncOperation.executing && !self.templateSyncOperation.finished){
+        if (!self.templateSyncOperation.executing && !self.templateSyncOperation.finished && ![self.operationQueue.operations containsObject:self.templateSyncOperation]){
             [self.operationQueue addOperation:self.templateSyncOperation];
         }
         
