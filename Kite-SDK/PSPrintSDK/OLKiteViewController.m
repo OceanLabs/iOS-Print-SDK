@@ -59,6 +59,7 @@ static CGFloat fadeTime = 0.3;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @property (strong, nonatomic) NSArray *fontNames;
+@property (assign, nonatomic) BOOL dismissing;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -274,6 +275,7 @@ static CGFloat fadeTime = 0.3;
 }
 
 -(IBAction) dismiss{
+    self.dismissing = YES;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackKiteDismissed];
 #endif
@@ -456,6 +458,9 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)templateSyncDidReturn:(NSNotification *)n{
+    if (self.dismissing){
+        return;
+    }
     NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if (self.templateSyncOperation.finished){
