@@ -67,7 +67,7 @@
 @end
 
 @interface OLSingleImageProductReviewViewController () <OLUpsellViewControllerDelegate, OLImageEditViewControllerDelegate>
-@property (nonatomic, copy) void (^saveJobCompletionHandler)();
+@property (nonatomic, copy) void (^saveJobCompletionHandler)(void);
 @property (assign, nonatomic) BOOL showingBack;
 @end
 
@@ -252,7 +252,7 @@
     }
 }
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler{
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     [self saveEditsToAsset:self.asset];
     
     OLAsset *asset = [self.asset copy];
@@ -272,7 +272,7 @@
     }];
 }
 
-- (void)saveJobNowWithCompletionHandler:(void(^)())handler {
+- (void)saveJobNowWithCompletionHandler:(void(^)(void))handler {
     if (self.product.productTemplate.collectionName && self.product.productTemplate.collectionId){
         NSString *templateId = self.product.selectedOptions[self.product.productTemplate.collectionId];
         if (templateId){

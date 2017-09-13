@@ -97,7 +97,7 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @property (strong, nonatomic) NSArray *paypalSupportedCurrencies;
 
 + (instancetype)sharedInstance;
-- (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
+- (void)fetchRemotePlistsWithCompletionHandler:(void(^)(void))handler;
 - (void)prefetchRemoteImages;
 - (void)setupABTestVariants;
 - (void)setupCoverPhotoTestWithExperimentDict:(NSDictionary *)experimentDict;

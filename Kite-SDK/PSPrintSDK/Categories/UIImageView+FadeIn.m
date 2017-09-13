@@ -52,7 +52,7 @@ static char tasksKey;
     [self setAndFadeInImageWithURL:url size:size placeholder:placeholder progress:NULL completionHandler:NULL];
 }
 
-- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
+- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
     for (id key in self.tasks.allKeys){
         if (![key isEqual:url]){
             [self.tasks[key] cancel];
@@ -110,7 +110,7 @@ static char tasksKey;
     [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:placeholder progress:nil completionHandler:NULL];
 }
 
-- (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
+- (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
     for (id key in self.tasks.allKeys){
         if (![asset isKindOfClass:[OLAsset class]] || ![key isEqual:asset.uuid]){
             [self.tasks removeObjectForKey:key];
@@ -161,7 +161,7 @@ static char tasksKey;
     }];
 }
 
-- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
+- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
     for (id key in self.tasks.allKeys){
         if (![key isEqual:asset.localIdentifier] && [self.tasks[key] isKindOfClass:[NSNumber class]]){
             PHImageRequestID requestID = (PHImageRequestID)[self.tasks[key] longValue];

@@ -855,7 +855,7 @@ static const CGFloat kBookEdgePadding = 38;
     return YES;
 }
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler{
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     NSInteger i = 0;
     NSMutableArray *bookPhotos = [[NSMutableArray alloc] init];
     NSMutableArray *photobookPhotosClean = [[NSMutableArray alloc] init];

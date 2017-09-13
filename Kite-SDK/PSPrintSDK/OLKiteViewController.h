@@ -235,7 +235,7 @@
 
  @param handler Completion handler that is called when all network requests are finished and the Kite View Controller is ready to be shown.
  */
-- (void)startLoadingWithCompletionHandler:(void(^_Nonnull)())handler;
+- (void)startLoadingWithCompletionHandler:(void(^_Nonnull)(void))handler;
 
 
 /**

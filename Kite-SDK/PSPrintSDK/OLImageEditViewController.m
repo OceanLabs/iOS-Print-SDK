@@ -1253,7 +1253,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self showDrawerWithCompletionHandler:NULL];
 }
 
-- (void)deselectButton:(UIButton *)sender withCompletionHandler:(void (^)())handler{
+- (void)deselectButton:(UIButton *)sender withCompletionHandler:(void (^)(void))handler{
     sender.selected = NO;
     [self dismissDrawerWithCompletionHandler:^(BOOL finished){
         if (handler){
@@ -1262,7 +1262,7 @@ const NSInteger kOLEditTagCrop = 40;
     }];
 }
 
-- (void)deselectSelectedButtonWithCompletionHandler:(void (^)())handler{
+- (void)deselectSelectedButtonWithCompletionHandler:(void (^)(void))handler{
     for (UIButton *button in [self.editingTools buttons]){
         if (button.selected){
             if (button.tag == kOLEditTagCrop){
@@ -1280,7 +1280,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonClicked:(UIButton *)sender {
-    void (^buttonAction)() = ^void(){
+    void (^buttonAction)(void) = ^void(void){
         [self selectButton:sender];
     };
     

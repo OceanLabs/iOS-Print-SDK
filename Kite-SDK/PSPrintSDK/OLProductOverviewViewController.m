@@ -480,7 +480,7 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler{
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://kite.ly/no-asset.jpg"]]]];

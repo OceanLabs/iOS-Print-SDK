@@ -57,6 +57,6 @@
 
 - (void)loadCoverPhoto;
 - (void)setUserSelectedPhotos:(NSMutableArray<OLAsset *> *)userSelectedPhotos;
-- (void)saveJobWithCompletionHandler:(void(^)())handler;
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler;
 
 @end

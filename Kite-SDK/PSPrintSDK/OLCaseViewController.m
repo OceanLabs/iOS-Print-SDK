@@ -76,7 +76,7 @@
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
 @property (assign, nonatomic) BOOL showingBack;
 @property (assign, nonatomic) CGAffineTransform backupTransform;
-@property (nonatomic, copy) void (^saveJobCompletionHandler)();
+@property (nonatomic, copy) void (^saveJobCompletionHandler)(void);
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
 @property (strong, nonatomic) NSMutableArray<OLPhotoTextField *> *textFields;
 @property (strong, nonatomic) OLImagePickerViewController *vcDelegateForCustomVc;
@@ -369,7 +369,7 @@
     }];
 }
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler{
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     [self saveEditsToAsset:self.asset];
     
     OLAsset *asset = [[OLUserSession currentSession].userSelectedPhotos.lastObject copy];
@@ -407,7 +407,7 @@
     }];
 }
 
-- (void)saveJobNowWithCompletionHandler:(void(^)())handler {
+- (void)saveJobNowWithCompletionHandler:(void(^)(void))handler {
     if (self.product.productTemplate.collectionName && self.product.productTemplate.collectionId){
         NSString *templateId = self.product.selectedOptions[self.product.productTemplate.collectionId];
         if (templateId){

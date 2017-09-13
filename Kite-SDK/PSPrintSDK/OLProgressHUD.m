@@ -541,7 +541,8 @@ static const CGFloat OLProgressHUDUndefinedProgress = -1;
 
 - (void)setFadeOutTimer:(NSTimer*)newTimer{
     if(_fadeOutTimer){
-        [_fadeOutTimer invalidate], _fadeOutTimer = nil;
+        [_fadeOutTimer invalidate];
+        _fadeOutTimer = nil;
     }
     if(newTimer){
         _fadeOutTimer = newTimer;

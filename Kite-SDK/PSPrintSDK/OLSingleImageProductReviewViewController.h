@@ -38,7 +38,7 @@
 
 @property (weak, nonatomic) IBOutlet UIView *hintView;
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler;
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler;
 - (void)showHintViewForView:(UIView *)view header:(NSString *)header body:(NSString *)body delay:(BOOL)shouldDelay;
 
 @end
