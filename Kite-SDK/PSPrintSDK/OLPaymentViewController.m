@@ -715,9 +715,8 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             return ;
         }
         OLReceiptViewController *receiptVC = [[OLUserSession currentSession].kiteVc receiptViewControllerForPrintOrder:welf.printOrder];
-        receiptVC.delegate = welf.delegate;
         receiptVC.presentedModally = welf.presentedModally;
-        receiptVC.delegate = welf.delegate;
+        [receiptVC safePerformSelector:@selector(setDelegate:) withObject:welf.delegate];
         if (!welf.presentedViewController) {
             [welf.navigationController pushViewController:receiptVC animated:YES];
             
