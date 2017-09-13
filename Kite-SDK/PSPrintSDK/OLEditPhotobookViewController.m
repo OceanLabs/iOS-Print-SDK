@@ -269,7 +269,15 @@ static const NSInteger kSectionPages = 2;
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
+        CGFloat y = -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y;
+        
+#ifdef __IPHONE_11_0
+        if (@available(iOS 11.0, *)) {
+            y -= self.view.safeAreaInsets.bottom;
+        }
+#endif
+        
+        self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         self.rotating = NO;
         [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];

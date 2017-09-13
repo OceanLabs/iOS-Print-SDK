@@ -155,7 +155,16 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
         [self.nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
     }
     [self.nextButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.nextButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
+    
+    CGFloat y = self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height);
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        y -= self.view.safeAreaInsets.bottom;
+    }
+#endif
+    
+    self.nextButton.frame = CGRectMake(5, y, self.view.frame.size.width-10, 50);
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
     if (!font){
         font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
@@ -202,7 +211,16 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
+    
+    CGFloat y = -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y;
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        y -= self.view.safeAreaInsets.bottom;
+    }
+#endif
+    
+    self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -237,7 +255,15 @@ UIViewControllerPreviewingDelegate, OLImagePickerViewControllerDelegate, OLInfoB
             [cell setNeedsDisplay];
         }
         
-        self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
+        CGFloat y = -self.nextButton.frame.origin.x + self.view.frame.size.height - self.nextButton.frame.size.height + self.collectionView.contentOffset.y;
+        
+#ifdef __IPHONE_11_0
+        if (@available(iOS 11.0, *)) {
+            y -= self.view.safeAreaInsets.bottom;
+        }
+#endif
+        
+        self.nextButton.frame = CGRectMake(self.nextButton.frame.origin.x, y, self.view.frame.size.width - 2 * self.nextButton.frame.origin.x, self.nextButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }
