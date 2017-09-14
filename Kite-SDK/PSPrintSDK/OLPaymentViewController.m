@@ -157,7 +157,7 @@ static OLPaymentMethod selectedPaymentMethod;
 - (BOOL)hasCachedCost;
 - (void)saveOrder;
 @property (strong, nonatomic, readwrite) NSString *submitStatusErrorMessage;
-@property (strong, nonatomic, readwrite) NSString *submitStatus;
+@property (assign, nonatomic, readwrite) OLPrintOrderSubmitStatus submitStatus;
 @property (nonatomic, readwrite) NSString *receipt;
 @property (strong, nonatomic) OLPrintOrderCost *finalCost;
 @property (nonatomic, strong) OLPrintOrderCostRequest *costReq;
@@ -703,7 +703,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }];
 }
 
-- (void(^)())transistionToReceiptBlock{
+- (void(^)(void))transistionToReceiptBlock{
     __weak OLPaymentViewController *welf = self;
     return ^{
         [[OLUserSession currentSession] clearUserSelectedPhotos];
