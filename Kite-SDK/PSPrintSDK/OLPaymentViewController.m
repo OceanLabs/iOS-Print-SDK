@@ -1647,10 +1647,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [self textFieldShouldReturn:self.promoCodeTextField];
-}
-
 - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
