@@ -82,8 +82,7 @@
 }
 
 -(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    CGFloat imageStretchFactor =  self.view.frame.size.width / self.image.size.width;
-    return self.image.size.height * imageStretchFactor;
+    return self.image.size.height;
 }
 
 @end
