@@ -673,6 +673,7 @@
             self.highlightsView.alpha = 0;
         }
         [self.view bringSubviewToFront:self.editingTools];
+        [self.view bringSubviewToFront:self.safeAreaView];
         [self.view bringSubviewToFront:self.editingTools.drawerView];
         self.editingTools.collectionView.tag = 40; // kOLEditTagCrop;
         

@@ -397,6 +397,7 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)setupEditingToolsView{
     self.editingTools = [[OLEditingToolsView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.editingTools];
+    self.allViews = [self.allViews arrayByAddingObject:self.editingTools];
     
     [self.editingTools leadingFromSuperview:0 relation:NSLayoutRelationEqual];
     [self.editingTools trailingToSuperview:0 relation:NSLayoutRelationEqual];
@@ -1456,6 +1457,7 @@ const NSInteger kOLEditTagCrop = 40;
             [view.superview bringSubviewToFront:view];
         }
         [self.view bringSubviewToFront:self.editingTools];
+        [self.view bringSubviewToFront:self.safeAreaView];
         [self.view bringSubviewToFront:self.navigationBar];
         
         [self.view bringSubviewToFront:self.editingTools.drawerView];
