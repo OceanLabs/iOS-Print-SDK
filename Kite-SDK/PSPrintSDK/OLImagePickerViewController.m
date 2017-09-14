@@ -53,6 +53,7 @@
 #import <Photos/Photos.h>
 #import "OLKiteViewController+Private.h"
 #import "UIView+RoundRect.h"
+#import "UIColor+OLHexString.h"
 
 @interface OLKitePrintSDK ()
 + (NSString *)instagramRedirectURI;
@@ -71,11 +72,9 @@
 @property (assign, nonatomic) CGSize rotationSize;
 
 @property (strong, nonatomic) NSArray<OLAsset *> *originalSelectedAssets;
-@property (strong, nonatomic) UIView *selectedProviderIndicator;
 
 @property (assign, nonatomic) BOOL viewWillDisappear;
 
-@property (assign, nonatomic) CGRect indicatorDestFrame;
 @end
 
 @interface OLProduct ()
@@ -230,34 +229,6 @@
         }
         
         [view.superview addConstraints:con];
-        
-        self.selectedProviderIndicator = [[UIView alloc] init];
-        
-        if ([OLKiteABTesting sharedInstance].lightThemeColorPickerTick){
-            self.selectedProviderIndicator.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorPickerTick;
-        }
-        else{
-            self.selectedProviderIndicator.backgroundColor = self.sourcesCollectionView.tintColor;
-        }
-        
-        [self.visualEffectView.contentView addSubview:self.selectedProviderIndicator];
-        view = self.selectedProviderIndicator;
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        views = NSDictionaryOfVariableBindings(view);
-        con = [[NSMutableArray alloc] init];
-        
-        CGFloat width = [self collectionView:self.sourcesCollectionView layout:self.sourcesCollectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]].width;
-        
-        visuals = @[[NSString stringWithFormat:@"H:|-0-[view(%f)]", width],
-                    @"V:[view(1.5)]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
     }
     
     if (self.maximumPhotos == 0 && self.minimumPhotos == 0){
@@ -292,7 +263,6 @@
         [self addBasketIconToTopRight];
     }
     
-    [self positionSelectedProviderIndicator];
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
@@ -546,7 +516,6 @@
     [super viewDidLayoutSubviews];
     
     [self updateTopConForVc:self.pageController.viewControllers.firstObject];
-    [self positionSelectedProviderIndicator];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -554,13 +523,8 @@
     self.rotationSize = size;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.sourcesCollectionView.collectionViewLayout invalidateLayout];
-        self.selectedProviderIndicator.alpha = 0;
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
-        self.indicatorDestFrame = CGRectZero;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            [self positionSelectedProviderIndicator];
-        });
     }];
 }
 
@@ -670,8 +634,7 @@
     [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[pageViewController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
     self.ctaButton.hidden = NO;
     ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).ctaButton.hidden = YES;
-    [self positionSelectedProviderIndicator];
-    self.indicatorDestFrame = CGRectZero;
+    [self updateSelectedProviderColor];
     
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoProviderPicked:self.providers[[self.pageController.viewControllers[0] pageIndex]].name forProductName:self.product ? self.product.productTemplate.name : @""];
@@ -770,6 +733,17 @@
     return cell;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.item == [self.pageController.viewControllers.firstObject pageIndex]){
+        [(UIImageView *)[cell viewWithTag:10] setTintColor:[UIColor blackColor]];
+        [(UILabel *)[cell viewWithTag:20] setTextColor:[UIColor blackColor]];
+    }
+    else{
+        [(UIImageView *)[cell viewWithTag:10] setTintColor:[UIColor colorWithHexString:@"7E7E7E"]];
+        [(UILabel *)[cell viewWithTag:20] setTextColor:[UIColor colorWithHexString:@"7E7E7E"]];
+    }
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return self.providers.count;
 }
@@ -802,14 +776,12 @@
         return;
     }
     
-    self.indicatorDestFrame = CGRectNull;
     
     UIViewController *vc = [self viewControllerAtIndex:indexPath.item];
     
     __weak OLImagePickerViewController *welf = self;
     [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished){
-        welf.indicatorDestFrame = CGRectZero;
-        [welf positionSelectedProviderIndicator];
+        [welf updateSelectedProviderColor];
         
 #ifndef OL_NO_ANALYTICS
         [OLAnalytics trackPhotoProviderPicked:welf.providers[[welf.pageController.viewControllers[0] pageIndex]].name forProductName:welf.product ? welf.product.productTemplate.name : @""];
@@ -817,35 +789,25 @@
     }];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if ([scrollView isKindOfClass:[UICollectionView class]]){
-        [self positionSelectedProviderIndicator];
-    }
-    else{
-        CGFloat percentMoved = (scrollView.contentOffset.x - scrollView.frame.size.width) / scrollView.frame.size.width;
-        if (!CGRectIsNull(self.indicatorDestFrame) && CGSizeEqualToSize(self.indicatorDestFrame.size, CGSizeZero)){
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0];
-            self.indicatorDestFrame = [self.sourcesCollectionView cellForItemAtIndexPath:indexPath].frame;
-        }
-        if (!CGRectIsNull(self.indicatorDestFrame)){
-        CGFloat translationX = [self.sourcesCollectionView convertRect:self.indicatorDestFrame toView:self.view].origin.x + percentMoved * self.indicatorDestFrame.size.width;
-        self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation(translationX, 0);
-        }
-    }
-}
-
-- (void)positionSelectedProviderIndicator{
+- (void)updateSelectedProviderColor{
     UICollectionViewCell *cell = [self.sourcesCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0]];
     
     if (cell){
+        NSMutableArray *grayCells = [[NSMutableArray alloc] init];
+        for (UICollectionViewCell *grayCell in self.sourcesCollectionView.visibleCells){
+            if (grayCell != cell){
+                [grayCells addObject:grayCell];
+            }
+        }
+        
         [UIView animateWithDuration:0.15 animations:^{
-            self.selectedProviderIndicator.alpha = 1;
-        }];
-        self.selectedProviderIndicator.transform = CGAffineTransformMakeTranslation([self.sourcesCollectionView convertRect:cell.frame toView:self.view].origin.x, 0);
-    }
-    else{
-        [UIView animateWithDuration:0.15 animations:^{
-            self.selectedProviderIndicator.alpha = 0;
+            [(UIImageView *)[cell viewWithTag:10] setTintColor:[UIColor blackColor]];
+            [(UILabel *)[cell viewWithTag:20] setTextColor:[UIColor blackColor]];
+            
+            for (UICollectionViewCell *cell in grayCells){
+                [(UIImageView *)[cell viewWithTag:10] setTintColor:[UIColor colorWithHexString:@"7E7E7E"]];
+                [(UILabel *)[cell viewWithTag:20] setTextColor:[UIColor colorWithHexString:@"7E7E7E"]];
+            }
         }];
     }
 }
