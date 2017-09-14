@@ -91,6 +91,7 @@ const NSInteger kOLEditTagCrop = 40;
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *allViews;
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
+@property (strong, nonatomic) UIView *safeAreaView;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewTopCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewLeftCon;
@@ -405,6 +406,31 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView verticalSpacingToView:self.editingTools constant:20 relation:NSLayoutRelationGreaterThanOrEqual];
     
     self.editingTools.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        self.safeAreaView = [[UIView alloc] init];
+        
+        UIView *bottomSeparatorView = [[UIView alloc] init];
+        bottomSeparatorView.backgroundColor = self.editingTools.backgroundColor;
+        [self.safeAreaView addSubview:bottomSeparatorView];
+        [bottomSeparatorView leadingFromSuperview:0 relation:0];
+        [bottomSeparatorView topFromSuperview:0 relation:0];
+        [bottomSeparatorView trailingToSuperview:0 relation:NSLayoutRelationEqual];
+        [bottomSeparatorView heightConstraint:1];
+        
+        self.safeAreaView.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:self.safeAreaView];
+        self.allViews = [self.allViews arrayByAddingObject:self.safeAreaView];
+        
+        [self.safeAreaView leadingFromSuperview:0 relation:NSLayoutRelationEqual];
+        [self.safeAreaView trailingToSuperview:0 relation:NSLayoutRelationEqual];
+        [self.safeAreaView bottomToSuperview:0 relation:NSLayoutRelationEqual];
+        
+        NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.safeAreaView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.editingTools attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+        [self.view addConstraint:con];
+    }
+#endif
 }
 
 - (void)setupProductRepresentation{
@@ -559,6 +585,9 @@ const NSInteger kOLEditTagCrop = 40;
     [self.view bringSubviewToFront:self.textFieldsView];
     [self.view bringSubviewToFront:self.previewView];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
+    if (self.safeAreaView){
+        [self.view bringSubviewToFront:self.safeAreaView];
+    }
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.gestureView];
 }
@@ -1000,9 +1029,17 @@ const NSInteger kOLEditTagCrop = 40;
     else if (self.editingTools.collectionView.tag == kOLEditTagCrop){
         self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Crop image") uppercaseStringWithLocale:[NSLocale currentLocale]];
     }
+    
+    CGFloat extraHeight = 0;
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        extraHeight = self.view.safeAreaInsets.bottom;
+    }
+#endif
 
     [UIView animateWithDuration:0.25 animations:^{
-        self.editingTools.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.editingTools.drawerView.frame.size.height);
+        self.editingTools.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.editingTools.drawerView.frame.size.height - extraHeight);
     } completion:^(BOOL finished){
         if (handler){
             handler(finished);

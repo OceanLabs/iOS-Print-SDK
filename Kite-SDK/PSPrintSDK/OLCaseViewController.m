@@ -74,6 +74,7 @@
 - (void)onTapGestureRecognized:(id)sender;
 - (void)saveEditsToAsset:(OLAsset *)asset;
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
+@property (strong, nonatomic) UIView *safeAreaView;
 @property (assign, nonatomic) BOOL showingBack;
 @property (assign, nonatomic) CGAffineTransform backupTransform;
 @property (nonatomic, copy) void (^saveJobCompletionHandler)(void);
@@ -489,6 +490,9 @@
     }
     
     [self.view bringSubviewToFront:self.editingTools.drawerView];
+    if (self.safeAreaView){
+        [self.view bringSubviewToFront:self.safeAreaView];
+    }
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.renderedImageView];
     [self.view bringSubviewToFront:self.hintView];

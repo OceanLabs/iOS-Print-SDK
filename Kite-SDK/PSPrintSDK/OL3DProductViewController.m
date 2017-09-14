@@ -39,6 +39,7 @@
 
 @interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UIView *printContainerView;
+@property (strong, nonatomic) UIView *safeAreaView;
 - (void)setupImage;
 - (void)onButtonCropClicked:(UIButton *)sender;
 - (void)exitCropMode;
@@ -110,6 +111,9 @@
     [self.view bringSubviewToFront:self.cropView];
     [self.view bringSubviewToFront:self.scene];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
+    if (self.safeAreaView){
+        [self.view bringSubviewToFront:self.safeAreaView];
+    }
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.hintView];
     [self.view bringSubviewToFront:[self.view viewWithTag:1010]];
