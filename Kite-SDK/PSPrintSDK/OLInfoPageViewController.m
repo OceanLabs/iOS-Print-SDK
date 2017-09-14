@@ -31,6 +31,8 @@
 #import "OLAnalytics.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLAnalytics.h"
+#import "OLKiteABTesting.h"
+#import "OLImageDownloader.h"
 
 @interface OLInfoPageViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -53,6 +55,29 @@
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackQualityInfoScreenViewed];
 #endif
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
+    if (url && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:url]){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
+            if (error){
+                return;
+            }
+            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
+                titleImageView.alpha = 0;
+                self.navigationItem.titleView = titleImageView;
+                titleImageView.alpha = 0;
+                [UIView animateWithDuration:0.15 animations:^{
+                    titleImageView.alpha = 1;
+                }];
+            });
+        }];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
