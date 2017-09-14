@@ -98,7 +98,6 @@ const NSInteger kOLEditTagCrop = 40;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewBottomCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropViewRightCon;
 @property (weak, nonatomic) IBOutlet UIView *printContainerView;
-@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) UIView *gestureView;
 
 @property (weak, nonatomic) OLProductTemplateOption *selectedOption;
@@ -244,10 +243,6 @@ const NSInteger kOLEditTagCrop = 40;
     [super viewDidLoad];
     
     [self setupEditingToolsView];
-    
-    if (self.navigationController){
-        [self.navigationBar removeFromSuperview];
-    }
     
     self.customNavigationItem.title = NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit image");
     [self.customNavigationItem.leftBarButtonItem setTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
@@ -1188,7 +1183,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
 }
 
-- (void)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
+- (IBAction)onBarButtonCancelTapped:(id)sender {
     if (self.ctaButton.enabled && self.previewView && [self.delegate respondsToSelector:@selector(scrollCropViewControllerDidDropChanges:)]){ //discard changes
         [self exitCropMode];
         self.previewSourceView.hidden = NO;
@@ -1458,7 +1453,6 @@ const NSInteger kOLEditTagCrop = 40;
         }
         [self.view bringSubviewToFront:self.editingTools];
         [self.view bringSubviewToFront:self.safeAreaView];
-        [self.view bringSubviewToFront:self.navigationBar];
         
         [self.view bringSubviewToFront:self.editingTools.drawerView];
         self.editingTools.collectionView.tag = kOLEditTagCrop;

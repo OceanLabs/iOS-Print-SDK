@@ -47,14 +47,13 @@
 #import "OLProductTypeSelectionViewController.h"
 #import "OLUserSession.h"
 #import "UIImage+OLUtils.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 
 static CGFloat fadeTime = 0.3;
 
 
 @interface OLKiteViewController ()
 
-@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
-@property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
@@ -106,22 +105,6 @@ static CGFloat fadeTime = 0.3;
     }
     
     return _loadingImageView;
-}
-
-- (UINavigationBar *)navigationBar{
-    if (!_navigationBar){
-        [self.view class]; //Force viewDidLoad;
-    }
-    
-    return _navigationBar;
-}
-
-- (UINavigationItem *)customNavigationItem{
-    if (!_customNavigationItem){
-         [self.view class]; //Force viewDidLoad;
-    }
-    
-    return _customNavigationItem;
 }
 
 - (OLPrintOrder *)basketOrder{
@@ -246,18 +229,9 @@ static CGFloat fadeTime = 0.3;
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    
-    if (!self.navigationController){
-        self.navigationBar.hidden = NO;
-        self.customNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
-    }
 
     if (!self.loadingHandler){
         [self loadRemoteData];
-    }
-    
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        self.customNavigationItem.title = @"";
     }
     
     if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
@@ -341,7 +315,7 @@ static CGFloat fadeTime = 0.3;
                             }];
                         }
                         else{
-                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                         }
                         [welf fadeToViewController:nvc];
                     }
@@ -373,7 +347,7 @@ static CGFloat fadeTime = 0.3;
                     }];
                 }
                 else{
-                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                 }
                 [welf fadeToViewController:nvc];
             }
@@ -410,7 +384,7 @@ static CGFloat fadeTime = 0.3;
                 }];
             }
             else{
-                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
             }
             [welf fadeToViewController:nvc];
         }
