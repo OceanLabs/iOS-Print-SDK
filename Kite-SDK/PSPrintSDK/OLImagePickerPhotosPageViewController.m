@@ -46,8 +46,6 @@
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *albumsContainerView;
 @property (weak, nonatomic) IBOutlet UIView *albumsCollectionViewContainerView;
-@property (strong, nonatomic) UIButton *logoutButton;
-@property (assign, nonatomic) CGFloat topInset;
 @property (assign, nonatomic) BOOL reloadOnViewWillAppear;
 @property (assign, nonatomic) NSUInteger numberOfCellsPerRow;
 
@@ -91,16 +89,6 @@ CGFloat OLImagePickerMargin = 1.5;
     [super viewDidAppear:animated];
     
     [self.albumsCollectionView reloadData];
-    
-    if (!self.logoutButton && (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram)){
-        self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(0, -45, self.collectionView.frame.size.width, 45)];
-        [self.logoutButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.logoutButton setTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        [self.collectionView addSubview:self.logoutButton];
-        [self.logoutButton addTarget:self action:@selector(onButtonLogoutTapped) forControlEvents:UIControlEventTouchUpInside];
-        
-        self.topInset = self.collectionView.contentInset.top;
-    }
 }
 
 - (void)viewDidLoad {
@@ -243,7 +231,6 @@ CGFloat OLImagePickerMargin = 1.5;
         
         self.albumsContainerView.transform = CGAffineTransformIdentity;
         
-        self.logoutButton.frame = CGRectMake(0, -45, size.width, 45);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){}];
 }
 
@@ -264,9 +251,6 @@ CGFloat OLImagePickerMargin = 1.5;
         if (self.provider.collections.count > self.showingCollectionIndex){
             CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
             NSInteger numberOfCellsToFillHeight = 0;
-            if (self.logoutButton){
-                numberOfCellsToFillHeight = (NSInteger)ceil((self.collectionView.frame.size.height - self.collectionView.contentInset.top) / (cellSize.height + OLImagePickerMargin));
-            }
             
             numberOfItems = MAX(numberOfCellsToFillHeight * [self numberOfCellsPerRow], [self.provider.collections[self.showingCollectionIndex] count]);
         }
@@ -528,6 +512,36 @@ CGFloat OLImagePickerMargin = 1.5;
     }
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
+    if (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram){
+        UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"logout" forIndexPath:indexPath];
+        [(UIButton *)[cell viewWithTag:10] setTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+        
+        return cell;
+    }
+    
+    return [[UICollectionReusableView alloc] init];
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
+    if (collectionView != self.collectionView){
+        return CGSizeZero;
+    }
+    
+    CGSize size = self.view.bounds.size;
+    
+    if (self.rotationSize.width != 0){
+        size = self.rotationSize;
+    }
+    
+    if (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram){
+        return CGSizeMake(size.width, 45);
+    }
+    else{
+        return CGSizeZero;
+    }
+}
+
 - (OLAsset *)assetForIndexPath:(NSIndexPath *)indexPath{
     id potentialAsset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
     OLAsset *asset;
@@ -660,11 +674,6 @@ CGFloat OLImagePickerMargin = 1.5;
             [self loadNextFacebookPage];
         }
     }
-    
-    if ((self.provider.providerType == OLImagePickerProviderTypeInstagram || self.provider.providerType == OLImagePickerProviderTypeFacebook) && self.collectionView.contentInset.top == self.topInset){
-        
-        self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 45, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
-    }
 }
 
 - (void)closeAlbumsDrawer{
@@ -772,7 +781,7 @@ CGFloat OLImagePickerMargin = 1.5;
     }
 }
 
-- (void)onButtonLogoutTapped{
+- (IBAction)onButtonLogoutTapped{
     NSString *serviceName;
     if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
         serviceName = @"Facebook";

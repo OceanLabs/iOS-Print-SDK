@@ -3157,13 +3157,13 @@ only Lorem Ipsum</string>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="QVo-mq-1ej">
                                     <size key="itemSize" width="152" height="142"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="headerReferenceSize" width="50" height="50"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photoCell" id="30V-eL-baD">
-                                        <rect key="frame" x="0.0" y="0.0" width="152" height="142"/>
+                                        <rect key="frame" x="0.0" y="50" width="152" height="142"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="152" height="142"/>
@@ -3207,7 +3207,7 @@ only Lorem Ipsum</string>
                                         </constraints>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="addCell" id="Ing-fi-eFM">
-                                        <rect key="frame" x="223" y="0.0" width="152" height="142"/>
+                                        <rect key="frame" x="223" y="50" width="152" height="142"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="152" height="142"/>
@@ -3227,6 +3227,25 @@ only Lorem Ipsum</string>
                                         </constraints>
                                     </collectionViewCell>
                                 </cells>
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="logout" id="W7V-ba-Xr0">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ebk-SY-WBZ">
+                                            <rect key="frame" x="161" y="10" width="52" height="30"/>
+                                            <state key="normal" title="Log out">
+                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="onButtonLogoutTapped" destination="arO-Mg-S2q" eventType="touchUpInside" id="oSE-Gs-t7C"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="ebk-SY-WBZ" firstAttribute="centerX" secondItem="W7V-ba-Xr0" secondAttribute="centerX" id="NKN-MR-vuH"/>
+                                        <constraint firstItem="ebk-SY-WBZ" firstAttribute="centerY" secondItem="W7V-ba-Xr0" secondAttribute="centerY" id="QYU-ND-ojq"/>
+                                    </constraints>
+                                </collectionReusableView>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Qw-uy-h3a">
                                 <rect key="frame" x="0.0" y="-84" width="375" height="128"/>
