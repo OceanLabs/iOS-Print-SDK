@@ -35,7 +35,7 @@
 
 @implementation OLArtboardAssetView
 
-- (void)loadImageWithCompletionHandler:(void(^)())handler{
+- (void)loadImageWithCompletionHandler:(void(^)(void))handler{
     OLAsset *asset = [[OLAsset userSelectedAssets] objectAtIndex:self.index];
     __weak OLArtboardAssetView *welf = self;
     [self.imageView setAndFadeInImageWithOLAsset:asset size:self.frame.size applyEdits:YES placeholder:nil progress:^(float progress){

@@ -130,7 +130,10 @@ static const NSInteger kSectionPages = 1;
 
     
     [self.ctaButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.ctaButton.frame = CGRectMake(5, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-10, 50);
+    
+    CGFloat y = self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height);
+    
+    self.ctaButton.frame = CGRectMake(5, y, self.view.frame.size.width-10, 50);
     [self.collectionView addSubview:self.ctaButton];
     
     if ([OLUserSession currentSession].capitalizeCtaTitles){
@@ -212,7 +215,16 @@ static const NSInteger kSectionPages = 1;
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
+    
+    CGFloat y = -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y;
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        y -= self.view.safeAreaInsets.bottom;
+    }
+#endif
+    
+    self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
@@ -236,7 +248,15 @@ static const NSInteger kSectionPages = 1;
     }
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
-        self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
+        CGFloat y = -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y;
+        
+#ifdef __IPHONE_11_0
+        if (@available(iOS 11.0, *)) {
+            y -= self.view.safeAreaInsets.bottom;
+        }
+#endif
+        
+        self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         self.rotating = NO;
         [self.collectionView insertSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]];

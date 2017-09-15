@@ -74,6 +74,7 @@
 - (void)onTapGestureRecognized:(id)sender;
 - (void)saveEditsToAsset:(OLAsset *)asset;
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler;
+@property (strong, nonatomic) UIView *safeAreaView;
 @property (assign, nonatomic) BOOL showingBack;
 @property (assign, nonatomic) CGAffineTransform backupTransform;
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
@@ -347,7 +348,7 @@
     [self doCheckout];
 }
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler{
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     [self saveEditsToAsset:self.asset];
     
     OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject copy];
@@ -385,7 +386,7 @@
     }];
 }
 
-- (void)saveJobNowWithCompletionHandler:(void(^)())handler {
+- (void)saveJobNowWithCompletionHandler:(void(^)(void))handler {
     if (self.product.productTemplate.collectionName && self.product.productTemplate.collectionId){
         NSString *templateId = self.product.selectedOptions[self.product.productTemplate.collectionId];
         if (templateId){
@@ -442,6 +443,9 @@
     }
     
     [self.view bringSubviewToFront:self.editingTools.drawerView];
+    if (self.safeAreaView){
+        [self.view bringSubviewToFront:self.safeAreaView];
+    }
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.renderedImageView];
     [self.view bringSubviewToFront:self.hintView];
@@ -581,6 +585,7 @@
             self.highlightsView.alpha = 0;
         }
         [self.view bringSubviewToFront:self.editingTools];
+        [self.view bringSubviewToFront:self.safeAreaView];
         [self.view bringSubviewToFront:self.editingTools.drawerView];
         self.editingTools.collectionView.tag = 40; // kOLEditTagCrop;
         

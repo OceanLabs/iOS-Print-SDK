@@ -95,6 +95,7 @@ const NSInteger kOLEditTagCrop = 40;
 
 @property (strong, nonatomic) NSMutableArray *allViews;
 @property (strong, nonatomic) NSMutableArray *cropFrameGuideViews;
+@property (strong, nonatomic) UIView *safeAreaView;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *artboardTopCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *artboardLeftCon;
@@ -477,17 +478,41 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)setupEditingToolsView{
     self.editingTools = [[OLEditingToolsView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.editingTools];
+    [self.allViews addObject:self.editingTools];
     
     [self.editingTools leadingFromSuperview:0 relation:NSLayoutRelationEqual];
     [self.editingTools trailingToSuperview:0 relation:NSLayoutRelationEqual];
-    [self.editingTools bottomToSuperview:0 relation:NSLayoutRelationEqual];
     [self.editingTools heightConstraint:45];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.editingTools attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.bottomLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
     
     [self.printContainerView verticalSpacingToView:self.editingTools constant:20 relation:NSLayoutRelationGreaterThanOrEqual];
     
     self.editingTools.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
     
-    [self.allViews addObject:self.editingTools];
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        self.safeAreaView = [[UIView alloc] init];
+        
+        UIView *bottomSeparatorView = [[UIView alloc] init];
+        bottomSeparatorView.backgroundColor = self.editingTools.backgroundColor;
+        [self.safeAreaView addSubview:bottomSeparatorView];
+        [bottomSeparatorView leadingFromSuperview:0 relation:0];
+        [bottomSeparatorView topFromSuperview:0 relation:0];
+        [bottomSeparatorView trailingToSuperview:0 relation:NSLayoutRelationEqual];
+        [bottomSeparatorView heightConstraint:1];
+        
+        self.safeAreaView.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:self.safeAreaView];
+        [self.allViews addObject:self.safeAreaView];
+        
+        [self.safeAreaView leadingFromSuperview:0 relation:NSLayoutRelationEqual];
+        [self.safeAreaView trailingToSuperview:0 relation:NSLayoutRelationEqual];
+        [self.safeAreaView bottomToSuperview:0 relation:NSLayoutRelationEqual];
+        
+        NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.safeAreaView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.editingTools attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+        [self.view addConstraint:con];
+    }
+#endif
 }
 
 - (void)applyProductImageLayers{
@@ -679,6 +704,9 @@ const NSInteger kOLEditTagCrop = 40;
     [self.view bringSubviewToFront:self.textFieldsView];
     [self.view bringSubviewToFront:self.previewView];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
+    if (self.safeAreaView){
+        [self.view bringSubviewToFront:self.safeAreaView];
+    }
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.gestureView];
     [self.view bringSubviewToFront:self.touchReporter];
@@ -1126,9 +1154,17 @@ const NSInteger kOLEditTagCrop = 40;
     else if (self.editingTools.collectionView.tag == kOLEditTagCrop){
         self.editingTools.drawerLabel.text = [NSLocalizedStringFromTableInBundle(@"Crop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Crop image") uppercaseStringWithLocale:[NSLocale currentLocale]];
     }
+    
+    CGFloat extraHeight = 0;
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        extraHeight = self.view.safeAreaInsets.bottom;
+    }
+#endif
 
     [UIView animateWithDuration:0.25 animations:^{
-        self.editingTools.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.editingTools.drawerView.frame.size.height);
+        self.editingTools.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.editingTools.drawerView.frame.size.height - extraHeight);
     } completion:^(BOOL finished){
         if (handler){
             handler(finished);
@@ -1270,7 +1306,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
 }
 
-- (void)onBarButtonCancelTapped:(UIBarButtonItem *)sender {
+- (IBAction)onBarButtonCancelTapped:(id)sender {
     if (self.ctaButton.enabled && self.previewView && [self.delegate respondsToSelector:@selector(imageEditViewControllerDidDropChanges:)]){ //discard changes
         [self exitCropMode];
         self.previewSourceView.hidden = NO;
@@ -1373,7 +1409,7 @@ const NSInteger kOLEditTagCrop = 40;
     [self showDrawerWithCompletionHandler:NULL];
 }
 
-- (void)deselectButton:(UIButton *)sender withCompletionHandler:(void (^)())handler{
+- (void)deselectButton:(UIButton *)sender withCompletionHandler:(void (^)(void))handler{
     sender.selected = NO;
     [self dismissDrawerWithCompletionHandler:^(BOOL finished){
         if (handler){
@@ -1382,7 +1418,7 @@ const NSInteger kOLEditTagCrop = 40;
     }];
 }
 
-- (void)deselectSelectedButtonWithCompletionHandler:(void (^)())handler{
+- (void)deselectSelectedButtonWithCompletionHandler:(void (^)(void))handler{
     for (UIButton *button in [self.editingTools buttons]){
         if (button.selected){
             if (button.tag == kOLEditTagCrop){
@@ -1400,7 +1436,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonClicked:(UIButton *)sender {
-    void (^buttonAction)() = ^void(){
+    void (^buttonAction)(void) = ^void(void){
         [self selectButton:sender];
     };
     
@@ -1539,7 +1575,7 @@ const NSInteger kOLEditTagCrop = 40;
             [view.superview bringSubviewToFront:view];
         }
         [self.view bringSubviewToFront:self.editingTools];
-        [self.view bringSubviewToFront:self.navigationBar];
+        [self.view bringSubviewToFront:self.safeAreaView];
         
         [self.view bringSubviewToFront:self.editingTools.drawerView];
         self.editingTools.collectionView.tag = kOLEditTagCrop;

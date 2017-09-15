@@ -420,7 +420,7 @@ static dispatch_once_t srand48OnceToken;
     return user;
 }
 
-- (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler{
+- (void)fetchRemotePlistsWithCompletionHandler:(void(^)(void))handler{
     [self resetTheme];
     [OLKiteABTesting fetchRemotePlistWithURL:[NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/kite-ios-remote-%@.plist", [OLKitePrintSDK apiKey]] completionHandler:^(NSError *error){
         if (error){

@@ -752,7 +752,7 @@ static const CGFloat kBookEdgePadding = 38;
     return YES;
 }
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler{
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     NSMutableArray *photoAssets = [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
     
     // ensure order is maxed out by adding duplicates as necessary

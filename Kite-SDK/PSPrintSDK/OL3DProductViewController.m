@@ -41,6 +41,7 @@
 - (void)loadImages;
 - (void)onButtonCropClicked:(UIButton *)sender;
 - (void)exitCropMode;
+@property (strong, nonatomic) UIView *safeAreaView;
 @end
 
 @interface OL3DProductViewController ()
@@ -123,6 +124,9 @@
     [self.view bringSubviewToFront:self.artboard];
     [self.view bringSubviewToFront:self.scene];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
+    if (self.safeAreaView){
+        [self.view bringSubviewToFront:self.safeAreaView];
+    }
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.hintView];
     [self.view bringSubviewToFront:[self.view viewWithTag:1010]];

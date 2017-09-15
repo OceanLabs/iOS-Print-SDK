@@ -1,3 +1,8 @@
+## 6.7.0
+- Support for Xcode 9 and iOS 11
+- Fixed: Issues that were caused by the safe area margins on iPhone X in portrait orientation.
+- Fixed: In some cases when dismissing and re-loading the Kite SDK multiple times the app would crash.
+
 ### 6.6.7
 - All headers are public
 

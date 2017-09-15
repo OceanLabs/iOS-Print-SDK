@@ -195,7 +195,7 @@
     }
 }
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler{
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     NSInteger nullCount = 0;
     for (OLAsset *asset in [[OLAsset userSelectedAssets] subarrayWithRange:NSMakeRange(0, self.product.quantityToFulfillOrder)]){
         if ([asset isKindOfClass:[OLPlaceholderAsset class]]){

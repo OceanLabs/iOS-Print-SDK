@@ -557,7 +557,7 @@ static NSString *nonNilStr(NSString *str) {
 
 + (void)trackPhotoProviderPicked:(NSString *)provider forProductName:(NSString *)productName{
     NSString *eventName = kOLAnalyticsEventNameKitePhotoProviderSelected;
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsPhotoSource : nonNilStr(provider), kOLAnalyticsEventLevel : @2}];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : nonNilStr(productName), kOLAnalyticsPhotoSource : nonNilStr(provider), kOLAnalyticsEventLevel : @2}];
 }
 
 + (void)trackQualityScreenHitBack{
@@ -669,7 +669,7 @@ static NSString *nonNilStr(NSString *str) {
 
 + (void)trackImagePickerScreenHitBack:(NSString *)productName{
     NSString *eventName = kOLAnalyticsEventNameImagePickerScreenHitBack;
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName ? productName : @"", kOLAnalyticsEventLevel : @2}];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : nonNilStr(productName), kOLAnalyticsEventLevel : @2}];
 }
 
 + (void)trackPhotobookEditScreenHitBack:(NSString *)productName{

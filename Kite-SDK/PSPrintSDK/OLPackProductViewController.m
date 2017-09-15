@@ -159,6 +159,15 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
         [self.ctaButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
     }
     [self.ctaButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    CGFloat y = self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height);
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        y -= self.view.safeAreaInsets.bottom;
+    }
+#endif
+    
     self.ctaButton.frame = CGRectMake(15, self.view.frame.size.height - 55 - ([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height), self.view.frame.size.width-30, 50);
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
     if (!font){
@@ -210,7 +219,16 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
+    
+    CGFloat y = -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y;
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        y -= self.view.safeAreaInsets.bottom;
+    }
+#endif
+    
+    self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -245,7 +263,15 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
             [cell setNeedsDisplay];
         }
         
-        self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
+        CGFloat y = -self.ctaButton.frame.origin.x + self.view.frame.size.height - self.ctaButton.frame.size.height + self.collectionView.contentOffset.y;
+        
+#ifdef __IPHONE_11_0
+        if (@available(iOS 11.0, *)) {
+            y -= self.view.safeAreaInsets.bottom;
+        }
+#endif
+        
+        self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }
@@ -292,7 +318,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     return YES;
 }
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler{
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     [self preparePhotosForCheckout];
     
     NSUInteger userSelectedAssetCount = [OLAsset userSelectedAssets].count;

@@ -40,6 +40,6 @@
 @property (nonatomic, strong) OLProduct *product;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler;
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler;
 
 @end

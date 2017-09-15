@@ -753,12 +753,6 @@
 		2E5F802B1B01E5F700095203 /* OLPaymentLineItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPaymentLineItem.m; sourceTree = "<group>"; };
 		2E6561101D1C341A0092001C /* OLSelectedEffectButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLSelectedEffectButton.h; sourceTree = "<group>"; };
 		2E6561111D1C341A0092001C /* OLSelectedEffectButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLSelectedEffectButton.m; sourceTree = "<group>"; };
-		2E65A3371E6438F500DBE418 /* JDStatusBarNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JDStatusBarNotification.h; path = JDStatusBarNotification/JDStatusBarNotification.h; sourceTree = "<group>"; };
-		2E65A3381E6438F500DBE418 /* JDStatusBarNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JDStatusBarNotification.m; path = JDStatusBarNotification/JDStatusBarNotification.m; sourceTree = "<group>"; };
-		2E65A3391E6438F500DBE418 /* JDStatusBarStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JDStatusBarStyle.h; path = JDStatusBarNotification/JDStatusBarStyle.h; sourceTree = "<group>"; };
-		2E65A33A1E6438F500DBE418 /* JDStatusBarStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JDStatusBarStyle.m; path = JDStatusBarNotification/JDStatusBarStyle.m; sourceTree = "<group>"; };
-		2E65A33B1E6438F500DBE418 /* JDStatusBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JDStatusBarView.h; path = JDStatusBarNotification/JDStatusBarView.h; sourceTree = "<group>"; };
-		2E65A33C1E6438F500DBE418 /* JDStatusBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JDStatusBarView.m; path = JDStatusBarNotification/JDStatusBarView.m; sourceTree = "<group>"; };
 		2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTouchTolerantView.h; sourceTree = "<group>"; };
 		2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTouchTolerantView.m; sourceTree = "<group>"; };
 		2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOrderHistoryViewController.h; sourceTree = "<group>"; };
@@ -1283,7 +1277,6 @@
 		2E23EB971D50917D00E2BF42 /* Private */ = {
 			isa = PBXGroup;
 			children = (
-				2E65A3401E64390500DBE418 /* JDStatusBarNotification */,
 				2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */,
 				2E23EB991D5091FC00E2BF42 /* CI-ViewController.h */,
 				2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */,
@@ -1431,19 +1424,6 @@
 				3DE2B0C01A77D2290092D97F /* Util */,
 			);
 			name = Model;
-			sourceTree = "<group>";
-		};
-		2E65A3401E64390500DBE418 /* JDStatusBarNotification */ = {
-			isa = PBXGroup;
-			children = (
-				2E65A3371E6438F500DBE418 /* JDStatusBarNotification.h */,
-				2E65A3381E6438F500DBE418 /* JDStatusBarNotification.m */,
-				2E65A3391E6438F500DBE418 /* JDStatusBarStyle.h */,
-				2E65A33A1E6438F500DBE418 /* JDStatusBarStyle.m */,
-				2E65A33B1E6438F500DBE418 /* JDStatusBarView.h */,
-				2E65A33C1E6438F500DBE418 /* JDStatusBarView.m */,
-			);
-			name = JDStatusBarNotification;
 			sourceTree = "<group>";
 		};
 		2E67B7C01E2645F400E70805 /* Wrappers */ = {
@@ -2305,7 +2285,7 @@
 		CD73BF60186215790009DE03 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = Kite.ly;
 				TargetAttributes = {
 					2E025DCB1EF7F132006B15EE = {
@@ -2804,10 +2784,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E3084D51E8136F4008218BF /* OLSwizzler.m in Sources */,
-				2E65A33D1E6438F500DBE418 /* JDStatusBarNotification.m in Sources */,
 				2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */,
-				2E65A33E1E6438F500DBE418 /* JDStatusBarStyle.m in Sources */,
-				2E65A33F1E6438F500DBE418 /* JDStatusBarView.m in Sources */,
 				2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */,
 				2E3084D71E813721008218BF /* OLBaseRequest+Mock.m in Sources */,
 				2E9A77371DA683FE00A50C4D /* CI-ViewController.m in Sources */,
@@ -3465,14 +3442,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -3511,14 +3494,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

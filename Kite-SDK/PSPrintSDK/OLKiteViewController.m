@@ -47,6 +47,7 @@
 #import "OLProductTypeSelectionViewController.h"
 #import "OLUserSession.h"
 #import "UIImage+OLUtils.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLCaseViewController.h"
 #import "OLSingleImagePosterViewController.h"
 #import "OL3DProductViewController.h"
@@ -60,8 +61,6 @@ static CGFloat fadeTime = 0.3;
 
 @interface OLKiteViewController ()
 
-@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
-@property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
@@ -69,6 +68,7 @@ static CGFloat fadeTime = 0.3;
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) NSDate *lastTouchDate;
 @property (weak, nonatomic) UIViewController *lastTouchedViewController;
+@property (assign, nonatomic) BOOL dismissing;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -78,7 +78,7 @@ static CGFloat fadeTime = 0.3;
 @property (strong, nonatomic) NSBlockOperation *remoteThemePlistSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
 
-@property (copy, nonatomic) void (^loadingHandler)();
+@property (copy, nonatomic) void (^loadingHandler)(void);
 
 @end
 
@@ -115,22 +115,6 @@ static CGFloat fadeTime = 0.3;
     }
     
     return _loadingImageView;
-}
-
-- (UINavigationBar *)navigationBar{
-    if (!_navigationBar){
-        [self.view class]; //Force viewDidLoad;
-    }
-    
-    return _navigationBar;
-}
-
-- (UINavigationItem *)customNavigationItem{
-    if (!_customNavigationItem){
-         [self.view class]; //Force viewDidLoad;
-    }
-    
-    return _customNavigationItem;
 }
 
 - (OLPrintOrder *)basketOrder{
@@ -199,7 +183,7 @@ static CGFloat fadeTime = 0.3;
     self.fontNames = fontNames;
 }
 
-- (void)startLoadingWithCompletionHandler:(void(^)())handler{
+- (void)startLoadingWithCompletionHandler:(void(^)(void))handler{
     if (!handler){
         return;
     }
@@ -255,18 +239,9 @@ static CGFloat fadeTime = 0.3;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    if (!self.navigationController){
-        self.navigationBar.hidden = NO;
-        self.customNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
-    }
 
     if (!self.loadingHandler){
         [self loadRemoteData];
-    }
-    
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        self.customNavigationItem.title = @"";
     }
     
     if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
@@ -327,7 +302,8 @@ static CGFloat fadeTime = 0.3;
     }
 }
 
-- (void) dismiss{
+- (IBAction) dismiss{
+    self.dismissing = YES;
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackKiteDismissed];
 #endif
@@ -398,7 +374,7 @@ static CGFloat fadeTime = 0.3;
                             }];
                         }
                         else{
-                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                         }
                         [welf fadeToViewController:nvc];
                     }
@@ -430,7 +406,7 @@ static CGFloat fadeTime = 0.3;
                     }];
                 }
                 else{
-                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                 }
                 [welf fadeToViewController:nvc];
             }
@@ -466,7 +442,7 @@ static CGFloat fadeTime = 0.3;
                 }];
             }
             else{
-                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
             }
             [welf fadeToViewController:nvc];
         }
@@ -513,6 +489,9 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)templateSyncDidReturn:(NSNotification *)n{
+    if (self.dismissing){
+        return;
+    }
     NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if (self.templateSyncOperation.finished){
@@ -643,7 +622,7 @@ static CGFloat fadeTime = 0.3;
 - (void)kioskLogout{
     [self.timer invalidate];
     
-    void (^logout)() = ^{
+    void (^logout)(void) = ^{
         [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionAll];
         self.transitionOperation = [[NSBlockOperation alloc] init];
         [self transitionToNextScreen];

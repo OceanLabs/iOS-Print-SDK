@@ -2,7 +2,6 @@
 
 ![Kite](Kite-SDK/docs/kite.png)
 
-[![Circle CI](https://circleci.com/gh/OceanLabs/iOS-Print-SDK/tree/master.svg?style=shield)](https://circleci.com/gh/OceanLabs/iOS-Print-SDK/tree/master)
 [![codecov](https://codecov.io/gh/OceanLabs/iOS-Print-SDK/branch/master/graph/badge.svg)](https://codecov.io/gh/OceanLabs/iOS-Print-SDK)
 ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey.svg)
 ![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Kite-Print-SDK.svg)

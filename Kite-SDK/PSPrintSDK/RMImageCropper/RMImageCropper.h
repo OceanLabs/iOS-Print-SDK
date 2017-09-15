@@ -23,7 +23,7 @@ typedef NS_ENUM(NSUInteger, RMImageCropperMode) {
 @property (nonatomic, assign) RMImageCropperMode initialScale;
 @property (nonatomic, assign) RMImageCropperMode minimumScale;
 @property (nonatomic, strong) OLImageView *imageView;
-@property (nonatomic, copy) void (^tapped)();
+@property (nonatomic, copy) void (^tapped)(void);
 
 - (void)editedImageAsync:(void (^)(UIImage *image))complete;
 - (CGRect)getFrameRect;
