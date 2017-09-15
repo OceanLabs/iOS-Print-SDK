@@ -188,6 +188,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RM8-Ff-8BD">
                                 <rect key="frame" x="16" y="30" width="23" height="23"/>
                                 <state key="normal" image="x-button"/>
+                                <connections>
+                                    <action selector="dismiss" destination="cpC-15-nyB" eventType="touchUpInside" id="nQU-Zh-lFA"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -247,7 +250,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="351"/>
                                         </imageView>
                                         <view tag="20" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cyk-Xt-VCA" customClass="OLArtboardView">
-                                            <rect key="frame" x="25" y="53" width="270" height="270"/>
+                                            <rect key="frame" x="25" y="53" width="278" height="278"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="Cyk-Xt-VCA" secondAttribute="height" multiplier="1:1" id="Jnm-bD-Gox"/>
