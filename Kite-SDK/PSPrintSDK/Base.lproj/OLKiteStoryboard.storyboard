@@ -182,6 +182,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RM8-Ff-8BD">
                                 <rect key="frame" x="16" y="30" width="23" height="23"/>
                                 <state key="normal" image="x-button"/>
+                                <connections>
+                                    <action selector="dismiss" destination="cpC-15-nyB" eventType="touchUpInside" id="ZB4-ty-EFA"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
