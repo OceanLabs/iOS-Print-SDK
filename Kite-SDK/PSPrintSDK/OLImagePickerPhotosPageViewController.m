@@ -94,7 +94,7 @@ CGFloat OLImagePickerMargin = 1.5;
     
     if (!self.logoutButton && (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram)){
         self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(0, -45, self.collectionView.frame.size.width, 45)];
-        [self.logoutButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [self.logoutButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [self.logoutButton setTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
         [self.collectionView addSubview:self.logoutButton];
         [self.logoutButton addTarget:self action:@selector(onButtonLogoutTapped) forControlEvents:UIControlEventTouchUpInside];
