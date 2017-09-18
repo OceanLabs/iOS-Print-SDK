@@ -189,7 +189,7 @@
                                 <rect key="frame" x="16" y="30" width="23" height="23"/>
                                 <state key="normal" image="x-button"/>
                                 <connections>
-                                    <action selector="dismiss" destination="cpC-15-nyB" eventType="touchUpInside" id="nQU-Zh-lFA"/>
+                                    <action selector="dismiss" destination="cpC-15-nyB" eventType="touchUpInside" id="ZB4-ty-EFA"/>
                                 </connections>
                             </button>
                         </subviews>

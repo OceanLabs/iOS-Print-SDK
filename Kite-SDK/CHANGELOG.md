@@ -1,3 +1,6 @@
+### 6.7.1
+- Fixed: Non-responsive cancel button when Kite SDK is loading
+
 ## 6.7.0
 - Support for Xcode 9 and iOS 11
 - Fixed: Issues that were caused by the safe area margins on iPhone X in portrait orientation.
