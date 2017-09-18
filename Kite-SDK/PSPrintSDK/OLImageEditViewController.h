@@ -77,7 +77,6 @@ extern const NSInteger kOLEditTagCrop;
 @property (strong, nonatomic) UIView *previewSourceView;
 @property (strong, nonatomic) UIView *previewView;
 @property (strong, nonatomic) UIView *printContainerView;
-@property (strong, nonatomic) UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) UIButton *ctaButton;
 @property (weak, nonatomic) id<OLImageEditViewControllerDelegate> delegate;
 

@@ -101,7 +101,6 @@ const NSInteger kOLEditTagCrop = 40;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *artboardLeftCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *artboardBottomCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *artboardRightCon;
-@property (strong, nonatomic) UINavigationBar *navigationBar;
 @property (weak, nonatomic) UIView *gestureView;
 
 @property (weak, nonatomic) OLProductTemplateOption *selectedOption;
@@ -257,23 +256,18 @@ const NSInteger kOLEditTagCrop = 40;
     [self setupEditingToolsView];
     
     if (!self.navigationController){
-        self.navigationBar = [[UINavigationBar alloc] init];
-        self.customNavigationItem = [[UINavigationItem alloc] init];
-        self.navigationBar.items = @[self.customNavigationItem];
-        [self.view addSubview:self.navigationBar];
+        UIButton *button = [[UIButton alloc] init];
+        [button addTarget:self action:@selector(onBarButtonCancelTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [button setImage:[UIImage imageNamedInKiteBundle:@"x-button"] forState:UIControlStateNormal];
+        button.tintColor = [UIColor whiteColor];
+        [self.allViews addObject:button];
         
-        [self.navigationBar leadingFromSuperview:0 relation:NSLayoutRelationEqual];
-        [self.navigationBar trailingToSuperview:0 relation:NSLayoutRelationEqual];
-        [self.navigationBar heightConstraint:64];
-        [self.navigationBar verticalSpacingToView:self.printContainerView constant:10 relation:NSLayoutRelationGreaterThanOrEqual];
-        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.navigationBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+        [self.view addSubview:button];
+        button.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeadingMargin multiplier:1 constant:0]];
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
         
-        self.customNavigationItem.title = NSLocalizedStringFromTableInBundle(@"Edit", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Edit image");
-        self.customNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onBarButtonCancelTapped:)];
-        [self.customNavigationItem.leftBarButtonItem setTintColor:[UIColor blackColor]];
-        [self.allViews addObject:self.navigationBar];
     }
-    
     self.availableColors = @[[UIColor blackColor], [UIColor whiteColor], [UIColor darkGrayColor], [UIColor colorWithRed:0.890 green:0.863 blue:0.761 alpha:1.000], [UIColor colorWithRed:0.765 green:0.678 blue:0.588 alpha:1.000], [UIColor colorWithRed:0.624 green:0.620 blue:0.612 alpha:1.000], [UIColor colorWithRed:0.976 green:0.910 blue:0.933 alpha:1.000], [UIColor colorWithRed:0.604 green:0.522 blue:0.741 alpha:1.000], [UIColor colorWithRed:0.996 green:0.522 blue:0.886 alpha:1.000], [UIColor colorWithRed:0.392 green:0.271 blue:0.576 alpha:1.000], [UIColor colorWithRed:0.906 green:0.573 blue:0.565 alpha:1.000], [UIColor colorWithRed:0.984 green:0.275 blue:0.404 alpha:1.000], [UIColor colorWithRed:0.918 green:0.000 blue:0.200 alpha:1.000], [UIColor colorWithRed:0.776 green:0.176 blue:0.157 alpha:1.000], [UIColor colorWithRed:0.965 green:0.831 blue:0.239 alpha:1.000], [UIColor colorWithRed:0.961 green:0.682 blue:0.118 alpha:1.000], [UIColor colorWithRed:0.945 green:0.482 blue:0.204 alpha:1.000], [UIColor colorWithRed:0.827 green:0.859 blue:0.898 alpha:1.000], [UIColor colorWithRed:0.616 green:0.710 blue:0.851 alpha:1.000], [UIColor colorWithRed:0.400 green:0.541 blue:0.784 alpha:1.000], [UIColor colorWithRed:0.400 green:0.541 blue:0.784 alpha:1.000], [UIColor colorWithRed:0.173 green:0.365 blue:0.725 alpha:1.000], [UIColor colorWithRed:0.102 green:0.247 blue:0.361 alpha:1.000], [UIColor colorWithRed:0.765 green:0.933 blue:0.898 alpha:1.000], [UIColor colorWithRed:0.506 green:0.788 blue:0.643 alpha:1.000], [UIColor colorWithRed:0.345 green:0.502 blue:0.400 alpha:1.000], [UIColor colorWithRed:0.337 green:0.427 blue:0.208 alpha:1.000]];
     
     [self registerCollectionViewCells];
@@ -769,7 +763,7 @@ const NSInteger kOLEditTagCrop = 40;
                         self.view.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorImageEditBg;
                     }
                     else{
-                        self.view.backgroundColor = [UIColor colorWithWhite:0.227 alpha:0.750];
+                        self.view.backgroundColor = [UIColor colorWithWhite:0.227 alpha:1.000];
                     }
                     for (UIView *view in self.allViews){
                         view.alpha = 1;
