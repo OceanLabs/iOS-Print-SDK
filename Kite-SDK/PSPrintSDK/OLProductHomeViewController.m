@@ -576,7 +576,7 @@
         }];
     }
     else{
-        OLInfoPageViewController *vc = (OLInfoPageViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
+        OLInfoPageViewController *vc = (OLInfoPageViewController *)[OLUserSession currentSession].kiteVc.infoViewController;
         vc.imageName = @"quality";
         [self.navigationController pushViewController:vc animated:YES];
     }

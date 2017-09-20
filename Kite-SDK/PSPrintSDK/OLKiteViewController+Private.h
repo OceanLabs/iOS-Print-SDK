@@ -43,4 +43,5 @@
 - (void)dismiss;
 - (UIViewController *)viewControllerForGroupSelected:(OLProductGroup *)group;
 - (UIViewController *)productDescriptionViewController;
+- (UIViewController *)infoViewController;
 @end

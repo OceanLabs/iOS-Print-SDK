@@ -556,6 +556,10 @@ static CGFloat fadeTime = 0.3;
     return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
 }
 
+- (UIViewController *)infoViewController{
+    return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]]instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
+}
+
 - (UIViewController *)viewControllerForGroupSelected:(OLProductGroup *)group{
     if (group.products.count > 1){
         return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
