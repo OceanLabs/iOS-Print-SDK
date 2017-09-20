@@ -577,7 +577,7 @@
     }
     else{
         OLInfoPageViewController *vc = (OLInfoPageViewController *)[OLUserSession currentSession].kiteVc.infoViewController;
-        vc.imageName = @"quality";
+        [vc safePerformSelector:@selector(setImageName:) withObject:@"quality"];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
