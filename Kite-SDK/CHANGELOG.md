@@ -1,3 +1,6 @@
+### 6.7.2
+- Fixed a layout issue on iPhone X when using a single custom image provider
+
 ### 6.7.1
 - Fixed: Non-responsive cancel button when Kite SDK is loading
 
