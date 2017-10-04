@@ -541,7 +541,13 @@
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
         UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
         imageView.image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
-        imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
+        if ([OLUserSession currentSession].prioritizeMainBundleImages){
+            imageView.contentMode = UIViewContentModeLeft;
+            imageView.backgroundColor = [UIColor whiteColor];
+        }
+        else{
+            imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
+        }
         return cell;
     }
 }
