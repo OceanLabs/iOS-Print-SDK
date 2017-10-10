@@ -794,7 +794,8 @@
     OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
     
-    [cellImageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:OLAssetMaximumSize applyEdits:NO placeholder:nil progress:nil completionHandler:NULL];
+    CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    [cellImageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:size applyEdits:NO placeholder:nil progress:nil completionHandler:NULL];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     

@@ -251,9 +251,6 @@
 		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
 		2E5B27331EC06A4700F3AED3 /* OLCollagePosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5B27311EC06A4700F3AED3 /* OLCollagePosterViewController.h */; };
 		2E5B27341EC06A4700F3AED3 /* OLCollagePosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5B27321EC06A4700F3AED3 /* OLCollagePosterViewController.m */; };
-		2E65A33D1E6438F500DBE418 /* JDStatusBarNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65A3381E6438F500DBE418 /* JDStatusBarNotification.m */; };
-		2E65A33E1E6438F500DBE418 /* JDStatusBarStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65A33A1E6438F500DBE418 /* JDStatusBarStyle.m */; };
-		2E65A33F1E6438F500DBE418 /* JDStatusBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65A33C1E6438F500DBE418 /* JDStatusBarView.m */; };
 		2E65FEA01E4E058400A301BB /* OLTouchTolerantView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */; };
 		2E65FEA11E4E058400A301BB /* OLTouchTolerantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */; };
 		2E65FEA81E4E143B00A301BB /* OLOrderHistoryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */; };
@@ -2428,9 +2425,13 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo-resources.sh",
+				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/Stripe/Stripe.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2542,13 +2543,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Kite-CI-Deploy-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A5C135E7BF18F5D8A7843D7D /* [CP] Check Pods Manifest.lock */ = {
@@ -2557,13 +2561,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-KiteSDK-Demo-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D801D965E628C76A96EAF7B6 /* [CP] Copy Pods Resources */ = {
@@ -2572,9 +2579,14 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy-resources.sh",
+				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/Stripe/Stripe.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/KITAssetsPickerController/KITAssetsPickerController.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

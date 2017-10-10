@@ -483,8 +483,6 @@ static NSOperationQueue *imageOperationQueue;
                     [self resizeImage:[UIImage imageWithData:data] size:size applyEdits:applyEdits completion:^(UIImage *image){
                         if (!error) {
                             if (!fullResolution){
-                                self.cachedEditedImage = image;
-                                
                                 // Decompress image to improve performance
                                 // Source: http://stackoverflow.com/questions/10790183/setting-image-property-of-uiimageview-causes-major-lag
                                 if (image) {
@@ -493,6 +491,8 @@ static NSOperationQueue *imageOperationQueue;
                                     image = UIGraphicsGetImageFromCurrentImageContext();
                                     UIGraphicsEndImageContext();
                                 }
+                                
+                                self.cachedEditedImage = image;
                             }
                             if (progress){
                                 progress(1);

@@ -249,7 +249,6 @@ CGFloat OLImagePickerMargin = 1.5;
     if (collectionView.tag == 10){
         NSInteger numberOfItems = 0;
         if (self.provider.collections.count > self.showingCollectionIndex){
-            CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
             NSInteger numberOfCellsToFillHeight = 0;
             
             numberOfItems = MAX(numberOfCellsToFillHeight * [self numberOfCellsPerRow], [self.provider.collections[self.showingCollectionIndex] count]);
