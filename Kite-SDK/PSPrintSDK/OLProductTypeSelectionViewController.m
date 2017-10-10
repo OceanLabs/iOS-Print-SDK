@@ -335,6 +335,7 @@
     OLProduct *product = (OLProduct *)self.products[indexPath.item];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:40];
+    imageView.image = nil;
     [imageView setAndFadeInImageWithOLAsset:[product coverPhotoAsset] size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
     
     UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
