@@ -1685,16 +1685,12 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     NSMutableArray<OLAsset *> *jobAssets = [[printJob assetsForUploading] mutableCopy];
     
     //Special handling of products
-    if (product.productTemplate.templateUI == OLTemplateUIPhotobook && [(OLPhotobookPrintJob *)printJob frontCover]){
-        //Make sure we don't add the cover photo asset in the book photos
-        OLAsset *potentialAsset = [(OLPhotobookPrintJob *)printJob frontCover];
-        OLAsset *asset = potentialAsset;
-        
-        if ([potentialAsset.dataSource isKindOfClass:[OLAsset class]]){
-            asset = (OLAsset *)potentialAsset.dataSource;
+    if (product.productTemplate.templateUI == OLTemplateUIPhotobook){
+        if (![(OLPhotobookPrintJob *)printJob frontCover]){
+            [userSelectedPhotos insertObject:[[OLPlaceholderAsset alloc] init] atIndex:0];
         }
-        if (asset.uuid){
-            [addedAssetsUUIDs addObject:asset.uuid];
+        else{
+            [jobAssets insertObject:[(OLPhotobookPrintJob *)printJob frontCover] atIndex:0];
         }
     }
     else if (product.productTemplate.templateUI == OLTemplateUIApparel && [printJob isKindOfClass:[OLApparelPrintJob class]]){
@@ -1755,13 +1751,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                 asset = ((OLApparelPrintJob *)printJob).assets[@"back_image"];
             }
             [orvc safePerformSelector:@selector(setBackAsset:) withObject:asset];
-        }
-        else if ([printJob isKindOfClass:[OLPhotobookPrintJob class]] && [(OLPhotobookPrintJob *)printJob frontCover]){
-            OLAsset *coverPhoto = [(OLPhotobookPrintJob *)printJob frontCover];
-            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:coverPhoto];
-        }
-        else{
-            [orvc safePerformSelector:@selector(setCoverPhoto:) withObject:[[OLPlaceholderAsset alloc] init]];
         }
         
         [orvc safePerformSelector:@selector(setProduct:) withObject:product];

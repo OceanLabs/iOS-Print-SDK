@@ -755,18 +755,11 @@ static const CGFloat kBookEdgePadding = 38;
 - (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     NSMutableArray *photoAssets = [[OLAsset userSelectedAssets].nonPlaceholderAssets mutableCopy];
     
-    // ensure order is maxed out by adding duplicates as necessary
-    NSUInteger userSelectedAssetCount = photoAssets.count;
-    NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
-    NSUInteger duplicatesToFillOrder = numOrders * self.product.quantityToFulfillOrder - userSelectedAssetCount;
-    for (NSUInteger i = 0; i < duplicatesToFillOrder; ++i) {
-        [photoAssets addObject:photoAssets[i % userSelectedAssetCount]];
-    }
-    
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
     if (![[OLAsset userSelectedAssets].firstObject isKindOfClass:[OLPlaceholderAsset class]]){
         job.frontCover = [OLAsset userSelectedAssets].firstObject;
+        [photoAssets removeObjectAtIndex:0];
     }
     else{
         job.frontCover = nil;
