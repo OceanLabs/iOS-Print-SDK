@@ -88,7 +88,7 @@
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
     NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                self.extendedSelectionBox ? @"V:|-(-8)-[view]-0-|" : @"V:|-(-5)-[view]-(-5)-|"];
+                self.extendedSelectionBox ? @"V:|-(-10)-[view]-(-5)-|" : @"V:|-(-5)-[view]-(-5)-|"];
     
     
     for (NSString *visual in visuals) {
