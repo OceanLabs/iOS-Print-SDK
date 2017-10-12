@@ -101,17 +101,17 @@
 
 - (void)clearUserSelectedPhotos{
     for (OLAsset *asset in self.userSelectedAssets){
-        asset.edits = nil;
         [asset unloadImage];
     }
     
     [self.userSelectedAssets removeAllObjects];
     
     for (OLAsset *asset in self.recentPhotos){
-        asset.edits = nil;
         [asset unloadImage];
     }
     [self.recentPhotos removeAllObjects];
+    
+    self.appAssets = nil;
     
     for (OLImagePickerProvider *provider in self.kiteVc.customImageProviders){
         if ([provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
