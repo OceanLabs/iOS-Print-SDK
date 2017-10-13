@@ -29,11 +29,9 @@
 
 #import "OLPayPalCard.h"
 
-#ifndef KITE_UTILS
 #import "OLConstants.h"
 #import "NSString+Formatting.h"
 #import "OLKiteUtils.h"
-#endif
 
 static NSString *const kKeyNumberMasked = @"co.oceanlabs.paypal.kKeyNumberMasked";
 static NSString *const kKeyCardType = @"co.oceanlabs.paypal.kKeyCardtype";
@@ -46,21 +44,11 @@ static NSString *const kKeyVaultExpireDate = @"co.oceanlabs.paypal.kKeyVaultExpi
 
 static NSString *const kOLErrorDomainPayPal = @"co.oceanlabs.paypal.kOLErrorDomainPayPal";
 
-#ifndef KITE_UTILS
 #define kErrorMessageGenericPayPalVaultFailure NSLocalizedStringFromTableInBundle(@"Failed to store card details with PayPal. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
 #define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
 #define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
 #define kErrorMessageCardValidation NSLocalizedStringFromTableInBundle(@"Failed to validate card details, please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
 #define kErrorMessagePaymentDeclined NSLocalizedStringFromTableInBundle(@"Your payment was not approved (transaction state: %@). Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
-#else
-#define kErrorMessageGenericPayPalVaultFailure NSLocalizedString(@"Failed to store card details with PayPal. Please try again.", @"")
-#define kErrorMessageBadCardNumber NSLocalizedString(@"Please enter a valid card number", @"")
-#define kErrorMessageBadExpiryDate NSLocalizedString(@"Please enter a card expiry date in the future", @"")
-#define kErrorMessageCardValidation NSLocalizedString(@"Failed to validate card details, please try again.", @"")
-#define kErrorMessagePaymentDeclined NSLocalizedString(@"Your payment was not approved (transaction state: %@). Please try again.", @"")
-const NSInteger kOLKiteSDKErrorCodeUnexpectedResponse = 520;
-#endif
-
 
 static NSString *clientId;
 

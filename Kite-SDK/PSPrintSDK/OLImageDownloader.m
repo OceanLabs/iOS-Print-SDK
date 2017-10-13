@@ -29,12 +29,7 @@
 
 #import "OLImageDownloader.h"
 #import "OLImageDownloadDelegate.h"
-
-#ifndef KITE_UTILS
 #import "OLConstants.h"
-#else
-NSString *const kOLKiteSDKErrorDomain = @"co.oceanlabs.kOLKiteSDKErrorDomain";
-#endif
 
 @interface OLImageDownloader ()
 

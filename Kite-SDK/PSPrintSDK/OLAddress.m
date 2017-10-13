@@ -62,7 +62,6 @@ static NSString *const kKeyCompanyName = @"co.oceanlabs.pssdk.kKeyCompanyName";
     return addr;
 }
 
-#ifndef KITE_UTILS
 + (OLAddressSearchRequest *)searchForAddressWithCountry:(OLCountry *)country query:(NSString *)q delegate:(id<OLAddressSearchRequestDelegate>)delegate {
     NSAssert(delegate != nil, @"please supply a non nil delegate");
     NSAssert(country != nil && q != nil, @"Please provide a country and query string at the very least when doing a search for an international address");
@@ -105,7 +104,6 @@ static NSString *const kKeyCompanyName = @"co.oceanlabs.pssdk.kKeyCompanyName";
     
     return displayName;
 }
-#endif
 
 - (NSString *)fullNameFromFirstAndLast{
     return [[NSString stringWithFormat:@"%@ %@", self.recipientFirstName ? self.recipientFirstName : @"", self.recipientLastName ? self.recipientLastName : @""] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];

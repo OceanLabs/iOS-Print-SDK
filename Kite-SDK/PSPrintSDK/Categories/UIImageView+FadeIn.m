@@ -32,23 +32,16 @@
 #import "OLImageDownloader.h"
 #import "objc/runtime.h"
 #import "UIImage+OLUtils.h"
-
-#ifndef KITE_UTILS
 #import "OLUserSession.h"
 #import "OLAsset+Private.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
-#endif
 
 static char tasksKey;
 
 @implementation UIImageView (FadeIn)
 
 - (CGFloat)screenScale{
-#ifndef KITE_UTILS
     return [OLUserSession currentSession].screenScale;
-#else
-    return [UIScreen mainScreen].scale;
-#endif
 }
 
 - (void)setAndFadeInImageWithURL:(NSURL *)url {

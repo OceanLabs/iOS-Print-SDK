@@ -28,10 +28,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#ifndef KITE_UTILS
 #import "OLAddressSearchRequest.h"
-#endif
 
 @class OLAddress;
 @class OLCountry;
@@ -40,11 +37,9 @@
 
 + (OLAddress *)kiteTeamAddress;
 
-#ifndef KITE_UTILS
 + (OLAddressSearchRequest *)searchForAddressWithCountry:(OLCountry *)country query:(NSString *)q delegate:(id<OLAddressSearchRequestDelegate>)delegate;
 + (OLAddressSearchRequest *)searchForAddress:(OLAddress *)address delegate:(id<OLAddressSearchRequestDelegate>)delegate;
 @property (nonatomic, readonly, getter = isSearchRequiredForFullDetails) BOOL searchRequiredForFullDetails;
-#endif
 
 @property (nonatomic, copy) NSString *recipientFirstName;
 @property (nonatomic, copy) NSString *recipientLastName;

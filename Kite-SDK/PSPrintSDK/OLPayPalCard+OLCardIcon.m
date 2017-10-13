@@ -30,16 +30,13 @@
 #import <UIKit/UIKit.h>
 #import "OLPayPalCard+OLCardIcon.h"
 #import "OLLuhn.h"
-#ifndef KITE_UTILS
 #import "UIImage+ImageNamedInKiteBundle.h"
-#endif
 
 @implementation OLPayPalCard (OLCardIcon)
 
 -(UIImage *)cardIcon{
     OLCreditCardType type = [[self number] creditCardType];
     
-#ifndef KITE_UTILS
     if (type == OLCreditCardTypeAmex){
         return [UIImage imageNamedInKiteBundle:@"amex-logo"];
     }
@@ -52,20 +49,6 @@
     else{
         return [UIImage imageNamedInKiteBundle:@"credit-card-method"];
     }
-#else
-    if (type == OLCreditCardTypeAmex){
-        return [UIImage imageNamed:@"amex-logo"];
-    }
-    else if (type == OLCreditCardTypeVisa){
-        return [UIImage imageNamed:@"visa-logo"];
-    }
-    else if(type == OLCreditCardTypeMastercard){
-        return [UIImage imageNamed:@"mastercard-logo"];
-    }
-    else{
-        return [UIImage imageNamed:@"credit-card-method"];
-    }
-#endif
 }
 
 - (BOOL)isAmex{
