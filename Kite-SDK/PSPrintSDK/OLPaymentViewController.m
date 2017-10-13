@@ -602,7 +602,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 
 - (void)setViewsToBlank{
     [self.paymentButton2 setTitle:@"0.00" forState:UIControlStateNormal];
-    self.shippingCostLabel.text = [[NSDecimalNumber decimalNumberWithString:@"0.00"] formatCostForCurrencyCode:[[OLCountry countryForCurrentLocale] currencyCode]];
+    self.shippingCostLabel.text = nil;
     self.promoCodeCostLabel.text = @"";
     [self.tableView reloadData];
 }
