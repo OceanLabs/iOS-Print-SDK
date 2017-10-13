@@ -82,23 +82,24 @@
 - (UIImage *)shrinkToSize:(CGSize)size forScreenScale:(CGFloat)screenScale aspectFit:(BOOL)aspectFit{
     CGFloat scaleFactor;
     if(aspectFit){
-        scaleFactor = (MAX(size.width, size.height) * screenScale) / MAX(self.size.height, self.size.width);
+        scaleFactor = (MAX(size.width, size.height)) / MAX(self.size.height, self.size.width);
     }
     else{
-        scaleFactor = (MAX(size.width, size.height) * screenScale) / MIN(self.size.height, self.size.width);
+        scaleFactor = (MAX(size.width, size.height)) / MIN(self.size.height, self.size.width);
     }
     
     if (scaleFactor >= 1){
         return self;
     }
     
-    CGFloat newHeight = self.size.height * scaleFactor;
-    CGFloat newWidth = self.size.width * scaleFactor;
+    CGFloat newHeight = self.size.height * scaleFactor * screenScale;
+    CGFloat newWidth = self.size.width * scaleFactor * screenScale;
     
     UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight));
     [self drawInRect:CGRectMake(0, 0, newWidth, newHeight)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+    newImage = [[UIImage alloc] initWithCGImage:newImage.CGImage scale:screenScale orientation:newImage.imageOrientation];
     return newImage;
 }
 
