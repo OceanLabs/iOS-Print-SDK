@@ -39,11 +39,13 @@
 - (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size;
 - (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder;
 - (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler;
+- (void)setImageWithURL:(NSURL *)url fadeIn:(BOOL)fadeIn size:(CGSize)size placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler;
 
 #ifndef KITE_UTILS
 - (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options;
 - (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder;
 - (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler;
 - (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler;
+- (void)setImageWithOLAsset:(OLAsset *)asset fadeIn:(BOOL)fadeIn size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler;
 #endif
 @end

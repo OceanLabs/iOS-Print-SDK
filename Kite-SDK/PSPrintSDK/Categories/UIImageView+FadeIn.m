@@ -64,6 +64,10 @@ static char tasksKey;
 }
 
 - (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
+    [self setImageWithURL:url fadeIn:YES size:size placeholder:placeholder progress:progressHandler completionHandler:handler];
+}
+
+- (void)setImageWithURL:(NSURL *)url fadeIn:(BOOL)fadeIn size:(CGSize)size placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
     for (id key in self.tasks.allKeys){
         if (![key isEqual:url]){
             [self.tasks[key] cancel];
@@ -103,7 +107,7 @@ static char tasksKey;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.image = resizedImage;
-                    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    [UIView animateWithDuration:fadeIn ? 0.3 : 0 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                         self.alpha = 1;
                     }completion:^(BOOL finished){
                         if (handler){
@@ -119,9 +123,11 @@ static char tasksKey;
     });
 }
 
-#ifndef KITE_UTILS
-
 - (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
+    [self setImageWithOLAsset:asset fadeIn:YES size:size applyEdits:applyEdits placeholder:placeholder progress:progressHandler completionHandler:handler];
+}
+
+- (void)setImageWithOLAsset:(OLAsset *)asset fadeIn:(BOOL)fadeIn size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
     for (id key in self.tasks.allKeys){
         if (![asset isKindOfClass:[OLAsset class]] || ![key isEqual:asset.uuid]){
             [self.tasks removeObjectForKey:key];
@@ -163,7 +169,7 @@ static char tasksKey;
         self.contentMode = UIViewContentModeScaleAspectFill;
         self.alpha = 0;
         self.image = image;
-        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:fadeIn ? 0.3 : 0 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.alpha = 1;
         }completion:^(BOOL finished){
             if (handler){
@@ -236,8 +242,6 @@ static char tasksKey;
     }];
     self.tasks[asset.localIdentifier] = [NSNumber numberWithLong:requestID];
 }
-
-#endif
 
 - (NSMutableDictionary *)tasks{
     NSMutableDictionary *tasks = objc_getAssociatedObject(self, &tasksKey);
