@@ -378,7 +378,8 @@ typedef enum {
     NSString *shippingLabel = [NSString stringWithFormat:@"**%@**\n", shippingString];
     
     NSDecimalNumber *minCost;
-    NSString *currencyCode = [OLUserSession currentSession].printOrder.currencyCode;
+    
+    NSString *currencyCode = [self currencyCode];
     NSString *region = self.productTemplate.countryMapping[[OLCountry countryForCurrentLocale].codeAlpha3];
     if (region){
         if (self.productTemplate.shippingClasses[region].count == 1){
@@ -398,32 +399,13 @@ typedef enum {
             }
             
             if (fromString){
-                s = [s stringByAppendingString: [NSString stringWithFormat:@"%@ %@\n\n", fromString, [minCost formatCostForCurrencyCode:[OLUserSession currentSession].printOrder.currencyCode]]];
+                s = [s stringByAppendingString: [NSString stringWithFormat:@"%@ %@\n\n", fromString, [minCost formatCostForCurrencyCode:currencyCode]]];
             }
             else{
                 s = [s stringByAppendingString: [NSString stringWithFormat:@"%@\n\n", [minCost formatCostForCurrencyCode:currencyCode]]];
             }
         }
     }
-    
-    //    NSDecimalNumber *shippingCost = [self.productTemplate shippingCostForCountry:[OLCountry countryForCurrentLocale]];
-    //    if (shippingCost && [shippingCost doubleValue] != 0){
-    //        if (![OLKiteABTesting sharedInstance].hidePrice){
-//            NSDecimalNumber *original = [self.productTemplate originalShippingCostForCountry:[OLCountry countryForCurrentLocale]];
-//            if (original){
-//                s = [s stringByAppendingString: [NSString stringWithFormat:@"**%@**\n~%@~ %@\n\n", shippingString, [original formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]], [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
-//            }
-//            else{
-//                s = [s stringByAppendingString: [NSString stringWithFormat:@"**%@**\n%@\n\n", shippingString, [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
-//            }
-//        }
-//    }
-//    else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, don't add any shipping info
-//    }
-//    else{
-//        NSString *freeString = NSLocalizedStringFromTableInBundle(@"FREE", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Free, no cost");
-//        s = [s stringByAppendingString:[NSString stringWithFormat:@"**%@**\n%@\n\n", shippingString, freeString]];
-//    }
     
     //Add quality guarantee
     s = [s stringByAppendingString:[OLKitePrintSDK qualityGuaranteeString]];
