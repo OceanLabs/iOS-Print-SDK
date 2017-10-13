@@ -542,6 +542,9 @@
         UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
         imageView.image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
         if ([OLUserSession currentSession].prioritizeMainBundleImages){
+            if (imageView.image.size.width > self.view.frame.size.width){
+                imageView.image = [imageView.image shrinkToSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.width * (imageView.image.size.height / imageView.image.size.width)) forScreenScale:[UIScreen mainScreen].scale aspectFit:YES];
+            }
             imageView.contentMode = UIViewContentModeLeft;
             imageView.backgroundColor = [UIColor whiteColor];
         }
@@ -557,6 +560,9 @@
     
     if ([OLUserSession currentSession].prioritizeMainBundleImages){
         UIImage *image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
+        if (image.size.width > self.view.frame.size.width){
+            image = [image shrinkToSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.width * (image.size.height / image.size.width)) forScreenScale:[UIScreen mainScreen].scale aspectFit:YES];
+        }
         return CGSizeMake(size.width, image.size.height);
     }
     
