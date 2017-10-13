@@ -33,6 +33,7 @@
 #import "OLKiteABTesting.h"
 #import "UIView+RoundRect.h"
 #import "OLUserSession.h"
+#import "UIView+AutoLayoutHelper.h"
 
 @interface OLProduct ()
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
@@ -81,7 +82,6 @@
         [ctaButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
     }
     [ctaButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    ctaButton.frame = CGRectMake(5, self.view.frame.size.height - 55, self.view.frame.size.width-10, 50);
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
     if (!font){
         font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
@@ -99,6 +99,10 @@
     }
     
     [self.view addSubview:ctaButton];
+    [ctaButton leadingFromSuperview:15 relation:NSLayoutRelationEqual];
+    [ctaButton trailingToSuperview:15 relation:NSLayoutRelationEqual];
+    [ctaButton bottomToSuperview:15 relation:NSLayoutRelationEqual];
+    [ctaButton heightConstraint:50];
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
