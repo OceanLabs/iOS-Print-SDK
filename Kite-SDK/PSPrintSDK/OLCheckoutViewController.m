@@ -161,9 +161,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self registerForKeyboardNotifications];
-    
+        
     [self trackViewed];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
@@ -230,16 +228,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (!self.navigationItem.rightBarButtonItem && !self.presentedViewController){
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonSaveClicked)];
     }
-}
-
-- (void)registerForKeyboardNotifications
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)trackViewed{
@@ -707,39 +695,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)addressPickerDidCancelPicking:(OLAddressPickerController *)picker {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-// Called when the UIKeyboardDidShowNotification is sent.
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
-    
-    NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.edgeInsetTop, 0.0, kbSize.height, 0.0);
-    [UIView animateWithDuration:0.1 animations:^{
-        self.tableView.contentInset = contentInsets;
-        self.tableView.scrollIndicatorInsets = contentInsets;
-    }];
-    
-    // If active text field is hidden by keyboard, scroll it so it's visible
-    // Your application might not need or want this behavior.
-    CGRect aRect = self.view.frame;
-    aRect.size.height -= kbSize.height;
-    CGPoint p = self.activeTextView.superview.frame.origin;
-    if (!CGRectContainsPoint(aRect, CGPointMake(p.x, p.y + self.activeTextView.frame.size.height)) ) {
-        CGPoint scrollPoint = CGPointMake(0.0, self.activeTextView.superview.frame.origin.y-kbSize.height);
-        [self.tableView setContentOffset:scrollPoint animated:YES];
-    }
-    
-}
-
-// Called when the UIKeyboardWillHideNotification is received
-- (void)keyboardWillBeHidden:(NSNotification *)aNotification
-{
-    // scroll back..
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
-    self.tableView.contentInset = contentInsets;
-    self.tableView.scrollIndicatorInsets = contentInsets;
 }
 
 - (void)dealloc{
