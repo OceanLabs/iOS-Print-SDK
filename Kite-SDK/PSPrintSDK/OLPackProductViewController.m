@@ -614,10 +614,14 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     
     OLArtboardView *artboard = cell.imageView;
     artboard.delegate = self;
-    [self configureAssetViewsForArtboard:artboard forSize:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath]];
+    CGSize imageSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    [self configureAssetViewsForArtboard:artboard forSize:imageSize];
     
     artboard.assetViews.firstObject.index = indexPath.item;
-    [artboard loadImageOnAllAssetViews];
+    
+    [artboard.assetViews.firstObject.imageView setAndFadeInImageWithOLAsset:asset size:imageSize applyEdits:YES placeholder:nil progress:^(float progress){
+        [(OLImageView *)artboard.assetViews.firstObject.imageView setProgress:progress];
+    }completionHandler:nil];
     
     if (self.product.productTemplate.templateUI == OLTemplateUICircle){
         cell.enableMask = YES;
