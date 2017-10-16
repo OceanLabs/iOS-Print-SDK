@@ -800,12 +800,21 @@ const NSInteger kOLEditTagCrop = 40;
         self.artboard.image = image;
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
-        self.artboard.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
+        
+        
+        CGFloat factor = 1;
+        if (self.edits.cropImageFrame.size.width != 0) {
+            factor = self.artboard.assetViews.firstObject.frame.size.width / self.edits.cropImageFrame.size.width;
+        }
+        
+        self.artboard.assetViews.firstObject.imageView.transform = CGAffineTransformMake(self.edits.cropTransform.a, self.edits.cropTransform.b, self.edits.cropTransform.c, self.edits.cropTransform.d, self.edits.cropTransform.tx * factor, self.edits.cropTransform.ty * factor);
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+    [self.view layoutIfNeeded];
     if (self.fullImage){
         [self loadImages];
     }
