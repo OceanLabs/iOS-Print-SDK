@@ -122,7 +122,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     
     [self setupCtaButton];
     
-    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.ctaButton.frame.size.height, self.collectionView.contentInset.right);
+    self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top, self.collectionView.contentInset.left, self.ctaButton.frame.size.height + 30, self.collectionView.contentInset.right);
     [self addInfoBanner];
 }
 
