@@ -138,13 +138,13 @@
         [(UIActivityIndicatorView *)view startAnimating];
     }
     
+    UIImage *image = [self addBorderToImage:[self.artboard.assetViews.firstObject editedImage]];
+    
+    if (!image){
+        return;
+    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        UIImage *image = [self addBorderToImage:[self.artboard.assetViews.firstObject editedImage]];
-        
-        if (!image){
-            return;
-        }
-        
         OLAsset *tempAsset = [OLAsset assetWithImageAsPNG:image];
         tempAsset.edits.filterName = self.edits.filterName;
         
