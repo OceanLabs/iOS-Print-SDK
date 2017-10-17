@@ -328,7 +328,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     NSArray *copy = [[NSArray alloc] initWithArray:self.edits.textsOnPhoto copyItems:NO];
     for (OLTextOnPhoto *textOnPhoto in copy){
-        UITextField *textField = [self addTextFieldToView:self.textFieldsView existing:nil];
+        UITextField *textField = [self addTextFieldToView:self.artboard existing:nil];
         textField.text = textOnPhoto.text;
         textField.transform = textOnPhoto.transform;
         textField.textColor = textOnPhoto.color;
@@ -2471,7 +2471,7 @@ const NSInteger kOLEditTagCrop = 40;
             
             NSArray *copy = [[NSArray alloc] initWithArray:welf.edits.textsOnPhoto copyItems:NO];
             for (OLTextOnPhoto *textOnPhoto in copy){
-                UITextField *textField = [welf addTextFieldToView:welf.textFieldsView existing:nil];
+                UITextField *textField = [welf addTextFieldToView:welf.artboard existing:nil];
                 textField.text = textOnPhoto.text;
                 textField.transform = textOnPhoto.transform;
                 textField.textColor = textOnPhoto.color;
