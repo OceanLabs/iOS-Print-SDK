@@ -2330,7 +2330,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
-				$PODS_CONFIGURATION_BUILD_DIR/Stripe/Stripe.bundle,
+				"$PODS_CONFIGURATION_BUILD_DIR/Stripe/Stripe.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -2484,8 +2484,8 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
-				$PODS_CONFIGURATION_BUILD_DIR/Stripe/Stripe.bundle,
-				$PODS_CONFIGURATION_BUILD_DIR/KITAssetsPickerController/KITAssetsPickerController.bundle,
+				"$PODS_CONFIGURATION_BUILD_DIR/Stripe/Stripe.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/KITAssetsPickerController/KITAssetsPickerController.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (

@@ -468,13 +468,14 @@
         NSMutableArray *con = [[NSMutableArray alloc] init];
         
         NSArray *visuals = @[[NSString stringWithFormat:@"H:|-5-[addButton(%f)]", height],
-                             [NSString stringWithFormat:@"V:[addButton(%f)]-5-|", height]];
+                             [NSString stringWithFormat:@"V:[addButton(%f)]", height]];
         
         for (NSString *visual in visuals) {
             [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
         }
         
         [addButton.superview addConstraints:con];
+        [addButton.superview addConstraint:[NSLayoutConstraint constraintWithItem:addButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.nextButton attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
         
         UILabel *label = [[UILabel alloc] init];
         label.text = @"+";
