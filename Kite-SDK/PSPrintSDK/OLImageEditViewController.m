@@ -1119,6 +1119,10 @@ const NSInteger kOLEditTagCrop = 40;
 #pragma mark Drawer
 
 - (void)dismissDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
+    if (self.animating){
+        return;
+    }
+    self.animating = YES;
     self.selectedOption = nil;
     self.editingTools.button1.selected = NO;
     self.editingTools.button2.selected = NO;
@@ -1127,9 +1131,6 @@ const NSInteger kOLEditTagCrop = 40;
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.editingTools.drawerView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished){
-        if (!finished){
-            return;
-        }
         [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
         
         self.editingTools.collectionView.tag = -1;
@@ -1137,6 +1138,7 @@ const NSInteger kOLEditTagCrop = 40;
         [self.view bringSubviewToFront:self.editingTools];
         self.editingTools.drawerHeightCon.constant = self.originalDrawerHeight;
         [self.view layoutIfNeeded];
+        self.animating = NO;
         if (handler){
             handler(finished);
         }
@@ -1144,6 +1146,10 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)showDrawerWithCompletionHandler:(void(^)(BOOL finished))handler{
+    if (self.animating){
+        return;
+    }
+    self.animating = YES;
     if (self.editingTools.collectionView.tag == kOLEditTagTextTools){
         self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"TEXT TOOLS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
@@ -1171,6 +1177,7 @@ const NSInteger kOLEditTagCrop = 40;
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.editingTools.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.editingTools.drawerView.frame.size.height - extraHeight);
     } completion:^(BOOL finished){
+        self.animating = NO;
         if (handler){
             handler(finished);
         }
@@ -1441,6 +1448,10 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)onButtonClicked:(UIButton *)sender {
+    if (self.animating){
+        return;
+    }
+    
     void (^buttonAction)(void) = ^void(void){
         [self selectButton:sender];
     };
