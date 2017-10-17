@@ -431,7 +431,7 @@ static NSOperationQueue *imageOperationQueue;
             };
             
             //Don't request less than a 400x400 image, otherwise the Photos Framework tries to be useful and returns a low-res, prerendered image which loses the rotation metadata (but is rotated correctly). This messes up the rotation from our editor.
-            CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(MAX(size.width * [OLUserSession currentSession].screenScale, 400), MAX(size.height * [OLUserSession currentSession].screenScale, 400));
+            CGSize requestSize = fullResolution || (applyEdits && self.isEdited) ? PHImageManagerMaximumSize : CGSizeMake(MAX(size.width * [OLUserSession currentSession].screenScale, 400), MAX(size.height * [OLUserSession currentSession].screenScale, 400));
             [imageManager requestImageForAsset:self.phAsset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
                 if (image){
                     if (applyEdits){
@@ -546,16 +546,21 @@ static NSOperationQueue *imageOperationQueue;
             blockImage = [UIImage imageWithCGImage:blockImage.CGImage scale:blockImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:blockImage.imageOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
         }
         
-        if (!CGSizeEqualToSize(size, CGSizeZero) && !CGSizeEqualToSize(size, OLAssetMaximumSize)){
-            blockImage = [blockImage shrinkToSize:size forScreenScale:[OLUserSession currentSession].screenScale];
-        }
-        
         if (![self isEdited] || !applyEdits){
+            if (!CGSizeEqualToSize(size, CGSizeZero) && !CGSizeEqualToSize(size, OLAssetMaximumSize)){
+                CGFloat scale = [OLUserSession currentSession].screenScale;
+                blockImage = [blockImage shrinkToSize:CGSizeMake(size.width * scale, size.height * scale) forScreenScale:[OLUserSession currentSession].screenScale];
+            }
             handler(blockImage);
             return;
         }
         
         blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:self.edits.cropImageFrame andImageRect:self.edits.cropImageRect andImageViewWidth:self.edits.cropImageSize.width andImageViewHeight:self.edits.cropImageSize.height];
+        
+        if (!CGSizeEqualToSize(size, CGSizeZero) && !CGSizeEqualToSize(size, OLAssetMaximumSize)){
+            CGFloat scale = [OLUserSession currentSession].screenScale;
+            blockImage = [blockImage shrinkToSize:CGSizeMake(size.width * scale, size.height * scale) forScreenScale:[OLUserSession currentSession].screenScale];
+        }
         
         if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
             CIImage *filterImage = [CIImage imageWithCGImage:blockImage.CGImage];
