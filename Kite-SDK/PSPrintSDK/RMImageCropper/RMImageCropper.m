@@ -561,9 +561,7 @@ CGFloat const RESET_DURATION = 0.10f;
     }
     
     CGPoint correction = CGPointMake(xCorrection, yCorrection);
-    CGPoint scaledCorrection = CGPointApplyAffineTransform(correction, CGAffineTransformInvert(self.scaleTransform));
-    
-    [self startDecelerationWithVelocity:[self getVelocityForDisplacement:scaledCorrection]];
+    [self startDecelerationWithVelocity:[self getVelocityForDisplacement:correction]];
 }
 
 #pragma mark - Size
