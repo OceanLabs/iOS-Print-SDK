@@ -96,7 +96,7 @@ CGFloat const RESET_DURATION = 0.10f;
 {
     [super setFrame:frame];
     
-    [self setImageViewToFitFrame];
+    [self layoutSubviews];
 }
 
 - (void)layoutSubviews
