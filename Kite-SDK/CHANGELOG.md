@@ -1,3 +1,8 @@
+## 6.8.0
+- Unified UX for adding images to products
+- Improved UX for swapping images in products
+- Many bug fixes
+
 ### 6.7.2
 - Fixed a layout issue on iPhone X when using a single custom image provider
 

@@ -475,7 +475,7 @@
         }
         
         [addButton.superview addConstraints:con];
-        [addButton.superview addConstraint:[NSLayoutConstraint constraintWithItem:addButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.nextButton attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+        [addButton.superview addConstraint:[NSLayoutConstraint constraintWithItem:addButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.ctaButton attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
         
         UILabel *label = [[UILabel alloc] init];
         label.text = @"+";
