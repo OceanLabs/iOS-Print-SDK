@@ -450,8 +450,6 @@ const NSInteger kOLEditTagCrop = 40;
     self.artboardBottomCon = cons[2];
     self.artboardRightCon= cons[3];
     
-    [self.artboard.assetViews.firstObject addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized:)]];
-    
     self.artboard.userInteractionEnabled = YES;
     [self.artboard.assetViews.firstObject setGesturesEnabled:YES];
     
@@ -468,6 +466,10 @@ const NSInteger kOLEditTagCrop = 40;
     [self.allViews addObject:self.printContainerView];
 }
 
+- (void)setupTextEditingEndArtboardTapGesture {
+    [self.artboard.assetViews.firstObject addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized:)]];
+}
+
 - (void)setupEditingToolsView{
     self.editingTools = [[OLEditingToolsView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.editingTools];
@@ -481,6 +483,8 @@ const NSInteger kOLEditTagCrop = 40;
     [self.printContainerView verticalSpacingToView:self.editingTools constant:20 relation:NSLayoutRelationGreaterThanOrEqual];
     
     self.editingTools.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
+    
+    [self setupTextEditingEndArtboardTapGesture];
     
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {

@@ -136,6 +136,10 @@
     [self configureAssetViewsForArtboard:self.artboard forSize:self.artboard.frame.size];
 }
 
+- (void)setupTextEditingEndArtboardTapGesture {
+    //Do nothing
+}
+
 - (void)configureAssetViewsForArtboard:(OLArtboardView *)artboard forSize:(CGSize)size{
     NSUInteger gridX = self.product.productTemplate.gridCountX;
     NSUInteger gridY = self.product.productTemplate.gridCountY;
@@ -162,6 +166,10 @@
 }
 
 - (void)loadImageFromAsset{
+    [self.artboard loadImageOnAllAssetViews];
+}
+
+- (void)loadImages{
     [self.artboard loadImageOnAllAssetViews];
 }
 
