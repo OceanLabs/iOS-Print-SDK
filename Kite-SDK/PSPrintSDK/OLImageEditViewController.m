@@ -223,10 +223,7 @@ const NSInteger kOLEditTagCrop = 40;
         }
     }
     
-    if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
-        [self setButtonsHidden:YES forTextField:self.activeTextField];
-    }
-    self.activeTextField = nil;
+    [self deselectSelectedTextField];
     
     if (self.editingTools.collectionView.tag != kOLEditTagCrop){
         [self dismissDrawerWithCompletionHandler:NULL];
@@ -452,6 +449,8 @@ const NSInteger kOLEditTagCrop = 40;
     self.artboardLeftCon = cons[1];
     self.artboardBottomCon = cons[2];
     self.artboardRightCon= cons[3];
+    
+    [self.artboard.assetViews.firstObject addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGestureRecognized:)]];
     
     self.artboard.userInteractionEnabled = YES;
     [self.artboard.assetViews.firstObject setGesturesEnabled:YES];
@@ -1125,9 +1124,12 @@ const NSInteger kOLEditTagCrop = 40;
     self.editingTools.button2.selected = NO;
     self.editingTools.button3.selected = NO;
     self.editingTools.button4.selected = NO;
-    [UIView animateWithDuration:0.25 animations:^{
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.editingTools.drawerView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished){
+        if (!finished){
+            return;
+        }
         [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
         
         self.editingTools.collectionView.tag = -1;
@@ -1166,7 +1168,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
 #endif
 
-    [UIView animateWithDuration:0.25 animations:^{
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.editingTools.drawerView.transform = CGAffineTransformMakeTranslation(0, -self.editingTools.drawerView.frame.size.height - extraHeight);
     } completion:^(BOOL finished){
         if (handler){
@@ -1443,6 +1445,8 @@ const NSInteger kOLEditTagCrop = 40;
         [self selectButton:sender];
     };
     
+    [self deselectSelectedTextField];
+    
     // Nothing is selected: just action
     if (!self.editingTools.button1.selected && !self.editingTools.button2.selected && !self.editingTools.button3.selected && !self.editingTools.button4.selected){
         buttonAction();
@@ -1558,11 +1562,21 @@ const NSInteger kOLEditTagCrop = 40;
     self.ctaButton.enabled = YES;
 }
 
+- (void)deselectSelectedTextField{
+    if ([self.activeTextField isKindOfClass:[OLPhotoTextField class]]){
+        [self setButtonsHidden:YES forTextField:self.activeTextField];
+    }
+    
+    _activeTextField = nil;
+}
+
 - (void)onButtonCropClicked:(UIButton *)sender{
     self.backupTransform = self.artboard.assetViews.firstObject.imageView.transform;
     self.editingTools.drawerDoneButton.hidden = YES;
     self.editingTools.halfWidthDrawerDoneButton.hidden = NO;
     self.editingTools.halfWidthDrawerCancelButton.hidden = NO;
+    
+    [self deselectSelectedTextField];
     
     for (UIView *view in self.cropFrameGuideViews){
         [self.printContainerView bringSubviewToFront:view];
