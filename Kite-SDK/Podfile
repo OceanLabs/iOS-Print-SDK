@@ -2,10 +2,10 @@ platform :ios, '8.0'
 inhibit_all_warnings!
 
 def shared_pods
-    pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
-    pod 'Stripe', '~> 8.0.6'
-    pod 'FBSDKCoreKit', '~> 4.16.0'
-    pod 'FBSDKLoginKit', '~> 4.16.0'
+    pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
+    pod 'Stripe', '~> 11.3.0'
+    pod 'FBSDKCoreKit', '~> 4.27.1'
+    pod 'FBSDKLoginKit', '~> 4.27.1'
 end
 
 target 'KiteSDK-Demo' do

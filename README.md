@@ -55,14 +55,14 @@ The recommended approach for installing is via the CocoaPods, however we also su
 
 ```ruby
 pod "Kite-Print-SDK"
-pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
+pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
 
 #Uncomment these lines if you want Facebook photo picking support
-#pod 'FBSDKCoreKit', '~> 4.16.0'
-#pod 'FBSDKLoginKit', '~> 4.16.0'
+#pod 'FBSDKCoreKit', '~> 4.27.1'
+#pod 'FBSDKLoginKit', '~> 4.27.1'
 
 #Uncomment the following line if you want Apple Pay support
-#pod 'Stripe', '~> 8.0.6'
+#pod 'Stripe', '~> 11.3.0'
 ```
 
 If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above and follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite-SDK/docs/social_photo_sources.md).
@@ -80,7 +80,7 @@ github "OceanLabs/iOS-Print-SDK"
 github "paypal/PayPal-iOS-SDK"
 
 #Uncomment the following line if you want Apple Pay support
-#github "stripe/stripe-ios" ~> 8.0.6
+#github "stripe/stripe-ios" ~> 11.3.0
 ```
 
 You can find an example project [here](https://github.com/OceanLabs/Example-Kite-iOS-Carthage)
