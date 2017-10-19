@@ -71,6 +71,8 @@ static char tasksKey;
         size = [UIScreen mainScreen].bounds.size;
     }
     
+    UIViewContentMode contentMode = self.contentMode;
+    
     self.alpha = 0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSURLSessionTask *task = [[OLImageDownloader sharedInstance] downloadImageAtURL:url progress:^(NSInteger downloaded, NSInteger total){
@@ -91,7 +93,7 @@ static char tasksKey;
             [self.tasks removeObjectForKey:url];
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                UIImage *resizedImage = [image shrinkToSize:size forScreenScale:[self screenScale] aspectFit:self.contentMode == UIViewContentModeScaleAspectFit];
+                UIImage *resizedImage = [image shrinkToSize:size forScreenScale:[self screenScale] aspectFit:contentMode == UIViewContentModeScaleAspectFit];
                 if (resizedImage) {
                     UIGraphicsBeginImageContextWithOptions(resizedImage.size, NO, resizedImage.scale);
                     [resizedImage drawAtPoint:CGPointZero];
@@ -126,6 +128,8 @@ static char tasksKey;
             [self.tasks removeObjectForKey:key];
         }
     }
+    
+    self.image = placeholder;
     
     if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
         self.image = [UIImage imageNamedInKiteBundle:@"plus"];
@@ -189,7 +193,9 @@ static char tasksKey;
         }
     }
     
-    self.alpha = 0;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.alpha = 0;
+    });
     
     if (progressHandler){
         options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){
