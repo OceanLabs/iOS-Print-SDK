@@ -325,11 +325,13 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == kSectionOrderSummary) {
         __block NSUInteger count = 0;
-        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
-            // this will actually do the right thing. Either this will callback immediately because printOrder
-            // has cached costs and the count will be updated before below conditionals are hit or it will make an async request and count will remain 0 for below.
-            count = cost.lineItems.count;
-        }];
+        if (self.printOrder.printed) {
+            [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+                // this will actually do the right thing. Either this will callback immediately because printOrder
+                // has cached costs and the count will be updated before below conditionals are hit or it will make an async request and count will remain 0 for below.
+                count = cost.lineItems.count;
+            }];
+        }
         if (count == 0){
             return self.printOrder.jobs.count;
         }
