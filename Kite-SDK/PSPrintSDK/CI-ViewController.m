@@ -163,6 +163,12 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
                     [OLProgressHUD showProgress:(float)progress/(float)total status:@"Downloading PDF 2/2"];
                 });
             } withCompletionHandler:^(NSData *data, NSError *error){
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
+                [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+                [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+                
                 OLAsset *cover = [OLAsset assetWithDataAsPDF:data];
                 
                 id<OLPrintJob> job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_280x210_sm" OLAssets:@[inside] frontCoverOLAsset:cover backCoverOLAsset:nil];
