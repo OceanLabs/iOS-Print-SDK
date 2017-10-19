@@ -589,7 +589,7 @@ CGFloat OLImagePickerMargin = 1.5;
                 [self.imagePicker.selectedAssets removeObject:asset];
                 asset.edits = nil;
                 asset.extraCopies = 0;
-                [collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
             }
         }
         else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.assetCount >= self.imagePicker.maximumPhotos){ //Maximum reached
