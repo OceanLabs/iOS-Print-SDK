@@ -5,7 +5,7 @@
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -2899,24 +2899,24 @@
                                             <outletCollection property="gestureRecognizers" destination="sUf-49-msX" appends="YES" id="jay-V7-GW4"/>
                                         </connections>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Product Details" lineBreakMode="tailTruncation" numberOfLines="9999" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="AlQ-Es-3y4">
-                                        <rect key="frame" x="20" y="70" width="335" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Product Details" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="VZT-Iv-riQ">
+                                        <rect key="frame" x="16" y="55" width="343" height="482"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="VZT-Iv-riQ" secondAttribute="bottom" constant="110" id="7Z8-eI-qHW"/>
                                     <constraint firstAttribute="height" constant="450" id="8lZ-F5-gff"/>
-                                    <constraint firstItem="AlQ-Es-3y4" firstAttribute="top" secondItem="kWa-iF-wa4" secondAttribute="bottom" priority="750" constant="20" id="BYa-Et-9d0"/>
                                     <constraint firstItem="kWa-iF-wa4" firstAttribute="leading" secondItem="EiN-2l-gIw" secondAttribute="leading" id="Bs6-gO-39R"/>
-                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="AlQ-Es-3y4" secondAttribute="bottom" constant="110" id="J3x-Qn-Xdx"/>
-                                    <constraint firstAttribute="trailing" secondItem="AlQ-Es-3y4" secondAttribute="trailing" constant="20" id="ZPr-yc-kyL"/>
+                                    <constraint firstItem="VZT-Iv-riQ" firstAttribute="top" secondItem="kWa-iF-wa4" secondAttribute="bottom" constant="5" id="KFg-rv-Dnx"/>
+                                    <constraint firstItem="VZT-Iv-riQ" firstAttribute="leading" secondItem="EiN-2l-gIw" secondAttribute="leading" constant="16" id="TQo-xG-nfA"/>
+                                    <constraint firstAttribute="trailing" secondItem="VZT-Iv-riQ" secondAttribute="trailing" constant="16" id="WDI-Ez-IT7"/>
                                     <constraint firstAttribute="trailing" secondItem="kWa-iF-wa4" secondAttribute="trailing" id="h36-A2-dgs"/>
                                     <constraint firstItem="kWa-iF-wa4" firstAttribute="top" secondItem="EiN-2l-gIw" secondAttribute="top" id="iys-rM-zqS"/>
-                                    <constraint firstItem="AlQ-Es-3y4" firstAttribute="leading" secondItem="EiN-2l-gIw" secondAttribute="leading" constant="20" id="qz0-lJ-b9Z"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -2936,8 +2936,7 @@
                     <connections>
                         <outlet property="arrowCenterXCon" destination="aSG-r9-WPM" id="jtA-Je-Mdg"/>
                         <outlet property="arrowImageView" destination="bMp-Op-YBx" id="dO0-ic-V3Y"/>
-                        <outlet property="detailsLabel" destination="CCQ-J9-y3B" id="GVU-Xg-oCe"/>
-                        <outlet property="detailsTextLabel" destination="AlQ-Es-3y4" id="7SZ-pF-6LE"/>
+                        <outlet property="detailsTextView" destination="VZT-Iv-riQ" id="QLS-iQ-NX9"/>
                         <outlet property="line" destination="yP4-uo-deY" id="Ijr-x2-HjY"/>
                         <outlet property="priceLabel" destination="X4d-8D-TEz" id="ePR-NJ-tyO"/>
                     </connections>

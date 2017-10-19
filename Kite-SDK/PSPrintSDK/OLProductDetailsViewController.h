@@ -35,6 +35,9 @@
 
 - (void)optionsButtonClicked;
 
+@optional
+- (void)onLabelDetailsTapped:(UITapGestureRecognizer *)sender;
+
 @end
 
 @interface OLProductDetailsViewController : OLViewController
