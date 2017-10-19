@@ -252,7 +252,17 @@
                                                     if (!existingClassesArray){
                                                         existingClassesArray = [[NSMutableArray alloc] init];
                                                     }
-                                                    [existingClassesArray addObject:shippingClass];
+                                                    BOOL exists = NO;
+                                                    for (OLShippingClass *existingShippingClass in existingClassesArray){
+                                                        if ([shippingClass.displayName isEqualToString:existingShippingClass.displayName] && shippingClass.tracked == existingShippingClass.tracked){
+                                                            exists = YES;
+                                                            break;
+                                                        }
+                                                    }
+                                                    
+                                                    if (!exists){
+                                                        [existingClassesArray addObject:shippingClass];
+                                                    }
                                                     templateShippingClasses[key] = existingClassesArray;
                                                 }
                                             }
