@@ -2094,11 +2094,16 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)applyFilterToImage:(UIImage *)image withCompletionHandler:(void(^)(UIImage *image))handler{
+    if (self.animating){
+        return;
+    }
+    self.animating = YES;
     OLAsset *asset = [OLAsset assetWithImageAsJPEG:image];
     asset.edits.filterName = self.edits.filterName;
     
     [asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
         handler(image);
+        self.animating = NO;
     }];
 }
 
