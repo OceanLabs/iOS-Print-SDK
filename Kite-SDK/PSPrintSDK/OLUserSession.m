@@ -96,7 +96,7 @@
 
 - (void)resetUserSelectedPhotos{
     [self clearUserSelectedPhotos];
-    [self.userSelectedAssets addObjectsFromArray:self.appAssets];
+    [self.userSelectedAssets addObjectsFromArray:[[NSArray alloc] initWithArray:self.appAssets copyItems:YES]];
 }
 
 - (void)clearUserSelectedPhotos{
@@ -110,8 +110,6 @@
         [asset unloadImage];
     }
     [self.recentPhotos removeAllObjects];
-    
-    self.appAssets = nil;
     
     for (OLImagePickerProvider *provider in self.kiteVc.customImageProviders){
         if ([provider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
