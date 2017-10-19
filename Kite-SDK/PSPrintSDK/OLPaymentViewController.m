@@ -1114,6 +1114,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         UIViewController *paymentController;
         paymentController = [[PKPaymentAuthorizationViewController alloc]
                              initWithPaymentRequest:paymentRequest];
+        if (!paymentController) {
+            // TODO: This avoids a crash but we should handle the error
+            return;
+        }
         ((PKPaymentAuthorizationViewController *)paymentController).delegate = self;
         [self presentViewController:paymentController animated:YES completion:nil];
     }];
