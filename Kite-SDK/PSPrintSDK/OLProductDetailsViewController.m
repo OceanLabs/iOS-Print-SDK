@@ -58,6 +58,13 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     self.detailsTextView.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product Details");
+    
+    if ([OLKiteABTesting sharedInstance].hidePrice){
+        self.priceLabel.text = nil;
+    }
+    else{
+        self.priceLabel.text = self.product.unitCost;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
