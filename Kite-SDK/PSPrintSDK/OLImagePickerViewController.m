@@ -54,6 +54,7 @@
 #import "OLKiteViewController+Private.h"
 #import "UIView+RoundRect.h"
 #import "UIColor+OLHexString.h"
+#import "NSMutableArray+OLUserSelectedAssetsUtils.h"
 
 @interface OLKitePrintSDK ()
 + (NSString *)instagramRedirectURI;
@@ -847,7 +848,7 @@
 
 - (void)updateRecentsWith:(NSArray *)assets{
     for (OLAsset *asset in assets){
-        if (![[OLUserSession currentSession].recentPhotos containsObject:asset]){
+        if (![[OLUserSession currentSession].recentPhotos containsAssetIgnoringEdits:asset]){
             [[OLUserSession currentSession].recentPhotos addObject:asset];
         }
     }

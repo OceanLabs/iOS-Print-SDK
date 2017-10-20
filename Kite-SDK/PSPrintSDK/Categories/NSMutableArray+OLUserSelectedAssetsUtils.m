@@ -29,6 +29,7 @@
 
 #import "NSMutableArray+OLUserSelectedAssetsUtils.h"
 #import "OLPlaceholderAsset.h"
+#import "OLAsset+Private.h"
 
 @implementation NSMutableArray (OLUserSelectedAssetsUtils)
 
@@ -73,6 +74,16 @@
     }
     
     return changedIndexes;
+}
+
+- (BOOL)containsAssetIgnoringEdits:(OLAsset *)anObject{
+    for (OLAsset *asset in self){
+        if ([asset isEqual:anObject ignoreEdits:YES]){
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 @end

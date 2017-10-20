@@ -35,4 +35,5 @@
 - (NSArray *)nonPlaceholderAssets;
 - (void)adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:(NSInteger)totalNumberOfAssets trim:(BOOL)trim;
 - (NSIndexSet *)updateUserSelectedAssetsAtIndex:(NSInteger)insertIndex withAddedAssets:(NSArray<OLAsset *> *)addedAssets removedAssets:(NSArray<OLAsset *> *)removedAssets;
+- (BOOL)containsAssetIgnoringEdits:(OLAsset *)anObject;
 @end
