@@ -131,11 +131,15 @@
     }
     else{
         cell = [tableView dequeueReusableCellWithIdentifier:@"noOrdersCell"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.printOrderHistory.count == 0){
+        return;
+    }
     NSArray *printOrders = self.printOrderHistory;
     OLPrintOrder *order = printOrders[printOrders.count - (indexPath.row + 1)];
     OLReceiptViewController *receiptVC = [[OLUserSession currentSession].kiteVc receiptViewControllerForPrintOrder:order];
