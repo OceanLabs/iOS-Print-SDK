@@ -124,6 +124,8 @@
     
     [super viewDidLoad];
     
+    self.printContainerView.backgroundColor = [self containerBackgroundColor];
+    
     if ([self isUsingMultiplyBlend]){
         [self.artboard.assetViews.firstObject setGesturesEnabled:NO];
     }
@@ -144,20 +146,22 @@
 - (void)setupContainerView{
     [super setupContainerView];
     
-    UIVisualEffect *blurEffect;
-    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-    
-    self.caseVisualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    [self.printContainerView insertSubview:self.caseVisualEffectView aboveSubview:self.artboard];
-    
-    [self.caseVisualEffectView fillSuperView];
-    
-    self.maskActivityIndicator = [[UIActivityIndicatorView alloc] init];
-    self.maskActivityIndicator.color = [UIColor blackColor];
-    [self.maskActivityIndicator startAnimating];
-    self.maskActivityIndicator.hidesWhenStopped = YES;
-    [self.printContainerView insertSubview:self.maskActivityIndicator aboveSubview:self.caseVisualEffectView];
-    [self.maskActivityIndicator centerInSuperview];
+    if (self.product.productTemplate.maskImageURL){
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        
+        self.caseVisualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        [self.printContainerView insertSubview:self.caseVisualEffectView aboveSubview:self.artboard];
+        
+        [self.caseVisualEffectView fillSuperView];
+        
+        self.maskActivityIndicator = [[UIActivityIndicatorView alloc] init];
+        self.maskActivityIndicator.color = [UIColor blackColor];
+        [self.maskActivityIndicator startAnimating];
+        self.maskActivityIndicator.hidesWhenStopped = YES;
+        [self.printContainerView insertSubview:self.maskActivityIndicator aboveSubview:self.caseVisualEffectView];
+        [self.maskActivityIndicator centerInSuperview];
+    }
 }
 
 - (void)onTapGestureRecognized:(id)sender{
