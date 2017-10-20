@@ -3364,7 +3364,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
-				INFOPLIST_FILE = "Tests/Resources/KitePrintSDKTests-Info.plist";
+				INFOPLIST_FILE = "PSPrintSDKTests/Tests/Supporting Files/KitePrintSDKTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "co.oceanlabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = KitePrintSDKTests;
@@ -3382,7 +3382,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PSPrintSDK/KitePrintSDK-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
-				INFOPLIST_FILE = "Tests/Resources/KitePrintSDKTests-Info.plist";
+				INFOPLIST_FILE = "PSPrintSDKTests/Tests/Supporting Files/KitePrintSDKTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "co.oceanlabs.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = KitePrintSDKTests;
