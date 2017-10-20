@@ -615,6 +615,7 @@ CGFloat OLImagePickerMargin = 1.5;
             [self.imagePicker presentViewController:alert animated:YES completion:nil];
         }
         else if (asset){ //Add photo
+            asset = [asset copy];
             NSUInteger index = [self.imagePicker.selectedAssets indexOfObject:[[OLPlaceholderAsset alloc] init]];
             if (index != NSNotFound){
                 [self.imagePicker.selectedAssets replaceObjectAtIndex:index withObject:asset];
