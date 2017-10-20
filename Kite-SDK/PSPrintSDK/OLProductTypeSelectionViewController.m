@@ -208,6 +208,7 @@
             self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
         }
 
+        [self addBasketIconToTopRight];
     } completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
     }];

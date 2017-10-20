@@ -272,6 +272,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 #endif
         
         self.ctaButton.frame = CGRectMake(self.ctaButton.frame.origin.x, y, self.view.frame.size.width - 2 * self.ctaButton.frame.origin.x, self.ctaButton.frame.size.height);
+        [self addBasketIconToTopRight];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
     }];
 }

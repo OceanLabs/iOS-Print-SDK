@@ -530,6 +530,7 @@ static const CGFloat kBookEdgePadding = 38;
         
         self.centerYCon = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.containerView.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:yOffset];
         [self.containerView.superview addConstraint:self.centerYCon];
+        [self addBasketIconToTopRight];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         if (!self.editMode){
             self.containerView.layer.shadowOpacity = 0;

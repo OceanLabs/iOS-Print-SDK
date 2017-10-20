@@ -531,6 +531,7 @@
     self.rotationSize = size;
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinator> context){
         [self.sourcesCollectionView.collectionViewLayout invalidateLayout];
+        [self addBasketIconToTopRight];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.sourcesCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[self.pageController.viewControllers.firstObject pageIndex] inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
     }];

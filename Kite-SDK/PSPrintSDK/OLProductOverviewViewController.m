@@ -274,6 +274,7 @@
     [coordinator animateAlongsideTransition:^(id context){
         self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self.productDetails recommendedDetailsBoxHeight];
         self.detailsBoxTopCon.constant = ![self boxIsHidden] ? self.detailsViewHeightCon.constant-100 : self.originalBoxConstraint;
+        [self addBasketIconToTopRight];
     }completion:NULL];
 }
 

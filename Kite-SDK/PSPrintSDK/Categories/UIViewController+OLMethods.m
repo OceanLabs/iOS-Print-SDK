@@ -70,13 +70,18 @@
         color = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
     }
     
+    CGFloat buttonHeight = MIN(44, self.navigationController.navigationBar.frame.size.height);
+    if (buttonHeight == 0){
+        buttonHeight = 44;
+    }
+    
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     UIButton *basketButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(6, 3, 44, 44)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(6, 0, 44, buttonHeight)];
     imageView.tag = 10;
     imageView.contentMode = UIViewContentModeRight;
     [basketButton addSubview:imageView];
-    basketButton.frame = CGRectMake(0,0,50,50);
+    basketButton.frame = CGRectMake(0,0,50,buttonHeight);
     [basketButton addTarget:self action:@selector(onButtonBasketClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     if (printOrder.jobs.count != 0){
@@ -87,7 +92,7 @@
             count += [job extraCopies];
         }
         
-        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(37, 14, 13, 13)];
+        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(37, buttonHeight / 2 - 10.5, 13, 13)];
         qtyLabel.tag = 20;
         qtyLabel.font = [UIFont systemFontOfSize:9];
         qtyLabel.textAlignment = NSTextAlignmentCenter;

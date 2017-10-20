@@ -488,6 +488,7 @@
         }
         
         [self.collectionView.collectionViewLayout invalidateLayout];
+        [self addBasketIconToTopRight];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
     }];
