@@ -778,6 +778,14 @@ const NSInteger kOLEditTagCrop = 40;
             }];
         }];
     }
+    if (!self.previewView){
+        if (self.fullImage){
+            [self loadImages];
+        }
+        else{
+            [self loadImageFromAsset];
+        }
+    }
 }
 
 - (void)loadImages{
@@ -817,12 +825,14 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    [self.view layoutIfNeeded];
-    if (self.fullImage){
-        [self loadImages];
-    }
-    else{
-        [self loadImageFromAsset];
+    if (self.previewView){
+        [self.view layoutIfNeeded];
+        if (self.fullImage){
+            [self loadImages];
+        }
+        else{
+            [self loadImageFromAsset];
+        }
     }
     
     [self updateButtonBadges];
