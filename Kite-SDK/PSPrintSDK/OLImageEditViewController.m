@@ -2018,9 +2018,14 @@ const NSInteger kOLEditTagCrop = 40;
         
         UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.artboard.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
         
+        if (self.animating){
+            return;
+        }
+        self.animating = YES;
         [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
             self.artboard.assetViews.firstObject.imageView.image = image;
             [self updateProductRepresentationForChoice:nil];
+            self.animating = NO;
         }];
     }
     else if (self.selectedOption && self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
@@ -2094,16 +2099,11 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)applyFilterToImage:(UIImage *)image withCompletionHandler:(void(^)(UIImage *image))handler{
-    if (self.animating){
-        return;
-    }
-    self.animating = YES;
     OLAsset *asset = [OLAsset assetWithImageAsJPEG:image];
     asset.edits.filterName = self.edits.filterName;
     
     [asset imageWithSize:[UIScreen mainScreen].bounds.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
         handler(image);
-        self.animating = NO;
     }];
 }
 
