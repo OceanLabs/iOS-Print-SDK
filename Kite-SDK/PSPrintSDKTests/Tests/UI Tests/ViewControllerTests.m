@@ -11,7 +11,7 @@
 
 @interface ViewControllerTests : XCTestCase
 @property (strong, nonatomic) NSString *kvoValueToObserve;
-@property (copy, nonatomic) void (^kvoBlockToExecute)();
+@property (copy, nonatomic) void (^kvoBlockToExecute)(void);
 @property (weak, nonatomic) id kvoObjectToObserve;
 @end
 
@@ -35,7 +35,7 @@
     [super tearDown];
 }
 
-- (void)kvoObserveObject:(id)object forValue:(NSString *)value andExecuteBlock:(void(^)())block{
+- (void)kvoObserveObject:(id)object forValue:(NSString *)value andExecuteBlock:(void(^)(void))block{
     self.kvoObjectToObserve = object;
     self.kvoValueToObserve = value;
     self.kvoBlockToExecute = block;

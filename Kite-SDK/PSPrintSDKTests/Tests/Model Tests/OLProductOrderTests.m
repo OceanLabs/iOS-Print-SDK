@@ -48,7 +48,7 @@
 
 #pragma mark Kite SDK helper methods
 
-- (void)submitOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
+- (void)submitOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)(void))handler{
     [self submitStripeOrder:printOrder WithSuccessHandler:handler];
 }
 
@@ -89,7 +89,7 @@
 }
 
 
-- (void)submitStripeOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
+- (void)submitStripeOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)(void))handler{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     OLStripeCard *card = [[OLStripeCard alloc] init];
@@ -114,7 +114,7 @@
     }];
 }
 
-- (void)submitPayPalOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)())handler{
+- (void)submitPayPalOrder:(OLPrintOrder *)printOrder WithSuccessHandler:(void(^)(void))handler{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Print order submitted"];
     
     OLPayPalCard *card = [[OLPayPalCard alloc] init];

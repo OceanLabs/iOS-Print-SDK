@@ -58,12 +58,12 @@
 - (OLProductHomeViewController *)loadKiteViewController;
 - (void)chooseClass:(NSString *)class onOLProductHomeViewController:(OLProductHomeViewController *)productHome;
 - (void)chooseProduct:(NSString *)name onOLProductTypeSelectionViewController:(OLProductTypeSelectionViewController *)productTypeVc;
-- (void)performUIAction:(void(^)())action;
-- (void)performUIActionWithDelay:(double)delay action:(void(^)())action;
+- (void)performUIAction:(void(^)(void))action;
+- (void)performUIActionWithDelay:(double)delay action:(void(^)(void))action;
 - (void)setUpHelper;
 - (void)tapNextOnViewController:(UIViewController *)vc;
 - (void)tearDownHelper;
-- (void)templateSyncWithSuccessHandler:(void(^)())handler;
+- (void)templateSyncWithSuccessHandler:(void(^)(void))handler;
 @end
 
 @interface OLArtboardView ()

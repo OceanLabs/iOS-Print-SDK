@@ -52,7 +52,7 @@
     return -1;
 }
 
-- (void)templateSyncWithSuccessHandler:(void(^)())handler{
+- (void)templateSyncWithSuccessHandler:(void(^)(void))handler{
     [OLProductTemplate syncWithCompletionHandler:^(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error){
         XCTAssert(!error, @"Template Sync Request failed with: %@", error);
         
@@ -95,7 +95,7 @@
     [self waitForExpectationsWithTimeout:10 handler:NULL];
 }
 
-- (void)performUIActionWithDelay:(double)delay action:(void(^)())action{
+- (void)performUIActionWithDelay:(double)delay action:(void(^)(void))action{
     XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for animations"];
     
     action();
@@ -107,7 +107,7 @@
     [self waitForExpectationsWithTimeout:10 handler:NULL];
 }
 
-- (void)performUIAction:(void(^)())action{
+- (void)performUIAction:(void(^)(void))action{
     [self performUIActionWithDelay:2 action:action];
 }
 
