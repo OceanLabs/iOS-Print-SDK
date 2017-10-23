@@ -315,6 +315,7 @@
     }
     else{
         [asset imageWithSize:vc.view.frame.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
+            [asset unloadImage];
             
             OLImageEditViewController *cropVc = [[OLImageEditViewController alloc] init];
             cropVc.borderInsets = product.productTemplate.imageBorder;
@@ -329,7 +330,7 @@
             cropVc.providesPresentationContextTransitionStyle = true;
             cropVc.definesPresentationContext = true;
             cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-            [cropVc setFullImage:image];
+            [cropVc setImage:image];
             cropVc.edits = asset.edits;
             
             [vc presentViewController:cropVc animated:NO completion:NULL];

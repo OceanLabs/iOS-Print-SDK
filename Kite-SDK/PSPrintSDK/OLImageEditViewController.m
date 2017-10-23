@@ -112,6 +112,8 @@ const NSInteger kOLEditTagCrop = 40;
 @property (strong, nonatomic) UIViewController *presentedVc;
 
 @property (assign, nonatomic) CGAffineTransform backupTransform;
+@property (strong, nonatomic) UIImage *thumbnailOriginalImage;
+@property (strong, nonatomic) UIImage *fullImage;
 
 @end
 
@@ -407,6 +409,11 @@ const NSInteger kOLEditTagCrop = 40;
     [gestureView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self.artboard.assetViews.firstObject action:@selector(panRecognized:)]];
     [gestureView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.artboard.assetViews.firstObject action:@selector(pinchRecognized:)]];
     gestureView.userInteractionEnabled = NO;
+}
+
+- (void)setImage:(UIImage *)image{
+    self.fullImage = image;
+    self.thumbnailOriginalImage = [image shrinkToSize:CGSizeMake(200, 200) forScreenScale:[OLUserSession currentSession].screenScale];
 }
 
 - (CGFloat)containerViewMargin{
@@ -1525,16 +1532,13 @@ const NSInteger kOLEditTagCrop = 40;
     
     UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.artboard.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
     
-    [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
-        
         [UIView transitionWithView:self.artboard.assetViews.firstObject.imageView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
-            [self.artboard setImage:image];
+            [self.artboard setImage:newImage];
         }completion:^(BOOL finished){
             self.animating = NO;
             
             [self updateProductRepresentationForChoice:nil];
         }];
-    }];
     
     self.ctaButton.enabled = YES;
 }
@@ -1557,13 +1561,12 @@ const NSInteger kOLEditTagCrop = 40;
     self.edits.counterClockwiseRotations = (self.edits.counterClockwiseRotations + 1) % 4;
     
     UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.artboard.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
-    [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
-        
+    
         [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             self.artboard.assetViews.firstObject.imageView.transform = CGAffineTransformMakeRotation(-M_PI_2);
             
         } completion:^(BOOL finished){
-            [self.artboard setImage:image];
+            [self.artboard setImage:newImage];
             self.artboard.assetViews.firstObject.imageView.transform = CGAffineTransformIdentity;
             
             [(UIBarButtonItem *)sender setEnabled:YES];
@@ -1573,7 +1576,6 @@ const NSInteger kOLEditTagCrop = 40;
             
             [self updateProductRepresentationForChoice:nil];
         }];
-    }];
 }
 
 - (void)onButtonAddTextClicked:(UIButton *)sender {
@@ -1873,7 +1875,7 @@ const NSInteger kOLEditTagCrop = 40;
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"imageCell" forIndexPath:indexPath];
         [self setupImageCell:cell];
         UIImageView *imageView = [cell viewWithTag:10];
-        OLAsset *asset = [OLAsset assetWithImageAsJPEG:self.fullImage];
+        OLAsset *asset = [OLAsset assetWithImageAsJPEG:self.thumbnailOriginalImage];
         asset.edits.filterName = [self filterNames][indexPath.item];
         [imageView setAndFadeInImageWithOLAsset:asset size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:YES placeholder:nil progress:NULL completionHandler:NULL];
     }
@@ -2032,7 +2034,9 @@ const NSInteger kOLEditTagCrop = 40;
             return;
         }
         self.animating = YES;
+        self.fullImage = nil;
         [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
+            self.fullImage = image;
             self.artboard.assetViews.firstObject.imageView.image = image;
             [self updateProductRepresentationForChoice:nil];
             self.animating = NO;
@@ -2485,9 +2489,8 @@ const NSInteger kOLEditTagCrop = 40;
             [welf.artboard.assetViews.firstObject setProgress:progress];
         });
     } completion:^(UIImage *image, NSError *error){
+        [self setImage:image];
         dispatch_async(dispatch_get_main_queue(), ^{
-            welf.fullImage = image;
-            
             NSArray *copy = [[NSArray alloc] initWithArray:welf.edits.textsOnPhoto copyItems:NO];
             for (OLTextOnPhoto *textOnPhoto in copy){
                 UITextField *textField = [welf addTextFieldToView:welf.artboard existing:nil];

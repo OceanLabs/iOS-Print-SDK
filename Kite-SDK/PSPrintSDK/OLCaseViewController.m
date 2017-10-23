@@ -87,6 +87,7 @@
 @property (weak, nonatomic) UIView *gestureView;
 - (OLProductTemplateOptionChoice *)selectedChoice;
 @property (weak, nonatomic) OLProductTemplateOption *selectedOption;
+@property (strong, nonatomic) UIImage *fullImage;
 
 @end
 

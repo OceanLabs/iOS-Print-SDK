@@ -548,8 +548,7 @@ static NSOperationQueue *imageOperationQueue;
         
         if (![self isEdited] || !applyEdits){
             if (!CGSizeEqualToSize(size, CGSizeZero) && !CGSizeEqualToSize(size, OLAssetMaximumSize)){
-                CGFloat scale = [OLUserSession currentSession].screenScale;
-                blockImage = [blockImage shrinkToSize:CGSizeMake(size.width * scale, size.height * scale) forScreenScale:[OLUserSession currentSession].screenScale];
+                blockImage = [blockImage shrinkToSize:CGSizeMake(size.width, size.height) forScreenScale:[OLUserSession currentSession].screenScale];
             }
             handler(blockImage);
             return;
