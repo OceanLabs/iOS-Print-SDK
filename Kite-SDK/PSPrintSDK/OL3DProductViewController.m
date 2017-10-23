@@ -143,6 +143,9 @@
 }
 
 - (void)setCropViewImageToMaterial{
+    if (self.activity.isAnimating){
+        return;
+    }
     self.tube.materials = @[];
     
     if (self.artboard.assetViews.firstObject.imageView.image == nil){
@@ -222,7 +225,7 @@
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
     if (addedAssets.firstObject){
-        self.edits.filterName = nil;
+        self.edits = nil;
     }
     [super imagePicker:vc didFinishPickingAssets:assets added:addedAssets removed:removedAssets];
 }
