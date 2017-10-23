@@ -150,8 +150,8 @@
     }
     
     [self.activity startAnimating];
-        
-    UIImage *image = [self addBorderToImage:[self.artboard.assetViews.firstObject editedImage]];
+    
+    UIImage *image = [self.artboard.assetViews.firstObject editedImage];
     
     if (!image){
         return;
@@ -166,7 +166,7 @@
                 SCNMaterial *material = [[SCNMaterial alloc] init];
                 material.diffuse.wrapS = SCNWrapModeRepeat;
                 material.diffuse.wrapT = SCNWrapModeRepeat;
-                material.diffuse.contents = image;
+                material.diffuse.contents = [self addBorderToImage:image];
                 self.tube.materials = @[material];
                 
                 [self.activity stopAnimating];
@@ -222,7 +222,7 @@
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
     if (addedAssets.firstObject){
-        self.asset.edits.filterName = nil;
+        self.edits.filterName = nil;
     }
     [super imagePicker:vc didFinishPickingAssets:assets added:addedAssets removed:removedAssets];
 }
