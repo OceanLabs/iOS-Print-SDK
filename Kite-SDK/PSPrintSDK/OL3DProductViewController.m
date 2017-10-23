@@ -53,6 +53,7 @@
 @property (strong, nonatomic) SCNNode *tubeNode;
 @property (strong, nonatomic) SCNNode *mug;
 @property (strong, nonatomic) SCNNode *camera;
+@property (strong, nonatomic) UIActivityIndicatorView *activity;
 @end
 
 @implementation OL3DProductViewController
@@ -101,6 +102,13 @@
         self.camera.position = SCNVector3Make(0, 4.2, 0);
     }
     
+    self.activity = [[UIActivityIndicatorView alloc] init];
+    [self.scene addSubview:self.activity];
+    [self.activity centerXInSuperview];
+    [self.activity centerYInSuperview];
+    self.activity.hidesWhenStopped = YES;
+    self.activity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    
     [self orderViews];
 }
 
@@ -131,20 +139,18 @@
     }
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.hintView];
-    [self.view bringSubviewToFront:[self.view viewWithTag:1010]];
+    [self.view bringSubviewToFront:self.activity];
 }
 
 - (void)setCropViewImageToMaterial{
+    self.tube.materials = @[];
+    
     if (self.artboard.assetViews.firstObject.imageView.image == nil){
-        self.tube.materials = @[];
         return;
     }
     
-    id view = [self.view viewWithTag:1010];
-    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
-        [(UIActivityIndicatorView *)view startAnimating];
-    }
-    
+    [self.activity startAnimating];
+        
     UIImage *image = [self addBorderToImage:[self.artboard.assetViews.firstObject editedImage]];
     
     if (!image){
@@ -163,9 +169,7 @@
                 material.diffuse.contents = image;
                 self.tube.materials = @[material];
                 
-                if ([view isKindOfClass:[UIActivityIndicatorView class]]){
-                    [(UIActivityIndicatorView *)view stopAnimating];
-                }
+                [self.activity stopAnimating];
             });
         }];
     });
