@@ -520,7 +520,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)applyProductImageLayers{
-    if (!self.deviceView.image){
+    if (!self.deviceView.image && [self productBackgroundURL]){
         self.deviceView.alpha = 0;
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productBackgroundURL] priority:1.0 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -533,7 +533,7 @@ const NSInteger kOLEditTagCrop = 40;
             });
         }];
     }
-    if (!self.highlightsView.image){
+    if (!self.highlightsView.image && [self productHighlightsURL]){
         self.highlightsView.alpha = 0;
         [[OLImageDownloader sharedInstance] downloadImageAtURL:[self productHighlightsURL] priority:0.9 progress:NULL withCompletionHandler:^(UIImage *image, NSError *error){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -785,14 +785,13 @@ const NSInteger kOLEditTagCrop = 40;
             }];
         }];
     }
-    if (!self.previewView){
-        if (self.fullImage){
-            [self loadImages];
-        }
-        else{
-            [self loadImageFromAsset];
-        }
+    if (!self.previewView && !self.fullImage){
+        [self loadImageFromAsset];
     }
+}
+
+- (BOOL)isUsingMultiplyBlend{
+    return NO;
 }
 
 - (void)loadImages{
@@ -826,6 +825,8 @@ const NSInteger kOLEditTagCrop = 40;
         }
         
         self.artboard.assetViews.firstObject.imageView.transform = CGAffineTransformMake(self.edits.cropTransform.a, self.edits.cropTransform.b, self.edits.cropTransform.c, self.edits.cropTransform.d, self.edits.cropTransform.tx * factor, self.edits.cropTransform.ty * factor);
+        
+        [self updateProductRepresentationForChoice:nil];
     }
 }
 
@@ -2467,12 +2468,16 @@ const NSInteger kOLEditTagCrop = 40;
     
     if (self.presentedVc){
         [self.presentedVc dismissViewControllerAnimated:YES completion:^{
-            [self updateProductRepresentationForChoice:nil];
+            if ([self isUsingMultiplyBlend]){
+                [self updateProductRepresentationForChoice:nil];
+            }
         }];
     }
     else{
         [vc dismissViewControllerAnimated:YES completion:^{
-            [self updateProductRepresentationForChoice:nil];
+            if ([self isUsingMultiplyBlend]){
+                [self updateProductRepresentationForChoice:nil];
+            }
         }];
     }
     

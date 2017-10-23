@@ -34,6 +34,7 @@
 #import "OLInfoBanner.h"
 #import "UIView+AutoLayoutHelper.h"
 #import "UIColor+OLHexString.h"
+#import "OLImagePickerViewController.h"
 
 @import SceneKit;
 
@@ -42,6 +43,7 @@
 - (void)onButtonCropClicked:(UIButton *)sender;
 - (void)exitCropMode;
 @property (strong, nonatomic) UIView *safeAreaView;
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets;
 @end
 
 @interface OL3DProductViewController ()
@@ -133,6 +135,11 @@
 }
 
 - (void)setCropViewImageToMaterial{
+    if (self.artboard.assetViews.firstObject.imageView.image == nil){
+        self.tube.materials = @[];
+        return;
+    }
+    
     id view = [self.view viewWithTag:1010];
     if ([view isKindOfClass:[UIActivityIndicatorView class]]){
         [(UIActivityIndicatorView *)view startAnimating];
@@ -181,16 +188,6 @@
     return paddedImage;
 }
 
-- (void)loadImages{
-    [super loadImages];
-    
-    [self setCropViewImageToMaterial];
-}
-
-- (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
-    [self setCropViewImageToMaterial];
-}
-
 - (void)onButtonCropClicked:(UIButton *)sender{
     self.scene.hidden = YES;
     
@@ -217,6 +214,17 @@
         self.tubeNode.eulerAngles = SCNVector3Make(self.tubeNode.eulerAngles.x, self.tubeNode.eulerAngles.y, -M_PI_2 + angleDelta);
         
     }
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    if (addedAssets.firstObject){
+        self.asset.edits.filterName = nil;
+    }
+    [super imagePicker:vc didFinishPickingAssets:assets added:addedAssets removed:removedAssets];
+}
+
+- (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
+    [self setCropViewImageToMaterial];
 }
 
 

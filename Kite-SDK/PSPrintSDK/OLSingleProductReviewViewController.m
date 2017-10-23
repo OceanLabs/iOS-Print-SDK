@@ -451,14 +451,10 @@
     }
     
     if (self.presentedVc){
-        [self.presentedVc dismissViewControllerAnimated:YES completion:^{
-            [self updateProductRepresentationForChoice:nil];
-        }];
+        [self.presentedVc dismissViewControllerAnimated:YES completion:NULL];
     }
     else{
-        [vc dismissViewControllerAnimated:YES completion:^{
-            [self updateProductRepresentationForChoice:nil];
-        }];
+        [vc dismissViewControllerAnimated:YES completion:NULL];
     }
 }
 
