@@ -401,7 +401,7 @@
         
         OLProduct *product;
         for (OLProduct *p in [OLProduct products]){
-            if ([[product.templateId lowercaseString] isEqualToString:deeplink]){
+            if ([[p.templateId lowercaseString] isEqualToString:deeplink]){
                 product = p;
             }
         }
