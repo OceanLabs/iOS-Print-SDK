@@ -32,7 +32,6 @@
 #import "OLAddress+AddressBook.h"
 #import "OLCountry.h"
 #import "OLAddressEditViewController.h"
-#import "OLAddressLookupViewController.h"
 #import "OLConstants.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteABTesting.h"
@@ -41,7 +40,6 @@
 static const NSInteger kSectionAddressList = 0;
 static const NSInteger kSectionAddAddress = 1;
 
-static const NSInteger kRowAddAddressSearch = 1;
 static const NSInteger kRowAddAddressManually = 0;
 
 @interface OLAddressSelectionViewController ()
@@ -143,7 +141,7 @@ static const NSInteger kRowAddAddressManually = 0;
     if (section == 0) {
         return [OLAddress addressBook].count;
     } else {
-        return self.allowAddressSearch ? 2 : 1;
+        return 1;
     }
 }
 
@@ -181,11 +179,7 @@ static const NSInteger kRowAddAddressManually = 0;
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kManageCellIdentifier];
         }
         
-        if (indexPath.row == kRowAddAddressSearch) {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Search for Address", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        } else {
-            cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Enter Address Manually", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        }
+        cell.textLabel.text = NSLocalizedStringFromTableInBundle(@"Enter Address Manually", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         
         cell.textLabel.adjustsFontSizeToFitWidth = YES;
         cell.textLabel.textColor = [UIColor colorWithRed:0 / 255.0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0];
@@ -240,8 +234,6 @@ static const NSInteger kRowAddAddressManually = 0;
         
         if (indexPath.row == kRowAddAddressManually) {
             [self.navigationController pushViewController:[[OLAddressEditViewController alloc] init] animated:YES];
-        } else if (indexPath.row == kRowAddAddressSearch) {
-            [self.navigationController pushViewController:[[OLAddressLookupViewController alloc] init] animated:YES];
         }
     }
 }

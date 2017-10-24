@@ -19,7 +19,6 @@
 "Add Text" = "Add Text";
 "Add to Basket" = "Add to Basket";
 "Address Book" = "Address Book";
-"Address Search" = "Address Search";
 "All Photos" = "All Photos";
 "Alternatively type the following URL into your mobile browser's address bar" = "Alternatively type the following URL into your mobile browser's address bar";
 "Are you sure you want to delete this item?" = "Are you sure you want to delete this item?";
@@ -45,7 +44,6 @@
 "cm" = "cm";
 "Completed Orders" = "Completed Orders";
 "Continue Shopping" = "Continue Shopping";
-"Country" = "Country";
 "County" = "County";
 "Create a %@ for\nonly %@ %@" = "Create a %@ for\nonly %@ %@";
 "Create a pack for\nonly %@ %@" = "Create a pack for\nonly %@ %@";
@@ -176,9 +174,6 @@
 "Save" = "Save";
 "Save as Copy" = "Save as Copy";
 "Scan QR Code" = "Scan QR Code";
-"Search by postcode, street or address" = "Search by postcode, street or address";
-"Search by street, address or ZIP code" = "Search by street, address or ZIP code";
-"Search for Address" = "Search for Address";
 "Select Size" = "Select Size";
 "Shipping" = "Shipping";
 "Shipping Method" = "Shipping Method";

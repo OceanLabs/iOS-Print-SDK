@@ -36,7 +36,6 @@
 
 
 static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
-static NSString *const kOLKiteABTestOfferAddressSearch = @"ly.kite.abtest.offer_address_search";
 static NSString *const kOLKiteABTestQualityBannerType = @"ly.kite.abtest.quality_banner_type";
 static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_tile_style";
 static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
@@ -60,7 +59,6 @@ static dispatch_once_t srand48OnceToken;
 
 @interface OLKiteABTesting ()
 
-@property (assign, nonatomic, readwrite) BOOL offerAddressSearch;
 @property (assign, nonatomic, readwrite) BOOL skipProductOverview;
 @property (assign, nonatomic, readwrite) BOOL disableProductCategories;
 @property (assign, nonatomic) BOOL minimalNavigationBar;
@@ -628,21 +626,6 @@ static dispatch_once_t srand48OnceToken;
                                          }];
 }
 
-- (void)setupOfferAddressSearchTest{
-    self.offerAddressSearch = NO;
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferAddressSearch];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-    }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestOfferAddressSearch
-                   conditions:@{
-                                @"Yes" : safeObject(experimentDict[@"Yes"]),
-                                @"No" : safeObject(experimentDict[@"No"])
-                                } block:^(id choice) {
-                                    self.offerAddressSearch = [choice isEqualToString:@"Yes"];
-                                }];
-}
-
 - (void)setupHidePriceTest{
     self.hidePrice = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestHidePrice];
@@ -732,7 +715,6 @@ static dispatch_once_t srand48OnceToken;
 }
 
 - (void)groupSetupShippingScreenTests{
-    [self setupOfferAddressSearchTest];
     [self setupPaymentScreenTest];
     [self setupOfferPayPalTest];
 }

@@ -232,11 +232,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)trackViewed{
 #ifndef OL_NO_ANALYTICS
-    if ([OLKiteABTesting sharedInstance].offerAddressSearch) {
-        [OLAnalytics trackDeliveryDetailsScreenViewedForOrder:self.printOrder variant:@"Classic + Address Search" showPhoneEntryField:YES];
-    } else {
         [OLAnalytics trackDeliveryDetailsScreenViewedForOrder:self.printOrder variant:@"Classic" showPhoneEntryField:YES];
-    }
 #endif
 }
 
@@ -641,10 +637,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
-        if ([OLKiteABTesting sharedInstance].offerAddressSearch || [OLAddress addressBook].count > 0) {
+        if ([OLAddress addressBook].count > 0) {
             OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
             addressPicker.delegate = self;
-            addressPicker.allowsAddressSearch = [OLKiteABTesting sharedInstance].offerAddressSearch;
             addressPicker.allowsMultipleSelection = NO;
             if (self.shippingAddress){
                 addressPicker.selected = [@[self.shippingAddress] mutableCopy];

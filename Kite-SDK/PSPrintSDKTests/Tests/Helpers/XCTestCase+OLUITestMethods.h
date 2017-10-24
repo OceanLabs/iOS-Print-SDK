@@ -42,7 +42,6 @@
 #import "OLImagePickerLoginPageViewController.h"
 #import "OLMockPanGestureRecognizer.h"
 #import "OL3DProductViewController.h"
-#import "OLAddressLookupViewController.h"
 #import "OLAddressSelectionViewController.h"
 #import "OLKiteViewController+Private.h"
 #import "OLAsset+Private.h"
@@ -78,11 +77,6 @@
 
 @interface OLFrameOrderReviewViewController ()
 - (void)onTapGestureThumbnailTapped:(UITapGestureRecognizer*)gestureRecognizer;
-@end
-
-@interface OLAddressLookupViewController ()
-@property (strong, nonatomic) UISearchController *searchController;
-- (void)updateSearchResultsForSearchController:(UISearchController *)searchController;
 @end
 
 @interface OLImagePickerLoginPageViewController ()

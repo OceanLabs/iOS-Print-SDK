@@ -213,7 +213,6 @@
 		2E451E521D9555D90080F1C1 /* OLCreditCardCaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1779591A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.m */; };
 		2E451E531D9555D90080F1C1 /* OLAddressPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */; };
 		2E451E541D9555D90080F1C1 /* OLAddressSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB2F187842AB00316492 /* OLAddressSelectionViewController.m */; };
-		2E451E551D9555D90080F1C1 /* OLAddressLookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */; };
 		2E451E561D9555D90080F1C1 /* OLAddressEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB3D187882A300316492 /* OLAddressEditViewController.m */; };
 		2E451E571D9555D90080F1C1 /* OLCountryPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD93BB441878DFA300316492 /* OLCountryPickerController.m */; };
 		2E451E5A1D9555DE0080F1C1 /* RMImageCropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8122EA1A759F42004E7297 /* RMImageCropper.m */; };
@@ -421,7 +420,6 @@
 		2EB8FE591D95685100E26BDF /* OLCreditCardCaptureViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D1779581A1E1D6800BE3E58 /* OLCreditCardCaptureViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE5A1D95685100E26BDF /* OLAddressPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB2B18783B8E00316492 /* OLAddressPickerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE5B1D95685100E26BDF /* OLAddressSelectionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB2E187842AB00316492 /* OLAddressSelectionViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE5C1D95685100E26BDF /* OLAddressLookupViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD550A66187B30D200782D75 /* OLAddressLookupViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE5D1D95685100E26BDF /* OLAddressEditViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB3C187882A300316492 /* OLAddressEditViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE5E1D95685100E26BDF /* OLCountryPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = CD93BB431878DFA300316492 /* OLCountryPickerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE681D95685100E26BDF /* RMImageCropper.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8122E91A759F42004E7297 /* RMImageCropper.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -903,8 +901,6 @@
 		8B41929BCC906276818C848C /* Pods-Kite-CI-Deploy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kite-CI-Deploy.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy.debug.xcconfig"; sourceTree = "<group>"; };
 		BF4FFD591B0B737D3A6DDA1E /* libPods-Kite-CI-Deploy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Kite-CI-Deploy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C69363223A86C6A26FD18921 /* Pods-KiteSDK-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK-Demo/Pods-KiteSDK-Demo.release.xcconfig"; sourceTree = "<group>"; };
-		CD550A66187B30D200782D75 /* OLAddressLookupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAddressLookupViewController.h; sourceTree = "<group>"; };
-		CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAddressLookupViewController.m; sourceTree = "<group>"; };
 		CD550B171881E1E600782D75 /* OLPrintOrder+History.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLPrintOrder+History.h"; sourceTree = "<group>"; };
 		CD550B181881E1E600782D75 /* OLPrintOrder+History.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLPrintOrder+History.m"; sourceTree = "<group>"; };
 		CD550BDA1886BF8B00782D75 /* OLPayPalCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPayPalCard.h; sourceTree = "<group>"; };
@@ -1335,8 +1331,6 @@
 				CD93BB2C18783B8E00316492 /* OLAddressPickerController.m */,
 				CD93BB2E187842AB00316492 /* OLAddressSelectionViewController.h */,
 				CD93BB2F187842AB00316492 /* OLAddressSelectionViewController.m */,
-				CD550A66187B30D200782D75 /* OLAddressLookupViewController.h */,
-				CD550A67187B30D200782D75 /* OLAddressLookupViewController.m */,
 				CD93BB3C187882A300316492 /* OLAddressEditViewController.h */,
 				CD93BB3D187882A300316492 /* OLAddressEditViewController.m */,
 				CD93BB431878DFA300316492 /* OLCountryPickerController.h */,
@@ -2033,7 +2027,6 @@
 				2E7FB64E1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h in Headers */,
 				2E65FEA81E4E143B00A301BB /* OLOrderHistoryViewController.h in Headers */,
 				2EB8FE131D95685100E26BDF /* OLFlipEnumerations.h in Headers */,
-				2EB8FE5C1D95685100E26BDF /* OLAddressLookupViewController.h in Headers */,
 				2EB8FE2D1D95685100E26BDF /* OLOAuth2PostBodyStream.h in Headers */,
 				2EB8FDDE1D95685100E26BDF /* OLAsset.h in Headers */,
 				2EB8FE0D1D95685100E26BDF /* OLFacebookAlbum.h in Headers */,
@@ -2522,7 +2515,6 @@
 				2E149AE91DB7B00D000E5849 /* OLProductTemplateCollection.m in Sources */,
 				2E451E1F1D9555870080F1C1 /* OLOAuth2AccountStore.m in Sources */,
 				2E451E251D9555870080F1C1 /* OLOAuth2PostBodyStream.m in Sources */,
-				2E451E551D9555D90080F1C1 /* OLAddressLookupViewController.m in Sources */,
 				2E451DF21D95555C0080F1C1 /* OLPrintOrder+History.m in Sources */,
 				2E451E221D9555870080F1C1 /* OLOAuth2Constants.m in Sources */,
 				2EB8FE7E1D95692000E26BDF /* UIColor+OLHexString.m in Sources */,

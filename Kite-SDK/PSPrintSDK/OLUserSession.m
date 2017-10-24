@@ -210,6 +210,9 @@
     if (self.kiteVc.filterProducts.count > 0){
         return NO;
     }
+    if (self.deeplink){
+        return NO;
+    }
     
     return YES;
 }

@@ -19,7 +19,6 @@
 "Add Text" = "Text hinzufügen";
 "Add to Basket" = "In den Warenkord legen";
 "Address Book" = "Adressbuch";
-"Address Search" = "Adresssuche";
 "All Photos" = "Alle Fotos";
 "Alternatively type the following URL into your mobile browser's address bar" = "Bitte gib Alternative diese URL in den Browser deines Smartphones ein";
 "Are you sure you want to delete this item?" = "Bist du sicher, dass du diesen Artikel löschen möchtest?";
@@ -45,7 +44,6 @@
 "cm" = "cm";
 "Completed Orders" = "Abgeschlossene Aufträge";
 "Continue Shopping" = "Weiter einkaufen";
-"Country" = "Land";
 "County" = "Bundesland";
 "Create a %@ for\nonly %@ %@" = "Erstelle einen %@ für\nnur %@ %@";
 "Create a pack for\nonly %@ %@" = "Erstelle ein Paket für\nnur %@ %@";
@@ -176,9 +174,6 @@
 "Save" = "Speichern";
 "Save as Copy" = "Save as Copy";
 "Scan QR Code" = "QR-Code scannen";
-"Search by postcode, street or address" = "Suche nach Postleitzahl, Straße oder Adresse";
-"Search by street, address or ZIP code" = "Suche nach Straße, Adresse oder Postleitzahl";
-"Search for Address" = "Nach Adresse suchen";
 "Select Size" = "Größe auswählen";
 "Shipping" = "Versand";
 "Shipping Method" = "Shipping Method";

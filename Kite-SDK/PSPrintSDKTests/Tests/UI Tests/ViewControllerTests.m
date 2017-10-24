@@ -132,21 +132,6 @@
     }];
 }
 
-- (void)testAddressSearch{
-    OLAddressLookupViewController *vc = [[OLAddressLookupViewController alloc] init];
-    
-    UINavigationController *rootVc = (UINavigationController *)[[UIApplication sharedApplication].delegate window].rootViewController;
-    [self performUIAction:^{
-        [rootVc.topViewController presentViewController:[[OLNavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
-    }];
-    
-    vc.searchController.searchBar.text = @"457 Finchley Road, NW3 6HN, London";
-    
-    [self performUIActionWithDelay:5 action:^{
-        [vc updateSearchResultsForSearchController:vc.searchController];
-    }];
-}
-
 
 - (void)testImagePickerViewController{
     [[OLUserSession currentSession] logoutOfInstagram];
