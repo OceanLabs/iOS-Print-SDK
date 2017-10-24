@@ -1126,6 +1126,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 - (IBAction)onButtonMinusClicked:(UIButton *)sender {
     CGPoint buttonPosition = [sender.superview convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
+    if (indexPath.row >= self.printOrder.jobs.count){
+        return;
+    }
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     
     if (printJob.extraCopies == 0){
@@ -1539,6 +1542,10 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         if ([OLKiteABTesting sharedInstance].lightThemeColorBasketQtyButtons){
             minusButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorBasketQtyButtons;
             plusButton.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorBasketQtyButtons;
+        }
+        
+        if (indexPath.row >= self.printOrder.jobs.count){
+            return cell;
         }
         
         id<OLPrintJob> job = self.printOrder.jobs[indexPath.row];
