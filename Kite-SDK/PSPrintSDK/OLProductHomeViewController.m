@@ -394,6 +394,37 @@
         self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
     }
     [self addBasketIconToTopRight];
+    
+    if ([OLUserSession currentSession].deeplink){
+        NSString *deeplink = [[OLUserSession currentSession].deeplink lowercaseString];
+        [OLUserSession currentSession].deeplink = nil;
+        
+        OLProduct *product;
+        for (OLProduct *p in [OLProduct products]){
+            if ([[product.templateId lowercaseString] isEqualToString:deeplink]){
+                product = p;
+            }
+        }
+        if (product){
+            UIViewController *vc = [[OLUserSession currentSession].kiteVc productDescriptionViewController];
+            [(OLProductOverviewViewController *)vc setProduct:product];
+            [self.navigationController pushViewController:vc animated:NO];
+        }
+        else{
+            for (OLProductGroup *group in self.productGroups){
+                if ([[group.templateClass lowercaseString] isEqualToString:deeplink]){
+                    OLProduct *product = [group.products firstObject];
+                    product.uuid = nil;
+                    
+                    id vc = [[OLUserSession currentSession].kiteVc viewControllerForGroupSelected:group];
+                    [vc safePerformSelector:@selector(setProduct:) withObject:product];
+                    [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
+                    [self.navigationController pushViewController:vc animated:NO];
+                    break;
+                }
+            }
+        }
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
