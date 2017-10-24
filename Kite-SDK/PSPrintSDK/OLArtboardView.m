@@ -332,6 +332,7 @@
             cropVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
             [cropVc setImage:image];
             cropVc.edits = asset.edits;
+            cropVc.asset = asset;
             
             [vc presentViewController:cropVc animated:NO completion:NULL];
             

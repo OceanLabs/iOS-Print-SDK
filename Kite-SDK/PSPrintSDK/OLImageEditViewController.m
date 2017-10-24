@@ -2029,18 +2029,24 @@ const NSInteger kOLEditTagCrop = 40;
         self.ctaButton.enabled = YES;
         self.edits.filterName = [self filterNames][indexPath.item];
         
-        UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.artboard.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
-        
-        if (self.animating){
-            return;
-        }
-        self.animating = YES;
-        self.fullImage = nil;
-        [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
+        OLAsset *asset = [self.asset copy];
+        asset.edits = nil;
+        asset.edits.filterName = self.edits.filterName;
+        [asset imageWithSize:self.view.frame.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
             self.fullImage = image;
-            self.artboard.assetViews.firstObject.imageView.image = image;
-            [self updateProductRepresentationForChoice:nil];
-            self.animating = NO;
+            UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.artboard.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+            
+            if (self.animating){
+                return;
+            }
+            self.animating = YES;
+            self.fullImage = nil;
+            [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
+                self.fullImage = image;
+                self.artboard.assetViews.firstObject.imageView.image = image;
+                [self updateProductRepresentationForChoice:nil];
+                self.animating = NO;
+            }];
         }];
     }
     else if (self.selectedOption && self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
