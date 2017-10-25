@@ -862,7 +862,7 @@ const NSInteger kOLEditTagCrop = 40;
     self.edits.cropTransform = [self.artboard.assetViews.firstObject.imageView transform];
     
     [coordinator animateAlongsideTransition:^(id context){
-        [self loadImages];
+        [self loadImageFromAsset];
         [self.editingTools.collectionView.collectionViewLayout invalidateLayout];
     }completion:^(id context){
         NSString *borderString = self.borderTextField.text;
