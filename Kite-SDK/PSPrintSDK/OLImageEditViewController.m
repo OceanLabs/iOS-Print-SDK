@@ -102,6 +102,7 @@ const NSInteger kOLEditTagCrop = 40;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *artboardBottomCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *artboardRightCon;
 @property (weak, nonatomic) UIView *gestureView;
+@property (strong, nonatomic) UIButton *closeButton;
 
 @property (weak, nonatomic) OLProductTemplateOption *selectedOption;
 @property (weak, nonatomic) OLProductTemplateOptionChoice *selectedChoice;
@@ -114,6 +115,8 @@ const NSInteger kOLEditTagCrop = 40;
 @property (assign, nonatomic) CGAffineTransform backupTransform;
 @property (strong, nonatomic) UIImage *thumbnailOriginalImage;
 @property (strong, nonatomic) UIImage *fullImage;
+
+@property (assign, nonatomic) BOOL didReplaceAsset;
 
 @end
 
@@ -256,6 +259,7 @@ const NSInteger kOLEditTagCrop = 40;
     
     if (!self.navigationController){
         UIButton *button = [[UIButton alloc] init];
+        self.closeButton = button;
         [button addTarget:self action:@selector(onBarButtonCancelTapped:) forControlEvents:UIControlEventTouchUpInside];
         [button setImage:[UIImage imageNamedInKiteBundle:@"x-button"] forState:UIControlStateNormal];
         button.tintColor = [UIColor whiteColor];
@@ -713,6 +717,7 @@ const NSInteger kOLEditTagCrop = 40;
     }
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.gestureView];
+    [self.view bringSubviewToFront:self.closeButton];
     [self.view bringSubviewToFront:self.touchReporter];
 }
 
@@ -795,25 +800,14 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)loadImages{
-    UIImage *image;
-    if (self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical){
-        image = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.fullImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.fullImage.imageOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
-    }
-    else{
-        image = self.fullImage;
-    }
-    
-    if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
-        OLAsset *asset = [OLAsset assetWithImageAsJPEG:image];
-        asset.edits.filterName = self.edits.filterName;
-        [asset imageWithSize:image.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
-            self.artboard.image = image;
-            [self.view setNeedsLayout];
-            [self.view layoutIfNeeded];
-            self.artboard.assetViews.firstObject.imageView.transform = self.edits.cropTransform;
-        }];
-    }
-    else{
+    void (^setImageToArtboard)(UIImage *image) = ^(UIImage *image){
+        if (self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical){
+            image = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.fullImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.fullImage.imageOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
+        }
+        else{
+            image = self.fullImage;
+        }
+        
         self.artboard.image = image;
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
@@ -827,6 +821,18 @@ const NSInteger kOLEditTagCrop = 40;
         self.artboard.assetViews.firstObject.imageView.transform = CGAffineTransformMake(self.edits.cropTransform.a, self.edits.cropTransform.b, self.edits.cropTransform.c, self.edits.cropTransform.d, self.edits.cropTransform.tx * factor, self.edits.cropTransform.ty * factor);
         
         [self updateProductRepresentationForChoice:nil];
+    };
+    
+    if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
+        OLAsset *asset = [OLAsset assetWithImageAsJPEG:self.fullImage];
+        asset.edits.filterName = self.edits.filterName;
+        [asset imageWithSize:self.fullImage.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+            self.fullImage = image;
+            setImageToArtboard(self.fullImage);
+        }];
+    }
+    else{
+        setImageToArtboard(self.fullImage);
     }
 }
 
@@ -1329,7 +1335,9 @@ const NSInteger kOLEditTagCrop = 40;
 - (void)onButtonDoneTapped:(id)sender {
     [self saveEditsToAsset:nil];
     
-    if (self.asset && [self.delegate respondsToSelector:@selector(imageEditViewController:didReplaceAssetWithAsset:)]){
+    if (self.didReplaceAsset && self.asset && [self.delegate respondsToSelector:@selector(imageEditViewController:didReplaceAssetWithAsset:)]){
+        self.asset.edits = self.edits;
+        [self.asset unloadImage];
         [self.delegate imageEditViewController:self didReplaceAssetWithAsset:self.asset];
     }
     if ([self.delegate respondsToSelector:@selector(imageEditViewController:didFinishCroppingImage:)]){
@@ -2032,22 +2040,7 @@ const NSInteger kOLEditTagCrop = 40;
         OLAsset *asset = [self.asset copy];
         asset.edits = nil;
         asset.edits.filterName = self.edits.filterName;
-        [asset imageWithSize:self.view.frame.size applyEdits:NO progress:NULL completion:^(UIImage *image, NSError *error){
-            self.fullImage = image;
-            UIImage *newImage = [UIImage imageWithCGImage:self.fullImage.CGImage scale:self.artboard.assetViews.firstObject.imageView.image.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:self.initialOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
-            
-            if (self.animating){
-                return;
-            }
-            self.animating = YES;
-            self.fullImage = nil;
-            [self applyFilterToImage:newImage withCompletionHandler:^(UIImage *image){
-                self.fullImage = image;
-                self.artboard.assetViews.firstObject.imageView.image = image;
-                [self updateProductRepresentationForChoice:nil];
-                self.animating = NO;
-            }];
-        }];
+        [self loadImageFromAsset];
     }
     else if (self.selectedOption && self.selectedOption.type == OLProductTemplateOptionTypeTemplateCollection){
         NSString *templateId = self.selectedOption.choices[indexPath.item].code;
@@ -2463,6 +2456,7 @@ const NSInteger kOLEditTagCrop = 40;
     self.asset = addedAssets.firstObject;
     self.edits = [self.asset.edits copy];
     if (self.asset){
+        self.didReplaceAsset = YES;
         self.ctaButton.enabled = YES;
         id view = [self.view viewWithTag:1010];
         if ([view isKindOfClass:[UIActivityIndicatorView class]]){
