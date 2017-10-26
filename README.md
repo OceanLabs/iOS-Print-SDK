@@ -62,7 +62,7 @@ pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
 #pod 'FBSDKLoginKit', '~> 4.27.1'
 
 #Uncomment the following line if you want Apple Pay support
-#pod 'Stripe', '~> 11.3.0'
+#pod 'Stripe', '~> 10.1.0'
 ```
 
 If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above and follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite-SDK/docs/social_photo_sources.md).
@@ -80,7 +80,7 @@ github "OceanLabs/iOS-Print-SDK"
 github "paypal/PayPal-iOS-SDK"
 
 #Uncomment the following line if you want Apple Pay support
-#github "stripe/stripe-ios" ~> 11.3.0
+#github "stripe/stripe-ios" ~> 10.1.0
 ```
 
 You can find an example project [here](https://github.com/OceanLabs/Example-Kite-iOS-Carthage)

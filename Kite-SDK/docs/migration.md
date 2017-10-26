@@ -10,7 +10,7 @@
  ```
 #### Apple Pay:
  ```ruby
- pod 'Stripe', '~> 11.3.0'
+ pod 'Stripe', '~> 10.1.0'
  ```
 #### Facebook:
  ```ruby

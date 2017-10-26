@@ -50,5 +50,5 @@ Finally ensure ApplePay is enabled in the Capabilities tab of your app build tar
 If you are using CocoaPods please make sure to include the ApplePay subspec by adding the following line to your podfile:
 
 ```ruby
-pod 'Stripe', '~> 11.3.0'
+pod 'Stripe', '~> 10.1.0'
 ```
