@@ -3,7 +3,7 @@ inhibit_all_warnings!
 
 def shared_pods
     pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
-    pod 'Stripe', '~> 11.3.0'
+    pod 'Stripe', '~> 10.1.0'
     pod 'FBSDKCoreKit', '~> 4.27.1'
     pod 'FBSDKLoginKit', '~> 4.27.1'
 end
