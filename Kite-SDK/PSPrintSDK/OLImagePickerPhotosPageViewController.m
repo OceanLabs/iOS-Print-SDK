@@ -616,6 +616,7 @@ CGFloat OLImagePickerMargin = 1.5;
         }
         else if (asset){ //Add photo
             asset = [asset copy];
+            asset.uuid = [[NSUUID UUID] UUIDString];
             NSUInteger index = [self.imagePicker.selectedAssets indexOfObject:[[OLPlaceholderAsset alloc] init]];
             if (index != NSNotFound){
                 [self.imagePicker.selectedAssets replaceObjectAtIndex:index withObject:asset];
