@@ -129,8 +129,6 @@ static char tasksKey;
         }
     }
     
-    self.image = placeholder;
-    
     if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
         self.image = [UIImage imageNamedInKiteBundle:@"plus"];
         self.contentMode = UIViewContentModeCenter;
@@ -139,6 +137,8 @@ static char tasksKey;
         }
         return;
     }
+    
+    self.image = placeholder;
     
     if (size.height == 0 || size.width == 0){
         size = CGSizeMake(self.frame.size.width * [UIScreen mainScreen].scale, self.frame.size.height * [UIScreen mainScreen].scale);

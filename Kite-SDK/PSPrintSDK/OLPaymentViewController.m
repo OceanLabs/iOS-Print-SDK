@@ -79,6 +79,7 @@
 #import "OLShippingMethodsViewController.h"
 #import "OLKioskLandingViewController.h"
 #import "UIColor+OLHexString.h"
+#import "OLBasketItemTableViewCell.h"
 
 @import PassKit;
 @import Contacts;
@@ -1528,7 +1529,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         return cell;
     }
     else if (indexPath.section == 0 && self.printOrder.jobs.count > 0){
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"jobCell"];
+        OLBasketItemTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"jobCell"];
         UIButton *minusButton = (UIButton *)[cell.contentView viewWithTag:10];
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:20];
         UILabel *quantityLabel = (UILabel *)[cell.contentView viewWithTag:30];
@@ -1564,7 +1565,8 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         
         CGFloat rowHeight = [self tableView:self.tableView heightForRowAtIndexPath:indexPath];
         
-        [imageView setImageWithOLAsset:[product coverPhotoAsset] fadeIn:NO size:CGSizeMake(rowHeight, rowHeight) applyEdits:NO placeholder:imageView.image progress:NULL completionHandler:NULL];
+        [imageView setImageWithOLAsset:[product coverPhotoAsset] fadeIn:NO size:CGSizeMake(rowHeight, rowHeight) applyEdits:NO placeholder:[cell.productTemplate isEqualToString:product.templateId] ? imageView.image : nil progress:NULL completionHandler:NULL];
+        cell.productTemplate = [job templateId];
         
         quantityLabel.text = [NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1];
         

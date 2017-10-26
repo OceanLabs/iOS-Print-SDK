@@ -242,6 +242,8 @@
 		2E7A8D921E9BBE8900AB4736 /* OLArtboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7A8D8E1E9BBE8900AB4736 /* OLArtboardView.m */; };
 		2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */; };
 		2E7D39731DAE39820046D255 /* OLImageRenderOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */; };
+		2E7ECBA51FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7ECBA31FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.h */; };
+		2E7ECBA61FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7ECBA41FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.m */; };
 		2E7FB64E1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7FB64C1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h */; };
 		2E7FB64F1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E7FB64D1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m */; };
 		2E870D3A1E49EF2100623C54 /* OLFulfilmentItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E870D381E49EF2100623C54 /* OLFulfilmentItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -739,6 +741,8 @@
 		2E7BDAD91D3E1713005F142C /* OLUserSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLUserSession.m; sourceTree = "<group>"; };
 		2E7D39701DAE39820046D255 /* OLImageRenderOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageRenderOptions.h; sourceTree = "<group>"; };
 		2E7D39711DAE39820046D255 /* OLImageRenderOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageRenderOptions.m; sourceTree = "<group>"; };
+		2E7ECBA31FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLBasketItemTableViewCell.h; sourceTree = "<group>"; };
+		2E7ECBA41FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OLBasketItemTableViewCell.m; sourceTree = "<group>"; };
 		2E7F516C1BF5FBB100A78718 /* OLGreetingCardPrintJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLGreetingCardPrintJob.m; sourceTree = "<group>"; };
 		2E7F516F1BF5FBCD00A78718 /* OLGreetingCardPrintJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLGreetingCardPrintJob.h; sourceTree = "<group>"; };
 		2E7FB64C1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSMutableArray+OLUserSelectedAssetsUtils.h"; path = "PSPrintSDK/Categories/NSMutableArray+OLUserSelectedAssetsUtils.h"; sourceTree = "<group>"; };
@@ -1105,6 +1109,8 @@
 				2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */,
 				2E973EEC1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.h */,
 				2E973EED1A7A5D0E00488212 /* OLCircleMaskCollectionViewCell.m */,
+				2E7ECBA31FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.h */,
+				2E7ECBA41FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.m */,
 				2EAC21521B9EDDC000C41BD4 /* OLImageCropper.h */,
 				2EAC21531B9EDDC000C41BD4 /* OLImageCropper.m */,
 				2ED3898F1C917D2000DC2314 /* OLPhotoTextField.h */,
@@ -1962,6 +1968,7 @@
 				2EB8FDD81D95685100E26BDF /* OLPrintOrderRequest.h in Headers */,
 				2EB8FE6B1D95685100E26BDF /* OLKiteViewController+Theme.h in Headers */,
 				2EB8FE2B1D95685100E26BDF /* OLOAuth2FileStreamWrapper.h in Headers */,
+				2E7ECBA51FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.h in Headers */,
 				2EB8FE571D95685100E26BDF /* OLCheckoutDelegate.h in Headers */,
 				2EB8FE161D95685100E26BDF /* OLTransition.h in Headers */,
 				2EB8FDEF1D95685100E26BDF /* OLGreetingCardPrintJob.h in Headers */,
@@ -2557,6 +2564,7 @@
 				2E451DD81D9555540080F1C1 /* OLPrintOrderSubmitStatusRequest.m in Sources */,
 				2E451E381D9555870080F1C1 /* OLImagePickerViewController.m in Sources */,
 				2E451E5E1D9555EF0080F1C1 /* OLKiteViewController.m in Sources */,
+				2E7ECBA61FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.m in Sources */,
 				2E7A8D921E9BBE8900AB4736 /* OLArtboardView.m in Sources */,
 				2E451E431D9555D30080F1C1 /* OLSingleProductReviewViewController.m in Sources */,
 				2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */,
