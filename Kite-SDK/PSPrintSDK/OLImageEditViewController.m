@@ -821,9 +821,10 @@ const NSInteger kOLEditTagCrop = 40;
         self.artboard.assetViews.firstObject.imageView.transform = CGAffineTransformMake(self.edits.cropTransform.a, self.edits.cropTransform.b, self.edits.cropTransform.c, self.edits.cropTransform.d, self.edits.cropTransform.tx * factor, self.edits.cropTransform.ty * factor);
         
         [self updateProductRepresentationForChoice:nil];
+        self.animating = NO;
     };
     
-    if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
+    if (self.fullImage && self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
         OLAsset *asset = [OLAsset assetWithImageAsJPEG:self.fullImage];
         asset.edits.filterName = self.edits.filterName;
         [asset imageWithSize:self.fullImage.size applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
@@ -2486,6 +2487,10 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)loadImageFromAsset{
+    if (!self.asset){
+        return;
+    }
+    self.animating = YES;
     self.fullImage = nil;
     self.artboard.assetViews.firstObject.imageView.image = nil;
     __weak OLImageEditViewController *welf = self;
