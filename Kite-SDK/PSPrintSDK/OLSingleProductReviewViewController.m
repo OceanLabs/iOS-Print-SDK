@@ -51,7 +51,7 @@
 #import "OLKiteViewController+Private.h"
 
 @interface OLPaymentViewController (Private)
-- (void)saveAndDismissReviewController;
+- (void)saveAndDismissReviewController:(UIButton *)button;
 @end
 
 @interface OLPrintOrder (Private)

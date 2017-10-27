@@ -41,7 +41,7 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)cropIsInImageEditingTools;
 - (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice;
-- (void)renderImage;
+- (void)renderImageWithCompletionHandler:(void (^)(void))handler;
 @end
 
 @interface OLCaseViewController ()
@@ -196,7 +196,7 @@
                 }
                 self.deviceView.alpha = 1;
             } completion:^(BOOL finished){
-                [self renderImage];
+                [self renderImageWithCompletionHandler:NULL];
             }];
         });
     }];

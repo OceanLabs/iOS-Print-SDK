@@ -108,7 +108,7 @@
 - (void)setActiveTextField:(OLPhotoTextField *)activeTextField{
     if ([self isUsingMultiplyBlend]){
         if (self.activeTextField && !activeTextField){
-            [self renderImage];
+            [self renderImageWithCompletionHandler:NULL];
         }
         else if (activeTextField){
             [self disableOverlay];
@@ -167,7 +167,7 @@
 
 - (void)onTapGestureRecognized:(id)sender{
     if (!self.activeTextField){
-        [self renderImage];
+        [self renderImageWithCompletionHandler:NULL];
     }
     [super onTapGestureRecognized:sender];
 }
@@ -535,10 +535,10 @@
     if (choice.color){
         self.deviceView.tintColor = choice.color;
         self.deviceView.image = [self.deviceView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        [self renderImage];
+        [self renderImageWithCompletionHandler:NULL];
     }
     else{
-        [self renderImage];
+        [self renderImageWithCompletionHandler:NULL];
     }
 }
 
@@ -633,7 +633,7 @@
             self.highlightsView.alpha = 1;
         }
     } completion:^(BOOL finished){
-        [self renderImage];
+        [self renderImageWithCompletionHandler:NULL];
         if ([self isUsingMultiplyBlend]){
             [self.artboard.assetViews.firstObject setGesturesEnabled:NO];
         }
@@ -690,6 +690,7 @@
             [self disableOverlay];
             
             self.artboard.assetViews.firstObject.imageView.image = nil;
+            [self.asset unloadImage];
             self.edits = nil;
             self.fullImage = nil;
             
@@ -713,9 +714,12 @@
             
             
         }completion:^(BOOL finished){
-            [self renderImage];
+            [self renderImageWithCompletionHandler:^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    self.productFlipButton.enabled = YES;
+                });
+            }];
             [self showExtraChargeHint];
-            self.productFlipButton.enabled = YES;
         }];
     }];
     [flipBlock addDependency:backgroundImageDownloadCompleteBlock];
@@ -750,11 +754,15 @@
     [super doCheckout];
 }
 
-- (void)renderImage{
+- (void)renderImageWithCompletionHandler:(void (^)(void))handler{
     if (![self isUsingMultiplyBlend]  || self.maskActivityIndicator.isAnimating || [[[UIDevice currentDevice] systemVersion] floatValue] < 10){
+        if (handler){
+            handler();
+        }
         return;
     }
     
+    @autoreleasepool{
     self.highlightsView.hidden = NO;
     self.renderedImageView.image = nil;
     UIGraphicsBeginImageContextWithOptions(self.highlightsView.bounds.size, NO, [UIScreen mainScreen].scale);
@@ -779,6 +787,10 @@
     
     self.renderedImageView.hidden = NO;
     self.highlightsView.hidden = YES;
+    }
+    if (handler){
+        handler();
+    }
 }
 
 #pragma mark - RMImageCropperDelegate methods
