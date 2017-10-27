@@ -13,14 +13,14 @@ PODS:
     - PureLayout (~> 3.0.0)
   - PayPal-iOS-SDK/Core (2.18.0)
   - PureLayout (3.0.2)
-  - Stripe (11.3.0)
+  - Stripe (10.1.0)
 
 DEPENDENCIES:
   - FBSDKCoreKit (~> 4.27.1)
   - FBSDKLoginKit (~> 4.27.1)
   - KITAssetsPickerController (from `git@github.com:kkarayannis/KITAssetsPickerController.git`)
   - PayPal-iOS-SDK/Core (~> 2.18.0)
-  - Stripe (~> 11.3.0)
+  - Stripe (~> 10.1.0)
 
 EXTERNAL SOURCES:
   KITAssetsPickerController:
@@ -38,8 +38,8 @@ SPEC CHECKSUMS:
   KITAssetsPickerController: bcb94b0b3267006fa666041f18a2370a00a9b105
   PayPal-iOS-SDK: 3fc74982a68d54eeaf39e09f507f279dc2291860
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
-  Stripe: 3c86dc18af21e59dd559aa15e83cb501248f9903
+  Stripe: 1c7aa951a075cced500a919d92b687b35d410705
 
-PODFILE CHECKSUM: c72ccf9a8dc2204b616444cb2bf0566b5f0a97de
+PODFILE CHECKSUM: 8a1459d72dc010b02ad5b70c72a501fe491ec9f1
 
 COCOAPODS: 1.3.1

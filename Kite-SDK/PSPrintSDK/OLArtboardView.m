@@ -456,6 +456,8 @@
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
+    asset.extraCopies = [OLAsset userSelectedAssets][self.sourceAssetView.index].extraCopies;
+    [OLAsset userSelectedAssets][self.sourceAssetView.index].extraCopies = 0;
     [[OLAsset userSelectedAssets] replaceObjectAtIndex:self.sourceAssetView.index withObject:asset];
     [self.sourceAssetView loadImageWithCompletionHandler:NULL];
 }
