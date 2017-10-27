@@ -129,10 +129,10 @@
     [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController:)]){
             [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
             [self.ctaButton removeTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
-            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController:) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     
@@ -258,8 +258,9 @@
     [self.view bringSubviewToFront:self.hintView];
 }
 
-- (void)onButtonDoneTapped:(id)sender{
+- (void)onButtonDoneTapped:(UIButton *)sender{
     if ([self shouldDoCheckout]){
+        sender.enabled = NO;
         [self doCheckout];
     }
 }

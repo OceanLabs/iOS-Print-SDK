@@ -340,13 +340,16 @@
     }
 }
 
-- (void)onButtonDoneTapped:(id)sender{
+- (void)onButtonDoneTapped:(UIButton *)sender{
+    sender.enabled = NO;
     if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 0 && !self.backAsset) {
         [self showHintViewForView:self.editingTools.button1 header:NSLocalizedStringFromTableInBundle(@"Let's pick\nan image!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half.") body:NSLocalizedStringFromTableInBundle(@"Start by tapping this button", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")delay:NO];
+        sender.enabled = YES;
         return;
     }
     
     if (![self shouldDoCheckout]){
+        sender.enabled = YES;
         return;
     }
     

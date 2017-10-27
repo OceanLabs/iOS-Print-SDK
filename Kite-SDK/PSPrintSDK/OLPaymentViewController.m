@@ -905,12 +905,12 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     return navController;
 }
 
-- (void)saveAndDismissReviewController{
+- (void)saveAndDismissReviewController:(UIButton *)button{
     OLNavigationController *nvc = (OLNavigationController *)self.presentedViewController;
     if (![nvc isKindOfClass:[OLNavigationController class]]){
         return;
     }
-    
+    button.enabled = NO;
     OLPackProductViewController *editingVc = nvc.viewControllers.lastObject;
     if ([editingVc respondsToSelector:@selector(saveJobWithCompletionHandler:)]){
         [editingVc saveJobWithCompletionHandler:^{

@@ -53,7 +53,7 @@
 @end
 
 @interface OLSingleImagePosterViewController () <OLArtboardDelegate>
-- (void)saveAndDismissReviewController;
+- (void)saveAndDismissReviewController:(UIButton *)button;
 - (IBAction)onButtonDoneTapped:(UIButton *)sender;
 - (IBAction)onButtonNextClicked:(UIButton *)sender;
 @end
@@ -112,10 +112,10 @@
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController:)]){
             [ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
             [ctaButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+            [ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController:) forControlEvents:UIControlEventTouchUpInside];
         }
     }
 }

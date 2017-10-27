@@ -65,7 +65,7 @@ static const CGFloat kBookEdgePadding = 38;
 
 @interface OLPaymentViewController (Private)
 
-- (void)saveAndDismissReviewController;
+- (void)saveAndDismissReviewController:(UIButton *)button;
 
 @end
 
@@ -193,10 +193,10 @@ static const CGFloat kBookEdgePadding = 38;
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController)]){
+        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController:)]){
             [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
             [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController) forControlEvents:UIControlEventTouchUpInside];
+            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController:) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     

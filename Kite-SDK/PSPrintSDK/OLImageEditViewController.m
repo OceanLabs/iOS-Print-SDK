@@ -1333,7 +1333,8 @@ const NSInteger kOLEditTagCrop = 40;
     
 }
 
-- (void)onButtonDoneTapped:(id)sender {
+- (void)onButtonDoneTapped:(UIButton *)sender {
+    sender.enabled = NO;
     [self saveEditsToAsset:nil];
     
     if (self.didReplaceAsset && self.asset && [self.delegate respondsToSelector:@selector(imageEditViewController:didReplaceAssetWithAsset:)]){
