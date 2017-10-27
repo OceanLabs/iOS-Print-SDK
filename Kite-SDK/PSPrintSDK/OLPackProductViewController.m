@@ -406,36 +406,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     }
 }
 
-- (void)setupBottomBorderTextFieldOnView:(OLCircleMaskCollectionViewCell *)cell{
-    OLArtboardView *artboard = [cell viewWithTag:10];
-    UIView *assetView = artboard.assetViews.firstObject;
-    CGFloat heightFactor = artboard.frame.size.height / 212.0;
-    UITextField *tf = [[UITextField alloc] init];
-    tf.userInteractionEnabled = NO;
-    tf.textAlignment = NSTextAlignmentCenter;
-    tf.adjustsFontSizeToFitWidth = YES;
-    tf.minimumFontSize = 1;
-    tf.font = [UIFont fontWithName:@"HelveticaNeue" size:35 * heightFactor];
-    tf.textColor = [UIColor blackColor];
-    tf.tag = 1556;
-    
-    [artboard addSubview:tf];
-    
-    tf.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(tf, assetView);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-5-[tf]-5-|",
-                         [NSString stringWithFormat:@"V:[assetView]-0-[tf]-0-|"]];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [tf.superview addConstraints:con];
-}
-
 #pragma mark Button Actions
 
 - (IBAction)onButtonUpArrowClicked:(UIButton *)sender {
@@ -632,7 +602,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     
     [[artboard viewWithTag:1556] removeFromSuperview];
     if (asset.edits.bottomBorderText.text){
-        [self setupBottomBorderTextFieldOnView:cell];
+        [artboard setupBottomBorderTextField];
         [(UITextView *)[artboard viewWithTag:1556] setText:asset.edits.bottomBorderText.text];
     }
     

@@ -51,4 +51,5 @@
 - (void)refreshAssetViewsWithIndexSet:(NSIndexSet *)indexSet;
 - (void)loadImageOnAllAssetViews;
 - (OLArtboardAssetView *)findAssetViewAtPoint:(CGPoint)point;
+- (void)setupBottomBorderTextField;
 @end

@@ -394,6 +394,35 @@
     return nil;
 }
 
+- (void)setupBottomBorderTextField{
+    UIView *assetView = self.assetViews.firstObject;
+    CGFloat heightFactor = self.frame.size.height / 212.0;
+    UITextField *tf = [[UITextField alloc] init];
+    tf.userInteractionEnabled = NO;
+    tf.textAlignment = NSTextAlignmentCenter;
+    tf.adjustsFontSizeToFitWidth = YES;
+    tf.minimumFontSize = 1;
+    tf.font = [UIFont fontWithName:@"HelveticaNeue" size:35 * heightFactor];
+    tf.textColor = [UIColor blackColor];
+    tf.tag = 1556;
+    
+    [self addSubview:tf];
+    
+    tf.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(tf, assetView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-5-[tf]-5-|",
+                         [NSString stringWithFormat:@"V:[assetView]-0-[tf]-0-|"]];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [tf.superview addConstraints:con];
+}
+
 #pragma mark - OLImageEditViewController delegate
 
 - (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper{
@@ -408,6 +437,12 @@
     OLAsset *asset = [OLAsset userSelectedAssets][self.sourceAssetView.index];
     [asset unloadImage];
     asset.edits = cropper.edits;
+    
+    [[self viewWithTag:1556] removeFromSuperview];
+    if (asset.edits.bottomBorderText.text){
+        [self setupBottomBorderTextField];
+        [(UITextView *)[self viewWithTag:1556] setText:asset.edits.bottomBorderText.text];
+    }
 
     [self.sourceAssetView loadImageWithCompletionHandler:NULL];
     
