@@ -2035,6 +2035,9 @@ const NSInteger kOLEditTagCrop = 40;
         [collectionView reloadData];
     }
     else if (collectionView.tag == kOLEditTagFilters){
+        if (self.animating){
+            return;
+        }
         self.ctaButton.enabled = YES;
         self.edits.filterName = [self filterNames][indexPath.item];
         
