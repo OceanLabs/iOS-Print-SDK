@@ -408,6 +408,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 
 - (void)setupBottomBorderTextFieldOnView:(OLCircleMaskCollectionViewCell *)cell{
     OLArtboardView *artboard = [cell viewWithTag:10];
+    UIView *assetView = artboard.assetViews.firstObject;
     CGFloat heightFactor = artboard.frame.size.height / 212.0;
     UITextField *tf = [[UITextField alloc] init];
     tf.userInteractionEnabled = NO;
@@ -418,14 +419,14 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     tf.textColor = [UIColor blackColor];
     tf.tag = 1556;
     
-    [artboard.superview addSubview:tf];
+    [artboard addSubview:tf];
     
     tf.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(tf, artboard);
+    NSDictionary *views = NSDictionaryOfVariableBindings(tf, assetView);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
     NSArray *visuals = @[@"H:|-5-[tf]-5-|",
-                         [NSString stringWithFormat:@"V:[artboard]-%f-[tf(%f)]", 8.0 * heightFactor, 40.0 * heightFactor]];
+                         [NSString stringWithFormat:@"V:[assetView]-0-[tf]-0-|"]];
     
     
     for (NSString *visual in visuals) {
@@ -629,10 +630,10 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
         [cell setNeedsDisplay];
     }
     
-    [[artboard.superview viewWithTag:1556] removeFromSuperview];
+    [[artboard viewWithTag:1556] removeFromSuperview];
     if (asset.edits.bottomBorderText.text){
         [self setupBottomBorderTextFieldOnView:cell];
-        [(UITextView *)[artboard.superview viewWithTag:1556] setText:asset.edits.bottomBorderText.text];
+        [(UITextView *)[artboard viewWithTag:1556] setText:asset.edits.bottomBorderText.text];
     }
     
     return cell;
