@@ -681,6 +681,12 @@
     NSBlockOperation *flipBlock = [NSBlockOperation blockOperationWithBlock:^{
         [aiv removeFromSuperview];
         [UIView transitionWithView:self.printContainerView duration:0.5 options:UIViewAnimationOptionTransitionFlipFromRight animations:^{
+            for (OLPhotoTextField *tf in self.textFields){
+                [tf removeFromSuperview];
+                [self.textFields removeObject:tf];
+            }
+            self.activeTextField = nil;
+            
             [self disableOverlay];
             
             self.artboard.assetViews.firstObject.imageView.image = nil;
