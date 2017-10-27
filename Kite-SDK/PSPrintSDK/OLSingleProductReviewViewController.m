@@ -425,7 +425,9 @@
 }
 
 - (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
-    OLAsset *asset = addedAssets.firstObject;
+    OLAsset *asset = [addedAssets.firstObject copy];
+    self.edits = [asset.edits copy];
+    
     NSInteger assetIndex = 0;
     if (self.showingBack){
         self.backAsset = asset;
