@@ -400,8 +400,10 @@ static NSOperationQueue *imageOperationQueue;
     }
     BOOL fullResolution = CGSizeEqualToSize(size, OLAssetMaximumSize);
     
+    BOOL shouldCacheResult = YES;
     if (fullResolution || (!applyEdits && self.isEdited)){
         self.cachedEditedImage = nil;
+        shouldCacheResult = NO;
     }
     
     if (self.cachedEditedImage) {
@@ -436,14 +438,14 @@ static NSOperationQueue *imageOperationQueue;
                 if (image){
                     if (applyEdits){
                         [self resizeImage:image size:size applyEdits:applyEdits completion:^(UIImage *image){
-                            if (!fullResolution){
+                            if (shouldCacheResult){
                                 self.cachedEditedImage = image;
                             }
                             handler(image, nil);
                         }];
                     }
                     else{ //Image is already resized, no need to do it again
-                        if (!fullResolution){
+                        if (shouldCacheResult){
                             self.cachedEditedImage = image;
                         }
                         handler(image, nil);
@@ -458,7 +460,7 @@ static NSOperationQueue *imageOperationQueue;
         }
         else if (self.assetType == kOLAssetTypeImageData){
             [self resizeImage:[UIImage imageWithData:self.imageData] size:size applyEdits:applyEdits completion:^(UIImage *image){
-                if (!fullResolution){
+                if (shouldCacheResult){
                     self.cachedEditedImage = image;
                 }
                 handler(image, nil);
@@ -467,7 +469,7 @@ static NSOperationQueue *imageOperationQueue;
         else if (self.assetType == kOLAssetTypeImageFilePath){
             NSData *imageData = [NSData dataWithContentsOfFile:self.imageFilePath options:0 error:nil];
             [self resizeImage:[UIImage imageWithData:imageData] size:size applyEdits:applyEdits completion:^(UIImage *image){
-                if (!fullResolution){
+                if (shouldCacheResult){
                     self.cachedEditedImage = image;
                 }
                 handler(image, nil);
@@ -492,7 +494,9 @@ static NSOperationQueue *imageOperationQueue;
                                     UIGraphicsEndImageContext();
                                 }
                                 
-                                self.cachedEditedImage = image;
+                                if (shouldCacheResult){
+                                    self.cachedEditedImage = image;
+                                }
                             }
                             if (progress){
                                 progress(1);
