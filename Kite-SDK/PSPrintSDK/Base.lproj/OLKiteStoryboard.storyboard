@@ -2878,7 +2878,7 @@
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         <gestureRecognizers/>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="X4d-8D-TEz" secondAttribute="trailing" constant="20" id="0aE-F3-1Uz"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="X4d-8D-TEz" secondAttribute="trailing" constant="12" id="0aE-F3-1Uz"/>
                                             <constraint firstItem="bMp-Op-YBx" firstAttribute="leading" secondItem="CCQ-J9-y3B" secondAttribute="trailing" constant="5" id="0du-0d-KNc"/>
                                             <constraint firstItem="CCQ-J9-y3B" firstAttribute="centerY" secondItem="kWa-iF-wa4" secondAttribute="centerY" id="476-Gd-iny"/>
                                             <constraint firstItem="yP4-uo-deY" firstAttribute="leading" secondItem="kWa-iF-wa4" secondAttribute="leading" constant="15" id="7qS-RO-ytT"/>
@@ -2887,7 +2887,7 @@
                                             <constraint firstAttribute="bottom" secondItem="yP4-uo-deY" secondAttribute="bottom" id="lHs-h9-O4E"/>
                                             <constraint firstAttribute="trailing" secondItem="yP4-uo-deY" secondAttribute="trailing" constant="15" id="lk7-yc-dJk"/>
                                             <constraint firstAttribute="height" constant="50" id="oMz-k2-vla"/>
-                                            <constraint firstItem="CCQ-J9-y3B" firstAttribute="leading" secondItem="kWa-iF-wa4" secondAttribute="leading" constant="20" id="wMg-fc-yVk"/>
+                                            <constraint firstItem="CCQ-J9-y3B" firstAttribute="leading" secondItem="kWa-iF-wa4" secondAttribute="leadingMargin" constant="12" id="wMg-fc-yVk"/>
                                             <constraint firstItem="bMp-Op-YBx" firstAttribute="centerY" secondItem="CCQ-J9-y3B" secondAttribute="centerY" id="yl3-x9-JqE"/>
                                         </constraints>
                                         <variation key="default">
@@ -2927,10 +2927,10 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="EiN-2l-gIw" firstAttribute="leading" secondItem="if3-xp-D16" secondAttribute="leading" id="MRQ-F5-DwO"/>
+                            <constraint firstItem="EiN-2l-gIw" firstAttribute="leading" secondItem="if3-xp-D16" secondAttribute="leadingMargin" constant="-16" id="MRQ-F5-DwO"/>
                             <constraint firstItem="EiN-2l-gIw" firstAttribute="top" secondItem="if3-xp-D16" secondAttribute="topMargin" id="SYr-o6-hAh"/>
                             <constraint firstAttribute="bottomMargin" secondItem="EiN-2l-gIw" secondAttribute="bottom" id="UCd-o3-TVL"/>
-                            <constraint firstAttribute="trailing" secondItem="EiN-2l-gIw" secondAttribute="trailing" id="lZU-sF-v6z"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="EiN-2l-gIw" secondAttribute="trailing" constant="-16" id="lZU-sF-v6z"/>
                         </constraints>
                     </view>
                     <connections>
