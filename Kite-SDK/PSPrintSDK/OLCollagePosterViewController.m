@@ -56,6 +56,7 @@
 - (void)saveAndDismissReviewController:(UIButton *)button;
 - (IBAction)onButtonDoneTapped:(UIButton *)sender;
 - (IBAction)onButtonNextClicked:(UIButton *)sender;
+@property (strong, nonatomic) UIView *safeAreaView;
 @end
 
 @implementation OLCollagePosterViewController
@@ -66,6 +67,7 @@
     [[OLAsset userSelectedAssets] adjustNumberOfSelectedAssetsWithTotalNumberOfAssets:self.product.quantityToFulfillOrder trim:YES];
     
     self.editingTools.hidden = YES;
+    self.safeAreaView.hidden = YES;
     [self.hintView removeFromSuperview];
     
     [self setupCtaButton];
@@ -101,8 +103,15 @@
     [self.view addSubview:ctaButton];
     [ctaButton leadingFromSuperview:15 relation:NSLayoutRelationEqual];
     [ctaButton trailingToSuperview:15 relation:NSLayoutRelationEqual];
-    [ctaButton bottomToSuperview:15 relation:NSLayoutRelationEqual];
     [ctaButton heightConstraint:50];
+    
+    CGFloat bottomMargin = 15;
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        bottomMargin += self.parentViewController.view.safeAreaInsets.bottom;
+    }
+#endif
+    [ctaButton bottomToSuperview:bottomMargin relation:NSLayoutRelationEqual];
     
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
