@@ -1,10 +1,15 @@
 ## 6.8.0
 - Unified UX for adding images to products
-- Improved UX for swapping images in products
-- Many bug fixes
+- Improved: UX for swapping images in products
+- Fixed: A layout issue with collage posters on iPhone X
+- Improved: support for iPhone X in landscape
+- Added: Proper deep link support
+- Improved: Performance and memory usage
+- Fixed: Many bugs
+- Updated: Docs with newer dependency version
 
 ### 6.7.2
-- Fixed a layout issue on iPhone X when using a single custom image provider
+- Fixed: A layout issue on iPhone X when using a single custom image provider
 
 ### 6.7.1
 - Fixed: Non-responsive cancel button when Kite SDK is loading
