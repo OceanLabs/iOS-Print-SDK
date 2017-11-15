@@ -555,6 +555,7 @@ static NSString *nonNilStr(NSString *str) {
     OLProductTemplate *template = [OLProductTemplate templateWithId:item.templateId];
     NSString *currency = product.currencyCode;
     NSDecimalNumber *price = [product unitCostDecimalNumber];
+    NSString *itemType = template.templateClass;
     
     if (!template || !product){
         return;
@@ -564,9 +565,12 @@ static NSString *nonNilStr(NSString *str) {
     [dict[@"properties"] setObject:item.templateId forKey:kOLAnalyticsProductName];
     [dict[@"properties"] setObject:price forKey:kOLAnalyticsItemPrice];
     [dict[@"properties"] setObject:currency forKey:kOLAnalyticsCurrencyCode];
+    if (itemType){
+        [dict[@"properties"] setObject:itemType forKey:kOLAnalyticsProductCategory];
+    }
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : template.name, kOLAnalyticsItemPrice : price, kOLAnalyticsCurrencyCode : currency, kOLAnalyticsEventLevel : @1}];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : template.name, kOLAnalyticsItemPrice : price, kOLAnalyticsCurrencyCode : currency, kOLAnalyticsProductName: nonNilStr(itemType), kOLAnalyticsEventLevel : @1}];
 }
 
 #pragma mark Track Secondary Events - Not Sent to MixPanel
