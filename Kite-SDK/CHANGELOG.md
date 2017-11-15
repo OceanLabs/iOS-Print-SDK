@@ -1,5 +1,5 @@
 ### 6.8.1
-- Fixed: The CTA button on the image picker was moving when lowering the album drawer on iPhone X
+- Fixed: Minor layout issues on iPhone X
 - Added: Add to basket analytics event
 
 ## 6.8.0

@@ -105,6 +105,10 @@
     self.productDetails.product = _product;
     
     [self setupProductRepresentation];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackProductDetailsScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
+#endif
 }
 
 - (void)viewDidLoad {
@@ -181,10 +185,6 @@
     if ([OLUserSession currentSession].capitalizeCtaTitles){
         [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
     }
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductDetailsScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
-#endif
     
     self.originalBoxConstraint = self.detailsBoxTopCon.constant;
     
@@ -701,3 +701,4 @@
 
 
 @end
+
