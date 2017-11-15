@@ -54,6 +54,7 @@ static NSString *const kOLAnalyticsEventNamePaymentMethodScreenViewed = @"Paymen
 static NSString *const kOLAnalyticsEventNameShippingMethodScreenViewed = @"Shipping Method Screen Viewed";
 static NSString *const kOLAnalyticsEventNamePaymentMethodSelected = @"Payment Method Selected";
 static NSString *const kOLAnalyticsEventNameShippingMethodSelected = @"Shipping Method Selected";
+static NSString *const kOLAnalyticsEventNameItemAddedToBasket = @"Item Added To Basket";
 
 // Secondary Events - Not Sent to MixPanel
 static NSString *const kOLAnalyticsEventNameProductListScreenHitBack = @"Product List Screen Hit Back";
@@ -138,6 +139,7 @@ static NSString *const kOLAnalyticsButtonName = @"Button Name";
 + (void)trackEditScreenFinishedEditingPhotoForProductName:(NSString *)productName;
 + (void)trackReviewScreenIncrementedPhotoQtyForProductName:(NSString *)productName;
 + (void)trackReviewScreenDecrementedPhotoQtyForProductName:(NSString *)productName;
++ (void)trackItemAddedToBasket:(id<OLPrintJob>)item;
 + (void)trackEditPhotoTappedForProductName:(NSString *)productName;
 + (void)trackOrderHistoryScreenViewed;
 + (void)trackOrderHistoryScreenDismissed;

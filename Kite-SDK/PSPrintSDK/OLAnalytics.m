@@ -56,9 +56,8 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 @interface OLProduct (Private)
-
 - (NSDecimalNumber*) unitCostDecimalNumber;
-
+- (NSString *)currencyCode;
 @end
 
 @interface OLKitePrintSDK (Private)
@@ -547,6 +546,27 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics sendToMixPanelWithDictionary:dict];
     
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsApplePayAvailable : applePayIsAvailable, kOLAnalyticsPaymentMethod : methodName,kOLAnalyticsEventLevel : @1}];
+}
+
++ (void)trackItemAddedToBasket:(id<OLPrintJob>)item{
+    NSString *eventName = kOLAnalyticsEventNameItemAddedToBasket;
+    
+    OLProduct *product = [OLProduct productWithTemplateId:item.templateId];
+    OLProductTemplate *template = [OLProductTemplate templateWithId:item.templateId];
+    NSString *currency = product.currencyCode;
+    NSDecimalNumber *price = [product unitCostDecimalNumber];
+    
+    if (!template || !product){
+        return;
+    }
+
+    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
+    [dict[@"properties"] setObject:item.templateId forKey:kOLAnalyticsProductName];
+    [dict[@"properties"] setObject:price forKey:kOLAnalyticsItemPrice];
+    [dict[@"properties"] setObject:currency forKey:kOLAnalyticsCurrencyCode];
+    [OLAnalytics sendToMixPanelWithDictionary:dict];
+
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : template.name, kOLAnalyticsItemPrice : price, kOLAnalyticsCurrencyCode : currency, kOLAnalyticsEventLevel : @1}];
 }
 
 #pragma mark Track Secondary Events - Not Sent to MixPanel

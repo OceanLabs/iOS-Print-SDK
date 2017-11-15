@@ -300,6 +300,8 @@
     OLAsset *asset = [self.asset copy];
     NSArray *assetArray = @[asset];
     
+    BOOL fromEdit = NO;
+    
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLProductPrintJob *job;
     job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
@@ -312,12 +314,18 @@
             job.dateAddedToBasket = [existingJob dateAddedToBasket];
             job.extraCopies = existingJob.extraCopies;
             [printOrder removePrintJob:existingJob];
+            fromEdit = YES;
         }
     }
     [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
     [printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+    if (!fromEdit){
+        [OLAnalytics trackItemAddedToBasket:job];
+    }
+#endif
     
     [printOrder saveOrder];
     
@@ -495,6 +503,9 @@
     }
     
     [[OLUserSession currentSession].printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackItemAddedToBasket:job];
+#endif
     return job;
 }
 

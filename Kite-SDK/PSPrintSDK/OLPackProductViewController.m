@@ -328,6 +328,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
     for (NSUInteger jobIndex = 0; jobIndex < numOrders; jobIndex++){
+        BOOL fromEdit = NO;
         OLProductPrintJob *job;
         if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
             job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:[OLAsset userSelectedAssets].firstObject backImageOLAsset:[OLAsset userSelectedAssets].lastObject];
@@ -341,12 +342,18 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
                 job.dateAddedToBasket = [existingJob dateAddedToBasket];
                 job.extraCopies = existingJob.extraCopies;
                 [printOrder removePrintJob:existingJob];
+                fromEdit = YES;
             }
         }
         [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
         [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
         job.redeemedOffer = self.product.redeemedOffer;
         [printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+        if (!fromEdit){
+            [OLAnalytics trackItemAddedToBasket:job];
+        }
+#endif
     }
     
     [printOrder saveOrder];

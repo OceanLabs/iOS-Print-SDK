@@ -491,6 +491,7 @@
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)(void))handler{
+    BOOL fromEdit = NO;
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://kite.ly/no-asset.jpg"]]]];
@@ -499,9 +500,15 @@
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             job.extraCopies = existingJob.extraCopies;
             [printOrder removePrintJob:existingJob];
+            fromEdit = YES;
         }
     }
     [printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+    if (!fromEdit){
+        [OLAnalytics trackItemAddedToBasket:job];
+    }
+#endif
     
     [printOrder saveOrder];
     
@@ -612,6 +619,9 @@
     }
     
     [[OLUserSession currentSession].printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackItemAddedToBasket:job];
+#endif
     return job;
 }
 

@@ -132,6 +132,7 @@
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
+    BOOL fromEdit = NO;
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
@@ -139,12 +140,18 @@
             job.extraCopies = existingJob.extraCopies;
             job.uuid = self.product.uuid;
             [printOrder removePrintJob:existingJob];
+            fromEdit = YES;
         }
     }
     [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
     [printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+    if (!fromEdit){
+        [OLAnalytics trackItemAddedToBasket:job];
+    }
+#endif
     
     [printOrder saveOrder];
     
