@@ -265,6 +265,7 @@ static NSString *nonNilStr(NSString *str) {
     OLProductTemplate *template = [OLProductTemplate templateWithId:[job templateId]];
     if (template){
         dict[kOLAnalyticsProductName] = template.name;
+        dict[kOLAnalyticsProductId] = template.identifier;
         dict[kOLAnalyticsNumberOfPhotosInItem] = [NSNumber numberWithInteger:[job quantity]];
         dict[kOLAnalyticsQuantity] = [NSNumber numberWithInteger:[job extraCopies]+1];
         
@@ -353,14 +354,15 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsEventLevel : @1}];
 }
 
-+ (void)trackProductDetailsScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice{
++ (void)trackProductDetailsScreenViewed:(OLProductTemplate *)productTemplate hidePrice:(BOOL)hidePrice{
     NSString *eventName = kOLAnalyticsEventNameProductDetailsScreenViewed;
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
-    [dict[@"properties"] setObject:nonNilStr(productName) forKey:@"Product Name"];
+    [dict[@"properties"] setObject:nonNilStr(productTemplate.name) forKey:kOLAnalyticsProductName];
+    [dict[@"properties"] setObject:nonNilStr(productTemplate.identifier) forKey:kOLAnalyticsProductId];
     [dict[@"properties"] setObject:hidePrice ? @"YES" : @"NO" forKey:@"Hide Price on Product Description"];
     [OLAnalytics sendToMixPanelWithDictionary:dict];
     
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : nonNilStr(productName), kOLAnalyticsEventLevel : @1}];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : nonNilStr(productTemplate.name), kOLAnalyticsProductId : nonNilStr(productTemplate.identifier), kOLAnalyticsEventLevel : @1}];
 }
 
 + (void)trackProductListScreenViewedWithTemplateClass:(NSString *)templateClassString{
@@ -562,7 +564,8 @@ static NSString *nonNilStr(NSString *str) {
     }
 
     NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
-    [dict[@"properties"] setObject:item.templateId forKey:kOLAnalyticsProductName];
+    [dict[@"properties"] setObject:template.name forKey:kOLAnalyticsProductName];
+    [dict[@"properties"] setObject:template.identifier forKey:kOLAnalyticsProductId];
     [dict[@"properties"] setObject:price forKey:kOLAnalyticsItemPrice];
     [dict[@"properties"] setObject:currency forKey:kOLAnalyticsCurrencyCode];
     if (itemType){
@@ -570,7 +573,7 @@ static NSString *nonNilStr(NSString *str) {
     }
     [OLAnalytics sendToMixPanelWithDictionary:dict];
 
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : template.name, kOLAnalyticsItemPrice : price, kOLAnalyticsCurrencyCode : currency, kOLAnalyticsProductName: nonNilStr(itemType), kOLAnalyticsEventLevel : @1}];
+    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : template.name, kOLAnalyticsProductId : template.identifier, kOLAnalyticsItemPrice : price, kOLAnalyticsCurrencyCode : currency, kOLAnalyticsProductName: nonNilStr(itemType), kOLAnalyticsEventLevel : @1}];
 }
 
 #pragma mark Track Secondary Events - Not Sent to MixPanel

@@ -30,6 +30,7 @@
 #import <Foundation/Foundation.h>
 
 @class OLPrintOrder;
+@class OLProductTemplate;
 @protocol OLPrintJob;
 
 // Main Events - Sent to MixPanel
@@ -97,6 +98,7 @@ static NSString *const kOLAnalyticsEventNameEditScreenButtonTapped = @"Edit Scre
 static NSString *const kOLAnalyticsEventName = @"Event Name";
 static NSString *const kOLAnalyticsProductCategory = @"Product Category";
 static NSString *const kOLAnalyticsProductName = @"Product Name";
+static NSString *const kOLAnalyticsProductId = @"Product ID";
 static NSString *const kOLAnalyticsApplePayAvailable = @"Apple Pay Available";
 static NSString *const kOLAnalyticsPaymentMethod = @"Payment Method";
 static NSString *const kOLAnalyticsPhotoSource = @"Photo Source";
@@ -122,7 +124,7 @@ static NSString *const kOLAnalyticsButtonName = @"Button Name";
 + (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint;
 + (void)trackKiteDismissed;
 + (void)trackCategoryListScreenViewed;
-+ (void)trackProductDetailsScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice;
++ (void)trackProductDetailsScreenViewed:(OLProductTemplate *)productTemplate hidePrice:(BOOL)hidePrice;
 + (void)trackProductDetailsViewOpened:(NSString *)productName hidePrice:(BOOL)hidePrice;
 + (void)trackProductDetailsViewClosed:(NSString *)productName hidePrice:(BOOL)hidePrice;
 + (void)trackProductDescriptionScreenHitBack:(NSString *)productName hidePrice:(BOOL)hidePrice;
