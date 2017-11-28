@@ -569,20 +569,22 @@
         
         return cell;
     }
+    else if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(viewForHeaderWithWidth:)]){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
+        UIView *view = [cell viewWithTag:10];
+        [view removeFromSuperview];
+        
+        view = [[OLUserSession currentSession].kiteVc.delegate viewForHeaderWithWidth:self.view.frame.size.width];
+        [cell.contentView addSubview:view];
+        view.tag = 10;
+        
+        return cell;
+    }
     else{
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
         UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
         imageView.image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
-        if ([OLUserSession currentSession].prioritizeMainBundleImages){
-            if (imageView.image.size.width > self.view.frame.size.width){
-                imageView.image = [imageView.image shrinkToSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.width * (imageView.image.size.height / imageView.image.size.width)) forScreenScale:[UIScreen mainScreen].scale aspectFit:YES];
-            }
-            imageView.contentMode = UIViewContentModeLeft;
-            imageView.backgroundColor = [UIColor whiteColor];
-        }
-        else{
             imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
-        }
         return cell;
     }
 }
