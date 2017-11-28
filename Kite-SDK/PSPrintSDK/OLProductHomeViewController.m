@@ -52,6 +52,7 @@
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
 #import "OLKiteViewController+Private.h"
+#import "UIView+AutoLayoutHelper.h"
 
 @interface OLProductTypeSelectionViewController ()
 -(NSMutableArray *) products;
@@ -576,6 +577,8 @@
         
         view = [[OLUserSession currentSession].kiteVc.delegate viewForHeaderWithWidth:self.view.frame.size.width];
         [cell.contentView addSubview:view];
+        [view fillSuperView];
+        
         view.tag = 10;
         
         return cell;
