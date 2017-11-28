@@ -29,18 +29,30 @@ for line in file:
     
     translated = open(sys.argv[2], 'r')
     translatedReader = csv.reader(translated, delimiter=',', quotechar='"')
-    translatedReader.next()
+    next(translatedReader, '')
     for translatedLine in translatedReader:
         if (strings[0])[1:-1] == translatedLine[0]:
             found = True
             result.write('"' + translatedLine[0] + "\" = \"" + translatedLine[1] + "\";\n")
             break
 
+    translated.close()
+
+    if found == False:
+        secondary = open(sys.argv[5], 'r')
+        secondaryReader = csv.reader(secondary, delimiter=',', quotechar='"')
+        next(secondaryReader, '')
+        for secondaryLine in secondaryReader:
+            if (strings[0])[1:-1] == secondaryLine[0]:
+                found = True
+                result.write('"' + secondaryLine[0] + "\" = \"" + secondaryLine[1] + "\";\n")
+                break
+        secondary.close()
+
     if found == False:
         untranslatedWriter.writerow([strings[0][1:-1],strings[1][1:-3], comment[0:-1]])
         result.write('"' + strings[0][1:-1] + "\" = \"" + strings[1][1:-3] + "\";\n")
     
-    translated.close()
         
 untranslated.close()
 file.close()

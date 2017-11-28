@@ -1,0 +1,98 @@
+ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!","**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!",
+401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,
+500 Internal Server Error whilst trying to upload an asset. Please try again.,500 Internal Server Error whilst trying to upload an asset. Please try again.,
+Add,Add,
+Add Address,Add Address,
+Add Credit/Debit Card,Add Credit/Debit Card,
+Add more,Add more,/* Add more [photos] */
+Add New Address,Add New Address,
+Add Payment Method,Add Payment Method,
+Add to Basket,Add to Basket,
+Address Book,Address Book,
+Back,Back,
+Basket is empty,Basket is empty,
+basket.Edit,basket.Edit,/* Edit basket item */
+Cancel,Cancel,
+Card Number,Card Number,
+Checking Code,Checking Code,/* Checking promo code */
+Checkout for Free!,Checkout for Free!,
+Choose Address,Choose Address,
+Choose Country,Choose Country,
+Choose Delivery Address,Choose Delivery Address,
+Choose Photos,Choose Photos,
+City,City,
+Clearing Code,Clearing Code,/* Clearing promo code */
+Continue Shopping,Continue Shopping,
+County,County,
+Delivery Details,Delivery Details,
+Details,Details,/* Product Details */
+Done,Done,
+Edit,Edit,/* Edit image */
+Edit Address,Edit Address,
+Email,Email,
+Enter a valid CVV number,Enter a valid CVV number,/* The credit card security number */
+Enter a valid expiry date,Enter a valid expiry date,/* For credit cards */
+Enter Address Manually,Enter Address Manually,
+Failed to get the price of the order. Please try again.,Failed to get the price of the order. Please try again.,
+Failed to store card details with PayPal. Please try again.,Failed to store card details with PayPal. Please try again.,
+Failed to synchronize product templates. Please try again.,Failed to synchronize product templates. Please try again.,
+Failed to validate the order. Please try again.,Failed to validate the order. Please try again.,
+First Name,First Name,
+Image Is Too Small,Image Is Too Small,
+Invalid Email Address,Invalid Email Address,
+Invalid Phone Number,Invalid Phone Number,
+Last Name,Last Name,
+Line 1,Line 1,
+Line 2,Line 2,
+Missing Delivery Address,Missing Delivery Address,
+Move Pages,Move Pages,/* Title of a screen that allows the user to move the pages of a book around */
+New Payment,New Payment,
+Next,Next,
+OK,OK,/* Acknowledgent to an alert dialog. */
+Only registered %d/%d image URLs with the asset endpoint,Only registered %d/%d image URLs with the asset endpoint,
+Oops!,Oops!,
+Or print on a product below ▼,Or print on a product below ▼,
+Order Id,Order Id,
+Order Summary,Order Summary,
+Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.,Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.,
+Pay %@,Pay %@,/* Pay [$10.00] */
+Paying With,Paying With,/* Paying with [PayPal/Credit Card] */
+Payment,Payment,
+Payment (TEST),Payment (TEST),
+Payment Method,Payment Method,
+Phone,Phone,
+Please add some photos to your photo book,Please add some photos to your photo book,
+Please choose an address to have your order shipped to,Please choose an address to have your order shipped to,
+Please enter a card expiry date in the future,Please enter a card expiry date in the future,/* For credit cards */
+Please enter a valid card number,Please enter a valid card number,
+Please enter a valid email address,Please enter a valid email address,
+Please enter a valid phone number,Please enter a valid phone number,
+Please zoom out or pick a higher quality image,Please zoom out or pick a higher quality image,
+Postcode,Postcode,
+Powered by Kite.ly,Powered by Kite.ly,
+Price,Price,
+Print order submission failed with a %lu HTTP response status code. Please try again.,Print order submission failed with a %lu HTTP response status code. Please try again.,
+Print these,Print these,
+Processing,Processing,/* Processing the order */
+Promo Code,Promo Code,
+Quantity,Quantity,/* Quantity of photos */
+Required by the postal service in case there are any issues during delivery.,Required by the postal service in case there are any issues during delivery.,
+Retry,Retry,
+Review,Review,/* Title of a screen where the user can review the product before ordering */
+Save,Save,
+Shipping,Shipping,
+Single Photo Poster,Single Photo Poster,
+Size,Size,/* Physical size of the product */
+Store Maintenance,Store Maintenance,
+This is the 3-4 digit verification number/security code normally found on the back of your card,This is the 3-4 digit verification number/security code normally found on the back of your card,
+Total,Total,
+Uploading Images \n%lu / %lu,Uploading Images \n%lu / %lu,
+We'll send you confirmation and order updates.,We'll send you confirmation and order updates.,
+We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,
+You can add %d more for the same price.,You can add %d more for the same price.,
+You've selected %d photos.,You've selected %d photos.,
+Your 15-16 digit card number,Your 15-16 digit card number,
+Your card expiry date,Your card expiry date,
+Your payment was not approved (transaction state: %@). Please try again.,Your payment was not approved (transaction state: %@). Please try again.,
+ZIP Code,ZIP Code,
