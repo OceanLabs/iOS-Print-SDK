@@ -624,6 +624,10 @@
             });
         }];
     }
+    else if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(infoPageViewController)]){
+        UIViewController *vc = [[OLUserSession currentSession].kiteVc.delegate infoPageViewController];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
     else{
         OLInfoPageViewController *vc = (OLInfoPageViewController *)[OLUserSession currentSession].kiteVc.infoViewController;
         [vc safePerformSelector:@selector(setImageName:) withObject:@"quality"];

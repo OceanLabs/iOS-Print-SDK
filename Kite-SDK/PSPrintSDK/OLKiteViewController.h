@@ -71,6 +71,7 @@
  For internal use
  */
 - (UIView *_Nonnull)viewForHeaderWithWidth:(CGFloat)width;
+- (UIViewController *_Nonnull)infoPageViewController;
 
 
 - (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disallowUserToAddMorePhotos.");
