@@ -254,7 +254,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                                                                             target:nil
                                                                             action:nil];
     
-    self.poweredByKiteLabel.text = NSLocalizedStringFromTableInBundle(@"Powered by Kite.ly", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.poweredByKiteLabel.text = @"Powered by Kite.ly";
     [self.paymentButton1 setTitle:NSLocalizedStringFromTableInBundle(@"Continue Shopping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     self.reloadTableViewOperation = [NSBlockOperation blockOperationWithBlock:^{
