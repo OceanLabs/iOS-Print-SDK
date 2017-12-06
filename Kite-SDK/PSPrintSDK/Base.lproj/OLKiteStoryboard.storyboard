@@ -2924,6 +2924,7 @@
                     <connections>
                         <outlet property="arrowCenterXCon" destination="aSG-r9-WPM" id="jtA-Je-Mdg"/>
                         <outlet property="arrowImageView" destination="bMp-Op-YBx" id="dO0-ic-V3Y"/>
+                        <outlet property="detailLabel" destination="CCQ-J9-y3B" id="Sa9-wy-NBk"/>
                         <outlet property="detailsTextView" destination="VZT-Iv-riQ" id="QLS-iQ-NX9"/>
                         <outlet property="line" destination="yP4-uo-deY" id="Ijr-x2-HjY"/>
                         <outlet property="priceLabel" destination="X4d-8D-TEz" id="ePR-NJ-tyO"/>
