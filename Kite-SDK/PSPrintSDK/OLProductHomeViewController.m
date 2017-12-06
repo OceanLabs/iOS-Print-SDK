@@ -812,23 +812,8 @@
     
     if (indexPath.item >= self.productGroups.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
-        UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         UILabel *label = [cell.contentView viewWithTag:50];
         label.text = NSLocalizedStringFromTableInBundle(@"MORE ITEMS\nCOMING SOON!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder-loc.png"] withCompletionHandler:^(UIImage *image, NSError *error){
-            if (error) return;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                cellImageView.image = image;
-                cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
-            });
-        }];
-        if (self.fromRotation){
-            self.fromRotation = NO;
-            cell.alpha = 0;
-            [UIView animateWithDuration:0.3 animations:^{
-                cell.alpha = 1;
-            }];
-        }
         return cell;
     }
     
