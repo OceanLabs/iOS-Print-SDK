@@ -210,7 +210,7 @@ Size,Grootte,/* Physical size of the product */
 Store Maintenance,Winkel Onderhoud,
 This is the 3-4 digit verification number/security code normally found on the back of your card,Dit is het 3-4-cijferige controlegetal/beveiligingscode dat normaal op de achterkant van uw kaart staat.,
 Total,Totaal,
-Uploading Images \n%lu / %lu,"Beelden uploaden ""n%lu / %lulux",
+Uploading Images \n%lu / %lu,"Beelden uploaden \n%lu / %lulux",
 We'll send you confirmation and order updates.,Wij sturen u een bevestiging en updates van uw bestelling.,
 We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,Wij sturen u een bevestiging en updates van uw bestelling. Schakel dit vakje uit om af te zien van e-mailcampagnes.,
 You can add %d more for the same price.,U kunt %d meer toevoegen voor dezelfde prijs.,
