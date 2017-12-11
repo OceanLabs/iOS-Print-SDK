@@ -254,12 +254,22 @@ typedef enum {
 }
 
 - (NSDecimalNumber*) unitCostDecimalNumber {
+    NSString *currencyCode = [self currencyCode];
     OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
     
-    NSDecimalNumber *sheetCost = [productTemplate costPerSheetInCurrencyCode:[self currencyCode]];
+    NSDecimalNumber *sheetCost = [productTemplate costPerSheetInCurrencyCode:currencyCode];
     NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
     NSUInteger numSheets = (NSUInteger) ceil(self.quantityToFulfillOrder / sheetQuanity);
     NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];
+    
+    if (self.productTemplate.fulfilmentItems.count > 1){
+        for (OLFulfilmentItem *item in self.productTemplate.fulfilmentItems){
+            if (((([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]))) && [item hasCostForCurrency:currencyCode]){
+                unitCost = [unitCost decimalNumberByAdding:[item costForCurrency:currencyCode]];
+            }
+        }
+    }
+    
     return unitCost;
 }
 

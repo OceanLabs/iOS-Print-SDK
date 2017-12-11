@@ -1,3 +1,6 @@
+### 6.8.1
+- Fixed: Apparel pricing
+
 ## 6.8.0
 - Unified UX for adding images to products
 - Improved: UX for swapping images in products
