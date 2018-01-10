@@ -1,5 +1,5 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
-%@ days,%@ nap,
+%@ working days,%@ munkanap,
 %ldx%ld Collage,%ldx%ld kollázs,
 1 day,1 nap,
 Add %ld %@!,Adja hozzá a következőt: %ld %@!,

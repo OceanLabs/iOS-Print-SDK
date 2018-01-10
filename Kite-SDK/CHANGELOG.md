@@ -1,6 +1,7 @@
 ### 6.8.2
 - Fixed: Minor layout issues on iPhone X
 - Added: Add to basket analytics event
+- Changed: Shipping estimate from days to working days
 
 ### 6.8.1
 - Fixed: Apparel pricing

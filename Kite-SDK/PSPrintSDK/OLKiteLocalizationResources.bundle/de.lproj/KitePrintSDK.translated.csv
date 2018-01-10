@@ -1,5 +1,5 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
-%@ days,%@ Tage,
+%@ working days,%@ Werktage,
 %ldx%ld Collage,%ldx%ld Collage,
 1 day,1 Tag,
 Add %ld %@!,%ld %@ hinzufügen!,
