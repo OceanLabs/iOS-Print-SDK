@@ -8,7 +8,7 @@ Usage
 
 There are 2 ways to offer custom photo sources:
 
-1. You can just provide the collection/albums and the photos within those collections, and the Kite SDK will present them in a View Controller similar to the one that handles the Camera Roll pictures. The stock photography is a good fit for this method. The sample app provides an example of this method.
+1. You can just provide the collection/albums and the photos within those collections, and the Kite SDK will present them in a screen similar to the one that handles the Camera Roll pictures. For example, stock photography is a good fit for this method. The sample app provides an example of this method.
 
   Please provide one or more `OLImagePickerProviderCollection` objects initialized with an array `OLAsset` objects. `OLAsset` is versatile enough to work in virtually any scenario (including fetching URLs and using data source objects for the image data).
 

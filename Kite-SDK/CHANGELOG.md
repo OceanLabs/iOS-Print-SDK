@@ -1,6 +1,9 @@
-### 6.8.1
+### 6.8.2
 - Fixed: Minor layout issues on iPhone X
 - Added: Add to basket analytics event
+
+### 6.8.1
+- Fixed: Apparel pricing
 
 ## 6.8.0
 - Unified UX for adding images to products
