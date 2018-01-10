@@ -500,6 +500,7 @@
 
 - (void)applyDownloadedMask {
     if (self.downloadedMask){
+        [self maskWithImage:self.maskImage targetView:self.artboard];
         return;
     }
     
