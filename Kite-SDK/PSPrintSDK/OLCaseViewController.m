@@ -764,7 +764,7 @@
 }
 
 - (void)renderImageWithCompletionHandler:(void (^)(void))handler{
-    if (![self isUsingMultiplyBlend]  || self.maskActivityIndicator.isAnimating || [[[UIDevice currentDevice] systemVersion] floatValue] < 10){
+    if (![self isUsingMultiplyBlend]  || self.maskActivityIndicator.isAnimating || [[[UIDevice currentDevice] systemVersion] floatValue] < 10 || self.presentedViewController){
         if (handler){
             handler();
         }
