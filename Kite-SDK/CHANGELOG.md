@@ -1,3 +1,6 @@
+### 6.8.2
+- Fixed: Adding photos to a photo book when using an exclusive custom image provider.
+
 ### 6.8.1
 - Fixed: Apparel pricing
 
