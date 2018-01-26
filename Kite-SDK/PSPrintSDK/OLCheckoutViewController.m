@@ -44,6 +44,8 @@
 #import "OLImageDownloader.h"
 #import "OLUserSession.h"
 
+#import <UMAnalytics/MobClick.h>
+
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";
 NSString *const kOLNotificationPrintOrderSubmission = @"co.oceanlabs.pssdk.kOLNotificationPrintOrderSubmission";
@@ -301,7 +303,8 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         [defaults setObject:phone forKey:kKeyPhone];
         [defaults synchronize];
     }
-    
+
+    [MobClick event:@"mb_user_info" attributes:@{@"email" : email, @"phone" : phone}];
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserSuppliedShippingDetails object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
 }
 

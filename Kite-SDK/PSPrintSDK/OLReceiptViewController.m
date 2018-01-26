@@ -48,6 +48,8 @@
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
 
+#import <UMAnalytics/MobClick.h>
+
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
 static const NSUInteger kSectionErrorRetry = 2;
@@ -217,6 +219,8 @@ static const NSUInteger kSectionErrorRetry = 2;
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
         self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     }
+    
+    [MobClick event:@"mb_order_success" attributes:@{@"email" : self.printOrder.email, @"orderid" : self.printOrder.receipt}];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
