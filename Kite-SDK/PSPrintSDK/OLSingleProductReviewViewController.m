@@ -391,7 +391,10 @@
     }
     [self saveJobWithCompletionHandler:^{
         if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+            // The `self.storybard` may be nil if it was not initialized from storyboard.
+            // eg. Review page for phonecase (OLCaseViewController). see. OLKiteViewController.m L264
+            UIStoryboard *storyboard = self.storyboard ?: [OLUserSession currentSession].kiteVc.storyboard;
+            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
             [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
             [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
             [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
