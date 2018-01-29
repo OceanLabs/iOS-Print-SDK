@@ -1,7 +1,8 @@
 "%@ days" = "%@ days";
+"%@ working days" = "%@ working days";
 "%ldx%ld Collage" = "Kolaż %ldx%ld";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Gwarancja jakości**\nNasze produkty są najwyższej jakości i jesteśmy przekonani, że Ci się spodobają. W przeciwnym razie oferujemy bezproblemowy zwrot pieniędzy. Zapraszamy!";
-"1 day" = "1 day";
+"1 working day" = "1 working day";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Błąd nieautoryzowanego żądania podczas próby wysłania zasobu. Sprawdź, czy jesteś dołączony do nagłówka Authorization i czy dane autoryzacji są poprawne.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Wewnętrzny błąd serwera podczas próby wysłania zasobu. Spróbuj jeszcze raz.";
 "Add" = "Dodaj";

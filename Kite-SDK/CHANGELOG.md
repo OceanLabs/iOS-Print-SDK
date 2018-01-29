@@ -1,3 +1,6 @@
+### 6.8.4
+- Changed: The estimated delivery times are now clarified as 'working days'.
+
 ### 6.8.3
 - Fixed: An issue where the user can't checkout under some circumstances.
 
