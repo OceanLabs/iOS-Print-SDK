@@ -1,3 +1,9 @@
+### 6.8.4
+- Changed: The estimated delivery times are now clarified as 'working days'.
+
+### 6.8.3
+- Fixed: An issue where the user can't checkout under some circumstances.
+
 ### 6.8.2
 - Fixed: Adding photos to a photo book when using an exclusive custom image provider.
 
