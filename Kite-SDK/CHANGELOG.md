@@ -1,3 +1,6 @@
+### 6.8.5
+- Fixed: The case where the user could go back from the basket under some circumstances.
+
 ### 6.8.4
 - Changed: The estimated delivery times are now clarified as 'working days'.
 
