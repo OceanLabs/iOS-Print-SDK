@@ -1,7 +1,7 @@
 "%@ working days" = "%@ jours ouvrables";
 "%ldx%ld Collage" = "%ldx%ld  pêle-mêle";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Garantie de Qualité**\nNos produits sont de la plus haute qualité et nous sommes certains que vous aimerez le vôtre. Sinon, nous offrons une garantie de remboursement. Profitez-en ! !";
-"1 day" = "1 jour";
+"1 working day" = "1 working day";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "Une erreur 401 Requête non autorisée est survenue durant le téléchargement. Veuillez réessayer.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "Une erreur 500 Serveur Interne est survenue durant le téléchargement. Veuillez réessayer.";
 "Add" = "Ajouter";
@@ -202,6 +202,7 @@
 "Uploading Images \n%lu / %lu" = "Images en cours de téléchargement \n%lu / %lu";
 "View Item" = "Afficher";
 "WE HAVE RECEIVED\nYOUR ORDER" = "Nous avons reçu \n votre commande";
+"We need access to your %@ photos" = "We need access to your %@ photos";
 "We'll send you confirmation and order updates." = "Nous vous enverrons une confirmation et des mises à jour de commande.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Nous vous enverrons une confirmation et des mises à jour de commande. Décochez cette case si vous ne souhaitez pas recevoir d'emails de notre part.";
 "Yes" = "oui";

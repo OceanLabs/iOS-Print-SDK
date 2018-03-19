@@ -1,7 +1,7 @@
 "%@ working days" = "%@ working days";
 "%ldx%ld Collage" = "%ldx%ld Collage";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Kvalitetsgaranti**\nVores produkter er af højeste kvalitet og vi er sikre på du vil elske dem. Hvis ikke, så tilbyder vi dig dine penge tilbage.";
-"1 day" = "1 day";
+"1 working day" = "1 working day";
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 interne serverfejl under uploadingforsøg af et aktiv. Prøv venligst igen.";
 "Add" = "Tilføj";
@@ -202,6 +202,7 @@
 "Uploading Images \n%lu / %lu" = "Uploader billeder \n%lu / %lu";
 "View Item" = "View Item";
 "WE HAVE RECEIVED\nYOUR ORDER" = "WE HAVE RECEIVED\nYOUR ORDER";
+"We need access to your %@ photos" = "We need access to your %@ photos";
 "We'll send you confirmation and order updates." = "Vi sender dig en bekræftelse og en odreopdatering.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Vi sender dig en bekræftelse og en odreopdatering. Afklik denne box, hvis du ikke ønsker at modtage kampagne e-mails.";
 "Yes" = "Yes";

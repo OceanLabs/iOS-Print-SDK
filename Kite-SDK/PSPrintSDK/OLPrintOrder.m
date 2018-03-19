@@ -733,7 +733,7 @@ static NSBlockOperation *templateSyncOperation;
             return NSLocalizedStringFromTableInBundle(@"1 working day", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
         else{
-            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 working days, 7 working days"), [NSString stringWithFormat:@"%d", (int)min]];
+            return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"%@ working days", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Examples: 2-5 working days, 7 working days"), [NSString stringWithFormat:@"%d", (int)min]];
         }
     }
     else if (min != NSIntegerMax){

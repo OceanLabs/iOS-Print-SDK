@@ -63,7 +63,7 @@
         providerName = [UIDevice currentDevice].localizedModel;
         [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Authorise", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
-    self.label.text = [NSString stringWithFormat:@"We need access to your %@ photos", providerName];
+    self.label.text = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"We need access to your %@ photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Example: We need access to your iPhone photos"), providerName];
     
     [self.view setNeedsLayout];
     [self.view layoutIfNeeded];

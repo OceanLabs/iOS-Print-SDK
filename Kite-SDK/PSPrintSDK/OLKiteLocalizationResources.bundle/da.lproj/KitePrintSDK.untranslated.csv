@@ -1,7 +1,7 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
-%@ working days,%@ working days,"/* Examples: 2-5 days, 7 days */"
+%@ working days,%@ working days,"/* Examples: 2-5 working days, 7 working days */"
 %ldx%ld Collage,%ldx%ld Collage,/* example: 5x7 Collage */
-1 day,1 day,
+1 working day,1 working day,
 Add %ld %@!,Add %ld %@!,
 Add a %@!,Add a %@!,
 Add a photo\non this side,Add a photo\non this side,/* this side [of the shirt] */
@@ -116,6 +116,7 @@ Tracked,Tracked,
 Uploading book,Uploading book,
 View Item,View Item,/* View [basket] item */
 WE HAVE RECEIVED\nYOUR ORDER,WE HAVE RECEIVED\nYOUR ORDER,
+We need access to your %@ photos,We need access to your %@ photos,/* Example: We need access to your iPhone photos */
 Yes,Yes,
 Yes Please,Yes Please,
 "Yes, remove it","Yes, remove it","/* Yes, remove [the photo] */"
