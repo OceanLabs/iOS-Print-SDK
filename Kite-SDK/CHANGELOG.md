@@ -1,7 +1,19 @@
-### 6.8.2
+### 6.8.6
 - Fixed: Minor layout issues on iPhone X
 - Added: Add to basket analytics event
-- Changed: Shipping estimate from days to working days
+- Updated: ES, NL localizations
+
+### 6.8.5
+- Fixed: The case where the user could go back from the basket under some circumstances.
+
+### 6.8.4
+- Changed: The estimated delivery times are now clarified as 'working days'.
+
+### 6.8.3
+- Fixed: An issue where the user can't checkout under some circumstances.
+
+### 6.8.2
+- Fixed: Adding photos to a photo book when using an exclusive custom image provider.
 
 ### 6.8.1
 - Fixed: Apparel pricing

@@ -298,7 +298,8 @@
             UIViewController<OLCustomPickerController> *customVc = [(OLCustomViewControllerPhotoProvider *)[OLUserSession currentSession].kiteVc.customImageProviders.firstObject vc];
             if (!customVc){
                 customVc = [[OLUserSession currentSession].kiteVc.delegate imagePickerViewControllerForName:imagePicker.providerForPresentedVc.name];
-            }        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
+            }
+            [customVc safePerformSelector:@selector(setDelegate:) withObject:imagePicker];
             [customVc safePerformSelector:@selector(setProductId:) withObject:product.templateId];
             [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
             if ([vc respondsToSelector:@selector(setMaximumPhotos:)] && [self.delegate respondsToSelector:@selector(maxNumberOfPhotosToPick)]){

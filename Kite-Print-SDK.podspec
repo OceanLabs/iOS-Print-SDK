@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                = 'Kite-Print-SDK'
-  spec.version             = '6.8.2'
+  spec.version             = '6.8.6'
   spec.license             = { :type => 'MIT', :file => 'Kite-SDK/LICENSE' }
   spec.homepage            = 'https://github.com/OceanLabs/iOS-Print-SDK'
   spec.authors             = {'Deon Botha' => 'deon@oceanlabs.co'}

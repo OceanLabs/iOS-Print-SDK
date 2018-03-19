@@ -264,7 +264,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     [self.reloadTableViewOperation addDependency:self.costCalculationOperation];
     [[NSOperationQueue mainQueue] addOperation:self.reloadTableViewOperation];
     
-    if (self.navigationController.viewControllers.firstObject == self){
+    if (self.navigationController.viewControllers.firstObject == self || [OLKiteABTesting sharedInstance].launchedWithPrintOrder){
         NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
         if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
             [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
