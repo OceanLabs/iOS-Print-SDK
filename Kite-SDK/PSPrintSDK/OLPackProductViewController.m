@@ -322,19 +322,15 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 - (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     [self preparePhotosForCheckout];
     
-    NSUInteger userSelectedAssetCount = [OLAsset userSelectedAssets].count;
-    NSUInteger numOrders = (NSUInteger) floor(userSelectedAssetCount + self.product.quantityToFulfillOrder - 1) / self.product.quantityToFulfillOrder;
-    
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
-    for (NSUInteger jobIndex = 0; jobIndex < numOrders; jobIndex++){
         BOOL fromEdit = NO;
         OLProductPrintJob *job;
         if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
             job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:[OLAsset userSelectedAssets].firstObject backImageOLAsset:[OLAsset userSelectedAssets].lastObject];
         }
         else{
-            job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[[OLAsset userSelectedAssets] subarrayWithRange:NSMakeRange(jobIndex * self.product.quantityToFulfillOrder, MIN(self.product.quantityToFulfillOrder, [OLAsset userSelectedAssets].count - jobIndex * self.product.quantityToFulfillOrder))]];
+            job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[NSArray arrayWithArray:[OLAsset userSelectedAssets]]];
         }
         NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
         for (id<OLPrintJob> existingJob in jobs){
@@ -354,7 +350,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
             [OLAnalytics trackItemAddedToBasket:job];
         }
 #endif
-    }
     
     [printOrder saveOrder];
     
