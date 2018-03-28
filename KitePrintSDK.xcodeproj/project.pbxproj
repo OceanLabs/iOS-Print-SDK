@@ -422,7 +422,6 @@
 		2EE04A041EEAE12600E6A16B /* OLArtboardTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E37B1791D227EDA003DAA84 /* OLArtboardTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EE4BC8E1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */; };
 		2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */; };
-		2EEAEF3D1ECDA1B700C40B71 /* mug.scn in Resources */ = {isa = PBXBuildFile; fileRef = 2EEAEF3C1ECDA12300C40B71 /* mug.scn */; };
 		2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */; };
 		2EEF0D0C1D9A781700C81086 /* OLCustomPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D0B1D9A781700C81086 /* OLCustomPickerController.h */; };
 		CD73BF8B186215790009DE03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF8A186215790009DE03 /* XCTest.framework */; };
@@ -2077,7 +2076,6 @@
 			files = (
 				2EBDF4CE1E434A0B004775BD /* OLKiteLocalizationResources.bundle in Resources */,
 				2E451E931D9564140080F1C1 /* kite_corrupt.jpg in Resources */,
-				2EEAEF3D1ECDA1B700C40B71 /* mug.scn in Resources */,
 				2E451E951D9564620080F1C1 /* OLKiteStoryboard.storyboard in Resources */,
 				2E8E19B91E93E0BF0003905E /* OLHintView.xib in Resources */,
 				2E451E941D95641A0080F1C1 /* OLEditingToolsView.xib in Resources */,

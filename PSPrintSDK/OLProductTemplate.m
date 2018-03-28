@@ -252,7 +252,7 @@ static BOOL partial = NO;
     else if ([identifier isEqualToString:@"PHONE_CASE"]){
         return OLTemplateUICase;
     }
-    else if ([identifier isEqualToString:@"PHOTOBOOK"]){
+    else if ([identifier isEqualToString:@"PHOTOBOOK"] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone){
         return OLTemplateUIPhotobook;
     }
     else if ([identifier isEqualToString:@"NONCUSTOMIZABLE"]){
@@ -267,11 +267,11 @@ static BOOL partial = NO;
     else if ([identifier isEqualToString:@"APPAREL"]){
         return OLTemplateUIApparel;
     }
-#ifndef OL_KITE_LITE
-    else if ([identifier isEqualToString:@"MUG"]){
-        return OLTemplateUIMug;
-    }
-#endif
+//#ifndef OL_KITE_LITE
+//    else if ([identifier isEqualToString:@"MUG"]){
+//        return OLTemplateUIMug;
+//    }
+//#endif
     return OLTemplateUINA;
 }
 
