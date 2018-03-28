@@ -133,15 +133,7 @@
             vc = vc.parentViewController;
         }
     }
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != OLTemplateUINonCustomizable){
-        if (![[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
-            [self.ctaButton setTitle: NSLocalizedStringFromTableInBundle(@"Checkout", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        }
-        else{
-            [self.ctaButton setTitle: NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering") forState:UIControlStateNormal];
-        }
-    }
-    else if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
+    if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
         [self.ctaButton setTitle: NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     else{
@@ -382,32 +374,7 @@
 }
 
 - (IBAction)onButtonStartClicked:(id)sender {
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != OLTemplateUINonCustomizable){
-        UIViewController *vc;
-        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
-            vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
-        }
-        else{
-            [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
-                if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Checkout"]){
-                    [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:(OLKiteViewController *)vc action:@selector(dismiss)]];
-                }
-                [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
-                [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
-                [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
-                [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-                [self.navigationController pushViewController:vc animated:YES];
-            }];
-            return;
-        }
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
-        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
-        [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-        [self.navigationController pushViewController:vc animated:YES];
-        return;
-    }
-    else if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
+    if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
         [self doCheckout];
     }
     

@@ -256,7 +256,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     [self.reloadTableViewOperation addDependency:self.costCalculationOperation];
     [[NSOperationQueue mainQueue] addOperation:self.reloadTableViewOperation];
     
-    if (self.navigationController.viewControllers.firstObject == self || [OLKiteABTesting sharedInstance].launchedWithPrintOrder){
+    if (self.navigationController.viewControllers.firstObject == self){
         NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
         if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
             [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
@@ -310,7 +310,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         self.shippingDetailsBox.alpha = 1;
     }
     
-    if ([OLUserSession currentSession].kiteVc.hideContinueShoppingButton || [OLKiteABTesting sharedInstance].launchedWithPrintOrder || self.navigationController.viewControllers.firstObject == self){
+    if ([OLUserSession currentSession].kiteVc.hideContinueShoppingButton || self.navigationController.viewControllers.firstObject == self){
         [self.paymentButton1 removeFromSuperview];
     }
     

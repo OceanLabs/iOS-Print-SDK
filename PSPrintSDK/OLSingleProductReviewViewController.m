@@ -105,12 +105,6 @@
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
 #endif
     
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        }
-    }
-    
     [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
@@ -327,25 +321,13 @@
         return;
     }
     [self saveJobWithCompletionHandler:^{
-        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            // The `self.storybard` may be nil if it was not initialized from storyboard.
-            // eg. Review page for phonecase (OLCaseViewController). see. OLKiteViewController.m L264
-            UIStoryboard *storyboard = self.storyboard ?: [OLUserSession currentSession].kiteVc.storyboard;
-            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-            [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
-            [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
-            [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+        OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+        [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+            
             [self.navigationController pushViewController:vc animated:YES];
-        }
-        else{
-            OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-            [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-                [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-                [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-                
-                [self.navigationController pushViewController:vc animated:YES];
-            }];
-        }
+        }];
     }];
 }
 

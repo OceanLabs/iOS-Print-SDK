@@ -201,7 +201,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (self.presentedModally || [OLKiteABTesting sharedInstance].launchedWithPrintOrder) {
+    if (self.presentedModally) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Done", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStyleDone target:self action:@selector(onButtonDoneClicked)];
         
         UIColor *color1 = [OLKiteABTesting sharedInstance].lightThemeColor1;
@@ -222,7 +222,7 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if (!(self.presentedModally || [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
+    if (!self.presentedModally) {
         NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
         if (navigationStack.count >= 2 &&
             [navigationStack[navigationStack.count - 2] isKindOfClass:[OLPaymentViewController class]]) {

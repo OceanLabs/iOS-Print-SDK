@@ -175,12 +175,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     
     [self.collectionView addSubview:self.ctaButton];
     
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        }
-    }
-    
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
         if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController:)]){
@@ -347,22 +341,12 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     [self saveJobWithCompletionHandler:NULL];
     
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-    
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
-        [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
+    [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
+        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
+        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
+        
         [self.navigationController pushViewController:vc animated:YES];
-    }
-    else{
-        [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-            
-            [self.navigationController pushViewController:vc animated:YES];
-        }];
-    }
+    }];
 }
 
 - (void) deletePhotoAtIndex:(NSUInteger)index{

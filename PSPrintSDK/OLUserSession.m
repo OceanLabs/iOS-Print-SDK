@@ -68,12 +68,6 @@
 -(NSMutableArray *) userSelectedAssets{
     if (!_userSelectedAssets){
         _userSelectedAssets = [[NSMutableArray alloc] init];
-        
-        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-            for (OLAsset *asset in self.appAssets){
-                [_userSelectedAssets addObject:asset];
-            }
-        }
     }
     return _userSelectedAssets;
 }
@@ -205,17 +199,7 @@
 }
 
 - (BOOL)shouldLoadTemplatesProgressively{
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        return NO;
-    }
-    if (self.kiteVc.filterProducts.count > 0){
-        return NO;
-    }
-    if (self.deeplink){
-        return NO;
-    }
-    
-    return YES;
+    return NO;
 }
 
 
