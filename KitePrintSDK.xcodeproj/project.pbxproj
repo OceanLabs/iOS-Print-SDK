@@ -437,7 +437,7 @@
 		2EB8FE761D95685100E26BDF /* UITextField+Selection.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DEF0D191A964B4E000F1E66 /* UITextField+Selection.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE771D95685100E26BDF /* NSString+Formatting.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DEF0D161A964881000F1E66 /* NSString+Formatting.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE781D95685100E26BDF /* UIImageView+FadeIn.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8122EF1A75A46D004E7297 /* UIImageView+FadeIn.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE791D95685100E26BDF /* NSDecimalNumber+CostFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E455DFE1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.h */; };
+		2EB8FE791D95685100E26BDF /* NSDecimalNumber+CostFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E455DFE1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE7A1D95685100E26BDF /* UIImage+OLUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EF53E391B55421A00BF936A /* UIImage+OLUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE7B1D95685100E26BDF /* UIView+RoundRect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1067FE1B83335C00EB4C14 /* UIView+RoundRect.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE7C1D95685100E26BDF /* UIImage+ImageNamedInKiteBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EA13E1E1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.h */; settings = {ATTRIBUTES = (Private, ); }; };
