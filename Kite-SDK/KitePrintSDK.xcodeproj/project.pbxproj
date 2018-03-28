@@ -58,12 +58,10 @@
 		2E1BB37D1E7C2A25008F7217 /* OLSingleImagePosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1BB37B1E7C2A25008F7217 /* OLSingleImagePosterViewController.h */; };
 		2E1BB37E1E7C2A25008F7217 /* OLSingleImagePosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1BB37C1E7C2A25008F7217 /* OLSingleImagePosterViewController.m */; };
 		2E23EB9B1D5091FC00E2BF42 /* CI-Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */; };
-		2E2494222065671D00F9EE68 /* FacebookCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941A2065671C00F9EE68 /* FacebookCore.framework */; };
 		2E2494232065671D00F9EE68 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941B2065671D00F9EE68 /* FBSDKCoreKit.framework */; };
 		2E2494242065671D00F9EE68 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941C2065671D00F9EE68 /* FBSDKLoginKit.framework */; };
 		2E2494252065671D00F9EE68 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941D2065671D00F9EE68 /* Bolts.framework */; };
 		2E2494262065671D00F9EE68 /* PayPalMobileSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941E2065671D00F9EE68 /* PayPalMobileSDK.framework */; };
-		2E2494272065671D00F9EE68 /* FacebookLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941F2065671D00F9EE68 /* FacebookLogin.framework */; };
 		2E2494282065671D00F9EE68 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2494202065671D00F9EE68 /* Stripe.framework */; };
 		2E2494292065671D00F9EE68 /* FBSDKPlacesKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2494212065671D00F9EE68 /* FBSDKPlacesKit.framework */; };
 		2E3084AE1E813672008218BF /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084A81E813672008218BF /* 1.jpg */; };
@@ -1010,12 +1008,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E2494222065671D00F9EE68 /* FacebookCore.framework in Frameworks */,
 				2E2494232065671D00F9EE68 /* FBSDKCoreKit.framework in Frameworks */,
 				2E2494242065671D00F9EE68 /* FBSDKLoginKit.framework in Frameworks */,
 				2E2494252065671D00F9EE68 /* Bolts.framework in Frameworks */,
 				2E2494262065671D00F9EE68 /* PayPalMobileSDK.framework in Frameworks */,
-				2E2494272065671D00F9EE68 /* FacebookLogin.framework in Frameworks */,
 				2E2494282065671D00F9EE68 /* Stripe.framework in Frameworks */,
 				2E2494292065671D00F9EE68 /* FBSDKPlacesKit.framework in Frameworks */,
 			);
