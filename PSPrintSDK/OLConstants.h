@@ -65,6 +65,10 @@
 #import "UIView+AutoLayoutHelper.h"
 #import "UIImage+OLUtils.h"
 #import "OLKiteTheme.h"
+#import "NSDecimalNumber+CostFormatter.h"
+#import "UIView+RoundRect.h"
+#import "OLPaymentViewController.h"
+#import "OLPaymentLineItem.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageMaintenanceMode;
