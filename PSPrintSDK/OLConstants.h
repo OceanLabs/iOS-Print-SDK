@@ -69,6 +69,7 @@
 #import "UIView+RoundRect.h"
 #import "OLPaymentViewController.h"
 #import "OLPaymentLineItem.h"
+#import "OLOrderHistoryViewController.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageMaintenanceMode;

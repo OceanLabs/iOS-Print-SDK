@@ -237,7 +237,7 @@
 		2E5B27341EC06A4700F3AED3 /* OLCollagePosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5B27321EC06A4700F3AED3 /* OLCollagePosterViewController.m */; };
 		2E65FEA01E4E058400A301BB /* OLTouchTolerantView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65FE9E1E4E058400A301BB /* OLTouchTolerantView.h */; };
 		2E65FEA11E4E058400A301BB /* OLTouchTolerantView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65FE9F1E4E058400A301BB /* OLTouchTolerantView.m */; };
-		2E65FEA81E4E143B00A301BB /* OLOrderHistoryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */; };
+		2E65FEA81E4E143B00A301BB /* OLOrderHistoryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E65FEA91E4E143B00A301BB /* OLOrderHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E65FEA71E4E143B00A301BB /* OLOrderHistoryViewController.m */; };
 		2E7A8D8F1E9BBE8900AB4736 /* OLArtboardAssetView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7A8D8B1E9BBE8900AB4736 /* OLArtboardAssetView.h */; };
 		2E7A8D901E9BBE8900AB4736 /* OLArtboardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7A8D8C1E9BBE8900AB4736 /* OLArtboardView.h */; };
