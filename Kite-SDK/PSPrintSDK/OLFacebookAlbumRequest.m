@@ -30,8 +30,8 @@
 #import "OLFacebookAlbumRequest.h"
 #import "OLFacebookImagePickerConstants.h"
 #import "OLFacebookAlbum.h"
-#import "OLFacebookSDKWrapper.h"
 @import UIKit;
+@import FBSDKCoreKit;
 
 @interface OLFacebookAlbumRequest ()
 @property (nonatomic, assign) BOOL cancelled;
@@ -57,7 +57,7 @@
 }
 
 - (void)getAlbums:(OLFacebookAlbumRequestHandler)handler {
-    if ([OLFacebookSDKWrapper currentAccessToken]) {
+    if ([FBSDKAccessToken currentAccessToken]) {
         // connection is open, perform the request
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         NSString *graphPath = @"me/albums?limit=100&fields=id,name,count,cover_photo";
@@ -65,8 +65,8 @@
             graphPath = [graphPath stringByAppendingFormat:@"&after=%@", self.after];
         }
         
-        id request = [OLFacebookSDKWrapper initGraphRequestWithGraphPath:graphPath];
-        [OLFacebookSDKWrapper startGraphRequest:request withCompletionHandler:^(id connection, id result, NSError *error) {
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath parameters:nil];
+        [request startWithCompletionHandler:^(id connection, id result, NSError *error) {
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
             if (self.cancelled) {
                 return;
@@ -103,7 +103,7 @@
                 album.albumId = albumId;
                 album.photoCount = [photoCount unsignedIntegerValue];
                 album.name = name;
-                album.coverPhotoURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=album&access_token=%@", album.albumId, [OLFacebookSDKWrapper tokenString]]];
+                album.coverPhotoURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=album&access_token=%@", album.albumId, [FBSDKAccessToken currentAccessToken].tokenString]];
                 [albums addObject:album];
             }
             

@@ -35,7 +35,7 @@
 #import "OLInstagramLoginWebViewController.h"
 #import "OLNavigationController.h"
 #import "OLKiteUtils.h"
-#import "OLFacebookSDKWrapper.h"
+@import FBSDKLoginKit;
 #import "OLKiteABTesting.h"
 
 @interface OLImagePickerLoginPageViewController ()
@@ -93,7 +93,7 @@
         [self presentViewController:nvc animated:YES completion:NULL];
     }
     else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
-        [OLFacebookSDKWrapper login:[OLFacebookSDKWrapper loginManager] withReadPermissions:@[@"public_profile", @"user_photos"] fromViewController:self handler:^(id result, NSError *error) {
+        [[[FBSDKLoginManager alloc] init] logInWithReadPermissions:@[@"public_profile", @"user_photos"] fromViewController:self handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
             if (error) {
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.")  style:UIAlertActionStyleDefault handler:NULL]];

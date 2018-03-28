@@ -32,7 +32,6 @@
 #import "OLAsset+Private.h"
 #import "OLCustomPickerController.h"
 #import "OLCustomViewControllerPhotoProvider.h"
-#import "OLFacebookSDKWrapper.h"
 #import "OLImagePickerLoginPageViewController.h"
 #import "OLImagePickerPhotosPageViewController.h"
 #import "OLImagePickerProvider.h"
@@ -55,6 +54,7 @@
 #import "UIView+RoundRect.h"
 #import "UIColor+OLHexString.h"
 #import "NSMutableArray+OLUserSelectedAssetsUtils.h"
+@import FBSDKCoreKit;
 
 @interface OLKitePrintSDK ()
 + (NSString *)instagramRedirectURI;
@@ -614,7 +614,7 @@
     
     OLImagePickerPageViewController *vc;
     
-    if (self.providers[index].providerType == OLImagePickerProviderTypeFacebook && ![OLFacebookSDKWrapper currentAccessToken]){
+    if (self.providers[index].providerType == OLImagePickerProviderTypeFacebook && ![FBSDKAccessToken currentAccessToken]){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
         vc.pageIndex = index;
     }

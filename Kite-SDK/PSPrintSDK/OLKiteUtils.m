@@ -35,9 +35,9 @@
 #import "OLCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
-#import "OLPayPalWrapper.h"
-#import "OLStripeWrapper.h"
-#import "OLFacebookSDKWrapper.h"
+@import PayPalMobileSDK;
+@import Stripe;
+@import FBSDKCoreKit;
 #import "OLKiteViewController+Private.h"
 
 @import Contacts;
@@ -87,7 +87,7 @@
 }
 
 + (BOOL)facebookEnabled{
-    return [OLFacebookSDKWrapper isFacebookAvailable];
+    return YES;
 }
 
 + (BOOL)recentsAvailable{
@@ -133,7 +133,7 @@
 }
 
 +(BOOL)isApplePayAvailable{
-    if (![OLStripeWrapper isStripeAvailable] || ![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""] || [OLKitePrintSDK isKiosk]){
+    if (![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""] || [OLKitePrintSDK isKiosk]){
         return NO;
     }
     
@@ -153,7 +153,7 @@
 }
 
 + (BOOL)isPayPalAvailable{
-    return [OLPayPalWrapper isPayPalAvailable];
+    return YES;
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{

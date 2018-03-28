@@ -31,7 +31,7 @@
 #import "OLFacebookAlbum.h"
 #import "OLFacebookImage.h"
 #import "OLFacebookImagePickerConstants.h"
-#import "OLFacebookSDKWrapper.h"
+@import FBSDKCoreKit;
 
 @interface OLFacebookPhotosForAlbumRequest ()
 @property (nonatomic, assign) BOOL cancelled;
@@ -71,7 +71,7 @@
 }
 
 - (void)getPhotos:(OLFacebookPhotosForAlbumRequestHandler)handler {
-    if ([OLFacebookSDKWrapper currentAccessToken]) {
+    if ([FBSDKAccessToken currentAccessToken]) {
         // connection is open, perform the request
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         NSString *graphPath = [NSString stringWithFormat:@"%@/photos?fields=picture,source,id,images&limit=100", self.album.albumId];
@@ -79,8 +79,8 @@
             graphPath = [graphPath stringByAppendingFormat:@"&after=%@", self.after];
         }
         
-        id request = [OLFacebookSDKWrapper initGraphRequestWithGraphPath:graphPath];
-        [OLFacebookSDKWrapper startGraphRequest:request withCompletionHandler:^(id connection, id result, NSError *error) {
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath parameters:nil];
+        [request startWithCompletionHandler:^(id connection, id result, NSError *error) {
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
             if (self.cancelled) {
                 return;

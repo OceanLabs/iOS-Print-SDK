@@ -50,7 +50,7 @@
 #import "OLPaymentViewController.h"
 #import "OLPayPalCard+OLCardIcon.h"
 #import "OLPayPalCard.h"
-#import "OLPayPalWrapper.h"
+@import PayPalMobileSDK;
 #import "OLPhotobookPrintJob.h"
 #import "OLPhotobookViewController.h"
 #import "OLPostcardPrintJob.h"
@@ -64,7 +64,7 @@
 #import "OLReceiptViewController.h"
 #import "OLSingleProductReviewViewController.h"
 #import "OLStripeCard+OLCardIcon.h"
-#import "OLStripeWrapper.h"
+@import Stripe;
 #import "OLUserSession.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImage+OLUtils.h"
@@ -166,7 +166,7 @@ static OLPaymentMethod selectedPaymentMethod;
 @interface OLPaymentViewController () <
 UITableViewDataSource, UITableViewDelegate,
 PKPaymentAuthorizationViewControllerDelegate,
-UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate, OLPaymentMethodsViewControllerDelegate>
+UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITableViewDelegate, UIScrollViewDelegate, UIViewControllerPreviewingDelegate, OLPaymentMethodsViewControllerDelegate, PayPalPaymentDelegate>
 
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) OLPayPalCard *card;
@@ -503,12 +503,12 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     if ([OLKiteUtils isPayPalAvailable]){
-        [OLPayPalWrapper initializeWithClientIdsForEnvironments:@{[OLKitePrintSDK paypalEnvironment] : [OLKitePrintSDK paypalClientId]}];
-        [OLPayPalWrapper preconnectWithEnvironment:[OLKitePrintSDK paypalEnvironment]];
+        [PayPalMobile initializeWithClientIdsForEnvironments:@{[OLKitePrintSDK paypalEnvironment] : [OLKitePrintSDK paypalClientId]}];
+        [PayPalMobile preconnectWithEnvironment:[OLKitePrintSDK paypalEnvironment]];
     }
     
     if ([OLKiteUtils isApplePayAvailable]){
-        [OLStripeWrapper setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
+        [[STPAPIClient sharedClient] setPublishableKey:[OLKitePrintSDK stripePublishableKey]];
     }
     
     if ([self.printOrder hasCachedCost] && !self.printOrder.costReq) {
@@ -1048,11 +1048,15 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         }
         
         // Create a PayPalPayment
-        id paypalShippingAddress = [OLPayPalWrapper payPalShippingAddressWithRecipientName:[NSString stringWithFormat:@"%@ %@", self.printOrder.shippingAddress.recipientFirstName, self.printOrder.shippingAddress.recipientLastName] withLine1:self.printOrder.shippingAddress.line1 withLine2:self.printOrder.shippingAddress.line2 withCity:self.printOrder.shippingAddress.city withState:self.printOrder.shippingAddress.stateOrCounty withPostalCode:self.printOrder.shippingAddress.zipOrPostcode withCountryCode:self.printOrder.shippingAddress.country.codeAlpha2];
-        id payment = [OLPayPalWrapper payPalPaymentWithAmount:[cost totalCostInCurrency:self.printOrder.currencyCode] currencyCode:self.printOrder.currencyCode shortDescription:self.printOrder.paymentDescription intent:1/*PayPalPaymentIntentAuthorize*/ shippingAddress:paypalShippingAddress];
+        PayPalShippingAddress *paypalShippingAddress = [PayPalShippingAddress shippingAddressWithRecipientName:[NSString stringWithFormat:@"%@ %@", self.printOrder.shippingAddress.recipientFirstName, self.printOrder.shippingAddress.recipientLastName] withLine1:self.printOrder.shippingAddress.line1 withLine2:self.printOrder.shippingAddress.line2 withCity:self.printOrder.shippingAddress.city withState:self.printOrder.shippingAddress.stateOrCounty withPostalCode:self.printOrder.shippingAddress.zipOrPostcode withCountryCode:self.printOrder.shippingAddress.country.codeAlpha2];
+        PayPalPayment *payment = [PayPalPayment paymentWithAmount:[cost totalCostInCurrency:self.printOrder.currencyCode] currencyCode:self.printOrder.currencyCode shortDescription:self.printOrder.paymentDescription intent:PayPalPaymentIntentAuthorize];
+        payment.shippingAddress = paypalShippingAddress;
         
-        id payPalConfiguration = [OLPayPalWrapper payPalConfigurationWithShippingAddressOption:1/*PayPalShippingAddressOptionProvided*/ acceptCreditCards:NO];
-        id paymentViewController = [OLPayPalWrapper payPalPaymentViewControllerWithPayment:payment configuration:payPalConfiguration delegate:self];
+        PayPalConfiguration *payPalConfiguration = [[PayPalConfiguration alloc] init];
+        payPalConfiguration.payPalShippingAddressOption = PayPalShippingAddressOptionProvided;
+        payPalConfiguration.acceptCreditCards = NO;
+
+        PayPalPaymentViewController *paymentViewController = [[PayPalPaymentViewController alloc] initWithPayment:payment configuration:payPalConfiguration delegate:self];
         ((UIViewController *)paymentViewController).modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
         
         if (paymentViewController){
@@ -1335,9 +1339,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)payPalPaymentViewController:(id)paymentViewController didCompletePayment:(id)completedPayment {
+- (void)payPalPaymentViewController:(id)paymentViewController didCompletePayment:(PayPalPayment *)completedPayment {
     [self dismissViewControllerAnimated:YES completion:nil];
-    NSString *token = [OLPayPalWrapper confirmationWithPayment:completedPayment][@"response"][@"id"];
+    NSString *token = [completedPayment confirmation][@"response"][@"id"];
     token = [token stringByReplacingCharactersInRange:NSMakeRange(0, 3) withString:@"PAUTH"];
     [self submitOrderForPrintingWithProofOfPayment:token paymentMethod:@"PayPal" completion:^void(PKPaymentAuthorizationStatus status){}];
 }
@@ -1410,13 +1414,13 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         completion(PKPaymentAuthorizationStatusInvalidShippingContact);
         return;
     }
-    id client = [OLStripeWrapper initSTPAPIClientWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
-    [OLStripeWrapper client:client createTokenWithPayment:payment completion:^(id token, NSError *error) {
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
+    [client createTokenWithPayment:payment completion:^(id token, NSError *error) {
         if (error) {
             completion(PKPaymentAuthorizationStatusFailure);
             return;
         }
-        [self submitOrderForPrintingWithProofOfPayment:[OLStripeWrapper tokenIdFromToken:token] paymentMethod:@"Apple Pay" completion:completion];
+        [self submitOrderForPrintingWithProofOfPayment:[token tokenId] paymentMethod:@"Apple Pay" completion:completion];
     }];
 }
 

@@ -1,0 +1,3 @@
+github "stripe/stripe-ios"
+github "paypal/PayPal-iOS-SDK"
+github "facebook/Facebook-SDK-Swift"

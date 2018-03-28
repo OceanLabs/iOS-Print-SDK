@@ -58,6 +58,14 @@
 		2E1BB37D1E7C2A25008F7217 /* OLSingleImagePosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1BB37B1E7C2A25008F7217 /* OLSingleImagePosterViewController.h */; };
 		2E1BB37E1E7C2A25008F7217 /* OLSingleImagePosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1BB37C1E7C2A25008F7217 /* OLSingleImagePosterViewController.m */; };
 		2E23EB9B1D5091FC00E2BF42 /* CI-Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */; };
+		2E2494222065671D00F9EE68 /* FacebookCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941A2065671C00F9EE68 /* FacebookCore.framework */; };
+		2E2494232065671D00F9EE68 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941B2065671D00F9EE68 /* FBSDKCoreKit.framework */; };
+		2E2494242065671D00F9EE68 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941C2065671D00F9EE68 /* FBSDKLoginKit.framework */; };
+		2E2494252065671D00F9EE68 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941D2065671D00F9EE68 /* Bolts.framework */; };
+		2E2494262065671D00F9EE68 /* PayPalMobileSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941E2065671D00F9EE68 /* PayPalMobileSDK.framework */; };
+		2E2494272065671D00F9EE68 /* FacebookLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941F2065671D00F9EE68 /* FacebookLogin.framework */; };
+		2E2494282065671D00F9EE68 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2494202065671D00F9EE68 /* Stripe.framework */; };
+		2E2494292065671D00F9EE68 /* FBSDKPlacesKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2494212065671D00F9EE68 /* FBSDKPlacesKit.framework */; };
 		2E3084AE1E813672008218BF /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084A81E813672008218BF /* 1.jpg */; };
 		2E3084AF1E813672008218BF /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084A91E813672008218BF /* 2.png */; };
 		2E3084B01E813672008218BF /* 3.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084AA1E813672008218BF /* 3.pdf */; };
@@ -142,8 +150,6 @@
 		2E451E021D9555620080F1C1 /* OLImageDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */; };
 		2E451E031D9555620080F1C1 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
 		2E451E041D9555620080F1C1 /* OLLuhn.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB715D41CFDD12900618C7B /* OLLuhn.m */; };
-		2E451E051D9555860080F1C1 /* OLPayPalWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F05B1D93E60100014C19 /* OLPayPalWrapper.m */; };
-		2E451E061D9555860080F1C1 /* OLStripeWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */; };
 		2E451E071D9555860080F1C1 /* OLInstagramMediaRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */; };
 		2E451E081D9555860080F1C1 /* OLInstagramImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */; };
 		2E451E091D9555860080F1C1 /* OLInstagramImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */; };
@@ -152,7 +158,6 @@
 		2E451E0C1D9555860080F1C1 /* OLFacebookAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */; };
 		2E451E0D1D9555870080F1C1 /* OLFacebookPhotosForAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */; };
 		2E451E0E1D9555870080F1C1 /* OLFacebookImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */; };
-		2E451E0F1D9555870080F1C1 /* OLFacebookSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */; };
 		2E451E101D9555870080F1C1 /* OLAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AAD1D92D768006C0EE6 /* OLAnimation.m */; };
 		2E451E111D9555870080F1C1 /* OLFlipTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AB01D92D768006C0EE6 /* OLFlipTransition.m */; };
 		2E451E121D9555870080F1C1 /* OLFlipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AB21D92D768006C0EE6 /* OLFlipViewController.m */; };
@@ -343,8 +348,6 @@
 		2EB8FE041D95685100E26BDF /* OLImageDownloadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE051D95685100E26BDF /* OLKeyChainStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE061D95685100E26BDF /* OLLuhn.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB715D31CFDD12900618C7B /* OLLuhn.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE071D95685100E26BDF /* OLPayPalWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F05A1D93E60100014C19 /* OLPayPalWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE081D95685100E26BDF /* OLStripeWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F0531D93D71D00014C19 /* OLStripeWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE091D95685100E26BDF /* OLInstagramMediaRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612F71D48AFE800B48E29 /* OLInstagramMediaRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE0A1D95685100E26BDF /* OLInstagramImagePickerConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612F91D48AFE800B48E29 /* OLInstagramImagePickerConstants.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE0B1D95685100E26BDF /* OLInstagramImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612FB1D48AFE800B48E29 /* OLInstagramImage.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -353,7 +356,6 @@
 		2EB8FE0E1D95685100E26BDF /* OLFacebookAlbumRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66DC1D4795EE002524A4 /* OLFacebookAlbumRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE0F1D95685100E26BDF /* OLFacebookPhotosForAlbumRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66DE1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE101D95685100E26BDF /* OLFacebookImagePickerConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66F91D47A653002524A4 /* OLFacebookImagePickerConstants.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE111D95685100E26BDF /* OLFacebookSDKWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB00A1A1D92735300668B29 /* OLFacebookSDKWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE121D95685100E26BDF /* OLAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AAC1D92D768006C0EE6 /* OLAnimation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE131D95685100E26BDF /* OLFlipEnumerations.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AAE1D92D768006C0EE6 /* OLFlipEnumerations.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE141D95685100E26BDF /* OLFlipTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AAF1D92D768006C0EE6 /* OLFlipTransition.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -573,10 +575,6 @@
 		2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCircularProgressView.m; sourceTree = "<group>"; };
 		2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLMarkdownParser.h; sourceTree = "<group>"; };
 		2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLMarkdownParser.m; sourceTree = "<group>"; };
-		2E10F0531D93D71D00014C19 /* OLStripeWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeWrapper.h; sourceTree = "<group>"; };
-		2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLStripeWrapper.m; sourceTree = "<group>"; };
-		2E10F05A1D93E60100014C19 /* OLPayPalWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPayPalWrapper.h; sourceTree = "<group>"; };
-		2E10F05B1D93E60100014C19 /* OLPayPalWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPayPalWrapper.m; sourceTree = "<group>"; };
 		2E12DBC61E795511000A6CEF /* UIView+AutoLayoutHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+AutoLayoutHelper.h"; path = "PSPrintSDK/Categories/UIView+AutoLayoutHelper.h"; sourceTree = "<group>"; };
 		2E12DBC71E795511000A6CEF /* UIView+AutoLayoutHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+AutoLayoutHelper.m"; path = "PSPrintSDK/Categories/UIView+AutoLayoutHelper.m"; sourceTree = "<group>"; };
 		2E149AE61DB7B00D000E5849 /* OLProductTemplateCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateCollection.h; sourceTree = "<group>"; };
@@ -607,6 +605,21 @@
 		2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "CI-Main.storyboard"; sourceTree = "<group>"; };
 		2E23EB991D5091FC00E2BF42 /* CI-ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CI-ViewController.h"; sourceTree = "<group>"; };
 		2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CI-ViewController.m"; sourceTree = "<group>"; };
+		2E2493FE2065645E00F9EE68 /* FacebookLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookLogin.framework; path = ../Carthage/Build/iOS/FacebookLogin.framework; sourceTree = "<group>"; };
+		2E2493FF2065645E00F9EE68 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../Carthage/Build/iOS/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		2E2494002065645E00F9EE68 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../Carthage/Build/iOS/Bolts.framework; sourceTree = "<group>"; };
+		2E2494012065645E00F9EE68 /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = ../Carthage/Build/iOS/Stripe.framework; sourceTree = "<group>"; };
+		2E2494022065645E00F9EE68 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../Carthage/Build/iOS/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		2E2494032065645E00F9EE68 /* PayPalMobileSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PayPalMobileSDK.framework; path = ../Carthage/Build/iOS/PayPalMobileSDK.framework; sourceTree = "<group>"; };
+		2E2494042065645E00F9EE68 /* FacebookCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookCore.framework; path = ../Carthage/Build/iOS/FacebookCore.framework; sourceTree = "<group>"; };
+		2E24941A2065671C00F9EE68 /* FacebookCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookCore.framework; path = Carthage/Build/iOS/FacebookCore.framework; sourceTree = "<group>"; };
+		2E24941B2065671D00F9EE68 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = Carthage/Build/iOS/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		2E24941C2065671D00F9EE68 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = Carthage/Build/iOS/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		2E24941D2065671D00F9EE68 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = Carthage/Build/iOS/Bolts.framework; sourceTree = "<group>"; };
+		2E24941E2065671D00F9EE68 /* PayPalMobileSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PayPalMobileSDK.framework; path = Carthage/Build/iOS/PayPalMobileSDK.framework; sourceTree = "<group>"; };
+		2E24941F2065671D00F9EE68 /* FacebookLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookLogin.framework; path = Carthage/Build/iOS/FacebookLogin.framework; sourceTree = "<group>"; };
+		2E2494202065671D00F9EE68 /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = Carthage/Build/iOS/Stripe.framework; sourceTree = "<group>"; };
+		2E2494212065671D00F9EE68 /* FBSDKPlacesKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKPlacesKit.framework; path = Carthage/Build/iOS/FBSDKPlacesKit.framework; sourceTree = "<group>"; };
 		2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKeyChainStore.h; sourceTree = "<group>"; };
 		2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKeyChainStore.m; sourceTree = "<group>"; };
 		2E28CDFB1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerPhotosPageViewController.h; sourceTree = "<group>"; };
@@ -794,8 +807,6 @@
 		2EAD11501BD79ED0000BC80E /* OLProductDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductDetailsViewController.h; sourceTree = "<group>"; };
 		2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductDetailsViewController.m; sourceTree = "<group>"; };
 		2EADD8651BE79D6D0051CD31 /* KiteSDK-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KiteSDK-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2EB00A1A1D92735300668B29 /* OLFacebookSDKWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookSDKWrapper.h; sourceTree = "<group>"; };
-		2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookSDKWrapper.m; sourceTree = "<group>"; };
 		2EB00A7C1D92C9D400668B29 /* OLOAuth2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2.h; sourceTree = "<group>"; };
 		2EB00A7D1D92C9D400668B29 /* OLOAuth2AccessToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2AccessToken.h; sourceTree = "<group>"; };
 		2EB00A7E1D92C9D400668B29 /* OLOAuth2AccessToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2AccessToken.m; sourceTree = "<group>"; };
@@ -999,6 +1010,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E2494222065671D00F9EE68 /* FacebookCore.framework in Frameworks */,
+				2E2494232065671D00F9EE68 /* FBSDKCoreKit.framework in Frameworks */,
+				2E2494242065671D00F9EE68 /* FBSDKLoginKit.framework in Frameworks */,
+				2E2494252065671D00F9EE68 /* Bolts.framework in Frameworks */,
+				2E2494262065671D00F9EE68 /* PayPalMobileSDK.framework in Frameworks */,
+				2E2494272065671D00F9EE68 /* FacebookLogin.framework in Frameworks */,
+				2E2494282065671D00F9EE68 /* Stripe.framework in Frameworks */,
+				2E2494292065671D00F9EE68 /* FBSDKPlacesKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1167,24 +1186,6 @@
 			name = "3rd Party";
 			sourceTree = "<group>";
 		};
-		2E10F0521D93D70300014C19 /* Stripe */ = {
-			isa = PBXGroup;
-			children = (
-				2E10F0531D93D71D00014C19 /* OLStripeWrapper.h */,
-				2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */,
-			);
-			name = Stripe;
-			sourceTree = "<group>";
-		};
-		2E10F0591D93E5E200014C19 /* PayPal */ = {
-			isa = PBXGroup;
-			children = (
-				2E10F05A1D93E60100014C19 /* OLPayPalWrapper.h */,
-				2E10F05B1D93E60100014C19 /* OLPayPalWrapper.m */,
-			);
-			name = PayPal;
-			sourceTree = "<group>";
-		};
 		2E1E66D91D4795C8002524A4 /* Facebook */ = {
 			isa = PBXGroup;
 			children = (
@@ -1198,8 +1199,6 @@
 				2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */,
 				2E1E66F91D47A653002524A4 /* OLFacebookImagePickerConstants.h */,
 				2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */,
-				2EB00A1A1D92735300668B29 /* OLFacebookSDKWrapper.h */,
-				2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */,
 			);
 			name = Facebook;
 			sourceTree = "<group>";
@@ -1383,8 +1382,6 @@
 			isa = PBXGroup;
 			children = (
 				2ED2B7B61DB8B4DF0036B536 /* HP SDK */,
-				2E10F0591D93E5E200014C19 /* PayPal */,
-				2E10F0521D93D70300014C19 /* Stripe */,
 				2EB612F61D48AFDA00B48E29 /* Instagram */,
 				2E1E66D91D4795C8002524A4 /* Facebook */,
 			);
@@ -1698,6 +1695,21 @@
 		CD73BF6A186215790009DE03 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2E2494002065645E00F9EE68 /* Bolts.framework */,
+				2E24941D2065671D00F9EE68 /* Bolts.framework */,
+				2E2494042065645E00F9EE68 /* FacebookCore.framework */,
+				2E2493FE2065645E00F9EE68 /* FacebookLogin.framework */,
+				2E24941F2065671D00F9EE68 /* FacebookLogin.framework */,
+				2E2493FF2065645E00F9EE68 /* FBSDKCoreKit.framework */,
+				2E2494022065645E00F9EE68 /* FBSDKLoginKit.framework */,
+				2E2494212065671D00F9EE68 /* FBSDKPlacesKit.framework */,
+				2E2494032065645E00F9EE68 /* PayPalMobileSDK.framework */,
+				2E2494012065645E00F9EE68 /* Stripe.framework */,
+				2E24941A2065671C00F9EE68 /* FacebookCore.framework */,
+				2E24941B2065671D00F9EE68 /* FBSDKCoreKit.framework */,
+				2E24941C2065671D00F9EE68 /* FBSDKLoginKit.framework */,
+				2E24941E2065671D00F9EE68 /* PayPalMobileSDK.framework */,
+				2E2494202065671D00F9EE68 /* Stripe.framework */,
 				2E31C01A1C7B2267009C1E42 /* libc++.tbd */,
 				2E31C0151C7B2237009C1E42 /* QuartzCore.framework */,
 				2E31C0131C7B2231009C1E42 /* OpenGLES.framework */,
@@ -1939,7 +1951,6 @@
 				2ED2B7B41DB8B4D90036B536 /* OLHPSDKWrapper.h in Headers */,
 				2EB8FDE01D95685100E26BDF /* OLImageCachingManager.h in Headers */,
 				2EB8FE231D95685100E26BDF /* OLOAuth2Account.h in Headers */,
-				2EB8FE081D95685100E26BDF /* OLStripeWrapper.h in Headers */,
 				2EB8FDE21D95685100E26BDF /* OLTextOnPhoto.h in Headers */,
 				2E451DCC1D9554B40080F1C1 /* KiteSDK.h in Headers */,
 				2EB8FE371D95685100E26BDF /* OLSelectedEffectButton.h in Headers */,
@@ -1984,7 +1995,6 @@
 				2EB8FDE31D95685100E26BDF /* OLImagePickerProvider.h in Headers */,
 				2EB8FDEA1D95685100E26BDF /* OLPaymentLineItem.h in Headers */,
 				2EB8FE471D95685100E26BDF /* OLInstagramLoginWebViewController.h in Headers */,
-				2EB8FE071D95685100E26BDF /* OLPayPalWrapper.h in Headers */,
 				2E0290F01F26356000F7A5B0 /* OLCollectionViewController.h in Headers */,
 				2EB8FE031D95685100E26BDF /* OLImageDownloader.h in Headers */,
 				2EB8FE5E1D95685100E26BDF /* OLCountryPickerController.h in Headers */,
@@ -2067,7 +2077,6 @@
 				2EB8FE241D95685100E26BDF /* OLOAuth2Account+Private.h in Headers */,
 				2EB8FDE51D95685100E26BDF /* OLCustomViewControllerPhotoProvider.h in Headers */,
 				2EB8FE121D95685100E26BDF /* OLAnimation.h in Headers */,
-				2EB8FE111D95685100E26BDF /* OLFacebookSDKWrapper.h in Headers */,
 				2EB8FDD11D95671400E26BDF /* OLConstants.h in Headers */,
 				2EB8FE7B1D95685100E26BDF /* UIView+RoundRect.h in Headers */,
 				2EB8FE521D95685100E26BDF /* OLPhotobookPageBlankContentViewController.h in Headers */,
@@ -2510,7 +2519,6 @@
 				2E0290E81F26333200F7A5B0 /* OLKioskLandingViewController.m in Sources */,
 				2E451DD61D9555540080F1C1 /* OLPrintOrderRequest.m in Sources */,
 				2E451E4E1D9555D90080F1C1 /* OLPaymentMethodsViewController.m in Sources */,
-				2E451E061D9555860080F1C1 /* OLStripeWrapper.m in Sources */,
 				2E451E3A1D9555870080F1C1 /* OLImagePickerPhotosPageViewController.m in Sources */,
 				2E451E4B1D9555D30080F1C1 /* OLPhotobookPageContentViewController.m in Sources */,
 				2E451E1C1D9555870080F1C1 /* NSData+OLOAuth2.m in Sources */,
@@ -2529,7 +2537,6 @@
 				2EB0DC771DC8DB7400B556CE /* OL3DProductViewController.m in Sources */,
 				2E451DE61D9555580080F1C1 /* OLPayPalCard+OLCardIcon.m in Sources */,
 				2E451E3C1D9555870080F1C1 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
-				2E451E051D9555860080F1C1 /* OLPayPalWrapper.m in Sources */,
 				2E451DE81D95555C0080F1C1 /* OLKitePrintSDK.m in Sources */,
 				2E451E601D9555EF0080F1C1 /* OLInfoPageViewController.m in Sources */,
 				2E451E0C1D9555860080F1C1 /* OLFacebookAlbumRequest.m in Sources */,
@@ -2620,7 +2627,6 @@
 				2E451DD11D95554D0080F1C1 /* OLAddress+AddressBook.m in Sources */,
 				2E7FB64F1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m in Sources */,
 				2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */,
-				2E451E0F1D9555870080F1C1 /* OLFacebookSDKWrapper.m in Sources */,
 				2E451E2F1D9555870080F1C1 /* OLCircleSelectedCollectionViewCell.m in Sources */,
 				2E451E041D9555620080F1C1 /* OLLuhn.m in Sources */,
 				2E5B27341EC06A4700F3AED3 /* OLCollagePosterViewController.m in Sources */,
@@ -2799,6 +2805,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = Kite/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2831,6 +2841,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = Kite/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

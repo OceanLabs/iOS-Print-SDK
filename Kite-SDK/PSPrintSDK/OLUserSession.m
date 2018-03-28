@@ -35,7 +35,8 @@
 #import "OLStripeCard.h"
 #import "OLKiteABTesting.h"
 #import "OLAddress+AddressBook.h"
-#import "OLFacebookSDKWrapper.h"
+@import FBSDKCoreKit;
+@import FBSDKLoginKit;
 #import "OLImagePickerProvider.h"
 #import "OLKiteViewController.h"
 #import "OLCustomViewControllerPhotoProvider.h"
@@ -121,7 +122,7 @@
 }
 
 - (void)logoutOfFacebook{
-    [OLFacebookSDKWrapper logout];
+    [[[FBSDKLoginManager alloc] init] logOut];
 }
 
 - (void)logoutOfInstagram{
