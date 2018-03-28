@@ -28,7 +28,7 @@
 //
 
 #import "AppDelegate.h"
-#import "OLKitePrintSDK.h"
+@import KiteSDK;
 
 #ifdef OL_KITE_CI_DEPLOY
 #import "CI-ViewController.h"

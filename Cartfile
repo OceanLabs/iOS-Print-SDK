@@ -1,3 +1,4 @@
 github "stripe/stripe-ios"
 github "paypal/PayPal-iOS-SDK"
 github "facebook/facebook-ios-sdk"
+github "OceanLabs/Photobook-iOS" "epic/PHO-168"

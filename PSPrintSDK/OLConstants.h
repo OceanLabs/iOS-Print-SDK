@@ -70,6 +70,7 @@
 #import "OLPaymentViewController.h"
 #import "OLPaymentLineItem.h"
 #import "OLOrderHistoryViewController.h"
+#import "OLImagePickerViewController.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageMaintenanceMode;
