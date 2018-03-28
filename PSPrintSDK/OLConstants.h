@@ -56,6 +56,7 @@
 #import "OLStripeCard.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
+#import "OLAddressEditViewController.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageMaintenanceMode;
