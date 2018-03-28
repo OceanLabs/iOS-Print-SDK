@@ -59,6 +59,11 @@
 #import "OLAddressEditViewController.h"
 #import "OLProductOverviewViewController.h"
 #import "OLProductDetailsViewController.h"
+#import "OLKiteABTesting.h"
+#import "NSObject+Utils.h"
+#import "UIColor+OLHexString.h"
+#import "UIView+AutoLayoutHelper.h"
+#import "UIImage+OLUtils.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageMaintenanceMode;
