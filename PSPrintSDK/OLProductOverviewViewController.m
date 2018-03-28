@@ -383,7 +383,12 @@
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
     
-    [self.navigationController pushViewController:vc animated:YES];
+    if (self.product.productTemplate.templateUI == OLTemplateUIPhotobook){
+        [self presentViewController:vc animated:YES completion:nil];
+    }
+    else {
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)(void))handler{

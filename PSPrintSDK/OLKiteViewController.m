@@ -58,6 +58,7 @@
 
 static CGFloat fadeTime = 0.3;
 
+@import PhotobookSDK;
 
 @interface OLKiteViewController ()
 
@@ -275,6 +276,14 @@ static CGFloat fadeTime = 0.3;
     else if (templateUI == OLTemplateUIMug){
         return [[OL3DProductViewController alloc] init];
     }
+    else if (templateUI == OLTemplateUIPhotobook) {
+        UITabBarController *tabBar = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle bundleWithIdentifier:@"ly.kite.Photobook"]] instantiateViewControllerWithIdentifier:@"TabBarController"];
+        [PhotobookLaunchHandler configureTabBarController:tabBar];
+        for (UIViewController *controller in tabBar.viewControllers) {
+            [(UINavigationController *)controller topViewController].navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(dismissModalViewController)];
+        }
+        return tabBar;
+    }
     
     return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:[self reviewViewControllerIdentifierForProduct:product photoSelectionScreen:photoSelectionScreen]];
     
@@ -474,7 +483,10 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (UIViewController *)viewControllerForGroupSelected:(OLProductGroup *)group{
-    if (group.products.count > 1){
+    if ([(OLProduct *)group.products.firstObject productTemplate].templateUI == OLTemplateUIPhotobook){
+        return [self productDescriptionViewController];
+    }
+    else if (group.products.count > 1){
         return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
     }
     else if ([OLKiteABTesting sharedInstance].disableProductCategories && [OLKiteABTesting sharedInstance].skipProductOverview){
@@ -562,6 +574,10 @@ static CGFloat fadeTime = 0.3;
         logout();
     }
     
+}
+
+- (void)dismissModalViewController {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

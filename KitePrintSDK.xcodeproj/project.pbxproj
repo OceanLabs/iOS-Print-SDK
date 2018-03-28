@@ -217,8 +217,6 @@
 		2E898CDA1CC518180041CCD8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD73BF6B186215790009DE03 /* Foundation.framework */; };
 		2E898CE11CC518180041CCD8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD73BF83186215790009DE03 /* Images.xcassets */; };
 		2E8E19B91E93E0BF0003905E /* OLHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E8E19B71E93E0BF0003905E /* OLHintView.xib */; };
-		2E9A772D1DA6839600A50C4D /* KiteSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; };
-		2E9A772E1DA6839600A50C4D /* KiteSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E9A77351DA683FE00A50C4D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF7B186215790009DE03 /* AppDelegate.m */; };
 		2E9A77371DA683FE00A50C4D /* CI-ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */; };
 		2E9A77391DA684FB00A50C4D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD73BF77186215790009DE03 /* main.m */; };
@@ -229,20 +227,6 @@
 		2E9CB6141EAE22710079F7AE /* OLShippingClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9CB6121EAE22710079F7AE /* OLShippingClass.m */; };
 		2E9F13FB1DAD048000D8B1EE /* OLPromoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E9F13F91DAD048000D8B1EE /* OLPromoView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E9F13FC1DAD048000D8B1EE /* OLPromoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */; };
-		2EAA1569206BC8E700858F57 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941D2065671D00F9EE68 /* Bolts.framework */; };
-		2EAA156A206BC8E700858F57 /* Bolts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941D2065671D00F9EE68 /* Bolts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2EAA156B206BC8E700858F57 /* FacebookLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941F2065671D00F9EE68 /* FacebookLogin.framework */; };
-		2EAA156C206BC8E700858F57 /* FacebookLogin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941F2065671D00F9EE68 /* FacebookLogin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2EAA156D206BC8E700858F57 /* FacebookCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941A2065671C00F9EE68 /* FacebookCore.framework */; };
-		2EAA156E206BC8E700858F57 /* FacebookCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941A2065671C00F9EE68 /* FacebookCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2EAA156F206BC8E700858F57 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941B2065671D00F9EE68 /* FBSDKCoreKit.framework */; };
-		2EAA1570206BC8E700858F57 /* FBSDKCoreKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941B2065671D00F9EE68 /* FBSDKCoreKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2EAA1571206BC8E700858F57 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941C2065671D00F9EE68 /* FBSDKLoginKit.framework */; };
-		2EAA1572206BC8E700858F57 /* FBSDKLoginKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941C2065671D00F9EE68 /* FBSDKLoginKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2EAA1573206BC8E700858F57 /* PayPalMobileSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941E2065671D00F9EE68 /* PayPalMobileSDK.framework */; };
-		2EAA1574206BC8E700858F57 /* PayPalMobileSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941E2065671D00F9EE68 /* PayPalMobileSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2EAA1575206BC8E700858F57 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2494202065671D00F9EE68 /* Stripe.framework */; };
-		2EAA1576206BC8E700858F57 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2494202065671D00F9EE68 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2EB0DC761DC8DB7400B556CE /* OL3DProductViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB0DC741DC8DB7400B556CE /* OL3DProductViewController.h */; };
 		2EB0DC771DC8DB7400B556CE /* OL3DProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB0DC751DC8DB7400B556CE /* OL3DProductViewController.m */; };
 		2EB8FDD11D95671400E26BDF /* OLConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFAF18634ED50009DE03 /* OLConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -402,6 +386,32 @@
 		2ECA34ED1E82743800D56220 /* OLApparelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ECA34EB1E82743800D56220 /* OLApparelViewController.m */; };
 		2ED2B7B41DB8B4D90036B536 /* OLHPSDKWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2ED2B7B21DB8B4D90036B536 /* OLHPSDKWrapper.h */; };
 		2ED2B7B51DB8B4D90036B536 /* OLHPSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED2B7B31DB8B4D90036B536 /* OLHPSDKWrapper.m */; };
+		2ED3B316206BDC7E0007E060 /* Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E4294A7206BDBF500A4115A /* Analytics.framework */; };
+		2ED3B317206BDC7E0007E060 /* Analytics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E4294A7206BDBF500A4115A /* Analytics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B318206BDC7E0007E060 /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E4294AA206BDBF600A4115A /* KeychainSwift.framework */; };
+		2ED3B319206BDC7E0007E060 /* KeychainSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E4294AA206BDBF600A4115A /* KeychainSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B31A206BDC7E0007E060 /* OAuthSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E4294A9206BDBF500A4115A /* OAuthSwift.framework */; };
+		2ED3B31B206BDC7E0007E060 /* OAuthSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E4294A9206BDBF500A4115A /* OAuthSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B31C206BDC7E0007E060 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E4294A8206BDBF500A4115A /* SDWebImage.framework */; };
+		2ED3B31D206BDC7E0007E060 /* SDWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E4294A8206BDBF500A4115A /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B31E206BDC7E0007E060 /* PhotobookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E4294A4206BDAA800A4115A /* PhotobookSDK.framework */; };
+		2ED3B31F206BDC7E0007E060 /* PhotobookSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E4294A4206BDAA800A4115A /* PhotobookSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B320206BDC7E0007E060 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941D2065671D00F9EE68 /* Bolts.framework */; };
+		2ED3B321206BDC7E0007E060 /* Bolts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941D2065671D00F9EE68 /* Bolts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B322206BDC7E0007E060 /* FacebookLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941F2065671D00F9EE68 /* FacebookLogin.framework */; };
+		2ED3B323206BDC7E0007E060 /* FacebookLogin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941F2065671D00F9EE68 /* FacebookLogin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B324206BDC7E0007E060 /* FacebookCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941A2065671C00F9EE68 /* FacebookCore.framework */; };
+		2ED3B325206BDC7E0007E060 /* FacebookCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941A2065671C00F9EE68 /* FacebookCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B326206BDC7E0007E060 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941B2065671D00F9EE68 /* FBSDKCoreKit.framework */; };
+		2ED3B327206BDC7E0007E060 /* FBSDKCoreKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941B2065671D00F9EE68 /* FBSDKCoreKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B328206BDC7E0007E060 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941C2065671D00F9EE68 /* FBSDKLoginKit.framework */; };
+		2ED3B329206BDC7E0007E060 /* FBSDKLoginKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941C2065671D00F9EE68 /* FBSDKLoginKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B32A206BDC7E0007E060 /* PayPalMobileSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941E2065671D00F9EE68 /* PayPalMobileSDK.framework */; };
+		2ED3B32B206BDC7E0007E060 /* PayPalMobileSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941E2065671D00F9EE68 /* PayPalMobileSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B32C206BDC7E0007E060 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2494202065671D00F9EE68 /* Stripe.framework */; };
+		2ED3B32D206BDC7E0007E060 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2494202065671D00F9EE68 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B32F206BDC850007E060 /* KiteSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; };
+		2ED3B330206BDC850007E060 /* KiteSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2EE04A041EEAE12600E6A16B /* OLArtboardTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E37B1791D227EDA003DAA84 /* OLArtboardTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EE4BC8E1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */; };
 		2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */; };
@@ -413,13 +423,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2E9A772F1DA6839600A50C4D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CD73BF60186215790009DE03 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2E451DC71D9554B40080F1C1;
-			remoteInfo = KiteSDK;
-		};
 		2EAB0AEF1CDC833C00625BD6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CD73BF60186215790009DE03 /* Project object */;
@@ -427,23 +430,35 @@
 			remoteGlobalIDString = 2E898C4C1CC518180041CCD8;
 			remoteInfo = "Kite-CI-Deploy";
 		};
+		2ED3B331206BDC850007E060 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD73BF60186215790009DE03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2E451DC71D9554B40080F1C1;
+			remoteInfo = KiteSDK;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2E9A77311DA6839700A50C4D /* Embed Frameworks */ = {
+		2ED3B32E206BDC7E0007E060 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				2EAA1570206BC8E700858F57 /* FBSDKCoreKit.framework in Embed Frameworks */,
-				2E9A772E1DA6839600A50C4D /* KiteSDK.framework in Embed Frameworks */,
-				2EAA1572206BC8E700858F57 /* FBSDKLoginKit.framework in Embed Frameworks */,
-				2EAA1576206BC8E700858F57 /* Stripe.framework in Embed Frameworks */,
-				2EAA156E206BC8E700858F57 /* FacebookCore.framework in Embed Frameworks */,
-				2EAA1574206BC8E700858F57 /* PayPalMobileSDK.framework in Embed Frameworks */,
-				2EAA156C206BC8E700858F57 /* FacebookLogin.framework in Embed Frameworks */,
-				2EAA156A206BC8E700858F57 /* Bolts.framework in Embed Frameworks */,
+				2ED3B31D206BDC7E0007E060 /* SDWebImage.framework in Embed Frameworks */,
+				2ED3B319206BDC7E0007E060 /* KeychainSwift.framework in Embed Frameworks */,
+				2ED3B329206BDC7E0007E060 /* FBSDKLoginKit.framework in Embed Frameworks */,
+				2ED3B317206BDC7E0007E060 /* Analytics.framework in Embed Frameworks */,
+				2ED3B323206BDC7E0007E060 /* FacebookLogin.framework in Embed Frameworks */,
+				2ED3B321206BDC7E0007E060 /* Bolts.framework in Embed Frameworks */,
+				2ED3B325206BDC7E0007E060 /* FacebookCore.framework in Embed Frameworks */,
+				2ED3B32B206BDC7E0007E060 /* PayPalMobileSDK.framework in Embed Frameworks */,
+				2ED3B330206BDC850007E060 /* KiteSDK.framework in Embed Frameworks */,
+				2ED3B31B206BDC7E0007E060 /* OAuthSwift.framework in Embed Frameworks */,
+				2ED3B327206BDC7E0007E060 /* FBSDKCoreKit.framework in Embed Frameworks */,
+				2ED3B31F206BDC7E0007E060 /* PhotobookSDK.framework in Embed Frameworks */,
+				2ED3B32D206BDC7E0007E060 /* Stripe.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -509,13 +524,6 @@
 		2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "CI-Main.storyboard"; sourceTree = "<group>"; };
 		2E23EB991D5091FC00E2BF42 /* CI-ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CI-ViewController.h"; sourceTree = "<group>"; };
 		2E23EB9A1D5091FC00E2BF42 /* CI-ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CI-ViewController.m"; sourceTree = "<group>"; };
-		2E2493FE2065645E00F9EE68 /* FacebookLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookLogin.framework; path = ../Carthage/Build/iOS/FacebookLogin.framework; sourceTree = "<group>"; };
-		2E2493FF2065645E00F9EE68 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../Carthage/Build/iOS/FBSDKCoreKit.framework; sourceTree = "<group>"; };
-		2E2494002065645E00F9EE68 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../Carthage/Build/iOS/Bolts.framework; sourceTree = "<group>"; };
-		2E2494012065645E00F9EE68 /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = ../Carthage/Build/iOS/Stripe.framework; sourceTree = "<group>"; };
-		2E2494022065645E00F9EE68 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../Carthage/Build/iOS/FBSDKLoginKit.framework; sourceTree = "<group>"; };
-		2E2494032065645E00F9EE68 /* PayPalMobileSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PayPalMobileSDK.framework; path = ../Carthage/Build/iOS/PayPalMobileSDK.framework; sourceTree = "<group>"; };
-		2E2494042065645E00F9EE68 /* FacebookCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookCore.framework; path = ../Carthage/Build/iOS/FacebookCore.framework; sourceTree = "<group>"; };
 		2E24941A2065671C00F9EE68 /* FacebookCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookCore.framework; path = Carthage/Build/iOS/FacebookCore.framework; sourceTree = "<group>"; };
 		2E24941B2065671D00F9EE68 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = Carthage/Build/iOS/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		2E24941C2065671D00F9EE68 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = Carthage/Build/iOS/FBSDKLoginKit.framework; sourceTree = "<group>"; };
@@ -574,6 +582,11 @@
 		2E37B1801D229162003DAA84 /* OLProductRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductRepresentation.m; sourceTree = "<group>"; };
 		2E3F96AD1A4967FF005C0EA3 /* OLProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProduct.h; sourceTree = "<group>"; };
 		2E3F96AE1A4967FF005C0EA3 /* OLProduct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProduct.m; sourceTree = "<group>"; };
+		2E4294A4206BDAA800A4115A /* PhotobookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotobookSDK.framework; path = Carthage/Build/iOS/PhotobookSDK.framework; sourceTree = "<group>"; };
+		2E4294A7206BDBF500A4115A /* Analytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Analytics.framework; path = Carthage/Build/iOS/Analytics.framework; sourceTree = "<group>"; };
+		2E4294A8206BDBF500A4115A /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
+		2E4294A9206BDBF500A4115A /* OAuthSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OAuthSwift.framework; path = Carthage/Build/iOS/OAuthSwift.framework; sourceTree = "<group>"; };
+		2E4294AA206BDBF600A4115A /* KeychainSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KeychainSwift.framework; path = Carthage/Build/iOS/KeychainSwift.framework; sourceTree = "<group>"; };
 		2E434ADE1D36583700D1BD06 /* OLEditingToolsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLEditingToolsView.h; sourceTree = "<group>"; };
 		2E434ADF1D36583700D1BD06 /* OLEditingToolsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLEditingToolsView.m; sourceTree = "<group>"; };
 		2E434AE71D36675700D1BD06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OLEditingToolsView.xib; sourceTree = "<group>"; };
@@ -738,9 +751,6 @@
 		2EB715DA1CFDD36600618C7B /* OLStripeCard+OLCardIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLStripeCard+OLCardIcon.m"; sourceTree = "<group>"; };
 		2EB715DF1CFDD38100618C7B /* OLPayPalCard+OLCardIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLPayPalCard+OLCardIcon.h"; sourceTree = "<group>"; };
 		2EB715E01CFDD38100618C7B /* OLPayPalCard+OLCardIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLPayPalCard+OLCardIcon.m"; sourceTree = "<group>"; };
-		2EB966971EA6172700AD6BBA /* KiteSDK.cs */ = {isa = PBXFileReference; lastKnownFileType = text; name = KiteSDK.cs; path = Assets/Plugins/iOS/KiteSDK/KiteSDK.cs; sourceTree = "<group>"; };
-		2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KiteSDKLoader.h; path = Assets/Plugins/iOS/KiteSDK/KiteSDKLoader.h; sourceTree = "<group>"; };
-		2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = KiteSDKLoader.m; path = Assets/Plugins/iOS/KiteSDK/KiteSDKLoader.m; sourceTree = "<group>"; };
 		2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloader.h; sourceTree = "<group>"; };
 		2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloader.m; sourceTree = "<group>"; };
 		2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = OLKiteLocalizationResources.bundle; sourceTree = "<group>"; };
@@ -892,28 +902,33 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EAA1575206BC8E700858F57 /* Stripe.framework in Frameworks */,
 				2E898CCB1CC518180041CCD8 /* libc++.tbd in Frameworks */,
+				2ED3B32C206BDC7E0007E060 /* Stripe.framework in Frameworks */,
 				2E898CCC1CC518180041CCD8 /* MobileCoreServices.framework in Frameworks */,
 				2E898CCE1CC518180041CCD8 /* QuartzCore.framework in Frameworks */,
-				2EAA156D206BC8E700858F57 /* FacebookCore.framework in Frameworks */,
+				2ED3B32F206BDC850007E060 /* KiteSDK.framework in Frameworks */,
 				2E898CCF1CC518180041CCD8 /* OpenGLES.framework in Frameworks */,
-				2EAA156F206BC8E700858F57 /* FBSDKCoreKit.framework in Frameworks */,
 				2E898CD01CC518180041CCD8 /* MessageUI.framework in Frameworks */,
+				2ED3B316206BDC7E0007E060 /* Analytics.framework in Frameworks */,
 				2E898CD11CC518180041CCD8 /* libz.1.2.5.tbd in Frameworks */,
 				2E898CD21CC518180041CCD8 /* libsqlite3.0.tbd in Frameworks */,
 				2E898CD31CC518180041CCD8 /* CoreData.framework in Frameworks */,
+				2ED3B324206BDC7E0007E060 /* FacebookCore.framework in Frameworks */,
+				2ED3B31A206BDC7E0007E060 /* OAuthSwift.framework in Frameworks */,
+				2ED3B32A206BDC7E0007E060 /* PayPalMobileSDK.framework in Frameworks */,
+				2ED3B322206BDC7E0007E060 /* FacebookLogin.framework in Frameworks */,
 				2E898CD41CC518180041CCD8 /* Accelerate.framework in Frameworks */,
-				2EAA1571206BC8E700858F57 /* FBSDKLoginKit.framework in Frameworks */,
 				2E898CD61CC518180041CCD8 /* AddressBook.framework in Frameworks */,
+				2ED3B328206BDC7E0007E060 /* FBSDKLoginKit.framework in Frameworks */,
 				2E898CD71CC518180041CCD8 /* AddressBookUI.framework in Frameworks */,
+				2ED3B318206BDC7E0007E060 /* KeychainSwift.framework in Frameworks */,
 				2E898CD81CC518180041CCD8 /* CoreGraphics.framework in Frameworks */,
-				2EAA1569206BC8E700858F57 /* Bolts.framework in Frameworks */,
-				2E9A772D1DA6839600A50C4D /* KiteSDK.framework in Frameworks */,
+				2ED3B320206BDC7E0007E060 /* Bolts.framework in Frameworks */,
 				2E898CD91CC518180041CCD8 /* UIKit.framework in Frameworks */,
-				2EAA1573206BC8E700858F57 /* PayPalMobileSDK.framework in Frameworks */,
+				2ED3B31C206BDC7E0007E060 /* SDWebImage.framework in Frameworks */,
+				2ED3B326206BDC7E0007E060 /* FBSDKCoreKit.framework in Frameworks */,
 				2E898CDA1CC518180041CCD8 /* Foundation.framework in Frameworks */,
-				2EAA156B206BC8E700858F57 /* FacebookLogin.framework in Frameworks */,
+				2ED3B31E206BDC7E0007E060 /* PhotobookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1376,16 +1391,6 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		2EDB7BD31E76D10A009B30F0 /* Unity Plugin */ = {
-			isa = PBXGroup;
-			children = (
-				2EB966971EA6172700AD6BBA /* KiteSDK.cs */,
-				2EB966981EA6172700AD6BBA /* KiteSDKLoader.h */,
-				2EB966991EA6172700AD6BBA /* KiteSDKLoader.m */,
-			);
-			name = "Unity Plugin";
-			sourceTree = "<group>";
-		};
 		2EE8CF111EA5F87100164AA6 /* Single */ = {
 			isa = PBXGroup;
 			children = (
@@ -1475,7 +1480,6 @@
 				CD73BF71186215790009DE03 /* Kite Print SDK */,
 				2ED412501F98E541005576C1 /* Tests */,
 				2E451DC91D9554B40080F1C1 /* Kite Framework */,
-				2EDB7BD31E76D10A009B30F0 /* Unity Plugin */,
 				CD73BF6A186215790009DE03 /* Frameworks */,
 				CD73BF69186215790009DE03 /* Products */,
 			);
@@ -1494,16 +1498,14 @@
 		CD73BF6A186215790009DE03 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2E2494002065645E00F9EE68 /* Bolts.framework */,
+				2E4294A7206BDBF500A4115A /* Analytics.framework */,
+				2E4294AA206BDBF600A4115A /* KeychainSwift.framework */,
+				2E4294A9206BDBF500A4115A /* OAuthSwift.framework */,
+				2E4294A8206BDBF500A4115A /* SDWebImage.framework */,
+				2E4294A4206BDAA800A4115A /* PhotobookSDK.framework */,
 				2E24941D2065671D00F9EE68 /* Bolts.framework */,
-				2E2494042065645E00F9EE68 /* FacebookCore.framework */,
-				2E2493FE2065645E00F9EE68 /* FacebookLogin.framework */,
 				2E24941F2065671D00F9EE68 /* FacebookLogin.framework */,
-				2E2493FF2065645E00F9EE68 /* FBSDKCoreKit.framework */,
-				2E2494022065645E00F9EE68 /* FBSDKLoginKit.framework */,
 				2E2494212065671D00F9EE68 /* FBSDKPlacesKit.framework */,
-				2E2494032065645E00F9EE68 /* PayPalMobileSDK.framework */,
-				2E2494012065645E00F9EE68 /* Stripe.framework */,
 				2E24941A2065671C00F9EE68 /* FacebookCore.framework */,
 				2E24941B2065671D00F9EE68 /* FBSDKCoreKit.framework */,
 				2E24941C2065671D00F9EE68 /* FBSDKLoginKit.framework */,
@@ -1926,12 +1928,12 @@
 				2E898C4E1CC518180041CCD8 /* Sources */,
 				2E898CCA1CC518180041CCD8 /* Frameworks */,
 				2E898CDC1CC518180041CCD8 /* Resources */,
-				2E9A77311DA6839700A50C4D /* Embed Frameworks */,
+				2ED3B32E206BDC7E0007E060 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				2E9A77301DA6839600A50C4D /* PBXTargetDependency */,
+				2ED3B332206BDC850007E060 /* PBXTargetDependency */,
 			);
 			name = "Kite-CI-Deploy";
 			productName = PSPrintSDK;
@@ -2261,15 +2263,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2E9A77301DA6839600A50C4D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2E451DC71D9554B40080F1C1 /* KiteSDK */;
-			targetProxy = 2E9A772F1DA6839600A50C4D /* PBXContainerItemProxy */;
-		};
 		2EAB0AF01CDC833C00625BD6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2E898C4C1CC518180041CCD8 /* Kite-CI-Deploy */;
 			targetProxy = 2EAB0AEF1CDC833C00625BD6 /* PBXContainerItemProxy */;
+		};
+		2ED3B332206BDC850007E060 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2E451DC71D9554B40080F1C1 /* KiteSDK */;
+			targetProxy = 2ED3B331206BDC850007E060 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2308,7 +2310,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 6.0.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
@@ -2343,7 +2345,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 6.0.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
