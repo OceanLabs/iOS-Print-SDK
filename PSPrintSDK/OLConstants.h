@@ -64,6 +64,7 @@
 #import "UIColor+OLHexString.h"
 #import "UIView+AutoLayoutHelper.h"
 #import "UIImage+OLUtils.h"
+#import "OLKiteTheme.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageMaintenanceMode;

@@ -340,7 +340,7 @@
 		2EB8FDFE1D95685100E26BDF /* OLPrintPhoto.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E18DC4F1D913DB1004752D2 /* OLPrintPhoto.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FDFF1D95685100E26BDF /* OLAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0E250D1A77997E00808ED8 /* OLAnalytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE001D95685100E26BDF /* OLKiteABTesting.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB1C40F1B551D6000EFE0D0 /* OLKiteABTesting.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2EB8FE011D95685100E26BDF /* OLKiteTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E2BF4451CCDFAF100725561 /* OLKiteTheme.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2EB8FE011D95685100E26BDF /* OLKiteTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E2BF4451CCDFAF100725561 /* OLKiteTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE021D95685100E26BDF /* OLKiteUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EA13E211BBC242F005F3D71 /* OLKiteUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FE031D95685100E26BDF /* OLImageDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE041D95685100E26BDF /* OLImageDownloadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */; settings = {ATTRIBUTES = (Private, ); }; };
