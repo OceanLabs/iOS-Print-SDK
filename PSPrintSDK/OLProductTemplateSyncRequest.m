@@ -212,8 +212,6 @@
                             id imagesPerSheet = productTemplate[@"images_per_page"];
                             id product = productTemplate[@"product"];
                             
-                            NSArray *upsellOffers = [productTemplate[@"upsell_offers"] isKindOfClass:[NSArray class]] ? productTemplate[@"upsell_offers"] : nil;
-                            
                             NSNumber *enabledNumber = productTemplate[@"enabled"];
                             NSString *description = productTemplate[@"description"];
                             NSString *descriptionMarkdown = [productTemplate[@"description_markdown"] isKindOfClass:[NSString class]] ? productTemplate[@"description_markdown"] : @"";
@@ -547,14 +545,6 @@
                                     if ([blendMode isEqualToString:@"MULTIPLY"]){
                                         t.blendMode = OLImageBlendModeMultiply;
                                     }
-                                    
-                                    NSMutableArray <OLUpsellOffer *>*upsellOffersClean = [[NSMutableArray alloc] init];
-                                    for (NSDictionary *offerDict in upsellOffers){
-                                        if ([offerDict isKindOfClass:[NSDictionary class]]){
-                                            [upsellOffersClean addObject:[OLUpsellOffer upsellOfferWithDictionary:offerDict]];
-                                        }
-                                    }
-                                    t.upsellOffers = upsellOffersClean;
                                     
                                     for (OLProductTemplateCollection *collection in templateCollections){
                                         if ([collection containsTemplateIdentifier:identifier]){

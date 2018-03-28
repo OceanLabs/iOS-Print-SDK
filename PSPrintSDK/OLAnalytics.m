@@ -477,15 +477,6 @@ static NSString *nonNilStr(NSString *str) {
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsEventLevel : @1}];
 }
 
-+ (void)trackUpsellDismissed:(BOOL)optedIn {
-    NSString *eventName = kOLAnalyticsEventNameUpsellScreenDismissed;
-    NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
-    NSString *how = optedIn ? @"Yes Please" : @"Not Thanks";
-    [dict[@"properties"] setObject:how forKey:@"How"];
-    [OLAnalytics sendToMixPanelWithDictionary:dict];
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{@"How": how, kOLAnalyticsEventLevel : @1}];
-}
-
 + (void)trackBasketIconTappedWithNumberBadged:(NSInteger)number{
     NSString *eventName = kOLAnalyticsEventNameBasketIconTapped;
     
@@ -702,15 +693,6 @@ static NSString *nonNilStr(NSString *str) {
 + (void)trackPhotobookEditScreenHitBack:(NSString *)productName{
     NSString *eventName = kOLAnalyticsEventNamePhotobookEditScreenHitBack;
     [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @2}];
-}
-
-+ (void)trackUpsellShown:(BOOL)shown {
-    NSString *eventName = kOLAnalyticsEventNameUpsellScreenViewed;
-    if (shown) {
-        NSDictionary *dict = [OLAnalytics defaultDictionaryForEventName:eventName];
-        [OLAnalytics sendToMixPanelWithDictionary:dict];
-    }
-    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{@"Shown": [NSNumber numberWithBool:shown], kOLAnalyticsEventLevel : shown ? @1 : @2}];
 }
 
 + (void)trackPaymentMethodScreenHitBack:(OLPrintOrder *)printOrder{

@@ -41,9 +41,6 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
 static NSString *const kKeyProductPringJobAddress = @"co.oceanlabs.pssdk.kKeyProductPringJobAddress";
 static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyProductPrintJobOptions";
 static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
-static NSString *const kKeyDeclinedOffers = @"co.oceanlabs.pssdk.kKeyDeclinedOffers";
-static NSString *const kKeyAcceptedOffers = @"co.oceanlabs.pssdk.kKeyAcceptedOffers";
-static NSString *const kKeyRedeemedOffer = @"co.oceanlabs.pssdk.kKeyRedeemedOffer";
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -53,9 +50,6 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) NSArray *assets;
 @property (strong, nonatomic) NSMutableDictionary *options;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @implementation OLProductPrintJob
@@ -65,20 +59,6 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
 @synthesize selectedShippingMethodIdentifier;
-
--(NSMutableSet *) declinedOffers{
-    if (!_declinedOffers){
-        _declinedOffers = [[NSMutableSet alloc] init];
-    }
-    return _declinedOffers;
-}
-
--(NSMutableSet *) acceptedOffers{
-    if (!_acceptedOffers){
-        _acceptedOffers = [[NSMutableSet alloc] init];
-    }
-    return _acceptedOffers;
-}
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -204,13 +184,6 @@ static id stringOrEmptyString(NSString *str) {
     }
     json[@"frame_contents"] = @{};
     
-    if (self.acceptedOffers.count > 0 && [self.acceptedOffers.allObjects.firstObject identifier]){
-        json[@"triggered_upsell"] = [NSNumber numberWithUnsignedInteger:[self.acceptedOffers.allObjects.firstObject identifier]];
-    }
-    if (self.redeemedOffer){
-        json[@"redeemed_upsell"] = [NSNumber numberWithUnsignedInteger:self.redeemedOffer.identifier];
-    }
-    
     self.options[@"polaroid_text"] = borderTextArray;
     json[@"options"] = self.options;
     
@@ -247,9 +220,6 @@ static id stringOrEmptyString(NSString *str) {
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
     objectCopy.options = self.options;
-    objectCopy.declinedOffers = self.declinedOffers;
-    objectCopy.acceptedOffers = self.acceptedOffers;
-    objectCopy.redeemedOffer = self.redeemedOffer;
     objectCopy.selectedShippingMethodIdentifier = self.selectedShippingMethodIdentifier;
     return objectCopy;
 }
@@ -297,9 +267,6 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.options forKey:kKeyProductPrintJobOptions];
     [aCoder encodeObject:self.address forKey:kKeyProductPringJobAddress];
     [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
-    [aCoder encodeObject:self.declinedOffers forKey:kKeyDeclinedOffers];
-    [aCoder encodeObject:self.acceptedOffers forKey:kKeyAcceptedOffers];
-    [aCoder encodeObject:self.redeemedOffer forKey:kKeyRedeemedOffer];
     [aCoder encodeInteger:self.selectedShippingMethodIdentifier forKey:@"selectedShippingMethodIdentifier"];
 }
 
@@ -312,9 +279,6 @@ static id stringOrEmptyString(NSString *str) {
         self.options = [aDecoder decodeObjectForKey:kKeyProductPrintJobOptions];
         self.address = [aDecoder decodeObjectForKey:kKeyProductPringJobAddress];
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
-        self.declinedOffers = [aDecoder decodeObjectForKey:kKeyDeclinedOffers];
-        self.acceptedOffers = [aDecoder decodeObjectForKey:kKeyAcceptedOffers];
-        self.redeemedOffer = [aDecoder decodeObjectForKey:kKeyRedeemedOffer];
         self.selectedShippingMethodIdentifier = [aDecoder decodeIntegerForKey:@"selectedShippingMethodIdentifier"];
     }
     

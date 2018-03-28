@@ -68,18 +68,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     OLPackReviewStyleMini,
 };
 
-@interface OLProduct ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-@end
-
-@interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-@end
-
 @interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout, OLInfoBannerDelegate, OLArtboardDelegate>
 
 @property (weak, nonatomic) OLAsset *editingAsset;
@@ -341,9 +329,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
                 fromEdit = YES;
             }
         }
-        [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
-        [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
-        job.redeemedOffer = self.product.redeemedOffer;
         [printOrder addPrintJob:job];
 #ifndef OL_NO_ANALYTICS
         if (!fromEdit){

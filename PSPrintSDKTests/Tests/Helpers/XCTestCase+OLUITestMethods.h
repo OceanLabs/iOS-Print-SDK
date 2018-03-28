@@ -27,7 +27,6 @@
 #import "OLAddressEditViewController.h"
 #import "OLTestTapGestureRecognizer.h"
 #import "OLCustomViewControllerPhotoProvider.h"
-#import "OLUpsellViewController.h"
 #import "OLPrintOrder+History.h"
 #import "OLFrameOrderReviewViewController.h"
 #import "OLInfoPageViewController.h"
@@ -81,11 +80,6 @@
 
 @interface OLImagePickerLoginPageViewController ()
 - (IBAction)onButtonLoginTapped:(UIButton *)sender ;
-@end
-
-@interface OLUpsellViewController ()
-- (IBAction)acceptButtonAction:(UIButton *)sender;
-- (IBAction)declineButtonAction:(UIButton *)sender;
 @end
 
 @interface OLKitePrintSDK ()
@@ -179,11 +173,6 @@
 @interface OLCreditCardCaptureRootController : UITableViewController
 @property (nonatomic, strong) UITextField *textFieldCardNumber, *textFieldExpiryDate, *textFieldCVV;
 - (void)onButtonPayClicked;
-@end
-
-@interface OLUpsellViewController ()
-@property (weak, nonatomic) IBOutlet UIButton *acceptButton;
-@property (weak, nonatomic) IBOutlet UIButton *declineButton;
 @end
 
 @interface OLPaymentMethodsViewController ()

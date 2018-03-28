@@ -121,12 +121,6 @@ static id stringOrEmptyString(NSString *str) {
 
 @end
 
-@interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-@end
-
 static NSBlockOperation *templateSyncOperation;
 
 @interface OLAddress ()
@@ -597,30 +591,6 @@ static NSBlockOperation *templateSyncOperation;
     }
     OLPrintOrder *order = [NSKeyedUnarchiver unarchiveObjectWithFile:[OLPrintOrder orderFilePath]];
     return order;
-}
-
-- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier{
-    for (id<OLPrintJob> job in self.jobs){
-        if (![job respondsToSelector:@selector(acceptedOffers)]){
-            continue;
-        }
-        OLProductPrintJob *printJob = job;
-        for (OLUpsellOffer *acceptedOffer in printJob.acceptedOffers){
-            if (acceptedOffer.identifier == identifier){
-                return YES;
-            }
-        }
-        for (OLUpsellOffer *declinedOffer in printJob.declinedOffers){
-            if (declinedOffer.identifier == identifier){
-                return YES;
-            }
-        }
-        if (printJob.redeemedOffer.identifier == identifier){
-            return YES;
-        }
-        
-    }
-    return NO;
 }
 
 - (NSArray<OLShippingClass *> *)shippingMethodsForJobs:(NSArray<id<OLPrintJob>>*)jobs;{

@@ -86,8 +86,6 @@ static NSString *const kOLAnalyticsEventNameReviewScreenDeletedPhoto = @"Review 
 static NSString *const kOLAnalyticsEventNameProductDescriptionScreenHitBack = @"Product Description Screen Hit Back";
 static NSString *const kOLAnalyticsEventNameImagePickerScreenHitBack = @"Image Picker Screen Hit Back";
 static NSString *const kOLAnalyticsEventNamePhotobookEditScreenHitBack = @"Photobook Edit Screen Hit Back";
-static NSString *const kOLAnalyticsEventNameUpsellScreenViewed = @"Upsell Screen Viewed";
-static NSString *const kOLAnalyticsEventNameUpsellScreenDismissed = @"Upsell Screen Dismissed";
 static NSString *const kOLAnalyticsEventNameBasketIconTapped = @"Basket Icon Tapped";
 static NSString *const kOLAnalyticsEventNamePaymentMethodScreenHitBack = @"Payment Method Screen Hit Back";
 static NSString *const kOLAnalyticsEventNameShippingMethodScreenHitBack = @"Shipping Method Screen Hit Back";
@@ -176,10 +174,6 @@ static NSString *const kOLAnalyticsButtonName = @"Button Name";
 + (void)trackShippingMethodScreenHitBack:(OLPrintOrder *)printOrder;
 + (void)trackEditScreenDidCancel;
 + (void)trackEditScreenButtonTapped:(NSString *)buttonName;
-
-// upsell events
-+ (void)trackUpsellShown:(BOOL)shown;
-+ (void)trackUpsellDismissed:(BOOL)optedIn;
 
 + (void)incrementLaunchSDKCount;
 + (void)setExtraInfo:(NSDictionary *)info;

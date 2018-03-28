@@ -104,16 +104,10 @@ static OLPaymentMethod selectedPaymentMethod;
 
 @interface OLProductPrintJob ()
 @property (strong, nonatomic) NSMutableDictionary *options;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @interface OLProduct (PrivateMethods)
 - (NSDecimalNumber*) unitCostDecimalNumber;
-@property (strong, nonatomic) NSMutableArray *declinedOffers;
-@property (strong, nonatomic) NSMutableArray *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
 @end
 
 @interface OLPackProductViewController ()
@@ -1685,9 +1679,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     OLProduct *product = [OLProduct productWithTemplateId:printJob.templateId];
-    product.acceptedOffers = [[[printJob safePerformSelectorWithReturn:@selector(acceptedOffers)withObject:nil] allObjects] mutableCopy];
-    product.declinedOffers = [[[printJob safePerformSelectorWithReturn:@selector(declinedOffers)withObject:nil] allObjects] mutableCopy];
-    product.redeemedOffer = [printJob safePerformSelectorWithReturn:@selector(redeemedOffer) withObject:nil];
     product.uuid = printJob.uuid;
     
     for (NSString *option in printJob.options.allKeys){

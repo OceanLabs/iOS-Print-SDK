@@ -45,17 +45,7 @@
 #import "UIColor+OLHexString.h"
 
 @interface OLProduct ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 - (NSString *)currencyCode;
-@end
-
-@interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @interface OLPrintOrder ()
@@ -64,7 +54,6 @@
 
 @interface OLSingleProductReviewViewController (Private) <UITextFieldDelegate>
 
-- (BOOL)shouldDoCheckout;
 - (UIEdgeInsets)imageInsetsOnContainer;
 - (void)disableOverlay;
 - (void)doCheckout;
@@ -348,11 +337,6 @@
         return;
     }
     
-    if (![self shouldDoCheckout]){
-        sender.enabled = YES;
-        return;
-    }
-    
     [self doCheckout];
 }
 
@@ -428,9 +412,6 @@
             fromEdit = YES;
         }
     }
-    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
-    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
-    job.redeemedOffer = self.product.redeemedOffer;
     [printOrder addPrintJob:job];
 #ifndef OL_NO_ANALYTICS
     if (!fromEdit){
