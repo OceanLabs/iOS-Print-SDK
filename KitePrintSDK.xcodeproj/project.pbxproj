@@ -63,7 +63,6 @@
 		2E2494252065671D00F9EE68 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941D2065671D00F9EE68 /* Bolts.framework */; };
 		2E2494262065671D00F9EE68 /* PayPalMobileSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E24941E2065671D00F9EE68 /* PayPalMobileSDK.framework */; };
 		2E2494282065671D00F9EE68 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2494202065671D00F9EE68 /* Stripe.framework */; };
-		2E2494292065671D00F9EE68 /* FBSDKPlacesKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2494212065671D00F9EE68 /* FBSDKPlacesKit.framework */; };
 		2E3084AE1E813672008218BF /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084A81E813672008218BF /* 1.jpg */; };
 		2E3084AF1E813672008218BF /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084A91E813672008218BF /* 2.png */; };
 		2E3084B01E813672008218BF /* 3.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E3084AA1E813672008218BF /* 3.pdf */; };
@@ -1013,7 +1012,6 @@
 				2E2494252065671D00F9EE68 /* Bolts.framework in Frameworks */,
 				2E2494262065671D00F9EE68 /* PayPalMobileSDK.framework in Frameworks */,
 				2E2494282065671D00F9EE68 /* Stripe.framework in Frameworks */,
-				2E2494292065671D00F9EE68 /* FBSDKPlacesKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
