@@ -35,4 +35,4 @@ FOUNDATION_EXPORT double KiteVersionNumber;
 //! Project version string for KiteSDK.
 FOUNDATION_EXPORT const unsigned char KiteVersionString[];
 
-#import <KiteSDK/OLKitePrintSDK.h>
+#import "OLKitePrintSDK.h"

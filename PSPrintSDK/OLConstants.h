@@ -54,6 +54,7 @@
 #import "OLPromoView.h"
 #import "OLReceiptViewController.h"
 #import "OLStripeCard.h"
+#import "OLKiteUtils.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageMaintenanceMode;
