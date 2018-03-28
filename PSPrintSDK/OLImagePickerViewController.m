@@ -1029,13 +1029,7 @@
         }
     }
     
-    id<OLPrintJob> job;
-    if ([OLProductTemplate templateWithId:templateId].templateUI == OLTemplateUIPhotobook){
-        job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
-    }
-    else{
-        job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:assets];
-    }
+    id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:assets];
     
     [[OLUserSession currentSession].printOrder addPrintJob:job];
 #ifndef OL_NO_ANALYTICS

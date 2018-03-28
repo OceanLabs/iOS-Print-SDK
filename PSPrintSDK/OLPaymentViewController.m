@@ -51,8 +51,6 @@
 #import "OLPayPalCard+OLCardIcon.h"
 #import "OLPayPalCard.h"
 @import PayPalMobileSDK;
-#import "OLPhotobookPrintJob.h"
-#import "OLPhotobookViewController.h"
 #import "OLPostcardPrintJob.h"
 #import "OLPrintJob.h"
 #import "OLPrintOrder+History.h"
@@ -1702,15 +1700,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     NSMutableArray<OLAsset *> *jobAssets = [[printJob assetsForUploading] mutableCopy];
     
     //Special handling of products
-    if (product.productTemplate.templateUI == OLTemplateUIPhotobook){
-        if (![(OLPhotobookPrintJob *)printJob frontCover]){
-            [userSelectedPhotos insertObject:[[OLPlaceholderAsset alloc] init] atIndex:0];
-        }
-        else{
-            [jobAssets insertObject:[(OLPhotobookPrintJob *)printJob frontCover] atIndex:0];
-        }
-    }
-    else if (product.productTemplate.templateUI == OLTemplateUIApparel && [printJob isKindOfClass:[OLApparelPrintJob class]]){
+    if (product.productTemplate.templateUI == OLTemplateUIApparel && [printJob isKindOfClass:[OLApparelPrintJob class]]){
         [jobAssets removeAllObjects];
         OLAsset *asset = ((OLApparelPrintJob *)printJob).assets[@"center_chest"];
         if (!asset) {
