@@ -319,7 +319,7 @@
 		2EB8FDE81D95685100E26BDF /* OLStripeCard+OLCardIcon.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB715D91CFDD36600618C7B /* OLStripeCard+OLCardIcon.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FDE91D95685100E26BDF /* OLPayPalCard+OLCardIcon.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB715DF1CFDD38100618C7B /* OLPayPalCard+OLCardIcon.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FDEA1D95685100E26BDF /* OLPaymentLineItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5F802A1B01E5F700095203 /* OLPaymentLineItem.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FDEB1D95685100E26BDF /* OLUserSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7BDAD81D3E1713005F142C /* OLUserSession.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2EB8FDEB1D95685100E26BDF /* OLUserSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E7BDAD81D3E1713005F142C /* OLUserSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FDEC1D95685100E26BDF /* OLPrintEnvironment.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE5DDCD18E5BE40000FF3B5 /* OLPrintEnvironment.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FDED1D95685100E26BDF /* OLPrintJob.h in Headers */ = {isa = PBXBuildFile; fileRef = CD9D6AE2187188BE001CD1F9 /* OLPrintJob.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EB8FDEE1D95685100E26BDF /* OLPostcardPrintJob.h in Headers */ = {isa = PBXBuildFile; fileRef = CD9D6AE3187189BF001CD1F9 /* OLPostcardPrintJob.h */; settings = {ATTRIBUTES = (Private, ); }; };

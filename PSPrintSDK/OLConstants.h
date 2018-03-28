@@ -55,6 +55,7 @@
 #import "OLReceiptViewController.h"
 #import "OLStripeCard.h"
 #import "OLKiteUtils.h"
+#import "OLUserSession.h"
 
 extern NSString *_Nonnull const kOLKiteSDKErrorDomain;
 extern NSString *_Nonnull const kOLKiteSDKErrorMessageMaintenanceMode;
