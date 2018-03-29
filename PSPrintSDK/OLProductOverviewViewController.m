@@ -72,9 +72,7 @@
 @property (weak, nonatomic) UIImageView *arrowImageView;
 @property (weak, nonatomic) IBOutlet UIView *detailsView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *detailsViewHeightCon;
-@property (weak, nonatomic) IBOutlet UIView *detailsSeparator;
 @property (assign, nonatomic) CGFloat originalBoxConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *separatorHeightCon;
 @property (weak, nonatomic) IBOutlet UIImageView *whiteGradient;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *whiteGradientTopCon;
 
@@ -121,9 +119,7 @@
     [self.view addConstraints:@[[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottomMargin multiplier:1 constant:-115]]];
     [self.pageController.view leadingFromSuperview:0 relation:NSLayoutRelationEqual];
     [self.pageController.view trailingToSuperview:0 relation:NSLayoutRelationEqual];
-    
-    self.separatorHeightCon.constant = 1.5;
-    
+        
     UIPageControl *pageControl = [UIPageControl appearance];
     pageControl.pageIndicatorTintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
     pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
@@ -148,7 +144,6 @@
     
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
-        [self.detailsSeparator setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
     if (!font){
@@ -168,10 +163,6 @@
     }
     
     self.originalBoxConstraint = self.detailsBoxTopCon.constant;
-    
-    if ([OLKiteABTesting sharedInstance].lightThemeColorDescriptionSeparator){
-        self.detailsSeparator.backgroundColor = [OLKiteABTesting sharedInstance].lightThemeColorDescriptionSeparator;
-    }
 }
 
 - (void)setupProductRepresentation{
@@ -289,7 +280,8 @@
 }
 
 - (void)setupDetailsView{
-    self.productDetails = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductDetailsViewController"];
+    NSString *detailsIdentifier = self.product.productTemplate.templateUI == OLTemplateUIPhotobook ? @"PhotobookDetailsViewController" : @"OLProductDetailsViewController";
+    self.productDetails = [self.storyboard instantiateViewControllerWithIdentifier:detailsIdentifier];
     self.productDetails.product = self.product;
     self.productDetails.delegate = self;
     
@@ -306,39 +298,16 @@
     UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:self.productDetails];
     nvc.navigationBarHidden = YES;
     
-    UIVisualEffect *blurEffect;
-    blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-    
-    UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    UIView *view = visualEffectView;
-    [nvc.view addSubview:view];
-    [nvc.view sendSubviewToBack:view];
-    nvc.view.backgroundColor = [UIColor clearColor];
-    
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                         @"V:|-0-[view]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [view.superview addConstraints:con];
-    
     [self addChildViewController:nvc];
     [self.detailsView addSubview:nvc.view];
     UIView *detailsVcView = nvc.view;
     
     detailsVcView.translatesAutoresizingMaskIntoConstraints = NO;
-    views = NSDictionaryOfVariableBindings(detailsVcView);
-    con = [[NSMutableArray alloc] init];
+    NSDictionary *views = NSDictionaryOfVariableBindings(detailsVcView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    visuals = @[@"H:|-0-[detailsVcView]-0-|",
-                @"V:|-0-[detailsVcView]-0-|"];
+    NSArray *visuals = @[@"H:|-0-[detailsVcView]-0-|",
+                         @"V:|-0-[detailsVcView]-0-|"];
     
     
     for (NSString *visual in visuals) {
@@ -346,6 +315,7 @@
     }
     
     [detailsVcView.superview addConstraints:con];
+
     
     CGSize size = self.view.frame.size;
     self.detailsViewHeightCon.constant = size.height > size.width ? 450 : [self.productDetails recommendedDetailsBoxHeight];

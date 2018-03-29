@@ -44,7 +44,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *detailLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *line;
-@property (weak, nonatomic) IBOutlet UITextView *detailsTextView;
+@property (weak, nonatomic) IBOutlet UILabel *detailsTextView;
 @property (assign, nonatomic) BOOL hasSetupProductDetails;
 
 @end
@@ -54,7 +54,6 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor clearColor];
     self.detailLabel.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product Details");
     
     if ([OLKiteABTesting sharedInstance].hidePrice){
@@ -73,6 +72,10 @@
 }
 
 - (void)setupProductDetails{
+    if (self.detailsTextView == nil) {
+        return;
+    }
+    
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
     if (font) {
         self.detailsTextView.font = font;
