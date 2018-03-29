@@ -384,6 +384,15 @@
         [self doCheckout];
     }
     
+    if (self.product.productTemplate.templateUI == OLTemplateUIPhotobook && [PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined){
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self onButtonStartClicked:nil];
+            });
+        }];
+        return;
+    }
+    
     UIViewController *vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
     
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
