@@ -88,7 +88,7 @@
             count += [job extraCopies];
         }
         
-        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(37, buttonHeight / 2 - 10.5, 13, 13)];
+        UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, buttonHeight / 2 - 14, 13, 13)];
         qtyLabel.tag = 20;
         qtyLabel.font = [UIFont systemFontOfSize:9];
         qtyLabel.textAlignment = NSTextAlignmentCenter;
