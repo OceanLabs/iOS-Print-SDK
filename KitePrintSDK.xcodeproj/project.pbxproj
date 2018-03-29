@@ -114,10 +114,6 @@
 		2E451E0C1D9555860080F1C1 /* OLFacebookAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */; };
 		2E451E0D1D9555870080F1C1 /* OLFacebookPhotosForAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */; };
 		2E451E0E1D9555870080F1C1 /* OLFacebookImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */; };
-		2E451E101D9555870080F1C1 /* OLAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AAD1D92D768006C0EE6 /* OLAnimation.m */; };
-		2E451E111D9555870080F1C1 /* OLFlipTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AB01D92D768006C0EE6 /* OLFlipTransition.m */; };
-		2E451E121D9555870080F1C1 /* OLFlipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AB21D92D768006C0EE6 /* OLFlipViewController.m */; };
-		2E451E131D9555870080F1C1 /* OLTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AB41D92D768006C0EE6 /* OLTransition.m */; };
 		2E451E141D9555870080F1C1 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
 		2E451E151D9555870080F1C1 /* OLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */; };
 		2E451E171D9555870080F1C1 /* OLIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E480AC81D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m */; };
@@ -287,12 +283,6 @@
 		2EB8FE0E1D95685100E26BDF /* OLFacebookAlbumRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66DC1D4795EE002524A4 /* OLFacebookAlbumRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE0F1D95685100E26BDF /* OLFacebookPhotosForAlbumRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66DE1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE101D95685100E26BDF /* OLFacebookImagePickerConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66F91D47A653002524A4 /* OLFacebookImagePickerConstants.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE121D95685100E26BDF /* OLAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AAC1D92D768006C0EE6 /* OLAnimation.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE131D95685100E26BDF /* OLFlipEnumerations.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AAE1D92D768006C0EE6 /* OLFlipEnumerations.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE141D95685100E26BDF /* OLFlipTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AAF1D92D768006C0EE6 /* OLFlipTransition.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE151D95685100E26BDF /* OLFlipViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AB11D92D768006C0EE6 /* OLFlipViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE161D95685100E26BDF /* OLTransition.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AB31D92D768006C0EE6 /* OLTransition.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE171D95685100E26BDF /* OLTransitionEnumerations.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AB51D92D768006C0EE6 /* OLTransitionEnumerations.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE181D95685100E26BDF /* OLMarkdownParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE191D95685100E26BDF /* OLCircularProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F0321D93CC0900014C19 /* OLCircularProgressView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE1B1D95685100E26BDF /* OLIndefiniteAnimatedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E480AC71D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -612,16 +602,6 @@
 		2E480A941D92D060006C0EE6 /* OLOAuth2Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2Request.h; sourceTree = "<group>"; };
 		2E480A951D92D060006C0EE6 /* OLOAuth2TrustDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2TrustDelegate.h; sourceTree = "<group>"; };
 		2E480A961D92D060006C0EE6 /* OLOAuth2Request.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2Request.m; sourceTree = "<group>"; };
-		2E480AAC1D92D768006C0EE6 /* OLAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLAnimation.h; sourceTree = "<group>"; };
-		2E480AAD1D92D768006C0EE6 /* OLAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLAnimation.m; sourceTree = "<group>"; };
-		2E480AAE1D92D768006C0EE6 /* OLFlipEnumerations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFlipEnumerations.h; sourceTree = "<group>"; };
-		2E480AAF1D92D768006C0EE6 /* OLFlipTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFlipTransition.h; sourceTree = "<group>"; };
-		2E480AB01D92D768006C0EE6 /* OLFlipTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFlipTransition.m; sourceTree = "<group>"; };
-		2E480AB11D92D768006C0EE6 /* OLFlipViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFlipViewController.h; sourceTree = "<group>"; };
-		2E480AB21D92D768006C0EE6 /* OLFlipViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFlipViewController.m; sourceTree = "<group>"; };
-		2E480AB31D92D768006C0EE6 /* OLTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTransition.h; sourceTree = "<group>"; };
-		2E480AB41D92D768006C0EE6 /* OLTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTransition.m; sourceTree = "<group>"; };
-		2E480AB51D92D768006C0EE6 /* OLTransitionEnumerations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTransitionEnumerations.h; sourceTree = "<group>"; };
 		2E480AC71D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLIndefiniteAnimatedView.h; sourceTree = "<group>"; };
 		2E480AC81D92DB9B006C0EE6 /* OLIndefiniteAnimatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLIndefiniteAnimatedView.m; sourceTree = "<group>"; };
 		2E480ACA1D92DB9B006C0EE6 /* OLProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProgressHUD.h; sourceTree = "<group>"; };
@@ -1031,7 +1011,6 @@
 			children = (
 				2E67B7C11E2658C000E70805 /* UICKeychainStore */,
 				3D8122E21A759E41004E7297 /* RMImageCropper */,
-				2E480AAB1D92D6D4006C0EE6 /* MPFlipViewController */,
 				2E10F03E1D93CC3600014C19 /* TSMarkdownParser */,
 				2E10F0311D93CBF100014C19 /* DACircularProgress */,
 				2E480AC61D92DB85006C0EE6 /* SVProgressHUD */,
@@ -1088,23 +1067,6 @@
 			);
 			name = "Kite Framework";
 			path = Kite;
-			sourceTree = "<group>";
-		};
-		2E480AAB1D92D6D4006C0EE6 /* MPFlipViewController */ = {
-			isa = PBXGroup;
-			children = (
-				2E480AAC1D92D768006C0EE6 /* OLAnimation.h */,
-				2E480AAD1D92D768006C0EE6 /* OLAnimation.m */,
-				2E480AAE1D92D768006C0EE6 /* OLFlipEnumerations.h */,
-				2E480AAF1D92D768006C0EE6 /* OLFlipTransition.h */,
-				2E480AB01D92D768006C0EE6 /* OLFlipTransition.m */,
-				2E480AB11D92D768006C0EE6 /* OLFlipViewController.h */,
-				2E480AB21D92D768006C0EE6 /* OLFlipViewController.m */,
-				2E480AB31D92D768006C0EE6 /* OLTransition.h */,
-				2E480AB41D92D768006C0EE6 /* OLTransition.m */,
-				2E480AB51D92D768006C0EE6 /* OLTransitionEnumerations.h */,
-			);
-			name = MPFlipViewController;
 			sourceTree = "<group>";
 		};
 		2E480AC61D92DB85006C0EE6 /* SVProgressHUD */ = {
@@ -1783,7 +1745,6 @@
 				2EB8FE2B1D95685100E26BDF /* OLOAuth2FileStreamWrapper.h in Headers */,
 				2E7ECBA51FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.h in Headers */,
 				2EB8FE571D95685100E26BDF /* OLCheckoutDelegate.h in Headers */,
-				2EB8FE161D95685100E26BDF /* OLTransition.h in Headers */,
 				2EB8FDEF1D95685100E26BDF /* OLGreetingCardPrintJob.h in Headers */,
 				2EB8FE441D95685100E26BDF /* OLImagePickerPhotosPageViewController+Facebook.h in Headers */,
 				2EB8FE6A1D95685100E26BDF /* OLKiteViewController.h in Headers */,
@@ -1791,7 +1752,6 @@
 				2EB8FE3B1D95685100E26BDF /* OLProductHomeViewController.h in Headers */,
 				2EB8FDEE1D95685100E26BDF /* OLPostcardPrintJob.h in Headers */,
 				2E0B5B4D1ECC5394005C0C03 /* OLTouchReporterView.h in Headers */,
-				2EB8FE171D95685100E26BDF /* OLTransitionEnumerations.h in Headers */,
 				2EB8FE281D95685100E26BDF /* OLOAuth2Connection.h in Headers */,
 				2EB8FE691D95685100E26BDF /* UIView+RMUtils.h in Headers */,
 				2EB8FDE31D95685100E26BDF /* OLImagePickerProvider.h in Headers */,
@@ -1844,7 +1804,6 @@
 				2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */,
 				2E7FB64E1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h in Headers */,
 				2E65FEA81E4E143B00A301BB /* OLOrderHistoryViewController.h in Headers */,
-				2EB8FE131D95685100E26BDF /* OLFlipEnumerations.h in Headers */,
 				2EB8FE2D1D95685100E26BDF /* OLOAuth2PostBodyStream.h in Headers */,
 				2EB8FDDE1D95685100E26BDF /* OLAsset.h in Headers */,
 				2EB8FE0D1D95685100E26BDF /* OLFacebookAlbum.h in Headers */,
@@ -1876,7 +1835,6 @@
 				2E0290EF1F26356000F7A5B0 /* OLNavigationController.h in Headers */,
 				2EB8FE241D95685100E26BDF /* OLOAuth2Account+Private.h in Headers */,
 				2EB8FDE51D95685100E26BDF /* OLCustomViewControllerPhotoProvider.h in Headers */,
-				2EB8FE121D95685100E26BDF /* OLAnimation.h in Headers */,
 				2EB8FDD11D95671400E26BDF /* OLConstants.h in Headers */,
 				2EB8FE7B1D95685100E26BDF /* UIView+RoundRect.h in Headers */,
 				2EB8FDE71D95685100E26BDF /* OLStripeCard.h in Headers */,
@@ -1884,7 +1842,6 @@
 				2EB8FE5D1D95685100E26BDF /* OLAddressEditViewController.h in Headers */,
 				2E18C5FD1E7ADB4100B06075 /* OLKiteViewController+Private.h in Headers */,
 				2EB8FE1F1D95685100E26BDF /* NSString+OLOAuth2.h in Headers */,
-				2EB8FE151D95685100E26BDF /* OLFlipViewController.h in Headers */,
 				2E12DBC81E795511000A6CEF /* UIView+AutoLayoutHelper.h in Headers */,
 				2EE04A041EEAE12600E6A16B /* OLArtboardTemplate.h in Headers */,
 				2ECA34EC1E82743800D56220 /* OLApparelViewController.h in Headers */,
@@ -1900,7 +1857,6 @@
 				2EB8FE2F1D95685100E26BDF /* OLOAuth2TrustDelegate.h in Headers */,
 				2EB8FDF51D95685100E26BDF /* OLPrintOrder+History.h in Headers */,
 				2EB8FE041D95685100E26BDF /* OLImageDownloadDelegate.h in Headers */,
-				2EB8FE141D95685100E26BDF /* OLFlipTransition.h in Headers */,
 				2EB8FE011D95685100E26BDF /* OLKiteTheme.h in Headers */,
 				2EB8FE321D95685100E26BDF /* OLCircleMaskCollectionViewCell.h in Headers */,
 				2EB8FE0E1D95685100E26BDF /* OLFacebookAlbumRequest.h in Headers */,
@@ -2157,7 +2113,6 @@
 				2E451DFC1D9555620080F1C1 /* OLConstants.m in Sources */,
 				2E65FEA91E4E143B00A301BB /* OLOrderHistoryViewController.m in Sources */,
 				2E1BB37E1E7C2A25008F7217 /* OLSingleImagePosterViewController.m in Sources */,
-				2E451E111D9555870080F1C1 /* OLFlipTransition.m in Sources */,
 				2E451E561D9555D90080F1C1 /* OLAddressEditViewController.m in Sources */,
 				2EB8FE7F1D95692000E26BDF /* UIViewController+OLMethods.m in Sources */,
 				2E0290EC1F26336100F7A5B0 /* OLLogoutViewController.m in Sources */,
@@ -2169,7 +2124,6 @@
 				2E0290E41F26330300F7A5B0 /* OLCollectionViewController.m in Sources */,
 				2E451DFB1D95555D0080F1C1 /* OLPrintPhoto.m in Sources */,
 				2E451E261D9555870080F1C1 /* OLOAuth2Request.m in Sources */,
-				2E451E121D9555870080F1C1 /* OLFlipViewController.m in Sources */,
 				2ECA34ED1E82743800D56220 /* OLApparelViewController.m in Sources */,
 				2E451DEF1D95555C0080F1C1 /* OLProductPrintJob.m in Sources */,
 				2E451E4F1D9555D90080F1C1 /* OLCheckoutViewController.m in Sources */,
@@ -2203,7 +2157,6 @@
 				2E451E0B1D9555860080F1C1 /* OLFacebookAlbum.m in Sources */,
 				2E451E361D9555870080F1C1 /* OLProductDetailsViewController.m in Sources */,
 				2EB8FE821D95692000E26BDF /* UITextField+Selection.m in Sources */,
-				2E451E101D9555870080F1C1 /* OLAnimation.m in Sources */,
 				2E451DF81D95555D0080F1C1 /* OLProduct.m in Sources */,
 				2E451E341D9555870080F1C1 /* OLProductOverviewViewController.m in Sources */,
 				2EB8FE831D95692000E26BDF /* NSString+Formatting.m in Sources */,
@@ -2211,7 +2164,6 @@
 				2E451DDE1D9555540080F1C1 /* OLPhotoEdits.m in Sources */,
 				2E451E321D9555870080F1C1 /* OLProductHomeViewController.m in Sources */,
 				2E451E091D9555860080F1C1 /* OLInstagramImage.m in Sources */,
-				2E451E131D9555870080F1C1 /* OLTransition.m in Sources */,
 				2E451E1E1D9555870080F1C1 /* OLOAuth2Account.m in Sources */,
 				2E451E571D9555D90080F1C1 /* OLCountryPickerController.m in Sources */,
 				2E451E021D9555620080F1C1 /* OLImageDownloadDelegate.m in Sources */,
