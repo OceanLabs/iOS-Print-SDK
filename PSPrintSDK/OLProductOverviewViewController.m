@@ -49,6 +49,7 @@
 #import "OLAsset+Private.h"
 #import "UIColor+OLHexString.h"
 #import "UIView+RoundRect.h"
+#import "UIView+AutoLayoutHelper.h"
 
 @interface OLPrintOrder ()
 - (void)saveOrder;
@@ -106,7 +107,7 @@
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;
     self.pageController.delegate = self;
-    self.pageController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height + 37);
+    self.pageController.view.translatesAutoresizingMaskIntoConstraints = false;
     
     UIViewController *vc = [self viewControllerAtIndex:0];
     if (vc){
@@ -116,13 +117,18 @@
     [self.view insertSubview:self.pageController.view belowSubview:self.pageControl];
     [self.pageController didMoveToParentViewController:self];
     
+    [self.view addConstraints:@[[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1 constant:0]]];
+    [self.view addConstraints:@[[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottomMargin multiplier:1 constant:-115]]];
+    [self.pageController.view leadingFromSuperview:0 relation:NSLayoutRelationEqual];
+    [self.pageController.view trailingToSuperview:0 relation:NSLayoutRelationEqual];
+    
     self.separatorHeightCon.constant = 1.5;
     
     UIPageControl *pageControl = [UIPageControl appearance];
     pageControl.pageIndicatorTintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
     pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
     pageControl.backgroundColor = [UIColor clearColor];
-    pageControl.frame = CGRectMake(0, -200, 100, 100);
+    pageControl.numberOfPages = self.product.productPhotos.count;
     
     vc = self.parentViewController;
     while (vc) {
@@ -509,14 +515,6 @@
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed{
     self.pageControl.currentPage = [pageViewController.viewControllers.firstObject pageIndex];
-}
-
-- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
-    return self.product.productPhotos.count;
-}
-
-- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
-    return 1;
 }
 
 #pragma mark - Tear down and restore
