@@ -412,6 +412,7 @@
 		2ED3B32D206BDC7E0007E060 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2494202065671D00F9EE68 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2ED3B32F206BDC850007E060 /* KiteSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; };
 		2ED3B330206BDC850007E060 /* KiteSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E451DC81D9554B40080F1C1 /* KiteSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2ED3B33D206CD8B80007E060 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED3B33B206CD3290007E060 /* UIFontExtensions.swift */; };
 		2EE04A041EEAE12600E6A16B /* OLArtboardTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E37B1791D227EDA003DAA84 /* OLArtboardTemplate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EE4BC8E1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */; };
 		2EE4BC8F1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EE4BC8D1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.m */; };
@@ -766,6 +767,7 @@
 		2ED389901C917D2000DC2314 /* OLPhotoTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPhotoTextField.m; sourceTree = "<group>"; };
 		2ED389931C918DC100DC2314 /* OLTextOnPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLTextOnPhoto.h; sourceTree = "<group>"; };
 		2ED389941C918DC100DC2314 /* OLTextOnPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLTextOnPhoto.m; sourceTree = "<group>"; };
+		2ED3B33B206CD3290007E060 /* UIFontExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFontExtensions.swift; sourceTree = "<group>"; };
 		2EE3C86E1A4AFB0C006446E2 /* OLKiteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteViewController.h; sourceTree = "<group>"; };
 		2EE3C86F1A4AFB0C006446E2 /* OLKiteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteViewController.m; sourceTree = "<group>"; };
 		2EE4BC8C1E0813BD0012E4E6 /* OLProductOverviewPageAnimatedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductOverviewPageAnimatedContentViewController.h; sourceTree = "<group>"; };
@@ -1325,6 +1327,14 @@
 			name = "HP SDK";
 			sourceTree = "<group>";
 		};
+		2ED3B338206CD30D0007E060 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				2ED3B33B206CD3290007E060 /* UIFontExtensions.swift */,
+			);
+			name = Swift;
+			sourceTree = "<group>";
+		};
 		2ED412501F98E541005576C1 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1539,6 +1549,7 @@
 		CD73BF71186215790009DE03 /* Kite Print SDK */ = {
 			isa = PBXGroup;
 			children = (
+				2ED3B338206CD30D0007E060 /* Swift */,
 				2E4CAF141BC294F30089FA26 /* Model */,
 				2E0DB88E1A6402D9001032E3 /* View */,
 				CDA8BF4F18D70CF500D835BB /* Controller */,
@@ -1964,11 +1975,12 @@
 		CD73BF60186215790009DE03 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = Kite.ly;
 				TargetAttributes = {
 					2E451DC71D9554B40080F1C1 = {
 						CreatedOnToolsVersion = 8.0;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Manual;
 					};
 					2E898C4C1CC518180041CCD8 = {
@@ -2087,6 +2099,7 @@
 				2EB8FE7E1D95692000E26BDF /* UIColor+OLHexString.m in Sources */,
 				2E451DE01D9555540080F1C1 /* OLImagePickerProvider.m in Sources */,
 				2EB0DC771DC8DB7400B556CE /* OL3DProductViewController.m in Sources */,
+				2ED3B33D206CD8B80007E060 /* UIFontExtensions.swift in Sources */,
 				2E451DE61D9555580080F1C1 /* OLPayPalCard+OLCardIcon.m in Sources */,
 				2E451E3C1D9555870080F1C1 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2E451DE81D95555C0080F1C1 /* OLKitePrintSDK.m in Sources */,
@@ -2307,10 +2320,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = 6.0.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
@@ -2332,6 +2346,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Kite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -2342,10 +2358,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 6.0.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2367,6 +2384,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ly.kite.Kite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -2653,6 +2671,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

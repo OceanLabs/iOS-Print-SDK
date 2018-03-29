@@ -55,6 +55,7 @@
 #import "OLCollagePosterViewController.h"
 #import "OLLogoutViewController.h"
 #import "OLKioskLandingViewController.h"
+#import "KiteSDK/KiteSDK-Swift.h"
 
 static CGFloat fadeTime = 0.3;
 
@@ -238,6 +239,8 @@ static CGFloat fadeTime = 0.3;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [UIFont loadAllFonts];
 
     if (!self.loadingHandler){
         [self loadRemoteData];
@@ -280,7 +283,7 @@ static CGFloat fadeTime = 0.3;
         UITabBarController *tabBar = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle bundleWithIdentifier:@"ly.kite.Photobook"]] instantiateViewControllerWithIdentifier:@"TabBarController"];
         [PhotobookLaunchHandler configureTabBarController:tabBar];
         for (UIViewController *controller in tabBar.viewControllers) {
-            [(UINavigationController *)controller topViewController].navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(dismissModalViewController)];
+            [(UINavigationController *)controller topViewController].navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"bigX"] style:UIBarButtonItemStylePlain target:self action:@selector(dismissModalViewController)];
         }
         return tabBar;
     }
