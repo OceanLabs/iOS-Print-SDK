@@ -164,15 +164,6 @@
                                                                             target:nil
                                                                             action:nil];
     
-    if ([OLKitePrintSDK isKiosk]){
-        for (OLProduct *product in self.products){
-            if (product.productTemplate.printInStore){
-                [self setupBannerView];
-                break;
-            }
-        }
-    }
-    
 #ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductListScreenViewedWithTemplateClass:self.templateClass];
 #endif
@@ -386,30 +377,6 @@
         if (font){
             [button.titleLabel setFont:font];
         }
-    }
-    
-    UIImageView *printInStoreIndicator = [cell.contentView viewWithTag:777];
-    if ([OLKitePrintSDK isKiosk] && product.productTemplate.printInStore){
-        if (!printInStoreIndicator){
-            printInStoreIndicator = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"availableintstore"]];
-            printInStoreIndicator.frame = CGRectMake(0, 0, 40, 40);
-            printInStoreIndicator.contentMode = UIViewContentModeCenter;
-            printInStoreIndicator.tag = 777;
-            printInStoreIndicator.backgroundColor = [product labelColor];
-            [cell.contentView addSubview:printInStoreIndicator];
-            
-            [printInStoreIndicator trailingToSuperview:20 relation:NSLayoutRelationEqual];
-            [printInStoreIndicator topFromSuperview:20 relation:NSLayoutRelationEqual];
-            [printInStoreIndicator widthConstraint:40];
-            [printInStoreIndicator heightConstraint:40];
-        }
-        
-        CGRect frame = printInStoreIndicator.frame;
-        [printInStoreIndicator makeRoundRectWithRadius:frame.size.height/2.0];
-        printInStoreIndicator.hidden = NO;
-    }
-    else{
-        [cell.contentView viewWithTag:777].hidden = YES;
     }
     
     return cell;

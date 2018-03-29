@@ -49,7 +49,6 @@ static NSString *const kOLAPIEndpointVersion = @"v4.0";
 static BOOL useStripeForCreditCards = YES;
 static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
-static BOOL isKiosk = NO;
 static BOOL allowImageZooming = YES;
 
 static NSString *paypalAccountId = nil;
@@ -175,14 +174,6 @@ static NSString *instagramRedirectURI = nil;
 
 + (NSString *)qualityGuaranteeString{
     return NSLocalizedStringFromTableInBundle(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-}
-
-+ (void)setIsKiosk:(BOOL)enabled{
-    isKiosk = enabled;
-}
-
-+ (BOOL)isKiosk{
-    return isKiosk;
 }
 
 + (void)setQRCodeUploadEnabled:(BOOL)enabled{

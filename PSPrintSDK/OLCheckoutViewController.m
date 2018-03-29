@@ -69,10 +69,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 @property (assign, nonatomic) BOOL optOutOfEmail;
 @end
 
-@interface OLKiteViewController ()
-- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
-@end
-
 #define kColourLightBlue [UIColor colorWithRed:0 / 255.0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0]
 
 @interface OLCheckoutViewController () <OLAddressPickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate>
@@ -674,7 +670,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
     return YES;
 }
 

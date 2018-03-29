@@ -75,7 +75,6 @@
 #import "OLKiteViewController+Private.h"
 #import "OLCollagePosterViewController.h"
 #import "OLShippingMethodsViewController.h"
-#import "OLKioskLandingViewController.h"
 #import "UIColor+OLHexString.h"
 #import "OLBasketItemTableViewCell.h"
 
@@ -91,7 +90,6 @@ static OLPaymentMethod selectedPaymentMethod;
 
 @interface OLKiteViewController ()
 - (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder;
-- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
 @end
 
 @interface OLProductTemplate ()
@@ -377,12 +375,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                 break;
             }
         }
-        if ([navigationStack.firstObject isKindOfClass:[OLKioskLandingViewController class]]){
-            [self.navigationController setViewControllers:@[navigationStack[0], navigationStack[1], self] animated:NO];
-        }
-        else{
-            [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
-        }
+        [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
         [[OLUserSession currentSession] clearUserSelectedPhotos];
     }
 }
@@ -1631,7 +1624,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
     return YES;
 }
 

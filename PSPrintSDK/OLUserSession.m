@@ -144,12 +144,6 @@
         }
         
         self.appAssets = nil;
-        
-        if ([OLKitePrintSDK isKiosk]){
-            NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
-            NSString *documentDirPath = [[(NSURL *)[urls objectAtIndex:0] path] stringByAppendingPathComponent:@"kite-kiosk-photos"];
-            [[NSFileManager defaultManager] removeItemAtPath:documentDirPath error:NULL];
-        }
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionBasket) == OLUserSessionCleanupOptionBasket){
         self.printOrder = [[OLPrintOrder alloc] init];

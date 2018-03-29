@@ -28,12 +28,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLTouchReporterView.h"
 
 @interface OLViewController : UIViewController
 
 @property (assign, nonatomic) BOOL isOffScreen;
 - (void)tearDownLargeObjectsFromMemory;
 - (void)recreateTornDownLargeObjectsToMemory;
-@property (strong, nonatomic) OLTouchReporterView *touchReporter;
 @end

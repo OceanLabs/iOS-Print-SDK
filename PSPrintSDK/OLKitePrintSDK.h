@@ -108,21 +108,7 @@
  *
  *  @param enabled BOOL values
  */
-+ (void)setQRCodeUploadEnabled:(BOOL)enabled __deprecated_msg("This method will no longer work. Use the OLKiteViewController property qrCodeUploadEnabled.");;
-
-/**
- *  Indicate that the app will be used in a kiosk environment
- *
- *  @param enabled Indicate kiosk environment. Default value is NO.
- */
-+ (void)setIsKiosk:(BOOL)enabled;
-
-/**
- *  Indicates if the app will be used in a kiosk environment or not
- *
- *  @return Indicate kiosk environment
- */
-+ (BOOL)isKiosk;
++ (void)setQRCodeUploadEnabled:(BOOL)enabled __deprecated_msg("This method will no longer work. Use the OLKiteViewController property qrCodeUploadEnabled.");
 
 /**
  *  Allow or disallow the image editing functionality to zoom images (pinch and double tap gestures)

@@ -112,38 +112,6 @@
     }
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:basketButton];
-    
-    if ([OLKitePrintSDK isKiosk]){
-        UIView *buttonView = [[UIView alloc] init];
-        [buttonView makeRoundRectWithRadius:2];
-        buttonView.backgroundColor = color;
-        UIButton *startAgain = [[UIButton alloc] init];
-        startAgain.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 20);
-        startAgain.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, -10);
-        [startAgain setTitle:NSLocalizedStringFromTableInBundle(@"End Session", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        
-        [buttonView addSubview:startAgain];
-        startAgain.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        [startAgain.superview addConstraint:[NSLayoutConstraint constraintWithItem:startAgain attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:startAgain.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-        [startAgain.superview addConstraint:[NSLayoutConstraint constraintWithItem:startAgain attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:startAgain.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]];
-        [startAgain setImage:[UIImage imageNamedInKiteBundle:@"endsession"] forState:UIControlStateNormal];
-        startAgain.tintColor = [UIColor whiteColor];
-        
-        [startAgain sizeToFit];
-        CGRect frame = startAgain.frame;
-        frame.size.height = 32;
-        buttonView.frame = frame;
-        
-        [startAgain addTarget:self action:@selector(kioskLogoutButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-        
-        if (self.navigationItem.rightBarButtonItem){
-            self.navigationItem.rightBarButtonItems = @[self.navigationItem.rightBarButtonItem, [[UIBarButtonItem alloc] initWithCustomView:buttonView]];
-        }
-        else{
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
-        }
-    }
 }
 
 - (void)kioskLogoutButtonTapped{

@@ -53,8 +53,6 @@
 #import "OL3DProductViewController.h"
 #import "OLApparelViewController.h"
 #import "OLCollagePosterViewController.h"
-#import "OLLogoutViewController.h"
-#import "OLKioskLandingViewController.h"
 #import "KiteSDK/KiteSDK-Swift.h"
 
 static CGFloat fadeTime = 0.3;
@@ -67,9 +65,6 @@ static CGFloat fadeTime = 0.3;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @property (strong, nonatomic) NSArray *fontNames;
-@property (strong, nonatomic) NSTimer *timer;
-@property (strong, nonatomic) NSDate *lastTouchDate;
-@property (weak, nonatomic) UIViewController *lastTouchedViewController;
 @property (assign, nonatomic) BOOL dismissing;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
@@ -516,67 +511,6 @@ static CGFloat fadeTime = 0.3;
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionPhotos];
     [OLUserSession currentSession].userSelectedAssets = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-#pragma mark Kiosk
-
-- (void)startTimer{
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
-}
-
-- (void)stopTimer{
-    [self.timer invalidate];
-}
-
-- (void)updateTimer:(NSTimer *)timer {
-    // has the target time passed?
-    if (self.touchReporter){
-        [self.touchReporter.superview bringSubviewToFront:self.touchReporter];
-    }
-    NSInteger timeout = 240;
-        NSLog(@"Auto log out in: %f",timeout+[self.lastTouchDate timeIntervalSinceNow]);
-    if ([self.lastTouchDate timeIntervalSinceNow] <= -timeout) {
-        [timer invalidate];
-        
-        OLLogoutViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"LogoutViewController"];
-        vc.modalPresentationStyle = UIModalPresentationFormSheet;
-        vc.preferredContentSize = CGSizeMake(435, 563);
-        
-        [self.lastTouchedViewController presentViewController:vc animated:YES completion:NULL];
-    }
-}
-
-- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc{
-    self.lastTouchedViewController = vc;
-    self.lastTouchDate = date;
-}
-
-- (void)kioskLogout{
-    [self.timer invalidate];
-    
-    void (^logout)(void) = ^{
-        [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionAll];
-        self.transitionOperation = [[NSBlockOperation alloc] init];
-        [self transitionToNextScreen];
-    };
-    
-    if (self.presentedViewController){
-    [self.presentedViewController dismissViewControllerAnimated:YES completion:^{
-        if (self.presentedViewController){
-            [self dismissViewControllerAnimated:NO completion:^{
-                logout();
-            }];
-        }
-        else{
-            logout();
-        }
-        [self.childViewControllers.firstObject removeFromParentViewController];
-    }];
-    }
-    else{
-        logout();
-    }
-    
 }
 
 - (void)dismissModalViewController {

@@ -108,10 +108,6 @@ static CardType getCardType(NSString *cardNumber) {
 + (BOOL)useStripeForCreditCards;
 @end
 
-@interface OLKiteViewController ()
-- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
-@end
-
 @interface OLCreditCardCaptureRootController : UITableViewController <UITableViewDelegate,
 UITableViewDataSource, UITextFieldDelegate>
 @property (nonatomic, strong) UITextField *textFieldCardNumber, *textFieldExpiryDate, *textFieldCVV;
@@ -432,7 +428,6 @@ UITableViewDataSource, UITextFieldDelegate>
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
     if (textField == self.textFieldExpiryDate) {
         self.textFieldExpiryDate.text = [NSString stringByFormattingCreditCardExpiry:[self.textFieldExpiryDate.text stringByReplacingCharactersInRange:range withString:string]];
         if (string.length == 0 && self.textFieldExpiryDate.text.length == 3) {

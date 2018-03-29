@@ -127,10 +127,6 @@
             });
         }];
     }
-    
-    if ([OLKitePrintSDK isKiosk]){
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] init]];
-    }
 }
 
 - (void)viewDidLayoutSubviews{
@@ -468,10 +464,6 @@
             self.bannerView.transform = CGAffineTransformMakeTranslation(0, -70);
             [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 40, 0)];
         }completion:NULL];
-    }
-    
-    if ([OLKitePrintSDK isKiosk]){
-        self.navigationController.viewControllers = @[self];
     }
 }
 

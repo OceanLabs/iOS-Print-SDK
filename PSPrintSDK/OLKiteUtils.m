@@ -133,7 +133,7 @@
 }
 
 +(BOOL)isApplePayAvailable{
-    if (![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""] || [OLKitePrintSDK isKiosk]){
+    if (![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""]){
         return NO;
     }
     
