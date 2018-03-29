@@ -40,7 +40,7 @@
 #import "OLKiteABTesting.h"
 #import "OLImagePreviewViewController.h"
 
-@interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
+@interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerPreviewingDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
 @property (assign, nonatomic) CGSize rotationSize;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
@@ -218,6 +218,11 @@ CGFloat OLImagePickerMargin = 1.5;
     return previewVc;
 }
 
+- (void)previewingContext:(nonnull id<UIViewControllerPreviewing>)previewingContext commitViewController:(nonnull UIViewController *)viewControllerToCommit {
+    
+}
+
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.numberOfCellsPerRow = 0;
@@ -233,6 +238,7 @@ CGFloat OLImagePickerMargin = 1.5;
         
     }completion:^(id<UIViewControllerTransitionCoordinator> context){}];
 }
+
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     if (collectionView.tag == 10 && ![self.imagePicker isExclusiveCustomViewControllerProvider] && (self.provider.providerType == OLImagePickerProviderTypeQRCode || self.provider.providerType == OLImagePickerProviderTypeViewController)){
@@ -803,9 +809,8 @@ CGFloat OLImagePickerMargin = 1.5;
         
         [self.imagePicker reloadPageController];
     }]];
-     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
     [self.imagePicker presentViewController:ac animated:YES completion:NULL];
 }
-
 
 @end
