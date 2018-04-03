@@ -51,7 +51,6 @@
 #import "OLProduct.h"
 #import "OLProductPrintJob.h"
 #import "OLProductTemplate.h"
-#import "OLPromoView.h"
 #import "OLReceiptViewController.h"
 #import "OLStripeCard.h"
 #import "OLKiteUtils.h"
