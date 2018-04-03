@@ -215,8 +215,6 @@
 		2E9CB6101EADF5F90079F7AE /* OLShippingMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9CB60E1EADF5F90079F7AE /* OLShippingMethodsViewController.m */; };
 		2E9CB6131EAE22710079F7AE /* OLShippingClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E9CB6111EAE22710079F7AE /* OLShippingClass.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E9CB6141EAE22710079F7AE /* OLShippingClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9CB6121EAE22710079F7AE /* OLShippingClass.m */; };
-		2E9F13FB1DAD048000D8B1EE /* OLPromoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E9F13F91DAD048000D8B1EE /* OLPromoView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2E9F13FC1DAD048000D8B1EE /* OLPromoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */; };
 		2EB0DC761DC8DB7400B556CE /* OL3DProductViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB0DC741DC8DB7400B556CE /* OL3DProductViewController.h */; };
 		2EB0DC771DC8DB7400B556CE /* OL3DProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB0DC751DC8DB7400B556CE /* OL3DProductViewController.m */; };
 		2EB8FDD11D95671400E26BDF /* OLConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFAF18634ED50009DE03 /* OLConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -665,8 +663,6 @@
 		2E9CB60E1EADF5F90079F7AE /* OLShippingMethodsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLShippingMethodsViewController.m; sourceTree = "<group>"; };
 		2E9CB6111EAE22710079F7AE /* OLShippingClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLShippingClass.h; sourceTree = "<group>"; };
 		2E9CB6121EAE22710079F7AE /* OLShippingClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLShippingClass.m; sourceTree = "<group>"; };
-		2E9F13F91DAD048000D8B1EE /* OLPromoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLPromoView.h; sourceTree = "<group>"; };
-		2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLPromoView.m; sourceTree = "<group>"; };
 		2EA13E1E1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ImageNamedInKiteBundle.h"; path = "PSPrintSDK/Categories/UIImage+ImageNamedInKiteBundle.h"; sourceTree = "<group>"; };
 		2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ImageNamedInKiteBundle.m"; path = "PSPrintSDK/Categories/UIImage+ImageNamedInKiteBundle.m"; sourceTree = "<group>"; };
 		2EA13E211BBC242F005F3D71 /* OLKiteUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteUtils.h; sourceTree = "<group>"; };
@@ -1145,8 +1141,6 @@
 				2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */,
 				2E65FEA61E4E143B00A301BB /* OLOrderHistoryViewController.h */,
 				2E65FEA71E4E143B00A301BB /* OLOrderHistoryViewController.m */,
-				2E9F13F91DAD048000D8B1EE /* OLPromoView.h */,
-				2E9F13FA1DAD048000D8B1EE /* OLPromoView.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1753,7 +1747,6 @@
 				2EB8FE5A1D95685100E26BDF /* OLAddressPickerController.h in Headers */,
 				2EB8FE2C1D95685100E26BDF /* OLOAuth2PostBodyPart.h in Headers */,
 				2EB8FE421D95685100E26BDF /* OLImagePickerPageViewController.h in Headers */,
-				2E9F13FB1DAD048000D8B1EE /* OLPromoView.h in Headers */,
 				2EB8FE3E1D95685100E26BDF /* OLProductOverviewPageContentViewController.h in Headers */,
 				2E149AE81DB7B00D000E5849 /* OLProductTemplateCollection.h in Headers */,
 				2EB8FDDA1D95685100E26BDF /* OLPrintOrderSubmitStatusRequest.h in Headers */,
@@ -2051,7 +2044,6 @@
 				2E451E331D9555870080F1C1 /* OLProductTypeSelectionViewController.m in Sources */,
 				2E451E241D9555870080F1C1 /* OLOAuth2PostBodyPart.m in Sources */,
 				2E870D3B1E49EF2100623C54 /* OLFulfilmentItem.m in Sources */,
-				2E9F13FC1DAD048000D8B1EE /* OLPromoView.m in Sources */,
 				2E451E1B1D9555870080F1C1 /* NSString+OLOAuth2.m in Sources */,
 				2E451E1A1D9555870080F1C1 /* NSURL+OLOAuth2.m in Sources */,
 				2E0290E11F2632F000F7A5B0 /* OLImageView.m in Sources */,

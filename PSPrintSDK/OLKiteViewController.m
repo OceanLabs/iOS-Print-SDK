@@ -277,9 +277,6 @@ static CGFloat fadeTime = 0.3;
     else if (templateUI == OLTemplateUIPhotobook) {
         UITabBarController *tabBar = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle bundleWithIdentifier:@"ly.kite.Photobook"]] instantiateViewControllerWithIdentifier:@"TabBarController"];
         [PhotobookLaunchHandler configureTabBarController:tabBar];
-        for (UIViewController *controller in tabBar.viewControllers) {
-            [(UINavigationController *)controller topViewController].navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"bigX"] style:UIBarButtonItemStylePlain target:self action:@selector(dismissModalViewController)];
-        }
         return tabBar;
     }
     

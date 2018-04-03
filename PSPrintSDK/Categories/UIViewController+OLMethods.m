@@ -139,18 +139,7 @@
         [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
         [(OLPaymentViewController *)vc setPresentedModally:YES];
         
-        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
-        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
-                if (error) return;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:vc action:@selector(dismiss)];
-                });
-            }];
-        }
-        else{
-            [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:vc action:@selector(dismiss)];
-        }
+        [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:vc action:@selector(dismiss)];
         
         OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
         nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
