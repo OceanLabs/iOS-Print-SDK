@@ -104,6 +104,8 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
  */
 @interface OLPrintOrder : NSObject <NSCoding>
 
+@property (strong, nonatomic) id externalOrderObject;
+
 /**
  *  The customer's email address
  */
