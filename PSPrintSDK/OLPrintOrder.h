@@ -196,7 +196,7 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
 /**
  *  The date of the last submission
  */
-@property (nonatomic, readonly) NSDate *lastPrintSubmissionDate;
+@property (nonatomic) NSDate *lastPrintSubmissionDate;
 
 /**
  *  The error of the last submission
