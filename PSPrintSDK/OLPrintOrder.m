@@ -113,7 +113,6 @@ static id stringOrEmptyString(NSString *str) {
 @property (assign, nonatomic) NSInteger numberOfTimesPolledForSubmissionStatus;
 
 @property (strong, nonatomic) NSString *paymentMethod;
-@property (nonatomic, readwrite) NSString *receipt;
 
 @property (assign, nonatomic) BOOL optOutOfEmail;
 @property (assign, nonatomic) BOOL shipToStore;

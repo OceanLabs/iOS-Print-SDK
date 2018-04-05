@@ -208,7 +208,7 @@ typedef NS_ENUM(NSInteger, OLPrintOrderSubmitStatus) {
 /**
  *  The receipt of the submission. Will be a Kite order ID if successful but can be a proof of payment if the user has paid but the submission has failed.
  */
-@property (nonatomic, readonly) NSString *receipt;
+@property (nonatomic) NSString *receipt;
 
 /**
  *  Extra information
