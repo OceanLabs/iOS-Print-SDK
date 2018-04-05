@@ -406,7 +406,7 @@ static NSBlockOperation *templateSyncOperation;
     NSAssert(self.printOrderReq == nil, @"A PrintOrder request should not already be in progress");
     [inProgressPrintOrders addObject:self];
     
-    self.lastPrintSubmissionDate = [NSDate date];
+    _lastPrintSubmissionDate = [NSDate date];
     self.progressHandler = progressHandler;
     self.completionHandler = completionHandler;
     
