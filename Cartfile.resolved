@@ -1,6 +1,6 @@
 github "BoltsFramework/Bolts-ObjC" "1.9.0"
 github "OAuthSwift/OAuthSwift" "1.2.1"
-github "OceanLabs/Photobook-iOS" "59c03dd91296acff710803cf5796157bc4ab8b74"
+github "OceanLabs/Photobook-iOS" "916e60027ba0e2756ce011c6adf62184cefb37af"
 github "evgenyneu/keychain-swift" "11.0.0"
 github "facebook/Facebook-SDK-Swift" "0.3.0"
 github "facebook/facebook-ios-sdk" "4.31.1"

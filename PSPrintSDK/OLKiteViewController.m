@@ -275,9 +275,7 @@ static CGFloat fadeTime = 0.3;
         return [[OL3DProductViewController alloc] init];
     }
     else if (templateUI == OLTemplateUIPhotobook) {
-        UITabBarController *tabBar = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle bundleWithIdentifier:@"ly.kite.Photobook"]] instantiateViewControllerWithIdentifier:@"TabBarController"];
-        [PhotobookLaunchHandler configureTabBarController:tabBar];
-        return tabBar;
+        return [[PhotobookSDK shared] rootViewControllerForCurrentState];
     }
     
     return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:[self reviewViewControllerIdentifierForProduct:product photoSelectionScreen:photoSelectionScreen]];
