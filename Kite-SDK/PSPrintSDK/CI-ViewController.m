@@ -278,11 +278,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #ifdef OL_KITE_VERBOSE
     NSLog(@"%@", info);
 #endif
-    
-    NSString *status = info[kOLAnalyticsEventName];
-    if ([info[kOLAnalyticsEventLevel] integerValue] != 1){
-        status = [@"*" stringByAppendingString:status];
-    }
 }
 
 - (void)setupCIDeploymentWithAssets:(NSArray *)assets{
