@@ -50,6 +50,7 @@
 #import "OLAsset+Private.h"
 #import "UIColor+OLHexString.h"
 #import "UIView+RoundRect.h"
+#import "UIView+AutoLayoutHelper.h"
 
 @interface OLProduct ()
 @property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
@@ -105,6 +106,10 @@
     self.productDetails.product = _product;
     
     [self setupProductRepresentation];
+    
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackProductDetailsScreenViewed:self.product.productTemplate hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
+#endif
 }
 
 - (void)viewDidLoad {
@@ -119,7 +124,7 @@
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageController.dataSource = self;
     self.pageController.delegate = self;
-    self.pageController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height + 37);
+    self.pageController.view.translatesAutoresizingMaskIntoConstraints = false;
     
     UIViewController *vc = [self viewControllerAtIndex:0];
     if (vc){
@@ -129,13 +134,18 @@
     [self.view insertSubview:self.pageController.view belowSubview:self.pageControl];
     [self.pageController didMoveToParentViewController:self];
     
+    [self.view addConstraints:@[[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1 constant:0]]];
+    [self.view addConstraints:@[[NSLayoutConstraint constraintWithItem:self.pageController.view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottomMargin multiplier:1 constant:-115]]];
+    [self.pageController.view leadingFromSuperview:0 relation:NSLayoutRelationEqual];
+    [self.pageController.view trailingToSuperview:0 relation:NSLayoutRelationEqual];
+    
     self.separatorHeightCon.constant = 1.5;
     
     UIPageControl *pageControl = [UIPageControl appearance];
     pageControl.pageIndicatorTintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
     pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
     pageControl.backgroundColor = [UIColor clearColor];
-    pageControl.frame = CGRectMake(0, -200, 100, 100);
+    pageControl.numberOfPages = self.product.productPhotos.count;
     
     vc = self.parentViewController;
     while (vc) {
@@ -181,10 +191,6 @@
     if ([OLUserSession currentSession].capitalizeCtaTitles){
         [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
     }
-    
-#ifndef OL_NO_ANALYTICS
-    [OLAnalytics trackProductDetailsScreenViewed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
-#endif
     
     self.originalBoxConstraint = self.detailsBoxTopCon.constant;
     
@@ -491,6 +497,7 @@
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)(void))handler{
+    BOOL fromEdit = NO;
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://kite.ly/no-asset.jpg"]]]];
@@ -499,9 +506,15 @@
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             job.extraCopies = existingJob.extraCopies;
             [printOrder removePrintJob:existingJob];
+            fromEdit = YES;
         }
     }
     [printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+    if (!fromEdit){
+        [OLAnalytics trackItemAddedToBasket:job];
+    }
+#endif
     
     [printOrder saveOrder];
     
@@ -612,6 +625,9 @@
     }
     
     [[OLUserSession currentSession].printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackItemAddedToBasket:job];
+#endif
     return job;
 }
 
@@ -669,14 +685,6 @@
     self.pageControl.currentPage = [pageViewController.viewControllers.firstObject pageIndex];
 }
 
-- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
-    return self.product.productPhotos.count;
-}
-
-- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
-    return 1;
-}
-
 #pragma mark - Tear down and restore
 
 - (void)tearDownLargeObjectsFromMemory{
@@ -691,3 +699,4 @@
 
 
 @end
+

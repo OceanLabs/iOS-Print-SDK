@@ -1,17 +1,3 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
-%@ days,%@ days,"/* Examples: 2-5 working days, 7 working days */"
-%@ working days,%@ working days,"/* Examples: 2-5 working days, 7 working days */"
 1 working day,1 working day,
-Discard Edits,Discard Edits,
-End Session,End Session,
-From,From,
-Photo Library,Photo Library,
-Please add some photos,Please add some photos,
-Save as Copy,Save as Copy,
-Shipping Method,Shipping Method,
-Tap image to change,Tap image to change,
-Tap image to change or hold to move,Tap image to change or hold to move,
-Tap image to edit,Tap image to edit,
-Tap image to edit or hold to move,Tap image to edit or hold to move,
-"This will log out of any accounts, clear selected photos and start over","This will log out of any accounts, clear selected photos and start over",
-Tracked,Tracked,
+We need access to your %@ photos,We need access to your %@ photos,/* Example: We need access to your iPhone photos */

@@ -254,7 +254,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                                                                             target:nil
                                                                             action:nil];
     
-    self.poweredByKiteLabel.text = NSLocalizedStringFromTableInBundle(@"Powered by Kite.ly", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.poweredByKiteLabel.text = @"Powered by Kite.ly";
     [self.paymentButton1 setTitle:NSLocalizedStringFromTableInBundle(@"Continue Shopping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     self.reloadTableViewOperation = [NSBlockOperation blockOperationWithBlock:^{
@@ -624,6 +624,12 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         [self.totalCostActivityIndicator stopAnimating];
         
+        if (cost.promoCodeInvalidReason){
+            self.printOrder.promoCode = nil;
+            [self applyPromoCode:self.promoCodeTextField.text showHUD:NO];
+            return;
+        }
+        
         //Small chance that the request started before we emptied the basket.
         if (self.printOrder.jobs.count == 0){
             [self.totalCostActivityIndicator stopAnimating];
@@ -931,17 +937,21 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }];
 }
 
-- (void)applyPromoCode:(NSString *)promoCode {
+- (void)applyPromoCode:(NSString *)promoCode showHUD:(BOOL)showHUD {
     if (promoCode != nil) {
         if ([promoCode isEqualToString:self.printOrder.promoCode]){
             return;
         }
-        [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Checking Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Checking promo code")];
+        if (showHUD){
+            [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Checking Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Checking promo code")];
+        }
     } else {
         if (!self.printOrder.promoCode || [self.printOrder.promoCode isEqualToString:@""]){
             return;
         }
-        [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Clearing Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Clearing promo code")];
+        if (showHUD){
+            [OLProgressHUD showWithStatus:NSLocalizedStringFromTableInBundle(@"Clearing Code", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Clearing promo code")];
+        }
     }
     
     NSString *previousCode = self.printOrder.promoCode;
@@ -960,10 +970,12 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 #endif
                 self.printOrder.promoCode = previousCode; // reset print order promo code as it was invalid
                 self.promoCodeTextField.text = previousCode;
+                [self.printOrder saveOrder];
                 [OLProgressHUD dismiss];
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:cost.promoCodeInvalidReason preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:NULL]];
                 [self presentViewController:ac animated:YES completion:NULL];
+                [self updateViewsBasedOnCostUpdate];
                 
             } else {
                 [self updateViewsBasedOnCostUpdate];
@@ -972,7 +984,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                     [OLAnalytics trackBasketScreenSuccessfullyAppliedPromoCode:self.printOrder.promoCode forOrder:self.printOrder];
 #endif
                     sleep(1);
-                    [OLProgressHUD showSuccessWithStatus:nil];
+                    if (showHUD){
+                        [OLProgressHUD showSuccessWithStatus:nil];
+                    }
                 } else {
                     [OLProgressHUD dismiss];
                 }
@@ -986,11 +1000,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 - (IBAction)onButtonApplyPromoCodeClicked:(id)sender {
     if ([self.promoCodeTextField.text isEqualToString:@""]) {
         // Clear promo code
-        [self applyPromoCode:nil];
+        [self applyPromoCode:nil showHUD:YES];
     }
     else {
         NSString *promoCode = [self.promoCodeTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        [self applyPromoCode:promoCode];
+        [self applyPromoCode:promoCode showHUD:YES];
     }
 }
 

@@ -248,7 +248,9 @@ static CGFloat fadeTime = 0.3;
         [[self.view viewWithTag:9999] removeFromSuperview];
     }
     
-    self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
+    if (self.loadingImageView){
+        self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
+    }
     
     [self transitionToNextScreen];
 }

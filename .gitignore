@@ -30,3 +30,4 @@ Gemfile.lock
 /Kite-CI-Deploy.app.dSYM.zip
 /Kite-SDK/Unity-Plugin
 /Kite-SDK/.idea
+/Carthage

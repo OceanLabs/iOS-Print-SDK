@@ -52,6 +52,7 @@
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
 #import "OLKiteViewController+Private.h"
+#import "UIView+AutoLayoutHelper.h"
 
 @interface OLProductTypeSelectionViewController ()
 -(NSMutableArray *) products;
@@ -569,20 +570,24 @@
         
         return cell;
     }
+    else if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(viewForHeaderWithWidth:)]){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
+        UIView *view = [cell viewWithTag:10];
+        [view removeFromSuperview];
+        
+        view = [[OLUserSession currentSession].kiteVc.delegate viewForHeaderWithWidth:self.view.frame.size.width];
+        [cell.contentView addSubview:view];
+        [view fillSuperView];
+        
+        view.tag = 10;
+        
+        return cell;
+    }
     else{
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
         UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
         imageView.image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
-        if ([OLUserSession currentSession].prioritizeMainBundleImages){
-            if (imageView.image.size.width > self.view.frame.size.width){
-                imageView.image = [imageView.image shrinkToSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.width * (imageView.image.size.height / imageView.image.size.width)) forScreenScale:[UIScreen mainScreen].scale aspectFit:YES];
-            }
-            imageView.contentMode = UIViewContentModeLeft;
-            imageView.backgroundColor = [UIColor whiteColor];
-        }
-        else{
             imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
-        }
         return cell;
     }
 }
@@ -618,6 +623,10 @@
                 [self.navigationController presentViewController:vc animated:YES completion:NULL];
             });
         }];
+    }
+    else if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(infoPageViewController)]){
+        UIViewController *vc = [[OLUserSession currentSession].kiteVc.delegate infoPageViewController];
+        [self.navigationController pushViewController:vc animated:YES];
     }
     else{
         OLInfoPageViewController *vc = (OLInfoPageViewController *)[OLUserSession currentSession].kiteVc.infoViewController;
@@ -803,23 +812,8 @@
     
     if (indexPath.item >= self.productGroups.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
-        UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         UILabel *label = [cell.contentView viewWithTag:50];
         label.text = NSLocalizedStringFromTableInBundle(@"MORE ITEMS\nCOMING SOON!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder-loc.png"] withCompletionHandler:^(UIImage *image, NSError *error){
-            if (error) return;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                cellImageView.image = image;
-                cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
-            });
-        }];
-        if (self.fromRotation){
-            self.fromRotation = NO;
-            cell.alpha = 0;
-            [UIView animateWithDuration:0.3 animations:^{
-                cell.alpha = 1;
-            }];
-        }
         return cell;
     }
     

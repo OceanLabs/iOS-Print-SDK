@@ -242,6 +242,8 @@
     
     [self preparePhotosForCheckout];
     
+    BOOL fromEdit = NO;
+    
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLAsset *photo in [OLAsset userSelectedAssets]) {
         [photoAssets addObject:[photo copy]];
@@ -255,12 +257,18 @@
             job.dateAddedToBasket = [existingJob dateAddedToBasket];
             job.extraCopies = existingJob.extraCopies;
             [printOrder removePrintJob:existingJob];
+            fromEdit = YES;
         }
     }
     [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
     [printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+    if (!fromEdit){
+        [OLAnalytics trackItemAddedToBasket:job];
+    }
+#endif
     
     [printOrder saveOrder];
     

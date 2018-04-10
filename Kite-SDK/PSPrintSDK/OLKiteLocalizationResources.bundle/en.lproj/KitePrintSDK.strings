@@ -1,4 +1,3 @@
-"%@ days" = "%@ days";
 "%@ working days" = "%@ working days";
 "%ldx%ld Collage" = "%ldx%ld Collage";
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!" = "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!";
@@ -153,7 +152,6 @@
 "Please select up to %ld photos" = "Please select up to %ld photos";
 "Please zoom out or pick a higher quality image" = "Please zoom out or pick a higher quality image";
 "Postcode" = "Postcode";
-"Powered by Kite.ly" = "Powered by Kite.ly";
 "Price" = "Price";
 "PRINT AT HOME" = "PRINT AT HOME";
 "Print It Anyway" = "Print It Anyway";
@@ -204,6 +202,7 @@
 "Uploading Images \n%lu / %lu" = "Uploading Images \n%lu / %lu";
 "View Item" = "View Item";
 "WE HAVE RECEIVED\nYOUR ORDER" = "WE HAVE RECEIVED\nYOUR ORDER";
+"We need access to your %@ photos" = "We need access to your %@ photos";
 "We'll send you confirmation and order updates." = "We'll send you confirmation and order updates.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.";
 "Yes" = "Yes";
