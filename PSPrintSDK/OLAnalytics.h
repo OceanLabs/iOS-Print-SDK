@@ -110,6 +110,7 @@ static NSString *const kOLAnalyticsItemsInOrder = @"Items In Order";
 static NSString *const kOLAnalyticsOrderCost = @"Order Cost";
 static NSString *const kOLAnalyticsOrderShippingCost = @"Order Shipping Cost";
 static NSString *const kOLAnalyticsCurrencyCode = @"Currency Code";
+static NSString *const kOLAnalyticsOrderId = @"Order ID";
 static NSString *const kOLAnalyticsItemPrice = @"Item Price";
 static NSString *const kOLAnalyticsPromoCode = @"Promo Code";
 static NSString *const kOLAnalyticsError = @"Error";

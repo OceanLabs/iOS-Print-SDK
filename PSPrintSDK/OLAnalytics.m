@@ -300,6 +300,7 @@ static NSString *nonNilStr(NSString *str) {
             dict[kOLAnalyticsNumberOfPhotosInOrder] = [NSNumber numberWithInteger:order.totalAssetsToUpload];
             dict[kOLAnalyticsPromoCode] = order.promoCode;
             dict[kOLAnalyticsCurrencyCode] = order.currencyCode;
+            dict[kOLAnalyticsOrderId] = order.receipt;
             [order costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error){
                 dict[kOLAnalyticsOrderCost] = [cost totalCostInCurrency:order.currencyCode];
                 dict[kOLAnalyticsOrderShippingCost] = [cost shippingCostInCurrency:order.currencyCode];
