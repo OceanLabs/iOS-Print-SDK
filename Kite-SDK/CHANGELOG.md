@@ -1,5 +1,8 @@
 ### 6.8.6
+- Changed: Adding an item with more images than the pack size to the basket will not split it into 2 items in the basket.
+- Fixed: Custom image pickers not getting the maximum amount of photos for some products
 - Fixed: Minor layout issues on iPhone X
+- Added: Order ID to the relevant analytics event
 - Added: Add to basket analytics event
 - Updated: ES, NL localizations
 
