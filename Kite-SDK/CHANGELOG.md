@@ -1,4 +1,4 @@
-### 6.8.7
+### 6.8.8
 - Fixed: An issue with remote configuration
 
 ### 6.8.6
