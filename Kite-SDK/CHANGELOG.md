@@ -1,3 +1,6 @@
+### 6.8.7
+- Fixed: An issue with remote configuration
+
 ### 6.8.6
 - Changed: Adding an item with more images than the pack size to the basket will not split it into 2 items in the basket.
 - Fixed: Custom image pickers not getting the maximum amount of photos for some products
