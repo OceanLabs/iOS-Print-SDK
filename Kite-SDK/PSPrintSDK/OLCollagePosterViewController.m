@@ -289,4 +289,8 @@
     return [self.artboard findAssetViewAtPoint:point];
 }
 
+- (NSInteger)maxNumberOfPhotosToPick {
+    return [OLAsset userSelectedAssets].count;
+}
+
 @end

@@ -1,3 +1,6 @@
+### 6.8.9
+- Fixed: Custom image pickers not getting the maximum amount of photos and the currently selected assets
+
 ### 6.8.8
 - Fixed: An issue with remote configuration
 
