@@ -1,3 +1,6 @@
+### 6.8.10
+- Fixed: Launching the SDK with some assets would sometimes result in those assets being ignored.
+
 ### 6.8.9
 - Fixed: Custom image pickers not getting the maximum amount of photos and the currently selected assets
 
