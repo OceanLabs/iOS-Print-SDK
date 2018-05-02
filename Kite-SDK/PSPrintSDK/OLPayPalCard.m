@@ -57,6 +57,11 @@ typedef void (^OLPayPalCardAccessTokenCompletionHandler)(NSString *accessToken, 
 static OLPayPalCard *lastUsedCard;
 static OLPayPalEnvironment environment;
 
+@interface OLPayPalCard ()
+@property (nonatomic, readwrite) NSString *vaultId;
+@property (nonatomic, readwrite) NSDate *vaultExpireDate;
+@end
+
 static NSString *typeToString(OLPayPalCardType type) {
     switch (type) {
         case kOLPayPalCardTypeAmex: return @"amex";
@@ -208,8 +213,8 @@ static NSString *typeToString(OLPayPalCardType type) {
                                 [dateFormatter setDateFormat:@"YYYY-MM-dd'T'HH:mm:ssZ"];
                                 
                                 self.numberMasked = number;
-                                _vaultId = vaultId;
-                                _vaultExpireDate = [dateFormatter dateFromString:vaultExpireDate];
+                                self.vaultId = vaultId;
+                                self.vaultExpireDate = [dateFormatter dateFromString:vaultExpireDate];
                                 
                                 handler(nil);
                             } else {

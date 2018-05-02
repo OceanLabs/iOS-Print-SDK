@@ -916,14 +916,14 @@ static const CGFloat OLProgressHUDUndefinedProgress = -1;
                                  
                                  [[NSNotificationCenter defaultCenter] removeObserver:strongSelf];
                                  [strongSelf cancelRingLayerAnimation];
-                                 [_hudView removeFromSuperview];
-                                 _hudView = nil;
+                                 [strongSelf.hudView removeFromSuperview];
+                                 strongSelf.hudView = nil;
                                  
-                                 [_overlayView removeFromSuperview];
-                                 _overlayView = nil;
+                                 [strongSelf.overlayView removeFromSuperview];
+                                 strongSelf.overlayView = nil;
                                  
-                                 [_indefiniteAnimatedView removeFromSuperview];
-                                 _indefiniteAnimatedView = nil;
+                                 [strongSelf.indefiniteAnimatedView removeFromSuperview];
+                                 strongSelf.indefiniteAnimatedView = nil;
                                  
                                  UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
                                  

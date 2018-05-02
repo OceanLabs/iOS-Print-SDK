@@ -28,8 +28,7 @@
 //
 #import <Foundation/Foundation.h>
 
-__deprecated_msg("Use OLAsset")
-
+//DEPRECATED: Use OLAsset
 // DO NOT DELETE THIS CLASS. People with older orders in their history won't be able to unarchive them and the app will crash.
 
 @interface OLPrintPhoto : NSObject
