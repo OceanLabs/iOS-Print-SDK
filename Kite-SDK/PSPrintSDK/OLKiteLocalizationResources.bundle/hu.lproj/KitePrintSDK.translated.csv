@@ -1,14 +1,29 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!","**Minőséggarancia**\nTermékeink minősége a lehető legkiválóbb, és bízunk benne, hogy te is rajongsz majd értük. Ha nem így történne, indoklás nélküli pénzvisszatérítést garantálunk. Használd örömmel!"
+"Failed to validate card details, please try again.","Sikertelen volt a kártya adatainak hitelesítése, próbálja újra.",
+"No, keep it","Nem, szeretném megtartani",
+"This will log out of any accounts, clear selected photos and start over","Ezzel kijelentkezik minden fiókból, visszavonja a kijelölt fényképeket és újrakezdi a műveletet.",
+"Yes, remove it","Igen, távolítsa el",
 %@ working days,%@ munkanap,
 %ldx%ld Collage,%ldx%ld kollázs,
 1 day,1 nap,
+401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,"401-es hiba: nem hitelesített kérés tartalomfeltöltési kísérlet közben. Ellenőrizd, hogy feltüntettél-e hitelesítési fejlécet, és hogy a megadott engedélyezési adatok helyesek-e."
+500 Internal Server Error whilst trying to upload an asset. Please try again.,500-as hiba: belső kiszolgálói hiba tartalomfeltöltési kísérlet közben. Próbáld meg újra.
 Add %ld %@!,Adja hozzá a következőt: %ld %@!,
+Add Address,Cím hozzáadása
+Add Credit Card (TEST),Bankkártya hozzáadása (PRÓBA),
+Add Credit Card,Bankkártya hozzáadása,
+Add Credit/Debit Card,Hitel-/bankkártya hozzáadása
+Add New Address,Új cím hozzáadása
+Add Payment Method,Fizetési mód hozzáadása
+Add Text,Szöveg hozzáadása,
 Add a %@!,Adja hozzá a következőt: %@!,
 Add a photo\non this side,Adjon hozzá egy fényképet\nezen az oldalon,
 Add another %@!,Adjon hozzá még egyet a következőből: %@!,
-Add Credit Card,Bankkártya hozzáadása,
-Add Credit Card (TEST),Bankkártya hozzáadása (PRÓBA),
-Add Text,Szöveg hozzáadása,
+Add more,Továbbiak hozzáadása
+Add to Basket,Kosárhoz ad
+Add,Hozzáadás
+Address Book,Címjegyzék
 All Photos,Összes fénykép,
 Alternatively type the following URL into your mobile browser's address bar,Alternatív megoldásként írja be az alábbi URL-címet mobileszköze böngészőjének címsorába,
 Are you sure you want to delete this item?,Biztosan szeretné törölni ezt az elemet?,
@@ -16,61 +31,115 @@ Are you sure?,Biztos benne?,
 Authorise,Engedélyezés,
 BACK,VISSZA,
 Back Image Is Too Small,A hátsó kép túl kicsi,
+Back,Vissza
+Basket is empty,A kosár tartalma üres
+CVV,CVV,
+Cancel,Mégse
+Card Number,Kártya száma
+Checking Code,Promóciós kód ellenőrzése
+Checkout for Free!,Ingyenes kifizetés!
 Checkout,Fizetés,
+Choose Address,Cím kiválasztása
+Choose Country,Ország kiválasztása
+Choose Delivery Address,Szállítási cím kiválasztása
 Choose Photo,Fénykép kiválasztása,
-cm,cm,
+Choose Photos,Fényképek kiválasztása
+City,Település
+Clearing Code,Promóciós kód törlése
 Completed Orders,Befejezett rendelések,
+Continue Shopping,Vásárlás folytatása
+County,Megye
+Create Image,Kép létrehozása,
 Create a %@ for\nonly %@ %@,%@ készítése\n%@ helyett mindössze ennyiért: %@,
 Create a pack for\nonly %@ %@,Csomag készítése\n%@ helyett mindössze ennyiért: %@,
 Create another %@ for\nonly %@ %@,Még egy %@ készítése\n%@ helyett mindössze ennyiért: %@,
 Create another pack for\nonly %@ %@,Még egy csomag készítése\n%@ helyett mindössze ennyiért: %@,
-Create Image,Kép létrehozása,
 Crop,Kivágás,
-CVV,CVV,
 Default,Alapértelmezett,
 Delete Item,Elem törlése,
+Delivery Details,Szállítási adatok
 Description,Leírás,
+Details,Részletek
 Discard Edits,Szerkesztések elvetése,
 Do you want to log out of %@?,Szeretne kijelentkezni a következőből: %@?,
 Do you want to remove this photo?,Szeretné eltávolítani ezt a fényképet?,
+Done,Kész
+Edit Address,Cím szerkesztése
+Edit,Szerkesztés
+Email,E-mail
 End Session,Munkamenet befejezése,
+Enter Address Manually,A címet kézzel írja be
+Enter a valid CVV number,Érvényes CVV-számot adjon meg
 Enter a valid card number,Adjon meg egy érvényes kártyaszámot.,
+Enter a valid expiry date,Érvényes lejárati dátumot adjon meg
 Error validating the order. Please try again later.,Hiba lépett fel a rendelés ellenőrzése során. Próbálja újra később.,
+FREE,INGYEN,
+FRONT,ELÜLSŐ,
 Failed to download phone case mask. Please check your internet connectivity and try again,"Sikertelen volt a telefontok maszkának letöltése. Ellenőrizze az internetkapcsolatot, majd próbálja újra.",
+Failed to get the price of the order. Please try again.,A rendelés árának elérése sikertelen. Próbáld meg újra.
 Failed to get upload URL. Try again later.,Sikertelen volt az URL-cím betöltése. Próbálja újra később.,
 Failed to log in to Instagram. Please check your internet connectivity and try again,"Sikertelen volt a bejelentkezés az Instagramra. Ellenőrizze az internetkapcsolatot, majd próbálja újra.",
-"Failed to validate card details, please try again.","Sikertelen volt a kártya adatainak hitelesítése, próbálja újra.",
+Failed to store card details with PayPal. Please try again.,A kártyaadatok PayPalos tárolása sikertelen. Próbáld meg újra.
+Failed to synchronize product templates. Please try again.,A terméksablonok szinkronizálása sikertelen. Próbáld meg újra.
+Failed to validate the order. Please try again.,A rendelés érvényesítése sikertelen. Próbáld meg újra.
 Filters,Szűrők,
+First Name,Keresztnév
 Flip,Tükrözés,
 Fonts,Betűtípusok,
 For only %@ extra,Mindössze ennyivel többért: %@,
-FREE,INGYEN,
 From,Már ennyiért:,
-FRONT,ELÜLSŐ,
 Great gifts for all the family,Nagyszerű ajándék az egész család számára,
 IMAGE TOOLS,KÉPESZKÖZÖK,
+Image Is Too Small,A kép mérete túl kicsi
 Image upload failed with a %lu HTTP response status code. Please try again.,Képfelöltés sikertelen. HTTP-válasz állapotkódja: %lu. Próbálja újra.,
-inches,hüvelyk,
+Invalid Email Address,Érvénytelen e-mail-cím
+Invalid Phone Number,Érvénytelen telefonszám
 Large,Nagy,
+Last Name,Vezetéknév
 Let's pick\nan image!,Válasszon egy\nképet!,
+Line 1,1. sor
+Line 2,2. sor
 Log In,Bejelentkezés,
 Log out,Kijelentkezés,
 Login,Bejelentkezés,
-Maximum Photos Reached,Elérte a fényképek maximális számát,
-Medium,Közepes,
 MM/YY,HH/ÉÉ,
 MORE ITEMS\nCOMING SOON!,MÉG TÖBB TERMÉK\nHAMAROSAN!,
-No,Nem,
+Maximum Photos Reached,Elérte a fényképek maximális számát,
+Medium,Közepes,
+Missing Delivery Address,Hiányzó szállítási cím
+Move Pages,Oldalak áthelyezése
+New Payment,Új fizetés
+Next,Tovább
 No Thanks,"Köszönöm, nem",
-"No, keep it","Nem, szeretném megtartani",
+No,Nem,
 Not now,Most nem,
+OK,OK
 OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,"HOPPÁ!\nVALAMI HIBA TÖRTÉNT,\nPRÓBÁLJA ÚJRA LENT.",
-Or print on a product below â–¼,Vagy nyomtasson az alábbi termékek valamelyikére â–¼,
+Only registered %d/%d image URLs with the asset endpoint,Csak regisztrált %d/%d kép URL-címei és a tartalom végpontja
+Oops!,Hoppá!
+Or print on a product below ▼,Vagy nyomtasson az alábbi termékek valamelyikére ▼,
 Order History,Rendelési előzmények,
+Order Id,Rendelési azonosító
+Order Summary,Rendelési összesítő
+Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.,"Üzletünk jelenleg karbantartás alatt áll, ezért nincs lehetőség termékek vásárlására. Próbálkozz újból egy kicsit később."
+PRINT AT HOME,NYOMTATÁS OTTHON,
+PRODUCT OPTIONS,TERMÉKBEÁLLÍTÁSOK,
 Pack of,Csomag tartalma:,
+Pay %@,%@ fizetése
+Paying With,Fizetés a következővel:
+Payment (TEST),Fizetés (TESZT)
+Payment Method,Fizetési mód
+Payment,Fizetés
+Phone,Telefon
 Photo Library,Fényképkönyvtár,
 Please add %d more.,Adjon hozzá még %d elemet.,
+Please add some photos to your photo book,Adj hozzá néhány fényképet a fotóalbumhoz
 Please add some photos,Adjon hozzá még néhány fényképet.,
+Please choose an address to have your order shipped to,"Válaszd ki azt a címet, ahová a rendelésedet kiszállíthatjuk"
+Please enter a card expiry date in the future,A kártya lejárati idejének egy későbbi dátumot adj meg
+Please enter a valid card number,Érvényes kártyaszámot adj meg
+Please enter a valid email address,Érvényes e-mai-címet adj meg
+Please enter a valid phone number,Érvényes telefonszámot adj meg
 Please enter your first and last name.,Adja meg a vezeték- és keresztnevét.,
 Please fill in Line 1 of the address.,Töltse ki a cím 1. sorát.,
 Please fill in your city.,Adja meg a várost.,
@@ -83,43 +152,70 @@ Please select no more than %d images.,Legfeljebb %d képet válasszon ki.,
 Please select only %ld photo,Csak %ld fényképet válasszon ki.,
 Please select some images.,Válasszon ki néhány képet.,
 Please select up to %ld photos,Legfeljebb %ld fényképet válasszon ki.,
-PRINT AT HOME,NYOMTATÁS OTTHON,
+Please zoom out or pick a higher quality image,"Lépj ki a nagyításból, vagy válassz jobb minőségű képet"
+Postcode,Irányítószám
+Price,Ár
 Print It Anyway,Nyomtatás mégis,
 Print Shop,Nyomatbolt,
-PRODUCT OPTIONS,TERMÉKBEÁLLÍTÁSOK,
+Print order submission failed with a %lu HTTP response status code. Please try again.,A nyomtatási rendelés elküldése sikertelen %lu HTTP-válasz státuszkóddal. Próbáld meg újra.
+Print these,Ezek kinyomtatása
+Processing,Feldolgozás
+Promo Code,Promóciós kód
 Promotional Discount,Promóciós kedvezmény,
+Quantity,Mennyiség
 Receipt,Nyugta,
 Recents,Legutóbbi elemek,
 Remove?,Eltávolítja?,
+Required by the postal service in case there are any issues during delivery.,"A postaszolgálat számára, ha a kiszállítás során probléma merülne fel."
+Retry,Újrapróbálkozás
+Review,Áttekintés
 Rotate,Forgatás,
 Save as Copy,Mentés másolatként,
+Save,Mentés
 Scan QR Code,QR-kód beolvasása,
 Select Size,Méret kiválasztása,
 Shipping Method,Szállítási mód,
+Shipping,Szállítás
+Single Photo Poster,Egyfotós poszter
+Size,Méret
 Small,Kis méret,
-Start by tapping this button,Az indításhoz koppintson erre a gombra.,
 Start Creating,Létrehozás indítása,
+Start by tapping this button,Az indításhoz koppintson erre a gombra.,
+Store Maintenance,Áruházi karbantartás
 Swipe to rotate your mug,Húzással forgathatja a bögrét.,
-Tap image to change,A módosításhoz koppintson a képre.,
+TEXT TOOLS,SZÖVEGESZKÖZÖK,
 Tap image to change or hold to move,A módosításhoz koppintson a képre vagy a mozgatásához tartsa lenyomva,
-Tap image to edit,A szerkesztéshez koppintson a képre.,
+Tap image to change,A módosításhoz koppintson a képre.,
 Tap image to edit or hold to move,A szerkesztéshez koppintson a képre vagy a mozgatásához tartsa lenyomva,
+Tap image to edit,A szerkesztéshez koppintson a képre.,
 Tap on this button,Koppintson erre a gombra.,
 Text Colour,Szövegszín,
-TEXT TOOLS,SZÖVEGESZKÖZÖK,
 There was a problem getting Print Shop products. Check your Internet connectivity or try again later.,Hiba történt az üzlet termékeinek betöltése során. Ellenőrizze az internetkapcsolatot vagy próbálja újra később.,
 There was an error getting one of your photos. Please remove or replace it.,Hiba történt az egyik fénykép betöltése során. Távolítsa el vagy cserélje le.,
 There was an error trying to validate the card. Please try again later.,Hiba történt a kártya ellenőrzése során. Próbálja újra később.,
+This is the 3-4 digit verification number/security code normally found on the back of your card,"Ez az általában a kártya hátoldalán található, 3–4 jegyű hitelesítési szám/biztonsági kód"
 This will discard your edits.,Ezzel elveti az eddigi módosításokat.,
-"This will log out of any accounts, clear selected photos and start over","Ezzel kijelentkezik minden fiókból, visszavonja a kijelölt fényképeket és újrakezdi a műveletet.",
+Total,Összes
 Tracked,Követett,
+Uploading Images \n%lu / %lu,\n%lu/%lu kép feltöltése
 Uploading book,Könyv feltöltése,
 View Item,Elem megtekintése,
 WE HAVE RECEIVED\nYOUR ORDER,RENDELÉSÉT\nMEGKAPTUK,
-Yes,Igen,
+We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,Elküldjük majd a megerősítést és a rendelés frissítéseit. Az e-mailes marketinganyagok küldését a jelölőnégyzet bepipálásának törlésével tilthatja le.
+We'll send you confirmation and order updates.,Elküldjük majd a megerősítést és a rendelés frissítéseit.
 Yes Please,"Igen, kérem",
-"Yes, remove it","Igen, távolítsa el",
+Yes,Igen,
+You can add %d more for the same price.,%d további hozzáadása lehetséges ezen az áron.
 You need to authorize the app to access your Instagram account if you want to import photos from there.,"Ha Instagram-fiókjából szeretne fényképeket importálni, engedélyeznie kell az alkalmazásnak a fiókhoz való hozzáférést.",
 You've only selected %d photo.,Csak %d fényképet választott ki.,
 You've only selected %d photos.,Csak %d fényképet választott ki.,
+You've selected %d photos.,%d fényképet választottál ki.
+Your 15-16 digit card number,A kártya 15–16 jegyű száma
 Your Phone,Az Ön iPhone-ja,
+Your card expiry date,A kártya lejárati dátuma
+Your payment was not approved (transaction state: %@). Please try again.,A fizetés nem lett jóváhagyva (tranzakció státusza: %@). Próbáld meg újra.
+ZIP Code,Irányítószám
+basket.Edit,Kosárban lévő elem szerkesztése
+cm,cm,
+inches,hüvelyk,
+We need access to your %@ photos, Hozzáférésre van szükségünk %@ fotó(i)dhoz
