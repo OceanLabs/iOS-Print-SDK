@@ -2432,8 +2432,8 @@ const NSInteger kOLEditTagCrop = 40;
         }        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
         [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
-        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
-            vc.maximumPhotos = 1;
+        if ([customVc respondsToSelector:@selector(setMaximumPhotos:)]){
+            customVc.maximumPhotos = 1;
         }
         
         [self presentViewController:customVc animated:YES completion:NULL];
