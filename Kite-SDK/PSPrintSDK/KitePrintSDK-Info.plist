@@ -22,6 +22,13 @@
 		<string>pl</string>
 		<string>nl</string>
 		<string>hu</string>
+		<string>sk</string>
+		<string>pt</string>
+		<string>fi</string>
+		<string>sv</string>
+		<string>nb</string>
+		<string>da</string>
+		<string>cs</string>
 	</array>
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>

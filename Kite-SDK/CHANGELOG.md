@@ -1,3 +1,6 @@
+### 6.8.11
+- Added localizations: Hungarian, Polish, Slovak, Czech, Portuguese, Danish, Norwegian, Swedish, Finnish
+
 ### 6.8.10
 - Fixed: Launching the SDK with some assets would sometimes result in those assets being ignored.
 
