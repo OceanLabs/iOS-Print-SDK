@@ -217,7 +217,6 @@ Your 15-16 digit card number,15–16-numeroinen kortin numero,
 Your card expiry date,Kortin vanhenemisajankohta,
 Your payment was not approved (transaction state: %@). Please try again.,Maksuasi ei hyväksytty (maksun tila: %@). Yritä uudelleen.,
 Your Phone,Oma puhelimesi,"/* Device, not number */"
-
 basket.Edit,Muokkaa,/* Edit basket item */
 We need access to your %@ photos,Sovellus tarvitsee käyttöluvan %@ -laitteen kuviin,/* Example: We need access to your iPhone photos */
 ZIP Code,ZIP,

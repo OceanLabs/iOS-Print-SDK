@@ -217,7 +217,6 @@ Your 15-16 digit card number,Ditt 15–16-siffriga kortnummer,
 Your card expiry date,Ditt korts giltighetsdatum,
 Your payment was not approved (transaction state: %@). Please try again.,Din betalning godkändes inte (transaktion: %@). Försök igen.,
 Your Phone,Din telefon,"/* Device, not number */"
-
 basket.Edit,Redigera,/* Edit basket item */
 We need access to your %@ photos,Vi behöver tillgång till dina %@-foton,/* Example: We need access to your iPhone photos */
 ZIP Code,ZIP,
