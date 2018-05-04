@@ -44,6 +44,7 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.minimumScaleFactor = 0.5;
     label.adjustsFontSizeToFitWidth = YES;
+    label.numberOfLines = 2;
     [banner addSubview:label];
     
     UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:17];
