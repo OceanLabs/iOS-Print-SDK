@@ -83,6 +83,7 @@
 
 @import PassKit;
 @import Contacts;
+@import SafariServices;
 
 static NSString *const kSectionOrderSummary = @"kSectionOrderSummary";
 static NSString *const kSectionPromoCodes = @"kSectionPromoCodes";
@@ -183,6 +184,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *promoBoxTopCon;
 @property (weak, nonatomic) IBOutlet UIView *promoBox;
 @property (weak, nonatomic) IBOutlet UILabel *poweredByKiteLabel;
+@property (weak, nonatomic) IBOutlet UIButton *privacyPolicyButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *poweredByKiteLabelBottomCon;
 @property (weak, nonatomic) IBOutlet UIView *shippingDetailsBox;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *deliveryDetailsCon;
@@ -255,6 +257,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
                                                                             action:nil];
     
     self.poweredByKiteLabel.text = @"Powered by Kite.ly";
+    [self.privacyPolicyButton setTitle:NSLocalizedStringFromTableInBundle(@"Privacy Policy", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     [self.paymentButton1 setTitle:NSLocalizedStringFromTableInBundle(@"Continue Shopping", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     self.reloadTableViewOperation = [NSBlockOperation blockOperationWithBlock:^{
@@ -1137,6 +1140,12 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [self presentViewController:paymentController animated:YES completion:nil];
     }];
 }
+
+- (IBAction)showPrivacyPolicy:(id)sender {
+    SFSafariViewController *safari = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.kite.ly/privacy-policy/"]];
+    [self presentViewController:safari animated:YES completion:nil];
+}
+
 
 - (IBAction)onButtonMinusClicked:(UIButton *)sender {
     CGPoint buttonPosition = [sender.superview convertPoint:CGPointZero toView:self.tableView];
