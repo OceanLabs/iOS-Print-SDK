@@ -693,7 +693,7 @@
                                 <constraints>
                                     <constraint firstItem="Zg1-ja-X5c" firstAttribute="top" secondItem="M4Z-g2-rfc" secondAttribute="top" constant="8" id="0h4-Ut-3gB"/>
                                     <constraint firstItem="Zg1-ja-X5c" firstAttribute="centerY" secondItem="fHD-9P-h6H" secondAttribute="centerY" id="3fy-8Q-e8K"/>
-                                    <constraint firstItem="lJL-qK-wQs" firstAttribute="centerX" secondItem="M4Z-g2-rfc" secondAttribute="centerX" id="5Ba-rz-HKM"/>
+                                    <constraint firstItem="lJL-qK-wQs" firstAttribute="centerX" secondItem="M4Z-g2-rfc" secondAttribute="centerX" priority="700" id="5Ba-rz-HKM"/>
                                     <constraint firstItem="fHD-9P-h6H" firstAttribute="leading" secondItem="Zg1-ja-X5c" secondAttribute="trailing" constant="8" id="8of-TQ-WOO"/>
                                     <constraint firstItem="9Ab-ub-9c3" firstAttribute="centerY" secondItem="MDv-31-HTi" secondAttribute="centerY" id="BIx-Fe-VNc"/>
                                     <constraint firstItem="fHD-9P-h6H" firstAttribute="width" secondItem="Zg1-ja-X5c" secondAttribute="width" id="Idp-WM-cOm"/>
@@ -708,7 +708,9 @@
                                     <constraint firstItem="Fqc-wl-79H" firstAttribute="centerX" secondItem="fHD-9P-h6H" secondAttribute="centerX" id="dbD-1G-x7D"/>
                                     <constraint firstItem="fHD-9P-h6H" firstAttribute="top" secondItem="M4Z-g2-rfc" secondAttribute="top" constant="8" id="hB2-gX-Tia"/>
                                     <constraint firstAttribute="height" constant="78" id="mLh-PO-hv1"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="MDv-31-HTi" secondAttribute="trailing" constant="5" id="oS1-5e-wmH"/>
                                     <constraint firstItem="MDv-31-HTi" firstAttribute="leading" secondItem="lJL-qK-wQs" secondAttribute="trailing" constant="5" id="vF0-tl-o45"/>
+                                    <constraint firstItem="9Ab-ub-9c3" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="M4Z-g2-rfc" secondAttribute="leading" constant="5" id="vcj-zU-eYj"/>
                                     <constraint firstItem="Fqc-wl-79H" firstAttribute="centerY" secondItem="fHD-9P-h6H" secondAttribute="centerY" id="yo6-c0-JcI"/>
                                 </constraints>
                                 <variation key="default">
