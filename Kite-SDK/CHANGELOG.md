@@ -1,5 +1,8 @@
-### 6.8.11
-- Added localizations: Hungarian, Polish, Slovak, Czech, Portuguese, Danish, Norwegian, Swedish, Finnish
+## 6.9.0
+- Added: Link to Kite Privacy Policy on the basket screen
+- Added: Hungarian, Polish, Slovak, Czech, Portuguese, Danish, Norwegian, Swedish, Finnish localizations
+- Changed: Analytics are now opt-in
+- Minimum supported iOS is now 9.0
 
 ### 6.8.10
 - Fixed: Launching the SDK with some assets would sometimes result in those assets being ignored.
