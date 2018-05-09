@@ -107,9 +107,7 @@
     
     [self setupProductRepresentation];
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductDetailsScreenViewed:self.product.productTemplate hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
-#endif
 }
 
 - (void)viewDidLoad {
@@ -237,11 +235,9 @@
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackProductDescriptionScreenHitBack:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
     }
-#endif
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -389,9 +385,7 @@
         self.arrowImageView.transform = self.detailsBoxTopCon.constant == self.originalBoxConstraint ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
         [self.view layoutIfNeeded];
     }completion:^(BOOL finished){
-#ifndef OL_NO_ANALYTICS
         self.detailsBoxTopCon.constant == self.originalBoxConstraint ? [OLAnalytics trackProductDetailsViewClosed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice] : [OLAnalytics trackProductDetailsViewOpened:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
-#endif
     }];
     
 }
@@ -510,11 +504,9 @@
         }
     }
     [printOrder addPrintJob:job];
-#ifndef OL_NO_ANALYTICS
     if (!fromEdit){
         [OLAnalytics trackItemAddedToBasket:job];
     }
-#endif
     
     [printOrder saveOrder];
     
@@ -585,9 +577,7 @@
             self.arrowImageView.transform = opening ? CGAffineTransformIdentity : CGAffineTransformMakeRotation(M_PI);
             [self.view layoutIfNeeded];
         }completion:^(BOOL finished){
-#ifndef OL_NO_ANALYTICS
             opening ? [OLAnalytics trackProductDetailsViewClosed:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice] : [OLAnalytics trackProductDetailsViewOpened:self.product.productTemplate.name hidePrice:[OLKiteABTesting sharedInstance].hidePrice];
-#endif
         }];
     }
 }
@@ -625,9 +615,7 @@
     }
     
     [[OLUserSession currentSession].printOrder addPrintJob:job];
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackItemAddedToBasket:job];
-#endif
     return job;
 }
 

@@ -173,19 +173,15 @@
         }
     }
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductListScreenViewedWithTemplateClass:self.templateClass];
-#endif
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
 
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackProductListScreenHitBackTemplateClass:self.templateClass];
     }
-#endif
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {

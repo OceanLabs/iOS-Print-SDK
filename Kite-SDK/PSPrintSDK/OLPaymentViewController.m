@@ -348,10 +348,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         self.promoBox.hidden = YES;
     }
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackBasketScreenViewedForOrder:self.printOrder applePayIsAvailable:applePayAvailableStr];
-#endif
-    
     
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         if ([OLKiteABTesting sharedInstance].lightThemeColorBasketContinueShopping){
@@ -425,11 +422,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     [super viewDidDisappear:animated];
     
     if (!self.navigationController){
-#ifndef OL_NO_ANALYTICS
         if (!self.usedContinueShoppingButton){
             [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
         }
-#endif
     }
 }
 
@@ -445,11 +440,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         }
     }
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
-#ifndef OL_NO_ANALYTICS
     if (!self.usedContinueShoppingButton){
         [OLAnalytics trackBasketScreenHitBackForOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
     }
-#endif
 }
 
 - (void)onBackgroundClicked {
@@ -750,9 +743,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     NSString *applePayAvailableStr = @"N/A";
     applePayAvailableStr = [OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No";
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPaymentCompletedForOrder:self.printOrder paymentMethod:paymentMethod applePayIsAvailable:applePayAvailableStr];
-#endif
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationUserCompletedPayment object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
     [self.printOrder saveToHistory];
@@ -873,10 +864,8 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         
         if (self.printOrder.printed){
             [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackOrderSubmission:self.printOrder];
         }
-#endif
         
         if (!self.presentedViewController){
             [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
@@ -925,9 +914,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [editingVc saveJobWithCompletionHandler:^{
             [self.tableView reloadData];
             [self dismissPresentedViewController];
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackBasketScreenHitEditItemDone:nil inOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
         }];
     }
 }
@@ -961,16 +948,12 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     self.printOrder.promoCode = promoCode;
     [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
         if (error) {
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackBasketScreenUnsuccessfullyAppliedPromoCode:promoCode withError:error forOrder:self.printOrder];
-#endif
             [OLProgressHUD dismiss];
             [self costCalculationCompletedWithError:error];
         } else {
             if (cost.promoCodeInvalidReason) {
-#ifndef OL_NO_ANALYTICS
                 [OLAnalytics trackBasketScreenUnsuccessfullyAppliedPromoCode:promoCode withError:[NSError errorWithDomain:@"ly.kite.sdk" code:0 userInfo:@{NSLocalizedDescriptionKey : cost.promoCodeInvalidReason}] forOrder:self.printOrder];
-#endif
                 self.printOrder.promoCode = previousCode; // reset print order promo code as it was invalid
                 self.promoCodeTextField.text = previousCode;
                 [self.printOrder saveOrder];
@@ -983,9 +966,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             } else {
                 [self updateViewsBasedOnCostUpdate];
                 if (self.printOrder.promoCode) {
-#ifndef OL_NO_ANALYTICS
                     [OLAnalytics trackBasketScreenSuccessfullyAppliedPromoCode:self.printOrder.promoCode forOrder:self.printOrder];
-#endif
                     sleep(1);
                     if (showHUD){
                         [OLProgressHUD showSuccessWithStatus:nil];
@@ -1174,9 +1155,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             [self.printOrder saveOrder];
             [self updateViewsBasedOnCostUpdate];
             
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackBasketScreenDidDeleteItem:printJob inOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
         }]];
         [self presentViewController:ac animated:YES completion:NULL];
     }
@@ -1191,9 +1170,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [self.printOrder saveOrder];
         [self updateViewsBasedOnCostUpdate];
         
-#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackBasketItemQtyDownForItem:printJob inOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
     }
 }
 
@@ -1211,9 +1188,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     
     [self.printOrder saveOrder];
     [self updateViewsBasedOnCostUpdate];
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackBasketItemQtyUpForItem:printJob inOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
 }
 
 - (IBAction)onButtonEditClicked:(UIButton *)sender {
@@ -1227,17 +1202,13 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     UIViewController *vc = [self viewControllerForItemAtIndexPath:indexPath];
     vc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [self presentViewController:vc animated:YES completion:NULL];
-#ifndef OL_NO_ANALYTICS
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     [OLAnalytics trackBasketScreenHitEditItem:printJob inOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
 }
 
 - (IBAction)onButtonContinueShoppingClicked:(UIButton *)sender {
     self.usedContinueShoppingButton = YES;
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackContinueShoppingButtonPressed:self.printOrder];
-#endif
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(userDidTapContinueShoppingButton)]){
         [self.delegate userDidTapContinueShoppingButton];
@@ -1352,9 +1323,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 #pragma mark - PayPalPaymentDelegate methods
 
 - (void)payPalPaymentDidCancel:(id)paymentViewController {
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackBasketScreenPaymentMethodDidCancel:@"PayPal" forOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -1376,11 +1345,9 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     [self dismissViewControllerAnimated:YES completion:^{
-#ifndef OL_NO_ANALYTICS
         if (!self.authorizedApplePay){
             [OLAnalytics trackBasketScreenPaymentMethodDidCancel:@"Apple Pay" forOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
         }
-#endif
         if (![[NSOperationQueue mainQueue].operations containsObject:self.transitionBlockOperation] && !self.transitionBlockOperation.finished){
             [[NSOperationQueue mainQueue] addOperation:self.transitionBlockOperation];
         }
@@ -1652,9 +1619,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackBasketScreenDidTapOnPromoCodeBoxforOrder:self.printOrder];
-#endif
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -1685,9 +1650,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         [self.printOrder saveOrder];
         [self updateViewsBasedOnCostUpdate];
         
-#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackBasketScreenDidDeleteItem:job inOrder:self.printOrder applePayIsAvailable:[OLKiteUtils isApplePayAvailable] ? @"Yes" : @"No"];
-#endif
     }
 }
 
@@ -1797,7 +1760,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 - (void)paymentMethodsViewController:(OLPaymentMethodsViewController *)vc didPickPaymentMethod:(OLPaymentMethod)method{
     selectedPaymentMethod = method;
     [self updateSelectedPaymentMethodView];
-#ifndef OL_NO_ANALYTICS
     NSString *methodName;
     switch (method) {
         case kOLPaymentMethodPayPal:
@@ -1817,7 +1779,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
             break;
     }
     [OLAnalytics trackPaymentMethodSelected:self.printOrder methodName:methodName];
-#endif
 }
 
 @end

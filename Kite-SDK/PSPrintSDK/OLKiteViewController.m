@@ -306,9 +306,7 @@ static CGFloat fadeTime = 0.3;
 
 - (IBAction) dismiss{
     self.dismissing = YES;
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackKiteDismissed];
-#endif
     if ([self.delegate respondsToSelector:@selector(kiteControllerDidFinish:)]){
         [self.delegate kiteControllerDidFinish:self];
     }
@@ -320,14 +318,12 @@ static CGFloat fadeTime = 0.3;
 - (void)transitionToNextScreen{
     __weak OLKiteViewController *welf = self;
     [self.transitionOperation addExecutionBlock:^{
-#ifndef OL_NO_ANALYTICS
         if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
             [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
         }
         else{
             [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
         }
-#endif
         
         // The screen we transition to will depend on what products are available based on the developers filter preferences.
         NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];

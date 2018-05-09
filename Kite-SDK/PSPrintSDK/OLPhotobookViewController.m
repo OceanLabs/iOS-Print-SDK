@@ -215,11 +215,9 @@ static const CGFloat kBookEdgePadding = 38;
         [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
     }
     
-#ifndef OL_NO_ANALYTICS
     if (!self.editMode){
         [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
     }
-#endif
     
     self.pageController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionSpineLocationKey : [NSNumber numberWithInt:UIPageViewControllerSpineLocationMid]}];
     self.pageController.dataSource = self;
@@ -387,11 +385,9 @@ static const CGFloat kBookEdgePadding = 38;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     [super viewDidDisappear:animated];
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController && !self.editMode){
         [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLAsset userSelectedAssets].nonPlaceholderAssets.count];
     }
-#endif
 }
 
 - (void)updatePagesLabel{
@@ -600,9 +596,7 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     [[OLUserSession currentSession].printOrder addPrintJob:job];
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackItemAddedToBasket:job];
-#endif
     return job;
 }
 
@@ -786,11 +780,9 @@ static const CGFloat kBookEdgePadding = 38;
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
     [printOrder addPrintJob:job];
-#ifndef OL_NO_ANALYTICS
     if (!fromEdit){
         [OLAnalytics trackItemAddedToBasket:job];
     }
-#endif
     
     [printOrder saveOrder];
     

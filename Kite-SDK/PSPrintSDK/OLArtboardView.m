@@ -337,9 +337,7 @@
             
             [vc presentViewController:cropVc animated:NO completion:NULL];
             
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditPhotoTappedForProductName:product.productTemplate.name];
-#endif
         }];
     }
 }
@@ -449,11 +447,9 @@
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
     
-#ifndef OL_NO_ANALYTICS
     UIViewController *vc = [self.delegate viewControllerForPresenting];
     OLProduct *product = [vc safePerformSelectorWithReturn:@selector(product) withObject:nil];
     [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:product.productTemplate.name];
-#endif
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{
