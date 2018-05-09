@@ -2,7 +2,8 @@
 - Added: Link to Kite Privacy Policy on the basket screen
 - Added: Hungarian, Polish, Slovak, Czech, Portuguese, Danish, Norwegian, Swedish, Finnish localizations
 - Changed: Analytics are now opt-in
-- Minimum supported iOS is now 9.0
+- Changed: Minimum supported iOS is now 9.0
+- Fixed: Issue where the editing controls would disappear if the Camera Roll was disabled.
 
 ### 6.8.10
 - Fixed: Launching the SDK with some assets would sometimes result in those assets being ignored.
