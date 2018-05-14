@@ -96,9 +96,7 @@ static const NSInteger kRowAddAddressManually = 0;
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.tableView reloadData];
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackAddressSelectionScreenViewed];
-#endif
 }
 
 - (NSArray *)selected {

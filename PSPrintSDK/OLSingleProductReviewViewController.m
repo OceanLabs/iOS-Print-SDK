@@ -101,9 +101,7 @@
         self.title = NSLocalizedStringFromTableInBundle(@"Create Image", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     }
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
-#endif
     
     [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
@@ -225,11 +223,9 @@
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLAsset userSelectedAssets].nonPlaceholderAssets.count];
     }
-#endif
 }
 
 - (void)orderViews{
@@ -295,11 +291,9 @@
         }
     }
     [printOrder addPrintJob:job];
-#ifndef OL_NO_ANALYTICS
     if (!fromEdit){
         [OLAnalytics trackItemAddedToBasket:job];
     }
-#endif
     
     [printOrder saveOrder];
     

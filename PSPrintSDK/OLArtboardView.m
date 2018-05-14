@@ -301,13 +301,9 @@
             }
             [customVc safePerformSelector:@selector(setDelegate:) withObject:imagePicker];
             [customVc safePerformSelector:@selector(setProductId:) withObject:product.templateId];
-            [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
-            if ([customVc respondsToSelector:@selector(setMaximumPhotos:)]){
-                NSInteger maximumPhotos = 0;
-                if (product.productTemplate.templateUI == OLTemplateUICase || product.productTemplate.templateUI == OLTemplateUICalendar || product.productTemplate.templateUI == OLTemplateUIPoster || product.productTemplate.templateUI == OLTemplateUIPhotobook || product.productTemplate.templateUI == OLTemplateUIApparel || product.productTemplate.templateUI == OLTemplateUIDoubleSided){
-                    maximumPhotos = product.quantityToFulfillOrder;
-                }
-                customVc.maximumPhotos = maximumPhotos;
+            [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:imagePicker.selectedAssets];
+            if ([customVc respondsToSelector:@selector(setMaximumPhotos:)] && [self.delegate respondsToSelector:@selector(maxNumberOfPhotosToPick)]){
+                customVc.maximumPhotos = imagePicker.maximumPhotos;
             }
             
             [vc presentViewController:customVc animated:YES completion:NULL];
@@ -341,9 +337,7 @@
             
             [vc presentViewController:cropVc animated:NO completion:NULL];
             
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditPhotoTappedForProductName:product.productTemplate.name];
-#endif
         }];
     }
 }
@@ -453,11 +447,9 @@
     
     [cropper dismissViewControllerAnimated:YES completion:NULL];
     
-#ifndef OL_NO_ANALYTICS
     UIViewController *vc = [self.delegate viewControllerForPresenting];
     OLProduct *product = [vc safePerformSelectorWithReturn:@selector(product) withObject:nil];
     [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:product.productTemplate.name];
-#endif
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{

@@ -108,11 +108,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-#ifndef OL_NO_ANALYTICS
     if (self.product){
         [OLAnalytics trackImagePickerScreenViewed:self.product.productTemplate.name];
     }
-#endif
     
     if (!self.navigationController){
         [self.ctaButton removeFromSuperview];
@@ -251,11 +249,9 @@
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackImagePickerScreenHitBack:self.product.productTemplate.name];
     }
-#endif
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -626,9 +622,7 @@
     ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).ctaButton.hidden = YES;
     [self updateSelectedProviderColor];
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotoProviderPicked:self.providers[[self.pageController.viewControllers[0] pageIndex]].name forProductName:self.product ? self.product.productTemplate.name : @""];
-#endif
 
 }
 
@@ -763,9 +757,7 @@
     [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished){
         [welf updateSelectedProviderColor];
         
-#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackPhotoProviderPicked:welf.providers[[welf.pageController.viewControllers[0] pageIndex]].name forProductName:welf.product ? welf.product.productTemplate.name : @""];
-#endif
     }];
 }
 
@@ -862,9 +854,7 @@
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackImagePickerScreenHitBack:self.product.productTemplate.name];
-#endif
 }
 
 - (void)onButtonDoneTapped:(UIButton *)sender{
@@ -882,6 +872,10 @@
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
+    
+    [[OLUserSession currentSession].printOrder addPrintJob:job];
+    [OLAnalytics trackItemAddedToBasket:job];
+    return job;
 }
 
 @end

@@ -242,11 +242,9 @@
         }
     }
     [printOrder addPrintJob:job];
-#ifndef OL_NO_ANALYTICS
     if (!fromEdit){
         [OLAnalytics trackItemAddedToBasket:job];
     }
-#endif
     
     [printOrder saveOrder];
     
@@ -265,6 +263,10 @@
 
 - (OLArtboardAssetView *)assetViewAtPoint:(CGPoint)point{
     return [self.artboard findAssetViewAtPoint:point];
+}
+
+- (NSInteger)maxNumberOfPhotosToPick {
+    return [OLAsset userSelectedAssets].count;
 }
 
 @end

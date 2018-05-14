@@ -1,0 +1,223 @@
+ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+%@ working days,%@ arkipäivää,"/* Examples: 2-5 days, 7 days */"
+%ldx%ld Collage,%ldx%ld-kollaasi,/* example: 5x7 Collage */
+"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!","**Laatutakuu**\nTuotteemme ovat huippulaatuisia, ja olemme varmoja, että olet niihin tyytyväinen. Mikäli näin ei kuitenkaan ole, lupaamme rahat takaisin. Nauti tuotteistasi!",
+1 day,1 päivä,
+401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,"401 Luvaton pyyntö -virhe kohteen latauksessa. Tarkista, että sisällytit pyyntöön valtuutusotsikon ja että antamasi valtuutustunnukset ovat oikein.",
+500 Internal Server Error whilst trying to upload an asset. Please try again.,500 Sisäinen palvelinvirhe kohteen latauksessa. Yritä uudelleen.,
+Add,Lisää,
+Add %ld %@!,Lisää %ld %@!,
+Add a %@!,Lisää %@!,
+Add a photo\non this side,Lisää kuva\ntälle puolelle,/* this side [of the shirt] */
+Add Address,Lisää osoite,
+Add another %@!,Lisää toinen %@!,
+Add Credit Card,Lisää luottokortti,
+Add Credit Card (TEST),Lisää luottokortti (TESTI),
+Add Credit/Debit Card,Lisää credit-/debit-kortti,
+Add more,Lisää enemmän,/* Add more [photos] */
+Add New Address,Lisää uusi osoite,
+Add Payment Method,Lisää maksutapa,
+Add Text,Lisää teksti,/* Add text on image */
+Add to Basket,Lisää ostoskoriin,
+Address Book,Osoitekirja,
+All Photos,Kaikki valokuvat,
+Alternatively type the following URL into your mobile browser's address bar,Voit myös kirjoittaa seuraavan URL-osoitteen mobiiliselaimesi osoitekenttään,
+Are you sure you want to delete this item?,Haluatko varmasti poistaa tämän tuotteen?,/* Refers to a basket item */
+Are you sure?,Oletko varma?,
+Authorise,Valtuuta,
+Back,Edellinen,
+BACK,TAKAOSA,/* Back of the photo */
+Back Image Is Too Small,Takana oleva kuva on liian pieni,
+Basket is empty,Ostoskori on tyhjä,
+Cancel,Peruuta,
+Card Number,Kortin numero,
+Checking Code,Tarkistetaan koodia,/* Checking promo code */
+Checkout,Kassalle,
+Checkout for Free!,Tilaa ilmaiseksi!,
+Choose Address,Valitse osoite,
+Choose Country,Valitse maa,
+Choose Delivery Address,Valitse toimitusosoite,
+Choose Photo,Valitse valokuva,
+Choose Photos,Valitse valokuvat,
+City,Kaupunki,
+Clearing Code,NCC-tunnus,/* Clearing promo code */
+cm,cm,/* Centimeters */
+Completed Orders,Valmiit tilaukset,
+Continue Shopping,Jatka tuotteiden selaamista,
+County,Alue,
+Create a %@ for\nonly %@ %@,Luo %@\nhintaan %@ %@,
+Create a pack for\nonly %@ %@,Luo paketti\nhintaan %@ %@,
+Create another %@ for\nonly %@ %@,Luo vielä yksi %@\nhintaan %@ %@,
+Create another pack for\nonly %@ %@,Luo vielä yksi paketti\nhintaan %@ %@,
+Create Image,Luo kuva,
+Crop,Rajaa,/* Crop image */
+CVV,CVV,/* The credit card security code */
+Default,Oletus,
+Delete Item,Poista tuote,/* Delete [basket item] */
+Delivery Details,Toimitustiedot,
+Description,Kuvaus,/* Product description */
+Details,Tiedot,/* Product Details */
+Discard Edits,Hylkää muutokset,
+Do you want to log out of %@?,Haluatko kirjautua ulos palvelusta %@?,/* Log out of Instagram/Facebook */
+Do you want to remove this photo?,Haluatko poistaa tämän valokuvan?,
+Done,Valmis,
+Edit,Muokkaa,/* Edit image */
+Edit Address,Muokkaa osoitetta,
+Email,Sähköposti,
+End Session,Lopeta istunto,
+Enter a valid card number,Anna kelvollinen kortin numero,
+Enter a valid CVV number,Anna kelvollinen CVV-turvakoodi,/* The credit card security number */
+Enter a valid expiry date,Anna kelvollinen vanhenemisaika,/* For credit cards */
+Enter Address Manually,Kirjoita osoite manuaalisesti,
+Error validating the order. Please try again later.,Virhe tilauksen vahvistamisessa. Yritä myöhemmin uudestaan.,
+Failed to download phone case mask. Please check your internet connectivity and try again,Suojakuoren kuvan lataus epäonnistui. Tarkista internetyhteys ja yritä uudelleen,
+Failed to get the price of the order. Please try again.,Tilauksen hinnan haku epäonnistui. Yritä uudelleen.,
+Failed to get upload URL. Try again later.,Latauksen URL-osoitteen haku epäonnistui. Yritä uudelleen myöhemmin.,
+Failed to log in to Instagram. Please check your internet connectivity and try again,Kirjautuminen Instagramiin epäonnistui. Tarkista internetyhteys ja yritä uudelleen,
+Failed to store card details with PayPal. Please try again.,Kortin tietojen tallennus PayPaliin epäonnistui. Yritä uudelleen.,
+Failed to synchronize product templates. Please try again.,Tuotemallien synkronointi epäonnistui. Yritä uudelleen.,
+"Failed to validate card details, please try again.",Kortin tietojen varmentaminen epäonnistui. Yritä uudelleen.,
+Failed to validate the order. Please try again.,Tilauksen vahvistaminen epäonnistui. Yritä uudelleen.,
+Filters,Suotimet,/* Image filters */
+First Name,Etunimi,
+Flip,Käännä vaakasuorassa,/* Horizontally flip image */
+Fonts,Fontit,
+For only %@ extra,Lisämaksu vain %@,/* [Add a photo on this side of the shirt] for only $4.00 extra */
+FREE,ILMAINEN,"/* Free, no cost */"
+From,Alkaen,
+FRONT,ETUOSA,/* Front of the photo */
+Great gifts for all the family,Hauskoja lahjoja koko perheelle,
+Image Is Too Small,Kuva on liian pieni,
+IMAGE TOOLS,KUVATYÖKALUT,
+Image upload failed with a %lu HTTP response status code. Please try again.,Kuvan lataus epäonnistui – HTTP-vastauksen tilakoodi: %lu. Yritä uudelleen.,
+inches,tuumaa,
+Invalid Email Address,Virheellinen sähköpostiosoite,
+Invalid Phone Number,Virheellinen puhelinnumero,
+Large,Suuri,
+Last Name,Sukunimi,
+Let's pick\nan image!,Valitse\nkuva!,"/* Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half. */"
+Line 1,Rivi 1,
+Line 2,Rivi 2,
+Log In,Kirjaudu sisään,
+Log out,Kirjaudu ulos,
+Login,Kirjaudu sisään,
+Maximum Photos Reached,Kuvien enimmäismäärä saavutettu,
+Medium,Keskikokoinen,
+Missing Delivery Address,Toimitusosoite puuttuu,
+MM/YY,KK/VV,/* Credit card date format: MonthMonth/YearYear */
+MORE ITEMS\nCOMING SOON!,LISÄÄ TUOTTEITA\nTULOSSA PIAN!,
+Move Pages,Siirrä sivuja,/* Title of a screen that allows the user to move the pages of a book around */
+New Payment,Uusi maksu,
+Next,Seuraava,
+No,Ei,
+No Thanks,Ei kiitos,
+"No, keep it","Ei, pidä se","/* No, keep [the photo] */"
+Not now,Ei nyt,
+OK,OK,/* Acknowledgent to an alert dialog. */
+Only registered %d/%d image URLs with the asset endpoint,Rekisteröity vain %d/%d kuva-URL-osoitetta kohdepäätteessä,
+Oops!,Hups!,
+OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,HUPS\nJOKIN MENI VIKAAN\n KOKEILE UUDELLEEN ALLA,
+Or print on a product below ▼,Tai paina kuvasi johonkin alla olevista tuotteista▼,
+Order History,Tilaushistoria,
+Order Id,Tilausnumero,
+Order Summary,Tilauksen yhteenveto,
+Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.,"Kaupassamme on huoltokatko, joten tuotteita ei voi tilata juuri nyt. Yritä myöhemmin uudestaan.",
+Pack of,Pakkaus:,/* Pack of [20 square photos] */
+Pay %@,Maksa %@,/* Pay [$10.00] */
+Paying With,Maksutapa:,/* Paying with [PayPal/Credit Card] */
+Payment,Maksu,
+Payment (TEST),Maksu (TESTI),
+Payment Method,Maksutapa,
+Phone,Puhelin,
+Photo Library,Valokuvakirjasto,
+Please add %d more.,Lisää %d kuvaa.,/* Please add [a number] more [photos] */
+Please add some photos,Lisää valokuvia,
+Please add some photos to your photo book,Lisää valokuvia kuvakirjaasi,
+Please choose an address to have your order shipped to,"Valitse osoite, johon tilauksesi toimitetaan",
+Please enter a card expiry date in the future,Anna tulevaisuudessa oleva vanhenemisaika,/* For credit cards */
+Please enter a valid card number,Anna kelvollinen kortin numero,
+Please enter a valid email address,Anna kelvollinen sähköpostiosoite,
+Please enter a valid phone number,Anna kelvollinen puhelinnumero,
+Please enter your first and last name.,Anna etu- ja sukunimesi.,
+Please fill in Line 1 of the address.,Täytä osoiterivi 1.,
+Please fill in your city.,Anna kaupunkisi.,
+Please fill in your postal code.,Anna postinumerosi.,
+Please scan the QR code using a QR reader app on your device.,Skannaa QR-koodi käyttämällä laitteeseesi asennettua QR-lukusovellusta.,
+Please select %d images.,Valitse %d kuvaa.,/* Please select [number] images */
+Please select %ld photos,Valitse %ld valokuvaa,
+Please select at least %d images.,Valitse vähintään %d kuvaa.,/* Please select at least [number] images */
+Please select no more than %d images.,Valitse enintään %d kuvaa.,/* Please select no more than [number] images */
+Please select only %ld photo,Valitse vain %ld valokuva,
+Please select some images.,Valitse kuvia.,
+Please select up to %ld photos,Valitse enintään %ld valokuvaa,
+Please zoom out or pick a higher quality image,"Zoomaa kauemmas tai valitse kuva, jossa on suurempi tarkkuus",
+Postcode,Postinumero,
+Powered by Kite.ly,Yhteistyössä Kite.ly,
+Price,Hinta,
+PRINT AT HOME,TULOSTA KOTONA,
+Print It Anyway,Tulosta silti,
+Print order submission failed with a %lu HTTP response status code. Please try again.,Tilauksen lähetys epäonnistui – HTTP-vastauksen tilakoodi: %lu. Yritä uudelleen.,
+Print Shop,Print Shop,
+Print these,Tulosta nämä,
+Privacy Policy,Tietosuojakäytäntö,
+Processing,Käsitellään,/* Processing the order */
+PRODUCT OPTIONS,TUOTEVAIHTOEHDOT,
+Promo Code,Alennuskoodi,
+Promotional Discount,Kampanja-alennus,
+Quantity,Määrä,/* Quantity of photos */
+Receipt,Kuitti,
+Recents,Viimeksi käytetyt,/* Recent photos used */
+Remove?,Poistetaanko?,/* Remove [photo]? */
+Required by the postal service in case there are any issues during delivery.,"Kuljetuspalvelu vaatii tämän tiedon siltä varalta, että toimituksen yhteydessä on ongelmia.",
+Retry,Yritä uudelleen,
+Review,Esikatselu,/* Title of a screen where the user can review the product before ordering */
+Rotate,Kierrä,/* Rotate image by 90 degrees */
+Save,Tallenna,
+Save as Copy,Tallenna kopiona,
+Scan QR Code,Skannaa QR-koodi,
+Select Size,Valitse koko,/* Example: Shirt size */
+Shipping,Toimitus,
+Shipping Method,Toimitustapa,
+Single Photo Poster,Yhden kuvan juliste,
+Size,Koko,/* Physical size of the product */
+Small,Pieni,
+Start by tapping this button,Aloita napauttamalla tätä painiketta,
+Start Creating,Aloita tuotteen luominen,/* Start Creating [your product] */
+Store Maintenance,Kauppaa huolletaan,
+Swipe to rotate your mug,Käännä mukia pyyhkäisemällä,
+Tap image to change,Muuta napauttamalla kuvaa,
+Tap image to change or hold to move,Muuta napauttamalla kuvaa tai siirrä painamalla pitkään,
+Tap image to edit,Muokkaa napauttamalla kuvaa,
+Tap image to edit or hold to move,Muokkaa napauttamalla kuvaa tai siirrä painamalla pitkään,
+Tap on this button,Napauta tätä painiketta,
+Text Colour,Tekstin väri,
+TEXT TOOLS,TEKSTITYÖKALUT,
+There was a problem getting Print Shop products. Check your Internet connectivity or try again later.,Print Shop -tuotteiden haussa on ongelmia. Tarkista internetyhteys tai yritä myöhemmin uudelleen.,
+There was an error getting one of your photos. Please remove or replace it.,Yhden kuvan lataaminen ei onnistunut. Poista kuva tai vaihda se johonkin toiseen.,
+There was an error trying to validate the card. Please try again later.,Kortin varmentaminen epäonnistui. Yritä myöhemmin uudestaan.,
+This is the 3-4 digit verification number/security code normally found on the back of your card,"3- tai 4-numeroinen turvakoodi, joka on yleensä kortin takana",
+This will discard your edits.,Tämä hylkää tekemäsi muutokset.,"/* The image edits, like crop, filters, etc */"
+"This will log out of any accounts, clear selected photos and start over","Tämä kirjaa sinut ulos kaikista tileistä, tyhjentää valitut kuvat ja aloittaa alusta",
+Total,Yhteensä,
+Tracked,Seurattu,
+Uploading book,Ladataan kirjaa,
+Uploading Images \n%lu / %lu,Ladataan kuvia \n%lu / %lu,
+View Item,Näytä tuote,/* View [basket] item */
+WE HAVE RECEIVED\nYOUR ORDER,TILAUKSESI ON\nVASTAANOTETTU,
+We'll send you confirmation and order updates.,Lähetämme sinulle vahvistuksen ja tietoja tilauksesi etenemisestä.,
+We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,"Lähetämme sinulle vahvistuksen ja tietoja tilauksesi etenemisestä. Jätä tämä tyhjäksi, jos et halua saada kampanjasähköposteja.",
+Yes,Kyllä,
+Yes Please,Kyllä kiitos,
+"Yes, remove it","Kyllä, poista","/* Yes, remove [the photo] */"
+You can add %d more for the same price.,Voit tilata %d lisää samaan hintaan.,
+You need to authorize the app to access your Instagram account if you want to import photos from there.,"Jos haluat käyttää Instagramin kuvia, anna sovellukselle lupa käyttää Instagram-tiliäsi.",
+You've only selected %d photo.,Olet valinnut vain %d kuvan.,
+You've only selected %d photos.,Olet valinnut vain %d kuvaa.,
+You've selected %d photos.,Olet valinnut %d kuvaa.,
+Your 15-16 digit card number,15–16-numeroinen kortin numero,
+Your card expiry date,Kortin vanhenemisajankohta,
+Your payment was not approved (transaction state: %@). Please try again.,Maksuasi ei hyväksytty (maksun tila: %@). Yritä uudelleen.,
+Your Phone,Oma puhelimesi,"/* Device, not number */"
+basket.Edit,Muokkaa,/* Edit basket item */
+We need access to your %@ photos,Sovellus tarvitsee käyttöluvan %@ -laitteen kuviin,/* Example: We need access to your iPhone photos */
+ZIP Code,ZIP,

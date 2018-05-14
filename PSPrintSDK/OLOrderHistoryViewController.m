@@ -55,9 +55,7 @@
     self.printOrderHistory = [OLPrintOrder printOrderHistory];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackOrderHistoryScreenViewed];
-#endif
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"") style:UIBarButtonItemStylePlain target:nil action:nil];
 }
@@ -67,9 +65,7 @@
 }
 
 - (void)dealloc{
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackOrderHistoryScreenDismissed];
-#endif
 }
 
 #pragma mark - UITableViewDataSource methods

@@ -54,19 +54,15 @@
     
     self.title = NSLocalizedStringFromTableInBundle(@"Shipping Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackShippingMethodScreenViewed:[OLUserSession currentSession].printOrder];
-#endif
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackShippingMethodScreenHitBack:[OLUserSession currentSession].printOrder];
     }
-#endif
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -100,9 +96,7 @@
     OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     id<OLPrintJob> job = printOrder.jobs[indexPath.section];
     OLShippingClass *shippingMethod = [[OLUserSession currentSession].printOrder shippingMethodsForJobs:@[job]][indexPath.item];
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackShippingMethodSelected:[OLUserSession currentSession].printOrder methodName:shippingMethod.className];
-#endif
     printOrder.jobs[indexPath.section].selectedShippingMethodIdentifier = shippingMethod.identifier;
     
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];

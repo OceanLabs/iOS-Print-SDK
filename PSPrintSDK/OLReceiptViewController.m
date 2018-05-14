@@ -187,9 +187,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     if  (!kiteVc){
         [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
     }
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackKiteDismissed];
-#endif
     if ([kiteVc.delegate respondsToSelector:@selector(kiteControllerDidFinish:)]){
         [kiteVc.delegate kiteControllerDidFinish:kiteVc];
     }
@@ -298,10 +296,8 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)retryWasSuccessful{
     if (self.printOrder.printed){
         [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
-#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackOrderSubmission:self.printOrder];
     }
-#endif
     
     [UIView transitionWithView:self.view duration:0.3f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         [self setupHeader];

@@ -606,7 +606,7 @@ NSString * const kOLOAuth2AccountStoreAccountType = @"kOLOAuth2AccountStoreAccou
     result = (__bridge_transfer NSDictionary *)cfResult;
 
     if (status != noErr) {
-        NSAssert1(status == errSecItemNotFound, @"Unexpected error while fetching accounts from keychain: %zd", status);
+        NSAssert1(status == errSecItemNotFound, @"Unexpected error while fetching accounts from keychain: %zd", (long)status);
         return nil;
     }
 
@@ -627,7 +627,7 @@ NSString * const kOLOAuth2AccountStoreAccountType = @"kOLOAuth2AccountStoreAccou
                            data, kSecAttrGeneric,
                            nil];
     OSStatus __attribute__((unused)) err = SecItemAdd((__bridge CFDictionaryRef)query, NULL);
-    NSAssert1(err == noErr, @"Error while adding token to keychain: %zd", err);
+    NSAssert1(err == noErr, @"Error while adding token to keychain: %zd", (long)err);
 }
 
 + (void)removeFromDefaultKeychain;
@@ -638,7 +638,7 @@ NSString * const kOLOAuth2AccountStoreAccountType = @"kOLOAuth2AccountStoreAccou
                            serviceName, kSecAttrService,
                            nil];
     OSStatus __attribute__((unused)) err = SecItemDelete((__bridge CFDictionaryRef)query);
-    NSAssert1((err == noErr || err == errSecItemNotFound), @"Error while deleting token from keychain: %zd", err);
+    NSAssert1((err == noErr || err == errSecItemNotFound), @"Error while deleting token from keychain: %zd", (long)err);
 
 }
 

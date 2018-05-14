@@ -86,6 +86,7 @@ Please select up to %ld photos,Wybierz nie więcej niż %Id obrazów,
 PRINT AT HOME,WYDRUKUJ W DOMU,
 Print It Anyway,"Nieważne, wydrukuj",
 Print Shop,Drukarnia,
+Privacy Policy,Polityka prywatności,
 PRODUCT OPTIONS,OPCJE PRODUKTÓW,
 Promotional Discount,Rabat promocyjny,
 Receipt,Odbiór,
@@ -123,3 +124,5 @@ You need to authorize the app to access your Instagram account if you want to im
 You've only selected %d photo.,Wybrano tylko %d zdjęcie.,
 You've only selected %d photos.,Wybrano tylko %d zdjęć.,
 Your Phone,Twój telefon,
+We need access to your %@ photos, Potrzebujemy dostępu do zdjęć w urządzeniu %@
+working days,dni robocze

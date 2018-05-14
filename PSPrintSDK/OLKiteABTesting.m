@@ -537,7 +537,7 @@ static dispatch_once_t srand48OnceToken;
     if (!experimentDict) {
         experimentDict = @{@"Classic" : @1, @"Mini" : @0};
     }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestProductTileStyle
+    [OLKiteABTesting splitTestWithName:kOLKiteABTestPackReviewStyle
                             conditions:@{
                                          @"Classic" : safeObject(experimentDict[@"Classic"]),
                                          @"Mini" : safeObject(experimentDict[@"Mini"])

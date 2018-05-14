@@ -158,6 +158,7 @@
 "Print order submission failed with a %lu HTTP response status code. Please try again." = "La soumission de commande d'impression a échoué avec un code d'état de réponse HTTP %lu. Veuillez réessayer.";
 "Print Shop" = "Print Shop";
 "Print these" = "Imprimer ceci";
+"Privacy Policy" = "Politique de confidentialité";
 "Processing" = "En cours de traitement";
 "PRODUCT OPTIONS" = "Options";
 "Promo Code" = "Code Promo";
@@ -202,7 +203,7 @@
 "Uploading Images \n%lu / %lu" = "Images en cours de téléchargement \n%lu / %lu";
 "View Item" = "Afficher";
 "WE HAVE RECEIVED\nYOUR ORDER" = "Nous avons reçu \n votre commande";
-"We need access to your %@ photos" = "We need access to your %@ photos";
+"We need access to your %@ photos" = "Nous avons besoin d'accéder à vos photos %@";
 "We'll send you confirmation and order updates." = "Nous vous enverrons une confirmation et des mises à jour de commande.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Nous vous enverrons une confirmation et des mises à jour de commande. Décochez cette case si vous ne souhaitez pas recevoir d'emails de notre part.";
 "Yes" = "oui";

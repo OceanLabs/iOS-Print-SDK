@@ -134,11 +134,11 @@ static CGFloat fadeTime = 0.3;
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info{
     [OLAnalytics setExtraInfo:info];
-    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
-        [OLUserSession currentSession].appAssets = assets;
-        [[OLUserSession currentSession] resetUserSelectedPhotos];
-        [OLUserSession currentSession].printOrder.userData = info;
-    }
+    NSArray <OLAsset *>*assetsCopy = [assets copy]; // Prevents assets being nilled in some cases
+    self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"];
+    [OLUserSession currentSession].appAssets = assetsCopy;
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
+    [OLUserSession currentSession].printOrder.userData = info;
     
     return self;
 }
@@ -306,9 +306,7 @@ static CGFloat fadeTime = 0.3;
 
 - (IBAction) dismiss{
     self.dismissing = YES;
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackKiteDismissed];
-#endif
     if ([self.delegate respondsToSelector:@selector(kiteControllerDidFinish:)]){
         [self.delegate kiteControllerDidFinish:self];
     }
@@ -320,9 +318,7 @@ static CGFloat fadeTime = 0.3;
 - (void)transitionToNextScreen{
     __weak OLKiteViewController *welf = self;
     [self.transitionOperation addExecutionBlock:^{
-#ifndef OL_NO_ANALYTICS
-        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
-#endif
+    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
         
         // The screen we transition to will depend on what products are available based on the developers filter preferences.
         NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];

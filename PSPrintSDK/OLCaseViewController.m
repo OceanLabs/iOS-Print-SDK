@@ -413,11 +413,9 @@
         }
     }
     [printOrder addPrintJob:job];
-#ifndef OL_NO_ANALYTICS
     if (!fromEdit){
         [OLAnalytics trackItemAddedToBasket:job];
     }
-#endif
     
     [printOrder saveOrder];
     
@@ -731,9 +729,7 @@
     
     [[NSOperationQueue mainQueue] addOperation:flipBlock];
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackEditScreenButtonTapped:@"Product Flip"];
-#endif
 }
 
 

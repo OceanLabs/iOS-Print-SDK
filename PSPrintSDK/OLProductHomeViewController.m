@@ -83,9 +83,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackCategoryListScreenViewed];
-#endif
 
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
@@ -604,9 +602,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView actionForBannerSectionForIndexPath:(NSIndexPath *)indexPath{
     if ([self printAtHomeAvailable]){
-#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackPrintAtHomeTapped];
-#endif
         OLAsset *asset = [OLUserSession currentSession].appAssets.firstObject;
         [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
             id printItem = [OLHPSDKWrapper printItemWithAsset:[UIImage imageWithData:data scale:1]];

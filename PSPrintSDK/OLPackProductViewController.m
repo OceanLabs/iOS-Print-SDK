@@ -97,9 +97,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 {
     [super viewDidLoad];
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
-#endif
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
@@ -192,11 +190,9 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLAsset userSelectedAssets].nonPlaceholderAssets.count];
     }
-#endif
 }
 
 - (void)viewDidLayoutSubviews{
@@ -324,11 +320,9 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
             }
         }
         [printOrder addPrintJob:job];
-#ifndef OL_NO_ANALYTICS
         if (!fromEdit){
             [OLAnalytics trackItemAddedToBasket:job];
         }
-#endif
     
     [printOrder saveOrder];
     
@@ -350,9 +344,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 }
 
 - (void) deletePhotoAtIndex:(NSUInteger)index{
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDeletedPhotoForProductName:self.product.productTemplate.name];
-#endif
     [[OLAsset userSelectedAssets] removeObjectAtIndex:index];
     
     if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 0){
@@ -394,9 +386,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenIncrementedPhotoQtyForProductName:self.product.productTemplate.name];
-#endif
 }
 
 - (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
@@ -425,9 +415,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackReviewScreenDecrementedPhotoQtyForProductName:self.product.productTemplate.name];
-#endif
 }
 
 - (void)editPhoto:(UIButton *)sender {

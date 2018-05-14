@@ -55,6 +55,8 @@ static NSString *nonNilStr(NSString *str) {
     return str == nil ? @"" : str;
 }
 
+static BOOL optInToRemoteAnalytics = NO;
+
 @interface OLProduct (Private)
 - (NSDecimalNumber*) unitCostDecimalNumber;
 - (NSString *)currencyCode;
@@ -80,6 +82,10 @@ static NSString *nonNilStr(NSString *str) {
     n = [NSNumber numberWithInteger:[n integerValue] + 1];
     [defaults setObject:n forKey:kKeySDKLaunchCount];
     [defaults synchronize];
+}
+
++ (void)setOptInToRemoteAnalytics:(BOOL)optIn {
+    optInToRemoteAnalytics = optIn;
 }
 
 + (NSString *)userDistinctId{
@@ -182,6 +188,10 @@ static NSString *nonNilStr(NSString *str) {
 }
 
 + (void)sendToMixPanelWithDictionary:(NSDictionary *)dict{
+    if (!optInToRemoteAnalytics) {
+        return;
+    }
+    
     NSError *error;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
     

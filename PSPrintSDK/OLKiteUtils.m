@@ -91,7 +91,7 @@
 }
 
 + (BOOL)recentsAvailable{
-    return [OLUserSession currentSession].appAssets.count == 0 && [OLUserSession currentSession].recentPhotos.count == 0;
+    return [OLUserSession currentSession].appAssets.count != 0 || [OLUserSession currentSession].recentPhotos.count != 0;
 }
 
 + (NSInteger)numberOfProvidersAvailable{

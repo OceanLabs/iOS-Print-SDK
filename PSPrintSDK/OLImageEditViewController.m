@@ -1386,9 +1386,7 @@ const NSInteger kOLEditTagCrop = 40;
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackEditScreenDidCancel];
-#endif
 }
 
 - (void)selectButton:(UIButton *)sender{
@@ -1397,15 +1395,11 @@ const NSInteger kOLEditTagCrop = 40;
     switch (sender.tag) {
         case kOLEditTagImageTools:
             self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"IMAGE TOOLS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Image Tools"];
-#endif
             break;
         case kOLEditTagImages:
             [self showImagePicker];
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Image Picker"];
-#endif
             return;
         case kOLEditTagProductOptionsTab:
             if (self.product.productTemplate.options.count == 1 || self.product.productTemplate.templateUI == OLTemplateUIApparel){
@@ -1422,23 +1416,17 @@ const NSInteger kOLEditTagCrop = 40;
                     self.editingTools.drawerLabel.text = [self.selectedOption.name uppercaseString];
                 }
                 self.editingTools.collectionView.tag = self.selectedOption.type;
-#ifndef OL_NO_ANALYTICS
                 [OLAnalytics trackEditScreenButtonTapped:self.selectedOption.code];
-#endif
             }
             else{
                 self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"PRODUCT OPTIONS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-#ifndef OL_NO_ANALYTICS
                 [OLAnalytics trackEditScreenButtonTapped:@"Product Options"];
-#endif
             }
 
             break;
         case kOLEditTagCrop:
             [self onButtonCropClicked:sender];
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
-#endif
             return;
             
         default:
@@ -1954,9 +1942,7 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Fonts"];
-#endif
         }
         else if (indexPath.item == 1){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
@@ -1966,9 +1952,7 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Text Color"];
-#endif
         }
         
     }
@@ -1976,21 +1960,15 @@ const NSInteger kOLEditTagCrop = 40;
         NSInteger adjustedIndexPathItem = indexPath.item - ([self cropIsInImageEditingTools] ? 1 : 0);
         if (indexPath.item == 0 && [self cropIsInImageEditingTools]){
             [self onButtonCropClicked:nil];
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
-#endif
         }
         else if (adjustedIndexPathItem == 0){
             [self onButtonHorizontalFlipClicked:nil];
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Flip"];
-#endif
         }
         else if (adjustedIndexPathItem == 1){
             [self onButtonRotateClicked:nil];
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Rotate"];
-#endif
         }
         else if (adjustedIndexPathItem == 2){
             if (!self.artboard.assetViews.firstObject.imageView.image){
@@ -2003,15 +1981,11 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Filters"];
-#endif
         }
         else if (adjustedIndexPathItem == 3){
             [self onButtonAddTextClicked:nil];
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:@"Add Text"];
-#endif
         }
     }
     else if ((collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3) && self.product.productTemplate.templateUI != OLTemplateUIApparel){
@@ -2067,9 +2041,7 @@ const NSInteger kOLEditTagCrop = 40;
         NSMutableArray *vcs = [self.navigationController.viewControllers mutableCopy];
         [vcs replaceObjectAtIndex:vcs.count-1 withObject:vc];
         [self.navigationController setViewControllers:vcs];
-#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackEditScreenButtonTapped:product.productTemplate.name];
-#endif
     }
     else if (self.selectedOption){
         OLProductTemplateOptionChoice *choice = self.selectedOption.choices[indexPath.item];
@@ -2081,9 +2053,7 @@ const NSInteger kOLEditTagCrop = 40;
         if (self.selectedChoice.color){
             self.editingTools.drawerLabel.text = [[self.selectedOption.name stringByAppendingString:[NSString stringWithFormat:@" - %@", self.selectedChoice.name]] uppercaseString];
         }
-#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackEditScreenButtonTapped:choice.code];
-#endif
     }
     else{
         UIButton *selectedButton;
@@ -2103,9 +2073,7 @@ const NSInteger kOLEditTagCrop = 40;
             [collectionView reloadData];
             [self showDrawerWithCompletionHandler:NULL];
             
-#ifndef OL_NO_ANALYTICS
             [OLAnalytics trackEditScreenButtonTapped:self.selectedOption.code];
-#endif
         }];
     }
     
@@ -2429,8 +2397,8 @@ const NSInteger kOLEditTagCrop = 40;
         }        [customVc safePerformSelector:@selector(setDelegate:) withObject:vc];
         [customVc safePerformSelector:@selector(setProductId:) withObject:self.product.templateId];
         [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
-        if ([vc respondsToSelector:@selector(setMaximumPhotos:)]){
-            vc.maximumPhotos = 1;
+        if ([customVc respondsToSelector:@selector(setMaximumPhotos:)]){
+            customVc.maximumPhotos = 1;
         }
         
         [self presentViewController:customVc animated:YES completion:NULL];

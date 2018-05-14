@@ -135,11 +135,9 @@
         }
     }
     [printOrder addPrintJob:job];
-#ifndef OL_NO_ANALYTICS
     if (!fromEdit){
         [OLAnalytics trackItemAddedToBasket:job];
     }
-#endif
     
     [printOrder saveOrder];
     

@@ -1,3 +1,19 @@
+## 6.9.0
+- Added: Link to Kite Privacy Policy on the basket screen
+- Added: Hungarian, Polish, Slovak, Czech, Portuguese, Danish, Norwegian, Swedish, Finnish localizations
+- Changed: Analytics are now opt-in
+- Changed: Minimum supported iOS is now 9.0
+- Fixed: Issue where the editing controls would disappear if the Camera Roll was disabled.
+
+### 6.8.10
+- Fixed: Launching the SDK with some assets would sometimes result in those assets being ignored.
+
+### 6.8.9
+- Fixed: Custom image pickers not getting the maximum amount of photos and the currently selected assets
+
+### 6.8.8
+- Fixed: An issue with remote configuration
+
 ### 6.8.6
 - Changed: Adding an item with more images than the pack size to the basket will not split it into 2 items in the basket.
 - Fixed: Custom image pickers not getting the maximum amount of photos for some products
