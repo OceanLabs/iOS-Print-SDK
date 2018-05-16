@@ -44,7 +44,7 @@
 #import "OLImageDownloader.h"
 #import "OLUserSession.h"
 
-#import <UMAnalytics/MobClick.h>
+#import <UMCAnalytics/UMAnalytics/MobClick.h>
 
 NSString *const kOLNotificationUserSuppliedShippingDetails = @"co.oceanlabs.pssdk.kOLNotificationUserSuppliedShippingDetails";
 NSString *const kOLNotificationUserCompletedPayment = @"co.oceanlabs.pssdk.kOLNotificationUserCompletedPayment";

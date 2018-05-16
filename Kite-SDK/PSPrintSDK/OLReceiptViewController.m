@@ -48,7 +48,7 @@
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
 
-#import <UMAnalytics/MobClick.h>
+#import <UMCAnalytics/UMAnalytics/MobClick.h>
 
 static const NSUInteger kSectionOrderSummary = 0;
 static const NSUInteger kSectionOrderId = 1;
