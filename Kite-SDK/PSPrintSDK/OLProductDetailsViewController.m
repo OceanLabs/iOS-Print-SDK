@@ -41,10 +41,8 @@
 
 @interface OLProductDetailsViewController ()
 
-@property (weak, nonatomic) IBOutlet UIView *moreOptionsView;
-@property (weak, nonatomic) IBOutlet UILabel *selectedOptionLabel;
-@property (weak, nonatomic) IBOutlet UILabel *optionLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *chevron;
+
+@property (weak, nonatomic) IBOutlet UILabel *detailLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *line;
 @property (weak, nonatomic) IBOutlet UITextView *detailsTextView;
 @property (assign, nonatomic) BOOL hasSetupProductDetails;
@@ -57,7 +55,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
-    self.detailsTextView.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product Details");
+    self.detailLabel.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product Details");
     
     if ([OLKiteABTesting sharedInstance].hidePrice){
         self.priceLabel.text = nil;
@@ -108,13 +106,6 @@
     }
     
     self.detailsTextView.attributedText = attributedString;
-    
-    if (self.product.productTemplate.options.count == 0){
-        [self.moreOptionsView removeFromSuperview];
-    }
-    else if (self.product.productTemplate.options.count != 1){
-        [self.selectedOptionLabel removeFromSuperview];
-    }
 }
 
 - (CGFloat)recommendedDetailsBoxHeight{

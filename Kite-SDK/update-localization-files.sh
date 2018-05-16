@@ -10,6 +10,7 @@ translated="KitePrintSDK.translated.csv"
 converted="KitePrintSDK.converted.strings"
 untranslated="KitePrintSDK.untranslated.csv"
 result="KitePrintSDK.result.strings"
+secondary="KitePrintSDK.secondary.csv"
 
 iconv -f UTF-16 -t UTF-8 $filename > $converted
 if [ ! -f $converted ]; then
@@ -30,8 +31,9 @@ pwd
 touch $untranslated
 touch $result
 touch $translated
+touch $secondary
 
-python ../../../update-localization-files.py "`pwd`/../$converted" "`pwd`/$translated" "`pwd`/$untranslated" "`pwd`/$result"
+python ../../../update-localization-files.py "`pwd`/../$converted" "`pwd`/$translated" "`pwd`/$untranslated" "`pwd`/$result" "`pwd`/$secondary"
 
 mv $result $filename
 

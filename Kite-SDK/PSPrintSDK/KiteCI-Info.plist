@@ -20,6 +20,8 @@
 		<string>de</string>
 		<string>it</string>
 		<string>pl</string>
+		<string>nl</string>
+		<string>hu</string>
 	</array>
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
@@ -42,7 +44,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>15</string>
+	<string>20</string>
 	<key>FacebookAppID</key>
 	<string>584401511683605</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

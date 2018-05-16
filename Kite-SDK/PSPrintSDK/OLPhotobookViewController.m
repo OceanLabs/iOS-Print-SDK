@@ -600,6 +600,9 @@ static const CGFloat kBookEdgePadding = 38;
     }
     
     [[OLUserSession currentSession].printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackItemAddedToBasket:job];
+#endif
     return job;
 }
 
@@ -768,18 +771,26 @@ static const CGFloat kBookEdgePadding = 38;
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
+    
+    BOOL fromEdit = NO;
     NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
     for (id<OLPrintJob> existingJob in jobs){
         if ([existingJob.uuid isEqualToString:self.product.uuid]){
             job.dateAddedToBasket = [existingJob dateAddedToBasket];
             job.extraCopies = existingJob.extraCopies;
             [printOrder removePrintJob:existingJob];
+            fromEdit = YES;
         }
     }
     [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
     [printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+    if (!fromEdit){
+        [OLAnalytics trackItemAddedToBasket:job];
+    }
+#endif
     
     [printOrder saveOrder];
     

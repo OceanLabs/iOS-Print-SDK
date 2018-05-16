@@ -30,6 +30,7 @@
 #import <Foundation/Foundation.h>
 
 @class OLPrintOrder;
+@class OLProductTemplate;
 @protocol OLPrintJob;
 
 // Main Events - Sent to MixPanel
@@ -54,6 +55,7 @@ static NSString *const kOLAnalyticsEventNamePaymentMethodScreenViewed = @"Paymen
 static NSString *const kOLAnalyticsEventNameShippingMethodScreenViewed = @"Shipping Method Screen Viewed";
 static NSString *const kOLAnalyticsEventNamePaymentMethodSelected = @"Payment Method Selected";
 static NSString *const kOLAnalyticsEventNameShippingMethodSelected = @"Shipping Method Selected";
+static NSString *const kOLAnalyticsEventNameItemAddedToBasket = @"Item Added To Basket";
 
 // Secondary Events - Not Sent to MixPanel
 static NSString *const kOLAnalyticsEventNameProductListScreenHitBack = @"Product List Screen Hit Back";
@@ -96,6 +98,7 @@ static NSString *const kOLAnalyticsEventNameEditScreenButtonTapped = @"Edit Scre
 static NSString *const kOLAnalyticsEventName = @"Event Name";
 static NSString *const kOLAnalyticsProductCategory = @"Product Category";
 static NSString *const kOLAnalyticsProductName = @"Product Name";
+static NSString *const kOLAnalyticsProductId = @"Product ID";
 static NSString *const kOLAnalyticsApplePayAvailable = @"Apple Pay Available";
 static NSString *const kOLAnalyticsPaymentMethod = @"Payment Method";
 static NSString *const kOLAnalyticsPhotoSource = @"Photo Source";
@@ -109,6 +112,7 @@ static NSString *const kOLAnalyticsItemsInOrder = @"Items In Order";
 static NSString *const kOLAnalyticsOrderCost = @"Order Cost";
 static NSString *const kOLAnalyticsOrderShippingCost = @"Order Shipping Cost";
 static NSString *const kOLAnalyticsCurrencyCode = @"Currency Code";
+static NSString *const kOLAnalyticsOrderId = @"Order ID";
 static NSString *const kOLAnalyticsItemPrice = @"Item Price";
 static NSString *const kOLAnalyticsPromoCode = @"Promo Code";
 static NSString *const kOLAnalyticsError = @"Error";
@@ -121,7 +125,7 @@ static NSString *const kOLAnalyticsButtonName = @"Button Name";
 + (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint;
 + (void)trackKiteDismissed;
 + (void)trackCategoryListScreenViewed;
-+ (void)trackProductDetailsScreenViewed:(NSString *)productName hidePrice:(BOOL)hidePrice;
++ (void)trackProductDetailsScreenViewed:(OLProductTemplate *)productTemplate hidePrice:(BOOL)hidePrice;
 + (void)trackProductDetailsViewOpened:(NSString *)productName hidePrice:(BOOL)hidePrice;
 + (void)trackProductDetailsViewClosed:(NSString *)productName hidePrice:(BOOL)hidePrice;
 + (void)trackProductDescriptionScreenHitBack:(NSString *)productName hidePrice:(BOOL)hidePrice;
@@ -138,6 +142,7 @@ static NSString *const kOLAnalyticsButtonName = @"Button Name";
 + (void)trackEditScreenFinishedEditingPhotoForProductName:(NSString *)productName;
 + (void)trackReviewScreenIncrementedPhotoQtyForProductName:(NSString *)productName;
 + (void)trackReviewScreenDecrementedPhotoQtyForProductName:(NSString *)productName;
++ (void)trackItemAddedToBasket:(id<OLPrintJob>)item;
 + (void)trackEditPhotoTappedForProductName:(NSString *)productName;
 + (void)trackOrderHistoryScreenViewed;
 + (void)trackOrderHistoryScreenDismissed;

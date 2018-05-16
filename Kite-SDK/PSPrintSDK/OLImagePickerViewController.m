@@ -1038,6 +1038,9 @@
     }
     
     [[OLUserSession currentSession].printOrder addPrintJob:job];
+#ifndef OL_NO_ANALYTICS
+    [OLAnalytics trackItemAddedToBasket:job];
+#endif
     return job;
 }
 

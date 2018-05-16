@@ -301,9 +301,9 @@
             }
             [customVc safePerformSelector:@selector(setDelegate:) withObject:imagePicker];
             [customVc safePerformSelector:@selector(setProductId:) withObject:product.templateId];
-            [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:[[NSMutableArray alloc] init]];
-            if ([vc respondsToSelector:@selector(setMaximumPhotos:)] && [self.delegate respondsToSelector:@selector(maxNumberOfPhotosToPick)]){
-                imagePicker.maximumPhotos = imagePicker.maximumPhotos;
+            [customVc safePerformSelector:@selector(setSelectedAssets:) withObject:imagePicker.selectedAssets];
+            if ([customVc respondsToSelector:@selector(setMaximumPhotos:)] && [self.delegate respondsToSelector:@selector(maxNumberOfPhotosToPick)]){
+                customVc.maximumPhotos = imagePicker.maximumPhotos;
             }
             
             [vc presentViewController:customVc animated:YES completion:NULL];

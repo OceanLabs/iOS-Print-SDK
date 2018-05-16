@@ -55,7 +55,7 @@
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
     NSArray *visuals = @[@"H:|-15-[ctaButton]-15-|",
-                         @"V:[ctaButton(50)]-15-|"];
+                         @"V:[ctaButton(50)]"];
     
     
     for (NSString *visual in visuals) {
@@ -63,6 +63,7 @@
     }
     
     [ctaButton.superview addConstraints:con];
+    [ctaButton.superview addConstraint:[NSLayoutConstraint constraintWithItem:ctaButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.bottomLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:-15]];
 
 }
 
