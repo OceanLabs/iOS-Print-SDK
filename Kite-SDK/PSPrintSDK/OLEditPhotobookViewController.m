@@ -73,9 +73,7 @@ static const NSInteger kSectionPages = 1;
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPhotobookEditScreenViewed:self.product.productTemplate.name];
-#endif
     
     self.title = NSLocalizedStringFromTableInBundle(@"Move Pages", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen that allows the user to move the pages of a book around");
     
@@ -181,11 +179,9 @@ static const NSInteger kSectionPages = 1;
     
     self.navigationItem.rightBarButtonItem.enabled = YES;
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackPhotobookEditScreenHitBack:self.product.productTemplate.name];
     }
-#endif
 }
 
 - (void)viewWillAppear:(BOOL)animated{

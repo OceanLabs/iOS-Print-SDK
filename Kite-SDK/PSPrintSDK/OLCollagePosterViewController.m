@@ -264,11 +264,9 @@
     [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
     job.redeemedOffer = self.product.redeemedOffer;
     [printOrder addPrintJob:job];
-#ifndef OL_NO_ANALYTICS
     if (!fromEdit){
         [OLAnalytics trackItemAddedToBasket:job];
     }
-#endif
     
     [printOrder saveOrder];
     

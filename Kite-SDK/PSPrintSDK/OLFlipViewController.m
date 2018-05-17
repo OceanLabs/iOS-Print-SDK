@@ -79,27 +79,6 @@ NSString *OLFlipViewControllerDidFinishAnimatingNotification = @"com.markpospese
 	[self addGestures];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
-
-#pragma mark - rotation callbacks
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return ![self isAnimating];
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-	if ([[self delegate] respondsToSelector:@selector(flipViewController:orientationForInterfaceOrientation:)])
-		[self setOrientation:[[self delegate] flipViewController:self orientationForInterfaceOrientation:toInterfaceOrientation]];
-	
-	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-}
-
 #pragma mark - Properties
 
 - (UIViewController *)viewController

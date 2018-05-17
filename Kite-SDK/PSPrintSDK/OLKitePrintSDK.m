@@ -129,6 +129,10 @@ static NSString *instagramRedirectURI = nil;
     [OLAnalytics addPushDeviceToken:deviceToken];
 }
 
++ (void)setOptInToRemoteAnalytics:(BOOL)optIn {
+    [OLAnalytics setOptInToRemoteAnalytics:optIn];
+}
+
 + (NSString *_Nonnull)paypalEnvironment {
     switch (environment) {
         case OLKitePrintSDKEnvironmentLive: return @"live";/*PayPalEnvironmentProduction*/;

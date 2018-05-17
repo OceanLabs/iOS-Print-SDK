@@ -122,6 +122,7 @@ static NSString *const kOLAnalyticsButtonName = @"Button Name";
 @interface OLAnalytics : NSObject
 
 + (void)addPushDeviceToken:(NSData *)deviceToken;
++ (void)setOptInToRemoteAnalytics:(BOOL)optIn;
 + (void)trackKiteViewControllerLoadedWithEntryPoint:(NSString *)entryPoint;
 + (void)trackKiteDismissed;
 + (void)trackCategoryListScreenViewed;

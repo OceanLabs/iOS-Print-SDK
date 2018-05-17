@@ -52,9 +52,7 @@
     CGRect f = self.navigationItem.titleView.frame;
     self.navigationItem.titleView.frame = CGRectMake(f.origin.x, f.origin.y + 25, f.size.width, f.size.height);
  
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackQualityInfoScreenViewed];
-#endif
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -83,11 +81,9 @@
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackQualityScreenHitBack];
     }
-#endif
 }
 
 - (void)viewWillAppear:(BOOL)animated{

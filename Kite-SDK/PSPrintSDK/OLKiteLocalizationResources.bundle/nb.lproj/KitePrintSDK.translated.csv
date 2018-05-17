@@ -1,0 +1,223 @@
+ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!","**Kvalitetsgaranti**\nProduktene våre er av høyeste kvalitet, og vi er sikre på at du kommer til å elske dem. Hvis ikke tilbyr vi en kostnadsfri pengene tilbake-garanti. Kos deg!",
+"Failed to validate card details, please try again.",Kunne ikke validere kortinformasjon. Prøv på nytt.,
+"No, keep it","Nei, behold det","/* No, keep [the photo] */"
+"This will log out of any accounts, clear selected photos and start over","Du blir nå logget av kontoene dine, valgte bilder blir fjernet, og du starter på nytt",
+"Yes, remove it","Ja, fjern den","/* Yes, remove [the photo] */"
+%@ working days,%@ virkedager,"/* Examples: 2-5 days, 7 days */"
+%ldx%ld Collage,%ldx%ld montasje,/* example: 5x7 Collage */
+1 day,1 dag,
+401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,401 Unauthorized Request Error-feil under forsøk på å laste opp en fil. Kontroller at du inkluderte en godkjenningsoverskrift og at den vedlagte godkjenningsinformasjonen er korrekt.,
+500 Internal Server Error whilst trying to upload an asset. Please try again.,500 Internal Server Error-feil under forsøk på å laste opp en fil. Prøv på nytt.,
+Add %ld %@!,Legg til %ld %@!,
+Add Address,Legg til en adresse,
+Add Credit Card (TEST),Legg til et kredittkort (TEST),
+Add Credit Card,Legg til et kredittkort,
+Add Credit/Debit Card,Legg til et kredittkort/debetkort,
+Add New Address,Legg til en ny adresse,
+Add Payment Method,Legg til en betalingsmetode,
+Add Text,Legg til tekst,/* Add text on image */
+Add a %@!,Legg til et %@!,
+Add a photo\non this side,Legg til et bilde\npå denne siden,/* this side [of the shirt] */
+Add another %@!,Legg til enda en %@!,
+Add more,Legg til flere,/* Add more [photos] */
+Add to Basket,Legg til i handlekurv,
+Add,Legg til,
+Address Book,Adressebok,
+All Photos,Alle bilder,
+Alternatively type the following URL into your mobile browser's address bar,Alternativt kan du skrive inn følgende URL-adresse i adresselinjen i nettleseren på mobilenheten,
+Are you sure you want to delete this item?,Er du sikker på at vil slette denne varen?,/* Refers to a basket item */
+Are you sure?,Er du sikker?,
+Authorise,Godkjenn,
+BACK,BAKSIDE,/* Back of the photo */
+Back Image Is Too Small,Bildet på baksiden er for lite,
+Back,Tilbake,
+Basket is empty,Handlekurven er tom,
+CVV,CVV,/* The credit card security code */
+Cancel,Avbryt,
+Card Number,Kortnummer,
+Checking Code,Kontrollerer kode,/* Checking promo code */
+Checkout for Free!,Gå gjennom kassen uten å betale!,
+Checkout,Betal,
+Choose Address,Velg adresse,
+Choose Country,Velg land,
+Choose Delivery Address,Velg leveringsadresse,
+Choose Photo,Velg bilde,
+Choose Photos,Velg bilder,
+City,Poststed,
+Clearing Code,Fjerner kode,/* Clearing promo code */
+Completed Orders,Fullførte bestillinger,
+Continue Shopping,Fortsett å handle,
+County,Fylke,
+Create Image,Opprett bilde,
+Create a %@ for\nonly %@ %@,Opprett en %@ for\nbare %@ %@,
+Create a pack for\nonly %@ %@,Opprett en pakke for\nbare %@ %@,
+Create another %@ for\nonly %@ %@,Opprett %@ for\nbare %@ %@,
+Create another pack for\nonly %@ %@,Opprett en ny pakke for\nbare %@ %@,
+Crop,Beskjær,/* Crop image */
+Default,Standard,
+Delete Item,Slett vare,/* Delete [basket item] */
+Delivery Details,Leveringsinformasjon,
+Description,Beskrivelse,/* Product description */
+Details,Detaljer,/* Product Details */
+Discard Edits,Forkast endringer,
+Do you want to log out of %@?,Vil du logge av %@?,/* Log out of Instagram/Facebook */
+Do you want to remove this photo?,Ønsker du å fjerne dette bildet?,
+Done,Fullført,
+Edit Address,Rediger adresse,
+Edit,Rediger,/* Edit image */
+Email,E-post,
+End Session,Avslutt økt,
+Enter Address Manually,Skriv inn adressen manuelt,
+Enter a valid CVV number,Skriv inn et gyldig CVV-nummer,/* The credit card security number */
+Enter a valid card number,Skriv inn et gyldig kortnummer,
+Enter a valid expiry date,Skriv inn en gyldig utløpsdato,/* For credit cards */
+Error validating the order. Please try again later.,Feil under validering av bestillingen. Prøv igjen senere.,
+FREE,GRATIS,"/* Free, no cost */"
+FRONT,FORSIDE,/* Front of the photo */
+Failed to download phone case mask. Please check your internet connectivity and try again,"Kunne ikke laste ned telefonetuimaske. Kontroller Internett-tilkoblingen din, og prøv på nytt",
+Failed to get the price of the order. Please try again.,Kunne ikke hente prisen på bestillingen. Prøv på nytt.,
+Failed to get upload URL. Try again later.,Kunne ikke hente URL-adressen for opplasting. Prøv igjen senere.,
+Failed to log in to Instagram. Please check your internet connectivity and try again,"Kunne ikke logge på Instagram. Kontroller Internett-tilkoblingen din, og prøv på nytt",
+Failed to store card details with PayPal. Please try again.,Kunne ikke lagre kortinformasjon med PayPal. Prøv på nytt.,
+Failed to synchronize product templates. Please try again.,Kunne ikke synkronisere produktmaler. Prøv på nytt.,
+Failed to validate the order. Please try again.,Kunne ikke validere bestillingen. Prøv på nytt.,
+Filters,Filtre,/* Image filters */
+First Name,Fornavn,
+Flip,Snu,/* Horizontally flip image */
+Fonts,Skrifter,
+For only %@ extra,For bare %@ ekstra,/* [Add a photo on this side of the shirt] for only $4.00 extra */
+From,Fra,
+Great gifts for all the family,Flotte gaver for hele familien,
+IMAGE TOOLS,BILDEVERKTØY,
+Image Is Too Small,Bildet er for lite,
+Image upload failed with a %lu HTTP response status code. Please try again.,Opplasting av bilde mislyktes med en %lu HTTP-svarstatuskode. Prøv på nytt.,
+Invalid Email Address,Ugyldig e-postadresse,
+Invalid Phone Number,Ugyldig telefonnummer,
+Large,Stor,
+Last Name,Etternavn,
+Let's pick\nan image!,La oss velge\net bilde!,"/* Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half. */"
+Line 1,Linje 1,
+Line 2,Linje 2,
+Log In,Logg på,
+Log out,Logg ut,
+Login,Logg på,
+MM/YY,MM/ÅÅ,/* Credit card date format: MonthMonth/YearYear */
+MORE ITEMS\nCOMING SOON!,FLERE VARER\nKOMMER SNART!,
+Maximum Photos Reached,Maksimalt antall bilder er nådd,
+Medium,Medium,
+Missing Delivery Address,Manglende leveringsadresse,
+Move Pages,Flytt sider,/* Title of a screen that allows the user to move the pages of a book around */
+New Payment,Ny betaling,
+Next,Neste,
+No Thanks,Nei takk,
+No,Nei,
+Not now,Ikke nå,
+OK,OK,/* Acknowledgent to an alert dialog. */
+OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,OPS\nNOE GIKK GALT\n PRØV IGJEN NEDENFOR,
+Only registered %d/%d image URLs with the asset endpoint,Bare registrerte %d/%d bilde-URL-adresser med ressursendepunkt,
+Oops!,Ops!,
+Or print on a product below ▼,Eller trykk på et produkt nedenfor ▼,
+Order History,Bestillingshistorikk,
+Order Id,Bestillings-ID,
+Order Summary,Bestillingssammendrag,
+Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.,"Butikken vår vedlikeholdes akkurat nå, så ingen produkter er tilgjengelige for kjøp på dette tidspunktet. Prøv på nytt om en liten stund.",
+PRINT AT HOME,SKRIV UT HJEMME,
+Privacy Policy,Retningslinjer for personvern,
+PRODUCT OPTIONS,PRODUKTALTERNATIVER,
+Pack of,Pakke med,/* Pack of [20 square photos] */
+Pay %@,Betal %@,/* Pay [$10.00] */
+Paying With,Betale med,/* Paying with [PayPal/Credit Card] */
+Payment (TEST),Betaling (TEST),
+Payment Method,Betalingsmåte,
+Payment,Betaling,
+Phone,Telefon,
+Photo Library,Fotobibliotek,
+Please add %d more.,Legg til %d til.,/* Please add [a number] more [photos] */
+Please add some photos to your photo book,Legg til noen bilder i bildeboken,
+Please add some photos,Legg til noen bilder,
+Please choose an address to have your order shipped to,Velg en adresse som bestillingen skal sendes til,
+Please enter a card expiry date in the future,Skriv inn en fremtidig utløpsdato for kortet,/* For credit cards */
+Please enter a valid card number,Angi et gyldig kortnummer,
+Please enter a valid email address,Angi en gyldig e-postadresse,
+Please enter a valid phone number,Angi et gyldig telefonnummer,
+Please enter your first and last name.,Angi fornavnet og etternavnet ditt.,
+Please fill in Line 1 of the address.,Fyll ut linje 1 av adressen.,
+Please fill in your city.,Fyll inn poststedet ditt.,
+Please fill in your postal code.,Fyll inn postkoden din.,
+Please scan the QR code using a QR reader app on your device.,Skann QR-koden ved å bruke en app for QR-kodelesing på enheten din.,
+Please select %d images.,Velg %d bilder.,/* Please select [number] images */
+Please select %ld photos,Velg %ld bilder,
+Please select at least %d images.,Velg minst %d bilder.,/* Please select at least [number] images */
+Please select no more than %d images.,Velg ikke mer enn %d bilder.,/* Please select no more than [number] images */
+Please select only %ld photo,Velg bare %ld bilde,
+Please select some images.,Velg noen bilder.,
+Please select up to %ld photos,Velg opptil %ld bilder,
+Please zoom out or pick a higher quality image,Zoom ut eller velg et bilde av høyere kvalitet,
+Postcode,Postnummer,
+Powered by Kite.ly,Drevet av Kite.ly,
+Price,Pris,
+Print It Anyway,Skriv ut uansett,
+Print Shop,Print Shop,
+Print order submission failed with a %lu HTTP response status code. Please try again.,Innsending av utskriftsbestilling mislyktes med en %lu HTTP-svarstatuskode. Prøv på nytt.,
+Print these,Skriv ut disse,
+Processing,Behandler,/* Processing the order */
+Promo Code,Kampanjekode,
+Promotional Discount,Kampanjerabatt,
+Quantity,Antall,/* Quantity of photos */
+Receipt,Kvittering,
+Recents,Nylige,/* Recent photos used */
+Remove?,Fjerne?,/* Remove [photo]? */
+Required by the postal service in case there are any issues during delivery.,Kreves av postvesenet i tilfelle det oppstår problemer ved levering.,
+Retry,Prøv på nytt,
+Review,Vise tatt bilde,/* Title of a screen where the user can review the product before ordering */
+Rotate,Roter,/* Rotate image by 90 degrees */
+Save as Copy,Lagre som kopi,
+Save,Lagre,
+Scan QR Code,Skann QR-kode,
+Select Size,Velg størrelse,/* Example: Shirt size */
+Shipping Method,Forsendelsesmetode,
+Shipping,Sender,
+Single Photo Poster,Plakat med ett bilde,
+Size,Størrelse,/* Physical size of the product */
+Small,Liten,
+Start Creating,Begynn å opprette,/* Start Creating [your product] */
+Start by tapping this button,Start ved å trykke på denne knappen,
+Store Maintenance,Lagre vedlikehold,
+Swipe to rotate your mug,Dra for å rotere koppen,
+TEXT TOOLS,TEKSTVERKTØY,
+Tap image to change or hold to move,"Trykk på bildet for å endre, eller hold for å flytte",
+Tap image to change,Trykk på bildet for å endre,
+Tap image to edit or hold to move,"Trykk på bildet for å redigere, eller hold for å flytte",
+Tap image to edit,Trykk på bildet for å redigere,
+Tap on this button,Trykk på denne knappen,
+Text Colour,Tekstfarge,
+There was a problem getting Print Shop products. Check your Internet connectivity or try again later.,"Det oppstod et problem under henting av Print Shop-produkter. Kontroller Internett-tilkoblingen, eller prøv på nytt senere.",
+There was an error getting one of your photos. Please remove or replace it.,Det oppstod en feil ved henting av ett av bildene dine. Fjern det eller bytt det ut.,
+There was an error trying to validate the card. Please try again later.,Det oppstod en feil da du forsøkte å validere kortet. Prøv igjen senere.,
+This is the 3-4 digit verification number/security code normally found on the back of your card,Dette er bekreftelsesnummeret/sikkerhetskoden på 3 eller 4 siffer som vanligvis er å finne på baksiden av kortet,
+This will discard your edits.,Endringene dine blir nå forkastet.,"/* The image edits, like crop, filters, etc */"
+Total,Totalt,
+Tracked,Sporet,
+Uploading Images \n%lu / %lu,Laster opp bilder \n%lu / %lu,
+Uploading book,Laster opp bok,
+View Item,Vis vare,/* View [basket] item */
+WE HAVE RECEIVED\nYOUR ORDER,VI HAR MOTTATT\nBESTILLINGEN DIN,
+We need access to your %@ photos,Vi trenger tilgang til bildene i %@,/* Example: We need access to your iPhone photos */
+We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,Vi sender deg en bekreftelse og bestillingsoppdateringer. Fjern merkingen av denne boksen for å melde deg ut av e-postkampanjer.,
+We'll send you confirmation and order updates.,Vi sender deg en bekreftelse og bestillingsoppdateringer.,
+Yes Please,Ja takk,
+Yes,Ja,
+You can add %d more for the same price.,Du kan legge til %d til for samme pris.,
+You need to authorize the app to access your Instagram account if you want to import photos from there.,Du må godkjenne appen for å få tilgang til Instagram-kontoen din hvis du vil importere bilder derfra.,
+You've only selected %d photo.,Du har bare valgt %d bilde.,
+You've only selected %d photos.,Du har bare valgt %d bilder.,
+You've selected %d photos.,Du har valgt %d bilder.,
+Your 15-16 digit card number,Kortnummeret ditt på 15–16 siffer,
+Your Phone,Telefonen din,"/* Device, not number */"
+Your card expiry date,Kortets utløpsdato,
+Your payment was not approved (transaction state: %@). Please try again.,Betalingen din ble ikke godkjent (transaksjonstilstand: %@). Prøv på nytt.,
+ZIP Code,ZIP,
+basket.Edit,Rediger,/* Edit basket item */
+cm,cm,/* Centimeters */
+inches,tommer,

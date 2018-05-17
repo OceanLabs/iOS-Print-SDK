@@ -67,6 +67,14 @@
  */
 + (void)addPushDeviceToken:(NSData *_Nonnull)deviceToken;
 
+
+/**
+ Allow the SDK to track events in the SDK for analytics purposes. Default value is false
+
+ @param optIn Allow remote analytics tracking
+ */
++ (void)setOptInToRemoteAnalytics:(BOOL)optIn;
+
 /**
  *  Optionally enable Instagram photo picking functionality (you'll need to take 5 minutes to register your app https://instagram.com/developer/)
  *  After you have registered, call this method to set everything up.

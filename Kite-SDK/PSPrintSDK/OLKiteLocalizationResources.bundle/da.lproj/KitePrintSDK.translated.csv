@@ -1,0 +1,127 @@
+ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+%@ working days,%@ arbejdsdage,"/* Examples: 2-5 days, 7 days */"
+%ldx%ld Collage,%ldx%ld collage,/* example: 5x7 Collage */
+1 day,1 dag,
+Add %ld %@!,Tilføj %ld %@!,
+Add a %@!,Tilføj en %@!,
+Add a photo\non this side,Tilføj et foto\npå denne side,/* this side [of the shirt] */
+Add another %@!,Tilføj en anden %@!,
+Add Credit Card,Tilføj kreditkort,
+Add Credit Card (TEST),Tilføj kreditkort (TEST),
+Add Text,Tilføj tekst,/* Add text on image */
+All Photos,Alle fotos,
+Alternatively type the following URL into your mobile browser's address bar,Alternativt kan du indtaste følgende hyperlink i adressefeltet i din mobile enheds webbrowser,
+Are you sure you want to delete this item?,"Er du sikker på, at du vil slette denne vare?",/* Refers to a basket item */
+Are you sure?,Er du sikker?,
+Authorise,Godkend,
+BACK,BAGSIDE,/* Back of the photo */
+Back Image Is Too Small,Bagsidebillede er for lille,
+Checkout,Betaling,
+Choose Photo,Vælg foto,
+cm,cm,/* Centimeters */
+Completed Orders,Gennemførte ordrer,
+Create a %@ for\nonly %@ %@,Lav en %@ for\nkun %@ %@,
+Create a pack for\nonly %@ %@,Lav en pakke for\nkun %@ %@,
+Create another %@ for\nonly %@ %@,Lav en ny %@ for\nkun %@ %@,
+Create another pack for\nonly %@ %@,Lav en ny pakke for\nkun %@ %@,
+Create Image,Opret billede,
+Crop,Beskær,/* Crop image */
+CVV,CVV-nummer,/* The credit card security code */
+Default,Standard,
+Delete Item,Fjern vare,/* Delete [basket item] */
+Description,Beskrivelse,/* Product description */
+Discard Edits,Kassér ændringer,
+Do you want to log out of %@?,Vil du logge ud af %@?,/* Log out of Instagram/Facebook */
+Do you want to remove this photo?,Vil du fjerne dette foto?,
+End Session,Afslut session,
+Enter a valid card number,Indtast et gyldigt kortnummer,
+Error validating the order. Please try again later.,Fejl under godkendelse af ordren. Prøv igen senere.,
+Failed to download phone case mask. Please check your internet connectivity and try again,"Kunne ikke hente skabelon til telefoncover. Kontrollér din internetforbindelse, og prøv igen",
+Failed to get upload URL. Try again later.,Kunne ikke hente overførsels-URL. Prøv igen senere.,
+Failed to log in to Instagram. Please check your internet connectivity and try again,"Kunne ikke logge på Instagram. Kontrollér din internetforbindelse, og prøv igen",
+"Failed to validate card details, please try again.",Kunne ikke validere kortoplysninger. Prøv igen.,
+Filters,Filtre,/* Image filters */
+Flip,Vend,/* Horizontally flip image */
+Fonts,Skrifttyper,
+For only %@ extra,For kun %@ mere,/* [Add a photo on this side of the shirt] for only $4.00 extra */
+FREE,GRATIS,"/* Free, no cost */"
+From,Fra,
+FRONT,FORSIDE,/* Front of the photo */
+Great gifts for all the family,Flotte gaver til hele familien,
+IMAGE TOOLS,BILLEDVÆRKTØJER,
+Image upload failed with a %lu HTTP response status code. Please try again.,Overførsel af billede mislykkedes med en %lu HTTP-svarstatuskode. Prøv igen.,
+inches,tommer,
+Large,Stor,
+Let's pick\nan image!,Lad os vælge\net billede!,"/* Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half. */"
+Log In,Log ind,
+Log out,Log ud,
+Login,Indlogning,
+Maximum Photos Reached,Maksimalt antal fotos nået,
+Medium,Medium,
+MM/YY,MM/ÅÅ,/* Credit card date format: MonthMonth/YearYear */
+MORE ITEMS\nCOMING SOON!,FLERE PRODUKTER\nPÅ VEJ!,
+No,Nej,
+No Thanks,Nej tak,
+"No, keep it","Nej, behold det","/* No, keep [the photo] */"
+Not now,Ikke nu,
+OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,UPS!\nNOGET GIK GALT\n PRØV IGEN NEDENFOR,
+Or print on a product below ▼,Eller print på et produkt nedenfor ▼,
+Order History,Ordrehistorik,
+Pack of,Pakke med,/* Pack of [20 square photos] */
+Photo Library,Fotobibliotek,
+Please add %d more.,Tilføj %d mere.,/* Please add [a number] more [photos] */
+Please add some photos,Tilføj nogle fotos,
+Please enter your first and last name.,Indtast dit fornavn og efternavn.,
+Please fill in Line 1 of the address.,Udfyld linje 1 i adressen.,
+Please fill in your city.,Udfyld din by.,
+Please fill in your postal code.,Udfyld dit postnummer.,
+Please scan the QR code using a QR reader app on your device.,Scan QR-koden ved hjælp af en QR-læser-app på din enhed.,
+Please select %d images.,Vælg %d billeder.,/* Please select [number] images */
+Please select %ld photos,Vælg %ld fotos,
+Please select at least %d images.,Vælg mindst %d billeder.,/* Please select at least [number] images */
+Please select no more than %d images.,Vælg højst %d billeder.,/* Please select no more than [number] images */
+Please select only %ld photo,Vælg kun %ld foto,
+Please select some images.,Vælg nogle billeder.,
+Please select up to %ld photos,Vælg op til %ld fotos,
+PRINT AT HOME,PRINT DERHJEMME,
+Print It Anyway,Print alligevel,
+Print Shop,Print Shop,
+Privacy Policy,Fortrolighedspolitik
+PRODUCT OPTIONS,PRODUKTVALG,
+Promotional Discount,Introduktionsrabat,
+Receipt,Kvittering,
+Recents,Seneste,/* Recent photos used */
+Remove?,Fjern?,/* Remove [photo]? */
+Rotate,Rotér,/* Rotate image by 90 degrees */
+Save as Copy,Gem som kopi,
+Scan QR Code,Scan QR-kode,
+Select Size,Vælg format,/* Example: Shirt size */
+Shipping Method,Forsendelsesmetode,
+Small,Lille,
+Start by tapping this button,Start ved at trykke på denne knap,
+Start Creating,Gå i gang med dit design,/* Start Creating [your product] */
+Swipe to rotate your mug,Swipe for at dreje dit krus,
+Tap image to change,Tryk på billedet for at ændre,
+Tap image to change or hold to move,"Tryk på billedet for at ændre, eller hold nede for at flytte",
+Tap image to edit,Tryk på billedet for at redigere,
+Tap image to edit or hold to move,"Tryk på billedet for at redigere, eller hold nede for at flytte",
+Tap on this button,Tryk på denne knap,
+Text Colour,Tekstfarve,
+TEXT TOOLS,TEKSTVÆRKTØJER,
+There was a problem getting Print Shop products. Check your Internet connectivity or try again later.,"Der opstod en fejl, da vi skulle hente Printshop-produkterne. Kontrollér din internetforbindelse, eller prøv igen senere.",
+There was an error getting one of your photos. Please remove or replace it.,Der opstod en fejl ved hentning af et af dine fotos. Fjern eller udskift det.,
+There was an error trying to validate the card. Please try again later.,Der opstod en fejl under forsøg på at godkende kortet. Prøv igen senere.,
+This will discard your edits.,Dette vil kassere dine ændringer.,"/* The image edits, like crop, filters, etc */"
+"This will log out of any accounts, clear selected photos and start over","Dette vil logge alle konti af, slette valgte fotos og starte forfra",
+Tracked,Sporet,
+Uploading book,Overfører bog,
+View Item,Vis vare,/* View [basket] item */
+WE HAVE RECEIVED\nYOUR ORDER,VI HAR MODTAGET\nDIN ORDRE,
+Yes,Ja,
+Yes Please,"Ja, tak",
+"Yes, remove it","Ja, fjern den","/* Yes, remove [the photo] */"
+You need to authorize the app to access your Instagram account if you want to import photos from there.,"Du skal give app'en tilladelse til at få adgang til din Instagram-konto, hvis du vil importere billeder derfra.",
+You've only selected %d photo.,Du har kun valgt %d foto.,
+You've only selected %d photos.,Du har kun valgt %d fotos.,
+Your Phone,Din telefon,"/* Device, not number */"
+We need access to your %@ photos,Vi skal have adgang til dine fotos på %@,/* Example: We need access to your iPhone photos */
