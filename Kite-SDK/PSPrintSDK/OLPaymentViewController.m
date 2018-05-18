@@ -81,8 +81,6 @@
 #import "UIColor+OLHexString.h"
 #import "OLBasketItemTableViewCell.h"
 
-#import <FirebaseAuth/FirebaseAuth/FIRUser.h>
-
 @import PassKit;
 @import Contacts;
 
@@ -1305,20 +1303,11 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         }
         else if (selectedPaymentMethod == kOLPaymentMethodApplePay){
             
-            if ([FIRAuth auth].currentUser.uid.length == 0) {
-                [self login];
-            }else{
-                [self payWithApplePay];
-            }
-            
+            [self payWithApplePay];
         }
         else if (selectedPaymentMethod == kOLPaymentMethodPayPal){
             
-            if ([FIRAuth auth].currentUser.uid.length == 0) {
-                [self login];
-            }else{
-               [self payWithPayPal];
-            }
+             [self payWithPayPal];
         }
     }];
 }
@@ -1351,13 +1340,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     
     OLShippingMethodsViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLShippingMethodsViewController"];
     [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (void)login {
-    
-    Class loginClass = NSClassFromString(@"MBLoginViewController");
-    id LoginViewController = [[loginClass alloc] init];
-    [self presentViewController:LoginViewController animated:YES completion:NULL];
 }
 
 #pragma mark - PayPalPaymentDelegate methods

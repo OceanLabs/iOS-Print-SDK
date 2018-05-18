@@ -40,6 +40,8 @@
 #import "OLFacebookSDKWrapper.h"
 #import "OLKiteViewController+Private.h"
 
+#import <FirebaseAuth/FIRUser.h>
+
 @import Contacts;
 @import PassKit;
 
@@ -157,8 +159,16 @@
 }
 
 + (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
-    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
-    handler(vc);
+    
+    if ([FIRAuth auth].currentUser.uid.length == 0) {
+        Class loginClass = NSClassFromString(@"MBLoginViewController");
+        id loginVC = [loginClass new];
+        UINavigationController *logNC = [[UINavigationController alloc] initWithRootViewController:loginVC];
+        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:logNC animated:YES completion:NULL];        
+    }else{
+        OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
+        handler(vc);
+    }
 }
 
 + (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
