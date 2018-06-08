@@ -872,10 +872,6 @@
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
-    
-    [[OLUserSession currentSession].printOrder addPrintJob:job];
-    [OLAnalytics trackItemAddedToBasket:job];
-    return job;
 }
 
 @end
