@@ -511,6 +511,11 @@
         ((OLImagePickerPhotosPageViewController *)vc).collectionView.contentOffset = CGPointMake(0, -offset);
         ((OLImagePickerPhotosPageViewController *)vc).albumsContainerHeight.constant = self.view.frame.size.height;
     }
+    else if ([vc isKindOfClass:[OLImagePickerLoginPageViewController class]]){
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0){
+            [(OLImagePickerLoginPageViewController *)vc labelTopConstraint].constant = self.sourcesCollectionView.frame.size.height + 20;
+        }
+    }
     else{
         ((OLImagePickerPhotosPageViewController *)vc).albumLabelContainerTopCon.constant = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height + 10;
     }
