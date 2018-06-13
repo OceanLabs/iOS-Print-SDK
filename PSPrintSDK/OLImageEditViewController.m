@@ -1744,7 +1744,13 @@ const NSInteger kOLEditTagCrop = 40;
         
         if (indexPath.item == 0){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"Aa"]];
-            [(UILabel *)[cell viewWithTag:20] setText:NSLocalizedStringFromTableInBundle(@"Fonts", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")];
+            NSString *text = NSLocalizedStringFromTableInBundle(@"Fonts", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+            [(UILabel *)[cell viewWithTag:20] setText:text];
+            if ([text containsString:@" "]){
+                [(UILabel *)[cell viewWithTag:20] setNumberOfLines:2];
+            } else {
+                [(UILabel *)[cell viewWithTag:20] setNumberOfLines:1];
+            }
         }
         else if (indexPath.item == 1){
             [(UIImageView *)[cell viewWithTag:10] setImage:[UIImage imageNamedInKiteBundle:@"paint-bucket-icon"]];
