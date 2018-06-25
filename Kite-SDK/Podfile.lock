@@ -1,45 +1,85 @@
 PODS:
-  - Bolts (1.8.4):
-    - Bolts/AppLinks (= 1.8.4)
-    - Bolts/Tasks (= 1.8.4)
-  - Bolts/AppLinks (1.8.4):
+  - Analytics (3.6.9)
+  - Bolts (1.9.0):
+    - Bolts/AppLinks (= 1.9.0)
+    - Bolts/Tasks (= 1.9.0)
+  - Bolts/AppLinks (1.9.0):
     - Bolts/Tasks
-  - Bolts/Tasks (1.8.4)
-  - FBSDKCoreKit (4.27.1):
+  - Bolts/Tasks (1.9.0)
+  - FBSDKCoreKit (4.33.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.27.1):
+  - FBSDKLoginKit (4.33.0):
     - FBSDKCoreKit
+  - KeychainSwift (11.0.0)
   - KITAssetsPickerController (1.0.9):
     - PureLayout (~> 3.0.0)
-  - PayPal-iOS-SDK/Core (2.18.0)
+  - OAuthSwift (1.2.0)
+  - PayPal-iOS-Dynamic-Loader (1.0.1)
+  - PayPal-iOS-SDK/Core (2.18.1)
+  - PhotobookSDK (1.0.0):
+    - Analytics (~> 3.0)
+    - FBSDKCoreKit (~> 4.33.0)
+    - FBSDKLoginKit (~> 4.33.0)
+    - KeychainSwift (~> 11.0.0)
+    - OAuthSwift (~> 1.2.0)
+    - PayPal-iOS-Dynamic-Loader
+    - SDWebImage (~> 4.4.0)
+    - Stripe
   - PureLayout (3.0.2)
-  - Stripe (10.1.0)
+  - SDWebImage (4.4.1):
+    - SDWebImage/Core (= 4.4.1)
+  - SDWebImage/Core (4.4.1)
+  - Stripe (13.0.3)
 
 DEPENDENCIES:
-  - FBSDKCoreKit (~> 4.27.1)
-  - FBSDKLoginKit (~> 4.27.1)
-  - KITAssetsPickerController (from `git@github.com:kkarayannis/KITAssetsPickerController.git`)
-  - PayPal-iOS-SDK/Core (~> 2.18.0)
-  - Stripe (~> 10.1.0)
+  - "KITAssetsPickerController (from `git@github.com:kkarayannis/KITAssetsPickerController.git`)"
+  - PayPal-iOS-SDK/Core
+  - "PhotobookSDK (from `git@github.com:OceanLabs/Photobook-iOS.git`, branch `cocoapod`)"
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Analytics
+    - Bolts
+    - FBSDKCoreKit
+    - FBSDKLoginKit
+    - KeychainSwift
+    - OAuthSwift
+    - PayPal-iOS-Dynamic-Loader
+    - PayPal-iOS-SDK
+    - PureLayout
+    - SDWebImage
+    - Stripe
 
 EXTERNAL SOURCES:
   KITAssetsPickerController:
-    :git: git@github.com:kkarayannis/KITAssetsPickerController.git
+    :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
+  PhotobookSDK:
+    :branch: cocoapod
+    :git: "git@github.com:OceanLabs/Photobook-iOS.git"
 
 CHECKOUT OPTIONS:
   KITAssetsPickerController:
     :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
-    :git: git@github.com:kkarayannis/KITAssetsPickerController.git
+    :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
+  PhotobookSDK:
+    :commit: 0e1ea5caafaad36be6b9664cfa0ee6373ef9d3e8
+    :git: "git@github.com:OceanLabs/Photobook-iOS.git"
 
 SPEC CHECKSUMS:
-  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  FBSDKCoreKit: 03365dad5d790249196ffad8be4f6d8a2d98f932
-  FBSDKLoginKit: 66ff53b73cffd967ab773e32fac39e90a60e6d46
+  Analytics: 6541ce337e99d9f7a2240a8b3953940a7be5f998
+  Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
+  FBSDKCoreKit: 572b047a7e029bc44542bcf8a59414e7ff2b543e
+  FBSDKLoginKit: 88cb456349cfb3b554427ce4f8b43729d85dfb40
+  KeychainSwift: bea6bd9f98af7b8d7ca4aa79fe105c00fab532db
   KITAssetsPickerController: bcb94b0b3267006fa666041f18a2370a00a9b105
-  PayPal-iOS-SDK: 3fc74982a68d54eeaf39e09f507f279dc2291860
+  OAuthSwift: 7fd6855b8e4d58eb5a30d156ea9bed7a8aecd1ca
+  PayPal-iOS-Dynamic-Loader: a32db083fe7e8f8d9ad4309e483e369c9a47e5eb
+  PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
+  PhotobookSDK: c7335f19212878c836546f8b2c7d160e60be8b4e
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
-  Stripe: 1c7aa951a075cced500a919d92b687b35d410705
+  SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
+  Stripe: 76c203e21555089b708e6cbe972a3e3baf1ab4d8
 
-PODFILE CHECKSUM: 8a1459d72dc010b02ad5b70c72a501fe491ec9f1
+PODFILE CHECKSUM: eb5c3e35fbfdb9ab63af9acf1d4ab09f7577daa7
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.3

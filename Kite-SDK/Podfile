@@ -1,11 +1,9 @@
-platform :ios, '9.0'
-inhibit_all_warnings!
+platform :ios, '10.0'
+use_frameworks!
 
 def shared_pods
-    pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
-    pod 'Stripe', '~> 10.1.0'
-    pod 'FBSDKCoreKit', '~> 4.27.1'
-    pod 'FBSDKLoginKit', '~> 4.27.1'
+    pod 'PayPal-iOS-SDK/Core'
+    pod 'PhotobookSDK', :git => 'git@github.com:OceanLabs/Photobook-iOS.git', :branch => 'cocoapod'
 end
 
 target 'KiteSDK-Demo' do
