@@ -35,6 +35,8 @@
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
 
+@import Photobook;
+
 static NSString *apiKey = nil;
 static NSString *applePayMerchantID = nil;
 static NSString *applePayPayToString = nil;
@@ -91,10 +93,13 @@ static NSString *instagramRedirectURI = nil;
     apiKey = _apiKey;
     environment = _environment;
     [OLStripeCard setClientId:[self stripePublishableKey]];
+    [[PhotobookSDK shared] setKiteApiKey:_apiKey];
     if (environment == OLKitePrintSDKEnvironmentLive) {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
+        [[PhotobookSDK shared] setEnvironmentWithEnvironment:EnvironmentLive];
     } else {
         [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
+        [[PhotobookSDK shared] setEnvironmentWithEnvironment:EnvironmentTest];
     }
 }
 

@@ -57,11 +57,11 @@
 }
 
 + (NSBundle *)kiteResourcesBundle{
-#ifdef COCOAPODS
-    return [NSBundle bundleWithPath:[[NSBundle bundleForClass:[OLKiteViewController class]] pathForResource:@"OLKiteResources" ofType:@"bundle"]];
-#else
-    return [NSBundle bundleForClass:[OLKiteViewController class]];
-#endif
+    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[OLKiteViewController class]] pathForResource:@"OLKiteResources" ofType:@"bundle"]];
+    if (!bundle) {
+        bundle = [NSBundle bundleForClass:[OLKiteViewController class]];
+    }
+    return bundle;
 }
 
 + (NSString *)userEmail:(UIViewController *)topVC {

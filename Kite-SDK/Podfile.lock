@@ -59,7 +59,7 @@ CHECKOUT OPTIONS:
     :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
     :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
   Photobook:
-    :commit: da29feec1472684bbc942e1a19c2f4dbd2ce2f9c
+    :commit: 3fed391ceb75015316a51bdaec27db7e5160ffa0
     :git: "git@github.com:OceanLabs/Photobook-iOS.git"
 
 SPEC CHECKSUMS:
@@ -76,6 +76,6 @@ SPEC CHECKSUMS:
   SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   Stripe: 76c203e21555089b708e6cbe972a3e3baf1ab4d8
 
-PODFILE CHECKSUM: 28c573a48b59bd6be19a257a2606a368e838e85c
+PODFILE CHECKSUM: 8ba50ddab603820cccdc9f1d7b6d16479f4b58cd
 
 COCOAPODS: 1.5.3

@@ -1,16 +1,15 @@
 platform :ios, '10.0'
 use_frameworks!
 
-def shared_pods
-    pod 'PayPal-iOS-SDK/Core'
-    pod 'Photobook', :git => 'git@github.com:OceanLabs/Photobook-iOS.git', :branch => 'cocoapod'
+target 'KiteSDK' do
+	pod 'Photobook', :git => 'git@github.com:OceanLabs/Photobook-iOS.git', :branch => 'cocoapod'
 end
 
 target 'KiteSDK-Demo' do
-    shared_pods
+    pod 'PayPal-iOS-SDK/Core'
 end
 
 target 'Kite-CI-Deploy' do
-    shared_pods
+    pod 'PayPal-iOS-SDK/Core'
     pod 'KITAssetsPickerController', :git => 'git@github.com:kkarayannis/KITAssetsPickerController.git'
 end
