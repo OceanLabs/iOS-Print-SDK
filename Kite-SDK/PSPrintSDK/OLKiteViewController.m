@@ -304,7 +304,7 @@ static CGFloat fadeTime = 0.3;
                     break;
             }
         }
-        return [(UINavigationController *)[[PhotobookSDK shared] photobookViewControllerWith:assets onDismiss:NULL] topViewController];
+        return [[PhotobookSDK shared] photobookViewControllerWith:assets embedInNavigation:NO delegate:nil];
     }
     else if (templateUI == OLTemplateUIPoster){
         return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLPosterViewController"];

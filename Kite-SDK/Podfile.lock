@@ -32,7 +32,7 @@ PODS:
 DEPENDENCIES:
   - "KITAssetsPickerController (from `git@github.com:kkarayannis/KITAssetsPickerController.git`)"
   - PayPal-iOS-SDK/Core
-  - "Photobook (from `git@github.com:OceanLabs/Photobook-iOS.git`, branch `cocoapod`)"
+  - "Photobook (from `git@github.com:OceanLabs/Photobook-iOS.git`, branch `develop`)"
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -51,7 +51,7 @@ EXTERNAL SOURCES:
   KITAssetsPickerController:
     :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
   Photobook:
-    :branch: cocoapod
+    :branch: develop
     :git: "git@github.com:OceanLabs/Photobook-iOS.git"
 
 CHECKOUT OPTIONS:
@@ -59,7 +59,7 @@ CHECKOUT OPTIONS:
     :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
     :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
   Photobook:
-    :commit: 3fed391ceb75015316a51bdaec27db7e5160ffa0
+    :commit: 1eff254e36f21a42a3477b710f85b0f962f7a9e8
     :git: "git@github.com:OceanLabs/Photobook-iOS.git"
 
 SPEC CHECKSUMS:
@@ -71,11 +71,11 @@ SPEC CHECKSUMS:
   KITAssetsPickerController: bcb94b0b3267006fa666041f18a2370a00a9b105
   PayPal-iOS-Dynamic-Loader: a32db083fe7e8f8d9ad4309e483e369c9a47e5eb
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
-  Photobook: 8683ca7f58561d48a5bfc63e6ebd8ac8e5e2f3e4
+  Photobook: 2134eb50fbb7968837bc4268bf2ac6e282a23e7b
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   Stripe: 76c203e21555089b708e6cbe972a3e3baf1ab4d8
 
-PODFILE CHECKSUM: 8ba50ddab603820cccdc9f1d7b6d16479f4b58cd
+PODFILE CHECKSUM: 242c74a86d362a14c22272e13ca500aed2b4a81d
 
 COCOAPODS: 1.5.3
