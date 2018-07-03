@@ -56,6 +56,8 @@
 #import "OLLogoutViewController.h"
 #import "OLKioskLandingViewController.h"
 
+@import Photobook;
+
 static CGFloat fadeTime = 0.3;
 
 
@@ -277,31 +279,43 @@ static CGFloat fadeTime = 0.3;
     else if (templateUI == OLTemplateUIMug){
         return [[OL3DProductViewController alloc] init];
     }
-    
-    return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:[self reviewViewControllerIdentifierForProduct:product photoSelectionScreen:photoSelectionScreen]];
-    
-}
-
-- (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
-    OLTemplateUI templateUI = product.productTemplate.templateUI;
-    if (templateUI == OLTemplateUIPhotobook){
-        return @"OLEditPhotobookViewController";
-    }
     else if (templateUI == OLTemplateUINonCustomizable){
-        return @"OLPaymentViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLPaymentViewController"];
     }
     else if (photoSelectionScreen){
-        return @"OLImagePickerViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    }
+    else if (templateUI == OLTemplateUIPhotobook){
+        NSMutableArray *assets = [[NSMutableArray alloc] init];
+        for (OLAsset *asset in [OLAsset userSelectedAssets]){
+            switch (asset.assetType) {
+                case kOLAssetTypeImageData:
+                    [assets addObject:[[ImageAsset alloc] initWithImage:[UIImage imageWithData:[asset imageData]] date:nil]];
+                    break;
+                case kOLAssetTypeRemoteImageURL:
+                    [assets addObject:[[URLAsset alloc] init:[asset imageURL] size:CGSizeMake(1000, 1000)]];
+                    break;
+                case kOLAssetTypePHAsset:
+                    [assets addObject:[[PhotosAsset alloc] init:[asset phAsset] albumIdentifier:nil]];
+                    break;
+                    
+                default:
+                    NSAssert(NO, @"Asset type not yet supported");
+                    break;
+            }
+        }
+        return [[PhotobookSDK shared] photobookViewControllerWith:assets embedInNavigation:NO delegate:nil];
     }
     else if (templateUI == OLTemplateUIPoster){
-        return @"OLPosterViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLPosterViewController"];
     }
     else if (templateUI == OLTemplateUIFrame || templateUI == OLTemplateUICalendar){
-        return @"FrameOrderReviewViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
     }
     else{
-        return @"OrderReviewViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
     }
+    
 }
 
 - (IBAction) dismiss{
@@ -348,12 +362,12 @@ static CGFloat fadeTime = 0.3;
             BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[[OLUserSession currentSession].printOrder.jobs firstObject] assetsForUploading]];
             OLProduct *product = [OLProduct productWithTemplateId:[[[OLUserSession currentSession].printOrder.jobs firstObject] templateId]];
             product.uuid = [[OLUserSession currentSession].printOrder.jobs firstObject].uuid;
-            NSString *identifier;
+            UIViewController *vc;
             if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"] && [product isValidProductForUI]){
-                identifier = @"OLProductOverviewViewController";
+                vc = [welf.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
             }
             else if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] && [product isValidProductForUI]){
-                identifier = [[OLUserSession currentSession].kiteVc reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
+                vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
             }
             else{
                 [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
@@ -384,7 +398,6 @@ static CGFloat fadeTime = 0.3;
                 
                 return;
             }
-            UIViewController *vc = [welf.storyboard instantiateViewControllerWithIdentifier:identifier];
             [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
             [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
             [vc safePerformSelector:@selector(setProduct:) withObject:product];

@@ -32,6 +32,8 @@
 #import "OLPlaceholderAsset.h"
 #import "NSMutableArray+OLUserSelectedAssetsUtils.h"
 
+@import Photobook;
+
 typedef enum {
     kOLAssetTypeCorrupt,
     kOLAssetTypePHAsset,
@@ -41,7 +43,7 @@ typedef enum {
     kOLAssetTypeDataSource,
 } OLAssetType;
 
-@interface OLAsset (Private)
+@interface OLAsset (Private) <PhotobookAsset>
 
 @property (nonatomic, strong) id<OLAssetDataSource> dataSource;
 
@@ -65,5 +67,6 @@ typedef enum {
 @property (strong, nonatomic) OLPhotoEdits *edits;
 @property (strong, nonatomic) PHAsset *phAsset;
 @property (strong, nonatomic) id metadata;
+@property (nonatomic, strong) NSData *imageData;
 @end
 

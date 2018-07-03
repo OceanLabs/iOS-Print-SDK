@@ -1,18 +1,15 @@
 platform :ios, '9.0'
-inhibit_all_warnings!
+use_frameworks!
 
-def shared_pods
-    pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
-    pod 'Stripe', '~> 10.1.0'
-    pod 'FBSDKCoreKit', '~> 4.27.1'
-    pod 'FBSDKLoginKit', '~> 4.27.1'
+target 'KiteSDK' do
+	pod 'Photobook', :git => 'git@github.com:OceanLabs/Photobook-iOS.git', :branch => 'develop'
 end
 
 target 'KiteSDK-Demo' do
-    shared_pods
+    pod 'PayPal-iOS-SDK/Core'
 end
 
 target 'Kite-CI-Deploy' do
-    shared_pods
+    pod 'PayPal-iOS-SDK/Core'
     pod 'KITAssetsPickerController', :git => 'git@github.com:kkarayannis/KITAssetsPickerController.git'
 end
