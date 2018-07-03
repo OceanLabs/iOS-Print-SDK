@@ -29,7 +29,6 @@
 
 #import <Foundation/Foundation.h>
 #import "OLProductTemplateOption.h"
-#import "OLUpsellOffer.h"
 #import "OLProductRepresentation.h"
 #import "OLFulfilmentItem.h"
 #import "OLShippingClass.h"
@@ -94,7 +93,6 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 @property (strong, nonatomic) NSString *_Nullable productDescriptionMarkdown;
 @property (assign, nonatomic) NSInteger gridCountX;
 @property (assign, nonatomic) NSInteger gridCountY;
-@property (strong, nonatomic) NSArray <OLUpsellOffer *>*_Nullable upsellOffers;
 @property (strong, nonatomic) NSArray <OLProductTemplateOption *>*_Nullable options;
 @property (strong, nonatomic) OLProductRepresentation *_Nullable productRepresentation;
 @property (assign, nonatomic) BOOL printInStore;

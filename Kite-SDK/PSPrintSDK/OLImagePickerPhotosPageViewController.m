@@ -294,10 +294,12 @@ CGFloat OLImagePickerMargin = 1.5;
         }
         
         if ([OLKiteABTesting sharedInstance].lightThemeColorPickerTick){
-            checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColorPickerTick;
+            [checkmark viewWithTag:1].tintColor = [OLKiteABTesting sharedInstance].lightThemeColorPickerTick;
         }
         else if ([OLKiteABTesting sharedInstance].lightThemeColor1){
-            checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+            [checkmark viewWithTag:1].tintColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+        } else {
+            [checkmark viewWithTag:1].tintColor = [UIColor colorWithRed:0 green:0.48 blue:1 alpha:1];
         }
         
         if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){

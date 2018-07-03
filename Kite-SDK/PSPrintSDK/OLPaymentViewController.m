@@ -52,7 +52,6 @@
 #import "OLPayPalCard.h"
 #import "OLPayPalWrapper.h"
 #import "OLPhotobookPrintJob.h"
-#import "OLPhotobookViewController.h"
 #import "OLPostcardPrintJob.h"
 #import "OLPrintJob.h"
 #import "OLPrintOrder+History.h"
@@ -107,16 +106,10 @@ static OLPaymentMethod selectedPaymentMethod;
 
 @interface OLProductPrintJob ()
 @property (strong, nonatomic) NSMutableDictionary *options;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @interface OLProduct (PrivateMethods)
 - (NSDecimalNumber*) unitCostDecimalNumber;
-@property (strong, nonatomic) NSMutableArray *declinedOffers;
-@property (strong, nonatomic) NSMutableArray *acceptedOffers;
-@property (strong, nonatomic) NSDictionary *redeemedOffer;
 @end
 
 @interface OLPackProductViewController ()
@@ -358,7 +351,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         else{
             [self.paymentButton1 setBackgroundColor:[UIColor clearColor]];
             [self.paymentButton1 setTitleColor:[OLKiteABTesting sharedInstance].lightThemeColor1 forState:UIControlStateNormal];
-            self.paymentButton1.layer.cornerRadius = 2;
+            self.paymentButton1.layer.cornerRadius = 10;
             self.paymentButton1.layer.borderColor = [OLKiteABTesting sharedInstance].lightThemeColor1.CGColor;
             self.paymentButton1.layer.borderWidth = 1;
         }
@@ -1669,9 +1662,6 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
     OLProductPrintJob* printJob = ((OLProductPrintJob*)[self.printOrder.jobs objectAtIndex:indexPath.row]);
     OLProduct *product = [OLProduct productWithTemplateId:printJob.templateId];
-    product.acceptedOffers = [[[printJob safePerformSelectorWithReturn:@selector(acceptedOffers)withObject:nil] allObjects] mutableCopy];
-    product.declinedOffers = [[[printJob safePerformSelectorWithReturn:@selector(declinedOffers)withObject:nil] allObjects] mutableCopy];
-    product.redeemedOffer = [printJob safePerformSelectorWithReturn:@selector(redeemedOffer) withObject:nil];
     product.uuid = printJob.uuid;
     
     for (NSString *option in printJob.options.allKeys){

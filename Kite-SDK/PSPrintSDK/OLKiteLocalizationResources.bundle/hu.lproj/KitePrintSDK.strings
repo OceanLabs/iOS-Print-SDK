@@ -5,11 +5,8 @@
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401-es hiba: nem hitelesített kérés tartalomfeltöltési kísérlet közben. Ellenőrizd, hogy feltüntettél-e hitelesítési fejlécet, és hogy a megadott engedélyezési adatok helyesek-e.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500-as hiba: belső kiszolgálói hiba tartalomfeltöltési kísérlet közben. Próbáld meg újra.";
 "Add" = "Hozzáadás";
-"Add %ld %@!" = "Add hozzá a következőt: %ld %@!";
-"Add a %@!" = "Add hozzá a következőt: %@!";
 "Add a photo\non this side" = "Adj hozzá egy fényképet\nezen az oldalon";
 "Add Address" = "Cím hozzáadása";
-"Add another %@!" = "Adj hozzá még egyet a következőből: %@!";
 "Add Credit Card" = "Bankkártya hozzáadása";
 "Add Credit Card (TEST)" = "Bankkártya hozzáadása (TESZT)";
 "Add Credit/Debit Card" = "Hitel-/bankkártya hozzáadása";
@@ -45,10 +42,6 @@
 "Completed Orders" = "Teljesített rendelések";
 "Continue Shopping" = "Vásárlás folytatása";
 "County" = "Megye";
-"Create a %@ for\nonly %@ %@" = "%@ készítése\n%@ helyett mindössze ennyiért: %@";
-"Create a pack for\nonly %@ %@" = "Csomag készítése\n%@ helyett mindössze ennyiért: %@";
-"Create another %@ for\nonly %@ %@" = "Még egy %@ készítése\n%@ helyett mindössze ennyiért: %@";
-"Create another pack for\nonly %@ %@" = "Még egy csomag készítése\n%@ helyett mindössze ennyiért: %@";
 "Create Image" = "Kép létrehozása";
 "Crop" = "Kivágás";
 "CVV" = "CVV";
@@ -106,11 +99,9 @@
 "Missing Delivery Address" = "Hiányzó szállítási cím";
 "MM/YY" = "HH/ÉÉ";
 "MORE ITEMS\nCOMING SOON!" = "MÉG TÖBB TERMÉK\nHAMAROSAN!";
-"Move Pages" = "Oldalak áthelyezése";
 "New Payment" = "Új fizetés";
 "Next" = "Tovább";
 "No" = "Nem";
-"No Thanks" = "Köszönöm, nem";
 "No, keep it" = "Nem, szeretném megtartani";
 "Not now" = "Most nem";
 "OK" = "OK";
@@ -132,7 +123,6 @@
 "Photo Library" = "Fényképkönyvtár";
 "Please add %d more." = "Kérlek adj hozzá még %d darabot.";
 "Please add some photos" = "Kérlek adj hozzá még néhány fényképet.";
-"Please add some photos to your photo book" = "Adj hozzá néhány fényképet a fotóalbumhoz";
 "Please choose an address to have your order shipped to" = "Válaszd ki azt a címet, ahová a rendelésedet kiszállíthatjuk";
 "Please enter a card expiry date in the future" = "A kártya lejárati idejének egy későbbi dátumot adj meg";
 "Please enter a valid card number" = "Érvényes kártyaszámot adj meg";
@@ -207,7 +197,6 @@
 "We'll send you confirmation and order updates." = "Elküldjük majd a megerősítést és a rendelés frissítéseit.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Elküldjük majd a megerősítést és a rendelés frissítéseit. Az e-mailes marketinganyagok küldését a jelölőnégyzet bepipálásának törlésével tilthatod le.";
 "Yes" = "Igen";
-"Yes Please" = "Igen, kérem";
 "Yes, remove it" = "Igen, távolítsa el";
 "You can add %d more for the same price." = "%d további hozzáadása lehetséges ezen az áron.";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "Ha Instagram-fiókodból szeretnél fényképeket importálni, engedélyezned kell az alkalmazásnak a fiókhoz való hozzáférést.";

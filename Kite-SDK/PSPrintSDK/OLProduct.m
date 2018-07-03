@@ -50,27 +50,7 @@ typedef enum {
 
 @end
 
-@interface OLProduct ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-@end
-
 @implementation OLProduct
-
--( NSMutableSet <OLUpsellOffer *> *) declinedOffers{
-    if (!_declinedOffers){
-        _declinedOffers = [[ NSMutableSet <OLUpsellOffer *> alloc] init];
-    }
-    return _declinedOffers;
-}
-
--( NSMutableSet <OLUpsellOffer *> *) acceptedOffers{
-    if (!_acceptedOffers){
-        _acceptedOffers = [[ NSMutableSet <OLUpsellOffer *> alloc] init];
-    }
-    return _acceptedOffers;
-}
 
 +(NSArray *)products{
     static NSMutableArray *products = nil;
@@ -182,23 +162,6 @@ typedef enum {
     else{
         [imageView setAndFadeInImageWithURL:[NSURL URLWithString:self.productTemplate.productPhotographyURLs[i % [self.productTemplate.productPhotographyURLs count]]]];
     }
-}
-
-- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier{
-    for (OLUpsellOffer *acceptedOffer in self.acceptedOffers){
-        if (acceptedOffer.identifier == identifier){
-            return YES;
-        }
-    }
-    for (OLUpsellOffer *declinedOffer in self.declinedOffers){
-        if (declinedOffer.identifier == identifier){
-            return YES;
-        }
-    }
-    if (self.redeemedOffer.identifier == identifier){
-        return YES;
-    }
-    return NO;
 }
 
 #pragma mark Product Info

@@ -19,7 +19,7 @@
 @implementation OLSelectedEffectButton
 
 - (UIColor *)colorToUse{
-    return self.effectColor ? self.effectColor : [UIColor colorWithRed:0.349 green:0.757 blue:0.890 alpha:1.000];
+    return self.effectColor ? self.effectColor : self.tintColor;
 }
 
 - (void)setSelected:(BOOL)selected{

@@ -59,7 +59,7 @@ CHECKOUT OPTIONS:
     :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
     :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
   Photobook:
-    :commit: 1eff254e36f21a42a3477b710f85b0f962f7a9e8
+    :commit: 67b0aeb8ccc0ad0340ac3baf96a222c4c7ca3d24
     :git: "git@github.com:OceanLabs/Photobook-iOS.git"
 
 SPEC CHECKSUMS:
@@ -71,7 +71,7 @@ SPEC CHECKSUMS:
   KITAssetsPickerController: bcb94b0b3267006fa666041f18a2370a00a9b105
   PayPal-iOS-Dynamic-Loader: a32db083fe7e8f8d9ad4309e483e369c9a47e5eb
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
-  Photobook: 2134eb50fbb7968837bc4268bf2ac6e282a23e7b
+  Photobook: 27c08357f5635c1ae3a620c5e7f89163350e07f8
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
   Stripe: 76c203e21555089b708e6cbe972a3e3baf1ab4d8

@@ -54,10 +54,6 @@ static id stringOrEmptyString(NSString *str) {
 @property (nonatomic, copy) NSString *message;
 @property (strong, nonatomic) NSMutableDictionary *options;
 
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-
 @end
 
 @implementation OLPostcardPrintJob
@@ -67,20 +63,6 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
 @synthesize selectedShippingMethodIdentifier;
-
--(NSMutableSet *) declinedOffers{
-    if (!_declinedOffers){
-        _declinedOffers = [[NSMutableSet alloc] init];
-    }
-    return _declinedOffers;
-}
-
--(NSMutableSet *) acceptedOffers{
-    if (!_acceptedOffers){
-        _acceptedOffers = [[NSMutableSet alloc] init];
-    }
-    return _acceptedOffers;
-}
 
 -(NSMutableDictionary *) options{
     if (!_options){

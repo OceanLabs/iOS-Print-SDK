@@ -5,11 +5,8 @@
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "Pri pokuse o nahranie položky sa vyskytla chyba „401 neoprávnená požiadavka“. Skontrolujte, či ste vložili hlavičku overenia a či sú poskytnuté poverenia na oprávnenie správne.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "Pri pokuse o nahranie položky sa vyskytla „vnútorná chyba servera 500“. Skúste to znova.";
 "Add" = "Pridať";
-"Add %ld %@!" = "Pridať %ld %@!";
-"Add a %@!" = "Pridať %@!";
 "Add a photo\non this side" = "Pridať fotografiu\nna túto stranu";
 "Add Address" = "Pridať adresu";
-"Add another %@!" = "Pridať ďalšiu %@!";
 "Add Credit Card" = "Pridať kreditnú kartu";
 "Add Credit Card (TEST)" = "Pridať kreditnú kartu (TEST)";
 "Add Credit/Debit Card" = "Pridať kreditnú/debetnú kartu";
@@ -45,10 +42,6 @@
 "Completed Orders" = "Dokončené objednávky";
 "Continue Shopping" = "Pokračovať v nákupe";
 "County" = "Kraj";
-"Create a %@ for\nonly %@ %@" = "Vytvoriť %@ iba\nza %@ %@";
-"Create a pack for\nonly %@ %@" = "Vytvoriť balík iba\nza %@ %@";
-"Create another %@ for\nonly %@ %@" = "Vytvoriť ďalší %@ iba\nza %@ %@";
-"Create another pack for\nonly %@ %@" = "Vytvoriť ďalší balík iba\nza %@ %@";
 "Create Image" = "Vytvoriť obrázok";
 "Crop" = "Orezať";
 "CVV" = "CVV";
@@ -106,11 +99,9 @@
 "Missing Delivery Address" = "Chýba doručovacia adresa";
 "MM/YY" = "MM/RR";
 "MORE ITEMS\nCOMING SOON!" = "ČOSKORO PRIBUDNÚ\nĎALŠIE POLOŽKY!";
-"Move Pages" = "Otáčať strany";
 "New Payment" = "Nová platba";
 "Next" = "Ďalej";
 "No" = "Nie";
-"No Thanks" = "Nie, ďakujem";
 "No, keep it" = "Nie, ponechať";
 "Not now" = "Teraz nie";
 "OK" = "OK";
@@ -132,7 +123,6 @@
 "Photo Library" = "Knižnica fotografií";
 "Please add %d more." = "Pridajte ešte %d.";
 "Please add some photos" = "Pridajte niekoľko fotografií";
-"Please add some photos to your photo book" = "Do fotoknihy pridajte ešte niekoľko fotografií";
 "Please choose an address to have your order shipped to" = "Vyberte dodaciu adresu objednávky";
 "Please enter a card expiry date in the future" = "Zadajte dátum vypršania platnosti karty";
 "Please enter a valid card number" = "Zadajte platné číslo karty";
@@ -207,7 +197,6 @@
 "We'll send you confirmation and order updates." = "Zašleme vám potvrdenie a aktuálne informácie o stave objednávky.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Zašleme vám potvrdenie a aktuálne informácie o stave objednávky. Ak nechcete dostávať reklamné kampane prostredníctvom e-mailu, zrušte začiarknutie tohto políčka.";
 "Yes" = "Áno";
-"Yes Please" = "Áno, prosím";
 "Yes, remove it" = "Áno, odstrániť";
 "You can add %d more for the same price." = "Za rovnakú cenu môžete pridať uvedený počet ďalších: %d";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "Ak chcete importovať fotografie z Instagramu, musíte aplikácii udeliť oprávnenie na prístup k vášmu účtu.";

@@ -5,11 +5,8 @@
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Unauthorized Request Error när du försökte överföra en tillgång. Kontrollera att du angav ett autentiseringshuvud och att angivna autentiseringsuppgifter är korrekta.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Internal Server Error medan du försöker ladda upp en tillgång. Försök igen.";
 "Add" = "Lägg till";
-"Add %ld %@!" = "Lägg till %ld%@!";
-"Add a %@!" = "Lägg till %@!";
 "Add a photo\non this side" = "Lägg till ett foto\npå denna sida";
 "Add Address" = "Lägg till adress";
-"Add another %@!" = "Lägg till ett till %@!";
 "Add Credit Card" = "Lägg till kreditkort";
 "Add Credit Card (TEST)" = "Lägg till kreditkort (TEST)";
 "Add Credit/Debit Card" = "Lägg till kredit-/betalkort";
@@ -45,10 +42,6 @@
 "Completed Orders" = "Slutförda beställningar";
 "Continue Shopping" = "Fortsätt handla";
 "County" = "Län";
-"Create a %@ for\nonly %@ %@" = "Skapa ett %@ för\nendast %@ %@";
-"Create a pack for\nonly %@ %@" = "Skapa ett paket för\nendast %@ %@";
-"Create another %@ for\nonly %@ %@" = "Skapa ett till %@ för\nendast %@ %@";
-"Create another pack for\nonly %@ %@" = "Skapa ett till paket för\nendast %@ %@";
 "Create Image" = "Skapa bild";
 "Crop" = "Beskär";
 "CVV" = "CVV";
@@ -106,11 +99,9 @@
 "Missing Delivery Address" = "Leveransadressen saknas";
 "MM/YY" = "MM/ÅÅ";
 "MORE ITEMS\nCOMING SOON!" = "FLER ARTIKLAR\NKOMMER SNART!";
-"Move Pages" = "Flytta sidor";
 "New Payment" = "Ny betalning";
 "Next" = "Nästa";
 "No" = "Nej";
-"No Thanks" = "Nej, tack";
 "No, keep it" = "Nej, behåll det";
 "Not now" = "Inte nu";
 "OK" = "OK";
@@ -132,7 +123,6 @@
 "Photo Library" = "Fotobibliotek";
 "Please add %d more." = "Lägg till %d fler.";
 "Please add some photos" = "Lägg till några foton";
-"Please add some photos to your photo book" = "Lägg till några foton till din fotobok";
 "Please choose an address to have your order shipped to" = "Välj en adress som beställningen ska levereras till";
 "Please enter a card expiry date in the future" = "Ange ett utgångsdatum för kortet i framtiden";
 "Please enter a valid card number" = "Ange ett giltigt kortnummer";
@@ -207,7 +197,6 @@
 "We'll send you confirmation and order updates." = "Vi kommer att skicka en bekräftelse och uppdateringar om beställningen.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Vi kommer att skicka en bekräftelse och uppdateringar om beställningen. Avmarkera den här rutan om du vill avanmäla dig från e-postkampanjer.";
 "Yes" = "Ja";
-"Yes Please" = "Ja, tack";
 "Yes, remove it" = "Ja, ta bort den";
 "You can add %d more for the same price." = "Du kan lägga till ytterligare %d för samma pris.";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "Du måste ge appen tillgång till Instagram-kontot om du vill importera foton från det.";

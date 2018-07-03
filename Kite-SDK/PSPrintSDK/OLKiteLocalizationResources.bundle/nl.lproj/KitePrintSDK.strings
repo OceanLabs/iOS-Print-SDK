@@ -5,11 +5,8 @@
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Onbevoegd verzoek Fout tijdens het uploaden van een onderdeel. Controleer of u een kopregel Autorisatie heeft bijgevoegd en of de bijgeleverde auth gegevens juist zijn.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Internal Server Error tijdens het uploaden van een onderdeel. Probeer het alstublieft nog eens.";
 "Add" = "Toevoegen";
-"Add %ld %@!" = "Voeg %ld %@ toe!";
-"Add a %@!" = "Voeg een %@ toe!";
 "Add a photo\non this side" = "Voeg een foto toe\nvoor deze zijde";
 "Add Address" = "Adres toevoegen";
-"Add another %@!" = "Voeg een andere %@ toe!";
 "Add Credit Card" = "Voeg een creditcard toe";
 "Add Credit Card (TEST)" = "Voeg een creditcard toe (TEST)";
 "Add Credit/Debit Card" = "Krediet/biljet toevoegen";
@@ -45,10 +42,6 @@
 "Completed Orders" = "Uitgevoerde bestellingen";
 "Continue Shopping" = "Verder winkelen";
 "County" = "Provincie";
-"Create a %@ for\nonly %@ %@" = "Creëer een %@ voor\nslechts %@ %@";
-"Create a pack for\nonly %@ %@" = "Creëer een pack voor\nslechts %@ %@";
-"Create another %@ for\nonly %@ %@" = "Creëer er nog een %@ voor\nslechts %@ %@";
-"Create another pack for\nonly %@ %@" = "Creëer nog een pack voor\nslechts %@ %@";
 "Create Image" = "Creëer een afbeelding";
 "Crop" = "Bijsnijden";
 "CVV" = "CVV";
@@ -106,11 +99,9 @@
 "Missing Delivery Address" = "Ontbrekend afleveradres";
 "MM/YY" = "MM/JJ";
 "MORE ITEMS\nCOMING SOON!" = "BINNENKORT\nMEER ITEMS!";
-"Move Pages" = "Verplaats Pagina's";
 "New Payment" = "Nieuwe betaling";
 "Next" = "Volgende";
 "No" = "Nee";
-"No Thanks" = "Nee, bedankt";
 "No, keep it" = "Nee, zo houden";
 "Not now" = "Nu niet";
 "OK" = "OK";
@@ -132,7 +123,6 @@
 "Photo Library" = "Fotobibliotheek";
 "Please add %d more." = "Voeg s.v.p. meer %d toe.";
 "Please add some photos" = "Voeg s.v.p. een aantal foto's toe";
-"Please add some photos to your photo book" = "Voeg enkele foto's toe aan uw fotoboek";
 "Please choose an address to have your order shipped to" = "Kies een adres om uw bestelling te verzenden naar";
 "Please enter a card expiry date in the future" = "Voer de vervaldatum van de kaart in";
 "Please enter a valid card number" = "Voer een geldig kaartnummer in";
@@ -207,7 +197,6 @@
 "We'll send you confirmation and order updates." = "Wij sturen u een bevestiging en updates van je bestelling.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Wij sturen je een bevestiging en updates van uw bestelling. Schakel dit vakje uit om je af te melden voor e-mailcampagnes.";
 "Yes" = "Ja";
-"Yes Please" = "Ja, graag";
 "Yes, remove it" = "Ja, verwijderen";
 "You can add %d more for the same price." = "U kunt %d meer toevoegen voor dezelfde prijs.";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "Je dient deze app toestemming te geven voor toegang tot je Instagram-account wanneer je daarvandaan foto's wilt importeren.";

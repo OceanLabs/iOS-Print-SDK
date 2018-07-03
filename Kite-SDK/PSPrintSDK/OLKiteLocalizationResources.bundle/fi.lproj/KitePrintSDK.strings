@@ -5,11 +5,8 @@
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Luvaton pyyntö -virhe kohteen latauksessa. Tarkista, että sisällytit pyyntöön valtuutusotsikon ja että antamasi valtuutustunnukset ovat oikein.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 Sisäinen palvelinvirhe kohteen latauksessa. Yritä uudelleen.";
 "Add" = "Lisää";
-"Add %ld %@!" = "Lisää %ld %@!";
-"Add a %@!" = "Lisää %@!";
 "Add a photo\non this side" = "Lisää kuva\ntälle puolelle";
 "Add Address" = "Lisää osoite";
-"Add another %@!" = "Lisää toinen %@!";
 "Add Credit Card" = "Lisää luottokortti";
 "Add Credit Card (TEST)" = "Lisää luottokortti (TESTI)";
 "Add Credit/Debit Card" = "Lisää credit-/debit-kortti";
@@ -45,10 +42,6 @@
 "Completed Orders" = "Valmiit tilaukset";
 "Continue Shopping" = "Jatka tuotteiden selaamista";
 "County" = "Alue";
-"Create a %@ for\nonly %@ %@" = "Luo %@\nhintaan %@ %@";
-"Create a pack for\nonly %@ %@" = "Luo paketti\nhintaan %@ %@";
-"Create another %@ for\nonly %@ %@" = "Luo vielä yksi %@\nhintaan %@ %@";
-"Create another pack for\nonly %@ %@" = "Luo vielä yksi paketti\nhintaan %@ %@";
 "Create Image" = "Luo kuva";
 "Crop" = "Rajaa";
 "CVV" = "CVV";
@@ -106,11 +99,9 @@
 "Missing Delivery Address" = "Toimitusosoite puuttuu";
 "MM/YY" = "KK/VV";
 "MORE ITEMS\nCOMING SOON!" = "LISÄÄ TUOTTEITA\nTULOSSA PIAN!";
-"Move Pages" = "Siirrä sivuja";
 "New Payment" = "Uusi maksu";
 "Next" = "Seuraava";
 "No" = "Ei";
-"No Thanks" = "Ei kiitos";
 "No, keep it" = "Ei, pidä se";
 "Not now" = "Ei nyt";
 "OK" = "OK";
@@ -132,7 +123,6 @@
 "Photo Library" = "Valokuvakirjasto";
 "Please add %d more." = "Lisää %d kuvaa.";
 "Please add some photos" = "Lisää valokuvia";
-"Please add some photos to your photo book" = "Lisää valokuvia kuvakirjaasi";
 "Please choose an address to have your order shipped to" = "Valitse osoite, johon tilauksesi toimitetaan";
 "Please enter a card expiry date in the future" = "Anna tulevaisuudessa oleva vanhenemisaika";
 "Please enter a valid card number" = "Anna kelvollinen kortin numero";
@@ -207,7 +197,6 @@
 "We'll send you confirmation and order updates." = "Lähetämme sinulle vahvistuksen ja tietoja tilauksesi etenemisestä.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Lähetämme sinulle vahvistuksen ja tietoja tilauksesi etenemisestä. Jätä tämä tyhjäksi, jos et halua saada kampanjasähköposteja.";
 "Yes" = "Kyllä";
-"Yes Please" = "Kyllä kiitos";
 "Yes, remove it" = "Kyllä, poista";
 "You can add %d more for the same price." = "Voit tilata %d lisää samaan hintaan.";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "Jos haluat käyttää Instagramin kuvia, anna sovellukselle lupa käyttää Instagram-tiliäsi.";

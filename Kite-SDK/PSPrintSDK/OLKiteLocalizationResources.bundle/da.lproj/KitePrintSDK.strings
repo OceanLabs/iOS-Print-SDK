@@ -5,11 +5,8 @@
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "500 interne serverfejl under uploadingforsøg af et aktiv. Prøv venligst igen.";
 "Add" = "Tilføj";
-"Add %ld %@!" = "Tilføj %ld %@!";
-"Add a %@!" = "Tilføj en %@!";
 "Add a photo\non this side" = "Tilføj et foto\npå denne side";
 "Add Address" = "Tilføj adresse";
-"Add another %@!" = "Tilføj en anden %@!";
 "Add Credit Card" = "Tilføj kreditkort";
 "Add Credit Card (TEST)" = "Tilføj kreditkort (TEST)";
 "Add Credit/Debit Card" = "Tilføj kredit- / betalingskort";
@@ -45,10 +42,6 @@
 "Completed Orders" = "Gennemførte ordrer";
 "Continue Shopping" = "Fortsæt indkøb";
 "County" = "Land";
-"Create a %@ for\nonly %@ %@" = "Lav en %@ for\nkun %@ %@";
-"Create a pack for\nonly %@ %@" = "Lav en pakke for\nkun %@ %@";
-"Create another %@ for\nonly %@ %@" = "Lav en ny %@ for\nkun %@ %@";
-"Create another pack for\nonly %@ %@" = "Lav en ny pakke for\nkun %@ %@";
 "Create Image" = "Opret billede";
 "Crop" = "Beskær";
 "CVV" = "CVV-nummer";
@@ -106,11 +99,9 @@
 "Missing Delivery Address" = "Leveringsadresse mangler";
 "MM/YY" = "MM/ÅÅ";
 "MORE ITEMS\nCOMING SOON!" = "FLERE PRODUKTER\nPÅ VEJ!";
-"Move Pages" = "Skift side";
 "New Payment" = "Ny betaling";
 "Next" = "Næste";
 "No" = "Nej";
-"No Thanks" = "Nej tak";
 "No, keep it" = "Nej, behold det";
 "Not now" = "Ikke nu";
 "OK" = "OK";
@@ -132,7 +123,6 @@
 "Photo Library" = "Fotobibliotek";
 "Please add %d more." = "Tilføj %d mere.";
 "Please add some photos" = "Tilføj nogle fotos";
-"Please add some photos to your photo book" = "Tilføj venligst nogle billeder til dit fotoalbum";
 "Please choose an address to have your order shipped to" = "Vælg venligst den adresse du vil have din ordre sendt til";
 "Please enter a card expiry date in the future" = "Indtast venligst en kortudløbsdato i fremtiden";
 "Please enter a valid card number" = "Indtast venligst et gyldigt kontonummer";
@@ -207,7 +197,6 @@
 "We'll send you confirmation and order updates." = "Vi sender dig en bekræftelse og en odreopdatering.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Vi sender dig en bekræftelse og en odreopdatering. Afklik denne box, hvis du ikke ønsker at modtage kampagne e-mails.";
 "Yes" = "Ja";
-"Yes Please" = "Ja, tak";
 "Yes, remove it" = "Ja, fjern den";
 "You can add %d more for the same price." = "Du kan tilføje %d mere til samme pris.";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "Du skal give app'en tilladelse til at få adgang til din Instagram-konto, hvis du vil importere billeder derfra.";

@@ -5,11 +5,8 @@
 "401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct." = "Une erreur 401 Requête non autorisée est survenue durant le téléchargement. Veuillez réessayer.";
 "500 Internal Server Error whilst trying to upload an asset. Please try again." = "Une erreur 500 Serveur Interne est survenue durant le téléchargement. Veuillez réessayer.";
 "Add" = "Ajouter";
-"Add %ld %@!" = "Ajouter ";
-"Add a %@!" = "Ajouter ";
 "Add a photo\non this side" = "Ajouter une photo de ce côté";
 "Add Address" = "Ajouter une adresse";
-"Add another %@!" = "Ajouter %@! Supplémentaire";
 "Add Credit Card" = "Ajouter une carte de paiement";
 "Add Credit Card (TEST)" = "Ajouter une carte de paiement (TEST)";
 "Add Credit/Debit Card" = "Ajouter une carte de crédit / débit";
@@ -45,10 +42,6 @@
 "Completed Orders" = "Mes commandes";
 "Continue Shopping" = "Continuer mes achats";
 "County" = "Région";
-"Create a %@ for\nonly %@ %@" = "Créez un(e)  %@ pour %@ %@ de plus";
-"Create a pack for\nonly %@ %@" = "Créez un(e)  %@ pour %@ %@ de plus";
-"Create another %@ for\nonly %@ %@" = "Créez un(e)  %@ pour %@ %@ de plus";
-"Create another pack for\nonly %@ %@" = "Créez un(e)  %@ pour %@ %@ de plus";
 "Create Image" = "Créez une image";
 "Crop" = "Rogner";
 "CVV" = "Code de sécurité";
@@ -106,11 +99,9 @@
 "Missing Delivery Address" = "Adresse de livraison manquante";
 "MM/YY" = "MM/AA";
 "MORE ITEMS\nCOMING SOON!" = "Nouveautés bientôt disponibles !";
-"Move Pages" = "Déplacerles pages";
 "New Payment" = "Nouveau paiement";
 "Next" = "Suivant";
 "No" = "Non";
-"No Thanks" = "Non merci";
 "No, keep it" = "Non merci";
 "Not now" = "Pas maintenant";
 "OK" = "Accepter";
@@ -132,7 +123,6 @@
 "Photo Library" = "Galerie photos";
 "Please add %d more." = "Ajoutez %d photos";
 "Please add some photos" = "Ajoutez des photos";
-"Please add some photos to your photo book" = "Merci d'ajouter des photos à votre livre";
 "Please choose an address to have your order shipped to" = "Veuillez choisir une adresse pour que votre commande soit expédiée";
 "Please enter a card expiry date in the future" = "Veuillez entrer une date d'expiration future de la carte";
 "Please enter a valid card number" = "Merci d'entrer un numéro de carte valide";
@@ -207,7 +197,6 @@
 "We'll send you confirmation and order updates." = "Nous vous enverrons une confirmation et des mises à jour de commande.";
 "We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns." = "Nous vous enverrons une confirmation et des mises à jour de commande. Décochez cette case si vous ne souhaitez pas recevoir d'emails de notre part.";
 "Yes" = "oui";
-"Yes Please" = "oui";
 "Yes, remove it" = "oui, supprimer";
 "You can add %d more for the same price." = "Vous pouvez ajouter %d de plus pour le même prix.";
 "You need to authorize the app to access your Instagram account if you want to import photos from there." = "Autoriser l'application à accéder à votre compte Instagram pour importer les photos.";

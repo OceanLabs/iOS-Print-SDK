@@ -35,20 +35,7 @@
 #import "OLUserSession.h"
 #import "UIView+AutoLayoutHelper.h"
 
-@interface OLProduct ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-@end
-
-@interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-@end
-
 @interface OLPrintOrder (Private)
-- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 - (void)saveOrder;
 @end
 
@@ -98,6 +85,8 @@
     NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
     if (cornerRadius){
         [ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+    } else {
+        [ctaButton makeRoundRectWithRadius:10];
     }
     
     [self.view addSubview:ctaButton];
@@ -260,9 +249,6 @@
             fromEdit = YES;
         }
     }
-    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
-    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
-    job.redeemedOffer = self.product.redeemedOffer;
     [printOrder addPrintJob:job];
     if (!fromEdit){
         [OLAnalytics trackItemAddedToBasket:job];

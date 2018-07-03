@@ -67,7 +67,7 @@
         color = [OLKiteABTesting sharedInstance].lightThemeColor1;
     }
     else{
-        color = [UIColor colorWithRed:0.231 green:0.686 blue:0.855 alpha:1.000];
+        color = self.view.tintColor;
     }
     
     CGFloat buttonHeight = MIN(44, self.navigationController.navigationBar.frame.size.height);

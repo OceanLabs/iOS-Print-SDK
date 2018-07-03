@@ -68,18 +68,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     OLPackReviewStyleMini,
 };
 
-@interface OLProduct ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-@end
-
-@interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-@end
-
 @interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout, OLInfoBannerDelegate, OLArtboardDelegate>
 
 @property (weak, nonatomic) OLAsset *editingAsset;
@@ -181,6 +169,8 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
     if (cornerRadius){
         [self.ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+    } else {
+        [self.ctaButton makeRoundRectWithRadius:10];
     }
     
     [self.collectionView addSubview:self.ctaButton];
@@ -337,9 +327,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
                 fromEdit = YES;
             }
         }
-        [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
-        [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
-        job.redeemedOffer = self.product.redeemedOffer;
         [printOrder addPrintJob:job];
         if (!fromEdit){
             [OLAnalytics trackItemAddedToBasket:job];

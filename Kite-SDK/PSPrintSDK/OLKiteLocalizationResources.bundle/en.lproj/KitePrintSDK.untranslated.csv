@@ -6,11 +6,8 @@ ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
 401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,
 500 Internal Server Error whilst trying to upload an asset. Please try again.,500 Internal Server Error whilst trying to upload an asset. Please try again.,
 Add,Add,
-Add %ld %@!,Add %ld %@!,
-Add a %@!,Add a %@!,
 Add a photo\non this side,Add a photo\non this side,/* this side [of the shirt] */
 Add Address,Add Address,
-Add another %@!,Add another %@!,
 Add Credit Card,Add Credit Card,
 Add Credit Card (TEST),Add Credit Card (TEST),
 Add Credit/Debit Card,Add Credit/Debit Card,
@@ -45,10 +42,6 @@ cm,cm,/* Centimeters */
 Completed Orders,Completed Orders,
 Continue Shopping,Continue Shopping,
 County,County,
-Create a %@ for\nonly %@ %@,Create a %@ for\nonly %@ %@,
-Create a pack for\nonly %@ %@,Create a pack for\nonly %@ %@,
-Create another %@ for\nonly %@ %@,Create another %@ for\nonly %@ %@,
-Create another pack for\nonly %@ %@,Create another pack for\nonly %@ %@,
 Create Image,Create Image,
 Crop,Crop,/* Crop image */
 CVV,CVV,/* The credit card security code */
@@ -106,11 +99,9 @@ Medium,Medium,
 Missing Delivery Address,Missing Delivery Address,
 MM/YY,MM/YY,/* Credit card date format: MonthMonth/YearYear */
 MORE ITEMS\nCOMING SOON!,MORE ITEMS\nCOMING SOON!,
-Move Pages,Move Pages,/* Title of a screen that allows the user to move the pages of a book around */
 New Payment,New Payment,
 Next,Next,
 No,No,
-No Thanks,No Thanks,
 "No, keep it","No, keep it","/* No, keep [the photo] */"
 Not now,Not now,
 OK,OK,/* Acknowledgent to an alert dialog. */
@@ -132,7 +123,6 @@ Phone,Phone,
 Photo Library,Photo Library,
 Please add %d more.,Please add %d more.,/* Please add [a number] more [photos] */
 Please add some photos,Please add some photos,
-Please add some photos to your photo book,Please add some photos to your photo book,
 Please choose an address to have your order shipped to,Please choose an address to have your order shipped to,
 Please enter a card expiry date in the future,Please enter a card expiry date in the future,/* For credit cards */
 Please enter a valid card number,Please enter a valid card number,
@@ -207,7 +197,6 @@ We need access to your %@ photos,We need access to your %@ photos,/* Example: We
 We'll send you confirmation and order updates.,We'll send you confirmation and order updates.,
 We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,
 Yes,Yes,
-Yes Please,Yes Please,
 "Yes, remove it","Yes, remove it","/* Yes, remove [the photo] */"
 You can add %d more for the same price.,You can add %d more for the same price.,
 You need to authorize the app to access your Instagram account if you want to import photos from there.,You need to authorize the app to access your Instagram account if you want to import photos from there.,
