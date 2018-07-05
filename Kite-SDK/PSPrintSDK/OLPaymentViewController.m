@@ -63,7 +63,6 @@
 #import "OLReceiptViewController.h"
 #import "OLSingleProductReviewViewController.h"
 #import "OLStripeCard+OLCardIcon.h"
-#import "OLStripeWrapper.h"
 #import "OLUserSession.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "UIImage+OLUtils.h"
@@ -83,6 +82,7 @@
 @import PassKit;
 @import Contacts;
 @import SafariServices;
+@import Stripe;
 
 static NSString *const kSectionOrderSummary = @"kSectionOrderSummary";
 static NSString *const kSectionPromoCodes = @"kSectionPromoCodes";
@@ -497,7 +497,7 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
     }
     
     if ([OLKiteUtils isApplePayAvailable]){
-        [OLStripeWrapper setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
+        [Stripe setDefaultPublishableKey:[OLKitePrintSDK stripePublishableKey]];
     }
     
     if ([self.printOrder hasCachedCost] && !self.printOrder.costReq) {
@@ -1393,13 +1393,13 @@ UIActionSheetDelegate, UITextFieldDelegate, UINavigationControllerDelegate, UITa
         completion(PKPaymentAuthorizationStatusInvalidShippingContact);
         return;
     }
-    id client = [OLStripeWrapper initSTPAPIClientWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
-    [OLStripeWrapper client:client createTokenWithPayment:payment completion:^(id token, NSError *error) {
+    id client = [[STPAPIClient alloc] initWithPublishableKey:[OLKitePrintSDK stripePublishableKey]];
+    [client createTokenWithPayment:payment completion:^(id token, NSError *error) {
         if (error) {
             completion(PKPaymentAuthorizationStatusFailure);
             return;
         }
-        [self submitOrderForPrintingWithProofOfPayment:[OLStripeWrapper tokenIdFromToken:token] paymentMethod:@"Apple Pay" completion:completion];
+        [self submitOrderForPrintingWithProofOfPayment:[token tokenId] paymentMethod:@"Apple Pay" completion:completion];
     }];
 }
 

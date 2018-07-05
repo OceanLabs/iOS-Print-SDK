@@ -140,7 +140,6 @@
 		2E451E021D9555620080F1C1 /* OLImageDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */; };
 		2E451E031D9555620080F1C1 /* OLKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E25FEFA1CF2EF5D006E52E5 /* OLKeyChainStore.m */; };
 		2E451E041D9555620080F1C1 /* OLLuhn.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB715D41CFDD12900618C7B /* OLLuhn.m */; };
-		2E451E061D9555860080F1C1 /* OLStripeWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */; };
 		2E451E071D9555860080F1C1 /* OLInstagramMediaRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */; };
 		2E451E081D9555860080F1C1 /* OLInstagramImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */; };
 		2E451E091D9555860080F1C1 /* OLInstagramImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */; };
@@ -334,7 +333,6 @@
 		2EB8FE041D95685100E26BDF /* OLImageDownloadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE051D95685100E26BDF /* OLKeyChainStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E25FEF91CF2EF5D006E52E5 /* OLKeyChainStore.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE061D95685100E26BDF /* OLLuhn.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB715D31CFDD12900618C7B /* OLLuhn.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE081D95685100E26BDF /* OLStripeWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F0531D93D71D00014C19 /* OLStripeWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE091D95685100E26BDF /* OLInstagramMediaRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612F71D48AFE800B48E29 /* OLInstagramMediaRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE0A1D95685100E26BDF /* OLInstagramImagePickerConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612F91D48AFE800B48E29 /* OLInstagramImagePickerConstants.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE0B1D95685100E26BDF /* OLInstagramImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612FB1D48AFE800B48E29 /* OLInstagramImage.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -557,8 +555,6 @@
 		2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCircularProgressView.m; sourceTree = "<group>"; };
 		2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLMarkdownParser.h; sourceTree = "<group>"; };
 		2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLMarkdownParser.m; sourceTree = "<group>"; };
-		2E10F0531D93D71D00014C19 /* OLStripeWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLStripeWrapper.h; sourceTree = "<group>"; };
-		2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLStripeWrapper.m; sourceTree = "<group>"; };
 		2E12DBC61E795511000A6CEF /* UIView+AutoLayoutHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+AutoLayoutHelper.h"; path = "PSPrintSDK/Categories/UIView+AutoLayoutHelper.h"; sourceTree = "<group>"; };
 		2E12DBC71E795511000A6CEF /* UIView+AutoLayoutHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+AutoLayoutHelper.m"; path = "PSPrintSDK/Categories/UIView+AutoLayoutHelper.m"; sourceTree = "<group>"; };
 		2E149AE61DB7B00D000E5849 /* OLProductTemplateCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductTemplateCollection.h; sourceTree = "<group>"; };
@@ -1140,15 +1136,6 @@
 			name = "3rd Party";
 			sourceTree = "<group>";
 		};
-		2E10F0521D93D70300014C19 /* Stripe */ = {
-			isa = PBXGroup;
-			children = (
-				2E10F0531D93D71D00014C19 /* OLStripeWrapper.h */,
-				2E10F0541D93D71D00014C19 /* OLStripeWrapper.m */,
-			);
-			name = Stripe;
-			sourceTree = "<group>";
-		};
 		2E1E66D91D4795C8002524A4 /* Facebook */ = {
 			isa = PBXGroup;
 			children = (
@@ -1342,7 +1329,6 @@
 			isa = PBXGroup;
 			children = (
 				2ED2B7B61DB8B4DF0036B536 /* HP SDK */,
-				2E10F0521D93D70300014C19 /* Stripe */,
 				2EB612F61D48AFDA00B48E29 /* Instagram */,
 				2E1E66D91D4795C8002524A4 /* Facebook */,
 			);
@@ -1880,7 +1866,6 @@
 				2ED2B7B41DB8B4D90036B536 /* OLHPSDKWrapper.h in Headers */,
 				2EB8FDE01D95685100E26BDF /* OLImageCachingManager.h in Headers */,
 				2EB8FE231D95685100E26BDF /* OLOAuth2Account.h in Headers */,
-				2EB8FE081D95685100E26BDF /* OLStripeWrapper.h in Headers */,
 				2EB8FDE21D95685100E26BDF /* OLTextOnPhoto.h in Headers */,
 				2E451DCC1D9554B40080F1C1 /* KiteSDK.h in Headers */,
 				2EB8FE371D95685100E26BDF /* OLSelectedEffectButton.h in Headers */,
@@ -2463,7 +2448,6 @@
 				2E0290E81F26333200F7A5B0 /* OLKioskLandingViewController.m in Sources */,
 				2E451DD61D9555540080F1C1 /* OLPrintOrderRequest.m in Sources */,
 				2E451E4E1D9555D90080F1C1 /* OLPaymentMethodsViewController.m in Sources */,
-				2E451E061D9555860080F1C1 /* OLStripeWrapper.m in Sources */,
 				2E451E3A1D9555870080F1C1 /* OLImagePickerPhotosPageViewController.m in Sources */,
 				2E451E1C1D9555870080F1C1 /* NSData+OLOAuth2.m in Sources */,
 				2E451DED1D95555C0080F1C1 /* OLApparelPrintJob.m in Sources */,

@@ -36,12 +36,12 @@
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
 #import "OLPayPalWrapper.h"
-#import "OLStripeWrapper.h"
 #import "OLFacebookSDKWrapper.h"
 #import "OLKiteViewController+Private.h"
 
 @import Contacts;
 @import PassKit;
+@import Stripe;
 
 @interface OLKitePrintSDK (Private)
 + (NSString *)appleMerchantID;
@@ -133,15 +133,11 @@
 }
 
 +(BOOL)isApplePayAvailable{
-    if (![OLStripeWrapper isStripeAvailable] || ![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""] || [OLKitePrintSDK isKiosk]){
+    if (![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""] || [OLKitePrintSDK isKiosk]){
         return NO;
     }
     
-    //Disable Apple Pay on iOS 8 because we need the Contacts framework. There's in issue in Xcode 8.0 that doesn't include some old symbols in PassKit that crashes iOS 9 apps built with frameworks on launch. Did Not test that they crash iOS 8, but disabled to be safe.
-    if (![CNContact class]){
-        return NO;
-    }
-    return [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
+    return [Stripe deviceSupportsApplePay];
 }
 
 + (NSArray<NSString *> *)supportedPKPaymentNetworks {
