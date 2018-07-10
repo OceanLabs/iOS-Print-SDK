@@ -278,11 +278,6 @@ static BOOL optInToRemoteAnalytics = NO;
         dict[kOLAnalyticsProductId] = template.identifier;
         dict[kOLAnalyticsNumberOfPhotosInItem] = [NSNumber numberWithInteger:[job quantity]];
         dict[kOLAnalyticsQuantity] = [NSNumber numberWithInteger:[job extraCopies]+1];
-        
-        OLProduct *product = [OLProduct productWithTemplateId:[job templateId]];
-        NSDecimalNumber *numUnitsInJob = [job numberOfItemsInJob];
-        NSDecimalNumber *jobPrice = [numUnitsInJob decimalNumberByMultiplyingBy:[[product unitCostDecimalNumber] decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ld", (long)[job extraCopies]+1]]]];
-        dict[kOLAnalyticsItemPrice] = jobPrice;
     }
     return dict;
 }

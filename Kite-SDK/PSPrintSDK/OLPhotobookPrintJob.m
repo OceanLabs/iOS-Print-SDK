@@ -149,10 +149,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     return self.assets.count;
 }
 
-- (NSDecimalNumber *)numberOfItemsInJob{
-    return [NSDecimalNumber decimalNumberWithString:@"1"];
-}
-
 - (NSArray *)currenciesSupported {
     return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
 }

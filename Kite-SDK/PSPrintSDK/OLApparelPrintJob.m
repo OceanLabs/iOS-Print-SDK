@@ -120,10 +120,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     return 1;
 }
 
-- (NSDecimalNumber *)numberOfItemsInJob{
-    return [NSDecimalNumber decimalNumberWithString:@"1"];
-}
-
 - (NSArray *)currenciesSupported {
     return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
 }

@@ -103,10 +103,6 @@ static id stringOrEmptyString(NSString *str) {
     return 1;
 }
 
-- (NSDecimalNumber *)numberOfItemsInJob{
-    return [NSDecimalNumber decimalNumberWithString:@"1"];
-}
-
 - (NSString *)productName {
     return [OLProductTemplate templateWithId:self.templateId].name;
 }

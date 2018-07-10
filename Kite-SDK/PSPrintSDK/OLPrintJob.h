@@ -54,13 +54,6 @@
 - (void)setValue:(NSString *)value forOption:(NSString *)option;
 
 /**
- *  Number of items in a job (for example multiple packs of prints in a single job)
- *
- *  @return The number of items
- */
-- (NSDecimalNumber *)numberOfItemsInJob;
-
-/**
  *  An array of the OLAssets that need to be uploaded
  */
 @property (nonatomic, readonly) NSArray<OLAsset *> *assetsForUploading;
