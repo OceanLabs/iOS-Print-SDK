@@ -10,7 +10,6 @@
 #import "OLProductTemplate.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteTestHelper.h"
-#import "OLPhotobookPrintJob.h"
 
 
 @import Photos;
@@ -205,11 +204,6 @@
     [self submitJobs:@[job]];
 }
 
-- (void)testPhotobookOrderWithURLOLAssets{
-    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_210x210_sm" OLAssets:[OLKiteTestHelper urlAssets] frontCoverOLAsset:[OLKiteTestHelper urlAssets].firstObject backCoverOLAsset:[OLKiteTestHelper urlAssets].lastObject];
-    [self submitJobs:@[job]];
-}
-
 - (void)testPostcardOrderWithURLOLAssets{
     id<OLPrintJob> job = [OLPrintJob postcardWithTemplateId:@"postcard" frontImageOLAsset:[OLKiteTestHelper urlAssets].firstObject backImageOLAsset:[OLKiteTestHelper urlAssets].lastObject];
     [self submitJobs:@[job]];
@@ -217,13 +211,6 @@
 
 - (void)testGreetingCardOrderWithURLOLAssets{
     id<OLPrintJob> job = [OLPrintJob greetingCardWithTemplateId:@"greeting_cards_a5" frontImageOLAsset:[OLKiteTestHelper urlAssets].firstObject backImageOLAsset:[OLKiteTestHelper urlAssets].lastObject insideRightImageAsset:[OLKiteTestHelper urlAssets][1] insideLeftImageAsset:[OLKiteTestHelper urlAssets][2]];
-    [self submitJobs:@[job]];
-}
-
-- (void)testPDFOLAssetPhotobook{
-    NSData *data1 = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[OLKiteTestHelper class]] pathForResource:@"3" ofType:@"pdf"]];
-    
-    OLPhotobookPrintJob *job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_300x300_sm" OLAssets:@[[OLAsset assetWithDataAsPDF:data1]] frontCoverOLAsset:nil backCoverOLAsset:nil];
     [self submitJobs:@[job]];
 }
 

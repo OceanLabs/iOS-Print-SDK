@@ -79,7 +79,6 @@
 "FREE" = "ILMAINEN";
 "From" = "Alkaen";
 "FRONT" = "ETUOSA";
-"Great gifts for all the family" = "Hauskoja lahjoja koko perheelle";
 "Image Is Too Small" = "Kuva on liian pieni";
 "IMAGE TOOLS" = "KUVATYÖKALUT";
 "Image upload failed with a %lu HTTP response status code. Please try again." = "Kuvan lataus epäonnistui – HTTP-vastauksen tilakoodi: %lu. Yritä uudelleen.";

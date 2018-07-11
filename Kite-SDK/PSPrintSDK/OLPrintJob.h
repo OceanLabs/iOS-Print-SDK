@@ -148,18 +148,6 @@
 + (id<OLPrintJob>)greetingCardWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset insideRightImageAsset:(OLAsset *)insideRightImageAsset insideLeftImageAsset:(OLAsset *)insideLeftImageAsset;
 
 /**
- *  Creates and returns a photo book print job
- *
- *  @param templateId The template ID of this job
- *  @param assets     The assets to print inside the book
- *  @param frontCover The image to print on the front cover
- *  @param backCover  The image to print on the back cover
- *
- *  @return The photo book print job
- */
-+ (id<OLPrintJob>)photobookWithTemplateId:(NSString *)templateId OLAssets:(NSArray <OLAsset *> *)assets frontCoverOLAsset:(OLAsset *)frontCover backCoverOLAsset:(OLAsset *)backCover;
-
-/**
  *  Creates and returns an apparel print job
  *
  *  @param templateId The template ID of this job

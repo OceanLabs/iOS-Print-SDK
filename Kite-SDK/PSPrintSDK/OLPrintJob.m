@@ -31,7 +31,6 @@
 #import "OLPostcardPrintJob.h"
 #import "OLProductPrintJob.h"
 #import "OLAsset.h"
-#import "OLPhotobookPrintJob.h"
 #import "OLApparelPrintJob.h"
 #import "OLGreetingCardPrintJob.h"
 
@@ -47,14 +46,6 @@
 
 + (id<OLPrintJob>)greetingCardWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset insideRightImageAsset:(OLAsset *)insideRightImageAsset insideLeftImageAsset:(OLAsset *)insideLeftImageAsset{
     return [[OLGreetingCardPrintJob alloc] initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:backImageAsset insideRightImageAsset:insideRightImageAsset insideLeftImageAsset:insideLeftImageAsset];
-}
-
-+ (id<OLPrintJob>)photobookWithTemplateId:(NSString *)templateId OLAssets:(NSArray <OLAsset *> *)assets frontCoverOLAsset:(OLAsset *)frontCover backCoverOLAsset:(OLAsset *)backCover{
-    OLPhotobookPrintJob *job = [[OLPhotobookPrintJob alloc] initWithTemplateId:templateId OLAssets:assets];
-    job.frontCover = frontCover;
-    job.backCover = backCover;
-    
-    return job;
 }
 
 + (id<OLPrintJob>)apparelWithTemplateId:(NSString *)templateId OLAssets:(NSDictionary<NSString *, OLAsset *> *)assets{
