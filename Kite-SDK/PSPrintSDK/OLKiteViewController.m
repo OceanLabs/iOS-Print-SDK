@@ -290,13 +290,13 @@ static CGFloat fadeTime = 0.3;
         for (OLAsset *asset in [OLAsset userSelectedAssets]){
             switch (asset.assetType) {
                 case kOLAssetTypeImageData:
-                    [assets addObject:[[ImageAsset alloc] initWithImage:[UIImage imageWithData:[asset imageData]] date:nil]];
+                    [assets addObject:[[PhotobookAsset alloc] initWithImage:[UIImage imageWithData:[asset imageData]] date:nil]];
                     break;
                 case kOLAssetTypeRemoteImageURL:
-                    [assets addObject:[[URLAsset alloc] init:[asset imageURL] size:CGSizeMake(1000, 1000)]];
+                    [assets addObject:[[PhotobookAsset alloc] initWithUrl:[asset imageURL] size:CGSizeMake(1000, 1000)]];
                     break;
                 case kOLAssetTypePHAsset:
-                    [assets addObject:[[PhotosAsset alloc] init:[asset phAsset] albumIdentifier:nil]];
+                    [assets addObject:[[PhotobookAsset alloc] initWithPHAsset:[asset phAsset] albumIdentifier:@""]];
                     break;
                     
                 default:

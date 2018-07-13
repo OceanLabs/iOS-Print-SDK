@@ -43,7 +43,7 @@ typedef enum {
     kOLAssetTypeDataSource,
 } OLAssetType;
 
-@interface OLAsset (Private) <PhotobookAsset>
+@interface OLAsset (Private)
 
 @property (nonatomic, strong) id<OLAssetDataSource> dataSource;
 
