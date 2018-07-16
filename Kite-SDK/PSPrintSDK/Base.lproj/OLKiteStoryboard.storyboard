@@ -1699,7 +1699,7 @@
                                         </imageView>
                                         <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="84Y-Pd-eC9">
                                             <rect key="frame" x="105" y="321" width="30" height="30"/>
-                                            <color key="backgroundColor" red="0.2901960784" green="0.53725490200000003" blue="0.86274509799999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="30" id="efe-tq-xjH"/>
                                                 <constraint firstAttribute="height" constant="30" id="jve-Jd-vfM"/>
@@ -1718,7 +1718,7 @@
                                         </label>
                                         <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B0X-gI-x0R">
                                             <rect key="frame" x="185" y="321" width="30" height="30"/>
-                                            <color key="backgroundColor" red="0.2901960784" green="0.53725490200000003" blue="0.86274509799999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                             <color key="tintColor" red="0.95002961159999999" green="0.68307703730000002" blue="0.20288231970000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <state key="normal" title="+">
@@ -3360,7 +3360,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NKM-qZ-fPP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4516" y="161"/>
+            <point key="canvasLocation" x="1433" y="157"/>
         </scene>
         <!--Payment Method-->
         <scene sceneID="JuG-sU-gil">

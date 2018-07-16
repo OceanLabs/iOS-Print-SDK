@@ -144,7 +144,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
         [self.ctaButton setBackgroundColor:[OLKiteABTesting sharedInstance].lightThemeColor1];
     }
     else{
-        [self.ctaButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+        [self.ctaButton setBackgroundColor:[UIColor colorWithRed:0 green:0.48 blue:1 alpha:1]];
     }
     [self.ctaButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
