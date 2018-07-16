@@ -30,7 +30,9 @@
 #import <Foundation/Foundation.h>
 #import "OLPrintJob.h"
 
-@interface OLProductPrintJob : NSObject <OLPrintJob, NSCopying>
+@import Photobook;
+
+@interface OLProductPrintJob : NSObject <OLPrintJob, NSCopying, Product>
 
 /**
  *  Creates and returns a print job

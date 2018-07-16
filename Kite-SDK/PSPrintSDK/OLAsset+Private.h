@@ -57,6 +57,8 @@ typedef enum {
 - (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler;
 - (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL;
 - (void)unloadImage;
+- (PhotobookAsset *)photobookAsset;
++ (NSArray<PhotobookAsset *> *)photobookAssetsFromAssets:(NSArray <OLAsset *>*)assets;
 + (NSMutableArray<OLAsset *> *)userSelectedAssets;
 @property (assign, nonatomic) BOOL corrupt;
 @property (assign, nonatomic) NSInteger extraCopies;

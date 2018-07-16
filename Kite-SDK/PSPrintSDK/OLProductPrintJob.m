@@ -33,6 +33,8 @@
 #import "OLCountry.h"
 #import "OLProductTemplate.h"
 #import "OLAsset+Private.h"
+#import "OLProduct.h"
+#import "OLImageDownloader.h"
 
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
 static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
@@ -59,6 +61,38 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
 @synthesize selectedShippingMethodIdentifier;
+@synthesize selectedShippingMethod;
+@synthesize upsoldTemplate;
+
+- (void)setIdentifier:(NSString *)s {
+    self.uuid = s;
+}
+
+- (NSString *)identifier {
+    return self.uuid;
+}
+
+- (void)setItemCount:(NSInteger)itemCount {
+    self.extraCopies = itemCount - 1;
+}
+
+- (NSInteger)itemCount {
+    return self.extraCopies + 1;
+}
+
+- (NSInteger)numberOfPages {
+    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
+    NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
+    return ceil(productTemplate.quantityPerSheet / sheetQuanity);
+}
+
+- (OLProductTemplate *)template {
+    return [OLProductTemplate templateWithId:self.templateId];
+}
+
+- (NSMutableDictionary *) upsoldOptions {
+    return self.options;
+}
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -214,6 +248,10 @@ static id stringOrEmptyString(NSString *str) {
     return objectCopy;
 }
 
+- (NSInteger) hashValue {
+    return [self hash];
+}
+
 - (NSUInteger) hash {
     NSUInteger val = [self.templateId hash];
     for (id asset in self.assets) {
@@ -275,5 +313,22 @@ static id stringOrEmptyString(NSString *str) {
     return self;
 }
 
+- (NSArray<PhotobookAsset *> * _Nullable)assetsToUpload {
+    return [OLAsset photobookAssetsFromAssets:self.assetsForUploading];
+}
+
+- (NSDictionary<NSString *,id> * _Nullable)orderParameters {
+    return self.jsonRepresentation;
+}
+
+- (void)previewImageWithSize:(CGSize)size completionHandler:(void (^ _Nonnull)(UIImage * _Nullable))completionHandler {
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
+        completionHandler(image);
+    }];
+}
+
+- (void)processUploadedAssetsWithCompletionHandler:(void (^ _Nonnull)(NSError * _Nullable))completionHandler {
+    completionHandler(nil);
+}
 
 @end

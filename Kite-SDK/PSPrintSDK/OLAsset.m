@@ -647,6 +647,33 @@ static NSOperationQueue *imageOperationQueue;
     return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical || !(CGAffineTransformIsIdentity(self.edits.cropTransform) || self.edits.textsOnPhoto.count > 0) || (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]);
 }
 
+- (PhotobookAsset *)photobookAsset {
+    switch (self.assetType) {
+        case kOLAssetTypeImageData:
+            return [[PhotobookAsset alloc] initWithImage:[UIImage imageWithData:[self imageData]] date:nil];
+        case kOLAssetTypeRemoteImageURL:
+            return  [[PhotobookAsset alloc] initWithUrl:[self imageURL] size:CGSizeMake(1000, 1000)];
+        case kOLAssetTypePHAsset:
+            return [[PhotobookAsset alloc] initWithPHAsset:[self phAsset] albumIdentifier:@""];
+            
+        default:
+            NSAssert(NO, @"Asset type not yet supported");
+            return nil;
+    }
+}
+
++ (NSArray<PhotobookAsset *> *)photobookAssetsFromAssets:(NSArray <OLAsset *>*)assets {
+    NSMutableArray *photobookAssets = [[NSMutableArray alloc] init];
+    for (OLAsset *asset in assets){
+        PhotobookAsset *photobookAsset = [asset photobookAsset];
+        if (photobookAsset) {
+            [photobookAssets addObject:photobookAsset];
+        }
+    }
+    
+    return photobookAssets;
+}
+
 - (NSUInteger) hash {
     NSUInteger val = 31 * self.mimeType.hash;
     val = 39 * val + self.imageData.hash;

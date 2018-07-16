@@ -51,6 +51,8 @@
 #import "OLKiteViewController+Private.h"
 #import "UIView+RoundRect.h"
 
+@import Photobook;
+
 @interface OLPaymentViewController (Private)
 
 - (void)saveAndDismissReviewController:(UIButton *)button;
@@ -308,31 +310,20 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 - (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     [self preparePhotosForCheckout];
     
-    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
-        BOOL fromEdit = NO;
-        OLProductPrintJob *job;
-        if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
-            job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:[OLAsset userSelectedAssets].firstObject backImageOLAsset:[OLAsset userSelectedAssets].lastObject];
-        }
-        else{
-            job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[NSArray arrayWithArray:[OLAsset userSelectedAssets]]];
-        }
-        NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-        for (id<OLPrintJob> existingJob in jobs){
-            if ([existingJob.uuid isEqualToString:self.product.uuid]){
-                job.dateAddedToBasket = [existingJob dateAddedToBasket];
-                job.extraCopies = existingJob.extraCopies;
-                [printOrder removePrintJob:existingJob];
-                fromEdit = YES;
-            }
-        }
-        [printOrder addPrintJob:job];
-        if (!fromEdit){
-            [OLAnalytics trackItemAddedToBasket:job];
-        }
+    BOOL fromEdit = NO;
+    id<Product> job;
+    if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
+        job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:[OLAsset userSelectedAssets].firstObject backImageOLAsset:[OLAsset userSelectedAssets].lastObject];
+    }
+    else{
+        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[NSArray arrayWithArray:[OLAsset userSelectedAssets]]];
+    }
+    [[Checkout shared] addProductToBasket:job];
+    if (!fromEdit){
+        [OLAnalytics trackItemAddedToBasket:(id<OLPrintJob>)job];
+    }
     
-    [printOrder saveOrder];
     
     if (handler){
         handler();
@@ -342,8 +333,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 - (void)doCheckout {
     [self saveJobWithCompletionHandler:NULL];
     
-    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-    
     if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
         UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
@@ -352,12 +341,8 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
         [self.navigationController pushViewController:vc animated:YES];
     }
     else{
-        [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-            [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-            [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-            
-            [self.navigationController pushViewController:vc animated:YES];
-        }];
+        UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
+        [self.navigationController pushViewController:checkoutVc animated:YES];
     }
 }
 

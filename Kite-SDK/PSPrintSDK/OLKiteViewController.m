@@ -286,25 +286,7 @@ static CGFloat fadeTime = 0.3;
         return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     }
     else if (templateUI == OLTemplateUIPhotobook){
-        NSMutableArray *assets = [[NSMutableArray alloc] init];
-        for (OLAsset *asset in [OLAsset userSelectedAssets]){
-            switch (asset.assetType) {
-                case kOLAssetTypeImageData:
-                    [assets addObject:[[PhotobookAsset alloc] initWithImage:[UIImage imageWithData:[asset imageData]] date:nil]];
-                    break;
-                case kOLAssetTypeRemoteImageURL:
-                    [assets addObject:[[PhotobookAsset alloc] initWithUrl:[asset imageURL] size:CGSizeMake(1000, 1000)]];
-                    break;
-                case kOLAssetTypePHAsset:
-                    [assets addObject:[[PhotobookAsset alloc] initWithPHAsset:[asset phAsset] albumIdentifier:@""]];
-                    break;
-                    
-                default:
-                    NSAssert(NO, @"Asset type not yet supported");
-                    break;
-            }
-        }
-        return [[PhotobookSDK shared] photobookViewControllerWith:assets embedInNavigation:NO delegate:nil];
+        return [[PhotobookSDK shared] photobookViewControllerWith:[OLAsset photobookAssetsFromAssets:[OLAsset userSelectedAssets]] embedInNavigation:NO delegate:nil];
     }
     else if (templateUI == OLTemplateUIPoster){
         return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLPosterViewController"];
