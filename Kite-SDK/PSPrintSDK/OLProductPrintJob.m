@@ -28,11 +28,10 @@
 //
 
 #import "OLProductPrintJob.h"
-#import "OLAsset.h"
+#import "OLAsset+Private.h"
 #import "OLAddress.h"
 #import "OLCountry.h"
 #import "OLProductTemplate.h"
-#import "OLAsset+Private.h"
 #import "OLProduct.h"
 #import "OLImageDownloader.h"
 
@@ -61,38 +60,6 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
 @synthesize selectedShippingMethodIdentifier;
-@synthesize selectedShippingMethod;
-@synthesize upsoldTemplate;
-
-- (void)setIdentifier:(NSString *)s {
-    self.uuid = s;
-}
-
-- (NSString *)identifier {
-    return self.uuid;
-}
-
-- (void)setItemCount:(NSInteger)itemCount {
-    self.extraCopies = itemCount - 1;
-}
-
-- (NSInteger)itemCount {
-    return self.extraCopies + 1;
-}
-
-- (NSInteger)numberOfPages {
-    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
-    NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
-    return ceil(productTemplate.quantityPerSheet / sheetQuanity);
-}
-
-- (OLProductTemplate *)template {
-    return [OLProductTemplate templateWithId:self.templateId];
-}
-
-- (NSMutableDictionary *) upsoldOptions {
-    return self.options;
-}
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -248,10 +215,6 @@ static id stringOrEmptyString(NSString *str) {
     return objectCopy;
 }
 
-- (NSInteger) hashValue {
-    return [self hash];
-}
-
 - (NSUInteger) hash {
     NSUInteger val = [self.templateId hash];
     for (id asset in self.assets) {
@@ -312,6 +275,46 @@ static id stringOrEmptyString(NSString *str) {
     
     return self;
 }
+
+#pragma mark - Product
+
+- (NSInteger) hashValue {
+    return [self hash];
+}
+
+- (void)setIdentifier:(NSString *)s {
+    self.uuid = s;
+}
+
+- (NSString *)identifier {
+    return self.uuid;
+}
+
+- (void)setItemCount:(NSInteger)itemCount {
+    self.extraCopies = itemCount - 1;
+}
+
+- (NSInteger)itemCount {
+    return self.extraCopies + 1;
+}
+
+- (NSInteger)numberOfPages {
+    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
+    NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
+    return ceil(productTemplate.quantityPerSheet / sheetQuanity);
+}
+
+@synthesize selectedShippingMethod;
+
+- (OLProductTemplate *)template {
+    return [OLProductTemplate templateWithId:self.templateId];
+}
+
+- (NSMutableDictionary *) upsoldOptions {
+    return self.options;
+}
+
+@synthesize upsoldTemplate;
 
 - (NSArray<PhotobookAsset *> * _Nullable)assetsToUpload {
     return [OLAsset photobookAssetsFromAssets:self.assetsForUploading];

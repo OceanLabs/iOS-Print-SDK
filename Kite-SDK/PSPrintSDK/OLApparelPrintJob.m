@@ -29,9 +29,10 @@
 
 #import "OLApparelPrintJob.h"
 #import "OLProductTemplate.h"
-#import "OLAsset.h"
+#import "OLAsset+Private.h"
 #import "OLAddress.h"
 #import "OLCountry.h"
+#import "OLImageDownloader.h"
 
 static NSString *const kKeyApparelProductTemplateId = @"co.oceanlabs.pssdk.kKeyApparelProductTemplateId";
 static NSString *const kKeyApparelImages = @"co.oceanlabs.pssdk.kKeyApparelImages";
@@ -205,6 +206,64 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     }
     
     return self;
+}
+
+#pragma mark - Product
+
+- (NSInteger) hashValue {
+    return [self hash];
+}
+
+- (void)setIdentifier:(NSString *)s {
+    self.uuid = s;
+}
+
+- (NSString *)identifier {
+    return self.uuid;
+}
+
+- (void)setItemCount:(NSInteger)itemCount {
+    self.extraCopies = itemCount - 1;
+}
+
+- (NSInteger)itemCount {
+    return self.extraCopies + 1;
+}
+
+- (NSInteger)numberOfPages {
+    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
+    NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
+    return ceil(productTemplate.quantityPerSheet / sheetQuanity);
+}
+
+@synthesize selectedShippingMethod;
+
+- (OLProductTemplate *)template {
+    return [OLProductTemplate templateWithId:self.templateId];
+}
+
+- (NSMutableDictionary *) upsoldOptions {
+    return self.options;
+}
+
+@synthesize upsoldTemplate;
+
+- (NSArray<PhotobookAsset *> * _Nullable)assetsToUpload {
+    return [OLAsset photobookAssetsFromAssets:self.assetsForUploading];
+}
+
+- (NSDictionary<NSString *,id> * _Nullable)orderParameters {
+    return self.jsonRepresentation;
+}
+
+- (void)previewImageWithSize:(CGSize)size completionHandler:(void (^ _Nonnull)(UIImage * _Nullable))completionHandler {
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
+        completionHandler(image);
+    }];
+}
+
+- (void)processUploadedAssetsWithCompletionHandler:(void (^ _Nonnull)(NSError * _Nullable))completionHandler {
+    completionHandler(nil);
 }
 
 @end
