@@ -192,6 +192,7 @@ static id stringOrEmptyString(NSString *str) {
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
     objectCopy.options = self.options;
+    objectCopy.selectedShippingMethod = self.selectedShippingMethod;
     return objectCopy;
 }
 
@@ -208,6 +209,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     val = 41 * val + [self.uuid hash];
+    val = 42 * val + [self.selectedShippingMethod hash];
 
     return val;
 }
@@ -222,7 +224,9 @@ static id stringOrEmptyString(NSString *str) {
     }
     OLProductPrintJob* printJob = (OLProductPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToArray:printJob.assets] && [self.options isEqualToDictionary:printJob.options];
+    
+    
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToArray:printJob.assets] && [self.options isEqualToDictionary:printJob.options] && (!self.selectedShippingMethod || [self.selectedShippingMethod isEqual:printJob.selectedShippingMethod]);
 }
 
 
@@ -235,6 +239,7 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.options forKey:kKeyProductPrintJobOptions];
     [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
+    [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -245,6 +250,7 @@ static id stringOrEmptyString(NSString *str) {
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.options = [aDecoder decodeObjectForKey:kKeyProductPrintJobOptions];
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
+        self.selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
     }
     
     return self;

@@ -140,6 +140,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         val = 39 * val + [self.options[key] hash] + [key hash];
     }
     val = 41 * val + [self.uuid hash];
+    val = 42 * val + [self.selectedShippingMethod hash];
     
     return val;
 }
@@ -154,7 +155,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     }
     OLApparelPrintJob* printJob = (OLApparelPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToDictionary:printJob.assets] && [self.options isEqualToDictionary:printJob.options];
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToDictionary:printJob.assets] && [self.options isEqualToDictionary:printJob.options] && (!self.selectedShippingMethod || [self.selectedShippingMethod isEqual:printJob.selectedShippingMethod]);
 }
 
 #pragma mark - NSCopying
@@ -168,6 +169,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     objectCopy.options = self.options;
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
+    objectCopy.selectedShippingMethod = self.selectedShippingMethod;
     return objectCopy;
 }
 
@@ -180,6 +182,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     [aCoder encodeInteger:self.extraCopies forKey:kKeyApparelExtraCopies];
     [aCoder encodeObject:self.options forKey:kKeyApparelPrintJobOptions];
     [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
+    [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -190,6 +193,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         self.uuid = [aDecoder decodeObjectForKey:kKeyApparelUuid];
         self.options = [aDecoder decodeObjectForKey:kKeyApparelPrintJobOptions];
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
+        self.selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
     }
     
     return self;

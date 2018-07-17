@@ -185,6 +185,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     if (self.extraCopies) val *= self.extraCopies+1;
     val = 18 * val + [self.options hash];
     val = 41 * val + [self.uuid hash];
+    val = 42 * val + [self.selectedShippingMethod hash];
     return val;
 }
 
@@ -205,6 +206,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     if (self.insideLeftImageAsset) result &= [self.insideLeftImageAsset isEqual:printJob.insideLeftImageAsset];
     if (self.message) result &= [self.message isEqual:printJob.message];
     result &= [self.options isEqualToDictionary:printJob.options];
+    if (self.selectedShippingMethod) result &= [self.selectedShippingMethod isEqual:printJob.selectedShippingMethod];
     return result;
 }
 
@@ -221,6 +223,8 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
     [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
+    [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
+    
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -235,6 +239,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
+        self.selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
     }
     
     return self;
