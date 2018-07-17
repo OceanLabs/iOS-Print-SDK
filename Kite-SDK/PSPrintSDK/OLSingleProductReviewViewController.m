@@ -79,6 +79,10 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    }
+    
     self.view.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
     self.printContainerView.backgroundColor = [UIColor clearColor];
     

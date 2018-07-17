@@ -85,6 +85,10 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 {
     [super viewDidLoad];
     
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    }
+    
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];

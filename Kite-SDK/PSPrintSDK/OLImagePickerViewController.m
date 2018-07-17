@@ -107,6 +107,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    }
+    
     if (self.product){
         [OLAnalytics trackImagePickerScreenViewed:self.product.productTemplate.name];
     }

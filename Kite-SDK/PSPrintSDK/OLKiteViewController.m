@@ -419,7 +419,8 @@ static CGFloat fadeTime = 0.3;
         [vc safePerformSelector:@selector(setFilterProducts:) withObject:welf.filterProducts];
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
         if (welf.navigationController.viewControllers.count <= 1){
-            UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+            UINavigationController *nvc = [[OLNavigationController alloc] initWithNavigationBarClass:[PhotobookNavigationBar class] toolbarClass:nil];
+            nvc.viewControllers = @[vc];
             NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
             if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
                 [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
@@ -552,12 +553,6 @@ static CGFloat fadeTime = 0.3;
     else{
         return [self productDescriptionViewController];
     }
-}
-
-+ (UINavigationController *)orderHistoryViewController{
-    UIViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLOrderHistoryViewController"];
-    
-    return [[OLNavigationController alloc] initWithRootViewController:vc];
 }
 
 - (void)didReceiveMemoryWarning{
