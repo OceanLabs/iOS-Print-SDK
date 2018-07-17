@@ -39,7 +39,6 @@
 @property (strong, nonatomic) NSArray *fontNames;
 
 - (UIViewController *)reviewViewControllerForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen;
-- (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder;
 - (void)dismiss;
 - (UIViewController *)viewControllerForGroupSelected:(OLProductGroup *)group;
 - (UIViewController *)productDescriptionViewController;

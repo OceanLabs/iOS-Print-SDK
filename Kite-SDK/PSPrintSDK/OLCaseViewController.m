@@ -43,6 +43,7 @@
 #import "OLKiteABTesting.h"
 #import "UIView+AutoLayoutHelper.h"
 #import "UIColor+OLHexString.h"
+#import "UIViewController+OLMethods.h"
 
 @interface OLProduct ()
 - (NSString *)currencyCode;
@@ -294,6 +295,8 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    
+     [self addBasketIconToTopRight];
     
     if (!self.downloadedMask && self.product.productTemplate.maskImageURL){
         UIImage *tempMask = [UIImage imageNamedInKiteBundle:@"dummy mask"];

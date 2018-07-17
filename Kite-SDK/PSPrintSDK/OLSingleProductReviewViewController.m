@@ -194,12 +194,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
-        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-    }
-    else{
-        [self addBasketIconToTopRight];
-    }
+    [self addBasketIconToTopRight];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -304,7 +299,8 @@
         }
         else{
             UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
-            [self.navigationController pushViewController:checkoutVc animated:YES];
+            UIViewController *firstController = self.navigationController.viewControllers.firstObject;
+            [self.navigationController setViewControllers:@[firstController, checkoutVc]];
         }
     }];
 }

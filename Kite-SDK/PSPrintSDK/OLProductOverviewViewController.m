@@ -334,7 +334,8 @@
         }
         else{
             UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
-            [self.navigationController pushViewController:checkoutVc animated:YES];
+            UIViewController *firstController = self.navigationController.viewControllers.firstObject;
+            [self.navigationController setViewControllers:@[firstController, checkoutVc]];
             return;
         }
         [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
@@ -373,7 +374,8 @@
     [self saveJobWithCompletionHandler:NULL];
     
     UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
-    [self.navigationController pushViewController:checkoutVc animated:YES];
+    UIViewController *firstController = self.navigationController.viewControllers.firstObject;
+    [self.navigationController setViewControllers:@[firstController, checkoutVc]];
 }
 
 - (void)userDidTapOnImage{

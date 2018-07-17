@@ -76,7 +76,7 @@
     basketButton.frame = CGRectMake(0,0,50,buttonHeight);
     [basketButton addTarget:self action:@selector(onButtonBasketClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    NSInteger count = 0;
+    NSInteger count = [[Checkout shared] numberOfItemsInBasket];
     
     if (count != 0){
         [imageView setImage:[UIImage imageNamedInKiteBundle:@"cart-full"]];
@@ -149,12 +149,12 @@
 }
 
 - (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {
-//    NSInteger count = 0;
-//    [OLAnalytics trackBasketIconTappedWithNumberBadged:count];
+    [OLAnalytics trackBasketIconTappedWithNumberBadged:[[Checkout shared] numberOfItemsInBasket]];
     
-    UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
-    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:checkoutVc];
-    [self presentViewController:nvc animated:YES completion:NULL];
+    UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES delegate:nil];
+    if (checkoutVc) {
+        [self presentViewController:checkoutVc animated:YES completion:NULL];
+    }
 }
 
 - (BOOL)isPushed{
