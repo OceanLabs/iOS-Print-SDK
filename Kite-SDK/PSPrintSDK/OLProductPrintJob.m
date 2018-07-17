@@ -78,6 +78,7 @@ static id stringOrEmptyString(NSString *str) {
         self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
         self.templateId = templateId;
+        self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
     }
     
     return self;
@@ -93,6 +94,7 @@ static id stringOrEmptyString(NSString *str) {
         self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
         self.templateId = templateId;
+        self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
     }
     
     return self;
@@ -108,6 +110,7 @@ static id stringOrEmptyString(NSString *str) {
         self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
         self.templateId = templateId;
+        self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
     }
     
     return self;

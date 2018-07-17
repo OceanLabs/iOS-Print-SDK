@@ -306,7 +306,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     else{
         UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
         UIViewController *firstController = self.navigationController.viewControllers.firstObject;
-        [self.navigationController setViewControllers:@[firstController, checkoutVc]];
+        [self.navigationController setViewControllers:@[firstController, checkoutVc] animated:YES];
     }
 }
 

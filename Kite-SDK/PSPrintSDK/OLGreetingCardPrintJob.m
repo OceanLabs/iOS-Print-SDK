@@ -44,10 +44,6 @@ static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
 static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
 
-static id stringOrEmptyString(NSString *str) {
-    return str ? str : @"";
-}
-
 @interface OLGreetingCardPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) OLAsset *frontImageAsset;
@@ -84,6 +80,7 @@ static id stringOrEmptyString(NSString *str) {
         self.insideRightImageAsset = insideRightImageAsset;
         self.insideLeftImageAsset = insideLeftImageAsset;
         self.templateId = templateId;
+        self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
     }
     return self;
 }

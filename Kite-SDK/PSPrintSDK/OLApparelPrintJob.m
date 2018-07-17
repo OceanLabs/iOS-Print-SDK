@@ -74,6 +74,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
         self.templateId = templateId;
+        self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
     }
     
     return self;
