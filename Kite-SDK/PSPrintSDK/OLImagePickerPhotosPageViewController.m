@@ -40,7 +40,7 @@
 #import "OLKiteABTesting.h"
 #import "OLImagePreviewViewController.h"
 
-@interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerPreviewingDelegate>
+@interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
 @property (assign, nonatomic) CGSize rotationSize;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;

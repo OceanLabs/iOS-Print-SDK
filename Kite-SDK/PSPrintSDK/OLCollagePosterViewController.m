@@ -35,10 +35,6 @@
 #import "OLUserSession.h"
 #import "UIView+AutoLayoutHelper.h"
 
-@interface OLPrintOrder (Private)
-- (void)saveOrder;
-@end
-
 @interface OLSingleImagePosterViewController () <OLArtboardDelegate>
 - (void)saveAndDismissReviewController:(UIButton *)button;
 - (IBAction)onButtonDoneTapped:(UIButton *)sender;
@@ -231,31 +227,14 @@
     
     [self preparePhotosForCheckout];
     
-    BOOL fromEdit = NO;
-    
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLAsset *photo in [OLAsset userSelectedAssets]) {
         [photoAssets addObject:[photo copy]];
     }
         
-    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-    for (id<OLPrintJob> existingJob in jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            job.dateAddedToBasket = [existingJob dateAddedToBasket];
-            job.extraCopies = existingJob.extraCopies;
-            [printOrder removePrintJob:existingJob];
-            fromEdit = YES;
-        }
-    }
-    [printOrder addPrintJob:job];
-    if (!fromEdit){
-        [OLAnalytics trackItemAddedToBasket:job];
-    }
-    
-    [printOrder saveOrder];
-    
+    [[Checkout shared] addProductToBasket:job];
+        
     if (handler){
         handler();
     }

@@ -31,11 +31,9 @@
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
-#import "OLPrintOrder.h"
 #import "OLPrintJob.h"
 #import "OLAnalytics.h"
 #import "NSObject+Utils.h"
-#import "OLPaymentViewController.h"
 #import "OLNavigationController.h"
 #import "OLKiteABTesting.h"
 #import "UIView+RoundRect.h"
@@ -44,12 +42,7 @@
 #import "OLKitePrintSDK.h"
 #import "UIView+AutoLayoutHelper.h"
 
-@interface OLPaymentViewController ()
-- (void)onBarButtonOrdersClicked;
-- (void)dismiss;
-@property (assign, nonatomic) BOOL presentedModally;
-@property (strong, nonatomic) NSArray *currentUserSelectedPhotos;
-@end
+@import Photobook;
 
 @interface OLKiteViewController ()
 - (void)kioskLogout;
@@ -75,7 +68,6 @@
         buttonHeight = 44;
     }
     
-    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     UIButton *basketButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(6, 0, 44, buttonHeight)];
     imageView.tag = 10;
@@ -84,13 +76,10 @@
     basketButton.frame = CGRectMake(0,0,50,buttonHeight);
     [basketButton addTarget:self action:@selector(onButtonBasketClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    if (printOrder.jobs.count != 0){
+    NSInteger count = 0;
+    
+    if (count != 0){
         [imageView setImage:[UIImage imageNamedInKiteBundle:@"cart-full"]];
-        
-        NSUInteger count = printOrder.jobs.count;
-        for (id<OLPrintJob> job in printOrder.jobs){
-            count += [job extraCopies];
-        }
         
         UILabel *qtyLabel = [[UILabel alloc] initWithFrame:CGRectMake(37, buttonHeight / 2 - 10.5, 13, 13)];
         qtyLabel.tag = 20;
@@ -160,36 +149,12 @@
 }
 
 - (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {
-    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
+//    NSInteger count = 0;
+//    [OLAnalytics trackBasketIconTappedWithNumberBadged:count];
     
-    NSUInteger count = printOrder.jobs.count;
-    for (id<OLPrintJob> job in printOrder.jobs){
-        count += [job extraCopies];
-    }
-    [OLAnalytics trackBasketIconTappedWithNumberBadged:count];
-    
-    [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-        [(OLPaymentViewController *)vc setPresentedModally:YES];
-        
-        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
-        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
-                if (error) return;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:vc action:@selector(dismiss)];
-                });
-            }];
-        }
-        else{
-            [(UIViewController *)vc navigationItem].leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:vc action:@selector(dismiss)];
-        }
-        
-        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-        nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
-        [self presentViewController:nvc animated:YES completion:NULL];
-    }];
+    UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
+    OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:checkoutVc];
+    [self presentViewController:nvc animated:YES completion:NULL];
 }
 
 - (BOOL)isPushed{

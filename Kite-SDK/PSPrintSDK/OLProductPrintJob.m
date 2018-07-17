@@ -29,8 +29,6 @@
 
 #import "OLProductPrintJob.h"
 #import "OLAsset+Private.h"
-#import "OLAddress.h"
-#import "OLCountry.h"
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 #import "OLImageDownloader.h"
@@ -55,11 +53,9 @@ static id stringOrEmptyString(NSString *str) {
 
 @implementation OLProductPrintJob
 
-@synthesize address;
 @synthesize uuid;
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
-@synthesize selectedShippingMethodIdentifier;
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -181,24 +177,6 @@ static id stringOrEmptyString(NSString *str) {
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
     
-    if (self.address) {
-        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
-                                          @"address_line_1": stringOrEmptyString(self.address.line1),
-                                          @"address_line_2": stringOrEmptyString(self.address.line2),
-                                          @"city": stringOrEmptyString(self.address.city),
-                                          @"county_state": stringOrEmptyString(self.address.stateOrCounty),
-                                          @"postcode": stringOrEmptyString(self.address.zipOrPostcode),
-                                          @"country_code": stringOrEmptyString(self.address.country.codeAlpha3)
-                                          };
-        [json setObject:shippingAddress forKey:@"shipping_address"];
-    }
-    
-    NSString *countryCode = self.address.country ? [self.address.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
-    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[countryCode];
-    if (region){
-        json[@"shipping_class"] = [NSNumber numberWithInteger:self.selectedShippingMethodIdentifier];
-    }
-    
     return json;
 }
 
@@ -211,7 +189,6 @@ static id stringOrEmptyString(NSString *str) {
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
     objectCopy.options = self.options;
-    objectCopy.selectedShippingMethodIdentifier = self.selectedShippingMethodIdentifier;
     return objectCopy;
 }
 
@@ -227,9 +204,7 @@ static id stringOrEmptyString(NSString *str) {
         val = 39 * val + [self.options[key] hash] + [key hash];
     }
     
-    val = 40 * val + [self.address hash];
     val = 41 * val + [self.uuid hash];
-    val = 42 * val + self.selectedShippingMethodIdentifier;
 
     return val;
 }
@@ -244,7 +219,7 @@ static id stringOrEmptyString(NSString *str) {
     }
     OLProductPrintJob* printJob = (OLProductPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToArray:printJob.assets] && [self.options isEqualToDictionary:printJob.options] && ((!self.address && !printJob.address) || [self.address isEqual:printJob.address]);
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToArray:printJob.assets] && [self.options isEqualToDictionary:printJob.options];
 }
 
 
@@ -256,9 +231,7 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.options forKey:kKeyProductPrintJobOptions];
-    [aCoder encodeObject:self.address forKey:kKeyProductPringJobAddress];
     [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
-    [aCoder encodeInteger:self.selectedShippingMethodIdentifier forKey:@"selectedShippingMethodIdentifier"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -268,9 +241,7 @@ static id stringOrEmptyString(NSString *str) {
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.options = [aDecoder decodeObjectForKey:kKeyProductPrintJobOptions];
-        self.address = [aDecoder decodeObjectForKey:kKeyProductPringJobAddress];
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
-        self.selectedShippingMethodIdentifier = [aDecoder decodeIntegerForKey:@"selectedShippingMethodIdentifier"];
     }
     
     return self;
@@ -326,7 +297,9 @@ static id stringOrEmptyString(NSString *str) {
 
 - (void)previewImageWithSize:(CGSize)size completionHandler:(void (^ _Nonnull)(UIImage * _Nullable))completionHandler {
     [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
-        completionHandler(image);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionHandler(image);
+        });
     }];
 }
 

@@ -65,21 +65,11 @@
  */
 - (UIViewController<OLCustomPickerController> *_Nonnull)imagePickerViewControllerForName:(NSString *_Nonnull)name;
 
-
-
 /**
  For internal use
  */
 - (UIView *_Nonnull)viewForHeaderWithWidth:(CGFloat)width;
 - (UIViewController *_Nonnull)infoPageViewController;
-
-
-- (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disallowUserToAddMorePhotos.");
-- (BOOL)kiteControllerShouldDisableCameraRoll:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disableCameraRoll.");
-- (BOOL)shouldShowPhoneEntryOnCheckoutScreen __deprecated_msg("This method will no longer work.");
-- (BOOL)shouldShowContinueShoppingButton __deprecated_msg("This method will no longer work. Use the OLKiteViewController property hideContinueShoppingButton.");
-- (BOOL)shouldStoreDeliveryAddresses __deprecated_msg("This method will no longer work. Use the OLKiteViewController property discardDeliveryAddresses.");
-- (BOOL)shouldShowOptOutOfEmailsCheckbox __deprecated_msg("This method will no longer work. Use the OLKiteViewController property showOptOutOfEmailsCheckbox.");
 
 @end
 
@@ -185,14 +175,6 @@
  By default when OLKiteViewController launches it deletes any previously downloaded product templates and downloads them again. Set this property to true to prevent this behavior. 
  */
 @property (assign, nonatomic) BOOL preserveExistingTemplates;
-
-
-/**
- Request a view controller that shows the user's complete order history
-
- @return A UINavigationController that is ready to be presented
- */
-+ (UINavigationController *_Nonnull)orderHistoryViewController;
 
 /**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with

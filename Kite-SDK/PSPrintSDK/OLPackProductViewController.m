@@ -30,7 +30,6 @@
 #import "NSObject+Utils.h"
 #import "OLAnalytics.h"
 #import "OLAsset+Private.h"
-#import "OLCheckoutDelegate.h"
 #import "OLCircleMaskCollectionViewCell.h"
 #import "OLConstants.h"
 #import "OLImagePickerViewController.h"
@@ -40,7 +39,6 @@
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
 #import "OLPackProductViewController.h"
-#import "OLPaymentViewController.h"
 #import "OLProduct.h"
 #import "OLProductPrintJob.h"
 #import "OLProductTemplate.h"
@@ -53,24 +51,12 @@
 
 @import Photobook;
 
-@interface OLPaymentViewController (Private)
-
-- (void)saveAndDismissReviewController:(UIButton *)button;
-
-@end
-
-@interface OLPrintOrder (Private)
-
-- (void)saveOrder;
-
-@end
-
 typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     OLPackReviewStyleClassic,
     OLPackReviewStyleMini,
 };
 
-@interface OLPackProductViewController () <OLCheckoutDelegate, UICollectionViewDelegateFlowLayout, OLInfoBannerDelegate, OLArtboardDelegate>
+@interface OLPackProductViewController () <UICollectionViewDelegateFlowLayout, OLInfoBannerDelegate, OLArtboardDelegate>
 
 @property (weak, nonatomic) OLAsset *editingAsset;
 @property (strong, nonatomic) UIView *addMorePhotosView;
@@ -183,15 +169,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
         }
     }
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
-        UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController:)]){
-            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-            [self.ctaButton removeTarget:self action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController:) forControlEvents:UIControlEventTouchUpInside];
-        }
-    }
-    
     if ([OLUserSession currentSession].capitalizeCtaTitles){
         [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
     }
@@ -222,15 +199,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
-        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-            [self addBasketIconToTopRight];
-        }
-    }
-    else{
-        [self addBasketIconToTopRight];
-    }
+    [self addBasketIconToTopRight];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -310,8 +279,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 - (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     [self preparePhotosForCheckout];
     
-    
-    BOOL fromEdit = NO;
     id<Product> job;
     if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
         job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:[OLAsset userSelectedAssets].firstObject backImageOLAsset:[OLAsset userSelectedAssets].lastObject];
@@ -320,10 +287,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
         job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[NSArray arrayWithArray:[OLAsset userSelectedAssets]]];
     }
     [[Checkout shared] addProductToBasket:job];
-    if (!fromEdit){
-        [OLAnalytics trackItemAddedToBasket:(id<OLPrintJob>)job];
-    }
-    
     
     if (handler){
         handler();

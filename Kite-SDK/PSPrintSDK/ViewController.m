@@ -56,10 +56,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 @implementation ViewController
 
-- (void)viewDidAppear:(BOOL)animated{
-    self.printOrder = [[OLPrintOrder alloc] init];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -84,11 +80,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     vc.delegate = self;
     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:vc] animated:YES completion:NULL];
 }
-
-- (IBAction)onButtonPrintOrderHistory:(UIButton *)sender {
-    [self presentViewController:[OLKiteViewController orderHistoryViewController] animated:YES completion:NULL];
-}
-
 
 - (NSString *)apiKey {
     if ([self environment] == OLKitePrintSDKEnvironmentSandbox) {

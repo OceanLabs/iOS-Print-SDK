@@ -28,19 +28,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OLKiteTheme.h"
-
-static NSString *const kOLKiteThemeHeaderLogoImageURL = @"ly.kite.theme.headerLogoImageURL";
-static NSString *const kOLKiteThemeCheckoutProgress1 = @"ly.kite.theme.kOLKiteThemeCheckoutProgress1";
-static NSString *const kOLKiteThemeCheckoutProgress2 = @"ly.kite.theme.kOLKiteThemeCheckoutProgress2";
-static NSString *const kOLKiteThemeCheckoutProgress1Bg = @"ly.kite.theme.kOLKiteThemeCheckoutProgress1Bg";
-static NSString *const kOLKiteThemeCheckoutProgress2Bg = @"ly.kite.theme.kOLKiteThemeCheckoutProgress2Bg";
-static NSString *const kOLKiteThemeReceiptSuccess = @"ly.kite.theme.kOLKiteThemeReceiptSuccess";
-static NSString *const kOLKiteThemeReceiptFailure = @"ly.kite.theme.kOLKiteThemeReceiptFailure";
-static NSString *const kOLKiteThemeReceiptSuccessBg = @"ly.kite.theme.kOLKiteThemeReceiptSuccessBg";
-static NSString *const kOLKiteThemeReceiptFailureBg = @"ly.kite.theme.kOLKiteThemeReceiptFailureBg";
-static NSString *const kOLKiteThemeCancelButtonIcon = @"ly.kite.theme.kOLKiteThemeCancelButtonIcon";
-static NSString *const kOLKiteThemeSupportEmail = @"ly.kite.theme.supportEmail";
 
 static NSString *const kOLKiteLightThemeColor1 = @"ly.kite.theme.light.color.1";
 static NSString *const kOLKiteLightThemeColor2 = @"ly.kite.theme.light.color.2";
@@ -56,7 +43,6 @@ static NSString *const kOLKiteLightThemeColorBasketContinueShopping = @"ly.kite.
 static NSString *const kOLKiteLightThemeTitleColor1 = @"ly.kite.theme.light.titleColor.1";
 static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 static NSString *const kOLKiteLightThemeHeavyFont1 = @"ly.kite.theme.light.font.1.heavy";
-static NSString *const kOLKiteLightThemeSecretReveal = @"ly.kite.theme.productListSecretReveal";
 static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.light.buttonRoundCorners";
 
 @interface OLKiteABTesting : NSObject
@@ -103,12 +89,10 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 - (NSString *)backButtonText;
 
 @property (strong, nonatomic) NSDictionary *userConfig;
-@property (strong, nonatomic) OLKiteTheme *theme;
 @property (strong, nonatomic) NSArray *paypalSupportedCurrencies;
 
 + (instancetype)sharedInstance;
 - (void)fetchRemotePlistsWithCompletionHandler:(void(^)(void))handler;
-- (void)prefetchRemoteImages;
 - (void)setupABTestVariants;
 - (void)setupCoverPhotoTestWithExperimentDict:(NSDictionary *)experimentDict;
 @end

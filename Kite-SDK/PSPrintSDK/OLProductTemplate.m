@@ -29,7 +29,6 @@
 
 #import "OLProductTemplate.h"
 #import "OLProductTemplateSyncRequest.h"
-#import "OLCountry.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteABTesting.h"
 
@@ -78,10 +77,6 @@ static BOOL partial = NO;
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
 @property (nonatomic, assign, readwrite) NSUInteger quantityPerSheet;
 @property (strong, nonatomic) NSArray *_Nullable supportedOptions;
-@end
-
-@interface OLCountry (Private)
-+ (BOOL)isValidCurrencyCode:(NSString *)code;
 @end
 
 @implementation OLProductTemplate
@@ -359,6 +354,12 @@ static BOOL partial = NO;
     }
     
     return self;
+}
+
+@synthesize availableShippingMethods;
+
+- (NSString *)templateId {
+    return self.identifier;
 }
 
 @end

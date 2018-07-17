@@ -33,6 +33,8 @@
 #import "OLFulfilmentItem.h"
 #import "OLShippingClass.h"
 
+@import Photobook;
+
 typedef void (^TemplateSyncHandler)(NSError *_Nullable error);
 
 extern NSString *_Nonnull const kNotificationTemplateSyncComplete;
@@ -63,7 +65,7 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 @class OLProductTemplateSyncRequest;
 @class OLCountry;
 
-@interface OLProductTemplate : NSObject <NSCoding>
+@interface OLProductTemplate : NSObject <NSCoding, Template>
 @property (nonatomic, copy, readonly) NSString *_Nonnull identifier;
 @property (nonatomic, copy, readonly) NSString *_Nonnull name;
 @property (nonatomic, assign, readonly) NSUInteger quantityPerSheet;

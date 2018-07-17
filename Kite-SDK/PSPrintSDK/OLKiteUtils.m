@@ -30,9 +30,7 @@
 #import "OLKiteUtils.h"
 #import "OLKitePrintSDK.h"
 #import "OLProductHomeViewController.h"
-#import "OLPaymentViewController.h"
 #import "OLKiteABTesting.h"
-#import "OLCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
 #import "OLPayPalWrapper.h"
@@ -150,16 +148,6 @@
 
 + (BOOL)isPayPalAvailable{
     return [OLPayPalWrapper isPayPalAvailable];
-}
-
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
-    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
-    handler(vc);
-}
-
-+ (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
-    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    handler(vc);
 }
 
 + (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size{

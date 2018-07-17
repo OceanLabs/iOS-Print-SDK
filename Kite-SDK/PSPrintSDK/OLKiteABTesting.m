@@ -85,98 +85,6 @@ static dispatch_once_t srand48OnceToken;
     return sharedInstance;
 }
 
-- (void)setUserConfig:(NSDictionary *)userConfig{
-    _userConfig = userConfig;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    NSString *s;
-    NSString *user = [self userTheme];
-    
-    s = userConfig[kOLKiteThemeHeaderLogoImageURL];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/logo.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeHeaderLogoImageURL];
-    
-    s = userConfig[kOLKiteThemeCheckoutProgress1];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress1];
-    
-    s = userConfig[kOLKiteThemeCheckoutProgress2];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator2.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress2];
-    
-    s = userConfig[kOLKiteThemeCheckoutProgress1Bg];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator_bg.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress1Bg];
-    
-    s = userConfig[kOLKiteThemeCheckoutProgress2Bg];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator2_bg.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress2Bg];
-    
-    s = userConfig[kOLKiteThemeReceiptSuccess];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_success.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeReceiptSuccess];
-    
-    s = userConfig[kOLKiteThemeReceiptFailure];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_failure.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeReceiptFailure];
-    
-    s = userConfig[kOLKiteThemeReceiptSuccessBg];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_success_bg.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeReceiptSuccessBg];
-    
-    s = userConfig[kOLKiteThemeReceiptFailureBg];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_failure_bg.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeReceiptFailureBg];
-    
-    s = userConfig[kOLKiteThemeCancelButtonIcon];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/x.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeCancelButtonIcon];
-    
-    s = userConfig[kOLKiteThemeSupportEmail];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"appsupport@%@.com", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeSupportEmail];
-    [defaults synchronize];
-}
-
-- (void)prefetchRemoteImages{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg, kOLKiteThemeCancelButtonIcon, kOLKiteLightThemeSecretReveal]){
-        NSURL *url = [NSURL URLWithString:[defaults objectForKey:s]];
-        if (url){
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
-                if (!image){
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [defaults removeObjectForKey:s];
-                        [defaults synchronize];
-                    });
-                }
-            }];
-        }
-    }
-}
-
 - (NSString *)promoBannerText{
     NSString *userConfig = self.userConfig[@"banner_message"];
     if (userConfig && ![userConfig isEqualToString:@""]){
@@ -188,46 +96,6 @@ static dispatch_once_t srand48OnceToken;
 
 - (NSString *)backButtonText{
     return self.minimalNavigationBar ? @"" : NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-}
-
-- (NSString *)headerLogoURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeHeaderLogoImageURL];
-}
-
-- (NSString *)receiptSuccessURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeReceiptSuccess];
-}
-
-- (NSString *)receiptFailureURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeReceiptFailure];
-}
-
-- (NSString *)receiptSuccessBgURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeReceiptSuccessBg];
-}
-
-- (NSString *)receiptFailureBgURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeReceiptFailureBg];
-}
-
-- (NSString *)cancelButtonIconURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeCancelButtonIcon];
-}
-
-- (NSString *)lightThemeSecretRevealURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteLightThemeSecretReveal];
-}
-
-- (NSString *)supportEmail{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeSupportEmail];
 }
 
 - (UIColor *)lightThemeColor1{
@@ -383,17 +251,6 @@ static dispatch_once_t srand48OnceToken;
 
 - (void)resetTheme{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:kOLKiteThemeHeaderLogoImageURL];
-    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1];
-    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2];
-    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1Bg];
-    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2Bg];
-    [defaults removeObjectForKey:kOLKiteThemeReceiptSuccess];
-    [defaults removeObjectForKey:kOLKiteThemeReceiptFailure];
-    [defaults removeObjectForKey:kOLKiteThemeReceiptSuccessBg];
-    [defaults removeObjectForKey:kOLKiteThemeReceiptFailureBg];
-    [defaults removeObjectForKey:kOLKiteLightThemeSecretReveal];
-    [defaults removeObjectForKey:kOLKiteThemeSupportEmail];
     [defaults removeObjectForKey:kOLKiteLightThemeFont1];
     [defaults removeObjectForKey:kOLKiteLightThemeColor1];
     [defaults removeObjectForKey:kOLKiteLightThemeColor2];

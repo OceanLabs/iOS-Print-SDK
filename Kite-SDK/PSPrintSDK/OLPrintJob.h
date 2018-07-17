@@ -80,11 +80,6 @@
 @property (nonatomic, readonly) NSArray *currenciesSupported;
 
 /**
- *  The shipping address of this print job (overrides the print order shipping address)
- */
-@property (nonatomic, strong) OLAddress *address;
-
-/**
  *  A unique indentifier for this job
  */
 @property (nonatomic, strong) NSString *uuid;
@@ -99,29 +94,12 @@
  */
 @property (strong, nonatomic) NSDate *dateAddedToBasket;
 
-/**
- The shipping method identifier
- */
-@property (assign, nonatomic) NSInteger selectedShippingMethodIdentifier;
-
 @end
 
 /**
  *  Abstract class that provides static methods that instantiate the appropriate print job objects.
  */
 @interface OLPrintJob : NSObject
-
-/**
- *  Creates and returns a postcard print job
- *
- *  @param templateId      The template ID of this job
- *  @param frontImageAsset The image to print on the front of the postcard
- *  @param message         The message on the back of the postcard
- *  @param address         The shipping address of the postcard
- *
- *  @return The postcard print job
- */
-+ (id<OLPrintJob>)postcardWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)address;
 
 /**
  *  Creates and returns a postcard print job

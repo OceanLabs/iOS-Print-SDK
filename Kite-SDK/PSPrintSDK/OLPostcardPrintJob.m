@@ -28,8 +28,6 @@
 //
 
 #import "OLPostcardPrintJob.h"
-#import "OLAddress.h"
-#import "OLCountry.h"
 #import "OLAsset+Private.h"
 #import "OLProductTemplate.h"
 #import "OLImageDownloader.h"
@@ -59,11 +57,9 @@ static id stringOrEmptyString(NSString *str) {
 
 @implementation OLPostcardPrintJob
 
-@synthesize address;
 @synthesize uuid;
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
-@synthesize selectedShippingMethodIdentifier;
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -76,21 +72,20 @@ static id stringOrEmptyString(NSString *str) {
     self.options[option] = value;
 }
 
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)theAddress {
-    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:nil message:message address:theAddress];
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message {
+    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:nil message:message];
 }
 
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset {
-    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:backImageAsset message:nil address:nil];
+    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:backImageAsset message:nil];
 }
 
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset message:(NSString *)message address:(OLAddress *)theAddress {
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset message:(NSString *)message {
     if (self = [super init]) {
         self.uuid = [[NSUUID UUID] UUIDString];
         self.frontImageAsset = frontImageAsset;
         self.backImageAsset = backImageAsset;
         self.message = message;
-        self.address = theAddress;
         self.templateId = templateId;
     }
     return self;
@@ -155,26 +150,6 @@ static id stringOrEmptyString(NSString *str) {
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
     
-    if (self.address) {
-        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
-                                          @"recipient_first_name": stringOrEmptyString(self.address.recipientFirstName),
-                                          @"recipient_last_name": stringOrEmptyString(self.address.recipientLastName),
-                                          @"address_line_1": stringOrEmptyString(self.address.line1),
-                                          @"address_line_2": stringOrEmptyString(self.address.line2),
-                                          @"city": stringOrEmptyString(self.address.city),
-                                          @"county_state": stringOrEmptyString(self.address.stateOrCounty),
-                                          @"postcode": stringOrEmptyString(self.address.zipOrPostcode),
-                                          @"country_code": stringOrEmptyString(self.address.country.codeAlpha3)
-                                          };
-        [json setObject:shippingAddress forKey:@"shipping_address"];
-    }
-    
-    NSString *countryCode = self.address.country ? [self.address.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
-    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[countryCode];
-    if (region){
-        json[@"shipping_class"] = [NSNumber numberWithInteger:self.selectedShippingMethodIdentifier];
-    }
-    
     return json;
 }
 
@@ -189,11 +164,9 @@ static id stringOrEmptyString(NSString *str) {
     if (self.frontImageAsset) val *= [self.frontImageAsset hash];
     if (self.backImageAsset) val *= [self.backImageAsset hash];
     if (self.message && [self.message hash] > 0) val *= [self.message hash];
-    if (self.address) val *= [self.address hash];
     if (self.extraCopies) val *= self.extraCopies+1;
     val = 18 * val + [self.options hash];
     val = 41 * val + [self.uuid hash];
-    val = 42 * val + self.selectedShippingMethodIdentifier;
     
     return val;
 }
@@ -212,7 +185,6 @@ static id stringOrEmptyString(NSString *str) {
     if (self.frontImageAsset) result &= [self.frontImageAsset isEqual:printJob.frontImageAsset];
     if (self.backImageAsset) result &= [self.backImageAsset isEqual:printJob.backImageAsset];
     if (self.message) result &= [self.message isEqual:printJob.message];
-    if (self.address) result &= [self.address isEqual:printJob.address];
     result &= [self.options isEqualToDictionary:printJob.options];
     return result;
 }
@@ -223,13 +195,11 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.frontImageAsset forKey:kKeyFrontImage];
     [aCoder encodeObject:self.backImageAsset forKey:kKeyBackImage];
     [aCoder encodeObject:self.message forKey:kKeyMessage];
-    [aCoder encodeObject:self.address forKey:kKeyAddress];
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
     [aCoder encodeObject:self.options forKey:kKeyPostcardPrintJobOptions];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
     [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
-    [aCoder encodeInteger:self.selectedShippingMethodIdentifier forKey:@"selectedShippingMethodIdentifier"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -237,13 +207,11 @@ static id stringOrEmptyString(NSString *str) {
         self.frontImageAsset = [aDecoder decodeObjectForKey:kKeyFrontImage];
         self.backImageAsset = [aDecoder decodeObjectForKey:kKeyBackImage];
         self.message = [aDecoder decodeObjectForKey:kKeyMessage];
-        self.address = [aDecoder decodeObjectForKey:kKeyAddress];
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
         self.options = [aDecoder decodeObjectForKey:kKeyPostcardPrintJobOptions];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
-        self.selectedShippingMethodIdentifier = [aDecoder decodeIntegerForKey:@"selectedShippingMethodIdentifier"];
     }
     
     return self;
@@ -299,7 +267,9 @@ static id stringOrEmptyString(NSString *str) {
 
 - (void)previewImageWithSize:(CGSize)size completionHandler:(void (^ _Nonnull)(UIImage * _Nullable))completionHandler {
     [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
-        completionHandler(image);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionHandler(image);
+        });
     }];
 }
 

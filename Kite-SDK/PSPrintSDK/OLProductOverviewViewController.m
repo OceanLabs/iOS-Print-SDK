@@ -35,7 +35,6 @@
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
 #import "OLPackProductViewController.h"
-#import "OLPaymentViewController.h"
 #import "OLProduct.h"
 #import "OLProductDetailsViewController.h"
 #import "OLProductOverviewPageContentViewController.h"
@@ -49,10 +48,6 @@
 #import "UIColor+OLHexString.h"
 #import "UIView+RoundRect.h"
 #import "UIView+AutoLayoutHelper.h"
-
-@interface OLPrintOrder ()
-- (void)saveOrder;
-@end
 
 @interface OLProductOverviewPageContentViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
@@ -230,29 +225,13 @@
     self.product.selectedOptions = nil;
     self.product.uuid = nil;
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
-        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-            [self addBasketIconToTopRight];
-        }
-    }
-    else{
-        [self addBasketIconToTopRight];
-    }
+    [self addBasketIconToTopRight];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
-        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-            [self addBasketIconToTopRight];
-        }
-    }
-    else{
-        [self addBasketIconToTopRight];
-    }
+    [self addBasketIconToTopRight];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
@@ -354,21 +333,12 @@
             vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
         }
         else{
-            [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
-                if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Checkout"]){
-                    [[vc navigationItem] setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:(OLKiteViewController *)vc action:@selector(dismiss)]];
-                }
-                [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
-                [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
-                [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
-                [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-                [self.navigationController pushViewController:vc animated:YES];
-            }];
+            UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
+            [self.navigationController pushViewController:checkoutVc animated:YES];
             return;
         }
         [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
         [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
-        [vc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
         [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
         [self.navigationController pushViewController:vc animated:YES];
         return;
@@ -387,24 +357,9 @@
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)(void))handler{
-    BOOL fromEdit = NO;
-    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://kite.ly/no-asset.jpg"]]]];
-    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-    for (id<OLPrintJob> existingJob in jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            job.extraCopies = existingJob.extraCopies;
-            [printOrder removePrintJob:existingJob];
-            fromEdit = YES;
-        }
-    }
-    [printOrder addPrintJob:job];
-    if (!fromEdit){
-        [OLAnalytics trackItemAddedToBasket:job];
-    }
-    
-    [printOrder saveOrder];
+    [[Checkout shared] addProductToBasket:job];
     
     if (handler){
         handler();
@@ -417,13 +372,8 @@
 - (void)doCheckout {
     [self saveJobWithCompletionHandler:NULL];
     
-    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-    [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-        
-        [self.navigationController pushViewController:vc animated:YES];
-    }];
+    UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
+    [self.navigationController pushViewController:checkoutVc animated:YES];
 }
 
 - (void)userDidTapOnImage{

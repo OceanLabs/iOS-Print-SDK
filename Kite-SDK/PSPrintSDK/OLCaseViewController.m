@@ -48,10 +48,6 @@
 - (NSString *)currencyCode;
 @end
 
-@interface OLPrintOrder ()
-- (void)saveOrder;
-@end
-
 @interface OLSingleProductReviewViewController (Private) <UITextFieldDelegate>
 
 - (UIEdgeInsets)imageInsetsOnContainer;
@@ -396,29 +392,14 @@
         return;
     }
     
-    BOOL fromEdit = NO;
     
-    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[asset]];
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
-    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-    for (id<OLPrintJob> existingJob in jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            job.dateAddedToBasket = [existingJob dateAddedToBasket];
-            job.extraCopies = existingJob.extraCopies;
-            [printOrder removePrintJob:existingJob];
-            fromEdit = YES;
-        }
-    }
-    [printOrder addPrintJob:job];
-    if (!fromEdit){
-        [OLAnalytics trackItemAddedToBasket:job];
-    }
     
-    [printOrder saveOrder];
-    
+    [[Checkout shared] addProductToBasket:job];
+        
     if (handler){
         handler();
     }

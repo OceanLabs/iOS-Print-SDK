@@ -28,9 +28,7 @@
 //
 
 #import "OLKitePrintSDK.h"
-#import "OLPayPalCard.h"
 #import "OLProductTemplate.h"
-#import "OLStripeCard.h"
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
@@ -63,10 +61,6 @@ static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
 static NSString *instagramRedirectURI = nil;
 
-@interface OLPrintOrder ()
-- (void)saveOrder;
-@end
-
 @implementation OLKitePrintSDK
 
 + (BOOL)useStripeForCreditCards {
@@ -92,13 +86,10 @@ static NSString *instagramRedirectURI = nil;
 + (void)setAPIKey:(NSString *_Nonnull)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
     apiKey = _apiKey;
     environment = _environment;
-    [OLStripeCard setClientId:[self stripePublishableKey]];
     [[PhotobookSDK shared] setKiteApiKey:_apiKey];
     if (environment == OLKitePrintSDKEnvironmentLive) {
-        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
         [[PhotobookSDK shared] setEnvironmentWithEnvironment:EnvironmentLive];
     } else {
-        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
         [[PhotobookSDK shared] setEnvironmentWithEnvironment:EnvironmentTest];
     }
 }
@@ -228,29 +219,6 @@ static NSString *instagramRedirectURI = nil;
 
 + (NSString *)instagramClientID{
     return instagramClientID;
-}
-
-+ (void)setPayPalAccountId:(NSString *)accountId{
-    paypalAccountId = accountId;
-}
-
-+ (void)setPayPalPublicKey:(NSString *)publicKey{
-    paypalPublicKey = publicKey;
-    
-    if (environment == OLKitePrintSDKEnvironmentLive) {
-        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
-    } else {
-        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
-    }
-}
-
-+ (void)setStripeAccountId:(NSString *)accountId{
-    stripeAccountId = accountId;
-}
-
-+ (void)setStripePublicKey:(NSString *)publicKey{
-    stripePublicKey = publicKey;
-    [OLStripeCard setClientId:[self stripePublishableKey]];
 }
 
 + (NSString *)paypalAccountId{

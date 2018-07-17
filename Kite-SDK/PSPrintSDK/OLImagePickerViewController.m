@@ -42,8 +42,6 @@
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
 #import "OLOAuth2AccountStore.h"
-#import "OLPaymentViewController.h"
-#import "OLPrintOrder.h"
 #import "OLProductPrintJob.h"
 #import "OLQRCodeUploadViewController.h"
 #import "OLUserSession.h"
@@ -54,6 +52,7 @@
 #import "UIView+RoundRect.h"
 #import "UIColor+OLHexString.h"
 #import "NSMutableArray+OLUserSelectedAssetsUtils.h"
+#import "OLNavigationController.h"
 
 @interface OLKitePrintSDK ()
 + (NSString *)instagramRedirectURI;

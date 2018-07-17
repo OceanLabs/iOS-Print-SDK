@@ -66,8 +66,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 @implementation CIViewController
 
 - (void)viewDidAppear:(BOOL)animated{
-    self.printOrder = [[OLPrintOrder alloc] init];
-    
     if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties]){
         [self showKiteVcForAPIKey:nil assets:nil];
     }
@@ -147,9 +145,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 - (IBAction)onButtonExtraTapped:(UIButton *)sender {
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"Extras" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    [ac addAction:[UIAlertAction actionWithTitle:@"Print Order History" style:UIAlertActionStyleDefault handler:^(id action){
-        [self presentViewController:[OLKiteViewController orderHistoryViewController] animated:YES completion:NULL];
-    }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"Clear Web Image Cache" style:UIAlertActionStyleDefault handler:^(id action){
         [[NSURLCache sharedURLCache] removeAllCachedResponses];
     }]];

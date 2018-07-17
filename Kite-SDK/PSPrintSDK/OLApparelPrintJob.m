@@ -30,8 +30,6 @@
 #import "OLApparelPrintJob.h"
 #import "OLProductTemplate.h"
 #import "OLAsset+Private.h"
-#import "OLAddress.h"
-#import "OLCountry.h"
 #import "OLImageDownloader.h"
 
 static NSString *const kKeyApparelProductTemplateId = @"co.oceanlabs.pssdk.kKeyApparelProductTemplateId";
@@ -51,11 +49,9 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 
 @implementation OLApparelPrintJob
 
-@synthesize address;
 @synthesize uuid;
 @synthesize extraCopies;
 @synthesize dateAddedToBasket;
-@synthesize selectedShippingMethodIdentifier;
 
 - (NSMutableDictionary *) options{
     if (!_options){
@@ -108,12 +104,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
     
-    NSString *countryCode = self.address.country ? [self.address.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
-    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[countryCode];
-    if (region){
-        json[@"shipping_class"] = [NSNumber numberWithInteger:self.selectedShippingMethodIdentifier];
-    }
-    
     return json;
 }
 
@@ -148,7 +138,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     for (NSString *key in self.options.allKeys){
         val = 39 * val + [self.options[key] hash] + [key hash];
     }
-    val = 40 * val + [self.address hash];
     val = 41 * val + [self.uuid hash];
     
     return val;
@@ -164,7 +153,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     }
     OLApparelPrintJob* printJob = (OLApparelPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToDictionary:printJob.assets] && [self.options isEqualToDictionary:printJob.options] && ((!self.address && !printJob.address) || [self.address isEqual:printJob.address]);
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToDictionary:printJob.assets] && [self.options isEqualToDictionary:printJob.options];
 }
 
 #pragma mark - NSCopying
@@ -178,7 +167,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     objectCopy.options = self.options;
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
-    objectCopy.selectedShippingMethodIdentifier = self.selectedShippingMethodIdentifier;
     return objectCopy;
 }
 
@@ -189,7 +177,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     [aCoder encodeObject:self.assets forKey:kKeyApparelImages];
     [aCoder encodeObject:self.uuid forKey:kKeyApparelUuid];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyApparelExtraCopies];
-    [aCoder encodeObject:self.address forKey:kKeyApparelAddress];
     [aCoder encodeObject:self.options forKey:kKeyApparelPrintJobOptions];
     [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
 }
@@ -200,7 +187,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         self.assets = [aDecoder decodeObjectForKey:kKeyApparelImages];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyApparelExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyApparelUuid];
-        self.address = [aDecoder decodeObjectForKey:kKeyApparelAddress];
         self.options = [aDecoder decodeObjectForKey:kKeyApparelPrintJobOptions];
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
     }
@@ -258,7 +244,9 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 
 - (void)previewImageWithSize:(CGSize)size completionHandler:(void (^ _Nonnull)(UIImage * _Nullable))completionHandler {
     [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
-        completionHandler(image);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionHandler(image);
+        });
     }];
 }
 

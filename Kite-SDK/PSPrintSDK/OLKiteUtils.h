@@ -58,12 +58,7 @@
 + (BOOL)recentsAvailable;
 + (NSInteger)numberOfProvidersAvailable;
 
-
 + (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size;
-
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler;
-+ (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler;
-
 + (void)registerDefaultsWithURL:(NSURL *)url
                         success:(void (^)(NSDictionary *defaults))success
                         failure:(void (^)(NSError *error))failure;

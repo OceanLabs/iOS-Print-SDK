@@ -31,10 +31,7 @@
 #import "OLKiteUtils.h"
 #import "OLOAuth2AccountStore.h"
 #import "OLAsset+Private.h"
-#import "OLPayPalCard.h"
-#import "OLStripeCard.h"
 #import "OLKiteABTesting.h"
-#import "OLAddress+AddressBook.h"
 #import "OLFacebookSDKWrapper.h"
 #import "OLImagePickerProvider.h"
 #import "OLKiteViewController.h"
@@ -42,11 +39,6 @@
 #import "OLKiteViewController+Private.h"
 #include <sys/sysctl.h>
 #import "OLKitePrintSDK.h"
-
-@interface OLPrintOrder (Private)
-- (void)saveOrder;
-+ (id)loadOrder;
-@end
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
@@ -82,16 +74,6 @@
         _recentPhotos = [[NSMutableArray alloc] init];
     }
     return _recentPhotos;
-}
-
--(OLPrintOrder *) printOrder{
-    if (!_printOrder){
-        _printOrder = [OLPrintOrder loadOrder];
-    }
-    if (!_printOrder){
-        _printOrder = [[OLPrintOrder alloc] init];
-    }
-    return _printOrder;
 }
 
 - (void)resetUserSelectedPhotos{
@@ -157,20 +139,16 @@
         }
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionBasket) == OLUserSessionCleanupOptionBasket){
-        self.printOrder = [[OLPrintOrder alloc] init];
-        [self.printOrder saveOrder];
+        
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionPayment) == OLUserSessionCleanupOptionPayment){
-        [OLPayPalCard clearLastUsedCard];
-        [OLStripeCard clearLastUsedCard];
+        
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionSocial) == OLUserSessionCleanupOptionSocial){
         [self logoutOfInstagram];
         [self logoutOfFacebook];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionPersonal) == OLUserSessionCleanupOptionPersonal){
-        [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientLastName = nil;
-        [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientFirstName = nil;
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyEmailAddress"];
@@ -185,7 +163,6 @@
         [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCountry"];
         [defaults synchronize];
         
-        [OLAddress clearAddressBook];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionAll) == OLUserSessionCleanupOptionAll){
         [self cleanupUserSession:OLUserSessionCleanupOptionPhotos | OLUserSessionCleanupOptionBasket | OLUserSessionCleanupOptionSocial | OLUserSessionCleanupOptionPersonal];

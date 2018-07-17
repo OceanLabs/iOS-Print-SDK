@@ -27,7 +27,7 @@ PODS:
   - SDWebImage (4.4.1):
     - SDWebImage/Core (= 4.4.1)
   - SDWebImage/Core (4.4.1)
-  - Stripe (13.0.3)
+  - Stripe (13.1.0)
 
 DEPENDENCIES:
   - "KITAssetsPickerController (from `git@github.com:kkarayannis/KITAssetsPickerController.git`)"
@@ -59,7 +59,7 @@ CHECKOUT OPTIONS:
     :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
     :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
   Photobook:
-    :commit: 325bfc4d0dd5cd47d1f02f10856307409b65acb2
+    :commit: b895d7cc33398943ee83b107135986ff15037058
     :git: "git@github.com:OceanLabs/Photobook-iOS.git"
 
 SPEC CHECKSUMS:
@@ -74,7 +74,7 @@ SPEC CHECKSUMS:
   Photobook: 27c08357f5635c1ae3a620c5e7f89163350e07f8
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   SDWebImage: 47e9b5b925cbce75946c23f0c42dd19464189af4
-  Stripe: 76c203e21555089b708e6cbe972a3e3baf1ab4d8
+  Stripe: 4f043bb840721b1f30492fa77790bbf9e3508ab0
 
 PODFILE CHECKSUM: 242c74a86d362a14c22272e13ca500aed2b4a81d
 
