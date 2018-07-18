@@ -255,6 +255,13 @@ static CGFloat fadeTime = 0.3;
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     [OLUserSession currentSession].kiteVc = self;
+    
+    if ([[PhotobookSDK shared] isProcessingOrder]) {
+        UIViewController *receiptViewController = [[PhotobookSDK shared] receiptViewControllerWithDelegate:nil];
+        if (receiptViewController) {
+            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:receiptViewController] animated:YES completion:nil];
+        }
+    }
 }
 
 - (UIViewController *)reviewViewControllerForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
