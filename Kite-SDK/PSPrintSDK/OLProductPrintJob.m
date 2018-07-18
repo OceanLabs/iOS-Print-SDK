@@ -48,6 +48,7 @@ static id stringOrEmptyString(NSString *str) {
 @interface OLProductPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) NSArray *assets;
+@property (nonatomic, strong) NSArray<PhotobookAsset *> *assetsToUpload;
 @property (strong, nonatomic) NSMutableDictionary *options;
 @end
 
@@ -77,6 +78,7 @@ static id stringOrEmptyString(NSString *str) {
         }
         self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
+        self.assetsToUpload = [OLAsset photobookAssetsFromAssets:assets];
         self.templateId = templateId;
         self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
     }
@@ -93,6 +95,7 @@ static id stringOrEmptyString(NSString *str) {
         }
         self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
+        self.assetsToUpload = [OLAsset photobookAssetsFromAssets:assets];
         self.templateId = templateId;
         self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
     }
@@ -109,6 +112,7 @@ static id stringOrEmptyString(NSString *str) {
 #endif
         self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
+        self.assetsToUpload = [OLAsset photobookAssetsFromAssets:assets];
         self.templateId = templateId;
         self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
     }
@@ -140,10 +144,6 @@ static id stringOrEmptyString(NSString *str) {
     return _templateId;
 }
 
-- (NSArray *)assetsForUploading {
-    return self.assets;
-}
-
 - (NSArray *)currenciesSupported {
     return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
 }
@@ -153,12 +153,17 @@ static id stringOrEmptyString(NSString *str) {
     NSMutableArray *pdfs = [[NSMutableArray alloc] init];
     NSMutableArray *borderTextArray = [[NSMutableArray alloc] init];
     
-    for (OLAsset *asset in self.assets) {
+    for (NSUInteger i = 0; i < self.assets.count; i++) {
+        OLAsset *asset = self.assets[i];
         if (asset.mimeType == kOLMimeTypePDF){
             [pdfs addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
         }
         else{
-            [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
+            if (i < self.assetsToUpload.count) {
+                [assets addObject:self.assetsToUpload[i].uploadUrl];
+            } else {
+                [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
+            }
             
             NSString *borderText = asset.edits.bottomBorderText.text;
             [borderTextArray addObject:stringOrEmptyString(borderText)];
@@ -246,6 +251,7 @@ static id stringOrEmptyString(NSString *str) {
     if (self = [super init]) {
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
         self.assets = [aDecoder decodeObjectForKey:kKeyImages];
+        self.assetsToUpload = [OLAsset photobookAssetsFromAssets:self.assets];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.options = [aDecoder decodeObjectForKey:kKeyProductPrintJobOptions];
@@ -295,10 +301,6 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 @synthesize upsoldTemplate;
-
-- (NSArray<PhotobookAsset *> * _Nullable)assetsToUpload {
-    return [OLAsset photobookAssetsFromAssets:self.assetsForUploading];
-}
 
 - (NSDictionary<NSString *,id> * _Nullable)orderParameters {
     return self.jsonRepresentation;

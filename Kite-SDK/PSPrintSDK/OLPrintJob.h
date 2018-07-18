@@ -54,12 +54,6 @@
 - (void)setValue:(NSString *)value forOption:(NSString *)option;
 
 /**
- *  An array of the OLAssets that need to be uploaded
- */
-@property (nonatomic, readonly) NSArray<OLAsset *> *assetsForUploading;
-
-
-/**
  *  The name of the product of this print job
  */
 @property (nonatomic, readonly) NSString *productName;
