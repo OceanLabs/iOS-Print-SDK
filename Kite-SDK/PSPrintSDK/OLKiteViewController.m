@@ -60,7 +60,7 @@
 static CGFloat fadeTime = 0.3;
 
 
-@interface OLKiteViewController ()
+@interface OLKiteViewController () <DismissDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
@@ -128,9 +128,9 @@ static CGFloat fadeTime = 0.3;
     return [self initWithAssets:assets info:nil];
 }
 
-- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder{
-    return [self initWithPrintOrder:printOrder info:nil];
-}
+//- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder{
+//    return [self initWithPrintOrder:printOrder info:nil];
+//}
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info{
     [OLAnalytics setExtraInfo:info];
@@ -257,7 +257,7 @@ static CGFloat fadeTime = 0.3;
     [OLUserSession currentSession].kiteVc = self;
     
     if ([[PhotobookSDK shared] isProcessingOrder]) {
-        UIViewController *receiptViewController = [[PhotobookSDK shared] receiptViewControllerWithDelegate:nil];
+        UIViewController *receiptViewController = [[PhotobookSDK shared] receiptViewControllerWithDelegate:self];
         if (receiptViewController) {
             [self presentViewController:[[UINavigationController alloc] initWithRootViewController:receiptViewController] animated:YES completion:nil];
         }
@@ -560,6 +560,10 @@ static CGFloat fadeTime = 0.3;
     else{
         return [self productDescriptionViewController];
     }
+}
+
+- (void)wantsToDismiss:(UIViewController *)viewController {
+    [viewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)didReceiveMemoryWarning{

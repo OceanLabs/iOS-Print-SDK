@@ -192,7 +192,7 @@
  *
  *  @return An instance of OLKiteViewController to present
  */
-- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder;
+//- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder;
 
 /**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with. Provides an extra argument for extra info.
@@ -212,13 +212,7 @@
  *
  *  @return An instance of OLKiteViewController to present
  */
-- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info;
-
-/**
- *  Clear all the orders that have been saved in the shopping basket.
- */
-- (void)clearBasket;
-
+//- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info;
 
 /**
  Start loading the products in the background
@@ -234,15 +228,6 @@
  @param assets The assets
  */
 - (void)setAssets:(NSArray *_Nonnull)assets;
-
-/**
- Returns the printOrder object that is used to handle the active basket
- 
- Note: A new object may be created when the user has successfully paid for and submitted their basket.
-
- @return the basket print order object
- */
-- (OLPrintOrder *_Nonnull)basketOrder;
 
 /**
  *  Add a custom source for the photo picker
