@@ -562,10 +562,6 @@ static CGFloat fadeTime = 0.3;
     }
 }
 
-- (void)wantsToDismiss:(UIViewController *)viewController {
-    [viewController dismissViewControllerAnimated:YES completion:NULL];
-}
-
 - (void)didReceiveMemoryWarning{
     for (OLAsset *asset in [OLAsset userSelectedAssets]){
         [asset unloadImage];
