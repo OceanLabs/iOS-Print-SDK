@@ -371,7 +371,7 @@ static dispatch_once_t srand48OnceToken;
     
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
     if (!experimentDict) {
-        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0, @"C" : @0, @"Dark" : @0, @"MinimalWhite" : @0, @"ThemeColor" : @0};
+        experimentDict = @{@"Classic" : @0, @"A" : @0, @"B" : @0, @"C" : @0, @"Dark" : @0, @"MinimalWhite" : @1, @"ThemeColor" : @0};
     }
     [OLKiteABTesting splitTestWithName:kOLKiteABTestProductTileStyle
                    conditions:@{
@@ -383,7 +383,7 @@ static dispatch_once_t srand48OnceToken;
                                 @"MinimalWhite" : safeObject(experimentDict[@"MinimalWhite"]),
                                 @"ThemeColor" : safeObject(experimentDict[@"ThemeColor"])
                                 } block:^(id choice) {
-                                    self.productTileStyle = choice;
+                                    self.productTileStyle = @"MinimalWhite";
                                 }];
 }
 
