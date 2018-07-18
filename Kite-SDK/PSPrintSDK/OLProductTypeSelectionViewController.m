@@ -145,6 +145,7 @@
     }
     
     [self addBasketIconToTopRight];
+    [(PhotobookNavigationBar *)self.navigationController.navigationBar setBarType:PhotobookNavigationBarTypeWhite];
     
     [self.collectionView.collectionViewLayout invalidateLayout];
 }

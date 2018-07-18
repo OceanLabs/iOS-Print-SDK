@@ -236,6 +236,7 @@
     [super viewWillAppear:animated];
     
     [self addBasketIconToTopRight];
+    [(PhotobookNavigationBar *)self.navigationController.navigationBar setBarType:PhotobookNavigationBarTypeWhite];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{

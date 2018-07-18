@@ -59,7 +59,7 @@ CHECKOUT OPTIONS:
     :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
     :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
   Photobook:
-    :commit: ecceb0e39e84a923e345066330389d48268c14c2
+    :commit: 6f48574978dbbe6a568a51079fd773c4fbdd37c9
     :git: "git@github.com:OceanLabs/Photobook-iOS.git"
 
 SPEC CHECKSUMS:

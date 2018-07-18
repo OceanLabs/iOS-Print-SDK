@@ -397,6 +397,7 @@
         self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
     }
     [self addBasketIconToTopRight];
+    [(PhotobookNavigationBar *)self.navigationController.navigationBar setBarType:PhotobookNavigationBarTypeWhite];
     
     if ([OLUserSession currentSession].deeplink){
         NSString *deeplink = [[OLUserSession currentSession].deeplink lowercaseString];

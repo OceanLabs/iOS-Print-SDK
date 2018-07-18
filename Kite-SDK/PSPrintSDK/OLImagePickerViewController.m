@@ -192,29 +192,7 @@
     
     [view.superview addConstraints:con];
     
-    if (self.sourcesCollectionView){
-        UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-        
-        self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        view = self.visualEffectView;
-        [self.sourcesCollectionView.superview addSubview:view];
-        [self.sourcesCollectionView.superview sendSubviewToBack:view];
-        
-        view.translatesAutoresizingMaskIntoConstraints = NO;
-        views = NSDictionaryOfVariableBindings(view);
-        con = [[NSMutableArray alloc] init];
-        
-        visuals = @[@"H:|-0-[view]-0-|",
-                    @"V:|-0-[view]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-        }
-        
-        [view.superview addConstraints:con];
-    }
+    self.sourcesCollectionView.backgroundColor = [UIColor whiteColor];
     
     if (self.maximumPhotos == 0 && self.minimumPhotos == 0){
         if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
