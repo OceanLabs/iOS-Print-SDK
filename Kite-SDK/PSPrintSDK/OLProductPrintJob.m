@@ -250,6 +250,9 @@ static id stringOrEmptyString(NSString *str) {
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
+        if (!self.template) {
+            return nil;
+        }
         self.assets = [aDecoder decodeObjectForKey:kKeyImages];
         self.assetsToUpload = [OLAsset photobookAssetsFromAssets:self.assets];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
