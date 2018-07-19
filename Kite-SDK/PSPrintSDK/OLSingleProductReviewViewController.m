@@ -105,14 +105,6 @@
     }
     
     [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
-        UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController:)]){
-            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-            [self.ctaButton removeTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
-            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController:) forControlEvents:UIControlEventTouchUpInside];
-        }
-    }
     
     self.ctaButton.enabled = YES;
     
@@ -227,7 +219,6 @@
 }
 
 - (void)onButtonDoneTapped:(UIButton *)sender{
-    sender.enabled = NO;
     [self doCheckout];
 }
 
@@ -290,6 +281,7 @@
         }
         return;
     }
+    self.ctaButton.enabled = NO;
     [self saveJobWithCompletionHandler:^{
         if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
             // The `self.storybard` may be nil if it was not initialized from storyboard.
