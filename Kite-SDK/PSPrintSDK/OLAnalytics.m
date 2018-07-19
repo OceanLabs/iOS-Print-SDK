@@ -534,19 +534,6 @@ static BOOL optInToRemoteAnalytics = NO;
 //    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : nonNilStr(productName), kOLAnalyticsEventLevel : @2}];
 }
 
-+ (void)trackPhotobookEditScreenHitBack:(NSString *)productName{
-    NSString *eventName = kOLAnalyticsEventNamePhotobookEditScreenHitBack;
-//    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @2}];
-}
-
-+ (void)trackPaymentMethodScreenHitBack:(OLPrintOrder *)printOrder{
-//    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNamePaymentMethodScreenHitBack job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
-}
-
-+ (void)trackShippingMethodScreenHitBack:(OLPrintOrder *)printOrder{
-//    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameShippingMethodScreenHitBack job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
-}
-
 + (void)trackEditScreenDidCancel{
 //    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameEditScreenFinishedEditingPhoto job:nil printOrder:nil extraInfo:@{kOLAnalyticsEventLevel : @2}];
 }

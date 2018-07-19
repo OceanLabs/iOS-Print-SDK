@@ -45,7 +45,7 @@ typedef NSUInteger OLUserSessionCleanupOption;
 
 @import Photobook;
 
-@interface OLUserSession : NSObject <DismissDelegate>
+@interface OLUserSession : NSObject <PhotobookDelegate>
 
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *userSelectedAssets;
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *recentPhotos;
