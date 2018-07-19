@@ -257,9 +257,9 @@ static CGFloat fadeTime = 0.3;
     [OLUserSession currentSession].kiteVc = self;
     
     if ([[PhotobookSDK shared] isProcessingOrder]) {
-        UIViewController *receiptViewController = [[PhotobookSDK shared] receiptViewControllerWithDelegate:self];
+        UIViewController *receiptViewController = [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES delegate:self];
         if (receiptViewController) {
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:receiptViewController] animated:YES completion:nil];
+            [self presentViewController:receiptViewController animated:YES completion:nil];
         }
     }
 }

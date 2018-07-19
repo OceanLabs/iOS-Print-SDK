@@ -302,7 +302,7 @@
             [self.navigationController pushViewController:vc animated:YES];
         }
         else{
-            UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
+            UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:[OLUserSession currentSession]];
             UIViewController *firstController = self.navigationController.viewControllers.firstObject;
             [self.navigationController setViewControllers:@[firstController, checkoutVc] animated:YES];
         }

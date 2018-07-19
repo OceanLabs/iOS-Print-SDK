@@ -62,7 +62,7 @@ CGSize const OLAssetMaximumSize = {-1, -1};
 
 static NSOperationQueue *imageOperationQueue;
 
-@interface OLAsset ()
+@interface OLAsset () <AssetDataSource>
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSData *imageData;
 @property (strong, nonatomic) PHAsset *phAsset;
@@ -648,18 +648,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (PhotobookAsset *)photobookAsset {
-    switch (self.assetType) {
-        case kOLAssetTypeImageData:
-            return [[PhotobookAsset alloc] initWithImage:[UIImage imageWithData:[self imageData]] date:nil];
-        case kOLAssetTypeRemoteImageURL:
-            return  [[PhotobookAsset alloc] initWithUrl:[self imageURL] size:CGSizeMake(1000, 1000)];
-        case kOLAssetTypePHAsset:
-            return [[PhotobookAsset alloc] initWithPHAsset:[self phAsset] albumIdentifier:@""];
-            
-        default:
-            NSAssert(NO, @"Asset type not yet supported");
-            return nil;
-    }
+    return [[PhotobookAsset alloc] initWithDataSource:self date:nil];
 }
 
 + (NSArray<PhotobookAsset *> *)photobookAssetsFromAssets:(NSArray <OLAsset *>*)assets {
@@ -790,6 +779,28 @@ static NSOperationQueue *imageOperationQueue;
     }
     
     return self;
+}
+
+- (void)imageDataWithProgressHandler:(void (^ _Nullable)(int64_t, int64_t))progressHandler completionHandler:(void (^ _Nonnull)(NSData * _Nullable, enum AssetDataFileExtension, NSError * _Nullable))completionHandler {
+    [self dataWithCompletionHandler:^(NSData *data, NSError *error) {
+        AssetDataFileExtension extension = AssetDataFileExtensionUnsupported;
+        if ([self.mimeType isEqualToString:kOLMimeTypePNG]){
+            extension = AssetDataFileExtensionPng;
+        } else if ([self.mimeType isEqualToString:kOLMimeTypeJPEG]){
+            extension = AssetDataFileExtensionJpg;
+        } else {
+            NSAssert(NO, @"Asset type not yet supported");
+        }
+        completionHandler(data, extension, error);
+    }];
+}
+
+- (void)imageWithSize:(CGSize)size loadThumbnailFirst:(BOOL)loadThumbnailFirst progressHandler:(void (^ _Nullable)(int64_t, int64_t))progressHandler completionHandler:(void (^ _Nonnull)(UIImage * _Nullable, NSError * _Nullable))completionHandler {
+    [self imageWithSize:size applyEdits:YES progress:nil completion:completionHandler];
+}
+
+- (CGSize)size {
+    return CGSizeMake(1000, 1000);
 }
 
 @end

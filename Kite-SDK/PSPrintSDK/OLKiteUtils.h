@@ -34,7 +34,6 @@
 @class OLKiteViewController;
 @class OLPrintOrder;
 @class OLProduct;
-@class OLCheckoutViewController;
 
 @interface OLKiteUtils : NSObject
 

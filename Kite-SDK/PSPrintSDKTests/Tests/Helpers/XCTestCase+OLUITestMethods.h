@@ -159,28 +159,6 @@
 @property (strong, nonatomic, readwrite) NSString *promoBannerText;
 @end
 
-@class OLCreditCardCaptureRootController;
-@interface OLCreditCardCaptureViewController ()
-@property (nonatomic, strong) OLCreditCardCaptureRootController *rootVC;
-@end
-
-@interface OLCheckoutViewController ()
-- (void)onButtonDoneClicked;
-@end
-
-@interface OLCreditCardCaptureRootController : UITableViewController
-@property (nonatomic, strong) UITextField *textFieldCardNumber, *textFieldExpiryDate, *textFieldCVV;
-- (void)onButtonPayClicked;
-@end
-
-@interface OLPaymentMethodsViewController ()
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@end
-
-@interface OLShippingMethodsViewController ()
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@end
-
 @interface OLImagePickerViewController ()
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 @property (weak, nonatomic) IBOutlet UICollectionView *sourcesCollectionView;

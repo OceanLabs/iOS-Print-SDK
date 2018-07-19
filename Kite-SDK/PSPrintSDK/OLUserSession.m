@@ -210,4 +210,8 @@
     return results;
 }
 
+- (void)wantsToDismiss:(UIViewController *)viewController {
+    [viewController.navigationController popToRootViewControllerAnimated:YES];
+}
+
 @end

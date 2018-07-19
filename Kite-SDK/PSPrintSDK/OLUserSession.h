@@ -43,7 +43,9 @@ typedef NSUInteger OLUserSessionCleanupOption;
 @protocol OLKiteDelegate;
 @class OLKiteViewController;
 
-@interface OLUserSession : NSObject
+@import Photobook;
+
+@interface OLUserSession : NSObject <DismissDelegate>
 
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *userSelectedAssets;
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *recentPhotos;

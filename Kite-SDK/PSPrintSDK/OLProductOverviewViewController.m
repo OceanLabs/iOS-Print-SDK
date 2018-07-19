@@ -338,7 +338,7 @@
             vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
         }
         else{
-            UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
+            UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:[OLUserSession currentSession]];
             UIViewController *firstController = self.navigationController.viewControllers.firstObject;
             [self.navigationController setViewControllers:@[firstController, checkoutVc] animated:YES];
             return;
@@ -378,7 +378,7 @@
 - (void)doCheckout {
     [self saveJobWithCompletionHandler:NULL];
     
-    UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:nil];
+    UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:[OLUserSession currentSession]];
     UIViewController *firstController = self.navigationController.viewControllers.firstObject;
     [self.navigationController setViewControllers:@[firstController, checkoutVc] animated:YES];
 }
