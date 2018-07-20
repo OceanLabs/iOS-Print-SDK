@@ -648,7 +648,7 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (PhotobookAsset *)photobookAsset {
-    return [[PhotobookAsset alloc] initWithDataSource:self date:nil];
+    return [[PhotobookAsset alloc] initWithDataSource:self size:self.size date:nil];
 }
 
 + (NSArray<PhotobookAsset *> *)photobookAssetsFromAssets:(NSArray <OLAsset *>*)assets {
