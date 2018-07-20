@@ -55,7 +55,6 @@ typedef enum {
 - (void)dataWithCompletionHandler:(GetDataHandler)handler;
 - (void)getImageURLWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSURL *url, NSError *error))handler;
 - (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler;
-- (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL;
 - (void)unloadImage;
 - (PhotobookAsset *)photobookAsset;
 + (NSArray<PhotobookAsset *> *)photobookAssetsFromAssets:(NSArray <OLAsset *>*)assets;

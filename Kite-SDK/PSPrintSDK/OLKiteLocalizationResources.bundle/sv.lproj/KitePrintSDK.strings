@@ -39,7 +39,6 @@
 "FRONT" = "FRAMSIDA";
 "Image Is Too Small" = "Bilden är för liten";
 "IMAGE TOOLS" = "BILDVERKTYG";
-"Image upload failed with a %lu HTTP response status code. Please try again." = "Det gick inte att ladda upp bilden %lu HTTP-svarsstatuskod. Försök igen.";
 "inches" = "tum";
 "Large" = "Stor,";
 "Let's pick\nan image!" = "Välj \nen bild!";

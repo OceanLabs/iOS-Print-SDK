@@ -39,7 +39,6 @@
 "FRONT" = "Avant";
 "Image Is Too Small" = "La taille de l’image est insuffisante";
 "IMAGE TOOLS" = "Outils";
-"Image upload failed with a %lu HTTP response status code. Please try again." = "Erreur de téléchargement. Vérifiez votre connection internet et réessayez.";
 "inches" = "N/A => please speak in cm";
 "Large" = "Grand";
 "Let's pick\nan image!" = "Choisir une photo";

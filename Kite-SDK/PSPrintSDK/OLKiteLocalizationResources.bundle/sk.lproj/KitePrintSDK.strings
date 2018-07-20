@@ -39,7 +39,6 @@
 "FRONT" = "PREDNÁ STRANA";
 "Image Is Too Small" = "Obrázok je príliš malý";
 "IMAGE TOOLS" = "NÁSTROJE OBRÁZKOV";
-"Image upload failed with a %lu HTTP response status code. Please try again." = "Kód pre stav odozvy protokolu HTTP %lu oznamuje neúspešné nahratie obrázka. Skúste to znova.";
 "inches" = "palce";
 "Large" = "Veľký";
 "Let's pick\nan image!" = "Vyberte\nobrázok!";

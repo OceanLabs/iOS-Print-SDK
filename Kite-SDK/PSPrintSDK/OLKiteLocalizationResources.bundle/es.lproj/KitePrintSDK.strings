@@ -39,7 +39,6 @@
 "FRONT" = "FRONTAL";
 "Image Is Too Small" = "La imagen es demasiado pequeña";
 "IMAGE TOOLS" = "HERRAMIENTAS DE IMAGEN";
-"Image upload failed with a %lu HTTP response status code. Please try again." = "Subida de la imagen fallida con un código de estado de respuesta de %lu HTTP. Por favor, inténtalo de nuevo.";
 "inches" = "Centímetros";
 "Large" = "Grande";
 "Let's pick\nan image!" = "¡Selecciona \nan imagen!";

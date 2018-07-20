@@ -40,7 +40,6 @@ From,From,
 FRONT,FRONT,/* Front of the photo */
 Image Is Too Small,Image Is Too Small,
 IMAGE TOOLS,IMAGE TOOLS,
-Image upload failed with a %lu HTTP response status code. Please try again.,Image upload failed with a %lu HTTP response status code. Please try again.,
 inches,inches,
 Large,Large,
 Let's pick\nan image!,Let's pick\nan image!,"/* Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half. */"

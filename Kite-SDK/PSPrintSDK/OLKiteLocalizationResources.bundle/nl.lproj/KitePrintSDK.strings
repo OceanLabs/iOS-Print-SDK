@@ -39,7 +39,6 @@
 "FRONT" = "VOORZIJDE";
 "Image Is Too Small" = "Beeld is te klein";
 "IMAGE TOOLS" = "FOTOTOOLS";
-"Image upload failed with a %lu HTTP response status code. Please try again." = "Uploaden van foto mislukt met een %lu HTTP-respons statuscode. Probeer het opnieuw.";
 "inches" = "inches";
 "Large" = "Groot";
 "Let's pick\nan image!" = "Laten we een \nfoto kiezen!";

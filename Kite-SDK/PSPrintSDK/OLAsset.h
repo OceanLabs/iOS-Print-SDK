@@ -202,9 +202,4 @@ extern NSString *const kOLMimeTypePDF;
  */
 @property (nonatomic, readonly) long long assetId;
 
-/**
- *  The Kite previewURL. Will only be valid upon sucessfully uploading this asset to the server i.e. OLAsset.isUploaded == YES
- */
-@property (nonatomic, readonly) NSURL *previewURL;
-
 @end

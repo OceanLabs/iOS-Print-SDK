@@ -39,7 +39,6 @@
 "FRONT" = "PŘEDNÍ STRANA";
 "Image Is Too Small" = "Snímek je příliš malý";
 "IMAGE TOOLS" = "NÁSTROJE SNÍMKU";
-"Image upload failed with a %lu HTTP response status code. Please try again." = "Nahrávání snímku se nezdařilo se stavovým kódem odpovědi %lu HTTP. Zkuste to prosím znovu.";
 "inches" = "palce";
 "Large" = "Velký";
 "Let's pick\nan image!" = "Nyní vyberte\nsnímek!";

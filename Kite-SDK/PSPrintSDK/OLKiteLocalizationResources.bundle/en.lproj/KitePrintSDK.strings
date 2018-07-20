@@ -39,7 +39,6 @@
 "FRONT" = "FRONT";
 "Image Is Too Small" = "Image Is Too Small";
 "IMAGE TOOLS" = "IMAGE TOOLS";
-"Image upload failed with a %lu HTTP response status code. Please try again." = "Image upload failed with a %lu HTTP response status code. Please try again.";
 "inches" = "inches";
 "Large" = "Large";
 "Let's pick\nan image!" = "Let's pick\nan image!";

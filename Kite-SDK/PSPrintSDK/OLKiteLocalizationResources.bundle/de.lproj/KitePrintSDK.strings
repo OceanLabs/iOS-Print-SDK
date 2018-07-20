@@ -39,7 +39,6 @@
 "FRONT" = "VORDERSEITE";
 "Image Is Too Small" = "Bild ist zu klein";
 "IMAGE TOOLS" = "TOOLS ZUR BILDGESTALTUNG";
-"Image upload failed with a %lu HTTP response status code. Please try again." = "Der Bildupload ist mit einem %lu HTTP-Response-Statuscode fehlgeschlagen. Bitte versuche es erneut.";
 "inches" = "Zoll";
 "Large" = "Large";
 "Let's pick\nan image!" = "Lass uns ein Bild \nauswählen!";

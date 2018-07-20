@@ -39,7 +39,6 @@
 "FRONT" = "ELÜLSŐ";
 "Image Is Too Small" = "A kép mérete túl kicsi";
 "IMAGE TOOLS" = "KÉPESZKÖZÖK";
-"Image upload failed with a %lu HTTP response status code. Please try again." = "Képfelöltés sikertelen. HTTP-válasz állapotkódja: %lu. Próbáld újra.";
 "inches" = "hüvelyk";
 "Large" = "Nagy";
 "Let's pick\nan image!" = "Válassz egy\nképet!";
