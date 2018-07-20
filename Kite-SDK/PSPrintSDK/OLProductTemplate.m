@@ -246,7 +246,7 @@ static BOOL partial = NO;
     else if ([identifier isEqualToString:@"PHONE_CASE"]){
         return OLTemplateUICase;
     }
-    else if ([identifier isEqualToString:@"PHOTOBOOK"]){
+    else if ([identifier isEqualToString:@"PHOTOBOOK"] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
         return OLTemplateUIPhotobook;
     }
     else if ([identifier isEqualToString:@"NONCUSTOMIZABLE"]){
