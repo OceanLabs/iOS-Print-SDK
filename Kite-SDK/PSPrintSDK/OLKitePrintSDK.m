@@ -36,8 +36,6 @@
 @import Photobook;
 
 static NSString *apiKey = nil;
-static NSString *applePayMerchantID = nil;
-static NSString *applePayPayToString = nil;
 static OLKitePrintSDKEnvironment environment;
 
 static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
@@ -46,30 +44,16 @@ static NSString *const kOLStagingEndpointLive = @"https://staging.kite.ly";
 static NSString *const kOLStagingEndpointSandbox = @"https://staging.kite.ly";
 static NSString *const kOLAPIEndpointVersion = @"v4.0";
 
-static BOOL useStripeForCreditCards = YES;
 static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
 static BOOL isKiosk = NO;
 static BOOL allowImageZooming = YES;
-
-static NSString *paypalAccountId = nil;
-static NSString *paypalPublicKey = nil;
-static NSString *stripeAccountId = nil;
-static NSString *stripePublicKey = nil;
 
 static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
 static NSString *instagramRedirectURI = nil;
 
 @implementation OLKitePrintSDK
-
-+ (BOOL)useStripeForCreditCards {
-    return useStripeForCreditCards;
-}
-
-+ (void)setUseStripeForCreditCards:(BOOL)use {
-    useStripeForCreditCards = use;
-}
 
 + (void)setUseStaging:(BOOL)staging{
     useStaging = staging;
@@ -129,48 +113,12 @@ static NSString *instagramRedirectURI = nil;
     [OLAnalytics setOptInToRemoteAnalytics:optIn];
 }
 
-+ (NSString *_Nonnull)paypalEnvironment {
-    switch (environment) {
-        case OLKitePrintSDKEnvironmentLive: return @"live";/*PayPalEnvironmentProduction*/;
-        case OLKitePrintSDKEnvironmentSandbox: return @"sandbox";/*PayPalEnvironmentSandbox*/;
-    }
-}
-
-+ (NSString *_Nonnull)paypalClientId {
-    return paypalPublicKey;
-}
-
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
-    applePayMerchantID = mID;
+    [[PhotobookSDK shared] setApplePayMerchantId:mID];
 }
 
 + (void)setApplePayPayToString:(NSString *_Nonnull)name{
-    applePayPayToString = name;
-}
-
-+ (NSString *)applePayPayToString{
-    if (applePayPayToString){
-        return applePayPayToString;
-    }
-    else{
-        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-        NSString *bundleName = nil;
-        if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
-            bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
-        } else {
-            bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
-        }
-        
-        return [NSString stringWithFormat:@"Kite.ly (via %@)", bundleName];
-    }
-}
-
-+ (NSString *_Nonnull)appleMerchantID {
-    return applePayMerchantID;
-}
-
-+ (NSString *_Nonnull)stripePublishableKey {
-    return stripePublicKey;
+    [[PhotobookSDK shared] setApplePayPayTo:name];
 }
 
 + (NSString *)qualityGuaranteeString{
@@ -219,14 +167,6 @@ static NSString *instagramRedirectURI = nil;
 
 + (NSString *)instagramClientID{
     return instagramClientID;
-}
-
-+ (NSString *)paypalAccountId{
-    return paypalAccountId;
-}
-
-+ (NSString *)stripeAccountId{
-    return stripeAccountId;
 }
 
 @end
