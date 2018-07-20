@@ -40,6 +40,8 @@
 #include <sys/sysctl.h>
 #import "OLKitePrintSDK.h"
 
+@import Photobook;
+
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
 @end
@@ -211,7 +213,11 @@
 }
 
 - (void)wantsToDismiss:(UIViewController *)viewController {
-    [viewController.navigationController popToRootViewControllerAnimated:YES];
+    if ([viewController isKindOfClass:[NSClassFromString(@"Photobook.PhotobookViewController") class]]){
+        [viewController.navigationController popViewControllerAnimated:YES];
+    } else {
+        [viewController.navigationController popToRootViewControllerAnimated:YES];
+    }
 }
 
 @end
