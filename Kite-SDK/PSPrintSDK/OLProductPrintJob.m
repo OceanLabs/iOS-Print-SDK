@@ -179,8 +179,9 @@ static id stringOrEmptyString(NSString *str) {
     }
     json[@"frame_contents"] = @{};
     
-    self.options[@"polaroid_text"] = borderTextArray;
-    json[@"options"] = self.options;
+    NSMutableDictionary *options = [self.options mutableCopy];
+    options[@"polaroid_text"] = borderTextArray;
+    json[@"options"] = options;
     
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
@@ -214,7 +215,6 @@ static id stringOrEmptyString(NSString *str) {
     }
     
     val = 41 * val + [self.uuid hash];
-    val = 42 * val + [self.selectedShippingMethod hash];
 
     return val;
 }
