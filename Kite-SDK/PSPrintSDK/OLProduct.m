@@ -127,16 +127,16 @@ typedef enum {
         return [OLAsset assetWithImageAsPNG:_coverPhoto];
     }
     else if ([_coverPhoto isKindOfClass:[NSURL class]]){
-        return [OLAsset assetWithURL:_coverPhoto];
+        return [OLAsset assetWithURL:_coverPhoto size:CGSizeZero];
     }
     else{
-        return [OLAsset assetWithURL:self.productTemplate.coverPhotoURL];
+        return [OLAsset assetWithURL:self.productTemplate.coverPhotoURL size:CGSizeZero];
     }
 }
 
 -(OLAsset *)classImageAsset{
     if (self.productTemplate.classPhotoURL && ![[self.productTemplate.classPhotoURL absoluteString] isEqualToString:@""]){
-        return [OLAsset assetWithURL:self.productTemplate.classPhotoURL];
+        return [OLAsset assetWithURL:self.productTemplate.classPhotoURL size:CGSizeZero];
     }
     else{
         return self.coverPhotoAsset;

@@ -47,12 +47,16 @@
     return 100;
 }
 
+- (CGSize)size {
+    return CGSizeMake(self.pixelWidth, self.pixelHeight);
+}
+
 - (BOOL)isEqual:(id)object{
     if (![object respondsToSelector:@selector(imageURL)]){
         return NO;
     }
-    OLAsset *selfAsset = [OLAsset assetWithURL:self.imageURL];
-    OLAsset *objectAsset = [OLAsset assetWithURL:[object imageURL]];
+    OLAsset *selfAsset = [OLAsset assetWithURL:self.imageURL size:self.size];
+    OLAsset *objectAsset = [OLAsset assetWithURL:[object imageURL] size:self.size];
     return [selfAsset isEqual:objectAsset];
 }
 

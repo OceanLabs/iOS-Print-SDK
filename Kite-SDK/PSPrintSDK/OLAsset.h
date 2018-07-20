@@ -181,10 +181,11 @@ extern NSString *const kOLMimeTypePDF;
  *  Create an asset with a URL
  *
  *  @param url The URL
+ *  @param size The original size of the image
  *
  *  @return The OLAsset
  */
-+ (OLAsset *)assetWithURL:(NSURL *)url;
++ (OLAsset *)assetWithURL:(NSURL *)url size:(CGSize)size;
 
 /**
  *  The mime type of the asset

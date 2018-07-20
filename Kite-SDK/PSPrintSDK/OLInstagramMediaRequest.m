@@ -142,6 +142,7 @@
                                    
                                    id thumbnailResolutionImageURLStr = [thumbnailResolutionImage objectForKey:@"url"];
                                    id standardResolutionImageURLStr = [standardResolutionImage objectForKey:@"url"];
+                                   CGSize size = CGSizeMake([[standardResolutionImage objectForKey:@"width"] floatValue], [[standardResolutionImage objectForKey:@"height"] floatValue]);
                                    if (![thumbnailResolutionImageURLStr isKindOfClass:[NSString class]] || ![standardResolutionImageURLStr isKindOfClass:[NSString class]]) {
                                        continue;
                                    }
@@ -156,7 +157,7 @@
                                        standardResolutionImageURLStr = [standardResolutionImageURLStr stringByReplacingCharactersInRange:range withString:@"https://"];
                                    }
 
-                                   OLInstagramImage *im = [[OLInstagramImage alloc] initWithThumbURL:[NSURL URLWithString:thumbnailResolutionImageURLStr] fullURL:[NSURL URLWithString:standardResolutionImageURLStr]];
+                                   OLInstagramImage *im = [[OLInstagramImage alloc] initWithThumbURL:[NSURL URLWithString:thumbnailResolutionImageURLStr] fullURL:[NSURL URLWithString:standardResolutionImageURLStr] size:size];
                                    [media addObject:im];
                                    
                                }

@@ -364,7 +364,7 @@
 
 - (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     
-    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://kite.ly/no-asset.jpg"]]]];
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://kite.ly/no-asset.jpg"] size:CGSizeZero]]];
     [[Checkout shared] addProductToBasket:job];
     
     if (handler){

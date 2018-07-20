@@ -87,21 +87,21 @@
         
         [welf.media addObjectsFromArray:welf.overflowMedia];
         for (OLInstagramImage *image in welf.overflowMedia){
-            [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+            [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL size:image.size]];
         }
         if (nextRequest != nil) {
             // only insert multiple of [self numberOfCellsPerRow] images so we fill complete rows
             NSInteger overflowCount = (welf.media.count + media.count) % [welf numberOfCellsPerRow];
             [welf.media addObjectsFromArray:[media subarrayWithRange:NSMakeRange(0, media.count - overflowCount)]];
             for (OLInstagramImage *image in [media subarrayWithRange:NSMakeRange(0, media.count - overflowCount)]){
-                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL size:image.size]];
             }
             welf.overflowMedia = [media subarrayWithRange:NSMakeRange(media.count - overflowCount, overflowCount)];
         } else {
             // we've exhausted all the users images so show the remainder
             [welf.media addObjectsFromArray:media];
             for (OLInstagramImage *image in media){
-                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL size:image.size]];
             }
             welf.overflowMedia = @[];
             [self.activityIndicator stopAnimating];

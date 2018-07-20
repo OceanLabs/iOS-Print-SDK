@@ -73,6 +73,7 @@ static NSOperationQueue *imageOperationQueue;
 @property (assign, nonatomic) NSInteger extraCopies;
 @property (strong, nonatomic) OLPhotoEdits *edits;
 @property (strong, nonatomic) NSString *uuid;
+@property (assign, nonatomic) CGSize size;
 
 @property (strong, nonatomic) id metadata; //Not saved
 
@@ -145,10 +146,11 @@ static NSOperationQueue *imageOperationQueue;
     return self;
 }
 
-- (instancetype)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType {
+- (instancetype)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType size:(CGSize)size{
     if (self = [super init]) {
         _mimeType = mimeType;
         _imageURL = url;
+        _size = size;
     }
     
     return self;
@@ -219,21 +221,21 @@ static NSOperationQueue *imageOperationQueue;
     return [[OLAsset alloc] initWithDataSource:dataSource];
 }
 
-+ (OLAsset *)assetWithURL:(NSURL *)url {
++ (OLAsset *)assetWithURL:(NSURL *)url size:(CGSize)size{
     NSAssert([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"], @"bad url scheme (%@), only http & https are supported", url.scheme);
     
     NSString *urlStr = url.absoluteString;
     if ([urlStr hasSuffix:@"jpg"] || [urlStr hasSuffix:@"jpeg"]) {
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG size:size];
     } else if ([urlStr hasSuffix:@"png"]) {
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePNG];
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePNG size:size];
     } else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF];
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF size:size];
     } else if ([urlStr hasSuffix:@"pdf"]){
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePDF];
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePDF size:size];
     } else {
         // Worst case scenario just assume it's a JPEG.
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG size:size];
     }
 
     return nil;
@@ -732,6 +734,7 @@ static NSOperationQueue *imageOperationQueue;
     copy.mimeType = self.mimeType;
     copy.assetId = self.assetId;
     copy.previewURL = self.previewURL;
+    copy.size = self.size;
     
     return copy;
 }
@@ -749,6 +752,7 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeObject:self.previewURL forKey:kKeyKitePreviewURL];
     [aCoder encodeObject:[NSNumber numberWithLongLong:self.assetId] forKey:kKeyKiteAssetId];
     [aCoder encodeObject:self.uuid forKey:kKeyAssetUUID];
+    [aCoder encodeCGSize:_size forKey:@"size"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -771,6 +775,7 @@ static NSOperationQueue *imageOperationQueue;
         self.assetId = [[aDecoder decodeObjectForKey:kKeyKiteAssetId] longLongValue];
         self.previewURL = [aDecoder decodeObjectForKey:kKeyKitePreviewURL];
         self.uuid = [aDecoder decodeObjectForKey:kKeyAssetUUID];
+        self.size = [aDecoder decodeCGSizeForKey:@"size"];
         
         NSString *localId = [aDecoder decodeObjectForKey:kKeyPHAssetLocalId];
         if (localId){
@@ -800,7 +805,15 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (CGSize)size {
-    return CGSizeMake(1000, 1000);
+    
+    if (self.assetType == kOLAssetTypePHAsset) {
+        return CGSizeMake(self.phAsset.pixelWidth, self.phAsset.pixelHeight);
+    }
+    else if (self.assetType ==  kOLAssetTypeImageData) {
+        return [UIImage imageWithData:self.imageData].size;
+    }
+    
+    return !CGSizeEqualToSize(_size, CGSizeZero) ? _size : CGSizeMake(1000, 1000);
 }
 
 @end
