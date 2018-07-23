@@ -45,6 +45,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 @interface OLApparelPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (strong, nonatomic) NSMutableDictionary *options;
+@property (strong, nonatomic) NSDictionary<NSString *, PhotobookAsset *> *photobookAssets;
 @end
 
 @implementation OLApparelPrintJob
@@ -73,6 +74,11 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 #endif
         self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
+        NSMutableDictionary *photobookAssets = [[NSMutableDictionary alloc] init];
+        for (NSString *key in [self.assets allKeys]) {
+            photobookAssets[key] = [OLAsset photobookAssetsFromAssets:@[self.assets[key]]].firstObject;
+        }
+        self.photobookAssets = photobookAssets;
         self.templateId = templateId;
         self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
     }
@@ -92,6 +98,9 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     for (NSString *key in [self.assets allKeys]){
         if ([self.assets[key] mimeType] == kOLMimeTypePDF){
             [pdfs setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
+        }
+        else if (self.photobookAssets[key].uploadUrl) {
+            [assets setObject:self.photobookAssets[key].uploadUrl forKey:key];
         }
         else{
             [assets setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
@@ -120,10 +129,10 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     return [OLProductTemplate templateWithId:self.templateId].name;
 }
 
-- (NSArray *)assetsForUploading {
-    NSMutableArray *assets = [[NSMutableArray alloc] init];
-    for (NSString *key in [self.assets allKeys]){
-        [assets addObject:self.assets[key]];
+- (NSArray <PhotobookAsset *>*)assetsToUpload {
+    NSMutableArray <PhotobookAsset *>*assets = [[NSMutableArray alloc] init];
+    for (NSString *key in [self.photobookAssets allKeys]){
+        [assets addObject:self.photobookAssets[key]];
     }
     return assets;
 }
@@ -188,12 +197,21 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.templateId = [aDecoder decodeObjectForKey:kKeyApparelProductTemplateId];
+        if (!self.template) {
+            return nil;
+        }
         self.assets = [aDecoder decodeObjectForKey:kKeyApparelImages];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyApparelExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyApparelUuid];
         self.options = [aDecoder decodeObjectForKey:kKeyApparelPrintJobOptions];
         self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
         self.selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
+        
+        NSMutableDictionary *photobookAssets = [[NSMutableDictionary alloc] init];
+        for (NSString *key in [self.assets allKeys]) {
+            photobookAssets[key] = [OLAsset photobookAssetsFromAssets:@[self.assets[key]]].firstObject;
+        }
+        self.photobookAssets = photobookAssets;
     }
     
     return self;
@@ -221,29 +239,17 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     return self.extraCopies + 1;
 }
 
-- (NSInteger)numberOfPages {
-    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
-    NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
-    return ceil(productTemplate.quantityPerSheet / sheetQuanity);
-}
-
 @synthesize selectedShippingMethod;
 
 - (OLProductTemplate *)template {
     return [OLProductTemplate templateWithId:self.templateId];
 }
 
-- (NSMutableDictionary *) upsoldOptions {
-    return self.options;
-}
-
-@synthesize upsoldTemplate;
-
-- (NSArray<PhotobookAsset *> * _Nullable)assetsToUpload {
-    return [OLAsset photobookAssetsFromAssets:self.assetsForUploading];
-}
-
 - (NSDictionary<NSString *,id> * _Nullable)orderParameters {
+    return self.jsonRepresentation;
+}
+
+- (NSDictionary<NSString *,id> * _Nullable)costParameters {
     return self.jsonRepresentation;
 }
 

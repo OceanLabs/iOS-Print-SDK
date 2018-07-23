@@ -50,6 +50,10 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 @property (nonatomic, strong) OLAsset *backImageAsset;
 @property (strong, nonatomic) OLAsset *insideRightImageAsset;
 @property (strong, nonatomic) OLAsset *insideLeftImageAsset;
+@property (nonatomic, strong) PhotobookAsset *frontPhotobookAsset;
+@property (nonatomic, strong) PhotobookAsset *backPhotobookAsset;
+@property (strong, nonatomic) PhotobookAsset *insideRightPhotobookAsset;
+@property (strong, nonatomic) PhotobookAsset *insideLeftPhotobookAsset;
 @property (nonatomic, copy) NSString *message;
 @property (strong, nonatomic) NSMutableDictionary *options;
 
@@ -75,14 +79,43 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset insideRightImageAsset:(OLAsset *)insideRightImageAsset insideLeftImageAsset:(OLAsset *)insideLeftImageAsset {
     if (self = [super init]) {
         self.uuid = [[NSUUID UUID] UUIDString];
-        self.frontImageAsset = frontImageAsset;
-        self.backImageAsset = backImageAsset;
-        self.insideRightImageAsset = insideRightImageAsset;
-        self.insideLeftImageAsset = insideLeftImageAsset;
+        if (frontImageAsset) {
+            self.frontPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[frontImageAsset]].firstObject;
+            self.frontImageAsset = frontImageAsset;
+        }
+        if (backImageAsset) {
+            self.backPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[backImageAsset]].firstObject;
+            self.backImageAsset = backImageAsset;
+        }
+        if (insideRightImageAsset) {
+            self.insideRightPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[insideRightImageAsset]].firstObject;
+            self.insideRightImageAsset = insideRightImageAsset;
+        }
+        if (insideLeftImageAsset) {
+            self.insideLeftPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[insideLeftImageAsset]].firstObject;
+            self.insideLeftImageAsset = insideLeftImageAsset;
+        }
         self.templateId = templateId;
         self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
     }
     return self;
+}
+
+- (NSArray <PhotobookAsset *> *)assetsToUpload {
+    NSMutableArray <PhotobookAsset *>*assets = [[NSMutableArray alloc] init];
+    if (self.frontImageAsset) {
+        [assets addObject:self.frontPhotobookAsset];
+    }
+    if (self.backImageAsset) {
+        [assets addObject:self.backPhotobookAsset];
+    }
+    if (self.insideLeftImageAsset) {
+        [assets addObject:self.insideLeftPhotobookAsset];
+    }
+    if (self.insideRightImageAsset) {
+        [assets addObject:self.insideRightPhotobookAsset];
+    }
+    return assets;
 }
 
 - (NSString *)templateId {
@@ -101,24 +134,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
 }
 
-- (NSArray<OLAsset *> *)assetsForUploading {
-    NSMutableArray *assets = [[NSMutableArray alloc] init];
-    if (self.frontImageAsset){
-        [assets addObject:self.frontImageAsset];
-    }
-    if (self.backImageAsset){
-        [assets addObject:self.backImageAsset];
-    }
-    if (self.insideLeftImageAsset){
-        [assets addObject:self.insideLeftImageAsset];
-    }
-    if (self.insideRightImageAsset){
-        [assets addObject:self.insideRightImageAsset];
-    }
-    
-    return assets;
-}
-
 - (NSDictionary *)jsonRepresentation {
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
     [json setObject:self.templateId forKey:@"template_id"];
@@ -126,12 +141,22 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     NSMutableDictionary *assets = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *pdfs = [[NSMutableDictionary alloc] init];
     
-    assets[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
-    pdfs[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
+    if (self.frontImageAsset.mimeType == kOLMimeTypePDF){
+        pdfs[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
+    }
+    else if (self.frontPhotobookAsset.uploadUrl){
+        assets[@"front_image"] = self.frontPhotobookAsset.uploadUrl;
+    }
+    else{
+        assets[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
+    }
     
     if (self.backImageAsset){
         if (self.backImageAsset.mimeType == kOLMimeTypePDF){
             pdfs[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
+        }
+        else if (self.backPhotobookAsset.uploadUrl){
+            assets[@"back_image"] = self.backPhotobookAsset.uploadUrl;
         }
         else{
             assets[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
@@ -141,6 +166,9 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         if (self.insideRightImageAsset.mimeType == kOLMimeTypePDF){
             pdfs[@"inside_right_image"] = [NSString stringWithFormat:@"%lld", self.insideRightImageAsset.assetId];
         }
+        else if (self.insideRightPhotobookAsset.uploadUrl){
+            assets[@"inside_right_image"] = self.insideRightPhotobookAsset.uploadUrl;
+        }
         else{
             assets[@"inside_right_image"] = [NSString stringWithFormat:@"%lld", self.insideRightImageAsset.assetId];
         }
@@ -148,6 +176,9 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     if (self.insideLeftImageAsset){
         if (self.insideLeftImageAsset.mimeType == kOLMimeTypePDF){
             pdfs[@"inside_left_image"] = [NSString stringWithFormat:@"%lld", self.insideLeftImageAsset.assetId];
+        }
+        else if (self.insideLeftPhotobookAsset.uploadUrl){
+            assets[@"inside_left_image"] = self.insideLeftPhotobookAsset.uploadUrl;
         }
         else{
             assets[@"inside_left_image"] = [NSString stringWithFormat:@"%lld", self.insideLeftImageAsset.assetId];
@@ -233,8 +264,23 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         self.backImageAsset = [aDecoder decodeObjectForKey:kKeyBackImage];
         self.insideRightImageAsset = [aDecoder decodeObjectForKey:kKeyInsideRightImage];
         self.insideLeftImageAsset = [aDecoder decodeObjectForKey:kKeyInsideLeftImage];
+        if (self.frontImageAsset) {
+            self.frontPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[self.frontImageAsset]].firstObject;
+        }
+        if (self.backImageAsset) {
+            self.backPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[self.backImageAsset]].firstObject;
+        }
+        if (self.insideLeftImageAsset) {
+            self.insideLeftPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[self.insideLeftImageAsset]].firstObject;
+        }
+        if (self.insideRightImageAsset) {
+            self.insideRightPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[self.insideRightImageAsset]].firstObject;
+        }
         self.message = [aDecoder decodeObjectForKey:kKeyMessage];
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
+        if (!self.template) {
+            return nil;
+        }
         self.options = [aDecoder decodeObjectForKey:kKeyPrintJobOptions];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
@@ -267,29 +313,17 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     return self.extraCopies + 1;
 }
 
-- (NSInteger)numberOfPages {
-    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
-    NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
-    return ceil(productTemplate.quantityPerSheet / sheetQuanity);
-}
-
 @synthesize selectedShippingMethod;
 
 - (OLProductTemplate *)template {
     return [OLProductTemplate templateWithId:self.templateId];
 }
 
-- (NSMutableDictionary *) upsoldOptions {
-    return self.options;
-}
-
-@synthesize upsoldTemplate;
-
-- (NSArray<PhotobookAsset *> * _Nullable)assetsToUpload {
-    return [OLAsset photobookAssetsFromAssets:self.assetsForUploading];
-}
-
 - (NSDictionary<NSString *,id> * _Nullable)orderParameters {
+    return self.jsonRepresentation;
+}
+
+- (NSDictionary<NSString *,id> * _Nullable)costParameters {
     return self.jsonRepresentation;
 }
 

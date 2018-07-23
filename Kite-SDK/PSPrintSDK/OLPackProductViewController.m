@@ -285,7 +285,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     
     id<Product> job;
     if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
-        job = [OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:[OLAsset userSelectedAssets].firstObject backImageOLAsset:[OLAsset userSelectedAssets].lastObject];
+        job = (id<Product>)[OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:[OLAsset userSelectedAssets].firstObject backImageOLAsset:[OLAsset userSelectedAssets].lastObject];
     }
     else{
         job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[NSArray arrayWithArray:[OLAsset userSelectedAssets]]];

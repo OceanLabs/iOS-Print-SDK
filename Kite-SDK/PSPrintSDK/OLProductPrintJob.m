@@ -291,25 +291,17 @@ static id stringOrEmptyString(NSString *str) {
     return self.extraCopies + 1;
 }
 
-- (NSInteger)numberOfPages {
-    OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
-    NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
-    return ceil(self.quantity / sheetQuanity);
-}
-
 @synthesize selectedShippingMethod;
 
 - (OLProductTemplate *)template {
     return [OLProductTemplate templateWithId:self.templateId];
 }
 
-- (NSMutableDictionary *) upsoldOptions {
-    return self.options;
+- (NSDictionary<NSString *,id> * _Nullable)orderParameters {
+    return self.jsonRepresentation;
 }
 
-@synthesize upsoldTemplate;
-
-- (NSDictionary<NSString *,id> * _Nullable)orderParameters {
+- (NSDictionary<NSString *,id> * _Nullable)costParameters {
     return self.jsonRepresentation;
 }
 
