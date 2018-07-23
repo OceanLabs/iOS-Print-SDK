@@ -137,7 +137,11 @@ static id stringOrEmptyString(NSString *str) {
     if ([OLProductTemplate templateWithId:self.templateId].templateUI == OLTemplateUINonCustomizable){
         return 1;
     }
-    return self.assets.count;
+    NSInteger count = 0;
+    for (OLAsset *asset in self.assets) {
+        count += asset.extraCopies + 1;
+    }
+    return count;
 }
 
 - (NSString *)templateId {
@@ -159,7 +163,7 @@ static id stringOrEmptyString(NSString *str) {
             [pdfs addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
         }
         else{
-            if (i < self.assetsToUpload.count) {
+            if (i < self.assetsToUpload.count && self.assetsToUpload[i].uploadUrl) {
                 [assets addObject:self.assetsToUpload[i].uploadUrl];
             } else {
                 [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
@@ -290,7 +294,7 @@ static id stringOrEmptyString(NSString *str) {
 - (NSInteger)numberOfPages {
     OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
     NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
-    return ceil(productTemplate.quantityPerSheet / sheetQuanity);
+    return ceil(self.quantity / sheetQuanity);
 }
 
 @synthesize selectedShippingMethod;
