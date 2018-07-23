@@ -45,7 +45,7 @@
 		2E0290EB1F26336100F7A5B0 /* OLLogoutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0290E91F26336100F7A5B0 /* OLLogoutViewController.h */; };
 		2E0290EC1F26336100F7A5B0 /* OLLogoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0290EA1F26336100F7A5B0 /* OLLogoutViewController.m */; };
 		2E0290EE1F26356000F7A5B0 /* OLViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0290D21F26323500F7A5B0 /* OLViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2E0290EF1F26356000F7A5B0 /* OLNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0290D61F26324E00F7A5B0 /* OLNavigationController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E0290EF1F26356000F7A5B0 /* OLNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0290D61F26324E00F7A5B0 /* OLNavigationController.h */; };
 		2E0290F01F26356000F7A5B0 /* OLCollectionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0290DA1F26325E00F7A5B0 /* OLCollectionViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2E0B5B4D1ECC5394005C0C03 /* OLTouchReporterView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0B5B4B1ECC5394005C0C03 /* OLTouchReporterView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E0B5B4E1ECC5394005C0C03 /* OLTouchReporterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B5B4C1ECC5394005C0C03 /* OLTouchReporterView.m */; };

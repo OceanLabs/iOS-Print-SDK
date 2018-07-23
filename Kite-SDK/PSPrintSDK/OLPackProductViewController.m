@@ -311,6 +311,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
         UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:[OLUserSession currentSession]];
         UIViewController *firstController = self.navigationController.viewControllers.firstObject;
         [self.navigationController setViewControllers:@[firstController, checkoutVc] animated:YES];
+        [[OLUserSession currentSession] resetUserSelectedPhotos];
     }
 }
 

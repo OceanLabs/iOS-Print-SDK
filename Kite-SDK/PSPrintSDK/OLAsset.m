@@ -655,6 +655,41 @@ static NSOperationQueue *imageOperationQueue;
     }];
 }
 
+- (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
+    if (self.assetType == kOLAssetTypeRemoteImageURL && !self.isEdited){
+        handler(0, nil);
+        return;
+    }
+    
+    [self dataWithCompletionHandler:^(NSData *data, NSError *error){
+        handler(data.length, error);
+    }];
+}
+
+- (void)dataWithCompletionHandler:(GetDataHandler)handler {
+    if (self.assetType == kOLAssetTypeImageData && self.mimeType == kOLMimeTypePDF){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            handler(self.imageData, nil);
+        });
+        return;
+    }
+    
+    [self backgroundImageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+        if (image && !error){
+            NSData *data = UIImageJPEGRepresentation(image, 0.7);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(data, error);
+            });
+            
+        }
+        else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error getting one of your photos. Please remove or replace it.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), @"asset" : self}]);
+            });
+        }
+    }];
+}
+
 - (void)imageWithSize:(CGSize)size loadThumbnailFirst:(BOOL)loadThumbnailFirst progressHandler:(void (^ _Nullable)(int64_t, int64_t))progressHandler completionHandler:(void (^ _Nonnull)(UIImage * _Nullable, NSError * _Nullable))completionHandler {
     [self imageWithSize:size applyEdits:YES progress:nil completion:completionHandler];
 }
