@@ -30,6 +30,4 @@
 typedef NS_ENUM(NSInteger, OLKitePrintSDKEnvironment) {
     OLKitePrintSDKEnvironmentLive,
     OLKitePrintSDKEnvironmentSandbox,
-    kOLKitePrintSDKEnvironmentLive __deprecated_enum_msg("Use OLKitePrintSDKEnvironmentLive") = OLKitePrintSDKEnvironmentLive,
-    kOLKitePrintSDKEnvironmentSandbox __deprecated_enum_msg("Use OLKitePrintSDKEnvironmentSandbox") = OLKitePrintSDKEnvironmentSandbox,
 };

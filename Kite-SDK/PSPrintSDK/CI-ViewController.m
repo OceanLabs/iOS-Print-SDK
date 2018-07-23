@@ -42,7 +42,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "OLUserSession.h"
 #import "OLImagePickerViewController.h"
 #import "OLImageDownloader.h"
-#import "OLProgressHUD.h"
 #import "KITAssetsPickerController.h"
 #import "CustomAssetCollectionDataSource.h"
 #import "AssetDataSource.h"

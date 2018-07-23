@@ -104,11 +104,6 @@
 @property (assign, nonatomic) BOOL qrCodeUploadEnabled;
 
 /**
- *  Set to hide the phone entry field at checkout.
- */
-@property (assign, nonatomic) BOOL hidePhoneEntryOnCheckoutScreen __deprecated;
-
-/**
  *  Set to hide the Continue Shopping button on the payment screen. The default value is NO.
  */
 @property (assign, nonatomic) BOOL hideContinueShoppingButton;
