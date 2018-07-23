@@ -189,6 +189,7 @@ static id stringOrEmptyString(NSString *str) {
     
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
+    json[@"shipping_class"] = [NSNumber numberWithInteger:selectedShippingMethod.id];
     
     return json;
 }

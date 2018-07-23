@@ -113,6 +113,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     json[@"options"] = self.options;
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
+    json[@"shipping_class"] = [NSNumber numberWithInteger:selectedShippingMethod.id];
     
     return json;
 }
