@@ -118,6 +118,24 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     return assets;
 }
 
+- (NSArray<OLAsset *> *)assetsForUploading {
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    if (self.frontImageAsset){
+        [assets addObject:self.frontImageAsset];
+    }
+    if (self.backImageAsset){
+        [assets addObject:self.backImageAsset];
+    }
+    if (self.insideLeftImageAsset){
+        [assets addObject:self.insideLeftImageAsset];
+    }
+    if (self.insideRightImageAsset){
+        [assets addObject:self.insideRightImageAsset];
+    }
+    
+    return assets;
+}
+
 - (NSString *)templateId {
     return _templateId;
 }

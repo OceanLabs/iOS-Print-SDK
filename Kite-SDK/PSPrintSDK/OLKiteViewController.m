@@ -128,9 +128,9 @@ static CGFloat fadeTime = 0.3;
     return [self initWithAssets:assets info:nil];
 }
 
-//- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder{
-//    return [self initWithPrintOrder:printOrder info:nil];
-//}
+- (instancetype _Nullable)initWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs {
+    return [self initWithPrintJobs:printJobs info:nil];
+}
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info{
     [OLAnalytics setExtraInfo:info];
@@ -139,22 +139,23 @@ static CGFloat fadeTime = 0.3;
     [OLKiteABTesting sharedInstance].launchedWithPrintOrder = NO;
     [OLUserSession currentSession].appAssets = assetsCopy;
     [[OLUserSession currentSession] resetUserSelectedPhotos];
-//    [OLUserSession currentSession].printOrder.userData = info;
     
     return self;
 }
 
-//- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info{
-//    [OLAnalytics setExtraInfo:info];
-//    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
-//        [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printOrder != nil;
-//        [OLUserSession currentSession].appAssets = [[printOrder.jobs firstObject] assetsForUploading];
-//        [[OLUserSession currentSession] resetUserSelectedPhotos];
-//        [OLUserSession currentSession].printOrder = printOrder;
-//        [OLUserSession currentSession].printOrder.userData = info;
-//    }
-//    return self;
-//}
+- (instancetype _Nullable)initWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info{
+    [OLAnalytics setExtraInfo:info];
+    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
+        [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printJobs != nil;
+        [OLUserSession currentSession].appAssets = [[printJobs firstObject] assetsForUploading];
+        [[OLUserSession currentSession] resetUserSelectedPhotos];
+        [[Checkout shared] clearBasketOrder];
+        for (id<OLPrintJob> printJob in printJobs) {
+            [[Checkout shared] addProductToBasket:(id<Product>)printJob];
+        }
+    }
+    return self;
+}
 
 - (void)setAssets:(NSArray *_Nonnull)assets{
     [OLUserSession currentSession].appAssets = assets;

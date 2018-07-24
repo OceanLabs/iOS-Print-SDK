@@ -138,6 +138,15 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     return assets;
 }
 
+- (NSArray *)assetsForUploading {
+    NSMutableArray *assets = [[NSMutableArray alloc] init];
+    for (NSString *key in [self.assets allKeys]){
+        [assets addObject:self.assets[key]];
+    }
+    
+    return assets;
+}
+
 - (NSUInteger) hash {
     NSUInteger val = [self.templateId hash];
     for (NSString *key in [self.assets allKeys]){
