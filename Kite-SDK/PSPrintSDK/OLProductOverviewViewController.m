@@ -135,15 +135,7 @@
             vc = vc.parentViewController;
         }
     }
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != OLTemplateUINonCustomizable){
-        if (![[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
-            [self.ctaButton setTitle: NSLocalizedStringFromTableInBundle(@"Checkout", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        }
-        else{
-            [self.ctaButton setTitle: NSLocalizedStringFromTableInBundle(@"Review", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Title of a screen where the user can review the product before ordering") forState:UIControlStateNormal];
-        }
-    }
-    else if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
+    if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
         [self.ctaButton setTitle: NSLocalizedStringFromTableInBundle(@"Add to Basket", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
     else{
@@ -332,25 +324,7 @@
 }
 
 - (IBAction)onButtonStartClicked:(id)sender {
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && self.product.productTemplate.templateUI != OLTemplateUINonCustomizable){
-        UIViewController *vc;
-        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Overview-Review-Checkout"]){
-            vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:self.product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
-        }
-        else{
-            UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:[OLUserSession currentSession]];
-            UIViewController *firstController = self.navigationController.viewControllers.firstObject;
-            [self.navigationController setViewControllers:@[firstController, checkoutVc] animated:YES];
-            [[OLUserSession currentSession] resetUserSelectedPhotos];
-            return;
-        }
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:self.userEmail];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:self.userPhone];
-        [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-        [self.navigationController pushViewController:vc animated:YES];
-        return;
-    }
-    else if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
+    if (self.product.productTemplate.templateUI == OLTemplateUINonCustomizable){
         [self doCheckout];
         return;
     }

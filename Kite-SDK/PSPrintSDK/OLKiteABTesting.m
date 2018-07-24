@@ -35,7 +35,6 @@
 #include <stdlib.h>
 
 
-static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
 static NSString *const kOLKiteABTestQualityBannerType = @"ly.kite.abtest.quality_banner_type";
 static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_tile_style";
 static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
@@ -69,7 +68,6 @@ static dispatch_once_t srand48OnceToken;
 @property (strong, nonatomic, readwrite) NSString *checkoutScreenType;
 @property (strong, nonatomic, readwrite) NSString *productTileStyle;
 @property (strong, nonatomic, readwrite) NSString *promoBannerText;
-@property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
 @property (strong, nonatomic, readwrite) NSString *paymentScreen;
 @property (strong, nonatomic, readwrite) NSString *coverPhotoId;
 @property (strong, nonatomic, readwrite) NSString *packReviewStyle;
@@ -419,25 +417,6 @@ static dispatch_once_t srand48OnceToken;
                                          }];
 }
 
-
-- (void)setupShowProductDescriptionScreenBeforeShippingTest{
-    self.launchWithPrintOrderVariant = nil;
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestLaunchWithPrintOrderVariant];
-    if (!experimentDict) {
-        experimentDict = @{@"Checkout" : @0.2, @"Overview-Checkout" : @0.2, @"Review-Overview-Checkout": @0.2, @"Review-Checkout" : @0.2, @"Overview-Review-Checkout" : @0.2};
-    }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestLaunchWithPrintOrderVariant
-                   conditions:@{
-                                @"Checkout" : safeObject(experimentDict[@"Checkout"]),
-                                @"Overview-Checkout" : safeObject(experimentDict[@"Overview-Checkout"]),
-                                @"Review-Overview-Checkout" : safeObject(experimentDict[@"Review-Overview-Checkout"]),
-                                @"Review-Checkout" : safeObject(experimentDict[@"Review-Checkout"]),
-                                @"Overview-Review-Checkout" : safeObject(experimentDict[@"Overview-Review-Checkout"])
-                                } block:^(id choice) {
-                                    self.launchWithPrintOrderVariant = choice;
-                                }];
-}
-
 - (void)setupDisableProductCategories{
     self.disableProductCategories = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestDisableProductCategories];
@@ -582,7 +561,6 @@ static dispatch_once_t srand48OnceToken;
     [self setupPackReviewStyleTest];
     [self setupPromoBannerTextTest];
     [self setupHidePriceTest];
-    [self setupShowProductDescriptionScreenBeforeShippingTest];
     [self setupProgressiveTemplateLoadingTest];
     [self setupSkipProductOverviewTest];
     [self setupDisableProductCategories];

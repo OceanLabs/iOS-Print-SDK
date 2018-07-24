@@ -278,6 +278,11 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 @synthesize selectedShippingMethod;
 
 - (OLProductTemplate *)template {
+    if (![OLProductTemplate templateWithId:self.templateId]){
+        OLProductTemplate *template = [[OLProductTemplate alloc] init];
+        template.identifier = self.templateId;
+        return template;
+    }
     return [OLProductTemplate templateWithId:self.templateId];
 }
 
@@ -290,6 +295,16 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 }
 
 - (void)previewImageWithSize:(CGSize)size completionHandler:(void (^ _Nonnull)(UIImage * _Nullable))completionHandler {
+    if (![OLProductTemplate templateWithId:self.templateId]){
+        [OLProductTemplate syncTemplateId:self.templateId withCompletionHandler:^(NSArray <OLProductTemplate *>*templates, NSError *error){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completionHandler(image);
+                });
+            }];
+        }];
+        return;
+    }
     [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             completionHandler(image);

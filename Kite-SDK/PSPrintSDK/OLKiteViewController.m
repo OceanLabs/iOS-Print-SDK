@@ -60,7 +60,7 @@
 static CGFloat fadeTime = 0.3;
 
 
-@interface OLKiteViewController () <DismissDelegate>
+@interface OLKiteViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
@@ -123,37 +123,18 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets{
-    NSAssert(![OLKiteUtils assetArrayContainsPDF:assets], @"If you want to use a pre-rendered PDF, please use initWithPrintOrder");
+    NSAssert(![OLKiteUtils assetArrayContainsPDF:assets], @"If you want to use a pre-rendered PDF, please use initWithPrintJobs");
     
     return [self initWithAssets:assets info:nil];
-}
-
-- (instancetype _Nullable)initWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs {
-    return [self initWithPrintJobs:printJobs info:nil];
 }
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info{
     [OLAnalytics setExtraInfo:info];
     NSArray <OLAsset *>*assetsCopy = [assets copy]; // Prevents assets being nilled in some cases
     self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"];
-    [OLKiteABTesting sharedInstance].launchedWithPrintOrder = NO;
     [OLUserSession currentSession].appAssets = assetsCopy;
     [[OLUserSession currentSession] resetUserSelectedPhotos];
     
-    return self;
-}
-
-- (instancetype _Nullable)initWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info{
-    [OLAnalytics setExtraInfo:info];
-    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
-        [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printJobs != nil;
-        [OLUserSession currentSession].appAssets = [[printJobs firstObject] assetsForUploading];
-        [[OLUserSession currentSession] resetUserSelectedPhotos];
-        [[Checkout shared] clearBasketOrder];
-        for (id<OLPrintJob> printJob in printJobs) {
-            [[Checkout shared] addProductToBasket:(id<Product>)printJob];
-        }
-    }
     return self;
 }
 
@@ -258,7 +239,7 @@ static CGFloat fadeTime = 0.3;
     [OLUserSession currentSession].kiteVc = self;
     
     if ([[PhotobookSDK shared] isProcessingOrder]) {
-        UIViewController *receiptViewController = [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES delegate:self];
+        UIViewController *receiptViewController = [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES delegate:nil];
         if (receiptViewController) {
             [self presentViewController:receiptViewController animated:YES completion:nil];
         }
@@ -317,12 +298,7 @@ static CGFloat fadeTime = 0.3;
 - (void)transitionToNextScreen{
     __weak OLKiteViewController *welf = self;
     [self.transitionOperation addExecutionBlock:^{
-        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
-        }
-        else{
-            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
-        }
+        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
         
         // The screen we transition to will depend on what products are available based on the developers filter preferences.
         NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];
@@ -330,7 +306,7 @@ static CGFloat fadeTime = 0.3;
         UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]];
         UIViewController *vc;
         OLProduct *product;
-        if (groups.count == 0 && ![OLProductTemplate isSyncInProgress] && !([OLProductTemplate templates].count != 0 && [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
+        if (groups.count == 0 && ![OLProductTemplate isSyncInProgress]) {
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Store Maintenance", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                     [welf dismiss];
@@ -343,74 +319,6 @@ static CGFloat fadeTime = 0.3;
             [welf fadeToViewController:[[OLNavigationController alloc] initWithRootViewController:vc]];
             return;
         }
-//        else if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-//            BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[[OLUserSession currentSession].printOrder.jobs firstObject] assetsForUploading]];
-//            OLProduct *product = [OLProduct productWithTemplateId:[[[OLUserSession currentSession].printOrder.jobs firstObject] templateId]];
-//            product.uuid = [[OLUserSession currentSession].printOrder.jobs firstObject].uuid;
-//            UIViewController *vc;
-//            if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"] && [product isValidProductForUI]){
-//                vc = [welf.storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-//            }
-//            else if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] && [product isValidProductForUI]){
-//                vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
-//            }
-//            else{
-//                [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
-//                    [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
-//                    [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
-//                    if (welf.navigationController.viewControllers.count <= 1){
-//                        UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-//                        
-//                        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
-//                        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
-//                            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
-//                                if (error) return;
-//                                dispatch_async(dispatch_get_main_queue(), ^{
-//                                   ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
-//                                });
-//                            }];
-//                        }
-//                        else{
-//                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
-//                        }
-//                        [welf fadeToViewController:nvc];
-//                    }
-//                    else{
-//                        [welf fadeToViewController:vc];
-//                    }
-//                    
-//                }];
-//                
-//                return;
-//            }
-//            [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
-//            [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
-//            [vc safePerformSelector:@selector(setProduct:) withObject:product];
-//            if ([vc isKindOfClass:[OLImagePickerViewController class]]){
-//                [(OLImagePickerViewController *)vc setOverrideImagePickerMode:YES];
-//            }
-//            
-//            if (welf.navigationController.viewControllers.count <= 1){
-//                UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-//                NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
-//                if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
-//                    [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
-//                        if (error) return;
-//                        dispatch_async(dispatch_get_main_queue(), ^{
-//                            vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
-//                        });
-//                    }];
-//                }
-//                else{
-//                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
-//                }
-//                [welf fadeToViewController:nvc];
-//            }
-//            else{
-//                [welf fadeToViewController:vc];
-//            }
-//            return;
-//        }
         else if (groups.count == 1) {
             OLProductGroup *group = groups[0];
             product = [group.products firstObject];
@@ -453,33 +361,34 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)fadeToViewController:(UIViewController *)vc{
-    [self addChildViewController:vc];
-    vc.view.alpha = 0;
-    [vc beginAppearanceTransition: YES animated: YES];
-    [self.view addSubview:vc.view];
-    
-    UIView *view = vc.view;
-    
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(view);
-    NSMutableArray *con = [[NSMutableArray alloc] init];
-    
-    NSArray *visuals = @[@"H:|-0-[view]-0-|",
-                         @"V:|-0-[view]-0-|"];
-    
-    
-    for (NSString *visual in visuals) {
-        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
-    }
-    
-    [view.superview addConstraints:con];
-    
-    [UIView animateWithDuration:fadeTime animations:^(void){
-        vc.view.alpha = 1;
-    } completion:^(BOOL b){
-        [vc endAppearanceTransition];
-        self.loadingImageView.image = nil;
-    }];
+    [self presentViewController:vc animated:YES completion:NULL];
+//    [self addChildViewController:vc];
+//    vc.view.alpha = 0;
+//    [vc beginAppearanceTransition: YES animated: YES];
+//    [self.view addSubview:vc.view];
+//
+//    UIView *view = vc.view;
+//
+//    view.translatesAutoresizingMaskIntoConstraints = NO;
+//    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+//    NSMutableArray *con = [[NSMutableArray alloc] init];
+//
+//    NSArray *visuals = @[@"H:|-0-[view]-0-|",
+//                         @"V:|-0-[view]-0-|"];
+//
+//
+//    for (NSString *visual in visuals) {
+//        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+//    }
+//
+//    [view.superview addConstraints:con];
+//
+//    [UIView animateWithDuration:fadeTime animations:^(void){
+//        vc.view.alpha = 1;
+//    } completion:^(BOOL b){
+//        [vc endAppearanceTransition];
+//        self.loadingImageView.image = nil;
+//    }];
     
 }
 

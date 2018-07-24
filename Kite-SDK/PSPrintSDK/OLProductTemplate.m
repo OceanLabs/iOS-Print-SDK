@@ -162,9 +162,16 @@ static BOOL partial = NO;
     [OLProductTemplate syncWithCompletionHandler:NULL];
 }
 
-+ (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler{
++ (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler {
+    [OLProductTemplate syncTemplateId:nil withCompletionHandler:handler];
+}
+
++ (void)syncTemplateId:(NSString *)templateId withCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler {
     if (inProgressSyncRequest == nil) {
         inProgressSyncRequest = [[OLProductTemplateSyncRequest alloc] init];
+        if (templateId) {
+            inProgressSyncRequest.templateId = templateId;
+        }
         [inProgressSyncRequest sync:^(NSArray *templates_, NSError *error) {
             partial = [inProgressSyncRequest isInProgress];
             if (!partial){

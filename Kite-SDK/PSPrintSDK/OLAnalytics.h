@@ -29,7 +29,6 @@
 
 #import <Foundation/Foundation.h>
 
-@class OLPrintOrder;
 @class OLProductTemplate;
 @protocol OLPrintJob;
 

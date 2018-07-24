@@ -30,8 +30,8 @@
 #import <UIKit/UIKit.h>
 #import "OLViewController.h"
 #import "OLImagePickerProviderCollection.h"
+#import "OLPrintJob.h"
 
-@class OLPrintOrder;
 @class OLKiteViewController;
 @class OLAsset;
 @protocol OLCustomPickerController;
@@ -181,15 +181,6 @@
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets;
 
 /**
- *  Initializer that accepts a ready to checkout OLPrintOrder
- *
- *  @param printOrder The printOrder to checkout
- *
- *  @return An instance of OLKiteViewController to present
- */
-//- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder;
-
-/**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with. Provides an extra argument for extra info.
  *
  *  @param assets The array of OLAssets for the user to personalize their products with
@@ -198,16 +189,6 @@
  *  @return An instance of OLKiteViewController to present
  */
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info;
-
-/**
- *  Initializer that accepts a ready to checkout OLPrintOrder. Provides an extra argument for extra info.
- *
- *  @param printOrder The printOrder to checkout
- *  @param info       Extra information that could be useful for analytics
- *
- *  @return An instance of OLKiteViewController to present
- */
-//- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info;
 
 /**
  Start loading the products in the background

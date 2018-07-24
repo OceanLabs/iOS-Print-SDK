@@ -54,10 +54,6 @@
 @implementation UIViewController (OLMethods)
 
 - (void)addBasketIconToTopRight{
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        return;
-    }
-    
     UIColor *color;
     if ([OLKiteABTesting sharedInstance].lightThemeColor1){
         color = [OLKiteABTesting sharedInstance].lightThemeColor1;

@@ -61,12 +61,6 @@
 -(NSMutableArray *) userSelectedAssets{
     if (!_userSelectedAssets){
         _userSelectedAssets = [[NSMutableArray alloc] init];
-        
-        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-            for (OLAsset *asset in self.appAssets){
-                [_userSelectedAssets addObject:asset];
-            }
-        }
     }
     return _userSelectedAssets;
 }
@@ -141,7 +135,7 @@
         }
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionBasket) == OLUserSessionCleanupOptionBasket){
-        
+        [[Checkout shared] clearBasketOrder];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionPayment) == OLUserSessionCleanupOptionPayment){
         
@@ -183,9 +177,6 @@
 }
 
 - (BOOL)shouldLoadTemplatesProgressively{
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        return NO;
-    }
     if (self.kiteVc.filterProducts.count > 0){
         return NO;
     }
@@ -213,7 +204,10 @@
 }
 
 - (void)wantsToDismiss:(UIViewController *)viewController {
-    if ([viewController isKindOfClass:[NSClassFromString(@"Photobook.PhotobookViewController") class]]){
+    if (!self.kiteVc){
+        [viewController dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else if ([viewController isKindOfClass:[NSClassFromString(@"Photobook.PhotobookViewController") class]]){
         [viewController.navigationController popViewControllerAnimated:YES];
     } else {
         [viewController.navigationController popToRootViewControllerAnimated:YES];

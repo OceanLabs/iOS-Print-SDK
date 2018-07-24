@@ -242,7 +242,7 @@
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
         }
     }
-    else if ([OLKiteABTesting sharedInstance].skipProductOverview && ![OLKiteABTesting sharedInstance].launchedWithPrintOrder && product.productTemplate.templateUI != OLTemplateUINonCustomizable){
+    else if ([OLKiteABTesting sharedInstance].skipProductOverview && product.productTemplate.templateUI != OLTemplateUINonCustomizable){
         vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
     }
     

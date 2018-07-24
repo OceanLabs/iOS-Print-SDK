@@ -133,6 +133,20 @@ static NSString *instagramRedirectURI = nil;
     return isKiosk;
 }
 
++ (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs {
+    return [self checkoutViewControllerWithPrintJobs:printJobs info:nil];
+}
+
++ (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info{
+    [OLAnalytics setExtraInfo:info];
+    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Checkout"];
+    [[Checkout shared] clearBasketOrder];
+    for (id<OLPrintJob> printJob in printJobs) {
+        [[Checkout shared] addProductToBasket:(id<Product>)printJob];
+    }
+    return [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES delegate:[OLUserSession currentSession]];
+}
+
 + (void)setQRCodeUploadEnabled:(BOOL)enabled{
 }
 

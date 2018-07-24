@@ -33,6 +33,8 @@ typedef void (^OLTemplateSyncRequestCompletionHandler)(NSArray *templates, NSErr
 
 @interface OLProductTemplateSyncRequest : NSObject
 
+@property (nonatomic, strong) NSString *templateId;
+
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler;
 - (void)cancel;
 - (BOOL)isInProgress;

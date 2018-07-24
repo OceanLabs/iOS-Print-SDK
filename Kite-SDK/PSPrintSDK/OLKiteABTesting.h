@@ -47,8 +47,6 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 
 @interface OLKiteABTesting : NSObject
 
-@property (assign, nonatomic) BOOL launchedWithPrintOrder;
-
 @property (assign, nonatomic, readonly) BOOL hidePrice;
 @property (assign, nonatomic, readonly) BOOL offerPayPal;
 @property (assign, nonatomic, readonly) BOOL skipProductOverview;
@@ -58,7 +56,6 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @property (strong, nonatomic, readonly) NSString *checkoutScreenType;
 @property (strong, nonatomic, readonly) NSString *productTileStyle;
 @property (strong, nonatomic, readonly) NSString *promoBannerText;
-@property (strong, nonatomic, readonly) NSString *launchWithPrintOrderVariant;
 @property (strong, nonatomic, readonly) NSString *paymentScreen;
 @property (strong, nonatomic, readonly) NSString *coverPhotoId;
 @property (strong, nonatomic, readonly) NSString *packReviewStyle;

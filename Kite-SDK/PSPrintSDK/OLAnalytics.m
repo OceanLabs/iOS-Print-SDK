@@ -434,20 +434,20 @@ static BOOL optInToRemoteAnalytics = NO;
 //    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameOrderHistoryDismissed job:nil printOrder:nil extraInfo:@{kOLAnalyticsEventLevel : @2}];
 }
 
-+ (void)trackBasketItemQtyDownForItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = kOLAnalyticsEventNameBasketItemQuantityDown;
-//    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
-}
+//+ (void)trackBasketItemQtyDownForItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
+//    NSString *eventName = kOLAnalyticsEventNameBasketItemQuantityDown;
+////    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
+//}
 
 + (void)trackReviewScreenHitBack:(NSString *)productName numberOfPhotos:(NSInteger)numberOfPhotos{
     NSString *eventName = kOLAnalyticsEventNameReviewScreenHitBack;
 //    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsNumberOfPhotos : [NSNumber numberWithInteger:numberOfPhotos], kOLAnalyticsEventLevel : @2}];
 }
 
-+ (void)trackBasketItemQtyUpForItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = kOLAnalyticsEventNameBasketItemQuantityUp;
-//    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
-}
+//+ (void)trackBasketItemQtyUpForItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
+//    NSString *eventName = kOLAnalyticsEventNameBasketItemQuantityUp;
+////    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
+//}
 
 + (void)trackEditScreenFinishedEditingPhotoForProductName:(NSString *)productName{
     NSString *eventName = kOLAnalyticsEventNameEditScreenFinishedEditingPhoto;
@@ -464,15 +464,15 @@ static BOOL optInToRemoteAnalytics = NO;
 //    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @2}];
 }
 
-+ (void)trackBasketScreenDidDeleteItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = kOLAnalyticsEventNameBasketScreenDeleteItem;
-//    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
-}
+//+ (void)trackBasketScreenDidDeleteItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
+//    NSString *eventName = kOLAnalyticsEventNameBasketScreenDeleteItem;
+////    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
+//}
 
-+ (void)trackBasketScreenHitEditItemDone:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = kOLAnalyticsEventNameBasketScreenDidEditItem;
-//    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
-}
+//+ (void)trackBasketScreenHitEditItemDone:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
+//    NSString *eventName = kOLAnalyticsEventNameBasketScreenDidEditItem;
+////    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
+//}
 
 + (void)trackProductDetailsViewOpened:(NSString *)productName hidePrice:(BOOL)hidePrice{
     NSString *eventName = kOLAnalyticsEventNameProductDetailsOpened;
@@ -484,40 +484,40 @@ static BOOL optInToRemoteAnalytics = NO;
 //    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @2}];
 }
 
-+ (void)trackBasketScreenHitBackForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = kOLAnalyticsEventNameBasketScreenHitBack;
-//    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
-}
-
-+ (void)trackBasketScreenSuccessfullyAppliedPromoCode:(NSString *)code forOrder:(OLPrintOrder *)order{
-//    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenSuccessfullyAppliedPromoCode job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code), kOLAnalyticsEventLevel : @2}];
-}
-
-+ (void)trackBasketScreenUnsuccessfullyAppliedPromoCode:(NSString *)code withError:(NSError *)error forOrder:(OLPrintOrder *)order{
-//    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenPromoCodeFailed job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code), kOLAnalyticsError : error ? error : @"", kOLAnalyticsEventLevel : @2}];
-}
-
-+ (void)trackBasketScreenDidTapOnPromoCodeBoxforOrder:(OLPrintOrder *)order{
-//    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenDidTaponPromoCodeBox job:nil printOrder:order extraInfo:@{kOLAnalyticsEventLevel : @2}];
-}
-
-+ (void)trackBasketScreenPaymentMethodDidCancel:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable{
-//    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenPaymentMethodHitBack job:nil printOrder:order extraInfo:@{kOLAnalyticsPaymentMethod : method, kOLAnalyticsEventLevel : @2}];
-}
+//+ (void)trackBasketScreenHitBackForOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
+//    NSString *eventName = kOLAnalyticsEventNameBasketScreenHitBack;
+////    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
+//}
+//
+//+ (void)trackBasketScreenSuccessfullyAppliedPromoCode:(NSString *)code forOrder:(OLPrintOrder *)order{
+////    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenSuccessfullyAppliedPromoCode job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code), kOLAnalyticsEventLevel : @2}];
+//}
+//
+//+ (void)trackBasketScreenUnsuccessfullyAppliedPromoCode:(NSString *)code withError:(NSError *)error forOrder:(OLPrintOrder *)order{
+////    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenPromoCodeFailed job:nil printOrder:order extraInfo:@{kOLAnalyticsPromoCode : nonNilStr(code), kOLAnalyticsError : error ? error : @"", kOLAnalyticsEventLevel : @2}];
+//}
+//
+//+ (void)trackBasketScreenDidTapOnPromoCodeBoxforOrder:(OLPrintOrder *)order{
+////    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenDidTaponPromoCodeBox job:nil printOrder:order extraInfo:@{kOLAnalyticsEventLevel : @2}];
+//}
+//
+//+ (void)trackBasketScreenPaymentMethodDidCancel:(NSString *)method forOrder:(OLPrintOrder *)order applePayIsAvailable:(NSString *)applePayIsAvailable{
+////    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameBasketScreenPaymentMethodHitBack job:nil printOrder:order extraInfo:@{kOLAnalyticsPaymentMethod : method, kOLAnalyticsEventLevel : @2}];
+//}
 
 + (void)trackReviewScreenIncrementedPhotoQtyForProductName:(NSString *)productName{
     NSString *eventName = kOLAnalyticsEventNameReviewScreenIncrementedPhotoQuantity;
 //    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:nil printOrder:nil extraInfo:@{kOLAnalyticsProductName : productName, kOLAnalyticsEventLevel : @2}];
 }
 
-+ (void)trackBasketScreenHitEditItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
-    NSString *eventName = kOLAnalyticsEventNameBasketScreenHitEditItem;
-//    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
-}
+//+ (void)trackBasketScreenHitEditItem:(id<OLPrintJob>)item inOrder:(OLPrintOrder *)printOrder applePayIsAvailable:(NSString *)applePayIsAvailable{
+//    NSString *eventName = kOLAnalyticsEventNameBasketScreenHitEditItem;
+////    [OLAnalytics reportAnalyticsEventToDelegate:eventName job:item printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
+//}
 
-+ (void)trackShippingScreenHitBackForOrder:(OLPrintOrder *)printOrder{
-//    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameShippingScreenHitBack job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
-}
+//+ (void)trackShippingScreenHitBackForOrder:(OLPrintOrder *)printOrder{
+////    [OLAnalytics reportAnalyticsEventToDelegate:kOLAnalyticsEventNameShippingScreenHitBack job:nil printOrder:printOrder extraInfo:@{kOLAnalyticsEventLevel : @2}];
+//}
 
 + (void)trackReviewScreenDeletedPhotoForProductName:(NSString *)productName{
     NSString *eventName = kOLAnalyticsEventNameReviewScreenDeletedPhoto;

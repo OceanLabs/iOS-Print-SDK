@@ -32,7 +32,6 @@
 @protocol OLKiteDelegate;
 @class OLProductHomeViewController;
 @class OLKiteViewController;
-@class OLPrintOrder;
 @class OLProduct;
 
 @interface OLKiteUtils : NSObject

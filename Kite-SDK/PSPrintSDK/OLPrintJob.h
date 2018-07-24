@@ -34,7 +34,7 @@
 
 /**
  *  Protocol to be implemented by print job classes. A print job is defined by a single template ID, which means can only refer to a single product.
- *  Print jobs are part of the OLPrintOrder object which get submitted for printing.
+ *  Print jobs are part of the order object which get submitted for printing.
  */
 @protocol OLPrintJob <NSObject, NSCoding, NSCopying>
 

@@ -60,7 +60,13 @@
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
     NSAssert(self.req == nil, @"Oops only one template sync request should be in progress at any given time");
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/?limit=20", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
+    NSString *urlString;
+    if (self.templateId){
+        urlString = [NSString stringWithFormat:@"%@/%@/template/?template_id__in=%@&limit=1", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion], self.templateId];
+    } else {
+        urlString = [NSString stringWithFormat:@"%@/%@/template/?limit=20", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]];
+    }
+    NSURL *url = [NSURL URLWithString:urlString];
     [self fetchTemplatesWithURL:url templateAccumulator:[[NSMutableArray alloc] init] handler:handler];
 }
 

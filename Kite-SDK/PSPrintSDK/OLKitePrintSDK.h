@@ -67,6 +67,26 @@
  */
 + (void)addPushDeviceToken:(NSData *_Nonnull)deviceToken;
 
+/**
+ *  Initializer that accepts a ready to checkout array of OLPrintJobs.
+ *  This will clear any existing basket items.
+ *
+ *  @param printJobs The printJobs to checkout
+ *
+ *  @return A checkout ViewController to present
+ */
++ (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs;
+
+/**
+ *  Initializer that accepts ready to checkout array of OLPrintJobs. Provides an extra argument for extra info.
+ *  This will clear any existing basket items.
+ *
+ *  @param printJobs  The printJobs to checkout
+ *  @param info       Extra information that could be useful for analytics
+ *
+ *  @return A checkout ViewController to present
+ */
++ (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info;
 
 /**
  Allow the SDK to track events in the SDK for analytics purposes. Default value is false

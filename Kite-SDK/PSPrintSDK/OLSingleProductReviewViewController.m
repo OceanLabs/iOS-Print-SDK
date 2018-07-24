@@ -98,12 +98,6 @@
     
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
     
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        }
-    }
-    
     [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     
     self.ctaButton.enabled = YES;
@@ -283,22 +277,10 @@
     }
     self.ctaButton.enabled = NO;
     [self saveJobWithCompletionHandler:^{
-        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            // The `self.storybard` may be nil if it was not initialized from storyboard.
-            // eg. Review page for phonecase (OLCaseViewController). see. OLKiteViewController.m L264
-            UIStoryboard *storyboard = self.storyboard ?: [OLUserSession currentSession].kiteVc.storyboard;
-            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-            [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
-            [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
-            [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-            [self.navigationController pushViewController:vc animated:YES];
-        }
-        else{
-            UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:[OLUserSession currentSession]];
-            UIViewController *firstController = self.navigationController.viewControllers.firstObject;
-            [self.navigationController setViewControllers:@[firstController, checkoutVc] animated:YES];
-            [[OLUserSession currentSession] resetUserSelectedPhotos];
-        }
+        UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:[OLUserSession currentSession]];
+        UIViewController *firstController = self.navigationController.viewControllers.firstObject;
+        [self.navigationController setViewControllers:@[firstController, checkoutVc] animated:YES];
+        [[OLUserSession currentSession] resetUserSelectedPhotos];
     }];
 }
 

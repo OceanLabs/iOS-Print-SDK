@@ -66,7 +66,7 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 @class OLCountry;
 
 @interface OLProductTemplate : NSObject <NSCoding, Template>
-@property (nonatomic, copy, readonly) NSString *_Nonnull identifier;
+@property (nonatomic, copy) NSString *_Nonnull identifier;
 @property (nonatomic, copy, readonly) NSString *_Nonnull name;
 @property (nonatomic, assign, readonly) NSUInteger quantityPerSheet;
 @property (nonatomic, assign, readonly) BOOL enabled;
@@ -114,6 +114,7 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 
 + (void)sync;
 + (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;
++ (void)syncTemplateId:(NSString *)templateId withCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;
 + (BOOL)isSyncInProgress;
 + (void)cancelSyncInProgress;
 + (OLProductTemplate *_Nullable)templateWithId:(NSString *_Nonnull)identifier;

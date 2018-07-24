@@ -53,7 +53,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 @interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate, KITAssetsPickerControllerDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
-@property (nonatomic, strong) OLPrintOrder* printOrder;
 @property (strong, nonatomic) OLKiteViewController *kiteViewController;
 @property (strong, nonatomic) NSArray *customDataSources;
 @end

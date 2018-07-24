@@ -757,7 +757,6 @@
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
     }
     
-    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];

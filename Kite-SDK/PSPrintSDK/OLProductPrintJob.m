@@ -47,7 +47,7 @@ static id stringOrEmptyString(NSString *str) {
 
 @interface OLProductPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
-@property (nonatomic, strong) NSArray *assets;
+@property (nonatomic, strong) NSArray *assetsForUploading;
 @property (nonatomic, strong) NSArray<PhotobookAsset *> *assetsToUpload;
 @property (strong, nonatomic) NSMutableDictionary *options;
 @end
@@ -77,7 +77,7 @@ static id stringOrEmptyString(NSString *str) {
             [assets addObject:[OLAsset assetWithFilePath:imagePath]];
         }
         self.uuid = [[NSUUID UUID] UUIDString];
-        self.assets = assets;
+        self.assetsForUploading = assets;
         self.assetsToUpload = [OLAsset photobookAssetsFromAssets:assets];
         self.templateId = templateId;
         self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
@@ -94,7 +94,7 @@ static id stringOrEmptyString(NSString *str) {
             [assets addObject:[OLAsset assetWithImageAsJPEG:image]];
         }
         self.uuid = [[NSUUID UUID] UUIDString];
-        self.assets = assets;
+        self.assetsForUploading = assets;
         self.assetsToUpload = [OLAsset photobookAssetsFromAssets:assets];
         self.templateId = templateId;
         self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
@@ -111,7 +111,7 @@ static id stringOrEmptyString(NSString *str) {
         }
 #endif
         self.uuid = [[NSUUID UUID] UUIDString];
-        self.assets = assets;
+        self.assetsForUploading = assets;
         self.assetsToUpload = [OLAsset photobookAssetsFromAssets:assets];
         self.templateId = templateId;
         self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
@@ -138,7 +138,7 @@ static id stringOrEmptyString(NSString *str) {
         return 1;
     }
     NSInteger count = 0;
-    for (OLAsset *asset in self.assets) {
+    for (OLAsset *asset in self.assetsForUploading) {
         count += asset.extraCopies + 1;
     }
     return count;
@@ -157,8 +157,8 @@ static id stringOrEmptyString(NSString *str) {
     NSMutableArray *pdfs = [[NSMutableArray alloc] init];
     NSMutableArray *borderTextArray = [[NSMutableArray alloc] init];
     
-    for (NSUInteger i = 0; i < self.assets.count; i++) {
-        OLAsset *asset = self.assets[i];
+    for (NSUInteger i = 0; i < self.assetsForUploading.count; i++) {
+        OLAsset *asset = self.assetsForUploading[i];
         if (asset.mimeType == kOLMimeTypePDF){
             [pdfs addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
         }
@@ -198,7 +198,7 @@ static id stringOrEmptyString(NSString *str) {
     OLProductPrintJob *objectCopy = [[OLProductPrintJob allocWithZone:zone] init];
     // Copy over all instance variables from self to objectCopy.
     // Use deep copies for all strong pointers, shallow copies for weak.
-    objectCopy.assets = self.assets;
+    objectCopy.assetsForUploading = self.assetsForUploading;
     objectCopy.templateId = self.templateId;
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
@@ -209,7 +209,7 @@ static id stringOrEmptyString(NSString *str) {
 
 - (NSUInteger) hash {
     NSUInteger val = [self.templateId hash];
-    for (id asset in self.assets) {
+    for (id asset in self.assetsForUploading) {
         val = 37 * val + [asset hash];
     }
     
@@ -236,7 +236,7 @@ static id stringOrEmptyString(NSString *str) {
     
     
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToArray:printJob.assets] && [self.options isEqualToDictionary:printJob.options] && (!self.selectedShippingMethod || [self.selectedShippingMethod isEqual:printJob.selectedShippingMethod]);
+    return [self.templateId isEqual:printJob.templateId] && [self.assetsForUploading isEqualToArray:printJob.assetsForUploading] && [self.options isEqualToDictionary:printJob.options] && (!self.selectedShippingMethod || [self.selectedShippingMethod isEqual:printJob.selectedShippingMethod]);
 }
 
 
@@ -244,7 +244,7 @@ static id stringOrEmptyString(NSString *str) {
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
-    [aCoder encodeObject:self.assets forKey:kKeyImages];
+    [aCoder encodeObject:self.assetsForUploading forKey:kKeyImages];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.options forKey:kKeyProductPrintJobOptions];
@@ -258,8 +258,8 @@ static id stringOrEmptyString(NSString *str) {
         if (!self.template) {
             return nil;
         }
-        self.assets = [aDecoder decodeObjectForKey:kKeyImages];
-        self.assetsToUpload = [OLAsset photobookAssetsFromAssets:self.assets];
+        self.assetsForUploading = [aDecoder decodeObjectForKey:kKeyImages];
+        self.assetsToUpload = [OLAsset photobookAssetsFromAssets:self.assetsForUploading];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.options = [aDecoder decodeObjectForKey:kKeyProductPrintJobOptions];
@@ -295,6 +295,11 @@ static id stringOrEmptyString(NSString *str) {
 @synthesize selectedShippingMethod;
 
 - (OLProductTemplate *)template {
+    if (![OLProductTemplate templateWithId:self.templateId]){
+        OLProductTemplate *template = [[OLProductTemplate alloc] init];
+        template.identifier = self.templateId;
+        return template;
+    }
     return [OLProductTemplate templateWithId:self.templateId];
 }
 
@@ -307,6 +312,16 @@ static id stringOrEmptyString(NSString *str) {
 }
 
 - (void)previewImageWithSize:(CGSize)size completionHandler:(void (^ _Nonnull)(UIImage * _Nullable))completionHandler {
+    if (![OLProductTemplate templateWithId:self.templateId]){
+        [OLProductTemplate syncTemplateId:self.templateId withCompletionHandler:^(NSArray <OLProductTemplate *>*templates, NSError *error){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completionHandler(image);
+                });
+            }];
+        }];
+        return;
+    }
     [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             completionHandler(image);
