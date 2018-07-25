@@ -133,6 +133,10 @@ static NSString *instagramRedirectURI = nil;
     return isKiosk;
 }
 
++ (void)setPromoCode:(NSString *)promoCode {
+    [[Checkout shared] setPromoCode:promoCode];
+}
+
 + (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs {
     return [self checkoutViewControllerWithPrintJobs:printJobs info:nil];
 }

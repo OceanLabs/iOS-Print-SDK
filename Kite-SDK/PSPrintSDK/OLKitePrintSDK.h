@@ -88,6 +88,8 @@
  */
 + (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info;
 
++ (void)setPromoCode:(NSString *)promoCode;
+
 /**
  Allow the SDK to track events in the SDK for analytics purposes. Default value is false
 
