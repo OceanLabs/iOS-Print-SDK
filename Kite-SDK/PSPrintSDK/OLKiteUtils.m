@@ -62,16 +62,6 @@
     return bundle;
 }
 
-+ (NSString *)userEmail:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [OLUserSession currentSession].kiteVc;
-    return kiteVC.userEmail;
-}
-
-+ (NSString *)userPhone:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [OLUserSession currentSession].kiteVc;
-    return kiteVC.userPhone;
-}
-
 + (BOOL)instagramEnabled{
     if (YES){ //Check what needs to be checked in terms of installation
         return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];

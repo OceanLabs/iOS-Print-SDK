@@ -127,8 +127,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     }
     
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-    vc.userEmail = @"";
-    vc.userPhone = @"";
     vc.delegate = self;
     
     [self addCatsAndDogsImagePickersToKite:vc];

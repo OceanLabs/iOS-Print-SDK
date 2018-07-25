@@ -330,8 +330,6 @@ static CGFloat fadeTime = 0.3;
         }
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
         [vc safePerformSelector:@selector(setDelegate:) withObject:welf.delegate];
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
         [vc safePerformSelector:@selector(setFilterProducts:) withObject:welf.filterProducts];
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
         if (welf.navigationController.viewControllers.count <= 1){

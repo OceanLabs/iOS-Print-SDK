@@ -88,7 +88,20 @@
  */
 + (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info;
 
+/**
+ *  Speed up checkout by prepopulating a promo code
+ */
 + (void)setPromoCode:(NSString *)promoCode;
+
+/**
+ *  Speed up checkout by prepopulating the users email in the Shipping details if you know it
+ */
++ (void)setUserEmail:(NSString *)userEmail;
+
+/**
+ *  Speed up checkout by prepopulating the users phone number in the Shipping details if you know it
+ */
++ (void)setUserPhone:(NSString *)userPhone;
 
 /**
  Allow the SDK to track events in the SDK for analytics purposes. Default value is false

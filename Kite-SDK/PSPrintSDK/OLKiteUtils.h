@@ -39,10 +39,6 @@
 + (NSBundle *)kiteLocalizationBundle;
 + (NSBundle *)kiteResourcesBundle;
 
-+ (NSString *)userEmail:(UIViewController *)topVC;
-
-+ (NSString *)userPhone:(UIViewController *)topVC;
-
 + (BOOL)assetArrayContainsPDF:(NSArray *)array;
 
 + (BOOL)imageProvidersAvailable;

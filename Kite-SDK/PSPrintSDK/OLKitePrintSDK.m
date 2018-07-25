@@ -137,6 +137,14 @@ static NSString *instagramRedirectURI = nil;
     [[Checkout shared] setPromoCode:promoCode];
 }
 
++ (void)setUserEmail:(NSString *)userEmail {
+    [[Checkout shared] setUserEmail:userEmail];
+}
+
++ (void)setUserPhone:(NSString *)userPhone {
+    [[Checkout shared] setUserPhone:userPhone];
+}
+
 + (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs {
     return [self checkoutViewControllerWithPrintJobs:printJobs info:nil];
 }

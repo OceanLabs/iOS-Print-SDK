@@ -134,16 +134,6 @@
 @property (weak, nonatomic) id<OLKiteDelegate> _Nullable delegate;
 
 /**
- *  Speed up checkout by prepopulating the users email in the Shipping details if you know it
- */
-@property (copy, nonatomic, nullable) NSString *userEmail;
-
-/**
- *  Speed up checkout by prepopulating the users phone number in the Shipping details if you know it
- */
-@property (copy, nonatomic, nullable) NSString *userPhone;
-
-/**
  *  A set of product template_id strings which if present will restrict which products ultimate show up in the product selection journey
  */
 @property (copy, nonatomic, nullable) NSArray<NSString *> *filterProducts;
