@@ -45,7 +45,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "KITAssetsPickerController.h"
 #import "CustomAssetCollectionDataSource.h"
 #import "AssetDataSource.h"
-#import "OLKiteTestHelper.h"
 #import "OLKiteUtils.h"
 #import "AppDelegate.h"
 
@@ -53,7 +52,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 @interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate, KITAssetsPickerControllerDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
-@property (strong, nonatomic) OLKiteViewController *kiteViewController;
 @property (strong, nonatomic) NSArray *customDataSources;
 @end
 
@@ -195,7 +193,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             [OLKitePrintSDK setUseStaging:YES];
             [self showKiteVcForAPIKey:pasteboard.string assets:assets];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and LC mode", @"") style:UIAlertActionStyleDefault handler:^(id action){
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, with single external picker", @"") style:UIAlertActionStyleDefault handler:^(id action){
             [OLKitePrintSDK setAPIKey:pasteboard.string withEnvironment:[self environment]];
             
             [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
@@ -208,11 +206,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
             
             [self presentViewController:customVc animated:YES completion:NULL];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes but mock templates", @"") style:UIAlertActionStyleDefault handler:^(id action){
-            [OLKiteTestHelper mockTemplateRequest];
-            
-            [self showKiteVcForAPIKey:pasteboard.string assets:assets];
-        }]];
         [self presentViewController:ac animated:YES completion:NULL];
     }
     else{
@@ -224,11 +217,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)kiteControllerDidFinish:(OLKiteViewController *)controller{
-    if (self.kiteViewController){
-        self.kiteViewController = [[OLKiteViewController alloc] initWithAssets:@[] info:@{@"Entry Point" : @"OLPromoView"}];
-        [self.kiteViewController startLoadingWithCompletionHandler:^{}];
-    }
-    
     [controller dismissViewControllerAnimated:YES completion:NULL];
 }
 
