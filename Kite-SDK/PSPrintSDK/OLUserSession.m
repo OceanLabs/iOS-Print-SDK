@@ -39,6 +39,10 @@
 #import "OLKiteViewController+Private.h"
 #include <sys/sysctl.h>
 #import "OLKitePrintSDK.h"
+#import "OLImagePickerViewController.h"
+#import "OLNavigationController.h"
+#import "OLImagePickerNavigationControllerViewController.h"
+#import "NSObject+Utils.h"
 
 @import Photobook;
 
@@ -177,14 +181,7 @@
 }
 
 - (BOOL)shouldLoadTemplatesProgressively{
-    if (self.kiteVc.filterProducts.count > 0){
-        return NO;
-    }
-    if (self.deeplink){
-        return NO;
-    }
-    
-    return YES;
+    return NO;
 }
 
 
@@ -212,6 +209,14 @@
     } else {
         [viewController.navigationController popToRootViewControllerAnimated:YES];
     }
+}
+
+- (id<PhotobookAssetPicker>) assetPickerViewController {
+    OLImagePickerViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.selectedAssets = [[NSMutableArray alloc] init];
+    vc.maximumPhotos = 1;
+    
+    return [[OLImagePickerNavigationControllerViewController alloc] initWithRootViewController:vc];
 }
 
 @end

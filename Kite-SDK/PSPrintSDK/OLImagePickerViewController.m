@@ -864,12 +864,17 @@
     
     [self updateRecentsWith:addedAssets];
     
-    if ([self.delegate respondsToSelector:@selector(imagePicker:didFinishPickingAssets:added:removed:)]){
+    if (self.addingDelegate){
+        [self.addingDelegate didFinishAdding:[OLAsset photobookAssetsFromAssets:self.selectedAssets]];
+    }
+    else if ([self.delegate respondsToSelector:@selector(imagePicker:didFinishPickingAssets:added:removed:)]){
         [self.delegate imagePicker:self didFinishPickingAssets:self.selectedAssets added:addedAssets removed:removedAssets];
     }
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
 }
+
+@synthesize addingDelegate;
 
 @end

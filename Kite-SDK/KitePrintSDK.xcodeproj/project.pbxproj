@@ -134,6 +134,8 @@
 		2E451E951D9564620080F1C1 /* OLKiteStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E6E60681C5038AD00829BB7 /* OLKiteStoryboard.storyboard */; };
 		2E451E961D9564680080F1C1 /* KitePrintSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD93BB471879EA4F00316492 /* KitePrintSDK.xcassets */; };
 		2E451E9A1D9565D40080F1C1 /* OLKitePrintSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = CD73BFB218635F170009DE03 /* OLKitePrintSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E4638D921089E7700ECC010 /* OLImagePickerNavigationControllerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E4638D721089E7700ECC010 /* OLImagePickerNavigationControllerViewController.h */; };
+		2E4638DA21089E7700ECC010 /* OLImagePickerNavigationControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4638D821089E7700ECC010 /* OLImagePickerNavigationControllerViewController.m */; };
 		2E4C312A1E1E5B3900B3F28C /* AssetDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31271E1E5B3900B3F28C /* AssetDataSource.m */; };
 		2E4C312B1E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C31291E1E5B3900B3F28C /* CustomAssetCollectionDataSource.m */; };
 		2E5B27331EC06A4700F3AED3 /* OLCollagePosterViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5B27311EC06A4700F3AED3 /* OLCollagePosterViewController.h */; };
@@ -457,6 +459,8 @@
 		2E451DCB1D9554B40080F1C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E455DFE1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDecimalNumber+CostFormatter.h"; path = "PSPrintSDK/Categories/NSDecimalNumber+CostFormatter.h"; sourceTree = "<group>"; };
 		2E455DFF1B1F1BA1001B1718 /* NSDecimalNumber+CostFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDecimalNumber+CostFormatter.m"; path = "PSPrintSDK/Categories/NSDecimalNumber+CostFormatter.m"; sourceTree = "<group>"; };
+		2E4638D721089E7700ECC010 /* OLImagePickerNavigationControllerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLImagePickerNavigationControllerViewController.h; sourceTree = "<group>"; };
+		2E4638D821089E7700ECC010 /* OLImagePickerNavigationControllerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerNavigationControllerViewController.m; sourceTree = "<group>"; };
 		2E480A8D1D92D060006C0EE6 /* OLOAuth2Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2Constants.m; sourceTree = "<group>"; };
 		2E480A8E1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLOAuth2FileStreamWrapper.h; sourceTree = "<group>"; };
 		2E480A8F1D92D060006C0EE6 /* OLOAuth2FileStreamWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLOAuth2FileStreamWrapper.m; sourceTree = "<group>"; };
@@ -960,6 +964,8 @@
 				2E14D2D01C2AE9AD00F35403 /* OLImagePreviewViewController.m */,
 				2EF53E3C1B5549B900BF936A /* OLInfoPageViewController.h */,
 				2EF53E3D1B5549B900BF936A /* OLInfoPageViewController.m */,
+				2E4638D721089E7700ECC010 /* OLImagePickerNavigationControllerViewController.h */,
+				2E4638D821089E7700ECC010 /* OLImagePickerNavigationControllerViewController.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1463,6 +1469,7 @@
 				2EB8FDFA1D95685100E26BDF /* OLProductGroup.h in Headers */,
 				2EB8FDFB1D95685100E26BDF /* OLProduct.h in Headers */,
 				2EB8FE0B1D95685100E26BDF /* OLInstagramImage.h in Headers */,
+				2E4638D921089E7700ECC010 /* OLImagePickerNavigationControllerViewController.h in Headers */,
 				2E870D3A1E49EF2100623C54 /* OLFulfilmentItem.h in Headers */,
 				2EB8FE0C1D95685100E26BDF /* OLFacebookImage.h in Headers */,
 				2EB8FE061D95685100E26BDF /* OLLuhn.h in Headers */,
@@ -1880,6 +1887,7 @@
 				2E451DDF1D9555540080F1C1 /* OLTextOnPhoto.m in Sources */,
 				2E451E391D9555870080F1C1 /* OLImagePickerPageViewController.m in Sources */,
 				2E451E0A1D9555860080F1C1 /* OLFacebookImage.m in Sources */,
+				2E4638DA21089E7700ECC010 /* OLImagePickerNavigationControllerViewController.m in Sources */,
 				2E451E291D9555870080F1C1 /* OLCircleMaskCollectionViewCell.m in Sources */,
 				2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */,
 				2E451E461D9555D30080F1C1 /* OLPackProductViewController.m in Sources */,
