@@ -42,7 +42,6 @@ static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductT
 static NSString *const kKeyPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPrintJobOptions";
 static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
-static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
 
 @interface OLGreetingCardPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
@@ -63,7 +62,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 
 @synthesize uuid;
 @synthesize extraCopies;
-@synthesize dateAddedToBasket;
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -159,10 +157,10 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     NSMutableDictionary *assets = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *pdfs = [[NSMutableDictionary alloc] init];
     
-    if (self.frontImageAsset.mimeType == kOLMimeTypePDF){
-        pdfs[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
-    }
-    else if (self.frontPhotobookAsset.uploadUrl){
+//    if (self.frontImageAsset.mimeType == kOLMimeTypePDF){
+//        pdfs[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
+//    }
+    if (self.frontPhotobookAsset.uploadUrl){
         assets[@"front_image"] = self.frontPhotobookAsset.uploadUrl;
     }
     else{
@@ -170,10 +168,10 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     }
     
     if (self.backImageAsset){
-        if (self.backImageAsset.mimeType == kOLMimeTypePDF){
-            pdfs[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
-        }
-        else if (self.backPhotobookAsset.uploadUrl){
+//        if (self.backImageAsset.mimeType == kOLMimeTypePDF){
+//            pdfs[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
+//        }
+        if (self.backPhotobookAsset.uploadUrl){
             assets[@"back_image"] = self.backPhotobookAsset.uploadUrl;
         }
         else{
@@ -181,10 +179,10 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         }
     }
     if (self.insideRightImageAsset){
-        if (self.insideRightImageAsset.mimeType == kOLMimeTypePDF){
-            pdfs[@"inside_right_image"] = [NSString stringWithFormat:@"%lld", self.insideRightImageAsset.assetId];
-        }
-        else if (self.insideRightPhotobookAsset.uploadUrl){
+//        if (self.insideRightImageAsset.mimeType == kOLMimeTypePDF){
+//            pdfs[@"inside_right_image"] = [NSString stringWithFormat:@"%lld", self.insideRightImageAsset.assetId];
+//        }
+        if (self.insideRightPhotobookAsset.uploadUrl){
             assets[@"inside_right_image"] = self.insideRightPhotobookAsset.uploadUrl;
         }
         else{
@@ -192,10 +190,10 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         }
     }
     if (self.insideLeftImageAsset){
-        if (self.insideLeftImageAsset.mimeType == kOLMimeTypePDF){
-            pdfs[@"inside_left_image"] = [NSString stringWithFormat:@"%lld", self.insideLeftImageAsset.assetId];
-        }
-        else if (self.insideLeftPhotobookAsset.uploadUrl){
+//        if (self.insideLeftImageAsset.mimeType == kOLMimeTypePDF){
+//            pdfs[@"inside_left_image"] = [NSString stringWithFormat:@"%lld", self.insideLeftImageAsset.assetId];
+//        }
+        if (self.insideLeftPhotobookAsset.uploadUrl){
             assets[@"inside_left_image"] = self.insideLeftPhotobookAsset.uploadUrl;
         }
         else{
@@ -272,7 +270,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     [aCoder encodeObject:self.options forKey:kKeyPrintJobOptions];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
-    [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
     [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
     
 }
@@ -303,7 +300,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         self.options = [aDecoder decodeObjectForKey:kKeyPrintJobOptions];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
-        self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
         self.selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
     }
     

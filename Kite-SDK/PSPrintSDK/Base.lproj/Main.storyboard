@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="yXl-Q0-oyl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="yXl-Q0-oyl">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -21,17 +21,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUR-Y7-KCs">
-                                <rect key="frame" x="0.0" y="363.5" width="375" height="44"/>
-                                <color key="backgroundColor" red="1" green="0.32941176470588235" blue="0.4392156862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Print Order History">
-                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="onButtonPrintOrderHistory:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="ZLU-Q9-niB"/>
-                                </connections>
-                            </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="yCC-yE-an1">
                                 <rect key="frame" x="120.5" y="83" width="135" height="29"/>
                                 <segments>
@@ -63,7 +52,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="https://www.kite.ly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QWq-dR-UOh">
-                                <rect key="frame" x="116" y="626" width="143" height="21"/>
+                                <rect key="frame" x="116.5" y="626" width="142" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -78,18 +67,13 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="vUR-Y7-KCs" firstAttribute="top" secondItem="kvO-to-w6m" secondAttribute="bottom" constant="8" id="7jE-59-EN1"/>
                             <constraint firstItem="kvO-to-w6m" firstAttribute="trailing" secondItem="zH5-iT-gzI" secondAttribute="trailing" id="8UM-b6-N0o"/>
-                            <constraint firstItem="kvO-to-w6m" firstAttribute="height" secondItem="vUR-Y7-KCs" secondAttribute="height" id="Lux-oR-IqI"/>
                             <constraint firstItem="kvO-to-w6m" firstAttribute="top" secondItem="zH5-iT-gzI" secondAttribute="bottom" constant="8" id="QNh-ei-swB"/>
                             <constraint firstAttribute="centerX" secondItem="yCC-yE-an1" secondAttribute="centerX" constant="-0.5" id="Sam-cA-4Np"/>
                             <constraint firstItem="kvO-to-w6m" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="V5t-o3-fMM"/>
                             <constraint firstAttribute="centerX" secondItem="QWq-dR-UOh" secondAttribute="centerX" id="adk-DX-gZ9"/>
-                            <constraint firstItem="kvO-to-w6m" firstAttribute="trailing" secondItem="vUR-Y7-KCs" secondAttribute="trailing" id="e4o-Y6-mZG"/>
                             <constraint firstItem="zH5-iT-gzI" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="lZT-wW-yWe"/>
-                            <constraint firstItem="QWq-dR-UOh" firstAttribute="top" relation="greaterThanOrEqual" secondItem="vUR-Y7-KCs" secondAttribute="bottom" id="nb6-8p-FQl"/>
                             <constraint firstItem="kvO-to-w6m" firstAttribute="height" secondItem="zH5-iT-gzI" secondAttribute="height" id="p87-GQ-3DM"/>
-                            <constraint firstItem="kvO-to-w6m" firstAttribute="leading" secondItem="vUR-Y7-KCs" secondAttribute="leading" id="pPV-OU-x9w"/>
                             <constraint firstItem="yCC-yE-an1" firstAttribute="top" secondItem="qcE-Ga-fsi" secondAttribute="bottom" constant="19" id="w4l-94-RAO"/>
                             <constraint firstAttribute="trailing" secondItem="zH5-iT-gzI" secondAttribute="trailing" id="xCf-6l-ayO"/>
                             <constraint firstItem="kvO-to-w6m" firstAttribute="leading" secondItem="zH5-iT-gzI" secondAttribute="leading" id="zBS-8c-yVa"/>
@@ -114,7 +98,7 @@
                 <navigationController definesPresentationContext="YES" id="yXl-Q0-oyl" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="eYh-pI-FLo">
-                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -126,9 +110,4 @@
             <point key="canvasLocation" x="449" y="370"/>
         </scene>
     </scenes>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
-    </simulatedMetricsContainer>
 </document>

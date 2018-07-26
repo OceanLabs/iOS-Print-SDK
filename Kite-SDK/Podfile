@@ -2,7 +2,7 @@ platform :ios, '9.0'
 use_frameworks!
 
 target 'KiteSDK' do
-	pod 'Photobook', :git => 'git@github.com:OceanLabs/Photobook-iOS.git', :branch => 'story/PHO-261'
+	pod 'Photobook', :git => 'git@github.com:OceanLabs/Photobook-iOS.git', :branch => 'develop'
 end
 
 target 'KiteSDK-Demo' do

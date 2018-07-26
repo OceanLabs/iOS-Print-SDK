@@ -84,11 +84,6 @@
 @property (assign, nonatomic) NSInteger extraCopies;
 
 /**
- *  The date the job was added to the basket.
- */
-@property (strong, nonatomic) NSDate *dateAddedToBasket;
-
-/**
  *  An array of the OLAssets that need to be uploaded
  */
 @property (nonatomic, readonly) NSArray<OLAsset *> *assetsForUploading;

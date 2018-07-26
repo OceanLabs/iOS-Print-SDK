@@ -42,7 +42,7 @@ static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
 static NSString *const kOLAPIEndpointSandbox = @"https://api.kite.ly";
 static NSString *const kOLStagingEndpointLive = @"https://staging.kite.ly";
 static NSString *const kOLStagingEndpointSandbox = @"https://staging.kite.ly";
-static NSString *const kOLAPIEndpointVersion = @"v4.0";
+static NSString *const kOLAPIEndpointVersion = @"v4.1";
 
 static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;

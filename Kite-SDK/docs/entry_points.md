@@ -14,8 +14,10 @@ This is the most common way of launching the SDK. The user is able to select a p
 
 ```obj-c
 [OLKitePrintSDK setAPIKey:@"19622ec7352a63a21700ea0323590f617bf380fe" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]]]];
-    [self presentViewController:vc animated:YES completion:NULL];
+
+OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]]]];
+
+[self presentViewController:vc animated:YES completion:NULL];
 ```
 
 Launching to specific/filtered products
@@ -40,10 +42,11 @@ If you're handling the product selection/creation journey within your own app it
 ```obj-c
 [OLKitePrintSDK setAPIKey:@"REPLACE_WITH_YOUR_API_KEY" withEnvironment:kOLKitePrintSDKEnvironmentSandbox];
     
-    OLPrintOrder *order = [[OLPrintOrder alloc] init];
-    OLAsset *frontImage = [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]];
-    [order addPrintJob:[[OLPostcardPrintJob alloc] initWithTemplateId:@"postcard" frontImageOLAsset:frontImage message:@"Hello World" address:[OLAddress kiteTeamAddress]]];
-    
-    OLKiteViewController *vc = [[OLKiteViewController alloc] initWithPrintOrder:order];
-    [self presentViewController:vc animated:YES completion:NULL];
+OLAsset *asset = [OLAsset assetWithURL:[NSURL URLWithString:@"http://psps.s3.amazonaws.com/sdk_static/4.jpg"]];
+
+id<OLPrintJob> job = [OLPrintJob printJobWithTemplateId:@"squares" OLAssets:@[asset]];
+
+UIViewController *vc = [OLKitePrintSDK checkoutViewControllerWithPrintJobs:@[job]];
+
+[self presentViewController:vc animated:YES completion:NULL];
 ```

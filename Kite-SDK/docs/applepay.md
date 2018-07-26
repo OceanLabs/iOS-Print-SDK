@@ -8,7 +8,7 @@ To submit an app with Apple Pay to the App Store, you need to register a merchan
 Prerequisites
 --------
 
-To begin, you'll need a newer iOS device (iPhone 6 or 6+, iPad Air 2, or iPad mini 3) running iOS 8.1 or later, as well as a Mac with Xcode 8.0 or newer installed. You can install or upgrade Xcode in the Mac App Store.
+To begin, you'll need a newer iOS device (iPhone 6 or 6+, iPad Air 2, or iPad mini 3) running iOS 9.0 or later, as well as a Mac with Xcode 9.3 or newer installed. You can install or upgrade Xcode in the Mac App Store.
 
 You'll also need an Apple Developer Account, as well as a membership in the iOS Developer Program. If you need to become a member, you can do so [here](https://developer.apple.com).
 
@@ -46,9 +46,3 @@ Finally
 ```
 
 Finally ensure ApplePay is enabled in the Capabilities tab of your app build target.
-
-If you are using CocoaPods please make sure to include the ApplePay subspec by adding the following line to your podfile:
-
-```ruby
-pod 'Stripe', '~> 10.1.0'
-```

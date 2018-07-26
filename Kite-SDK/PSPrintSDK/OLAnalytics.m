@@ -33,7 +33,6 @@
 #import "OLKitePrintSDK.h"
 #include <sys/sysctl.h>
 #import "OLKiteABTesting.h"
-#import "OLKeyChainStore.h"
 #import "NSDictionary+RequestParameterData.h"
 #import "OLUserSession.h"
 #import "OLKiteUtils.h"
@@ -86,16 +85,12 @@ static BOOL optInToRemoteAnalytics = NO;
 }
 
 + (NSString *)userDistinctId{
-    OLKeyChainStore *keychain = [OLKeyChainStore keyChainStoreWithService:kKeyServiceName];
-    NSData *data = [keychain dataForKey:kKeyUserDistinctId];
-    NSString *uuid;
-    if (data){
-        uuid = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    }
-    else{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *uuid = [defaults objectForKey:kKeyUserDistinctId];
+    if (!uuid){
         uuid = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-        keychain.synchronizable = YES;
-        [keychain setData:[NSKeyedArchiver archivedDataWithRootObject:uuid] forKey:kKeyUserDistinctId];
+        [defaults setObject:uuid forKey:kKeyUserDistinctId];
+        [defaults synchronize];
     }
     
     return uuid;

@@ -40,7 +40,6 @@ static NSString *const kKeyApparelAddress = @"co.oceanlabs.pssdk.kKeyApparelAddr
 static NSString *const kKeyApparelUuid = @"co.oceanlabs.pssdk.kKeyApparelUuid";
 static NSString *const kKeyApparelExtraCopies = @"co.oceanlabs.pssdk.kKeyApparelExtraCopies";
 static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApparelPrintJobOptions";
-static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
 
 @interface OLApparelPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
@@ -52,7 +51,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 
 @synthesize uuid;
 @synthesize extraCopies;
-@synthesize dateAddedToBasket;
 
 - (NSMutableDictionary *) options{
     if (!_options){
@@ -96,10 +94,10 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     
     NSMutableDictionary *assets = [[NSMutableDictionary alloc] init];
     for (NSString *key in [self.assets allKeys]){
-        if ([self.assets[key] mimeType] == kOLMimeTypePDF){
-            [pdfs setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
-        }
-        else if (self.photobookAssets[key].uploadUrl) {
+//        if ([self.assets[key] mimeType] == kOLMimeTypePDF){
+//            [pdfs setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
+//        }
+        if (self.photobookAssets[key].uploadUrl) {
             [assets setObject:self.photobookAssets[key].uploadUrl forKey:key];
         }
         else{
@@ -200,7 +198,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     [aCoder encodeObject:self.uuid forKey:kKeyApparelUuid];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyApparelExtraCopies];
     [aCoder encodeObject:self.options forKey:kKeyApparelPrintJobOptions];
-    [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
     [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
 }
 
@@ -214,7 +211,6 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyApparelExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyApparelUuid];
         self.options = [aDecoder decodeObjectForKey:kKeyApparelPrintJobOptions];
-        self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
         self.selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
         
         NSMutableDictionary *photobookAssets = [[NSMutableDictionary alloc] init];

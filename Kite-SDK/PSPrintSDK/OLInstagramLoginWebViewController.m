@@ -165,7 +165,7 @@
                 errorDescription = NSLocalizedStringFromTableInBundle(@"You need to authorize the app to access your Instagram account if you want to import photos from there.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
             } else {
                 errorDescription = [errorDescription stringByReplacingOccurrencesOfString:@"+" withString:@" "];
-                errorDescription = [errorDescription stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                errorDescription = [errorDescription stringByRemovingPercentEncoding];
             }
             
             UIAlertController *ac = [UIAlertController alertControllerWithTitle:errorReason message:errorDescription preferredStyle:UIAlertControllerStyleAlert];

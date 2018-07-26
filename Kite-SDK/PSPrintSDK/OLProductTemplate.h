@@ -114,7 +114,7 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 
 + (void)sync;
 + (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;
-+ (void)syncTemplateId:(NSString *)templateId withCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;
++ (void)syncTemplateId:(NSString *_Nullable)templateId withCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;
 + (BOOL)isSyncInProgress;
 + (void)cancelSyncInProgress;
 + (OLProductTemplate *_Nullable)templateWithId:(NSString *_Nonnull)identifier;

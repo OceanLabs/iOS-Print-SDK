@@ -154,9 +154,9 @@
         if (![asset isKindOfClass:[OLAsset class]]){
             continue;
         }
-        if (asset.mimeType == kOLMimeTypePDF){
-            return YES;
-        }
+//        if (asset.mimeType == kOLMimeTypePDF){
+//            return YES;
+//        }
     }
     
     return NO;

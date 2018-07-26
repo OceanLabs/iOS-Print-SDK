@@ -39,7 +39,6 @@ static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
 static NSString *const kKeyProductPringJobAddress = @"co.oceanlabs.pssdk.kKeyProductPringJobAddress";
 static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyProductPrintJobOptions";
-static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
 
 static id stringOrEmptyString(NSString *str) {
     return str ? str : @"";
@@ -56,7 +55,6 @@ static id stringOrEmptyString(NSString *str) {
 
 @synthesize uuid;
 @synthesize extraCopies;
-@synthesize dateAddedToBasket;
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -159,10 +157,10 @@ static id stringOrEmptyString(NSString *str) {
     
     for (NSUInteger i = 0; i < self.assetsForUploading.count; i++) {
         OLAsset *asset = self.assetsForUploading[i];
-        if (asset.mimeType == kOLMimeTypePDF){
-            [pdfs addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
-        }
-        else{
+//        if (asset.mimeType == kOLMimeTypePDF){
+//            [pdfs addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
+//        }
+//        else{
             if (i < self.assetsToUpload.count && self.assetsToUpload[i].uploadUrl) {
                 [assets addObject:self.assetsToUpload[i].uploadUrl];
             } else {
@@ -172,7 +170,7 @@ static id stringOrEmptyString(NSString *str) {
             NSString *borderText = asset.edits.bottomBorderText.text;
             [borderTextArray addObject:stringOrEmptyString(borderText)];
             
-        }
+//        }
     }
     
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
@@ -248,7 +246,6 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.options forKey:kKeyProductPrintJobOptions];
-    [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
     [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
 }
 
@@ -263,7 +260,6 @@ static id stringOrEmptyString(NSString *str) {
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.options = [aDecoder decodeObjectForKey:kKeyProductPrintJobOptions];
-        self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
         self.selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
     }
     

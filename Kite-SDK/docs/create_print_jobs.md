@@ -1,9 +1,9 @@
-Creating a Print Order
+Creating Print Jobs
 ==============
 
-If you don't want to use the checkout experience included with the Print SDK (i.e. the [Kite Print Shop Experience](print_shop.md)) then you need to explicitly create a print order.
+If you don't want to use the print shop experience included with the Print SDK (i.e. the [Kite Print Shop Experience](print_shop.md)) then you need to explicitly create a print job.
 
-This tutorial covers creating a print order to be submitted for printing and posting.
+This tutorial covers creating a print job to be submitted for printing and posting.
 
 _If you haven't already, see the [README](../../README.md) for an initial overview and instructions for adding the SDK to your project._
 
@@ -13,8 +13,6 @@ Overview
 1. Initialise the SDK
 2. Create `OLAsset` representations of all the images you want to print
 3. Create `OLPrintJob`'s for the desired products you want to print and attach the assets created in Step 2
-4. Create an `OLPrintOrder` and attach your job(s) created in Step 3
-
 
 Sample Code
 -----------
@@ -40,24 +38,12 @@ Sample Code
     ];
     ```
 
-3. Create `OLPrintJob`'s for every type of product you want to print in this order. A print order can have multiple print jobs attached.
+3. Create `OLPrintJob`s for every type of product you want to print in this order. You can submit multiple print jobs for printing at once.
 
     ```obj-c
-   id<OLPrintJob> squarePrints = [OLPrintJob printJobWithTemplateId:kOLDefaultTemplateForSquarePrints OLAssets:assetsForPrinting];
-    id<OLPrintJob> magnets = [OLPrintJob printJobWithTemplateId:kOLDefaultTemplateForMagnets OLAssets:assetsForPrinting];
-    id<OLPrintJob> polaroidStylePrints = [OLPrintJob printJobWithTemplateId:kOLDefaultTemplateForPolaroidStylePrints OLAssets:assetsForPrinting];
+   id<OLPrintJob> squarePrints = [OLPrintJob printJobWithTemplateId:@"TemplateForSquarePrints" OLAssets:assetsForPrinting];
+    id<OLPrintJob> magnets = [OLPrintJob printJobWithTemplateId:@"TemplateForMagnets" OLAssets:assetsForPrinting];
+    id<OLPrintJob> polaroidStylePrints = [OLPrintJob printJobWithTemplateId:@"TemplateForPolaroidStylePrints" OLAssets:assetsForPrinting];
     ```
 
      *Note: The above shows only a small sample of the products available for printing with the SDK*
-4. Create an `OLPrintOrder` and attach the print job(s) you created in the previous step
-
-    ```obj-c
-    OLPrintOrder *printOrder = [[OLPrintOrder alloc] init];
-    [printOrder addPrintJob:squarePrints];
-    [printOrder addPrintJob:magnets];
-    [printOrder addPrintJob:polaroidStylePrints];
-    ```
-
-Next Steps
-----------
-- If you're building your own [Custom Checkout](../../README.md#custom-checkout) UI then it's time to [set the shipping address](shipping.md) to which the order will be delivered

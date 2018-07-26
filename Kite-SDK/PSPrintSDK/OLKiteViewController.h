@@ -104,26 +104,6 @@
 @property (assign, nonatomic) BOOL qrCodeUploadEnabled;
 
 /**
- *  Set to hide the Continue Shopping button on the payment screen. The default value is NO.
- */
-@property (assign, nonatomic) BOOL hideContinueShoppingButton;
-
-/**
- *  Set to discard delivery addresses after the order is placed. The default value is NO.
- */
-@property (assign, nonatomic) BOOL discardDeliveryAddresses;
-
-/**
- *  Set to show a checkbox that allows the user to opt out of emails. The default value is NO.
- */
-@property (assign, nonatomic) BOOL showOptOutOfEmailsCheckbox;
-
-/**
- Set to hide the promo code field on the basket screen
- */
-@property (assign, nonatomic) BOOL hidePromoCodeField;
-
-/**
  Show the Print at Home tile if the HP SDK is installed
  */
 @property (assign, nonatomic) BOOL showPrintAtHome;
@@ -187,7 +167,6 @@
  */
 - (void)startLoadingWithCompletionHandler:(void(^_Nonnull)(void))handler;
 
-
 /**
  Set the assets to use. Use this if you've previously initialized the Kite View Controller. Otherwise use initWithAssets:
 
@@ -214,7 +193,6 @@
  *  @param icon An image to be used as an icon (where applicable)
  */
 - (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon;
-
 
 /**
  *  Add your own photo picker View Controller.

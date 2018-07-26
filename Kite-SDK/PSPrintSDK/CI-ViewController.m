@@ -243,8 +243,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 - (void)assetsPickerController:(id)ipvc didFinishPickingAssets:(NSMutableArray *)assets{
     OLKiteViewController *vc = [[OLKiteViewController alloc] initWithAssets:assets];
-    vc.userEmail = @"";
-    vc.userPhone = @"";
     vc.delegate = self;
     vc.disableFacebook = YES;
     vc.disableRecents = YES;

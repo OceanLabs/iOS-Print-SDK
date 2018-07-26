@@ -68,11 +68,14 @@
         return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
     } else if ([urlStr hasSuffix:@"png"]) {
         return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypePNG];
-    } else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
-        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF];
-    } else if ([urlStr hasSuffix:@"pdf"]){
-        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypePDF];
-    } else {
+    }
+//    else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
+//        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF];
+//    }
+//    else if ([urlStr hasSuffix:@"pdf"]){
+//        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypePDF];
+//    }
+    else {
         // Worst case scenario just assume it's a JPEG.
         return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
     }

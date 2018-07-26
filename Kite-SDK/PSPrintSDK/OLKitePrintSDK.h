@@ -88,18 +88,27 @@
  */
 + (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info;
 
+
 /**
- *  Speed up checkout by prepopulating a promo code
+ Speed up checkout by prepopulating a promo code
+
+ @param promoCode A promo code. You can register codes in the Kite Dashboard
  */
 + (void)setPromoCode:(NSString *)promoCode;
 
+
 /**
- *  Speed up checkout by prepopulating the users email in the Shipping details if you know it
+ Speed up checkout by prepopulating the users email in the Shipping details if you know it
+
+ @param userEmail The user's email
  */
 + (void)setUserEmail:(NSString *)userEmail;
 
+
 /**
- *  Speed up checkout by prepopulating the users phone number in the Shipping details if you know it
+ Speed up checkout by prepopulating the users phone number in the Shipping details if you know it
+
+ @param userPhone The user's phone number
  */
 + (void)setUserPhone:(NSString *)userPhone;
 

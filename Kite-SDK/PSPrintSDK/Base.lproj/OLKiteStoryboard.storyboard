@@ -1745,7 +1745,7 @@
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="20" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="z3K-mE-eiL">
                                                     <rect key="frame" x="0.0" y="0.5" width="326" height="467"/>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <collectionViewLayout key="collectionViewLayout" id="5aa-xD-xw5" customClass="LXReorderableCollectionViewFlowLayout"/>
+                                                    <collectionViewLayout key="collectionViewLayout" id="5aa-xD-xw5"/>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photoCell" id="66B-DM-ogE">
                                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>

@@ -54,8 +54,8 @@ static NSString *const kKeyAssetUUID = @"co.oceanlabs.pssdk.kKeyAssetUUID";
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
-NSString *const kOLMimeTypeTIFF = @"image/tiff";
-NSString *const kOLMimeTypePDF = @"application/pdf";
+//NSString *const kOLMimeTypeTIFF = @"image/tiff";
+//NSString *const kOLMimeTypePDF = @"application/pdf";
 
 CGSize const OLAssetMaximumSize = {-1, -1};
 
@@ -124,12 +124,15 @@ static NSOperationQueue *imageOperationQueue;
             _mimeType = kOLMimeTypeJPEG;
         } else if ([lower hasSuffix:@".png"]) {
             _mimeType = kOLMimeTypePNG;
-        } else if ([lower hasSuffix:@".tif"] || [lower hasSuffix:@".tiff"]) {
-            _mimeType = kOLMimeTypeTIFF;
-        } else if ([lower hasSuffix:@".pdf"]){
-            _mimeType = kOLMimeTypePDF;
-        } else {
-            NSAssert(NO, @"Only JPEG, PNG & TIFF images and pre-rendered PDF files are supported");
+        }
+//            else if ([lower hasSuffix:@".tif"] || [lower hasSuffix:@".tiff"]) {
+//            _mimeType = kOLMimeTypeTIFF;
+//        }
+//        else if ([lower hasSuffix:@".pdf"]){
+//            _mimeType = kOLMimeTypePDF;
+//        }
+        else {
+            NSAssert(NO, @"Only JPEG & PNG images are supported");
         }
     }
     
@@ -203,9 +206,9 @@ static NSOperationQueue *imageOperationQueue;
     return [[OLAsset alloc] initWithImageData:data mimeType:kOLMimeTypePNG];
 }
 
-+ (OLAsset *)assetWithDataAsPDF:(NSData *)data {
-    return [[OLAsset alloc] initWithImageData:data mimeType:kOLMimeTypePDF];
-}
+//+ (OLAsset *)assetWithDataAsPDF:(NSData *)data {
+//    return [[OLAsset alloc] initWithImageData:data mimeType:kOLMimeTypePDF];
+//}
 
 + (OLAsset *)assetWithFilePath:(NSString *)path {
     return [[OLAsset alloc] initWithImageFilePath:path];
@@ -227,11 +230,14 @@ static NSOperationQueue *imageOperationQueue;
         return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG size:size];
     } else if ([urlStr hasSuffix:@"png"]) {
         return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePNG size:size];
-    } else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF size:size];
-    } else if ([urlStr hasSuffix:@"pdf"]){
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePDF size:size];
-    } else {
+    }
+//        else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
+//        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF size:size];
+//    }
+//    else if ([urlStr hasSuffix:@"pdf"]){
+//        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePDF size:size];
+//    }
+    else {
         // Worst case scenario just assume it's a JPEG.
         return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG size:size];
     }
@@ -618,9 +624,11 @@ static NSOperationQueue *imageOperationQueue;
             _mimeType = kOLMimeTypeJPEG;
         } else if ([kOLMimeTypePNG isEqualToString:mimeType]) {
             _mimeType = kOLMimeTypePNG;
-        } else if ([kOLMimeTypeTIFF isEqualToString:mimeType]) {
-            _mimeType = kOLMimeTypeTIFF;
-        } else {
+        }
+//        else if ([kOLMimeTypeTIFF isEqualToString:mimeType]) {
+//            _mimeType = kOLMimeTypeTIFF;
+//        }
+        else {
             _mimeType = kOLMimeTypePNG;
         }
         self.imageFilePath = [aDecoder decodeObjectForKey:kKeyImageFilePath];
@@ -667,12 +675,12 @@ static NSOperationQueue *imageOperationQueue;
 }
 
 - (void)dataWithCompletionHandler:(GetDataHandler)handler {
-    if (self.assetType == kOLAssetTypeImageData && self.mimeType == kOLMimeTypePDF){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            handler(self.imageData, nil);
-        });
-        return;
-    }
+//    if (self.assetType == kOLAssetTypeImageData && self.mimeType == kOLMimeTypePDF){
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            handler(self.imageData, nil);
+//        });
+//        return;
+//    }
     
     [self backgroundImageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
         if (image && !error){
