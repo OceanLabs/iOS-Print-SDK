@@ -3,6 +3,7 @@ use_frameworks!
 
 target 'KiteSDK' do
 	pod 'Photobook', :git => 'git@github.com:OceanLabs/Photobook-iOS.git', :branch => 'develop'
+	pod 'NXOAuth2Client'
 end
 
 target 'KiteSDK-Demo' do

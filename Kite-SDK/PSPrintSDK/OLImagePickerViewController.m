@@ -41,7 +41,6 @@
 #import "OLKiteABTesting.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
-#import "OLOAuth2AccountStore.h"
 #import "OLProductPrintJob.h"
 #import "OLQRCodeUploadViewController.h"
 #import "OLUserSession.h"
@@ -569,7 +568,7 @@
     }
     
     if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram){
-        [[OLOAuth2AccountStore sharedStore] setClientID:[OLKitePrintSDK instagramClientID]
+        [[NXOAuth2AccountStore sharedStore] setClientID:[OLKitePrintSDK instagramClientID]
                                                  secret:[OLKitePrintSDK instagramSecret]
                                        authorizationURL:[NSURL URLWithString:@"https://api.instagram.com/oauth/authorize"]
                                                tokenURL:[NSURL URLWithString:@"https://api.instagram.com/oauth/access_token/"]
@@ -583,7 +582,7 @@
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
         vc.pageIndex = index;
     }
-    else if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram && [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"].count == 0){
+    else if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram && [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"].count == 0){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
         vc.pageIndex = index;
     }

@@ -29,7 +29,6 @@
 
 #import "OLUserSession.h"
 #import "OLKiteUtils.h"
-#import "OLOAuth2AccountStore.h"
 #import "OLAsset+Private.h"
 #import "OLKiteABTesting.h"
 #import "OLFacebookSDKWrapper.h"
@@ -45,6 +44,7 @@
 #import "NSObject+Utils.h"
 
 @import Photobook;
+@import NXOAuth2Client;
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
@@ -116,9 +116,9 @@
         }
     }
     
-    NSArray *instagramAccounts = [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-    for (OLOAuth2Account *account in instagramAccounts) {
-        [[OLOAuth2AccountStore sharedStore] removeAccount:account];
+    NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
+    for (NXOAuth2Account *account in instagramAccounts) {
+        [[NXOAuth2AccountStore sharedStore] removeAccount:account];
     }
 }
 
