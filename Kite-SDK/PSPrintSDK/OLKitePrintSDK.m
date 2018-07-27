@@ -156,7 +156,11 @@ static NSString *instagramRedirectURI = nil;
     for (id<OLPrintJob> printJob in printJobs) {
         [[Checkout shared] addProductToBasket:(id<Product>)printJob];
     }
-    return [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES delegate:[OLUserSession currentSession]];
+    
+    if ([[PhotobookSDK shared] isProcessingOrder]) {
+        return [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES delegate:nil];
+    }
+    return (UINavigationController *)[[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES delegate:[OLUserSession currentSession]];    
 }
 
 + (void)setQRCodeUploadEnabled:(BOOL)enabled{

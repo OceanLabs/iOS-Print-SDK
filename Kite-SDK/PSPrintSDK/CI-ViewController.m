@@ -144,6 +144,19 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [ac addAction:[UIAlertAction actionWithTitle:@"Clear Web Image Cache" style:UIAlertActionStyleDefault handler:^(id action){
         [[NSURLCache sharedURLCache] removeAllCachedResponses];
     }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"Checkout iPhone 6 case" style:UIAlertActionStyleDefault handler:^(id action){
+        id<OLPrintJob> printJob = [OLPrintJob printJobWithTemplateId:@"i6_case" OLAssets:@[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"] size:CGSizeMake(1824,1216)]]];
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
+        [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:[self environment]];
+        
+        [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+        [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+        
+        UIViewController *vc = [OLKitePrintSDK checkoutViewControllerWithPrintJobs:@[printJob]];
+        [self presentViewController:vc animated:YES completion:NULL];
+    }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:NULL]];
     ac.popoverPresentationController.sourceRect = sender.frame;
     ac.popoverPresentationController.sourceView = self.view;
