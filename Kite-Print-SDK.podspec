@@ -12,6 +12,7 @@ Pod::Spec.new do |spec|
   spec.module_name         = 'KiteSDK'
   spec.default_subspec     = 'Core'
   spec.dependency "Photobook"
+  spec.dependency "NXOAuth2Client"
 
   spec.subspec 'Core' do |core|
     core.source_files      = ['Kite-SDK/PSPrintSDK/OL*.{h,m}', 'Kite-SDK/PSPrintSDK/RMImageCropper/*.{h,m}', 'Kite-SDK/PSPrintSDK/Categories/*.{h,m}']
