@@ -203,7 +203,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", @"") style:UIAlertActionStyleDefault handler:^(id action){
             [self showKiteVcForAPIKey:pasteboard.string assets:assets];
         }]];
-        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes and use staging", @"") style:UIAlertActionStyleDefault handler:^(id action){
+        [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Yes, in staging", @"") style:UIAlertActionStyleDefault handler:^(id action){
             [OLKitePrintSDK setUseStaging:YES];
             [self showKiteVcForAPIKey:pasteboard.string assets:assets];
         }]];

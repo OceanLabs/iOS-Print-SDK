@@ -48,7 +48,6 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @interface OLKiteABTesting : NSObject
 
 @property (assign, nonatomic, readonly) BOOL hidePrice;
-@property (assign, nonatomic, readonly) BOOL offerPayPal;
 @property (assign, nonatomic, readonly) BOOL skipProductOverview;
 @property (assign, nonatomic, readonly) BOOL disableProductCategories;
 @property (assign, nonatomic, readonly) BOOL progressiveTemplateLoading;
@@ -61,10 +60,6 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @property (strong, nonatomic, readonly) NSString *packReviewStyle;
 
 @property (strong, nonatomic, readonly) NSString *headerLogoURL;
-@property (strong, nonatomic, readonly) NSString *receiptSuccessURL;
-@property (strong, nonatomic, readonly) NSString *receiptFailureURL;
-@property (strong, nonatomic, readonly) NSString *receiptSuccessBgURL;
-@property (strong, nonatomic, readonly) NSString *receiptFailureBgURL;
 @property (strong, nonatomic, readonly) NSString *cancelButtonIconURL;
 @property (strong, nonatomic, readonly) NSString *lightThemeSecretRevealURL;
 @property (strong, nonatomic, readonly) NSString *supportEmail;
@@ -77,8 +72,6 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @property (strong, nonatomic, readonly) UIColor *lightThemeColorDescriptionSeparator;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColorImageEditBg;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColorImageEditCta;
-@property (strong, nonatomic, readonly) UIColor *lightThemeColorBasketQtyButtons;
-@property (strong, nonatomic, readonly) UIColor *lightThemeColorBasketContinueShopping;
 @property (strong, nonatomic, readonly) UIColor *lightThemeTitleColor1;
 @property (strong, nonatomic, readonly) NSNumber *lightThemeButtonRoundCorners;
 - (UIFont *)lightThemeFont1WithSize:(CGFloat)size;

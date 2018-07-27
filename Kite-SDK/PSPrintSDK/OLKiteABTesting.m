@@ -40,7 +40,6 @@ static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_
 static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
 static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_banner_style";
 static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_banner_text";
-static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
 static NSString *const kOLKiteABTestPaymentScreen = @"ly.kite.abtest.payment_screen";
 static NSString *const kOLKiteABTestCoverPhotoVariants = @"ly.kite.abtest.cover_photo_variants";
 static NSString *const kOLKiteABTestProgressiveTemplateLoading = @"ly.kite.abtest.progressive_template_loading";
@@ -62,7 +61,6 @@ static dispatch_once_t srand48OnceToken;
 @property (assign, nonatomic, readwrite) BOOL disableProductCategories;
 @property (assign, nonatomic) BOOL minimalNavigationBar;
 @property (assign, nonatomic, readwrite) BOOL hidePrice;
-@property (assign, nonatomic, readwrite) BOOL offerPayPal;
 @property (assign, nonatomic, readwrite) BOOL progressiveTemplateLoading;
 @property (strong, nonatomic, readwrite) NSString *qualityBannerType;
 @property (strong, nonatomic, readwrite) NSString *checkoutScreenType;
@@ -401,22 +399,6 @@ static dispatch_once_t srand48OnceToken;
                                          }];
 }
 
-- (void)setupPaymentScreenTest{
-    self.paymentScreen = nil;
-    
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestPaymentScreen];
-    if (!experimentDict) {
-        experimentDict = @{@"V2" : @0, @"V3" : @1};
-    }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestPaymentScreen
-                            conditions:@{
-                                         @"V2" : safeObject(experimentDict[@"V2"]),
-                                         @"V3" : safeObject(experimentDict[@"V3"]),
-                                         } block:^(id choice) {
-                                             self.paymentScreen = choice;
-                                         }];
-}
-
 - (void)setupDisableProductCategories{
     self.disableProductCategories = NO;
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestDisableProductCategories];
@@ -535,26 +517,6 @@ static dispatch_once_t srand48OnceToken;
                    }];
 }
 
-- (void)setupOfferPayPalTest{
-    self.offerPayPal = NO;
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferPayPal];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-    }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestOfferPayPal
-                   conditions:@{
-                                @"Yes" : safeObject(experimentDict[@"Yes"]),
-                                @"No" : safeObject(experimentDict[@"No"])
-                                } block:^(id choice) {
-                                    self.offerPayPal = [choice isEqualToString:@"Yes"];
-                                }];
-}
-
-- (void)groupSetupShippingScreenTests{
-    [self setupPaymentScreenTest];
-    [self setupOfferPayPalTest];
-}
-
 - (void)setupABTestVariants{
     [self setupQualityBannerTypeTest];
     [self setupProductTileStyleTest];
@@ -565,7 +527,6 @@ static dispatch_once_t srand48OnceToken;
     [self setupSkipProductOverviewTest];
     [self setupDisableProductCategories];
     [self setupMinimalNavigationBarTest];
-    [self groupSetupShippingScreenTests];
 }
 
 #pragma mark OLKiteABTesting
