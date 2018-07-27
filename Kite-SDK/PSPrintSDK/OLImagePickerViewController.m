@@ -228,14 +228,6 @@
     [self updateTitleBasedOnSelectedPhotoQuanitity];
 }
 
-- (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-    
-    if (!self.navigationController){
-        [OLAnalytics trackImagePickerScreenHitBack:self.product.productTemplate.name];
-    }
-}
-
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.viewWillDisappear = YES;
@@ -608,9 +600,6 @@
     self.ctaButton.hidden = NO;
     ((OLImagePickerPageViewController *)(self.pageController.viewControllers.firstObject)).ctaButton.hidden = YES;
     [self updateSelectedProviderColor];
-    
-    [OLAnalytics trackPhotoProviderPicked:self.providers[[self.pageController.viewControllers[0] pageIndex]].name forProductName:self.product ? self.product.productTemplate.name : @""];
-
 }
 
 #pragma mark Custom VC
@@ -752,9 +741,7 @@
     
     __weak OLImagePickerViewController *welf = self;
     [self.pageController setViewControllers:@[vc] direction:currentPageIndex < indexPath.item ? UIPageViewControllerNavigationDirectionForward : UIPageViewControllerNavigationDirectionReverse animated:YES completion:^(BOOL finished){
-        [welf updateSelectedProviderColor];
-        
-        [OLAnalytics trackPhotoProviderPicked:welf.providers[[welf.pageController.viewControllers[0] pageIndex]].name forProductName:welf.product ? welf.product.productTemplate.name : @""];
+        [welf updateSelectedProviderColor];        
     }];
 }
 
@@ -851,7 +838,6 @@
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
-    [OLAnalytics trackImagePickerScreenHitBack:self.product.productTemplate.name];
 }
 
 - (void)onButtonDoneTapped:(UIButton *)sender{

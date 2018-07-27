@@ -50,14 +50,6 @@
 - (void)kiteControllerDidFinish:(OLKiteViewController * _Nonnull)controller;
 
 /**
- *  Notifies the delegate of an analytics event.
- *
- *  @param info The dictionary containing the information about the event
- */
-- (void)logKiteAnalyticsEventWithInfo:(NSDictionary *_Nonnull)info;
-
-
-/**
  Asks the delegate for a UIViewController image picker to show
 
  @param name The name of the image picker

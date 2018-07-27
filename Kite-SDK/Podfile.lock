@@ -34,7 +34,7 @@ DEPENDENCIES:
   - "KITAssetsPickerController (from `git@github.com:kkarayannis/KITAssetsPickerController.git`)"
   - NXOAuth2Client
   - PayPal-iOS-SDK/Core
-  - "Photobook (from `git@github.com:OceanLabs/Photobook-iOS.git`, branch `develop`)"
+  - "Photobook (from `git@github.com:OceanLabs/Photobook-iOS.git`, branch `story/PHO-261`)"
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -54,7 +54,7 @@ EXTERNAL SOURCES:
   KITAssetsPickerController:
     :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
   Photobook:
-    :branch: develop
+    :branch: story/PHO-261
     :git: "git@github.com:OceanLabs/Photobook-iOS.git"
 
 CHECKOUT OPTIONS:
@@ -62,7 +62,7 @@ CHECKOUT OPTIONS:
     :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
     :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
   Photobook:
-    :commit: 575529fa1c1103c8817e1e87ebb70fc9ace7711f
+    :commit: 5a75a98759193b488452a33228a53f8d167ca00e
     :git: "git@github.com:OceanLabs/Photobook-iOS.git"
 
 SPEC CHECKSUMS:
@@ -80,6 +80,6 @@ SPEC CHECKSUMS:
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   Stripe: 4f043bb840721b1f30492fa77790bbf9e3508ab0
 
-PODFILE CHECKSUM: 5200c922d913ea463845b59ea0930c23857194df
+PODFILE CHECKSUM: 2ee0c0ad24d7ec454621d1e6149929851a179a74
 
 COCOAPODS: 1.5.3

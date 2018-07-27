@@ -172,14 +172,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     }
 }
 
-- (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-    
-    if (!self.navigationController){
-        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLAsset userSelectedAssets].nonPlaceholderAssets.count];
-    }
-}
-
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
     
@@ -301,7 +293,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 }
 
 - (void) deletePhotoAtIndex:(NSUInteger)index{
-    [OLAnalytics trackReviewScreenDeletedPhotoForProductName:self.product.productTemplate.name];
     [[OLAsset userSelectedAssets] removeObjectAtIndex:index];
     
     if ([OLAsset userSelectedAssets].nonPlaceholderAssets.count == 0){
@@ -342,8 +333,6 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
     [self updateTitleBasedOnSelectedPhotoQuanitity];
-    
-    [OLAnalytics trackReviewScreenIncrementedPhotoQtyForProductName:self.product.productTemplate.name];
 }
 
 - (IBAction)onButtonDownArrowClicked:(UIButton *)sender {
@@ -370,9 +359,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     UILabel* countLabel = (UILabel *)[cellContentView viewWithTag:30];
     [countLabel setText: [NSString stringWithFormat:@"%lu", (unsigned long)extraCopies + 1]];
     
-    [self updateTitleBasedOnSelectedPhotoQuanitity];
-    
-    [OLAnalytics trackReviewScreenDecrementedPhotoQtyForProductName:self.product.productTemplate.name];
+    [self updateTitleBasedOnSelectedPhotoQuanitity];    
 }
 
 - (void)editPhoto:(UIButton *)sender {

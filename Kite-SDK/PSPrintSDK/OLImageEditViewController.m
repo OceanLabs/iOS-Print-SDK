@@ -1388,7 +1388,6 @@ const NSInteger kOLEditTagCrop = 40;
     else{
         [self dismissViewControllerAnimated:YES completion:NULL];
     }
-    [OLAnalytics trackEditScreenDidCancel];
 }
 
 - (void)selectButton:(UIButton *)sender{
@@ -1397,11 +1396,9 @@ const NSInteger kOLEditTagCrop = 40;
     switch (sender.tag) {
         case kOLEditTagImageTools:
             self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"IMAGE TOOLS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-            [OLAnalytics trackEditScreenButtonTapped:@"Image Tools"];
             break;
         case kOLEditTagImages:
             [self showImagePicker];
-            [OLAnalytics trackEditScreenButtonTapped:@"Image Picker"];
             return;
         case kOLEditTagProductOptionsTab:
             if (self.product.productTemplate.options.count == 1 || self.product.productTemplate.templateUI == OLTemplateUIApparel){
@@ -1418,17 +1415,14 @@ const NSInteger kOLEditTagCrop = 40;
                     self.editingTools.drawerLabel.text = [self.selectedOption.name uppercaseString];
                 }
                 self.editingTools.collectionView.tag = self.selectedOption.type;
-                [OLAnalytics trackEditScreenButtonTapped:self.selectedOption.code];
             }
             else{
                 self.editingTools.drawerLabel.text = NSLocalizedStringFromTableInBundle(@"PRODUCT OPTIONS", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-                [OLAnalytics trackEditScreenButtonTapped:@"Product Options"];
             }
 
             break;
         case kOLEditTagCrop:
             [self onButtonCropClicked:sender];
-            [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
             return;
             
         default:
@@ -1950,7 +1944,6 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
-            [OLAnalytics trackEditScreenButtonTapped:@"Fonts"];
         }
         else if (indexPath.item == 1){
             [self dismissDrawerWithCompletionHandler:^(BOOL finished){
@@ -1960,7 +1953,6 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
-            [OLAnalytics trackEditScreenButtonTapped:@"Text Color"];
         }
         
     }
@@ -1968,15 +1960,12 @@ const NSInteger kOLEditTagCrop = 40;
         NSInteger adjustedIndexPathItem = indexPath.item - ([self cropIsInImageEditingTools] ? 1 : 0);
         if (indexPath.item == 0 && [self cropIsInImageEditingTools]){
             [self onButtonCropClicked:nil];
-            [OLAnalytics trackEditScreenButtonTapped:@"Crop"];
         }
         else if (adjustedIndexPathItem == 0){
             [self onButtonHorizontalFlipClicked:nil];
-            [OLAnalytics trackEditScreenButtonTapped:@"Flip"];
         }
         else if (adjustedIndexPathItem == 1){
             [self onButtonRotateClicked:nil];
-            [OLAnalytics trackEditScreenButtonTapped:@"Rotate"];
         }
         else if (adjustedIndexPathItem == 2){
             if (!self.artboard.assetViews.firstObject.imageView.image){
@@ -1989,11 +1978,9 @@ const NSInteger kOLEditTagCrop = 40;
                 [collectionView reloadData];
                 [self showDrawerWithCompletionHandler:NULL];
             }];
-            [OLAnalytics trackEditScreenButtonTapped:@"Filters"];
         }
         else if (adjustedIndexPathItem == 3){
             [self onButtonAddTextClicked:nil];
-            [OLAnalytics trackEditScreenButtonTapped:@"Add Text"];
         }
     }
     else if ((collectionView.tag == OLProductTemplateOptionTypeColor1 || collectionView.tag == OLProductTemplateOptionTypeColor2 || collectionView.tag == OLProductTemplateOptionTypeColor3) && self.product.productTemplate.templateUI != OLTemplateUIApparel){
@@ -2049,7 +2036,6 @@ const NSInteger kOLEditTagCrop = 40;
         NSMutableArray *vcs = [self.navigationController.viewControllers mutableCopy];
         [vcs replaceObjectAtIndex:vcs.count-1 withObject:vc];
         [self.navigationController setViewControllers:vcs];
-        [OLAnalytics trackEditScreenButtonTapped:product.productTemplate.name];
     }
     else if (self.selectedOption){
         OLProductTemplateOptionChoice *choice = self.selectedOption.choices[indexPath.item];
@@ -2061,7 +2047,6 @@ const NSInteger kOLEditTagCrop = 40;
         if (self.selectedChoice.color){
             self.editingTools.drawerLabel.text = [[self.selectedOption.name stringByAppendingString:[NSString stringWithFormat:@" - %@", self.selectedChoice.name]] uppercaseString];
         }
-        [OLAnalytics trackEditScreenButtonTapped:choice.code];
     }
     else{
         UIButton *selectedButton;
@@ -2079,9 +2064,7 @@ const NSInteger kOLEditTagCrop = 40;
             [self.editingTools bringSubviewToFront:self.editingTools.drawerView];
             [(UICollectionViewFlowLayout *)self.editingTools.collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
             [collectionView reloadData];
-            [self showDrawerWithCompletionHandler:NULL];
-            
-            [OLAnalytics trackEditScreenButtonTapped:self.selectedOption.code];
+            [self showDrawerWithCompletionHandler:NULL];            
         }];
     }
     

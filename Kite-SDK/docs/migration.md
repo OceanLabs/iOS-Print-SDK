@@ -19,6 +19,8 @@
  - Removed some checkout-related properties on `OLKiteViewController`
  - Removed Order history and related APIs
  - Removed OLPromoView
+ - Removed all level-2 analytics events and a few others. Some of the remaining analytics events have changed.
+ - Local analytics events are now notified on the delegate of OLAnalytics.sharedInstance instead of the delegate of the OLKiteViewController.
 
  ## Customization
  - Fully custom checkout is no longer supported with this SDK. You *must* use the provided Checkout experience or implement your own using the Kite REST APIs.

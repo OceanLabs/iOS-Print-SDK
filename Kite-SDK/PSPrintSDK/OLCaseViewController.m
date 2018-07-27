@@ -711,9 +711,7 @@
         self.hintView.alpha = 0;
     } completion:NULL];
     
-    [[NSOperationQueue mainQueue] addOperation:flipBlock];
-    
-    [OLAnalytics trackEditScreenButtonTapped:@"Product Flip"];
+    [[NSOperationQueue mainQueue] addOperation:flipBlock];    
 }
 
 

@@ -286,7 +286,6 @@ static CGFloat fadeTime = 0.3;
 
 - (IBAction) dismiss{
     self.dismissing = YES;
-    [OLAnalytics trackKiteDismissed];
     if ([self.delegate respondsToSelector:@selector(kiteControllerDidFinish:)]){
         [self.delegate kiteControllerDidFinish:self];
     }

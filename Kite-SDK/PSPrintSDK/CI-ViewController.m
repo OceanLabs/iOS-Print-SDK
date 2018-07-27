@@ -47,10 +47,11 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "AssetDataSource.h"
 #import "OLKiteUtils.h"
 #import "AppDelegate.h"
+#import "OLAnalytics.h"
 
 @import Photos;
 
-@interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate, KITAssetsPickerControllerDelegate>
+@interface CIViewController () <UINavigationControllerDelegate, OLKiteDelegate, OLImagePickerViewControllerDelegate, KITAssetsPickerControllerDelegate, OLAnalyticsDelegate>
 @property (nonatomic, weak) IBOutlet UISegmentedControl *environmentPicker;
 @property (strong, nonatomic) NSArray *customDataSources;
 @end
@@ -78,6 +79,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+    
+    [OLAnalytics sharedInstance].delegate = self;
 }
 
 - (BOOL)shouldAutorotate {
@@ -178,9 +181,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 }
 
 - (void)logKiteAnalyticsEventWithInfo:(NSDictionary *)info{
-#ifdef OL_KITE_VERBOSE
     NSLog(@"%@", info);
-#endif
 }
 
 - (void)setupCIDeploymentWithAssets:(NSArray *)assets{

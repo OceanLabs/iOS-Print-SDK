@@ -181,14 +181,6 @@
     [OLAnalytics trackProductListScreenViewedWithTemplateClass:self.templateClass];
 }
 
-- (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-
-    if (!self.navigationController){
-        [OLAnalytics trackProductListScreenHitBackTemplateClass:self.templateClass];
-    }
-}
-
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.fromRotation = YES;

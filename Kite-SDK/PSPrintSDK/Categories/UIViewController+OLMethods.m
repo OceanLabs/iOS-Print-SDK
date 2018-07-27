@@ -147,9 +147,7 @@
     [self presentViewController:ac animated:YES completion:NULL];
 }
 
-- (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {
-    [OLAnalytics trackBasketIconTappedWithNumberBadged:[[Checkout shared] numberOfItemsInBasket]];
-    
+- (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {    
     UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES delegate:self];
     if (checkoutVc) {
         [self presentViewController:checkoutVc animated:YES completion:NULL];

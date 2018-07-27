@@ -199,14 +199,6 @@
     }
 }
 
-- (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-    
-    if (!self.navigationController){
-        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLAsset userSelectedAssets].nonPlaceholderAssets.count];
-    }
-}
-
 - (void)orderViews{
     [super orderViews];
     [self.view bringSubviewToFront:self.hintView];
