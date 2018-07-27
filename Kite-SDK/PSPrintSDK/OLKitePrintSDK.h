@@ -79,7 +79,9 @@
 
 /**
  *  Initializer that accepts ready to checkout array of OLPrintJobs. Provides an extra argument for extra info.
- *  This will clear any existing basket items.
+ *  Notes:
+ *  - This will clear any existing basket items.
+ *  - If there is a processing order in progress, the print jobs will be discarded in favor of the already processing order and the upload screen will be returned instead of the checkout screen, so you should be prepared for that. See isProcessingOrder.
  *
  *  @param printJobs  The printJobs to checkout
  *  @param info       Extra information that could be useful for analytics
@@ -88,6 +90,13 @@
  */
 + (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info;
 
+
+/**
+ Returns true if an order is in progress of submission. This is useful to know because in case this is true, if you try to checkout a print job, that print job will be discarded in favor of the already processing order and the upload screen will be returned instead of the checkout screen, so you should be prepared for that. If you present the normal flow Print Shop, the upload screen will be presented on top of that and everything will be handled internally. It might also be useful if you want to let the user know beforehand.
+
+ @return A bool value that indicates if an order is in progress of submission
+ */
++ (BOOL)isProcessingOrder;
 
 /**
  Speed up checkout by prepopulating a promo code

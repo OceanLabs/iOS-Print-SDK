@@ -150,6 +150,10 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info{
+    if ([[PhotobookSDK shared] isProcessingOrder]) {
+        return [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES delegate:nil];
+    }
+    
     [OLAnalytics setExtraInfo:info];
     [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Checkout"];
     [[Checkout shared] clearBasketOrder];
@@ -157,10 +161,11 @@ static NSString *instagramRedirectURI = nil;
         [[Checkout shared] addProductToBasket:(id<Product>)printJob];
     }
     
-    if ([[PhotobookSDK shared] isProcessingOrder]) {
-        return [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES delegate:nil];
-    }
-    return (UINavigationController *)[[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES delegate:[OLUserSession currentSession]];    
+    return (UINavigationController *)[[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES delegate:[OLUserSession currentSession]];
+}
+
++ (BOOL)isProcessingOrder {
+    return [[PhotobookSDK shared] isProcessingOrder];
 }
 
 + (void)setQRCodeUploadEnabled:(BOOL)enabled{

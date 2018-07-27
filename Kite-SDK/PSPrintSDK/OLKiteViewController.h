@@ -142,7 +142,8 @@
 @property (assign, nonatomic) BOOL preserveExistingTemplates;
 
 /**
- *  Initializer that accepts an array of OLAssets for the user to personalize their products with
+ *  Initializer that accepts an array of OLAssets for the user to personalize their products with.
+ *  Note: If there is a processing order in progress, the upload screen will be presented on top of the Print Shop and everything will be handled internally. It might be useful to let the user know about that beforehand. Please look at [OLKitePrintSDK isProcessingOrder]
  *
  *  @param assets The array of OLAssets for the user to personalize their products with
  *
@@ -152,6 +153,7 @@
 
 /**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with. Provides an extra argument for extra info.
+ *  Note: If there is a processing order in progress, the upload screen will be presented on top of the Print Shop and everything will be handled internally. It might be useful to let the user know about that beforehand. Please look at [OLKitePrintSDK isProcessingOrder]
  *
  *  @param assets The array of OLAssets for the user to personalize their products with
  *  @param info   Extra information that could be useful for analytics
