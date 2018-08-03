@@ -197,6 +197,9 @@
         if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
             self.maximumPhotos = 2;
             self.minimumPhotos = 2;
+        } else if (self.product.productTemplate.templateUI == OLTemplateUIPhotobook) {
+            self.maximumPhotos = 70;
+            self.minimumPhotos = 20;
         }
     }
     else if (self.maximumPhotos == 1){
