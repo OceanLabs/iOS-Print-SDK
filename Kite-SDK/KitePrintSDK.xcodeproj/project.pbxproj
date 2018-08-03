@@ -270,6 +270,8 @@
 		2EB8FE861D95692000E26BDF /* UIImage+OLUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EF53E3A1B55421A00BF936A /* UIImage+OLUtils.m */; };
 		2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1067FF1B83335C00EB4C14 /* UIView+RoundRect.m */; };
 		2EB8FE881D95692000E26BDF /* UIImage+ImageNamedInKiteBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E1F1BBC2202005F3D71 /* UIImage+ImageNamedInKiteBundle.m */; };
+		2EBA8EEA2114580400BB87DE /* OLCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBA8EE82114580400BB87DE /* OLCountry.m */; };
+		2EBA8EEB2114580400BB87DE /* OLCountry.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EBA8EE92114580400BB87DE /* OLCountry.h */; };
 		2EBDF4CE1E434A0B004775BD /* OLKiteLocalizationResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */; };
 		2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC455D81DB669D700DC5FD1 /* OLPlaceholderAsset.h */; };
 		2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EC455D91DB669D700DC5FD1 /* OLPlaceholderAsset.m */; };
@@ -506,6 +508,8 @@
 		2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramImagePickerConstants.m; sourceTree = "<group>"; };
 		2EB612FB1D48AFE800B48E29 /* OLInstagramImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramImage.h; sourceTree = "<group>"; };
 		2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramImage.m; sourceTree = "<group>"; };
+		2EBA8EE82114580400BB87DE /* OLCountry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCountry.m; sourceTree = "<group>"; };
+		2EBA8EE92114580400BB87DE /* OLCountry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCountry.h; sourceTree = "<group>"; };
 		2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloader.h; sourceTree = "<group>"; };
 		2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImageDownloader.m; sourceTree = "<group>"; };
 		2EBDF4CD1E434A0B004775BD /* OLKiteLocalizationResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = OLKiteLocalizationResources.bundle; sourceTree = "<group>"; };
@@ -1017,6 +1021,8 @@
 			children = (
 				CD73BFAF18634ED50009DE03 /* OLConstants.h */,
 				CD73BFB018634ED50009DE03 /* OLConstants.m */,
+				2EBA8EE92114580400BB87DE /* OLCountry.h */,
+				2EBA8EE82114580400BB87DE /* OLCountry.m */,
 				2E0E250D1A77997E00808ED8 /* OLAnalytics.h */,
 				2E0E250E1A77997E00808ED8 /* OLAnalytics.m */,
 				2EB1C40F1B551D6000EFE0D0 /* OLKiteABTesting.h */,
@@ -1274,6 +1280,7 @@
 				2EB8FE6B1D95685100E26BDF /* OLKiteViewController+Theme.h in Headers */,
 				2E7ECBA51FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.h in Headers */,
 				2EB8FDEF1D95685100E26BDF /* OLGreetingCardPrintJob.h in Headers */,
+				2EBA8EEB2114580400BB87DE /* OLCountry.h in Headers */,
 				2EB8FE441D95685100E26BDF /* OLImagePickerPhotosPageViewController+Facebook.h in Headers */,
 				2EB8FE6A1D95685100E26BDF /* OLKiteViewController.h in Headers */,
 				2EB8FE3B1D95685100E26BDF /* OLProductHomeViewController.h in Headers */,
@@ -1769,6 +1776,7 @@
 				2ECA34ED1E82743800D56220 /* OLApparelViewController.m in Sources */,
 				2E451DEF1D95555C0080F1C1 /* OLProductPrintJob.m in Sources */,
 				2E451E0D1D9555870080F1C1 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
+				2EBA8EEA2114580400BB87DE /* OLCountry.m in Sources */,
 				2E451E301D9555870080F1C1 /* OLEditingToolsView.m in Sources */,
 				2E451DDB1D9555540080F1C1 /* OLURLShortener.m in Sources */,
 				2E65FEA11E4E058400A301BB /* OLTouchTolerantView.m in Sources */,

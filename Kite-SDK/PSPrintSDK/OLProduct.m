@@ -37,6 +37,7 @@
 #import "OLKitePrintSDK.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
+#import "OLCountry.h"
 
 typedef enum {
     kSizeUnitsInches,
@@ -166,7 +167,7 @@ typedef enum {
 #pragma mark Product Info
 
 - (NSString *)currencyCode {
-    NSString *code = [NSLocale currentLocale].currencyCode;
+    NSString *code = [[OLCountry countryForCurrentLocale] currencyCode];
     OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
     if (!code || ![productTemplate.currenciesSupported containsObject:code]) {
         // preferred currency fallback order if users local currency isn't supported: USD, GBP, EUR
