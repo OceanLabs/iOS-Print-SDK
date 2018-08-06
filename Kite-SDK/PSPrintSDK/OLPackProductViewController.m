@@ -272,9 +272,10 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     id<Product> job;
     if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
         job = (id<Product>)[OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:[OLAsset userSelectedAssets].firstObject backImageOLAsset:[OLAsset userSelectedAssets].lastObject];
-    }
-    else{
-        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[NSArray arrayWithArray:[OLAsset userSelectedAssets]]];
+    } else if (self.product.productTemplate.templateUI == OLTemplateUICalendar) {
+        job = (id<Product>)[OLPrintJob calendarWithTemplateId:self.product.productTemplate.identifier OLAssets:[NSArray arrayWithArray:[OLAsset userSelectedAssets]]];
+    } else{
+        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[NSArray arrayWithArray:[NSArray arrayWithArray:[OLAsset userSelectedAssets]]]];
     }
     [[Checkout shared] addProductToBasket:job];
     

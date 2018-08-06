@@ -129,6 +129,16 @@
  */
 + (id<OLPrintJob>)apparelWithTemplateId:(NSString *)templateId OLAssets:(NSDictionary<NSString *, OLAsset *> *)assets;
 
+
+/**
+ Creates and returns a calendar print job
+
+ @param templateId The template ID of this job
+ @param assets The assets to print
+ @return The calendar print job
+ */
++ (id<OLPrintJob>)calendarWithTemplateId:(NSString *)templateId OLAssets:(NSArray<OLAsset *> *)assets;
+
 /**
  *  Creates and returns a print job
  *

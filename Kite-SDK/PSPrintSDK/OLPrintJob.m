@@ -33,6 +33,7 @@
 #import "OLAsset.h"
 #import "OLApparelPrintJob.h"
 #import "OLGreetingCardPrintJob.h"
+#import "OLCalendarPrintJob.h"
 
 @implementation OLPrintJob
 
@@ -47,6 +48,10 @@
 + (id<OLPrintJob>)apparelWithTemplateId:(NSString *)templateId OLAssets:(NSDictionary<NSString *, OLAsset *> *)assets{
     OLApparelPrintJob *job = [[OLApparelPrintJob alloc] initWithTemplateId:templateId OLAssets:assets];
     return job;
+}
+
++ (id<OLPrintJob>)calendarWithTemplateId:(NSString *)templateId OLAssets:(NSArray<OLAsset *> *)assets {
+    return [[OLCalendarPrintJob alloc] initWithTemplateId:templateId OLAssets:assets];
 }
 
 + (id<OLPrintJob>)printJobWithTemplateId:(NSString *)templateId imageFilePaths:(NSArray<NSString *> *)imageFilePaths {

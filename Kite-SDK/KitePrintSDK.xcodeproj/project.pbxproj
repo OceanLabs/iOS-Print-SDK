@@ -20,6 +20,8 @@
 		2E0290EE1F26356000F7A5B0 /* OLViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0290D21F26323500F7A5B0 /* OLViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E0290EF1F26356000F7A5B0 /* OLNavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0290D61F26324E00F7A5B0 /* OLNavigationController.h */; };
 		2E0290F01F26356000F7A5B0 /* OLCollectionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0290DA1F26325E00F7A5B0 /* OLCollectionViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		2E07BD1721186009006FA50B /* OLCalendarPrintJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E07BD1521186009006FA50B /* OLCalendarPrintJob.h */; };
+		2E07BD1821186009006FA50B /* OLCalendarPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E07BD1621186009006FA50B /* OLCalendarPrintJob.m */; };
 		2E0B5B4D1ECC5394005C0C03 /* OLTouchReporterView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0B5B4B1ECC5394005C0C03 /* OLTouchReporterView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E0B5B4E1ECC5394005C0C03 /* OLTouchReporterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0B5B4C1ECC5394005C0C03 /* OLTouchReporterView.m */; };
 		2E12DBC81E795511000A6CEF /* UIView+AutoLayoutHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E12DBC61E795511000A6CEF /* UIView+AutoLayoutHelper.h */; };
@@ -342,6 +344,8 @@
 		2E0290E61F26333200F7A5B0 /* OLKioskLandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKioskLandingViewController.m; sourceTree = "<group>"; };
 		2E0290E91F26336100F7A5B0 /* OLLogoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLLogoutViewController.h; sourceTree = "<group>"; };
 		2E0290EA1F26336100F7A5B0 /* OLLogoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLLogoutViewController.m; sourceTree = "<group>"; };
+		2E07BD1521186009006FA50B /* OLCalendarPrintJob.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLCalendarPrintJob.h; sourceTree = "<group>"; };
+		2E07BD1621186009006FA50B /* OLCalendarPrintJob.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OLCalendarPrintJob.m; sourceTree = "<group>"; };
 		2E0804B61C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCustomViewControllerPhotoProvider.h; sourceTree = "<group>"; };
 		2E0804B71C0DECE300F50D42 /* OLCustomViewControllerPhotoProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCustomViewControllerPhotoProvider.m; sourceTree = "<group>"; };
 		2E0A72641A6FB07000BC5AE7 /* OLImageEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageEditViewController.h; sourceTree = "<group>"; };
@@ -1160,6 +1164,8 @@
 				CD9CF4A4187592A900F067B6 /* OLPrintJob.m */,
 				CD9CF4A118758BDF00F067B6 /* OLProductPrintJob.h */,
 				CD9CF4A218758BDF00F067B6 /* OLProductPrintJob.m */,
+				2E07BD1521186009006FA50B /* OLCalendarPrintJob.h */,
+				2E07BD1621186009006FA50B /* OLCalendarPrintJob.m */,
 				CD9D6AE3187189BF001CD1F9 /* OLPostcardPrintJob.h */,
 				CD9D6AE4187189BF001CD1F9 /* OLPostcardPrintJob.m */,
 				2E7F516F1BF5FBCD00A78718 /* OLGreetingCardPrintJob.h */,
@@ -1356,6 +1362,7 @@
 				2EB8FE381D95685100E26BDF /* OLCircleSelectedCollectionViewCell.h in Headers */,
 				2EB8FE771D95685100E26BDF /* NSString+Formatting.h in Headers */,
 				2EB8FDFD1D95685100E26BDF /* OLProductRepresentation.h in Headers */,
+				2E07BD1721186009006FA50B /* OLCalendarPrintJob.h in Headers */,
 				2EB8FE041D95685100E26BDF /* OLImageDownloadDelegate.h in Headers */,
 				2EB8FE321D95685100E26BDF /* OLCircleMaskCollectionViewCell.h in Headers */,
 				2EB8FE0E1D95685100E26BDF /* OLFacebookAlbumRequest.h in Headers */,
@@ -1803,6 +1810,7 @@
 				2E451DF81D95555D0080F1C1 /* OLProduct.m in Sources */,
 				2E451E341D9555870080F1C1 /* OLProductOverviewViewController.m in Sources */,
 				2EB8FE831D95692000E26BDF /* NSString+Formatting.m in Sources */,
+				2E07BD1821186009006FA50B /* OLCalendarPrintJob.m in Sources */,
 				2E451DDE1D9555540080F1C1 /* OLPhotoEdits.m in Sources */,
 				2E451E321D9555870080F1C1 /* OLProductHomeViewController.m in Sources */,
 				2E451E091D9555860080F1C1 /* OLInstagramImage.m in Sources */,
