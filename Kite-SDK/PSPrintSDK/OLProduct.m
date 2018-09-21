@@ -164,7 +164,7 @@ typedef enum {
     }
 }
 
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView{
+- (void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView{
     UIImage *image;
     if ([self.productPhotos[i] isKindOfClass:[NSString class]]){
         image = [UIImage imageNamedInKiteBundle:self.productPhotos[i]];
@@ -254,12 +254,22 @@ typedef enum {
 }
 
 - (NSDecimalNumber*) unitCostDecimalNumber {
+    NSString *currencyCode = [self currencyCode];
     OLProductTemplate *productTemplate = [OLProductTemplate templateWithId:self.templateId];
     
-    NSDecimalNumber *sheetCost = [productTemplate costPerSheetInCurrencyCode:[self currencyCode]];
+    NSDecimalNumber *sheetCost = [productTemplate costPerSheetInCurrencyCode:currencyCode];
     NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
     NSUInteger numSheets = (NSUInteger) ceil(self.quantityToFulfillOrder / sheetQuanity);
     NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];
+    
+    if (self.productTemplate.fulfilmentItems.count > 1){
+        for (OLFulfilmentItem *item in self.productTemplate.fulfilmentItems){
+            if (((([item.identifier isEqualToString:@"center_chest"] || [item.identifier isEqualToString:@"front_image"]))) && [item hasCostForCurrency:currencyCode]){
+                unitCost = [unitCost decimalNumberByAdding:[item costForCurrency:currencyCode]];
+            }
+        }
+    }
+    
     return unitCost;
 }
 
@@ -276,7 +286,7 @@ typedef enum {
 }
 
 - (BOOL)isMultipack{
-    if (self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUICircle || self.productTemplate.templateUI == OLTemplateUIRectagle){
+    if (self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUICircle || self.productTemplate.templateUI == OLTemplateUIRectagle || (self.productTemplate.templateUI == OLTemplateUIPoster && self.quantityToFulfillOrder > 1)){
         return YES;
     }
     
@@ -378,7 +388,8 @@ typedef enum {
     NSString *shippingLabel = [NSString stringWithFormat:@"**%@**\n", shippingString];
     
     NSDecimalNumber *minCost;
-    NSString *currencyCode = [OLUserSession currentSession].printOrder.currencyCode;
+    
+    NSString *currencyCode = [self currencyCode];
     NSString *region = self.productTemplate.countryMapping[[OLCountry countryForCurrentLocale].codeAlpha3];
     if (region){
         if (self.productTemplate.shippingClasses[region].count == 1){
@@ -398,32 +409,13 @@ typedef enum {
             }
             
             if (fromString){
-                s = [s stringByAppendingString: [NSString stringWithFormat:@"%@ %@\n\n", fromString, [minCost formatCostForCurrencyCode:[OLUserSession currentSession].printOrder.currencyCode]]];
+                s = [s stringByAppendingString: [NSString stringWithFormat:@"%@ %@\n\n", fromString, [minCost formatCostForCurrencyCode:currencyCode]]];
             }
             else{
                 s = [s stringByAppendingString: [NSString stringWithFormat:@"%@\n\n", [minCost formatCostForCurrencyCode:currencyCode]]];
             }
         }
     }
-    
-    //    NSDecimalNumber *shippingCost = [self.productTemplate shippingCostForCountry:[OLCountry countryForCurrentLocale]];
-    //    if (shippingCost && [shippingCost doubleValue] != 0){
-    //        if (![OLKiteABTesting sharedInstance].hidePrice){
-//            NSDecimalNumber *original = [self.productTemplate originalShippingCostForCountry:[OLCountry countryForCurrentLocale]];
-//            if (original){
-//                s = [s stringByAppendingString: [NSString stringWithFormat:@"**%@**\n~%@~ %@\n\n", shippingString, [original formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]], [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
-//            }
-//            else{
-//                s = [s stringByAppendingString: [NSString stringWithFormat:@"**%@**\n%@\n\n", shippingString, [shippingCost formatCostForCurrencyCode:[self.productTemplate currencyForCurrentLocale]]]];
-//            }
-//        }
-//    }
-//    else if (!shippingCost){ // ¯\_(ツ)_/¯ don't assume 0, don't add any shipping info
-//    }
-//    else{
-//        NSString *freeString = NSLocalizedStringFromTableInBundle(@"FREE", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Free, no cost");
-//        s = [s stringByAppendingString:[NSString stringWithFormat:@"**%@**\n%@\n\n", shippingString, freeString]];
-//    }
     
     //Add quality guarantee
     s = [s stringByAppendingString:[OLKitePrintSDK qualityGuaranteeString]];
@@ -433,7 +425,5 @@ typedef enum {
 - (BOOL)isValidProductForUI{
     return self.labelColor && self.productTemplate.templateUI != OLTemplateUINA;
 }
-
-
 
 @end

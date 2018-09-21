@@ -30,6 +30,17 @@
 #import "OLViewController.h"
 #import "OLKiteABTesting.h"
 #import "UIViewController+OLMethods.h"
+#import "OLKitePrintSDK.h"
+#import "OLTouchReporterView.h"
+#import "OLUserSession.h"
+#import "OLKiteViewController.h"
+
+@interface OLKiteViewController ()
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
+@end
+
+@interface OLViewController () <OLTouchReporterDelegate>
+@end
 
 @implementation OLViewController
 
@@ -37,6 +48,17 @@
     [super viewDidLoad];
     
     [self setupTheme];
+    
+    if ([OLKitePrintSDK isKiosk] || YES){
+        self.touchReporter = [[OLTouchReporterView alloc] initWithFrame:self.view.bounds];
+        self.touchReporter.delegate = self;
+        [self.view addSubview:self.touchReporter];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [self reportTouch];
 }
 
 - (void)setupTheme{
@@ -63,5 +85,8 @@
     //To subclass
 }
 
+- (void)reportTouch{
+    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
+}
 
 @end

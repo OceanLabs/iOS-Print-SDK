@@ -50,4 +50,8 @@
     return _collections;
 }
 
+- (UIImage *)icon{
+    return [_icon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+}
+
 @end

@@ -46,8 +46,13 @@ static NSString *const kOLKiteLightThemeColor1 = @"ly.kite.theme.light.color.1";
 static NSString *const kOLKiteLightThemeColor2 = @"ly.kite.theme.light.color.2";
 static NSString *const kOLKiteLightThemeColor3 = @"ly.kite.theme.light.color.3";
 static NSString *const kOLKiteLightThemeColor4 = @"ly.kite.theme.light.color.4";
+static NSString *const kOLKiteLightThemeColorPickerTick = @"ly.kite.theme.light.color.picker.tick";
 static NSString *const kOLKiteLightThemeColorReviewCounter = @"ly.kite.theme.light.color.reviewCounter";
 static NSString *const kOLKiteLightThemeColorDescriptionSeparator = @"ly.kite.theme.light.color.descriptionSeparator";
+static NSString *const kOLKiteLightThemeColorImageEditBg = @"ly.kite.theme.light.color.imageedit.bg";
+static NSString *const kOLKiteLightThemeColorImageEditCta = @"ly.kite.theme.light.color.imageedit.cta";
+static NSString *const kOLKiteLightThemeColorBasketQtyButtons = @"ly.kite.theme.light.color.basket.qtybuttons";
+static NSString *const kOLKiteLightThemeColorBasketContinueShopping = @"ly.kite.theme.light.color.basket.continueshopping";
 static NSString *const kOLKiteLightThemeTitleColor1 = @"ly.kite.theme.light.titleColor.1";
 static NSString *const kOLKiteLightThemeFont1 = @"ly.kite.theme.light.font.1";
 static NSString *const kOLKiteLightThemeHeavyFont1 = @"ly.kite.theme.light.font.1.heavy";
@@ -58,7 +63,6 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 
 @property (assign, nonatomic) BOOL launchedWithPrintOrder;
 
-@property (assign, nonatomic, readonly) BOOL offerAddressSearch;
 @property (assign, nonatomic, readonly) BOOL hidePrice;
 @property (assign, nonatomic, readonly) BOOL offerPayPal;
 @property (assign, nonatomic, readonly) BOOL skipProductOverview;
@@ -71,6 +75,7 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @property (strong, nonatomic, readonly) NSString *launchWithPrintOrderVariant;
 @property (strong, nonatomic, readonly) NSString *paymentScreen;
 @property (strong, nonatomic, readonly) NSString *coverPhotoId;
+@property (strong, nonatomic, readonly) NSString *packReviewStyle;
 
 @property (strong, nonatomic, readonly) NSString *headerLogoURL;
 @property (strong, nonatomic, readonly) NSString *receiptSuccessURL;
@@ -84,8 +89,13 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor2;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor3;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColor4;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColorPickerTick;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColorReviewCounter;
 @property (strong, nonatomic, readonly) UIColor *lightThemeColorDescriptionSeparator;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColorImageEditBg;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColorImageEditCta;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColorBasketQtyButtons;
+@property (strong, nonatomic, readonly) UIColor *lightThemeColorBasketContinueShopping;
 @property (strong, nonatomic, readonly) UIColor *lightThemeTitleColor1;
 @property (strong, nonatomic, readonly) NSNumber *lightThemeButtonRoundCorners;
 - (UIFont *)lightThemeFont1WithSize:(CGFloat)size;
@@ -97,7 +107,7 @@ static NSString *const kOLKiteLightThemeButtonRoundCorners = @"ly.kite.theme.lig
 @property (strong, nonatomic) NSArray *paypalSupportedCurrencies;
 
 + (instancetype)sharedInstance;
-- (void)fetchRemotePlistsWithCompletionHandler:(void(^)())handler;
+- (void)fetchRemotePlistsWithCompletionHandler:(void(^)(void))handler;
 - (void)prefetchRemoteImages;
 - (void)setupABTestVariants;
 - (void)setupCoverPhotoTestWithExperimentDict:(NSDictionary *)experimentDict;

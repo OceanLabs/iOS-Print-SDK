@@ -38,6 +38,7 @@
 #import "OLPayPalWrapper.h"
 #import "OLStripeWrapper.h"
 #import "OLFacebookSDKWrapper.h"
+#import "OLKiteViewController+Private.h"
 
 @import Contacts;
 @import PassKit;
@@ -47,10 +48,6 @@
 + (NSString *)instagramRedirectURI;
 + (NSString *)instagramSecret;
 + (NSString *)instagramClientID;
-@end
-
-@interface OLKiteViewController (Private)
-@property (strong, nonatomic) NSMutableArray *customImageProviders;
 @end
 
 @implementation OLKiteUtils
@@ -94,7 +91,7 @@
 }
 
 + (BOOL)recentsAvailable{
-    return [OLUserSession currentSession].appAssets.count == 0 && [OLUserSession currentSession].recentPhotos.count == 0;
+    return [OLUserSession currentSession].appAssets.count != 0 || [OLUserSession currentSession].recentPhotos.count != 0;
 }
 
 + (NSInteger)numberOfProvidersAvailable{
@@ -136,7 +133,7 @@
 }
 
 +(BOOL)isApplePayAvailable{
-    if (![OLStripeWrapper isStripeAvailable] || ![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""]){
+    if (![OLStripeWrapper isStripeAvailable] || ![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""] || [OLKitePrintSDK isKiosk]){
         return NO;
     }
     
@@ -144,7 +141,7 @@
     if (![CNContact class]){
         return NO;
     }
-    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
+    return [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
 }
 
 + (NSArray<NSString *> *)supportedPKPaymentNetworks {
@@ -176,40 +173,6 @@
     }
     
     return font;
-}
-
-+ (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
-    OLTemplateUI templateUI = product.productTemplate.templateUI;
-    if (templateUI == OLTemplateUICase || templateUI == OLTemplateUIApparel){
-        return @"OLCaseViewController";
-    }
-    else if (templateUI == OLTemplateUIPostcard){
-        return @"OLPostcardViewController";
-    }
-    else if (templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
-        return @"OLSingleImageProductReviewViewController";
-    }
-    else if (templateUI == OLTemplateUIPhotobook){
-        return @"OLEditPhotobookViewController";
-    }
-    else if (templateUI == OLTemplateUINonCustomizable){
-        return @"OLPaymentViewController";
-    }
-    else if (templateUI == OLTemplateUIMug){
-        return @"OL3DProductViewController";
-    }
-    else if (photoSelectionScreen){
-        return @"OLImagePickerViewController";
-    }
-    else if (templateUI == OLTemplateUIPoster){
-        return @"OLPosterViewController";
-    }
-    else if (templateUI == OLTemplateUIFrame || templateUI == OLTemplateUICalendar){
-        return @"FrameOrderReviewViewController";
-    }
-    else{
-        return @"OrderReviewViewController";
-    }
 }
 
 + (BOOL)assetArrayContainsPDF:(NSArray *)array{

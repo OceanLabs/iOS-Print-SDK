@@ -1,6 +1,2 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
-%@ days,%@ days,"/* Examples: 2-5 days, 7 days */"
-1 day,1 day,
-From,From,
-Shipping Method,Shipping Method,
-Tracked,Tracked,
+1 working day,1 working day,

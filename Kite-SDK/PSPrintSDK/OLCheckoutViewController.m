@@ -69,6 +69,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 @property (assign, nonatomic) BOOL optOutOfEmail;
 @end
 
+@interface OLKiteViewController ()
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
+@end
 
 #define kColourLightBlue [UIColor colorWithRed:0 / 255.0 green:122 / 255.0 blue:255 / 255.0 alpha:1.0]
 
@@ -112,7 +115,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)presentViewControllerFrom:(UIViewController *)presentingViewController animated:(BOOL)animated completion:(void (^)(void))completion {
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self];
+    UINavigationController *navController = [[OLNavigationController alloc] initWithRootViewController:self];
     navController.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
     [presentingViewController presentViewController:navController animated:animated completion:completion];
 }
@@ -158,9 +161,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self registerForKeyboardNotifications];
-    
+        
     [self trackViewed];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(onButtonNextClicked)];
@@ -205,7 +206,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 0)];
     
     self.kiteLabel = [[UILabel alloc] init];
-    self.kiteLabel.text = NSLocalizedStringFromTableInBundle(@"Powered by Kite.ly", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
+    self.kiteLabel.text = @"Powered by Kite.ly";
     self.kiteLabel.font = [UIFont systemFontOfSize:13];
     self.kiteLabel.textColor = [UIColor lightGrayColor];
     self.kiteLabel.textAlignment = NSTextAlignmentCenter;
@@ -229,34 +230,16 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     }
 }
 
-- (void)registerForKeyboardNotifications
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
-}
-
 - (void)trackViewed{
-#ifndef OL_NO_ANALYTICS
-    if ([OLKiteABTesting sharedInstance].offerAddressSearch) {
-        [OLAnalytics trackDeliveryDetailsScreenViewedForOrder:self.printOrder variant:@"Classic + Address Search" showPhoneEntryField:YES];
-    } else {
-        [OLAnalytics trackDeliveryDetailsScreenViewedForOrder:self.printOrder variant:@"Classic" showPhoneEntryField:YES];
-    }
-#endif
+    [OLAnalytics trackDeliveryDetailsScreenViewedForOrder:self.printOrder variant:@"Classic" showPhoneEntryField:YES];
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
     }
-#endif
 }
 
 - (void)positionKiteLabel {
@@ -271,9 +254,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 }
 
 - (void)onButtonCancelClicked {
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
-#endif
     if ([self.delegate respondsToSelector:@selector(checkoutViewControllerDidCancel:)]) {
         [self.delegate checkoutViewControllerDidCancel:self];
     } else {
@@ -290,9 +271,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     if (![self hasUserProvidedValidDetailsToProgressToPayment]) {
         return;
     }
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
-#endif
     [self checkAndSaveAddress];
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
@@ -336,9 +315,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         return;
     }
     [self checkAndSaveAddress];
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackShippingScreenHitBackForOrder:self.printOrder];
-#endif
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -650,10 +627,9 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kSectionDeliveryDetails) {
-        if ([OLKiteABTesting sharedInstance].offerAddressSearch || [OLAddress addressBook].count > 0) {
+        if ([OLAddress addressBook].count > 0) {
             OLAddressPickerController *addressPicker = [[OLAddressPickerController alloc] init];
             addressPicker.delegate = self;
-            addressPicker.allowsAddressSearch = [OLKiteABTesting sharedInstance].offerAddressSearch;
             addressPicker.allowsMultipleSelection = NO;
             if (self.shippingAddress){
                 addressPicker.selected = [@[self.shippingAddress] mutableCopy];
@@ -663,7 +639,7 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
         } else {
             OLAddressEditViewController *editVc = [[OLAddressEditViewController alloc] init];
             editVc.delegate = self;
-            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:editVc];
+            UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:editVc];
             nvc.modalPresentationStyle = [OLUserSession currentSession].kiteVc.modalPresentationStyle;
             [self presentViewController:nvc animated:YES completion:nil];
         }
@@ -687,6 +663,11 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
     self.activeTextView = textField;
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
+    return YES;
+}
+
 #pragma mark - OLAddressPickerController delegate
 
 - (void)addressPicker:(OLAddressPickerController *)picker didFinishPickingAddresses:(NSArray<OLAddress *> *)addresses {
@@ -699,39 +680,6 @@ static NSString *const kKeyPhone = @"co.oceanlabs.pssdk.kKeyPhone";
 
 - (void)addressPickerDidCancelPicking:(OLAddressPickerController *)picker {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-// Called when the UIKeyboardDidShowNotification is sent.
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
-    
-    NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.edgeInsetTop, 0.0, kbSize.height, 0.0);
-    [UIView animateWithDuration:0.1 animations:^{
-        self.tableView.contentInset = contentInsets;
-        self.tableView.scrollIndicatorInsets = contentInsets;
-    }];
-    
-    // If active text field is hidden by keyboard, scroll it so it's visible
-    // Your application might not need or want this behavior.
-    CGRect aRect = self.view.frame;
-    aRect.size.height -= kbSize.height;
-    CGPoint p = self.activeTextView.superview.frame.origin;
-    if (!CGRectContainsPoint(aRect, CGPointMake(p.x, p.y + self.activeTextView.frame.size.height)) ) {
-        CGPoint scrollPoint = CGPointMake(0.0, self.activeTextView.superview.frame.origin.y-kbSize.height);
-        [self.tableView setContentOffset:scrollPoint animated:YES];
-    }
-    
-}
-
-// Called when the UIKeyboardWillHideNotification is received
-- (void)keyboardWillBeHidden:(NSNotification *)aNotification
-{
-    // scroll back..
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.edgeInsetTop, 0, 0, 0);
-    self.tableView.contentInset = contentInsets;
-    self.tableView.scrollIndicatorInsets = contentInsets;
 }
 
 - (void)dealloc{

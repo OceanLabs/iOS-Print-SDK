@@ -48,7 +48,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #import "AssetDataSource.h"
 #import "OLKiteTestHelper.h"
 #import "OLKiteUtils.h"
-#import "JDStatusBarNotification/JDStatusBarNotification.h"
 #import "AppDelegate.h"
 
 @import Photos;
@@ -66,7 +65,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 @implementation CIViewController
 
--(void)viewDidAppear:(BOOL)animated{
+- (void)viewDidAppear:(BOOL)animated{
     self.printOrder = [[OLPrintOrder alloc] init];
     
     if ([(AppDelegate *)[UIApplication sharedApplication].delegate setupProperties]){
@@ -81,7 +80,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [OLKitePrintSDK setInstagramEnabledWithClientID:@"1af4c208cbdc4d09bbe251704990638f" secret:@"c8a5b1b1806f4586afad2f277cee1d5c" redirectURI:@"kitely://instagram-callback"];
+    [OLKitePrintSDK setInstagramEnabledWithClientID:@"1af4c208cbdc4d09bbe251704990638f" secret:@"c8a5b1b1806f4586afad2f277cee1d5c" redirectURI:@"https://kite.ly/instagram-callback"];
     
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
@@ -140,7 +139,8 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     NSArray *assets = @[[OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/1.jpg"]],
                         [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/2.jpg"]],
                         [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/3.jpg"]],
-                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]]];
+                        [OLAsset assetWithURL:[NSURL URLWithString:@"https://s3.amazonaws.com/psps/sdk_static/4.jpg"]],
+                        ];
     
     [self printWithAssets:assets];
 }
@@ -163,6 +163,12 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
                     [OLProgressHUD showProgress:(float)progress/(float)total status:@"Downloading PDF 2/2"];
                 });
             } withCompletionHandler:^(NSData *data, NSError *error){
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define OL_KITE_CI_DEPLOY_KEY @ STRINGIZE2(OL_KITE_CI_DEPLOY)
+                [OLKitePrintSDK setAPIKey:OL_KITE_CI_DEPLOY_KEY withEnvironment:OLKitePrintSDKEnvironmentSandbox];
+                [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
+                
                 OLAsset *cover = [OLAsset assetWithDataAsPDF:data];
                 
                 id<OLPrintJob> job = [OLPrintJob photobookWithTemplateId:@"rpi_wrap_280x210_sm" OLAssets:@[inside] frontCoverOLAsset:cover backCoverOLAsset:nil];
@@ -245,7 +251,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
         }];
 
     }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"Clear Cache" style:UIAlertActionStyleDefault handler:^(id action){
+    [ac addAction:[UIAlertAction actionWithTitle:@"Clear Web Image Cache" style:UIAlertActionStyleDefault handler:^(id action){
         [[NSURLCache sharedURLCache] removeAllCachedResponses];
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:NULL]];
@@ -272,12 +278,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 #ifdef OL_KITE_VERBOSE
     NSLog(@"%@", info);
 #endif
-    
-    NSString *status = info[kOLAnalyticsEventName];
-    if ([info[kOLAnalyticsEventLevel] integerValue] != 1){
-        status = [@"*" stringByAppendingString:status];
-    }
-    [JDStatusBarNotification showWithStatus:status dismissAfter:2];
 }
 
 - (void)setupCIDeploymentWithAssets:(NSArray *)assets{
@@ -354,7 +354,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
 
 - (void)showKiteVcForAPIKey:(NSString *)s assets:(NSArray *)assets{
     [OLKitePrintSDK setAPIKey:s withEnvironment:[self environment]];
-    
+        
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
     
@@ -367,7 +367,9 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     }
     
     [self addCatsAndDogsImagePickersToKite:vc];
-        
+    
+    [vc addCustomPhotoProviderWithViewController:nil name:@"External" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
+    
     [self presentViewController:vc animated:YES completion:NULL];
 }
 

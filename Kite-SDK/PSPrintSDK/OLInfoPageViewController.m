@@ -31,6 +31,8 @@
 #import "OLAnalytics.h"
 #import "UIImage+ImageNamedInKiteBundle.h"
 #import "OLAnalytics.h"
+#import "OLKiteABTesting.h"
+#import "OLImageDownloader.h"
 
 @interface OLInfoPageViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -50,22 +52,41 @@
     CGRect f = self.navigationItem.titleView.frame;
     self.navigationItem.titleView.frame = CGRectMake(f.origin.x, f.origin.y + 25, f.size.width, f.size.height);
  
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackQualityInfoScreenViewed];
-#endif
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    NSURL *url = [NSURL URLWithString:[OLKiteABTesting sharedInstance].headerLogoURL];
+    if (url && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:url]){
+        [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
+            if (error){
+                return;
+            }
+            image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImageView *titleImageView = [[UIImageView alloc] initWithImage:image];
+                titleImageView.alpha = 0;
+                self.navigationItem.titleView = titleImageView;
+                titleImageView.alpha = 0;
+                [UIView animateWithDuration:0.15 animations:^{
+                    titleImageView.alpha = 1;
+                }];
+            });
+        }];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackQualityScreenHitBack];
     }
-#endif
 }
 
--(void)viewWillAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
@@ -82,8 +103,7 @@
 }
 
 -(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    CGFloat imageStretchFactor =  self.view.frame.size.width / self.image.size.width;
-    return self.image.size.height * imageStretchFactor;
+    return self.image.size.height;
 }
 
 @end

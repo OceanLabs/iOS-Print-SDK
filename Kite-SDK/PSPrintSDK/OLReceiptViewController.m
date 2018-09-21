@@ -187,9 +187,7 @@ static const NSUInteger kSectionErrorRetry = 2;
     if  (!kiteVc){
         [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
     }
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackKiteDismissed];
-#endif
     if ([kiteVc.delegate respondsToSelector:@selector(kiteControllerDidFinish:)]){
         [kiteVc.delegate kiteControllerDidFinish:kiteVc];
     }
@@ -298,10 +296,8 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (void)retryWasSuccessful{
     if (self.printOrder.printed){
         [[NSNotificationCenter defaultCenter] postNotificationName:kOLNotificationPrintOrderSubmission object:self userInfo:@{kOLKeyUserInfoPrintOrder: self.printOrder}];
-#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackOrderSubmission:self.printOrder];
     }
-#endif
     
     [UIView transitionWithView:self.view duration:0.3f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         [self setupHeader];
@@ -325,11 +321,13 @@ static const NSUInteger kSectionErrorRetry = 2;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == kSectionOrderSummary) {
         __block NSUInteger count = 0;
-        [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
-            // this will actually do the right thing. Either this will callback immediately because printOrder
-            // has cached costs and the count will be updated before below conditionals are hit or it will make an async request and count will remain 0 for below.
-            count = cost.lineItems.count;
-        }];
+        if (self.printOrder.printed) {
+            [self.printOrder costWithCompletionHandler:^(OLPrintOrderCost *cost, NSError *error) {
+                // this will actually do the right thing. Either this will callback immediately because printOrder
+                // has cached costs and the count will be updated before below conditionals are hit or it will make an async request and count will remain 0 for below.
+                count = cost.lineItems.count;
+            }];
+        }
         if (count == 0){
             return self.printOrder.jobs.count;
         }

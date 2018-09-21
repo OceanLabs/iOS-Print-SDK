@@ -44,10 +44,10 @@
 
 @end
 
-@interface OLImagePickerViewController : UIViewController
+@interface OLImagePickerViewController : OLViewController
 
 @property (strong, nonatomic) OLProduct *product;
-@property (weak, nonatomic) IBOutlet UIButton *nextButton;
+@property (weak, nonatomic) IBOutlet UIButton *ctaButton;
 @property (weak, nonatomic) id<OLImagePickerViewControllerDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *selectedAssets;
 @property (assign, nonatomic) NSInteger maximumPhotos;
@@ -61,6 +61,7 @@
 - (void)onButtonDoneTapped:(UIButton *)sender;
 - (void)presentExternalViewControllerForProvider:(OLImagePickerProvider *)provider;
 - (BOOL)isExclusiveCustomViewControllerProvider;
+- (NSUInteger)assetCount;
 
 
 @end

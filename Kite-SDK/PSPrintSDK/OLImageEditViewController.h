@@ -28,46 +28,59 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLRemoteImageCropper.h"
+#import "OLImageCropper.h"
 #import "OLViewController.h"
 #import "OLEditingToolsView.h"
 #import "OLProduct.h"
+#import "OLArtboardView.h"
 
 @class OLImageEditViewController;
 @class OLPhotoEdits;
 @class OLAsset;
 
+extern const NSInteger kOLEditTagImages;
+extern const NSInteger kOLEditTagProductOptionsTab;
+extern const NSInteger kOLEditTagImageTools;
+extern const NSInteger kOLEditTagTextTools;
+extern const NSInteger kOLEditTagTextColors;
+extern const NSInteger kOLEditTagFonts;
+extern const NSInteger kOLEditTagFilters;
+extern const NSInteger kOLEditTagCrop;
+
 @protocol OLImageEditViewControllerDelegate <NSObject>
 
-- (void)scrollCropViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage;
-- (void)scrollCropViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset;
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didFinishCroppingImage:(UIImage *)croppedImage;
+- (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset;
 
 @optional
-- (void)scrollCropViewControllerDidDropChanges:(OLImageEditViewController *)cropper;
-- (void)scrollCropViewControllerDidCancel:(OLImageEditViewController *)cropper;
+- (void)imageEditViewControllerDidDropChanges:(OLImageEditViewController *)cropper;
+- (void)imageEditViewControllerDidCancel:(OLImageEditViewController *)cropper;
 @end
 
 @interface OLImageEditViewController : OLViewController
 
-@property (strong, nonatomic) UIImage *fullImage;
-@property (copy, nonatomic) OLPhotoEdits *edits;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *aspectRatioConstraint;
-@property (weak, nonatomic) IBOutlet OLRemoteImageCropper *cropView;
-@property (assign, nonatomic) CGFloat aspectRatio;
-@property (strong, nonatomic) NSNumber *centerYConConstant;
-@property (weak, nonatomic) id<OLImageEditViewControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL enableCircleMask;
-@property (strong, nonatomic) UIView *previewView;
-@property (strong, nonatomic) UIView *previewSourceView;
 @property (assign, nonatomic) BOOL forceSourceViewDimensions;
 @property (assign, nonatomic) BOOL skipPresentAnimation;
+@property (assign, nonatomic) CGFloat aspectRatio;
 @property (assign, nonatomic) UIEdgeInsets borderInsets;
+@property (copy, nonatomic) OLPhotoEdits *edits;
+@property (strong, nonatomic) NSLayoutConstraint *aspectRatioConstraint;
+@property (strong, nonatomic) NSNumber *centerYConConstant;
 @property (strong, nonatomic) OLAsset *asset;
-@property (weak, nonatomic) UIButton *ctaButton;
 @property (strong, nonatomic) OLEditingToolsView *editingTools;
 @property (strong, nonatomic) OLProduct *product;
-@property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
+@property (strong, nonatomic) OLArtboardView *artboard;
+@property (strong, nonatomic) UIImageView *deviceView;
+@property (strong, nonatomic) UIImageView *highlightsView;
+@property (strong, nonatomic) UIView *previewSourceView;
+@property (strong, nonatomic) UIView *previewView;
+@property (strong, nonatomic) UIView *printContainerView;
+@property (weak, nonatomic) UIButton *ctaButton;
+@property (weak, nonatomic) id<OLImageEditViewControllerDelegate> delegate;
 
-
+- (void)setupContainerView;
+- (void)applyProductImageLayers;
+- (void)setImage:(UIImage *)image;
 
 @end

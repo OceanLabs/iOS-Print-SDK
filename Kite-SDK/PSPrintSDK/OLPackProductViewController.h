@@ -35,12 +35,11 @@
 
 @class OLProduct;
 
-@interface OLPackProductViewController : OLCollectionViewController <UINavigationControllerDelegate, OLImageEditViewControllerDelegate>
+@interface OLPackProductViewController : OLCollectionViewController <UINavigationControllerDelegate>
 
 @property (nonatomic, strong) OLProduct *product;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
-@property (strong, nonatomic) NSMutableArray *checkoutPhotos;
 
-- (void)saveJobWithCompletionHandler:(void(^)())handler;
+- (void)saveJobWithCompletionHandler:(void(^)(void))handler;
 
 @end

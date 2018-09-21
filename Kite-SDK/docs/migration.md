@@ -6,16 +6,16 @@
  All payment and social subspecs are deprecated. If you need any of the following please install them separately.
 #### PayPal:
  ```ruby
- pod 'PayPal-iOS-SDK/Core', '~> 2.12.5'
+ pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
  ```
 #### Apple Pay:
  ```ruby
- pod 'Stripe', '~> 8.0.6'
+ pod 'Stripe', '~> 10.1.0'
  ```
 #### Facebook:
  ```ruby
- pod 'FBSDKCoreKit', '~> 4.16.0'
- pod 'FBSDKLoginKit', '~> 4.16.0'
+ pod 'FBSDKCoreKit', '~> 4.27.1'
+ pod 'FBSDKLoginKit', '~> 4.27.1'
  ```
 
 #### Instagram:

@@ -55,6 +55,10 @@ static const NSUInteger kTagTextField = 99;
 @property (nonatomic, assign) BOOL userSavedAddress;
 @end
 
+@interface OLKiteViewController ()
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
+@end
+
 @implementation OLAddressEditViewController
 
 - (id)init {
@@ -80,9 +84,7 @@ static const NSUInteger kTagTextField = 99;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackAddEditAddressScreenViewed];
-#endif
 }
 
 - (void)viewDidLoad {
@@ -145,7 +147,7 @@ static const NSUInteger kTagTextField = 99;
     }
 }
 
--(BOOL)isValidAddress{
+- (BOOL)isValidAddress{
     BOOL flag = YES;
     NSString *errorMessage;
     if ([self.textFieldFirstName.text isEqualToString:@""] || [self.textFieldLastName.text isEqualToString:@""]){
@@ -404,6 +406,7 @@ static const NSUInteger kTagTextField = 99;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
     NSString *s = [textField.text stringByReplacingCharactersInRange:range withString:string];
     if (textField == self.textFieldFirstName) {
         self.address.recipientFirstName = s;

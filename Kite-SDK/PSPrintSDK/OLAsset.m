@@ -84,21 +84,21 @@ static NSOperationQueue *imageOperationQueue;
 
 @implementation OLAsset
 
--(OLPhotoEdits *) edits{
+- (OLPhotoEdits *) edits{
     if (!_edits){
         _edits = [[OLPhotoEdits alloc] init];
     }
     return _edits;
 }
 
--(NSString *) uuid{
+- (NSString *) uuid{
     if (!_uuid){
         _uuid = [[NSUUID UUID] UUIDString];
     }
     return _uuid;
 }
 
-+(NSOperationQueue *) imageOperationQueue{
++ (NSOperationQueue *) imageOperationQueue{
     if (!imageOperationQueue){
         imageOperationQueue = [[NSOperationQueue alloc] init];
         imageOperationQueue.maxConcurrentOperationCount = 1;
@@ -400,8 +400,10 @@ static NSOperationQueue *imageOperationQueue;
     }
     BOOL fullResolution = CGSizeEqualToSize(size, OLAssetMaximumSize);
     
+    BOOL shouldCacheResult = YES;
     if (fullResolution || (!applyEdits && self.isEdited)){
         self.cachedEditedImage = nil;
+        shouldCacheResult = NO;
     }
     
     if (self.cachedEditedImage) {
@@ -431,19 +433,19 @@ static NSOperationQueue *imageOperationQueue;
             };
             
             //Don't request less than a 400x400 image, otherwise the Photos Framework tries to be useful and returns a low-res, prerendered image which loses the rotation metadata (but is rotated correctly). This messes up the rotation from our editor.
-            CGSize requestSize = fullResolution ? PHImageManagerMaximumSize : CGSizeMake(MAX(size.width * [OLUserSession currentSession].screenScale, 400), MAX(size.height * [OLUserSession currentSession].screenScale, 400));
+            CGSize requestSize = fullResolution || (applyEdits && self.isEdited) ? PHImageManagerMaximumSize : CGSizeMake(MAX(size.width * [OLUserSession currentSession].screenScale, 400), MAX(size.height * [OLUserSession currentSession].screenScale, 400));
             [imageManager requestImageForAsset:self.phAsset targetSize:requestSize contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage *image, NSDictionary *info){
                 if (image){
                     if (applyEdits){
                         [self resizeImage:image size:size applyEdits:applyEdits completion:^(UIImage *image){
-                            if (!fullResolution){
+                            if (shouldCacheResult){
                                 self.cachedEditedImage = image;
                             }
                             handler(image, nil);
                         }];
                     }
                     else{ //Image is already resized, no need to do it again
-                        if (!fullResolution){
+                        if (shouldCacheResult){
                             self.cachedEditedImage = image;
                         }
                         handler(image, nil);
@@ -458,7 +460,7 @@ static NSOperationQueue *imageOperationQueue;
         }
         else if (self.assetType == kOLAssetTypeImageData){
             [self resizeImage:[UIImage imageWithData:self.imageData] size:size applyEdits:applyEdits completion:^(UIImage *image){
-                if (!fullResolution){
+                if (shouldCacheResult){
                     self.cachedEditedImage = image;
                 }
                 handler(image, nil);
@@ -467,7 +469,7 @@ static NSOperationQueue *imageOperationQueue;
         else if (self.assetType == kOLAssetTypeImageFilePath){
             NSData *imageData = [NSData dataWithContentsOfFile:self.imageFilePath options:0 error:nil];
             [self resizeImage:[UIImage imageWithData:imageData] size:size applyEdits:applyEdits completion:^(UIImage *image){
-                if (!fullResolution){
+                if (shouldCacheResult){
                     self.cachedEditedImage = image;
                 }
                 handler(image, nil);
@@ -483,8 +485,6 @@ static NSOperationQueue *imageOperationQueue;
                     [self resizeImage:[UIImage imageWithData:data] size:size applyEdits:applyEdits completion:^(UIImage *image){
                         if (!error) {
                             if (!fullResolution){
-                                self.cachedEditedImage = image;
-                                
                                 // Decompress image to improve performance
                                 // Source: http://stackoverflow.com/questions/10790183/setting-image-property-of-uiimageview-causes-major-lag
                                 if (image) {
@@ -492,6 +492,10 @@ static NSOperationQueue *imageOperationQueue;
                                     [image drawAtPoint:CGPointZero];
                                     image = UIGraphicsGetImageFromCurrentImageContext();
                                     UIGraphicsEndImageContext();
+                                }
+                                
+                                if (shouldCacheResult){
+                                    self.cachedEditedImage = image;
                                 }
                             }
                             if (progress){
@@ -541,21 +545,25 @@ static NSOperationQueue *imageOperationQueue;
 
 - (void)resizeImage:(UIImage *)image size:(CGSize)size applyEdits:(BOOL)applyEdits completion:(void(^)(UIImage *image))handler{
     __block UIImage *blockImage = image;
-    void (^localBlock)() = ^{
+    void (^localBlock)(void) = ^{
         if ((self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical) && applyEdits){
             blockImage = [UIImage imageWithCGImage:blockImage.CGImage scale:blockImage.scale orientation:[OLPhotoEdits orientationForNumberOfCounterClockwiseRotations:self.edits.counterClockwiseRotations andInitialOrientation:blockImage.imageOrientation horizontalFlip:self.edits.flipHorizontal verticalFlip:self.edits.flipVertical]];
         }
         
-        if (!CGSizeEqualToSize(size, CGSizeZero) && !CGSizeEqualToSize(size, OLAssetMaximumSize)){
-            blockImage = [blockImage shrinkToSize:size forScreenScale:[OLUserSession currentSession].screenScale];
-        }
-        
         if (![self isEdited] || !applyEdits){
+            if (!CGSizeEqualToSize(size, CGSizeZero) && !CGSizeEqualToSize(size, OLAssetMaximumSize)){
+                blockImage = [blockImage shrinkToSize:CGSizeMake(size.width, size.height) forScreenScale:[OLUserSession currentSession].screenScale];
+            }
             handler(blockImage);
             return;
         }
         
         blockImage = [RMImageCropper editedImageFromImage:blockImage andFrame:self.edits.cropImageFrame andImageRect:self.edits.cropImageRect andImageViewWidth:self.edits.cropImageSize.width andImageViewHeight:self.edits.cropImageSize.height];
+        
+        if (!CGSizeEqualToSize(size, CGSizeZero) && !CGSizeEqualToSize(size, OLAssetMaximumSize)){
+            CGFloat scale = [OLUserSession currentSession].screenScale;
+            blockImage = [blockImage shrinkToSize:CGSizeMake(size.width * scale, size.height * scale) forScreenScale:[OLUserSession currentSession].screenScale];
+        }
         
         if (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]){
             CIImage *filterImage = [CIImage imageWithCGImage:blockImage.CGImage];
@@ -625,6 +633,10 @@ static NSOperationQueue *imageOperationQueue;
     else{
         localBlock();
     }
+}
+
++ (NSMutableArray<OLAsset *> *)userSelectedAssets{
+    return [OLUserSession currentSession].userSelectedAssets;
 }
 
 - (void)unloadImage {

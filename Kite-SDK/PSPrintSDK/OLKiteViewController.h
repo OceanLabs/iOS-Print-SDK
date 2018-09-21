@@ -66,6 +66,14 @@
 - (UIViewController<OLCustomPickerController> *_Nonnull)imagePickerViewControllerForName:(NSString *_Nonnull)name;
 
 
+
+/**
+ For internal use
+ */
+- (UIView *_Nonnull)viewForHeaderWithWidth:(CGFloat)width;
+- (UIViewController *_Nonnull)infoPageViewController;
+
+
 - (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disallowUserToAddMorePhotos.");
 - (BOOL)kiteControllerShouldDisableCameraRoll:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disableCameraRoll.");
 - (BOOL)shouldShowPhoneEntryOnCheckoutScreen __deprecated_msg("This method will no longer work.");
@@ -235,7 +243,7 @@
 
  @param handler Completion handler that is called when all network requests are finished and the Kite View Controller is ready to be shown.
  */
-- (void)startLoadingWithCompletionHandler:(void(^_Nonnull)())handler;
+- (void)startLoadingWithCompletionHandler:(void(^_Nonnull)(void))handler;
 
 
 /**

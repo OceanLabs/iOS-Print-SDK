@@ -46,12 +46,15 @@ typedef NSUInteger OLUserSessionCleanupOption;
 
 @interface OLUserSession : NSObject
 
-@property (strong, nonatomic) NSMutableArray<OLAsset *> *userSelectedPhotos;
+@property (strong, nonatomic) NSMutableArray<OLAsset *> *userSelectedAssets;
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *recentPhotos;
 @property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSArray<OLAsset *> *appAssets;
 @property (assign, nonatomic) CGFloat screenScale;
 @property (weak, nonatomic) OLKiteViewController *kiteVc;
+@property (assign, nonatomic) BOOL prioritizeMainBundleImages;
+@property (assign, nonatomic) BOOL capitalizeCtaTitles;
+@property (strong, nonatomic) NSString *deeplink;
 + (instancetype)currentSession;
 - (void)cleanupUserSession:(OLUserSessionCleanupOption)cleanupOptions;
 - (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection;

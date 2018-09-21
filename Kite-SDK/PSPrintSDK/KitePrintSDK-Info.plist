@@ -12,8 +12,6 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>en</string>
@@ -22,7 +20,18 @@
 		<string>de</string>
 		<string>it</string>
 		<string>pl</string>
+		<string>nl</string>
+		<string>hu</string>
+		<string>sk</string>
+		<string>pt</string>
+		<string>fi</string>
+		<string>sv</string>
+		<string>nb</string>
+		<string>da</string>
+		<string>cs</string>
 	</array>
+	<key>CFBundleName</key>
+	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

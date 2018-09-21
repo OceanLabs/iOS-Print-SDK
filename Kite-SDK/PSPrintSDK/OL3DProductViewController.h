@@ -27,8 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#import "OLSingleImageProductReviewViewController.h"
+#import "OLSingleProductReviewViewController.h"
 
-@interface OL3DProductViewController : OLSingleImageProductReviewViewController
+@interface OL3DProductViewController : OLSingleProductReviewViewController
 
 @end

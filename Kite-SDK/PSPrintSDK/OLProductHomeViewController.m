@@ -51,15 +51,8 @@
 #import "UIImage+OLUtils.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
-
-#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-
-@interface OLKiteViewController (Private)
-
-+ (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group;
-- (void)dismiss;
-
-@end
+#import "OLKiteViewController+Private.h"
+#import "UIView+AutoLayoutHelper.h"
 
 @interface OLProductTypeSelectionViewController ()
 -(NSMutableArray *) products;
@@ -67,7 +60,7 @@
 @end
 
 
-@interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
+@interface OLProductHomeViewController () <UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSArray *productGroups;
 @property (nonatomic, strong) UIImageView *topSurpriseImageView;
 @property (assign, nonatomic) BOOL fromRotation;
@@ -90,9 +83,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackCategoryListScreenViewed];
-#endif
 
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[OLKiteABTesting sharedInstance].backButtonText
                                                                              style:UIBarButtonItemStylePlain
@@ -106,10 +97,6 @@
         else{
             self.title = NSLocalizedStringFromTableInBundle(@"Print Shop", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
         }
-    }
-    
-    if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
-        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
     }
     
     if ([self isPushed]){
@@ -137,6 +124,10 @@
                 [self.collectionView addSubview:self.topSurpriseImageView];
             });
         }];
+    }
+    
+    if ([OLKitePrintSDK isKiosk]){
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[[UIView alloc] init]];
     }
 }
 
@@ -402,6 +393,37 @@
         self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
     }
     [self addBasketIconToTopRight];
+    
+    if ([OLUserSession currentSession].deeplink){
+        NSString *deeplink = [[OLUserSession currentSession].deeplink lowercaseString];
+        [OLUserSession currentSession].deeplink = nil;
+        
+        OLProduct *product;
+        for (OLProduct *p in [OLProduct products]){
+            if ([[p.templateId lowercaseString] isEqualToString:deeplink]){
+                product = p;
+            }
+        }
+        if (product){
+            UIViewController *vc = [[OLUserSession currentSession].kiteVc productDescriptionViewController];
+            [(OLProductOverviewViewController *)vc setProduct:product];
+            [self.navigationController pushViewController:vc animated:NO];
+        }
+        else{
+            for (OLProductGroup *group in self.productGroups){
+                if ([[group.templateClass lowercaseString] isEqualToString:deeplink]){
+                    OLProduct *product = [group.products firstObject];
+                    product.uuid = nil;
+                    
+                    id vc = [[OLUserSession currentSession].kiteVc viewControllerForGroupSelected:group];
+                    [vc safePerformSelector:@selector(setProduct:) withObject:product];
+                    [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
+                    [self.navigationController pushViewController:vc animated:NO];
+                    break;
+                }
+            }
+        }
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -444,6 +466,10 @@
             self.bannerView.transform = CGAffineTransformMakeTranslation(0, -70);
             [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 40, 0)];
         }completion:NULL];
+    }
+    
+    if ([OLKitePrintSDK isKiosk]){
+        self.navigationController.viewControllers = @[self];
     }
 }
 
@@ -492,6 +518,7 @@
         }
         
         [self.collectionView.collectionViewLayout invalidateLayout];
+        [self addBasketIconToTopRight];
     }completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
     }];
@@ -541,17 +568,39 @@
         
         return cell;
     }
+    else if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(viewForHeaderWithWidth:)]){
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
+        UIView *view = [cell viewWithTag:10];
+        [view removeFromSuperview];
+        
+        view = [[OLUserSession currentSession].kiteVc.delegate viewForHeaderWithWidth:self.view.frame.size.width];
+        [cell.contentView addSubview:view];
+        [view fillSuperView];
+        
+        view.tag = 10;
+        
+        return cell;
+    }
     else{
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"qualityBanner" forIndexPath:indexPath];
         UIImageView *imageView = (UIImageView *)[cell viewWithTag:10];
         imageView.image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
-        imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
+            imageView.backgroundColor = [imageView.image colorAtPixel:CGPointMake(3, 3)];
         return cell;
     }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView sizeForBannerSectionCellForIndexPath:(NSIndexPath *)indexPath{
     CGSize size = self.view.frame.size;
+    
+    if ([OLUserSession currentSession].prioritizeMainBundleImages){
+        UIImage *image = [UIImage imageNamedInKiteBundle:[NSString stringWithFormat:@"quality-banner%@", [OLKiteABTesting sharedInstance].qualityBannerType]];
+        if (image.size.width > self.view.frame.size.width){
+            image = [image shrinkToSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.width * (image.size.height / image.size.width)) forScreenScale:[UIScreen mainScreen].scale aspectFit:YES];
+        }
+        return CGSizeMake(size.width, image.size.height);
+    }
+    
     CGFloat height = [self printAtHomeAvailable] ? 233 : 110;
     if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && size.height > size.width){
         height = (self.view.frame.size.width * height) / 375.0;
@@ -561,9 +610,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView actionForBannerSectionForIndexPath:(NSIndexPath *)indexPath{
     if ([self printAtHomeAvailable]){
-#ifndef OL_NO_ANALYTICS
         [OLAnalytics trackPrintAtHomeTapped];
-#endif
         OLAsset *asset = [OLUserSession currentSession].appAssets.firstObject;
         [asset dataWithCompletionHandler:^(NSData *data, NSError *error){
             id printItem = [OLHPSDKWrapper printItemWithAsset:[UIImage imageWithData:data scale:1]];
@@ -573,9 +620,13 @@
             });
         }];
     }
+    else if ([[OLUserSession currentSession].kiteVc.delegate respondsToSelector:@selector(infoPageViewController)]){
+        UIViewController *vc = [[OLUserSession currentSession].kiteVc.delegate infoPageViewController];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
     else{
-        OLInfoPageViewController *vc = (OLInfoPageViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
-        vc.imageName = @"quality";
+        OLInfoPageViewController *vc = (OLInfoPageViewController *)[OLUserSession currentSession].kiteVc.infoViewController;
+        [vc safePerformSelector:@selector(setImageName:) withObject:@"quality"];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
@@ -652,17 +703,6 @@
     }
 }
 
-- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
-    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
-    [previewingContext setSourceRect:cell.frame];
-    return [self viewControllerForItemAtIndexPath:indexPath];
-}
-
-- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    [self.navigationController pushViewController:viewControllerToCommit animated:YES];
-}
-
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == 0 && [self includeBannerSection]){
         return nil;
@@ -675,9 +715,7 @@
     OLProduct *product = [group.products firstObject];
     product.uuid = nil;
     
-    NSString *identifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
-    
-    id vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
+    id vc = [[OLUserSession currentSession].kiteVc viewControllerForGroupSelected:group];
     [vc safePerformSelector:@selector(setProduct:) withObject:product];
     
     if ([vc isKindOfClass:[OLProductTypeSelectionViewController class]] && product.productTemplate.collectionName && product.productTemplate.collectionId){
@@ -749,7 +787,7 @@
     NSInteger numberOfProducts = [self.productGroups count];
     
     CGSize size = self.view.frame.size;
-    if (!(numberOfProducts % 2 == 0) && (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact || size.height < size.width)){
+    if (![OLProductTemplate isSyncInProgress] || (!numberOfProducts % 2 != 0 && (self.traitCollection.horizontalSizeClass != UIUserInterfaceSizeClassCompact || size.height < size.width))){
         extras = 1;
     }
     
@@ -770,23 +808,8 @@
     
     if (indexPath.item >= self.productGroups.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
-        UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         UILabel *label = [cell.contentView viewWithTag:50];
         label.text = NSLocalizedStringFromTableInBundle(@"MORE ITEMS\nCOMING SOON!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder-loc.png"] withCompletionHandler:^(UIImage *image, NSError *error){
-            if (error) return;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                cellImageView.image = image;
-                cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
-            });
-        }];
-        if (self.fromRotation){
-            self.fromRotation = NO;
-            cell.alpha = 0;
-            [UIView animateWithDuration:0.3 animations:^{
-                cell.alpha = 1;
-            }];
-        }
         return cell;
     }
     
@@ -794,11 +817,13 @@
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
+    cellImageView.image = nil;
     
     OLProductGroup *group = self.productGroups[indexPath.item];
     OLProduct *product = [group.products firstObject];
     
-    [cellImageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:OLAssetMaximumSize applyEdits:NO placeholder:nil progress:nil completionHandler:NULL];
+    CGSize size = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    [cellImageView setAndFadeInImageWithOLAsset:[product classImageAsset] size:size applyEdits:NO placeholder:nil progress:nil completionHandler:NULL];
     
     UILabel *productTypeLabel = (UILabel *)[cell.contentView viewWithTag:300];
     

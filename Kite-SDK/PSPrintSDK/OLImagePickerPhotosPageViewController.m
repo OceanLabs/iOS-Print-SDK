@@ -30,7 +30,7 @@
 
 #import "OLImagePickerPhotosPageViewController.h"
 #import "UIImageView+FadeIn.h"
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
 #import "OLUserSession.h"
 #import "OLImagePickerPhotosPageViewController+Facebook.h"
 #import "OLImagePickerPhotosPageViewController+Instagram.h"
@@ -38,15 +38,14 @@
 #import "OLAsset+Private.h"
 #import "OLKiteUtils.h"
 #import "OLKiteABTesting.h"
+#import "OLImagePreviewViewController.h"
 
-@interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate>
+@interface OLImagePickerPhotosPageViewController () <UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate, UIViewControllerPreviewingDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *albumLabelChevron;
 @property (assign, nonatomic) CGSize rotationSize;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (weak, nonatomic) IBOutlet UIView *albumsContainerView;
 @property (weak, nonatomic) IBOutlet UIView *albumsCollectionViewContainerView;
-@property (strong, nonatomic) UIButton *logoutButton;
-@property (assign, nonatomic) CGFloat topInset;
 @property (assign, nonatomic) BOOL reloadOnViewWillAppear;
 @property (assign, nonatomic) NSUInteger numberOfCellsPerRow;
 
@@ -90,16 +89,6 @@ CGFloat OLImagePickerMargin = 1.5;
     [super viewDidAppear:animated];
     
     [self.albumsCollectionView reloadData];
-    
-    if (!self.logoutButton && (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram)){
-        self.logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(0, -45, self.collectionView.frame.size.width, 45)];
-        [self.logoutButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-        [self.logoutButton setTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        [self.collectionView addSubview:self.logoutButton];
-        [self.logoutButton addTarget:self action:@selector(onButtonLogoutTapped) forControlEvents:UIControlEventTouchUpInside];
-        
-        self.topInset = self.collectionView.contentInset.top;
-    }
 }
 
 - (void)viewDidLoad {
@@ -137,9 +126,13 @@ CGFloat OLImagePickerMargin = 1.5;
     
     self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI);
     
-    self.nextButton.backgroundColor = self.imagePicker.nextButton.backgroundColor;
-    self.nextButton.titleLabel.font = self.imagePicker.nextButton.titleLabel.font;
-    [self.nextButton setTitle:self.imagePicker.nextButton.currentTitle forState:UIControlStateNormal];
+    self.ctaButton.backgroundColor = self.imagePicker.ctaButton.backgroundColor;
+    self.ctaButton.titleLabel.font = self.imagePicker.ctaButton.titleLabel.font;
+    [self.ctaButton setTitle:self.imagePicker.ctaButton.currentTitle forState:UIControlStateNormal];
+    
+    if ([OLUserSession currentSession].capitalizeCtaTitles){
+        [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+    }
     
     UIVisualEffect *blurEffect;
     blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
@@ -183,6 +176,46 @@ CGFloat OLImagePickerMargin = 1.5;
     [self.view layoutIfNeeded];
     
     self.reloadOnViewWillAppear = YES;
+    
+    if ([self.imagePicker.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.imagePicker.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+    }
+}
+
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    if (self.collectionView.tag != 10){
+        return nil;
+    }
+    
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    
+    UIImageView *imageView = [cell viewWithTag:10];
+    
+    [previewingContext setSourceRect:[cell convertRect:imageView.frame toView:self.collectionView]];
+    
+    id potentialAsset = [self assetForIndexPath:indexPath];
+    OLAsset *asset;
+    if ([potentialAsset isKindOfClass:[PHAsset class]]){
+        asset = [OLAsset assetWithPHAsset:potentialAsset];
+        
+        //If it's already selected use the existing OLAsset instead of the newly created one
+        if ([self.imagePicker.selectedAssets containsObject:asset]){
+            asset = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:asset]];
+        }
+    }
+    else if ([potentialAsset isKindOfClass:[OLAsset class]]){
+        asset = potentialAsset;
+    }
+    
+    OLImagePreviewViewController *previewVc = [[OLImagePreviewViewController alloc] init];
+    previewVc.asset = asset;
+    previewVc.providesPresentationContextTransitionStyle = true;
+    previewVc.definesPresentationContext = true;
+    previewVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    previewVc.preferredContentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.width * (imageView.image.size.height / imageView.image.size.width));
+    
+    return previewVc;
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -198,10 +231,7 @@ CGFloat OLImagePickerMargin = 1.5;
         
         self.albumsContainerView.transform = CGAffineTransformIdentity;
         
-        self.logoutButton.frame = CGRectMake(0, -45, size.width, 45);
-    }completion:^(id<UIViewControllerTransitionCoordinator> context){
-        
-    }];
+    }completion:^(id<UIViewControllerTransitionCoordinator> context){}];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -219,11 +249,7 @@ CGFloat OLImagePickerMargin = 1.5;
     if (collectionView.tag == 10){
         NSInteger numberOfItems = 0;
         if (self.provider.collections.count > self.showingCollectionIndex){
-            CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section]];
             NSInteger numberOfCellsToFillHeight = 0;
-            if (self.logoutButton){
-                numberOfCellsToFillHeight = (NSInteger)ceil((self.collectionView.frame.size.height - self.collectionView.contentInset.top) / (cellSize.height + OLImagePickerMargin));
-            }
             
             numberOfItems = MAX(numberOfCellsToFillHeight * [self numberOfCellsPerRow], [self.provider.collections[self.showingCollectionIndex] count]);
         }
@@ -249,7 +275,7 @@ CGFloat OLImagePickerMargin = 1.5;
     UICollectionViewCell *cell;
     if (collectionView.tag == 10){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
-        OLRemoteImageView *imageView = [cell viewWithTag:10];
+        OLImageView *imageView = [cell viewWithTag:10];
         [self setAssetOfCollection:self.provider.collections[self.showingCollectionIndex] withIndex:indexPath.item toImageView:imageView forCollectionView:collectionView];
         
         UIView *checkmark = [cell viewWithTag:20];
@@ -259,19 +285,22 @@ CGFloat OLImagePickerMargin = 1.5;
             asset = [OLAsset assetWithPHAsset:potentialAsset];
             
             //If it's already selected use the existing OLAsset instead of the newly created one
-            if ([self.imagePicker.selectedAssets containsObject:asset]){
-                asset = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:asset]];
+            if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){
+                asset = self.imagePicker.selectedAssets[[[self.imagePicker.selectedAssets copy] indexOfObject:asset]];
             }
         }
         else if ([potentialAsset isKindOfClass:[OLAsset class]]){
             asset = potentialAsset;
         }
         
-        if ([OLKiteABTesting sharedInstance].lightThemeColor1){
+        if ([OLKiteABTesting sharedInstance].lightThemeColorPickerTick){
+            checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColorPickerTick;
+        }
+        else if ([OLKiteABTesting sharedInstance].lightThemeColor1){
             checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
         }
         
-        if ([self.imagePicker.selectedAssets containsObject:asset]){
+        if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){
             checkmark.hidden = NO;
         }
         else{
@@ -283,7 +312,7 @@ CGFloat OLImagePickerMargin = 1.5;
             qtyLabel = [[UILabel alloc] init];
             qtyLabel.tag = 11;
             
-            qtyLabel.backgroundColor = self.nextButton.backgroundColor;
+            qtyLabel.backgroundColor = self.ctaButton.backgroundColor;
             qtyLabel.textColor = [UIColor whiteColor];
             qtyLabel.font = [UIFont systemFontOfSize:13];
             qtyLabel.textAlignment = NSTextAlignmentCenter;
@@ -316,10 +345,10 @@ CGFloat OLImagePickerMargin = 1.5;
     else{
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"albumCell" forIndexPath:indexPath];
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
-        OLRemoteImageView *imageView = [cell viewWithTag:10];
+        OLImageView *imageView = [cell viewWithTag:10];
         
         if (self.provider.collections[indexPath.item].coverAsset){
-            __weak OLRemoteImageView *weakImageView = imageView;
+            __weak OLImageView *weakImageView = imageView;
             [imageView setAndFadeInImageWithOLAsset:self.provider.collections[indexPath.item].coverAsset size:imageView.frame.size applyEdits:NO placeholder:nil progress:^(float progress){
                 [weakImageView setProgress:progress];
             } completionHandler:NULL];
@@ -349,10 +378,10 @@ CGFloat OLImagePickerMargin = 1.5;
     return cell;
 }
 
-- (void)setAssetOfCollection:(OLImagePickerProviderCollection *)collection withIndex:(NSInteger)index toImageView:(OLRemoteImageView *)imageView forCollectionView:(UICollectionView *)collectionView{
+- (void)setAssetOfCollection:(OLImagePickerProviderCollection *)collection withIndex:(NSInteger)index toImageView:(OLImageView *)imageView forCollectionView:(UICollectionView *)collectionView{
     id asset = [collection objectAtIndex:index];
     
-    for (OLAsset *selectedAsset in self.imagePicker.selectedAssets){
+    for (OLAsset *selectedAsset in [self.imagePicker.selectedAssets copy]){
         if ([asset isKindOfClass:[PHAsset class]]){
             if ([asset isEqual:[selectedAsset isKindOfClass:[OLAsset class]] ? selectedAsset.phAsset : selectedAsset]){
                 asset = selectedAsset;
@@ -372,7 +401,7 @@ CGFloat OLImagePickerMargin = 1.5;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;
         options.resizeMode = PHImageRequestOptionsResizeModeFast;
         
-        __weak OLRemoteImageView *weakImageView = imageView;
+        __weak OLImageView *weakImageView = imageView;
         
         CGSize cellSize = [self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -382,8 +411,8 @@ CGFloat OLImagePickerMargin = 1.5;
         });
     }
     else if ([asset isKindOfClass:[OLAsset class]]){
-        __weak OLRemoteImageView *weakImageView = imageView;
-        [imageView setAndFadeInImageWithOLAsset:asset size:imageView.frame.size applyEdits:NO placeholder:nil progress:^(float progress){
+        __weak OLImageView *weakImageView = imageView;
+        [imageView setAndFadeInImageWithOLAsset:asset size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:[NSIndexPath indexPathWithIndex:0]] applyEdits:NO placeholder:nil progress:^(float progress){
             [weakImageView setProgress:progress];
         } completionHandler:NULL];
     }
@@ -482,20 +511,50 @@ CGFloat OLImagePickerMargin = 1.5;
     }
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
+    if (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram){
+        UICollectionReusableView *cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"logout" forIndexPath:indexPath];
+        [(UIButton *)[cell viewWithTag:10] setTitle:NSLocalizedStringFromTableInBundle(@"Log out", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+        
+        return cell;
+    }
+    
+    return [[UICollectionReusableView alloc] init];
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
+    if (collectionView != self.collectionView){
+        return CGSizeZero;
+    }
+    
+    CGSize size = self.view.bounds.size;
+    
+    if (self.rotationSize.width != 0){
+        size = self.rotationSize;
+    }
+    
+    if (self.provider.providerType == OLImagePickerProviderTypeFacebook || self.provider.providerType == OLImagePickerProviderTypeInstagram){
+        return CGSizeMake(size.width, 45);
+    }
+    else{
+        return CGSizeZero;
+    }
+}
+
 - (OLAsset *)assetForIndexPath:(NSIndexPath *)indexPath{
     id potentialAsset = [self.provider.collections[self.showingCollectionIndex] objectAtIndex:indexPath.item];
     OLAsset *asset;
     if ([potentialAsset isKindOfClass:[PHAsset class]]){
         asset = [OLAsset assetWithPHAsset:potentialAsset];
-        if ([self.imagePicker.selectedAssets containsObject:asset]){
-            asset = self.imagePicker.selectedAssets[[self.imagePicker.selectedAssets indexOfObject:asset]];
+        if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){
+            asset = self.imagePicker.selectedAssets[[[self.imagePicker.selectedAssets copy] indexOfObject:asset]];
         }
     }
     else if ([potentialAsset isKindOfClass:[OLAsset class]]){
         asset = potentialAsset;
     }
     
-    for (OLAsset *potentialAsset in self.imagePicker.selectedAssets){
+    for (OLAsset *potentialAsset in [self.imagePicker.selectedAssets copy]){
         if ([asset isEqual:potentialAsset ignoreEdits:YES]){
             asset = potentialAsset;
             break;
@@ -514,7 +573,7 @@ CGFloat OLImagePickerMargin = 1.5;
     if (collectionView.tag == 10){ //Images collection view
         OLAsset *asset = [self assetForIndexPath:indexPath];
         
-        if ([self.imagePicker.selectedAssets containsObject:asset]){ //Photo is selected
+        if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){ //Photo is selected
             if ([asset isEdited]){
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Are you sure?", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"This will discard your edits.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"The image edits, like crop, filters, etc") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Yes", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleDestructive handler:^(id action){
@@ -530,10 +589,10 @@ CGFloat OLImagePickerMargin = 1.5;
                 [self.imagePicker.selectedAssets removeObject:asset];
                 asset.edits = nil;
                 asset.extraCopies = 0;
-                [collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = YES;
             }
         }
-        else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.selectedAssets.count >= self.imagePicker.maximumPhotos){ //Maximum reached
+        else if (self.imagePicker.maximumPhotos > 0 && self.imagePicker.assetCount >= self.imagePicker.maximumPhotos){ //Maximum reached
             NSString *message;
             if (self.imagePicker.maximumPhotos != self.imagePicker.minimumPhotos && self.imagePicker.maximumPhotos != 1){
                 message = [NSString stringWithFormat:self.imagePicker.maximumPhotos == 1 ? NSLocalizedStringFromTableInBundle(@"Please select only %ld photo", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") : NSLocalizedStringFromTableInBundle(@"Please select up to %ld photos", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (long)self.imagePicker.maximumPhotos];
@@ -556,14 +615,23 @@ CGFloat OLImagePickerMargin = 1.5;
             [self.imagePicker presentViewController:alert animated:YES completion:nil];
         }
         else if (asset){ //Add photo
-            [self.imagePicker.selectedAssets addObject:asset];
+            asset = [asset copy];
+            asset.extraCopies = 0;
+            asset.uuid = [[NSUUID UUID] UUIDString];
+            NSUInteger index = [self.imagePicker.selectedAssets indexOfObject:[[OLPlaceholderAsset alloc] init]];
+            if (index != NSNotFound){
+                [self.imagePicker.selectedAssets replaceObjectAtIndex:index withObject:asset];
+            }
+            else{
+                [self.imagePicker.selectedAssets addObject:asset];
+            }
             asset.edits = nil;
             [asset unloadImage];
             [[collectionView cellForItemAtIndexPath:indexPath] viewWithTag:20].hidden = NO;
             
             if (self.imagePicker.maximumPhotos == 1){
-                if (self.imagePicker.nextButton){
-                    [self.imagePicker.nextButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+                if (self.imagePicker.ctaButton){
+                    [self.imagePicker.ctaButton sendActionsForControlEvents:UIControlEventTouchUpInside];
                 }
                 else{
                     [self.imagePicker onButtonDoneTapped:nil];
@@ -608,14 +676,6 @@ CGFloat OLImagePickerMargin = 1.5;
             [self loadNextFacebookPage];
         }
     }
-    
-    if ((self.provider.providerType == OLImagePickerProviderTypeInstagram || self.provider.providerType == OLImagePickerProviderTypeFacebook) && self.collectionView.contentInset.top == self.topInset){
-//        if (self.collectionView.contentSize.height < self.collectionView.frame.size.height - self.topInset){
-//            self.collectionView.contentSize = CGSizeMake(self.collectionView.contentSize.height, self.collectionView.frame.size.height - self.topInset);
-//        }
-        
-        self.collectionView.contentInset = UIEdgeInsetsMake(self.collectionView.contentInset.top + 45, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
-    }
 }
 
 - (void)closeAlbumsDrawer{
@@ -628,13 +688,13 @@ CGFloat OLImagePickerMargin = 1.5;
     BOOL isOpening = CGAffineTransformIsIdentity(self.albumsContainerView.transform);
     
     if (isOpening){
-        self.nextButton.hidden = NO;
-        self.imagePicker.nextButton.hidden = YES;
+        self.ctaButton.hidden = NO;
+        self.imagePicker.ctaButton.hidden = YES;
     }
     else{
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            self.imagePicker.nextButton.hidden = NO;
-            self.nextButton.hidden = YES;
+            self.imagePicker.ctaButton.hidden = NO;
+            self.ctaButton.hidden = YES;
         });
     }
     
@@ -672,8 +732,8 @@ CGFloat OLImagePickerMargin = 1.5;
             CGFloat percentComplete = MAX(self.albumsContainerView.transform.ty, 0) / (openTY);
             self.albumLabelChevron.transform = CGAffineTransformMakeRotation(M_PI * (1- MIN(percentComplete, 1)));
             
-            self.nextButton.hidden = percentComplete <= 0.5;
-            self.imagePicker.nextButton.hidden = percentComplete > 0.5;
+            self.ctaButton.hidden = percentComplete <= 0.5;
+            self.imagePicker.ctaButton.hidden = percentComplete > 0.5;
             
             self.albumsCollectionViewContainerView.alpha = MIN(percentComplete * 15, 1);
             
@@ -697,8 +757,8 @@ CGFloat OLImagePickerMargin = 1.5;
             CGFloat time = ABS(0.8 - (0.8 * percentComplete));
             
             if (opening){
-                self.nextButton.hidden = NO;
-                self.imagePicker.nextButton.hidden = YES;
+                self.ctaButton.hidden = NO;
+                self.imagePicker.ctaButton.hidden = YES;
                 
                 [UIView animateWithDuration:0.1 animations:^{
                     self.albumsCollectionViewContainerView.alpha = 1;
@@ -709,8 +769,8 @@ CGFloat OLImagePickerMargin = 1.5;
                     self.albumsCollectionViewContainerView.alpha = 0;
                 } completion:NULL];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.25 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    self.nextButton.hidden = YES;
-                    self.imagePicker.nextButton.hidden = NO;
+                    self.ctaButton.hidden = YES;
+                    self.imagePicker.ctaButton.hidden = NO;
                 });
             }
             
@@ -723,7 +783,7 @@ CGFloat OLImagePickerMargin = 1.5;
     }
 }
 
-- (void)onButtonLogoutTapped{
+- (IBAction)onButtonLogoutTapped{
     NSString *serviceName;
     if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
         serviceName = @"Facebook";

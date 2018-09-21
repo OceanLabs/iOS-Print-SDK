@@ -28,10 +28,10 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import "OLAddressSearchRequest.h"
 
 @class OLAddress;
+@class OLCountry;
 
 @interface OLAddress : NSObject <NSCopying, NSCoding>
 
@@ -39,6 +39,7 @@
 
 + (OLAddressSearchRequest *)searchForAddressWithCountry:(OLCountry *)country query:(NSString *)q delegate:(id<OLAddressSearchRequestDelegate>)delegate;
 + (OLAddressSearchRequest *)searchForAddress:(OLAddress *)address delegate:(id<OLAddressSearchRequestDelegate>)delegate;
+@property (nonatomic, readonly, getter = isSearchRequiredForFullDetails) BOOL searchRequiredForFullDetails;
 
 @property (nonatomic, copy) NSString *recipientFirstName;
 @property (nonatomic, copy) NSString *recipientLastName;
@@ -48,8 +49,6 @@
 @property (nonatomic, copy) NSString *stateOrCounty;
 @property (nonatomic, copy) NSString *zipOrPostcode;
 @property (nonatomic, strong) OLCountry *country;
-
-@property (nonatomic, readonly, getter = isSearchRequiredForFullDetails) BOOL searchRequiredForFullDetails;
 
 @property (nonatomic, readonly) NSString *descriptionWithoutRecipient;
 

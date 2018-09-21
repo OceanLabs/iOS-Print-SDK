@@ -34,29 +34,44 @@
 #import "OLInfoBanner.h"
 #import "UIView+AutoLayoutHelper.h"
 #import "UIColor+OLHexString.h"
+#import "OLImagePickerViewController.h"
 
 @import SceneKit;
 
-@interface OLSingleImageProductReviewViewController (Private) <UITextFieldDelegate>
-@property (weak, nonatomic) IBOutlet UIView *printContainerView;
-- (void)setupImage;
+@interface OLSingleProductReviewViewController (Private) <UITextFieldDelegate>
+- (void)loadImages;
 - (void)onButtonCropClicked:(UIButton *)sender;
 - (void)exitCropMode;
+@property (strong, nonatomic) UIView *safeAreaView;
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets;
 @end
 
 @interface OL3DProductViewController ()
 @property (strong, nonatomic) OLInfoBanner *infoBanner;
-@property (weak, nonatomic) IBOutlet SCNView *scene;
+@property (strong, nonatomic) SCNView *scene;
 @property (strong, nonatomic) SCNGeometry *tube;
 @property (strong, nonatomic) SCNNode *tubeNode;
 @property (strong, nonatomic) SCNNode *mug;
 @property (strong, nonatomic) SCNNode *camera;
+@property (strong, nonatomic) UIActivityIndicatorView *activity;
 @end
 
 @implementation OL3DProductViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.scene = [[SCNView alloc] init];
+    self.scene.antialiasingMode = SCNAntialiasingModeMultisampling4X;
+    self.scene.backgroundColor = self.view.backgroundColor;
+    [self.view addSubview:self.scene];
+    [self.scene leadingFromSuperview:0 relation:NSLayoutRelationEqual];
+    [self.scene trailingToSuperview:0 relation:NSLayoutRelationEqual];
+    [self.scene verticalSpacingToView:self.editingTools constant:0 relation:NSLayoutRelationEqual];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.scene attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanGestureRecognized:)];
+    [self.scene addGestureRecognizer:panGesture];
     
     SCNScene *scene = [SCNScene sceneWithURL:[[OLKiteUtils kiteResourcesBundle] URLForResource:@"mug" withExtension:@"scn"]
  options:NULL error:nil];
@@ -86,6 +101,15 @@
     else{
         self.camera.position = SCNVector3Make(0, 4.2, 0);
     }
+    
+    self.activity = [[UIActivityIndicatorView alloc] init];
+    [self.scene addSubview:self.activity];
+    [self.activity centerXInSuperview];
+    [self.activity centerYInSuperview];
+    self.activity.hidesWhenStopped = YES;
+    self.activity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    
+    [self orderViews];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
@@ -107,23 +131,36 @@
 
 - (void)orderViews{
     [self.view bringSubviewToFront:self.printContainerView];
-    [self.view bringSubviewToFront:self.cropView];
+    [self.view bringSubviewToFront:self.artboard];
     [self.view bringSubviewToFront:self.scene];
     [self.view bringSubviewToFront:self.editingTools.drawerView];
+    if (self.safeAreaView){
+        [self.view bringSubviewToFront:self.safeAreaView];
+    }
     [self.view bringSubviewToFront:self.editingTools];
     [self.view bringSubviewToFront:self.hintView];
-    [self.view bringSubviewToFront:[self.view viewWithTag:1010]];
+    [self.view bringSubviewToFront:self.activity];
 }
 
 - (void)setCropViewImageToMaterial{
-    id view = [self.view viewWithTag:1010];
-    if ([view isKindOfClass:[UIActivityIndicatorView class]]){
-        [(UIActivityIndicatorView *)view startAnimating];
+    if (self.activity.isAnimating){
+        return;
+    }
+    self.tube.materials = @[];
+    
+    if (self.artboard.assetViews.firstObject.imageView.image == nil){
+        return;
+    }
+    
+    [self.activity startAnimating];
+    
+    UIImage *image = [self.artboard.assetViews.firstObject editedImage];
+    
+    if (!image){
+        return;
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        UIImage *image = [self addBorderToImage:[self.cropView editedImage]];
-        
         OLAsset *tempAsset = [OLAsset assetWithImageAsPNG:image];
         tempAsset.edits.filterName = self.edits.filterName;
         
@@ -132,12 +169,10 @@
                 SCNMaterial *material = [[SCNMaterial alloc] init];
                 material.diffuse.wrapS = SCNWrapModeRepeat;
                 material.diffuse.wrapT = SCNWrapModeRepeat;
-                material.diffuse.contents = image;
+                material.diffuse.contents = [self addBorderToImage:image];
                 self.tube.materials = @[material];
                 
-                if ([view isKindOfClass:[UIActivityIndicatorView class]]){
-                    [(UIActivityIndicatorView *)view stopAnimating];
-                }
+                [self.activity stopAnimating];
             });
         }];
     });
@@ -158,16 +193,6 @@
     UIGraphicsEndImageContext();
     
     return paddedImage;
-}
-
-- (void)setupImage{
-    [super setupImage];
-    
-    [self setCropViewImageToMaterial];
-}
-
-- (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
-    [self setCropViewImageToMaterial];
 }
 
 - (void)onButtonCropClicked:(UIButton *)sender{
@@ -196,6 +221,17 @@
         self.tubeNode.eulerAngles = SCNVector3Make(self.tubeNode.eulerAngles.x, self.tubeNode.eulerAngles.y, -M_PI_2 + angleDelta);
         
     }
+}
+
+- (void)imagePicker:(OLImagePickerViewController *)vc didFinishPickingAssets:(NSMutableArray *)assets added:(NSArray<OLAsset *> *)addedAssets removed:(NSArray *)removedAssets{
+    if (addedAssets.firstObject){
+        self.edits = nil;
+    }
+    [super imagePicker:vc didFinishPickingAssets:assets added:addedAssets removed:removedAssets];
+}
+
+- (void)updateProductRepresentationForChoice:(OLProductTemplateOptionChoice *)choice{
+    [self setCropViewImageToMaterial];
 }
 
 

@@ -28,6 +28,7 @@
 //
 
 #import "OLImagePickerProviderCollection.h"
+#import "OLAsset+Private.h"
 
 @interface OLImagePickerProviderCollection ()
 
@@ -106,7 +107,11 @@
 - (void)addAssets:(NSArray<OLAsset *> *)assets unique:(BOOL)unique{
     if (unique){
         for (OLAsset *asset in assets){
-            [self.array removeObject:asset];
+            for (OLAsset *arrayAsset in [self.array copy]){
+                if ([arrayAsset isEqual:asset ignoreEdits:YES]){
+                    [self.array removeObject:arrayAsset];
+                }
+            }
         }
     }
     

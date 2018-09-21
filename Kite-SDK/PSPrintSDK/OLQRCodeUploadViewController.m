@@ -28,9 +28,8 @@
 //
 
 #import "OLQRCodeUploadViewController.h"
-#import "OLQRCodeUploadedImagePoller.h"
+#import "OLRemoteDataPoller.h"
 #import "OLURLShortener.h"
-#import "UIImage+MDQRCode.h"
 #import "OLKiteUtils.h"
 
 @interface OLQRCodeUploadViewController ()
@@ -42,7 +41,7 @@
 @property (nonatomic, retain) IBOutlet UIProgressView *downloadProgressView;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *activityIndicator;
 
-@property (nonatomic, strong) OLQRCodeUploadedImagePoller *imagePoller;
+@property (nonatomic, strong) OLRemoteDataPoller *imagePoller;
 @property (nonatomic, strong) OLURLShortener *urlShortner;
 @end
 
@@ -81,8 +80,8 @@
                 self.urlLabel.text = shortenedURL;
             }
             
-            self.qrCodeImageView.image = [UIImage mdQRCodeForString:uploadURL size:self.qrCodeImageView.bounds.size.width fillColor:[UIColor blackColor]];
-            self.imagePoller = [[OLQRCodeUploadedImagePoller alloc] init];
+            self.qrCodeImageView.image = [self generateQRCodeImage:uploadURL];
+            self.imagePoller = [[OLRemoteDataPoller alloc] init];
             [self.imagePoller startPollingImageURL:[NSURL URLWithString:downloadURL] onImageDownloadProgress:^(NSInteger receivedSize, NSInteger expectedSize) {
                 if (self.downloadProgressView.hidden) {
                     self.downloadProgressView.hidden = NO;
@@ -99,6 +98,15 @@
             }];
         }
     }];
+}
+
+- (UIImage *)generateQRCodeImage:(NSString *)input{
+    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    [filter setValue:[input dataUsingEncoding:NSISOLatin1StringEncoding allowLossyConversion:NO] forKey:@"inputMessage"];
+    
+    CGAffineTransform transform = CGAffineTransformMakeScale(12, 12);
+    UIImage *image = [UIImage imageWithCIImage:[filter.outputImage imageByApplyingTransform: transform]];
+    return image;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{

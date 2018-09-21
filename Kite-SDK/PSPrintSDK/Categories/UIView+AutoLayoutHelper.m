@@ -31,52 +31,89 @@
 
 @implementation UIView (AutoLayoutHelper)
 
-- (void)fillSuperView{
+- (NSArray<NSLayoutConstraint *> *)fillSuperView{
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    [self leadingFromSuperview:0 relation:NSLayoutRelationEqual];
-    [self trailingToSuperview:0 relation:NSLayoutRelationEqual];
-    [self bottomToSuperview:0 relation:NSLayoutRelationEqual];
-    [self topFromSuperview:0 relation:NSLayoutRelationEqual];
+    NSLayoutConstraint *left = [self leadingFromSuperview:0 relation:NSLayoutRelationEqual];
+    NSLayoutConstraint *right = [self trailingToSuperview:0 relation:NSLayoutRelationEqual];
+    NSLayoutConstraint *bottom = [self bottomToSuperview:0 relation:NSLayoutRelationEqual];
+    NSLayoutConstraint *top = [self topFromSuperview:0 relation:NSLayoutRelationEqual];
+    
+    return @[top, left, bottom, right];
 }
 
-- (void)leadingFromSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation{
+- (NSLayoutConstraint *)leadingFromSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation{
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.superview addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeLeading relatedBy:relation toItem:self.superview attribute:NSLayoutAttributeLeading multiplier:1 constant:constant]];
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeLeading relatedBy:relation toItem:self.superview attribute:NSLayoutAttributeLeading multiplier:1 constant:constant];
+    [self.superview addConstraint:con];
+    return con;
 }
 
-- (void)trailingToSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation{
+- (NSLayoutConstraint *)trailingToSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation{
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.superview attribute:NSLayoutAttributeTrailing relatedBy:relation toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:constant]];
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.superview attribute:NSLayoutAttributeTrailing relatedBy:relation toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:constant];
+    [self.superview addConstraint:con];
+    return con;
 }
 
-- (void)bottomToSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation{
+- (NSLayoutConstraint *)bottomToSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation{
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.superview attribute:NSLayoutAttributeBottom relatedBy:relation toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:constant]];
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self.superview attribute:NSLayoutAttributeBottom relatedBy:relation toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:constant];
+    [self.superview addConstraint:con];
+    return con;
 }
 
-- (void)topFromSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation{
+- (NSLayoutConstraint *)topFromSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation{
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.superview addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTop relatedBy:relation toItem:self.superview attribute:NSLayoutAttributeTop multiplier:1 constant:constant]];
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTop relatedBy:relation toItem:self.superview attribute:NSLayoutAttributeTop multiplier:1 constant:constant];
+    [self.superview addConstraint:con];
+    return con;
 }
 
-- (void)verticalSpacingToView:(UIView *)view constant:(CGFloat)constant relation:(NSLayoutRelation)relation{
+- (NSLayoutConstraint *)verticalSpacingToView:(UIView *)view constant:(CGFloat)constant relation:(NSLayoutRelation)relation{
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.superview addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:relation toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:constant]];
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTop relatedBy:relation toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:constant];
+    [self.superview addConstraint:con];
+    return con;
 }
 
-- (void)horizontalSpacingToView:(UIView *)view constant:(CGFloat)constant relation:(NSLayoutRelation)relation{
+- (NSLayoutConstraint *)horizontalSpacingToView:(UIView *)view constant:(CGFloat)constant relation:(NSLayoutRelation)relation{
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.superview addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeLeft relatedBy:relation toItem:view attribute:NSLayoutAttributeRight multiplier:1 constant:constant]];
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeLeft relatedBy:relation toItem:view attribute:NSLayoutAttributeRight multiplier:1 constant:constant];
+    [self.superview addConstraint:con];
+    return con;
 }
 
-- (void)heightConstraint:(CGFloat)constant{
+- (NSLayoutConstraint *)heightConstraint:(CGFloat)constant{
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:constant]];
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:constant];
+    [self.superview addConstraint:con];
+    return con;
 }
 
-- (void)widthConstraint:(CGFloat)constant{
+- (NSLayoutConstraint *)widthConstraint:(CGFloat)constant{
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:constant]];
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:constant];
+    [self.superview addConstraint:con];
+    return con;
+}
+
+- (NSLayoutConstraint *)centerXInSuperview{
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.superview attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+    [self.superview addConstraint:con];
+    return con;
+}
+
+- (NSLayoutConstraint *)centerYInSuperview{
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    NSLayoutConstraint *con = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.superview attribute:NSLayoutAttributeCenterY multiplier:1 constant:0];
+    [self.superview addConstraint:con];
+    return con;
+}
+
+- (void)centerInSuperview{
+    [self centerXInSuperview];
+    [self centerYInSuperview];
 }
 
 @end

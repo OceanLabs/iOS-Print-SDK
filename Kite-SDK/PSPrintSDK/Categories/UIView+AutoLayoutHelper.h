@@ -30,13 +30,16 @@
 #import <UIKit/UIKit.h>
 
 @interface UIView (AutoLayoutHelper)
-- (void)fillSuperView;
-- (void)leadingFromSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
-- (void)trailingToSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
-- (void)bottomToSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
-- (void)topFromSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
-- (void)verticalSpacingToView:(UIView *)view constant:(CGFloat)constant relation:(NSLayoutRelation)relation;
-- (void)horizontalSpacingToView:(UIView *)view constant:(CGFloat)constant relation:(NSLayoutRelation)relation;
-- (void)heightConstraint:(CGFloat)constant;
-- (void)widthConstraint:(CGFloat)constant;
+- (NSArray<NSLayoutConstraint *> *)fillSuperView;
+- (NSLayoutConstraint *)leadingFromSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)trailingToSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)bottomToSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)topFromSuperview:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)verticalSpacingToView:(UIView *)view constant:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)horizontalSpacingToView:(UIView *)view constant:(CGFloat)constant relation:(NSLayoutRelation)relation;
+- (NSLayoutConstraint *)heightConstraint:(CGFloat)constant;
+- (NSLayoutConstraint *)widthConstraint:(CGFloat)constant;
+- (void)centerInSuperview;
+- (NSLayoutConstraint *)centerYInSuperview;
+- (NSLayoutConstraint *)centerXInSuperview;
 @end

@@ -44,7 +44,6 @@
     if (self = [super initWithRootViewController:vc]) {
         self.selectionVC = vc;
         vc.delegate = self;
-        self.allowsAddressSearch = YES;
     }
     
     return self;
@@ -56,14 +55,6 @@
 
 - (BOOL)allowsMultipleSelection {
     return self.selectionVC.allowMultipleSelection;
-}
-
-- (void)setAllowsAddressSearch:(BOOL)allowsAddressSearch {
-    self.selectionVC.allowAddressSearch = allowsAddressSearch;
-}
-
-- (BOOL)allowsAddressSearch {
-    return self.selectionVC.allowAddressSearch;
 }
 
 - (NSArray *)selected {
@@ -84,7 +75,7 @@
     }
 }
 
--(void)addressSelectionControllerDidCancelPicking:(OLAddressSelectionViewController *)vc {
+- (void)addressSelectionControllerDidCancelPicking:(OLAddressSelectionViewController *)vc {
     [self.delegate addressPickerDidCancelPicking:self];
 }
 

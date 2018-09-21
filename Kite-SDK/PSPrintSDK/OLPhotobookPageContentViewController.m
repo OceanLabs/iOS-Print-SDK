@@ -27,13 +27,15 @@
 //  THE SOFTWARE.
 //
 
-#import "OLPhotobookPageContentViewController.h"
-#import "OLImageEditViewController.h"
-#import "OLProduct.h"
-#import "OLRemoteImageView.h"
-#import "UIImage+ImageNamedInKiteBundle.h"
-#import "OLPageLayout.h"
+#import "OLArtboardTemplate.h"
 #import "OLAsset+Private.h"
+#import "OLImageEditViewController.h"
+#import "OLPhotobookPageContentViewController.h"
+#import "OLProduct.h"
+#import "OLImageView.h"
+#import "OLUserSession.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIImageView+FadeIn.h"
 
 @interface OLPhotobookPageContentViewController ()
 
@@ -48,16 +50,21 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-        
+    
+    self.artboardView.delegate = self.delegate;
     [self setupImageViews];
 }
 
-- (void)setupImageViews{
-    OLPageLayout *layout = self.product.productTemplate.productRepresentation.pages[self.pageIndex];
+- (void)setupImageViews{//TODO position the assetView instead of the artboard
+    OLArtboardTemplate *layout = self.product.productTemplate.productRepresentation.pages[self.pageIndex];
     CGRect imageViewPosition = [layout.positions.firstObject CGRectValue];
     
-    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeHeight multiplier:imageViewPosition.size.height constant:0]];
-    [self.imageView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.imageView.superview attribute:NSLayoutAttributeWidth multiplier:imageViewPosition.size.width constant:0]];
+    [self.artboardView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.artboardView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.artboardView.superview attribute:NSLayoutAttributeHeight multiplier:imageViewPosition.size.height constant:0]];
+    [self.artboardView.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.artboardView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.artboardView.superview attribute:NSLayoutAttributeWidth multiplier:imageViewPosition.size.width constant:0]];
+    
+    for (OLArtboardAssetView *assetView in self.artboardView.assetViews){
+        assetView.backgroundColor = [UIColor whiteColor];
+    }
     
     [self loadImageWithCompletionHandler:NULL];
 }
@@ -66,12 +73,6 @@
     [super viewWillAppear:animated];
     [self setPage:(self.pageIndex % 2 == 0)];
 }
-
-//- (void)setPageIndex:(NSInteger)pageIndex{
-//    _pageIndex = pageIndex;
-//    
-//    [self setPage:(pageIndex % 2 == 0)];
-//}
 
 - (void)setPage:(BOOL)left{
     self.left = left;
@@ -91,75 +92,34 @@
 }
 
 - (NSInteger)imageIndexForPoint:(CGPoint)p{
-    NSIndexSet *indexSet = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex];
-    if (indexSet.count > 0){
-        return indexSet.firstIndex;
-    }
-    
-    return NSNotFound;
-}
-
-- (void)unhighlightImageAtIndex:(NSInteger)index{
-    UIView *selectedView = self.imageView; //only one for now
-    
-    selectedView.layer.borderColor = [UIColor clearColor].CGColor;
-    selectedView.layer.borderWidth = 0;
-}
-
-- (void)highlightImageAtIndex:(NSInteger)index{
-    UIView *selectedView = self.imageView; //only one for now
-    
-    selectedView.layer.borderColor = self.view.tintColor.CGColor;
-    selectedView.layer.borderWidth = 3.0;
+    return self.pageIndex;
 }
 
 - (void)clearImage{
     self.pageShadowLeft2.hidden = YES;
     self.pageShadowRight2.hidden = YES;
-    self.imageView.image = nil;
+    self.artboardView.assetViews.firstObject.image = nil;
 }
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler{
-    NSInteger imageIndex = [self.product.productTemplate.productRepresentation indexSetForPageNumber:self.pageIndex].firstIndex;
-    if (imageIndex >= self.userSelectedPhotos.count){
-        return;
-    }
-    OLAsset *asset = [self.userSelectedPhotos objectAtIndex:imageIndex];
-    if (![asset isKindOfClass:[OLPlaceholderAsset class]]){
-        self.imageView.image = nil;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSInteger blockIndex = imageIndex;
-            
-            [asset imageWithSize:self.imageView.frame.size applyEdits:YES progress:^(float progress){
-                [self.imageView setProgress:progress];
-            }completion:^(UIImage *image, NSError *error){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (blockIndex == imageIndex){
-                        self.imageView.image = image;
-                        
-                        if (self.left){
-                            self.pageShadowLeft2.hidden = NO;
-                        }
-                        else{
-                            self.pageShadowRight2.hidden = NO;
-                        }
-                    }
-                    if (handler){
-                        handler();
-                    }
-                });
-            }];
-        });
-    }
-    else{
-        self.pageShadowLeft2.hidden = YES;
-        self.pageShadowRight2.hidden = YES;
-        self.imageView.image = nil;
-        if (handler){
-            handler();
-        }
-        
-    }
+    NSInteger imageIndex = self.pageIndex + 1;
+    self.artboardView.assetViews.firstObject.image = nil;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.artboardView.assetViews.firstObject.index = imageIndex;
+        [self.artboardView.assetViews.firstObject loadImageWithCompletionHandler:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (self.left){
+                    self.pageShadowLeft2.hidden = NO;
+                }
+                else{
+                    self.pageShadowRight2.hidden = NO;
+                }
+                if (handler){
+                    handler();
+                }
+            });
+        }];
+    });
 }
 
 @end

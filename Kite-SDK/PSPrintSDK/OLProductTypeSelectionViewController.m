@@ -36,20 +36,24 @@
 #import "OLProduct.h"
 #import "OLProductOverviewViewController.h"
 #import "OLProductTypeSelectionViewController.h"
-#import "OLSingleImageProductReviewViewController.h"
+#import "OLSingleProductReviewViewController.h"
 #import "OLUserSession.h"
 #import "UIImage+OLUtils.h"
 #import "UIImageView+FadeIn.h"
 #import "UIViewController+OLMethods.h"
+#import "OLKiteViewController+Private.h"
+#import "UIView+RoundRect.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "UIView+AutoLayoutHelper.h"
+#import "OLKiteViewController+Private.h"
 
-#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-
-@interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate>
+@interface OLProductTypeSelectionViewController () <UICollectionViewDelegateFlowLayout>
 
 @property (strong, nonatomic) NSMutableArray *products;
 @property (strong, nonatomic) NSMutableArray *allPosterProducts;
 @property (strong, nonatomic) NSMutableDictionary *collections;
 @property (assign, nonatomic) BOOL fromRotation;
+@property (strong, nonatomic) UIView *bannerView;
 
 @end
 
@@ -100,6 +104,32 @@
     return _products;
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    if (self.bannerView){
+        [UIView animateWithDuration:0.25 animations:^{
+            self.bannerView.transform = CGAffineTransformMakeTranslation(0, 0);
+            [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 0, 0)];
+        }completion:^(BOOL finished){
+            self.bannerView.hidden = YES;
+            self.bannerView.transform = CGAffineTransformIdentity;
+        }];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (self.bannerView){
+        self.bannerView.hidden = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+            self.bannerView.transform = CGAffineTransformMakeTranslation(0, -70);
+            [self.collectionView setContentInset:UIEdgeInsetsMake(self.collectionView.contentInset.top, 0, 40, 0)];
+        }completion:NULL];
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
@@ -134,23 +164,24 @@
                                                                             target:nil
                                                                             action:nil];
     
-    if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)] && self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
-        [self registerForPreviewingWithDelegate:self sourceView:self.collectionView];
+    if ([OLKitePrintSDK isKiosk]){
+        for (OLProduct *product in self.products){
+            if (product.productTemplate.printInStore){
+                [self setupBannerView];
+                break;
+            }
+        }
     }
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackProductListScreenViewedWithTemplateClass:self.templateClass];
-#endif
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
 
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackProductListScreenHitBackTemplateClass:self.templateClass];
     }
-#endif
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -173,6 +204,7 @@
             self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
         }
 
+        [self addBasketIconToTopRight];
     } completion:^(id<UIViewControllerTransitionCoordinator> context){
         [self.collectionView reloadData];
     }];
@@ -185,17 +217,6 @@
     }
 }
 
-- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
-    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
-    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
-    [previewingContext setSourceRect:cell.frame];
-    return [self viewControllerForItemAtIndexPath:indexPath];
-}
-
-- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
-    [self.navigationController pushViewController:viewControllerToCommit animated:YES];
-}
-
 - (UIViewController *)viewControllerForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.item >= self.products.count){
         return nil;
@@ -204,7 +225,7 @@
     OLProduct *product = self.products[indexPath.row];
     product.uuid = nil;
     
-    NSString *identifier;
+    UIViewController *vc;
     NSMutableArray *posters = [[NSMutableArray alloc] init];
     if (product.productTemplate.templateUI == OLTemplateUIPoster && !self.subtypeSelection){
         for (OLProduct *poster in self.allPosterProducts){
@@ -213,18 +234,17 @@
             }
         }
         if (posters.count > 1){
-            identifier = @"OLTypeSelectionViewController";
+            vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
         }
     }
     else if ([OLKiteABTesting sharedInstance].skipProductOverview && ![OLKiteABTesting sharedInstance].launchedWithPrintOrder && product.productTemplate.templateUI != OLTemplateUINonCustomizable){
-        identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
+        vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
     }
     
-    if (!identifier){
-        identifier = @"OLProductOverviewViewController";
+    if (!vc){
+        vc = [[OLUserSession currentSession].kiteVc productDescriptionViewController];
     }
-    OLProductOverviewViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:identifier];
-    vc.delegate = self.delegate;
+    ((OLProductOverviewViewController *)vc).delegate = self.delegate;
     
     if (product.productTemplate.collectionName && product.productTemplate.collectionId){
         NSMutableArray *options = [[NSMutableArray alloc] init];
@@ -269,22 +289,8 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.item >= self.products.count){
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"extraCell" forIndexPath:indexPath];
-        UIImageView *cellImageView = (UIImageView *)[cell.contentView viewWithTag:40];
         UILabel *label = [cell.contentView viewWithTag:50];
         label.text = NSLocalizedStringFromTableInBundle(@"MORE ITEMS\nCOMING SOON!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-        [[OLImageDownloader sharedInstance] downloadImageAtURL:[NSURL URLWithString:@"https://s3.amazonaws.com/sdk-static/product_photography/placeholder-loc.png"] withCompletionHandler:^(UIImage *image, NSError *error){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                cellImageView.image = image;
-                cell.backgroundColor = [image colorAtPixel:CGPointMake(3, 3)];
-            });
-        }];
-        if (self.fromRotation){
-            self.fromRotation = NO;
-            cell.alpha = 0;
-            [UIView animateWithDuration:0.3 animations:^{
-                cell.alpha = 1;
-            }];
-        }
         return cell;
     }
     
@@ -312,6 +318,7 @@
     OLProduct *product = (OLProduct *)self.products[indexPath.item];
     
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:40];
+    imageView.image = nil;
     [imageView setAndFadeInImageWithOLAsset:[product coverPhotoAsset] size:[self collectionView:collectionView layout:collectionView.collectionViewLayout sizeForItemAtIndexPath:indexPath] applyEdits:NO placeholder:nil progress:NULL completionHandler:NULL];
     
     UILabel *textView = (UILabel *)[cell.contentView viewWithTag:300];
@@ -380,7 +387,103 @@
         }
     }
     
+    UIImageView *printInStoreIndicator = [cell.contentView viewWithTag:777];
+    if ([OLKitePrintSDK isKiosk] && product.productTemplate.printInStore){
+        if (!printInStoreIndicator){
+            printInStoreIndicator = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"availableintstore"]];
+            printInStoreIndicator.frame = CGRectMake(0, 0, 40, 40);
+            printInStoreIndicator.contentMode = UIViewContentModeCenter;
+            printInStoreIndicator.tag = 777;
+            printInStoreIndicator.backgroundColor = [product labelColor];
+            [cell.contentView addSubview:printInStoreIndicator];
+            
+            [printInStoreIndicator trailingToSuperview:20 relation:NSLayoutRelationEqual];
+            [printInStoreIndicator topFromSuperview:20 relation:NSLayoutRelationEqual];
+            [printInStoreIndicator widthConstraint:40];
+            [printInStoreIndicator heightConstraint:40];
+        }
+        
+        CGRect frame = printInStoreIndicator.frame;
+        [printInStoreIndicator makeRoundRectWithRadius:frame.size.height/2.0];
+        printInStoreIndicator.hidden = NO;
+    }
+    else{
+        [cell.contentView viewWithTag:777].hidden = YES;
+    }
+    
     return cell;
+}
+
+- (void)setupBannerView{
+    self.bannerView = [[UIView alloc] init];
+    UIView *bannerView = self.bannerView;
+    bannerView.backgroundColor = [UIColor colorWithRed:0.310 green:0.698 blue:0.886 alpha:1.000];
+    
+    bannerView.layer.shadowColor = [[UIColor blackColor] CGColor];
+    bannerView.layer.shadowOpacity = .3;
+    bannerView.layer.shadowOffset = CGSizeMake(0,-2);
+    bannerView.layer.shadowRadius = 2;
+    
+    UILabel *label = [[UILabel alloc] init];
+    [bannerView addSubview:label];
+    
+    [self.navigationController.view addSubview:bannerView];
+    
+    bannerView.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(bannerView);
+    NSMutableArray *con = [[NSMutableArray alloc] init];
+    
+    NSArray *visuals = @[@"H:|-0-[bannerView]-0-|",
+                         @"V:[bannerView(40)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [bannerView.superview addConstraints:con];
+    
+    [self.navigationController.view addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.navigationController.view attribute:NSLayoutAttributeBottom multiplier:1 constant:70]];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"availableintstore"]];
+    imageView.contentMode = UIViewContentModeCenter;
+    [imageView makeRoundRectWithRadius:2];
+    imageView.backgroundColor = [UIColor colorWithRed:0.310 green:0.698 blue:0.886 alpha:1.000];
+    
+    [bannerView addSubview:imageView];
+    [bannerView addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:label attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [bannerView addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    
+    [bannerView addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationLessThanOrEqual toItem:imageView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0]];
+    [bannerView addConstraint:[NSLayoutConstraint constraintWithItem:bannerView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:label attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0]];
+    
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    views = NSDictionaryOfVariableBindings(label, imageView);
+    con = [[NSMutableArray alloc] init];
+    
+    visuals = @[@"H:[imageView(30)]-0-[label]",
+                @"V:|-0-[label]-0-|", @"V:[imageView(30)]"];
+    
+    
+    for (NSString *visual in visuals) {
+        [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+    }
+    
+    [label.superview addConstraints:con];
+    
+    label.tag = 10;
+    label.minimumScaleFactor = 0.5;
+    label.adjustsFontSizeToFitWidth = YES;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.numberOfLines = 3;
+    label.textColor = [UIColor whiteColor];
+    label.font = [UIFont systemFontOfSize:15.5];
+    label.text = NSLocalizedString(@"*Printed in store in less than 20 minutes!", @"");
+    label.minimumScaleFactor = 0.5;
+    if ([label respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]){
+        label.allowsDefaultTighteningForTruncation = YES;
+    }
 }
 
 - (void)onButtonCallToActionTapped:(UIButton *)sender{
@@ -409,6 +512,10 @@
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     CGSize size = self.view.bounds.size;
+    
+    if (@available(iOS 11.0, *)) {
+        size = CGSizeMake(size.width, size.height - self.view.safeAreaInsets.bottom);
+    }
     
     NSInteger numberOfCells = [self collectionView:collectionView numberOfItemsInSection:indexPath.section];
     CGFloat halfScreenHeight = (size.height - [[UIApplication sharedApplication] statusBarFrame].size.height - self.navigationController.navigationBar.frame.size.height)/2;

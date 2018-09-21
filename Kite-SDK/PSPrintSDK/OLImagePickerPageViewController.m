@@ -29,47 +29,52 @@
 
 #import "OLImagePickerPageViewController.h"
 #import "OLKiteUtils.h"
+#import "OLUserSession.h"
 
 @implementation OLImagePickerPageViewController
 
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    UIButton *nextButton = [[UIButton alloc] init];
-    self.nextButton = nextButton;
-    [nextButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-    [nextButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
-    [nextButton addTarget:self.imagePicker action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [nextButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
-    nextButton.hidden = YES;
+    UIButton *ctaButton = [[UIButton alloc] init];
+    self.ctaButton = ctaButton;
+    [ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
+    [ctaButton.titleLabel setFont:[UIFont systemFontOfSize:17]];
+    [ctaButton addTarget:self.imagePicker action:@selector(onButtonNextClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [ctaButton setBackgroundColor:[UIColor colorWithRed:0.125 green:0.498 blue:0.655 alpha:1.000]];
+    ctaButton.hidden = YES;
     
+    if ([OLUserSession currentSession].capitalizeCtaTitles){
+        [self.ctaButton setTitle:[[self.ctaButton titleForState:UIControlStateNormal] uppercaseString] forState:UIControlStateNormal];
+    }
     
-    [self.view addSubview:nextButton];
+    [self.view addSubview:ctaButton];
     
-    nextButton.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *views = NSDictionaryOfVariableBindings(nextButton);
+    ctaButton.translatesAutoresizingMaskIntoConstraints = NO;
+    NSDictionary *views = NSDictionaryOfVariableBindings(ctaButton);
     NSMutableArray *con = [[NSMutableArray alloc] init];
     
-    NSArray *visuals = @[@"H:|-5-[nextButton]-5-|",
-                         @"V:[nextButton(50)]-5-|"];
+    NSArray *visuals = @[@"H:|-15-[ctaButton]-15-|",
+                         @"V:[ctaButton(50)]"];
     
     
     for (NSString *visual in visuals) {
         [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
     
-    [nextButton.superview addConstraints:con];
+    [ctaButton.superview addConstraints:con];
+    [ctaButton.superview addConstraint:[NSLayoutConstraint constraintWithItem:ctaButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.bottomLayoutGuide attribute:NSLayoutAttributeTop multiplier:1 constant:-15]];
 
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if (self.imagePicker.nextButton.hidden){
-        self.nextButton.hidden = NO;
+    if (self.imagePicker.ctaButton.hidden){
+        self.ctaButton.hidden = NO;
     }
     else{
-        self.nextButton.hidden = YES;
+        self.ctaButton.hidden = YES;
     }
 }
 

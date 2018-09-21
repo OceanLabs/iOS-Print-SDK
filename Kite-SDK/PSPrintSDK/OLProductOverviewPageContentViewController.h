@@ -28,16 +28,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLViewController.h"
 
 @class OLProduct;
 
 @protocol OLProductOverviewPageContentViewControllerDelegate <NSObject>
 
--(void)userDidTapOnImage;
+- (void)userDidTapOnImage;
 
 @end
 
-@interface OLProductOverviewPageContentViewController : UIViewController
+@interface OLProductOverviewPageContentViewController : OLViewController
 @property (assign, nonatomic) NSUInteger pageIndex;
 @property (strong, nonatomic) OLProduct *product;
 @property (weak, nonatomic) id<OLProductOverviewPageContentViewControllerDelegate> delegate;

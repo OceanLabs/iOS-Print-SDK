@@ -12,7 +12,7 @@
 //  
 //  The software MAY ONLY be used with the Kite Tech Ltd platform and MAY NOT be modified
 //  to be used with any competitor platforms. This means the software MAY NOT be modified
-//  to place orders with any competitors to Kite Tech Ltd, all orders MUST go through the
+//  to place orders with any competit]ors to Kite Tech Ltd, all orders MUST go through the
 //  Kite Tech Ltd platform servers.
 //  
 //  The above copyright notice and this permission notice shall be included in
@@ -180,7 +180,7 @@ static BOOL partial = NO;
                 if (handler){
                     handler(nil, error);
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncPartialComplete object:self userInfo:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncPartialComplete object:self userInfo:@{kNotificationKeyTemplateSyncError: error}];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationTemplateSyncComplete object:self userInfo:@{kNotificationKeyTemplateSyncError: error}];
             } else {
                 [self saveTemplatesAsLatest:templates_];

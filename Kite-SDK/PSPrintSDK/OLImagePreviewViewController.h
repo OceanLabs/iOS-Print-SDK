@@ -28,10 +28,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLRemoteImageView.h"
+#import "OLImageView.h"
+#import "OLViewController.h"
 
-@interface OLImagePreviewViewController : UIViewController
+@class OLAsset;
 
-@property (strong, nonatomic) OLRemoteImageView *imageView;
+@interface OLImagePreviewViewController : OLViewController
+
+@property (strong, nonatomic) OLAsset *asset;
 
 @end

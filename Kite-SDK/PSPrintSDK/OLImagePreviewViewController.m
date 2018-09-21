@@ -28,35 +28,63 @@
 //
 
 #import "OLImagePreviewViewController.h"
+#import "UIView+AutoLayoutHelper.h"
+#import "OLAsset+Private.h"
+#import "OLKiteUtils.h"
+
+#import <Photos/Photos.h>
 
 @interface OLImagePreviewViewController ()
-
+@property (strong, nonatomic) OLImageView *imageView;
 @end
 
 @implementation OLImagePreviewViewController
 
-- (instancetype)init{
-    if (self = [super init]){
-        OLRemoteImageView *imageView = [[OLRemoteImageView alloc] init];
-        self.imageView = imageView;
-        [self.view addSubview:self.imageView];
-        
-        imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
-        NSMutableArray *con = [[NSMutableArray alloc] init];
-        
-        NSArray *visuals = @[@"H:|-0-[imageView]-0-|",
-                             @"V:|-0-[imageView]-0-|"];
-        
-        
-        for (NSString *visual in visuals) {
-            [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
+- (void)viewDidLoad{
+    [super viewDidLoad];
+    OLImageView *imageView = [[OLImageView alloc] init];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.imageView = imageView;
+    [self.view addSubview:self.imageView];
+    
+    [imageView centerInSuperview];
+    [imageView leadingFromSuperview:0 relation:NSLayoutRelationGreaterThanOrEqual];
+    [imageView trailingToSuperview:0 relation:NSLayoutRelationGreaterThanOrEqual];
+    [imageView topFromSuperview:0 relation:NSLayoutRelationGreaterThanOrEqual];
+    [imageView bottomToSuperview:0 relation:NSLayoutRelationGreaterThanOrEqual];
+    
+    __weak OLImagePreviewViewController *weakVc = self;
+    [self.asset imageWithSize:self.view.frame.size applyEdits:YES progress:^(float progress){
+        [weakVc.imageView setProgress:progress];
+    } completion:^(UIImage *image, NSError *error){
+        self.imageView.image = image;
+    }];
+    
+}
+
+- (NSArray *)previewActionItems{
+    NSMutableArray *actions = [[NSMutableArray alloc] init];
+    
+    if ([self.asset isEdited]){
+        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized){
+            UIPreviewAction *saveAction = [UIPreviewAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Save as Copy", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIPreviewActionStyleDefault handler:^(UIPreviewAction *action, id context){
+                [self.asset imageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+                    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+                        PHAssetChangeRequest *changeRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+                        changeRequest.creationDate = [NSDate date];
+                    } completionHandler:NULL];
+                }];
+            }];
+            [actions addObject:saveAction];
         }
         
-        [imageView.superview addConstraints:con];
+        UIPreviewAction *discardAction = [UIPreviewAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"Discard Edits", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIPreviewActionStyleDestructive handler:^(UIPreviewAction *action, id context){
+            self.asset.edits = nil;
+        }];
+        [actions addObject:discardAction];
     }
     
-    return self;
+    return actions;
 }
 
 @end

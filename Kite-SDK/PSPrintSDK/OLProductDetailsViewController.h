@@ -29,14 +29,18 @@
 
 #import <UIKit/UIKit.h>
 #import "OLProduct.h"
+#import "OLViewController.h"
 
 @protocol OLProductDetailsDelegate <NSObject>
 
--(void)optionsButtonClicked;
+- (void)optionsButtonClicked;
+
+@optional
+- (void)onLabelDetailsTapped:(UITapGestureRecognizer *)sender;
 
 @end
 
-@interface OLProductDetailsViewController : UIViewController
+@interface OLProductDetailsViewController : OLViewController
 
 @property (weak, nonatomic) IBOutlet UILabel *detailsTextLabel;
 @property (strong, nonatomic) OLProduct *product;
@@ -44,6 +48,8 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *arrowCenterXCon;
 
 - (CGFloat)recommendedDetailsBoxHeight;
 

@@ -25,19 +25,20 @@
 - (void)setSelected:(BOOL)selected{
     if (!self.selected && selected){
         if (!self.selectedView){
-            self.selectedView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height, self.frame.size.width, 3.5)];
+            self.selectedView = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 3.5, self.frame.size.width, 3.5)];
             self.selectedView.backgroundColor = [self colorToUse];
+            self.selectedView.alpha = 0;
             [self addSubview:self.selectedView];
         }
         
         [UIView animateWithDuration:0.25 animations:^{
-            self.selectedView.transform = CGAffineTransformMakeTranslation(0, -3.5);
+            self.selectedView.alpha = 1;
         }];
 
     }
     else if (self.selected && !selected){
         [UIView animateWithDuration:0.25 animations:^{
-            self.selectedView.transform = CGAffineTransformIdentity;
+            self.selectedView.alpha = 0;
         } completion:^(BOOL finished){}];
     }
     super.selected = selected;    

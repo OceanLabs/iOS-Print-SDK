@@ -41,18 +41,11 @@
 
 @interface OLProductDetailsViewController ()
 
-@property (weak, nonatomic) IBOutlet UIView *moreOptionsView;
-@property (weak, nonatomic) IBOutlet UILabel *selectedOptionLabel;
-@property (weak, nonatomic) IBOutlet UILabel *optionLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *chevron;
-@property (weak, nonatomic) IBOutlet UILabel *detailsLabel;
 
-@end
-
-@interface OLProductOverViewViewController
-
-- (IBAction)onLabelDetailsTapped:(UITapGestureRecognizer *)sender;
-@property (strong, nonatomic) UILabel *detailsTextLabel;
+@property (weak, nonatomic) IBOutlet UILabel *detailLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *line;
+@property (weak, nonatomic) IBOutlet UITextView *detailsTextView;
+@property (assign, nonatomic) BOOL hasSetupProductDetails;
 
 @end
 
@@ -62,12 +55,28 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
+    self.detailLabel.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product Details");
     
-    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
-    if (font){
-        [self.detailsLabel setFont:font];
+    if ([OLKiteABTesting sharedInstance].hidePrice){
+        self.priceLabel.text = nil;
     }
-    self.detailsLabel.text = NSLocalizedStringFromTableInBundle(@"Details", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Product Details");
+    else{
+        self.priceLabel.text = self.product.unitCost;
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    if (!self.hasSetupProductDetails){
+        self.hasSetupProductDetails = YES;
+        [self setupProductDetails];
+    }
+}
+
+- (void)setupProductDetails{
+    UIFont *font = [[OLKiteABTesting sharedInstance] lightThemeFont1WithSize:17];
+    if (font) {
+        self.detailsTextView.font = font;
+    }
     
     OLMarkDownParser *mdParser = [OLMarkDownParser standardParser];
     font = [[OLKiteABTesting sharedInstance] lightThemeHeavyFont1WithSize:13];
@@ -82,10 +91,11 @@
     
     NSMutableAttributedString *attributedString = [[mdParser attributedStringFromMarkdown:[self.product detailsString]] mutableCopy];
     
-    [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextLabel.tintColor range:NSMakeRange(0, attributedString.length)];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:self.detailsTextView.tintColor range:NSMakeRange(0, attributedString.length)];
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.alignment = NSTextAlignmentNatural;
+    paragraphStyle.lineSpacing = 2;
     [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, attributedString.length)];
     
     NSRange strikeThroughRange = [[attributedString string] rangeOfString:@"\\~.*\\~" options:NSRegularExpressionSearch];
@@ -95,14 +105,7 @@
         [attributedString deleteCharactersInRange:NSMakeRange(strikeThroughRange.location + strikeThroughRange.length-2, 1)];
     }
     
-    self.detailsTextLabel.attributedText = attributedString;
-    
-    if (self.product.productTemplate.options.count == 0){
-        [self.moreOptionsView removeFromSuperview];
-    }
-    else if (self.product.productTemplate.options.count != 1){
-        [self.selectedOptionLabel removeFromSuperview];
-    }
+    self.detailsTextView.attributedText = attributedString;
 }
 
 - (CGFloat)recommendedDetailsBoxHeight{

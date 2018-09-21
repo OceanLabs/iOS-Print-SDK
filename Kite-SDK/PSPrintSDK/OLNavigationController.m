@@ -29,6 +29,18 @@
 
 #import "OLNavigationController.h"
 #import "OLKiteABTesting.h"
+#import "OLKitePrintSDK.h"
+#import "OLTouchReporterView.h"
+#import "OLUserSession.h"
+#import "OLKiteViewController.h"
+
+@interface OLKiteViewController ()
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc;
+@end
+
+@interface OLNavigationController () <OLTouchReporterDelegate>
+@property (strong, nonatomic) OLTouchReporterView *touchReporter;
+@end
 
 @implementation OLNavigationController
 
@@ -51,6 +63,21 @@
         [attributes setObject:titleColor1 forKey:NSForegroundColorAttributeName];
         self.navigationBar.titleTextAttributes = attributes;
     }
+    
+    if ([OLKitePrintSDK isKiosk] || YES){
+        self.touchReporter = [[OLTouchReporterView alloc] initWithFrame:self.view.bounds];
+        self.touchReporter.delegate = self;
+        [self.view addSubview:self.touchReporter];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [self reportTouch];
+}
+
+- (void)reportTouch{
+    [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
 }
 
 

@@ -39,19 +39,17 @@
 #import "OLImagePickerProvider.h"
 #import "OLKiteViewController.h"
 #import "OLCustomViewControllerPhotoProvider.h"
+#import "OLKiteViewController+Private.h"
+#include <sys/sysctl.h>
+#import "OLKitePrintSDK.h"
 
 @interface OLPrintOrder (Private)
-@property (weak, nonatomic) NSArray *userSelectedPhotos;
 - (void)saveOrder;
 + (id)loadOrder;
 @end
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
-@end
-
-@interface OLKiteViewController ()
-@property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @end
 
 @implementation OLUserSession
@@ -66,15 +64,17 @@
     return sharedInstance;
 }
 
--(NSMutableArray *) userSelectedPhotos{
-    if (!_userSelectedPhotos){
-        _userSelectedPhotos = [[NSMutableArray alloc] init];
+-(NSMutableArray *) userSelectedAssets{
+    if (!_userSelectedAssets){
+        _userSelectedAssets = [[NSMutableArray alloc] init];
         
         if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-            [_userSelectedPhotos addObjectsFromArray:self.appAssets];
+            for (OLAsset *asset in self.appAssets){
+                [_userSelectedAssets addObject:asset];
+            }
         }
     }
-    return _userSelectedPhotos;
+    return _userSelectedAssets;
 }
 
 -(NSMutableArray *) recentPhotos{
@@ -91,25 +91,22 @@
     if (!_printOrder){
         _printOrder = [[OLPrintOrder alloc] init];
     }
-    _printOrder.userSelectedPhotos = self.userSelectedPhotos;
     return _printOrder;
 }
 
 - (void)resetUserSelectedPhotos{
     [self clearUserSelectedPhotos];
-    [self.userSelectedPhotos addObjectsFromArray:self.appAssets];
+    [self.userSelectedAssets addObjectsFromArray:[[NSArray alloc] initWithArray:self.appAssets copyItems:YES]];
 }
 
 - (void)clearUserSelectedPhotos{
-    for (OLAsset *asset in self.userSelectedPhotos){
-        asset.edits = nil;
+    for (OLAsset *asset in self.userSelectedAssets){
         [asset unloadImage];
     }
     
-    [self.userSelectedPhotos removeAllObjects];
+    [self.userSelectedAssets removeAllObjects];
     
     for (OLAsset *asset in self.recentPhotos){
-        asset.edits = nil;
         [asset unloadImage];
     }
     [self.recentPhotos removeAllObjects];
@@ -152,6 +149,12 @@
         }
         
         self.appAssets = nil;
+        
+        if ([OLKitePrintSDK isKiosk]){
+            NSArray * urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+            NSString *documentDirPath = [[(NSURL *)[urls objectAtIndex:0] path] stringByAppendingPathComponent:@"kite-kiosk-photos"];
+            [[NSFileManager defaultManager] removeItemAtPath:documentDirPath error:NULL];
+        }
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionBasket) == OLUserSessionCleanupOptionBasket){
         self.printOrder = [[OLPrintOrder alloc] init];
@@ -191,24 +194,12 @@
 }
 
 - (void)calcScreenScaleForTraitCollection:(UITraitCollection *)traitCollection{
-    //TODO: Just check for the specific model and get rid of this image loading business
-    
     //Should be [UIScreen mainScreen].scale but the 6 Plus with its 1GB RAM chokes on 3x images.
-    CGFloat scale = [UIScreen mainScreen].scale;
-    if (scale == 2.0 || scale == 1.0){
-        self.screenScale = scale;
+    if ([[self getSysInfoByName:"hw.model"] isEqualToString:@"iPhone7,1"]){
+        self.screenScale = 2.0;
     }
     else{
-        UIImage *ram1GbImage = [UIImage imageNamed:@"ram-1" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:traitCollection];
-        UIImage *ramThisDeviceImage = [UIImage imageNamed:@"ram" inBundle:[OLKiteUtils kiteLocalizationBundle] compatibleWithTraitCollection:traitCollection];
-        NSData *ram1Gb = UIImagePNGRepresentation(ram1GbImage);
-        NSData *ramThisDevice = UIImagePNGRepresentation(ramThisDeviceImage);
-        if ([ram1Gb isEqualToData:ramThisDevice]){
-            self.screenScale = 2.0;
-        }
-        else{
-            self.screenScale = scale;
-        }
+        self.screenScale = [UIScreen mainScreen].scale;
     }
 }
 
@@ -219,8 +210,27 @@
     if (self.kiteVc.filterProducts.count > 0){
         return NO;
     }
+    if (self.deeplink){
+        return NO;
+    }
     
     return YES;
+}
+
+
+// From: https://github.com/erica/uidevice-extension/blob/master/UIDevice-Hardware.m
+- (NSString *) getSysInfoByName:(char *)typeSpecifier
+{
+    size_t size;
+    sysctlbyname(typeSpecifier, NULL, &size, NULL, 0);
+    
+    char *answer = malloc(size);
+    sysctlbyname(typeSpecifier, answer, &size, NULL, 0);
+    
+    NSString *results = [NSString stringWithCString:answer encoding: NSUTF8StringEncoding];
+    
+    free(answer);
+    return results;
 }
 
 @end

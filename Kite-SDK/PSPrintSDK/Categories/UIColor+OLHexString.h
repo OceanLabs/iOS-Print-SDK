@@ -9,7 +9,9 @@
 
 @interface UIColor (OLHexString)
 
++ (CGFloat) colorComponentFrom: (NSString *) string start: (NSUInteger) start length: (NSUInteger) length;
 + (UIColor *) colorWithHexString: (NSString *) hexString;
++ (UIColor *) textColorForBackGroundColor:(UIColor *)color;
 - (NSString *)hexString;
 
 @end

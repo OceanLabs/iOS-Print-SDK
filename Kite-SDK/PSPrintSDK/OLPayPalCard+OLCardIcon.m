@@ -27,6 +27,7 @@
 //  THE SOFTWARE.
 //
 
+#import <UIKit/UIKit.h>
 #import "OLPayPalCard+OLCardIcon.h"
 #import "OLLuhn.h"
 #import "UIImage+ImageNamedInKiteBundle.h"

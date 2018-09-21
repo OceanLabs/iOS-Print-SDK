@@ -28,6 +28,7 @@
 //
 
 #import "OLPayPalCard.h"
+
 #import "OLConstants.h"
 #import "NSString+Formatting.h"
 #import "OLKiteUtils.h"
@@ -46,7 +47,8 @@ static NSString *const kOLErrorDomainPayPal = @"co.oceanlabs.paypal.kOLErrorDoma
 #define kErrorMessageGenericPayPalVaultFailure NSLocalizedStringFromTableInBundle(@"Failed to store card details with PayPal. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
 #define kErrorMessageBadCardNumber NSLocalizedStringFromTableInBundle(@"Please enter a valid card number", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
 #define kErrorMessageBadExpiryDate NSLocalizedStringFromTableInBundle(@"Please enter a card expiry date in the future", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
-
+#define kErrorMessageCardValidation NSLocalizedStringFromTableInBundle(@"Failed to validate card details, please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
+#define kErrorMessagePaymentDeclined NSLocalizedStringFromTableInBundle(@"Your payment was not approved (transaction state: %@). Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")
 
 static NSString *clientId;
 
@@ -54,6 +56,11 @@ typedef void (^OLPayPalCardAccessTokenCompletionHandler)(NSString *accessToken, 
 
 static OLPayPalCard *lastUsedCard;
 static OLPayPalEnvironment environment;
+
+@interface OLPayPalCard ()
+@property (nonatomic, readwrite) NSString *vaultId;
+@property (nonatomic, readwrite) NSDate *vaultExpireDate;
+@end
 
 static NSString *typeToString(OLPayPalCardType type) {
     switch (type) {
@@ -148,7 +155,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                 if ([accessToken isKindOfClass:[NSString class]] && !JSONError) {
                     handler(accessToken, nil);
                 } else {
-                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringFromTableInBundle(@"Failed to validate card details, please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"")}];
+                    NSError *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: kErrorMessageCardValidation}];
                     handler(nil, error);
                 }
             }
@@ -206,8 +213,8 @@ static NSString *typeToString(OLPayPalCardType type) {
                                 [dateFormatter setDateFormat:@"YYYY-MM-dd'T'HH:mm:ssZ"];
                                 
                                 self.numberMasked = number;
-                                _vaultId = vaultId;
-                                _vaultExpireDate = [dateFormatter dateFromString:vaultExpireDate];
+                                self.vaultId = vaultId;
+                                self.vaultExpireDate = [dateFormatter dateFromString:vaultExpireDate];
                                 
                                 handler(nil);
                             } else {
@@ -311,7 +318,7 @@ static NSString *typeToString(OLPayPalCardType type) {
                             }
                             
                             if (![paymentState isEqualToString:@"approved"]) {
-                                NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Your payment was not approved (transaction state: %@). Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), paymentState]}];
+                                NSError *error = [NSError errorWithDomain:kOLErrorDomainPayPal code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:kErrorMessagePaymentDeclined, paymentState]}];
                                 handler(nil, error);
                                 return;
                             }

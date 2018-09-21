@@ -30,6 +30,7 @@
 #import "OLAsset.h"
 #import "OLPhotoEdits.h"
 #import "OLPlaceholderAsset.h"
+#import "NSMutableArray+OLUserSelectedAssetsUtils.h"
 
 typedef enum {
     kOLAssetTypeCorrupt,
@@ -40,27 +41,29 @@ typedef enum {
     kOLAssetTypeDataSource,
 } OLAssetType;
 
-@interface OLAsset (FriendMethods)
+@interface OLAsset (Private)
 
 @property (nonatomic, strong) id<OLAssetDataSource> dataSource;
 
-- (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL;
-- (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler;
-- (void)dataWithCompletionHandler:(GetDataHandler)handler;
-- (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler;
-- (void)getImageURLWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSURL *url, NSError *error))handler;
-- (void)unloadImage;
++ (void)cancelAllImageOperations;
 - (BOOL)isEdited;
 - (BOOL)isEqual:(id)object ignoreEdits:(BOOL)ignoreEdits;
 - (instancetype)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType;
-+ (void)cancelAllImageOperations;
+- (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler;
+- (void)dataWithCompletionHandler:(GetDataHandler)handler;
+- (void)getImageURLWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSURL *url, NSError *error))handler;
+- (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler;
+- (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL;
+- (void)unloadImage;
++ (NSMutableArray<OLAsset *> *)userSelectedAssets;
+@property (assign, nonatomic) BOOL corrupt;
+@property (assign, nonatomic) NSInteger extraCopies;
 @property (nonatomic, readonly) OLAssetType assetType;
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSURL *imageURL;
-@property (assign, nonatomic) NSInteger extraCopies;
-@property (strong, nonatomic) OLPhotoEdits *edits;
 @property (strong, nonatomic) NSString *uuid;
-@property (strong, nonatomic) id metadata;
+@property (strong, nonatomic) OLPhotoEdits *edits;
 @property (strong, nonatomic) PHAsset *phAsset;
+@property (strong, nonatomic) id metadata;
 @end
 

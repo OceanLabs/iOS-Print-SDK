@@ -28,23 +28,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OLViewController.h"
 
 @class OLProduct;
-@class OLRemoteImageView;
+@class OLArtboardView;
+@protocol OLArtboardDelegate;
 
-@interface OLPhotobookPageContentViewController : UIViewController
+@interface OLPhotobookPageContentViewController : OLViewController
 
-@property (strong, nonatomic) NSMutableArray *userSelectedPhotos;
 @property (assign, nonatomic) NSInteger pageIndex;
-@property (weak, nonatomic) IBOutlet OLRemoteImageView *imageView;
+@property (weak, nonatomic) IBOutlet OLArtboardView *artboardView;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowLeft2;
 @property (weak, nonatomic) IBOutlet UIImageView *pageShadowRight2;
+@property (weak, nonatomic) id<OLArtboardDelegate> delegate;
 @property (strong, nonatomic) OLProduct *product;
 
 - (void)loadImageWithCompletionHandler:(void(^)(void))handler;
 - (NSInteger)imageIndexForPoint:(CGPoint)p;
-- (void)highlightImageAtIndex:(NSInteger)index;
-- (void)unhighlightImageAtIndex:(NSInteger)index;
 - (void)clearImage;
 
 @end

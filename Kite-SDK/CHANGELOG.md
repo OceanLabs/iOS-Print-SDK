@@ -1,5 +1,72 @@
+## 6.9.0
+- Added: Link to Kite Privacy Policy on the basket screen
+- Added: Hungarian, Polish, Slovak, Czech, Portuguese, Danish, Norwegian, Swedish, Finnish localizations
+- Changed: Analytics are now opt-in
+- Changed: Minimum supported iOS is now 9.0
+- Fixed: Issue where the editing controls would disappear if the Camera Roll was disabled.
+
+### 6.8.10
+- Fixed: Launching the SDK with some assets would sometimes result in those assets being ignored.
+
+### 6.8.9
+- Fixed: Custom image pickers not getting the maximum amount of photos and the currently selected assets
+
+### 6.8.8
+- Fixed: An issue with remote configuration
+
+### 6.8.6
+- Changed: Adding an item with more images than the pack size to the basket will not split it into 2 items in the basket.
+- Fixed: Custom image pickers not getting the maximum amount of photos for some products
+- Fixed: Minor layout issues on iPhone X
+- Added: Order ID to the relevant analytics event
+- Added: Add to basket analytics event
+- Updated: ES, NL localizations
+
+### 6.8.5
+- Fixed: The case where the user could go back from the basket under some circumstances.
+
+### 6.8.4
+- Changed: The estimated delivery times are now clarified as 'working days'.
+
+### 6.8.3
+- Fixed: An issue where the user can't checkout under some circumstances.
+
+### 6.8.2
+- Fixed: Adding photos to a photo book when using an exclusive custom image provider.
+
+### 6.8.1
+- Fixed: Apparel pricing
+
+## 6.8.0
+- Unified UX for adding images to products
+- Improved: UX for swapping images in products
+- Fixed: A layout issue with collage posters on iPhone X
+- Improved: support for iPhone X in landscape
+- Added: Proper deep link support
+- Improved: Performance and memory usage
+- Fixed: Many bugs
+- Updated: Docs with newer dependency version
+
+### 6.7.2
+- Fixed: A layout issue on iPhone X when using a single custom image provider
+
+### 6.7.1
+- Fixed: Non-responsive cancel button when Kite SDK is loading
+
+## 6.7.0
+- Support for Xcode 9 and iOS 11
+- Fixed: Issues that were caused by the safe area margins on iPhone X in portrait orientation.
+- Fixed: In some cases when dismissing and re-loading the Kite SDK multiple times the app would crash.
+
+### 6.6.7
+- All headers are public
+
+### 6.6.6
+- Fixed: Public header files in podspec
+
 ### 6.6.5
 - Added: Polish localization
+- Added: 'Lite' podspec that does not include mugs
 
 ### 6.6.4
 - Added: Ability to hide promo code text field

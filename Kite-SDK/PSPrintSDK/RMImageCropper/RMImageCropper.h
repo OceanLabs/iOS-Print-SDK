@@ -1,5 +1,7 @@
 #import <UIKit/UIKit.h>
 
+#import "OLImageView.h"
+
 typedef NS_ENUM(NSUInteger, RMImageCropperMode) {
     RMImageCropperModeAspectFill,
     RMImageCropperModeAspectFit
@@ -20,8 +22,8 @@ typedef NS_ENUM(NSUInteger, RMImageCropperMode) {
 @property (nonatomic, assign) BOOL enabled;
 @property (nonatomic, assign) RMImageCropperMode initialScale;
 @property (nonatomic, assign) RMImageCropperMode minimumScale;
-@property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, copy) void (^tapped)();
+@property (nonatomic, strong) OLImageView *imageView;
+@property (nonatomic, copy) void (^tapped)(void);
 
 - (void)editedImageAsync:(void (^)(UIImage *image))complete;
 - (CGRect)getFrameRect;

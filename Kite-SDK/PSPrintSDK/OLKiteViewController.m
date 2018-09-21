@@ -47,18 +47,28 @@
 #import "OLProductTypeSelectionViewController.h"
 #import "OLUserSession.h"
 #import "UIImage+OLUtils.h"
+#import "UIImage+ImageNamedInKiteBundle.h"
+#import "OLCaseViewController.h"
+#import "OLSingleImagePosterViewController.h"
+#import "OL3DProductViewController.h"
+#import "OLApparelViewController.h"
+#import "OLCollagePosterViewController.h"
+#import "OLLogoutViewController.h"
+#import "OLKioskLandingViewController.h"
 
 static CGFloat fadeTime = 0.3;
 
 
 @interface OLKiteViewController ()
 
-@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
-@property (weak, nonatomic) IBOutlet UINavigationItem *customNavigationItem;
 @property (weak, nonatomic) IBOutlet UIImageView *loadingImageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
 @property (strong, nonatomic) NSMutableArray <OLImagePickerProvider *> *customImageProviders;
 @property (strong, nonatomic) NSArray *fontNames;
+@property (strong, nonatomic) NSTimer *timer;
+@property (strong, nonatomic) NSDate *lastTouchDate;
+@property (weak, nonatomic) UIViewController *lastTouchedViewController;
+@property (assign, nonatomic) BOOL dismissing;
 
 // Because template sync happens in the constructor it may complete before the OLKiteViewController has appeared. In such a case where sync does
 // complete first we make a note to immediately transition to the appropriate view when the OLKiteViewController does appear:
@@ -68,7 +78,7 @@ static CGFloat fadeTime = 0.3;
 @property (strong, nonatomic) NSBlockOperation *remoteThemePlistSyncOperation;
 @property (strong, nonatomic) NSBlockOperation *transitionOperation;
 
-@property (copy, nonatomic) void (^loadingHandler)();
+@property (copy, nonatomic) void (^loadingHandler)(void);
 
 @end
 
@@ -107,22 +117,6 @@ static CGFloat fadeTime = 0.3;
     return _loadingImageView;
 }
 
-- (UINavigationBar *)navigationBar{
-    if (!_navigationBar){
-        [self.view class]; //Force viewDidLoad;
-    }
-    
-    return _navigationBar;
-}
-
-- (UINavigationItem *)customNavigationItem{
-    if (!_customNavigationItem){
-         [self.view class]; //Force viewDidLoad;
-    }
-    
-    return _customNavigationItem;
-}
-
 - (OLPrintOrder *)basketOrder{
     return [OLUserSession currentSession].printOrder;
 }
@@ -143,12 +137,12 @@ static CGFloat fadeTime = 0.3;
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info{
     [OLAnalytics setExtraInfo:info];
-    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
-        [OLUserSession currentSession].appAssets = assets;
-        [[OLUserSession currentSession] resetUserSelectedPhotos];
-        [OLUserSession currentSession].printOrder.userData = info;
-    }
+    NSArray <OLAsset *>*assetsCopy = [assets copy]; // Prevents assets being nilled in some cases
+    self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"];
     [OLKiteABTesting sharedInstance].launchedWithPrintOrder = NO;
+    [OLUserSession currentSession].appAssets = assetsCopy;
+    [[OLUserSession currentSession] resetUserSelectedPhotos];
+    [OLUserSession currentSession].printOrder.userData = info;
     
     return self;
 }
@@ -189,7 +183,7 @@ static CGFloat fadeTime = 0.3;
     self.fontNames = fontNames;
 }
 
-- (void)startLoadingWithCompletionHandler:(void(^)())handler{
+- (void)startLoadingWithCompletionHandler:(void(^)(void))handler{
     if (!handler){
         return;
     }
@@ -243,27 +237,20 @@ static CGFloat fadeTime = 0.3;
     }
 }
 
--(void)viewDidLoad {
+- (void)viewDidLoad {
     [super viewDidLoad];
-    
-    if (!self.navigationController){
-        self.navigationBar.hidden = NO;
-        self.customNavigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
-    }
 
     if (!self.loadingHandler){
         [self loadRemoteData];
-    }
-    
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        self.customNavigationItem.title = @"";
     }
     
     if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentLive){
         [[self.view viewWithTag:9999] removeFromSuperview];
     }
     
-    self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
+    if (self.loadingImageView){
+        self.view.backgroundColor = [self.loadingImageView.image colorAtPixel:CGPointMake(3, 3)];
+    }
     
     [self transitionToNextScreen];
 }
@@ -273,10 +260,53 @@ static CGFloat fadeTime = 0.3;
     [OLUserSession currentSession].kiteVc = self;
 }
 
--(IBAction) dismiss{
-#ifndef OL_NO_ANALYTICS
+- (UIViewController *)reviewViewControllerForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
+    OLTemplateUI templateUI = product.productTemplate.templateUI;
+    if (templateUI == OLTemplateUICase){
+        return [[OLCaseViewController alloc] init];
+    }
+    else if (templateUI == OLTemplateUIApparel){
+        return [[OLApparelViewController alloc] init];
+    }
+    else if (templateUI == OLTemplateUIPoster && product.productTemplate.gridCountX == 1 && product.productTemplate.gridCountY == 1){
+        return [[OLSingleImagePosterViewController alloc] init];
+    }
+    else if (templateUI == OLTemplateUIPoster){
+        return [[OLCollagePosterViewController alloc] init];
+    }
+    else if (templateUI == OLTemplateUIMug){
+        return [[OL3DProductViewController alloc] init];
+    }
+    
+    return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:[self reviewViewControllerIdentifierForProduct:product photoSelectionScreen:photoSelectionScreen]];
+    
+}
+
+- (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
+    OLTemplateUI templateUI = product.productTemplate.templateUI;
+    if (templateUI == OLTemplateUIPhotobook){
+        return @"OLEditPhotobookViewController";
+    }
+    else if (templateUI == OLTemplateUINonCustomizable){
+        return @"OLPaymentViewController";
+    }
+    else if (photoSelectionScreen){
+        return @"OLImagePickerViewController";
+    }
+    else if (templateUI == OLTemplateUIPoster){
+        return @"OLPosterViewController";
+    }
+    else if (templateUI == OLTemplateUIFrame || templateUI == OLTemplateUICalendar){
+        return @"FrameOrderReviewViewController";
+    }
+    else{
+        return @"OrderReviewViewController";
+    }
+}
+
+- (IBAction) dismiss{
+    self.dismissing = YES;
     [OLAnalytics trackKiteDismissed];
-#endif
     if ([self.delegate respondsToSelector:@selector(kiteControllerDidFinish:)]){
         [self.delegate kiteControllerDidFinish:self];
     }
@@ -288,27 +318,30 @@ static CGFloat fadeTime = 0.3;
 - (void)transitionToNextScreen{
     __weak OLKiteViewController *welf = self;
     [self.transitionOperation addExecutionBlock:^{
-#ifndef OL_NO_ANALYTICS
         if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
             [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
         }
         else{
             [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
         }
-#endif
         
         // The screen we transition to will depend on what products are available based on the developers filter preferences.
         NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];
         
         UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]];
-        NSString *nextVcNavIdentifier;
+        UIViewController *vc;
         OLProduct *product;
-        if (groups.count == 0 && !([OLProductTemplate templates].count != 0 && [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
+        if (groups.count == 0 && ![OLProductTemplate isSyncInProgress] && !([OLProductTemplate templates].count != 0 && [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Store Maintenance", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                     [welf dismiss];
                 }]];
                 [welf presentViewController:ac animated:YES completion:NULL];
+            return;
+        }
+        else if ([OLKitePrintSDK isKiosk]){
+            OLKioskLandingViewController *vc = [[OLKioskLandingViewController alloc] init];
+            [welf fadeToViewController:[[OLNavigationController alloc] initWithRootViewController:vc]];
             return;
         }
         else if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
@@ -320,7 +353,7 @@ static CGFloat fadeTime = 0.3;
                 identifier = @"OLProductOverviewViewController";
             }
             else if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] && [product isValidProductForUI]){
-                identifier = [OLKiteUtils reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
+                identifier = [[OLUserSession currentSession].kiteVc reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
             }
             else{
                 [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
@@ -339,7 +372,7 @@ static CGFloat fadeTime = 0.3;
                             }];
                         }
                         else{
-                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                         }
                         [welf fadeToViewController:nvc];
                     }
@@ -371,7 +404,7 @@ static CGFloat fadeTime = 0.3;
                     }];
                 }
                 else{
-                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
                 }
                 [welf fadeToViewController:nvc];
             }
@@ -383,13 +416,12 @@ static CGFloat fadeTime = 0.3;
         else if (groups.count == 1) {
             OLProductGroup *group = groups[0];
             product = [group.products firstObject];
-            nextVcNavIdentifier = [OLKiteViewController storyboardIdentifierForGroupSelected:group];
+            vc = [self viewControllerForGroupSelected:group];
         }
         else {
             // Launch the product home view controller where the top level groups will be displayed
-            nextVcNavIdentifier = @"ProductHomeViewController";
+            vc = [sb instantiateViewControllerWithIdentifier:@"ProductHomeViewController"];
         }
-        UIViewController *vc = [sb instantiateViewControllerWithIdentifier:nextVcNavIdentifier];
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
         [vc safePerformSelector:@selector(setDelegate:) withObject:welf.delegate];
         [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
@@ -408,7 +440,7 @@ static CGFloat fadeTime = 0.3;
                 }];
             }
             else{
-                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
+                vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
             }
             [welf fadeToViewController:nvc];
         }
@@ -445,7 +477,6 @@ static CGFloat fadeTime = 0.3;
     
     [view.superview addConstraints:con];
     
-    
     [UIView animateWithDuration:fadeTime animations:^(void){
         vc.view.alpha = 1;
     } completion:^(BOOL b){
@@ -456,6 +487,9 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)templateSyncDidReturn:(NSNotification *)n{
+    if (self.dismissing){
+        return;
+    }
     NSAssert([NSThread isMainThread], @"assumption about main thread callback is incorrect");
     if (n.userInfo[kNotificationKeyTemplateSyncError]){
         if (self.templateSyncOperation.finished){
@@ -500,7 +534,7 @@ static CGFloat fadeTime = 0.3;
                 }
             }
         }
-        if (!self.templateSyncOperation.executing && !self.templateSyncOperation.finished){
+        if (!self.templateSyncOperation.executing && !self.templateSyncOperation.finished && ![self.operationQueue.operations containsObject:self.templateSyncOperation]){
             [self.operationQueue addOperation:self.templateSyncOperation];
         }
         
@@ -516,15 +550,23 @@ static CGFloat fadeTime = 0.3;
     return [[OLReceiptViewController alloc] initWithPrintOrder:printOrder];
 }
 
-+ (NSString *)storyboardIdentifierForGroupSelected:(OLProductGroup *)group{
+- (UIViewController *)productDescriptionViewController{
+    return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
+}
+
+- (UIViewController *)infoViewController{
+    return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]]instantiateViewControllerWithIdentifier:@"InfoPageViewController"];
+}
+
+- (UIViewController *)viewControllerForGroupSelected:(OLProductGroup *)group{
     if (group.products.count > 1){
-        return @"OLTypeSelectionViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
     }
     else if ([OLKiteABTesting sharedInstance].disableProductCategories && [OLKiteABTesting sharedInstance].skipProductOverview){
-        return [OLKiteUtils reviewViewControllerIdentifierForProduct:group.products.firstObject photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
+        return [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:group.products.firstObject photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
     }
     else{
-        return @"OLProductOverviewViewController";
+        return [self productDescriptionViewController];
     }
 }
 
@@ -535,15 +577,76 @@ static CGFloat fadeTime = 0.3;
 }
 
 - (void)didReceiveMemoryWarning{
-    for (OLAsset *asset in [OLUserSession currentSession].userSelectedPhotos){
+    for (OLAsset *asset in [OLAsset userSelectedAssets]){
         [asset unloadImage];
     }
 }
 
 - (void)dealloc{
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionPhotos];
-    [OLUserSession currentSession].userSelectedPhotos = nil;
+    [OLUserSession currentSession].userSelectedAssets = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark Kiosk
+
+- (void)startTimer{
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
+}
+
+- (void)stopTimer{
+    [self.timer invalidate];
+}
+
+- (void)updateTimer:(NSTimer *)timer {
+    // has the target time passed?
+    if (self.touchReporter){
+        [self.touchReporter.superview bringSubviewToFront:self.touchReporter];
+    }
+    NSInteger timeout = 240;
+        NSLog(@"Auto log out in: %f",timeout+[self.lastTouchDate timeIntervalSinceNow]);
+    if ([self.lastTouchDate timeIntervalSinceNow] <= -timeout) {
+        [timer invalidate];
+        
+        OLLogoutViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"LogoutViewController"];
+        vc.modalPresentationStyle = UIModalPresentationFormSheet;
+        vc.preferredContentSize = CGSizeMake(435, 563);
+        
+        [self.lastTouchedViewController presentViewController:vc animated:YES completion:NULL];
+    }
+}
+
+- (void)setLastTouchDate:(NSDate *)date forViewController:(UIViewController *)vc{
+    self.lastTouchedViewController = vc;
+    self.lastTouchDate = date;
+}
+
+- (void)kioskLogout{
+    [self.timer invalidate];
+    
+    void (^logout)(void) = ^{
+        [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionAll];
+        self.transitionOperation = [[NSBlockOperation alloc] init];
+        [self transitionToNextScreen];
+    };
+    
+    if (self.presentedViewController){
+    [self.presentedViewController dismissViewControllerAnimated:YES completion:^{
+        if (self.presentedViewController){
+            [self dismissViewControllerAnimated:NO completion:^{
+                logout();
+            }];
+        }
+        else{
+            logout();
+        }
+        [self.childViewControllers.firstObject removeFromParentViewController];
+    }];
+    }
+    else{
+        logout();
+    }
+    
 }
 
 @end

@@ -27,9 +27,8 @@
 //  THE SOFTWARE.
 //
 
-#import "OLImageDownloader.h"
-
 #import "UIImageView+FadeIn.h"
+
 #import "OLImageDownloader.h"
 #import "objc/runtime.h"
 #import "UIImage+OLUtils.h"
@@ -40,6 +39,11 @@
 static char tasksKey;
 
 @implementation UIImageView (FadeIn)
+
+- (CGFloat)screenScale{
+    return [OLUserSession currentSession].screenScale;
+}
+
 - (void)setAndFadeInImageWithURL:(NSURL *)url {
     [self setAndFadeInImageWithURL:url size:CGSizeZero placeholder:nil progress:NULL completionHandler:NULL];
 }
@@ -52,7 +56,11 @@ static char tasksKey;
     [self setAndFadeInImageWithURL:url size:size placeholder:placeholder progress:NULL completionHandler:NULL];
 }
 
-- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
+- (void)setAndFadeInImageWithURL:(NSURL *)url size:(CGSize)size placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
+    [self setImageWithURL:url fadeIn:YES size:size placeholder:placeholder progress:progressHandler completionHandler:handler];
+}
+
+- (void)setImageWithURL:(NSURL *)url fadeIn:(BOOL)fadeIn size:(CGSize)size placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
     for (id key in self.tasks.allKeys){
         if (![key isEqual:url]){
             [self.tasks[key] cancel];
@@ -62,6 +70,8 @@ static char tasksKey;
     if (size.height == 0 || size.width == 0){
         size = [UIScreen mainScreen].bounds.size;
     }
+    
+    UIViewContentMode contentMode = self.contentMode;
     
     self.alpha = 0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -83,10 +93,16 @@ static char tasksKey;
             [self.tasks removeObjectForKey:url];
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                UIImage *resizedImage = [image shrinkToSize:size forScreenScale:[OLUserSession currentSession].screenScale aspectFit:self.contentMode == UIViewContentModeScaleAspectFit];
+                UIImage *resizedImage = [image shrinkToSize:size forScreenScale:[self screenScale] aspectFit:contentMode == UIViewContentModeScaleAspectFit];
+                if (resizedImage) {
+                    UIGraphicsBeginImageContextWithOptions(resizedImage.size, NO, resizedImage.scale);
+                    [resizedImage drawAtPoint:CGPointZero];
+                    resizedImage = UIGraphicsGetImageFromCurrentImageContext();
+                    UIGraphicsEndImageContext();
+                }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.image = resizedImage;
-                    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    [UIView animateWithDuration:fadeIn ? 0.3 : 0 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                         self.alpha = 1;
                     }completion:^(BOOL finished){
                         if (handler){
@@ -102,15 +118,11 @@ static char tasksKey;
     });
 }
 
-- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options{
-    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:nil progress:nil completionHandler:NULL];
+- (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
+    [self setImageWithOLAsset:asset fadeIn:YES size:size applyEdits:applyEdits placeholder:placeholder progress:progressHandler completionHandler:handler];
 }
 
-- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder{
-    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:placeholder progress:nil completionHandler:NULL];
-}
-
-- (void)setAndFadeInImageWithOLAsset:(OLAsset *)asset size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
+- (void)setImageWithOLAsset:(OLAsset *)asset fadeIn:(BOOL)fadeIn size:(CGSize)size applyEdits:(BOOL)applyEdits placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
     for (id key in self.tasks.allKeys){
         if (![asset isKindOfClass:[OLAsset class]] || ![key isEqual:asset.uuid]){
             [self.tasks removeObjectForKey:key];
@@ -120,17 +132,20 @@ static char tasksKey;
     if ([asset isKindOfClass:[OLPlaceholderAsset class]]){
         self.image = [UIImage imageNamedInKiteBundle:@"plus"];
         self.contentMode = UIViewContentModeCenter;
-        self.backgroundColor = [UIColor colorWithWhite: 0.937 alpha: 1];
+        if (handler){
+            handler();
+        }
         return;
     }
+    
+    self.image = placeholder;
     
     if (size.height == 0 || size.width == 0){
         size = CGSizeMake(self.frame.size.width * [UIScreen mainScreen].scale, self.frame.size.height * [UIScreen mainScreen].scale);
     }
     
-    self.alpha = 0;
     self.tasks[asset.uuid] = [NSNull null];
-    [asset imageWithSize:self.frame.size applyEdits:applyEdits progress:^(float progress){
+    [asset imageWithSize:size applyEdits:applyEdits progress:^(float progress){
         if (progressHandler){
             if (!self.tasks[asset.uuid]){
                 progressHandler(1);
@@ -149,9 +164,9 @@ static char tasksKey;
         }
         
         self.contentMode = UIViewContentModeScaleAspectFill;
-        
+        self.alpha = 0;
         self.image = image;
-        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:fadeIn ? 0.3 : 0 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.alpha = 1;
         }completion:^(BOOL finished){
             if (handler){
@@ -161,7 +176,15 @@ static char tasksKey;
     }];
 }
 
-- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)())handler{
+- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options{
+    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:nil progress:nil completionHandler:NULL];
+}
+
+- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder{
+    [self setAndFadeInImageWithPHAsset:asset size:size options:options placeholder:placeholder progress:nil completionHandler:NULL];
+}
+
+- (void)setAndFadeInImageWithPHAsset:(PHAsset *)asset size:(CGSize)size options:(PHImageRequestOptions *)options placeholder:(UIImage *)placeholder progress:(void(^)(float progress))progressHandler completionHandler:(void(^)(void))handler{
     for (id key in self.tasks.allKeys){
         if (![key isEqual:asset.localIdentifier] && [self.tasks[key] isKindOfClass:[NSNumber class]]){
             PHImageRequestID requestID = (PHImageRequestID)[self.tasks[key] longValue];
@@ -170,7 +193,9 @@ static char tasksKey;
         }
     }
     
-    self.alpha = 0;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.alpha = 0;
+    });
     
     if (progressHandler){
         options.progressHandler = ^(double progress, NSError *__nullable error, BOOL *stop, NSDictionary *__nullable info){

@@ -42,7 +42,6 @@
 
 @property (weak, nonatomic) id<UINavigationControllerDelegate, OLAddressPickerControllerDelegate> delegate;
 @property (assign, nonatomic) BOOL allowsMultipleSelection;
-@property (assign, nonatomic) BOOL allowsAddressSearch;
 @property (strong, nonatomic) NSArray<OLAddress *> *selected;
 
 @end

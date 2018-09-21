@@ -60,7 +60,7 @@ CGFloat const RESET_DURATION = 0.10f;
     _enabled = true;
     _initialScale = RMImageCropperModeAspectFill;
     _minimumScale = RMImageCropperModeAspectFill;
-    _imageView = [[UIImageView alloc] init];
+    _imageView = [[OLImageView alloc] init];
     _imageView.userInteractionEnabled = true;
     _scaleTransform = CGAffineTransformIdentity;
     _originalWidth = 0.0f;
@@ -96,7 +96,7 @@ CGFloat const RESET_DURATION = 0.10f;
 {
     [super setFrame:frame];
     
-    [self setImageViewToFitFrame];
+    [self layoutSubviews];
 }
 
 - (void)layoutSubviews
@@ -561,9 +561,7 @@ CGFloat const RESET_DURATION = 0.10f;
     }
     
     CGPoint correction = CGPointMake(xCorrection, yCorrection);
-    CGPoint scaledCorrection = CGPointApplyAffineTransform(correction, CGAffineTransformInvert(self.scaleTransform));
-    
-    [self startDecelerationWithVelocity:[self getVelocityForDisplacement:scaledCorrection]];
+    [self startDecelerationWithVelocity:[self getVelocityForDisplacement:correction]];
 }
 
 #pragma mark - Size

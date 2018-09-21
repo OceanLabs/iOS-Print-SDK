@@ -20,13 +20,22 @@
 		<string>de</string>
 		<string>it</string>
 		<string>pl</string>
+		<string>nl</string>
+		<string>hu</string>
+		<string>sk</string>
+		<string>pt</string>
+		<string>fi</string>
+		<string>sv</string>
+		<string>nb</string>
+		<string>da</string>
+		<string>cs</string>
 	</array>
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>6.6.5</string>
+	<string>6.9.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -36,15 +45,15 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb298749663586228</string>
+				<string>fb584401511683605</string>
 				<string>kitely</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>9</string>
+	<string>23</string>
 	<key>FacebookAppID</key>
-	<string>298749663586228</string>
+	<string>584401511683605</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>

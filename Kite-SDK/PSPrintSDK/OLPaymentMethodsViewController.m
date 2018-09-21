@@ -72,19 +72,15 @@
     
     self.title = NSLocalizedStringFromTableInBundle(@"Payment Method", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
     
-#ifndef OL_NO_ANALYTICS
     [OLAnalytics trackPaymentMethodScreenViewed:[(OLPaymentViewController *)self.delegate printOrder]];
-#endif
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     
-#ifndef OL_NO_ANALYTICS
     if (!self.navigationController){
         [OLAnalytics trackPaymentMethodScreenHitBack:[(OLPaymentViewController *)self.delegate printOrder]];
     }
-#endif
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {

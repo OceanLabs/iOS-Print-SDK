@@ -1,0 +1,223 @@
+ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
+%@ working days,%@ arbetsdagar,"/* Examples: 2-5 days, 7 days */"
+%ldx%ld Collage,%ldx%ld-kollage,/* example: 5x7 Collage */
+"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!",**Kvalitetsgaranti**\nVåra produkter är av högsta kvalitet och vi är övertygade om att du kommer att älska dem. Annars erbjuder vi alltid en pengarna-tillbaka-garanti. Vi hörs!,
+1 day,1 dag,
+401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,401 Unauthorized Request Error när du försökte överföra en tillgång. Kontrollera att du angav ett autentiseringshuvud och att angivna autentiseringsuppgifter är korrekta.,
+500 Internal Server Error whilst trying to upload an asset. Please try again.,500 Internal Server Error medan du försöker ladda upp en tillgång. Försök igen.,
+Add,Lägg till,
+Add %ld %@!,Lägg till %ld%@!,
+Add a %@!,Lägg till %@!,
+Add a photo\non this side,Lägg till ett foto\npå denna sida,/* this side [of the shirt] */
+Add Address,Lägg till adress,
+Add another %@!,Lägg till ett till %@!,
+Add Credit Card,Lägg till kreditkort,
+Add Credit Card (TEST),Lägg till kreditkort (TEST),
+Add Credit/Debit Card,Lägg till kredit-/betalkort,
+Add more,Lägg till fler,/* Add more [photos] */
+Add New Address,Lägg till ny adress,
+Add Payment Method,Lägg till betalningsmetod,
+Add Text,Lägg till text,/* Add text on image */
+Add to Basket,Lägg till i varukorgen,
+Address Book,Adressbok,
+All Photos,Alla foton,
+Alternatively type the following URL into your mobile browser's address bar,Du kan också skriva in följande webbadress i webbläsarens adressfält på mobilen,
+Are you sure you want to delete this item?,Är du säker på att du vill ta bort denna artikel?,/* Refers to a basket item */
+Are you sure?,Är du säker?,
+Authorise,Auktorisera,
+Back,Tillbaka,
+BACK,BAKSIDA,/* Back of the photo */
+Back Image Is Too Small,Bilden är för liten,
+Basket is empty,Varukorgen är tom,
+Cancel,Avbryt,
+Card Number,Kortnummer,
+Checking Code,Kontrollerar kod,/* Checking promo code */
+Checkout,Gå till kassan,
+Checkout for Free!,Gå till kassan utan extra kostnad!,
+Choose Address,Välj adress,
+Choose Country,Välj land,
+Choose Delivery Address,Välj leveransadress,
+Choose Photo,Välj foto,
+Choose Photos,Välj foton,
+City,Stad,
+Clearing Code,Clearing-kod,/* Clearing promo code */
+cm,cm,/* Centimeters */
+Completed Orders,Slutförda beställningar,
+Continue Shopping,Fortsätt handla,
+County,Län,
+Create a %@ for\nonly %@ %@,Skapa ett %@ för\nendast %@ %@,
+Create a pack for\nonly %@ %@,Skapa ett paket för\nendast %@ %@,
+Create another %@ for\nonly %@ %@,Skapa ett till %@ för\nendast %@ %@,
+Create another pack for\nonly %@ %@,Skapa ett till paket för\nendast %@ %@,
+Create Image,Skapa bild,
+Crop,Beskär,/* Crop image */
+CVV,CVV,/* The credit card security code */
+Default,Standard,
+Delete Item,Ta bort artikel,/* Delete [basket item] */
+Delivery Details,Leveransinformation,
+Description,Beskrivning,/* Product description */
+Details,Detaljer,/* Product Details */
+Discard Edits,Ångra redigeringar,
+Do you want to log out of %@?,Vill du logga ut från %@?,/* Log out of Instagram/Facebook */
+Do you want to remove this photo?,Vill du ta bort det här fotot?,
+Done,Klart,
+Edit,Redigera,/* Edit image */
+Edit Address,Redigera adress,
+Email,E-postadress,
+End Session,Avsluta session,
+Enter a valid card number,Ange ett giltigt kortnummer,
+Enter a valid CVV number,Ange ett giltigt CVV-nummer,/* The credit card security number */
+Enter a valid expiry date,Ange ett giltigt utgångsdatum,/* For credit cards */
+Enter Address Manually,Ange adressen manuellt,
+Error validating the order. Please try again later.,Fel vid validering av ordern. Försök igen senare.,
+Failed to download phone case mask. Please check your internet connectivity and try again,Det gick inte att hämta masken för telefonskalet. Kontrollera din internet-anslutning och försök igen,
+Failed to get the price of the order. Please try again.,Det gick inte att hämta priset för ordern. Försök igen.,
+Failed to get upload URL. Try again later.,Det gick inte att överföra webbadressen. Försök igen senare.,
+Failed to log in to Instagram. Please check your internet connectivity and try again,Det gick inte att logga in på Instagram. Kontrollera din internet-anslutning och försök igen,
+Failed to store card details with PayPal. Please try again.,Det gick inte att spara kortuppgifterna hos PayPal. Försök igen.,
+Failed to synchronize product templates. Please try again.,Det gick inte att synkronisera produktmallar. Försök igen.,
+"Failed to validate card details, please try again.",Det gick inte att validera kortuppgifterna. Försök igen.,
+Failed to validate the order. Please try again.,Det gick inte att validera. Försök igen.,
+Filters,Filter,/* Image filters */
+First Name,Förnamn,
+Flip,Vänd,/* Horizontally flip image */
+Fonts,Teckensnitt,
+For only %@ extra,För bara %@ extra,/* [Add a photo on this side of the shirt] for only $4.00 extra */
+FREE,KOSTNADSFRI,"/* Free, no cost */"
+From,Från,
+FRONT,FRAMSIDA,/* Front of the photo */
+Great gifts for all the family,Roliga julklappar till hela familjen,
+Image Is Too Small,Bilden är för liten,
+IMAGE TOOLS,BILDVERKTYG,
+Image upload failed with a %lu HTTP response status code. Please try again.,Det gick inte att ladda upp bilden %lu HTTP-svarsstatuskod. Försök igen.,
+inches,tum,
+Invalid Email Address,Ogiltig e-postadress,
+Invalid Phone Number,Ogiltigt telefonnummer,
+Large,"Stor,",
+Last Name,Efternamn,
+Let's pick\nan image!,Välj \nen bild!,"/* Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half. */"
+Line 1,Rad 1,
+Line 2,Rad 2,
+Log In,Logga in,
+Log out,Logga ut,
+Login,Logga in,
+Maximum Photos Reached,Maximalt antal foton har uppnåtts,
+Medium,Medel,
+Missing Delivery Address,Leveransadressen saknas,
+MM/YY,MM/ÅÅ,/* Credit card date format: MonthMonth/YearYear */
+MORE ITEMS\nCOMING SOON!,FLER ARTIKLAR\NKOMMER SNART!,
+Move Pages,Flytta sidor,/* Title of a screen that allows the user to move the pages of a book around */
+New Payment,Ny betalning,
+Next,Nästa,
+No,Nej,
+No Thanks,"Nej, tack",
+"No, keep it","Nej, behåll det","/* No, keep [the photo] */"
+Not now,Inte nu,
+OK,OK,/* Acknowledgent to an alert dialog. */
+Only registered %d/%d image URLs with the asset endpoint,Endast registrerade %d/%d webbadresser med tillgångens slutpunkt,
+Oops!,Hoppsan!,
+OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,HOPPSAN\nNÅGONTING GICK FEL\n FÖRSÖK IGEN NEDAN,
+Or print on a product below ▼,Eller tryck på en produkt nedan ▼,
+Order History,Orderhistorik,
+Order Id,Beställnings-ID,
+Order Summary,Beställningssammanfattning,
+Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.,Vår butik genomgår underhåll just nu så det går för tillfället inte att köpa produkter. Försök igen om en stund.,
+Pack of,Förpackning med,/* Pack of [20 square photos] */
+Pay %@,Betala %@,/* Pay [$10.00] */
+Paying With,Betala med,/* Paying with [PayPal/Credit Card] */
+Payment,Betalning,
+Payment (TEST),Betalning (TEST),
+Payment Method,Betalningsmetod,
+Phone,Telefon,
+Photo Library,Fotobibliotek,
+Please add %d more.,Lägg till %d fler.,/* Please add [a number] more [photos] */
+Please add some photos,Lägg till några foton,
+Please add some photos to your photo book,Lägg till några foton till din fotobok,
+Please choose an address to have your order shipped to,Välj en adress som beställningen ska levereras till,
+Please enter a card expiry date in the future,Ange ett utgångsdatum för kortet i framtiden,/* For credit cards */
+Please enter a valid card number,Ange ett giltigt kortnummer,
+Please enter a valid email address,Ange en giltig e-postadress,
+Please enter a valid phone number,Ange ett giltigt telefonnummer,
+Please enter your first and last name.,Ange ditt förnamn och efternamn.,
+Please fill in Line 1 of the address.,Fyll i Rad 1 för adressen.,
+Please fill in your city.,Fyll i din stad.,
+Please fill in your postal code.,Ange ditt postnummer.,
+Please scan the QR code using a QR reader app on your device.,Skanna QR-koden med hjälp av en QR-läsarapp på din enhet.,
+Please select %d images.,Välj %d bilder.,/* Please select [number] images */
+Please select %ld photos,Välj %ld foton,
+Please select at least %d images.,Välj minst %d bilder.,/* Please select at least [number] images */
+Please select no more than %d images.,Välj inte mer än %d bilder.,/* Please select no more than [number] images */
+Please select only %ld photo,Välj endast %ld foto,
+Please select some images.,Välj några bilder.,
+Please select up to %ld photos,Välj upp till %ld foton,
+Please zoom out or pick a higher quality image,Zooma ut eller välj en bild av högre kvalitet,
+Postcode,Postnummer,
+Powered by Kite.ly,Powered by Kite.ly,
+Price,Pris,
+PRINT AT HOME,TRYCK I HEMMET,
+Print It Anyway,Tryck ändå,
+Print order submission failed with a %lu HTTP response status code. Please try again.,Tryckbeställningen misslyckades med en %lu HTTP-svarsstatuskod. Försök igen.,
+Print Shop,Print Shop,
+Print these,Skriv ut dessa,
+Privacy Policy,Sekretesspolicy,
+Processing,Bearbetning,/* Processing the order */
+PRODUCT OPTIONS,PRODUKTALTERNATIV,
+Promo Code,Kampanjkod,
+Promotional Discount,Kampanjrabatt,
+Quantity,Antal,/* Quantity of photos */
+Receipt,Mottagande,
+Recents,Senaste,/* Recent photos used */
+Remove?,Vill du ta bort?,/* Remove [photo]? */
+Required by the postal service in case there are any issues during delivery.,Det krävs av posten om det uppstår några problem under leveransen.,
+Retry,Försök igen,
+Review,granskning,/* Title of a screen where the user can review the product before ordering */
+Rotate,Rotera,/* Rotate image by 90 degrees */
+Save,Spara,
+Save as Copy,Spara som kopia,
+Scan QR Code,Skanna QR-kod,
+Select Size,Välj storlek,/* Example: Shirt size */
+Shipping,Frakt,
+Shipping Method,Leveransmetod,
+Single Photo Poster,Affisch med ett foto,
+Size,Storlek,/* Physical size of the product */
+Small,Liten,
+Start by tapping this button,Starta genom att trycka på denna knapp,
+Start Creating,Börja skapa,/* Start Creating [your product] */
+Store Maintenance,Butiksunderhåll,
+Swipe to rotate your mug,Dra för att rotera muggen,
+Tap image to change,Tryck på bilden för att ändra,
+Tap image to change or hold to move,Tryck på bilden för att ändra eller tryck ned för att flytta,
+Tap image to edit,Tryck på bilden för att redigera,
+Tap image to edit or hold to move,Tryck på bilden för att redigera eller tryck ned för att flytta,
+Tap on this button,Tryck på den här knappen,
+Text Colour,Textfärg,
+TEXT TOOLS,TEXTVERKTYG,
+There was a problem getting Print Shop products. Check your Internet connectivity or try again later.,Det uppstod ett problem när Print Shop-produkter hämtades. Kontrollera din Internet-anslutning eller försök igen senare.,
+There was an error getting one of your photos. Please remove or replace it.,Det uppstod ett fel när ett av dina foton hämtades. Ta bort eller byt ut det.,
+There was an error trying to validate the card. Please try again later.,Ett fel uppstod när du försökte validera kortet. Försök igen senare.,
+This is the 3-4 digit verification number/security code normally found on the back of your card,Det här är det 3–4-siffriga kontrollnumret/säkerhetskoden som vanligtvis finns på baksidan av ditt kort,
+This will discard your edits.,Detta kommer att ignorera ändringarna.,"/* The image edits, like crop, filters, etc */"
+"This will log out of any accounts, clear selected photos and start over","Detta loggar ut från alla konton, rensar valda foton och börjar om",
+Total,Total,
+Tracked,Spårad,
+Uploading book,Överför bok,
+Uploading Images \n%lu / %lu,Överför bilder \n%lu / %lu,
+View Item,Visa objekt,/* View [basket] item */
+WE HAVE RECEIVED\nYOUR ORDER,VI HAR TAGIT EMOT\NDIN BESTÄLLNING,
+We'll send you confirmation and order updates.,Vi kommer att skicka en bekräftelse och uppdateringar om beställningen.,
+We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,Vi kommer att skicka en bekräftelse och uppdateringar om beställningen. Avmarkera den här rutan om du vill avanmäla dig från e-postkampanjer.,
+Yes,Ja,
+Yes Please,"Ja, tack",
+"Yes, remove it","Ja, ta bort den","/* Yes, remove [the photo] */"
+You can add %d more for the same price.,Du kan lägga till ytterligare %d för samma pris.,
+You need to authorize the app to access your Instagram account if you want to import photos from there.,Du måste ge appen tillgång till Instagram-kontot om du vill importera foton från det.,
+You've only selected %d photo.,Du har endast valt %d foto.,
+You've only selected %d photos.,Du har endast valt %d foton.,
+You've selected %d photos.,Du har valt %d foton.,
+Your 15-16 digit card number,Ditt 15–16-siffriga kortnummer,
+Your card expiry date,Ditt korts giltighetsdatum,
+Your payment was not approved (transaction state: %@). Please try again.,Din betalning godkändes inte (transaktion: %@). Försök igen.,
+Your Phone,Din telefon,"/* Device, not number */"
+basket.Edit,Redigera,/* Edit basket item */
+We need access to your %@ photos,Vi behöver tillgång till dina %@-foton,/* Example: We need access to your iPhone photos */
+ZIP Code,ZIP,

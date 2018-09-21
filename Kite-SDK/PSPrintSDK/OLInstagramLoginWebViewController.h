@@ -30,6 +30,6 @@
 #import <UIKit/UIKit.h>
 #import "OLImagePickerViewController.h"
 
-@interface OLInstagramLoginWebViewController : UIViewController
+@interface OLInstagramLoginWebViewController : OLViewController
 @property (weak, nonatomic) OLImagePickerViewController *imagePicker;
 @end

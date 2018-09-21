@@ -33,7 +33,7 @@
 #import "OLProductOverviewViewController.h"
 
 @interface OLProduct (Private)
--(void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
+- (void)setProductPhotography:(NSUInteger)i toImageView:(UIImageView *)imageView;
 @end
 
 @interface OLProductOverviewViewController (Private)
