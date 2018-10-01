@@ -31,6 +31,7 @@
 #import "OLAsset+Private.h"
 #import "OLProductTemplate.h"
 #import "OLImageDownloader.h"
+#import "OLCountry.h"
 
 static NSString *const kKeyFrontImage = @"co.oceanlabs.pssdk.kKeyFrontImage";
 static NSString *const kKeyBackImage = @"co.oceanlabs.pssdk.kKeyBackImage";
@@ -94,7 +95,9 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
             self.insideLeftImageAsset = insideLeftImageAsset;
         }
         self.templateId = templateId;
-        self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
+        
+        NSString *countryCode = [OLCountry countryForCurrentLocale].codeAlpha3;
+        self.selectedShippingMethod = self.template.availableShippingMethods[countryCode].firstObject;
     }
     return self;
 }

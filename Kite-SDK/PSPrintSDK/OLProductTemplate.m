@@ -364,6 +364,7 @@ static BOOL partial = NO;
 }
 
 @synthesize availableShippingMethods;
+@synthesize countryToRegionMapping;
 
 - (NSString *)templateId {
     return self.identifier;

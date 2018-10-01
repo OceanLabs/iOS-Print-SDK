@@ -31,6 +31,7 @@
 #import "OLProductTemplate.h"
 #import "OLAsset+Private.h"
 #import "OLImageDownloader.h"
+#import "OLCountry.h"
 
 static NSString *const kKeyApparelProductTemplateId = @"co.oceanlabs.pssdk.kKeyApparelProductTemplateId";
 static NSString *const kKeyApparelImages = @"co.oceanlabs.pssdk.kKeyApparelImages";
@@ -78,7 +79,9 @@ static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApp
         }
         self.photobookAssets = photobookAssets;
         self.templateId = templateId;
-        self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
+        
+        NSString *countryCode = [OLCountry countryForCurrentLocale].codeAlpha3;
+        self.selectedShippingMethod = self.template.availableShippingMethods[countryCode].firstObject;
     }
     
     return self;

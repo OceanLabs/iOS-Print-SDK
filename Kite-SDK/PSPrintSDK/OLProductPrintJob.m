@@ -32,6 +32,7 @@
 #import "OLProductTemplate.h"
 #import "OLProduct.h"
 #import "OLImageDownloader.h"
+#import "OLCountry.h"
 
 static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductTemplateId";
 static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
@@ -78,7 +79,9 @@ static id stringOrEmptyString(NSString *str) {
         self.assetsForUploading = assets;
         self.assetsToUpload = [OLAsset photobookAssetsFromAssets:assets];
         self.templateId = templateId;
-        self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
+        
+        NSString *countryCode = [OLCountry countryForCurrentLocale].codeAlpha3;
+        self.selectedShippingMethod = self.template.availableShippingMethods[countryCode].firstObject;
     }
     
     return self;
@@ -95,7 +98,9 @@ static id stringOrEmptyString(NSString *str) {
         self.assetsForUploading = assets;
         self.assetsToUpload = [OLAsset photobookAssetsFromAssets:assets];
         self.templateId = templateId;
-        self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
+        
+        NSString *countryCode = [OLCountry countryForCurrentLocale].codeAlpha3;
+        self.selectedShippingMethod = self.template.availableShippingMethods[countryCode].firstObject;
     }
     
     return self;
@@ -112,7 +117,9 @@ static id stringOrEmptyString(NSString *str) {
         self.assetsForUploading = assets;
         self.assetsToUpload = [OLAsset photobookAssetsFromAssets:assets];
         self.templateId = templateId;
-        self.selectedShippingMethod = self.template.availableShippingMethods.firstObject;
+        
+        NSString *countryCode = [OLCountry countryForCurrentLocale].codeAlpha3;
+        self.selectedShippingMethod = self.template.availableShippingMethods[countryCode].firstObject;
     }
     
     return self;
