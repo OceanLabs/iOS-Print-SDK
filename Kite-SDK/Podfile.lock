@@ -31,7 +31,7 @@ PODS:
   - Stripe (13.2.0)
 
 DEPENDENCIES:
-  - "KITAssetsPickerController (from `git@github.com:kkarayannis/KITAssetsPickerController.git`)"
+  - KITAssetsPickerController (from `https://github.com/kkarayannis/KITAssetsPickerController.git`)
   - NXOAuth2Client
   - PayPal-iOS-SDK/Core
   - Photobook
@@ -53,12 +53,12 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   KITAssetsPickerController:
-    :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
+    :git: https://github.com/kkarayannis/KITAssetsPickerController.git
 
 CHECKOUT OPTIONS:
   KITAssetsPickerController:
     :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
-    :git: "git@github.com:kkarayannis/KITAssetsPickerController.git"
+    :git: https://github.com/kkarayannis/KITAssetsPickerController.git
 
 SPEC CHECKSUMS:
   Analytics: 6541ce337e99d9f7a2240a8b3953940a7be5f998
@@ -75,6 +75,6 @@ SPEC CHECKSUMS:
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   Stripe: 2c69e216061d54d9c538204bb4f58bd597ddfc5b
 
-PODFILE CHECKSUM: 322eee5113826dd85f22646562473888efadccc4
+PODFILE CHECKSUM: c6bfa01094e617e3cd25be1e02d9067d9c359466
 
 COCOAPODS: 1.5.3
