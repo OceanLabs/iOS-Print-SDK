@@ -1257,7 +1257,7 @@ const NSInteger kOLEditTagCrop = 40;
 }
 
 - (void)setupButton2{
-    if (self.product.productTemplate.options.count > 0){
+    if (self.product.productTemplate.options.count > 0 && ![self isMemberOfClass:[OLImageEditViewController class]]){
         self.editingTools.button2.tag = kOLEditTagProductOptionsTab;
         [self.editingTools.button2 addTarget:self action:@selector(onButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.product.productTemplate.options.firstObject iconWithCompletionHandler:^(UIImage *icon){
