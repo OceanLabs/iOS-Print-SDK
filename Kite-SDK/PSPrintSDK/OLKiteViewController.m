@@ -540,4 +540,15 @@ static CGFloat fadeTime = 0.3;
     
 }
 
+- (BOOL)shouldAutorotate {
+    if ([self.childViewControllers.firstObject respondsToSelector: @selector(shouldAutorotate)]) {
+        return self.childViewControllers.firstObject.shouldAutorotate;
+    }
+    return YES;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return self.childViewControllers.firstObject.supportedInterfaceOrientations ?: UIInterfaceOrientationMaskAll;
+}
+
 @end
