@@ -56,21 +56,7 @@
 @end
 
 @interface OLProduct ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
 - (NSString *)currencyCode;
-@end
-
-@interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-@end
-
-@interface OLPrintOrder ()
-- (void)saveOrder;
 @end
 
 @implementation OLApparelViewController
@@ -109,8 +95,7 @@
     
     OLAsset *asset = [[OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject copy];
     
-    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-    OLProductPrintJob *job;
+    id<OLPrintJob> job;
     if (self.product.productTemplate.fulfilmentItems.count > 0){
         NSMutableDictionary *assetDict = [[NSMutableDictionary alloc] init];
         for (OLFulfilmentItem *item in self.product.productTemplate.fulfilmentItems){
@@ -132,26 +117,8 @@
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
-    BOOL fromEdit = NO;
-    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-    for (id<OLPrintJob> existingJob in jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            job.dateAddedToBasket = [existingJob dateAddedToBasket];
-            job.extraCopies = existingJob.extraCopies;
-            job.uuid = self.product.uuid;
-            [printOrder removePrintJob:existingJob];
-            fromEdit = YES;
-        }
-    }
-    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
-    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
-    job.redeemedOffer = self.product.redeemedOffer;
-    [printOrder addPrintJob:job];
-    if (!fromEdit){
-        [OLAnalytics trackItemAddedToBasket:job];
-    }
     
-    [printOrder saveOrder];
+    [[Checkout shared] addProductToBasket:(id<Product>)job];
     
     if (handler){
         handler();

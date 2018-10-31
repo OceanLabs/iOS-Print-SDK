@@ -47,12 +47,16 @@
     return 100;
 }
 
+- (CGSize)size {
+    return CGSizeMake(self.pixelWidth, self.pixelHeight);
+}
+
 - (BOOL)isEqual:(id)object{
     if (![object respondsToSelector:@selector(imageURL)]){
         return NO;
     }
-    OLAsset *selfAsset = [OLAsset assetWithURL:self.imageURL];
-    OLAsset *objectAsset = [OLAsset assetWithURL:[object imageURL]];
+    OLAsset *selfAsset = [OLAsset assetWithURL:self.imageURL size:self.size];
+    OLAsset *objectAsset = [OLAsset assetWithURL:[object imageURL] size:self.size];
     return [selfAsset isEqual:objectAsset];
 }
 
@@ -64,11 +68,14 @@
         return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
     } else if ([urlStr hasSuffix:@"png"]) {
         return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypePNG];
-    } else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
-        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF];
-    } else if ([urlStr hasSuffix:@"pdf"]){
-        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypePDF];
-    } else {
+    }
+//    else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
+//        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF];
+//    }
+//    else if ([urlStr hasSuffix:@"pdf"]){
+//        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypePDF];
+//    }
+    else {
         // Worst case scenario just assume it's a JPEG.
         return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
     }

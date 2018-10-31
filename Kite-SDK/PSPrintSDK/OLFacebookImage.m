@@ -104,6 +104,21 @@ static NSString *const kKeyImageHeight = @"co.oceanlabs.FacebookImagePicker.kKey
     return bestSeen == nil ? self.thumbURL : bestSeen.url;
 }
 
+- (CGSize)bestSize {
+    if (self.sourceImages.count == 0) {
+        return CGSizeZero;
+    }
+    
+    OLFacebookImageURL *bestSeen = self.sourceImages[0];
+    for (OLFacebookImageURL *image in self.sourceImages) {
+        if (image.imageSize.width * image.imageSize.height < bestSeen.imageSize.width * bestSeen.imageSize.height) {
+            bestSeen = image;
+        }
+    }
+    
+    return bestSeen == nil ? CGSizeZero : bestSeen.imageSize;
+}
+
 - (BOOL)isEqual:(id)object {
     if (![object isMemberOfClass:[OLFacebookImage class]]) {
         return NO;

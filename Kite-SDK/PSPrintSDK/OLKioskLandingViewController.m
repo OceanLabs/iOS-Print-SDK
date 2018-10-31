@@ -117,28 +117,12 @@
 
 - (void)pickBestImageForSize:(CGSize)size{
     if (size.width > size.height){
-        if ([OLKiteABTesting sharedInstance].theme.startScreenLandscape){
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLKiteABTesting sharedInstance].theme.startScreenLandscape withCompletionHandler:^(UIImage *image, NSError *error){
-                self.imageView.image = [UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp];
-                self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
-            }];
-        }
-        else{
-            self.imageView.image = [UIImage imageNamed:@"kiosk-landing-landscape"];
-            self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
-        }
+        self.imageView.image = [UIImage imageNamed:@"kiosk-landing-landscape"];
+        self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
     }
     else{
-        if ([OLKiteABTesting sharedInstance].theme.startScreenPortrait){
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLKiteABTesting sharedInstance].theme.startScreenPortrait withCompletionHandler:^(UIImage *image, NSError *error){
-                self.imageView.image = [UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp];
-                self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
-            }];
-        }
-        else{
-            self.imageView.image = [UIImage imageNamed:@"kiosk-landing-portrait"];
-            self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
-        }
+        self.imageView.image = [UIImage imageNamed:@"kiosk-landing-portrait"];
+        self.imageView.backgroundColor = [self.imageView.image colorAtPixel:CGPointMake(3, 3)];
     }
 }
 

@@ -30,7 +30,9 @@
 #import <Foundation/Foundation.h>
 #import "OLPrintJob.h"
 
-@interface OLApparelPrintJob : NSObject <OLPrintJob, NSCopying>
+@import Photobook;
+
+@interface OLApparelPrintJob : NSObject <OLPrintJob, NSCopying, Product>
 
 - (id)initWithTemplateId:(NSString *)templateId OLAssets:(NSDictionary<NSString *, OLAsset *> *)assets;
 @property (strong, nonatomic) NSDictionary<NSString *, OLAsset *> *assets;

@@ -29,10 +29,11 @@
 
 #import "OLImagePickerPhotosPageViewController+Instagram.h"
 #import "OLInstagramImagePickerConstants.h"
-#import "OLOAuth2AccountStore.h"
 #import "OLInstagramImage.h"
 #import "OLImagePickerProviderCollection.h"
 #import "OLKiteUtils.h"
+
+@import NXOAuth2Client;
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
@@ -70,9 +71,9 @@
             // clear all accounts and redo login...
             if (error.domain == kOLInstagramImagePickerErrorDomain && error.code == kOLInstagramImagePickerErrorCodeOAuthTokenInvalid) {
                 // need to renew auth token, start by clearing any accounts. A new one will be created as part of the login process.
-                NSArray *instagramAccounts = [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-                for (OLOAuth2Account *account in instagramAccounts) {
-                    [[OLOAuth2AccountStore sharedStore] removeAccount:account];
+                NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
+                for (NXOAuth2Account *account in instagramAccounts) {
+                    [[NXOAuth2AccountStore sharedStore] removeAccount:account];
                 }
                 
                 [welf.imagePicker reloadPageController];
@@ -87,21 +88,21 @@
         
         [welf.media addObjectsFromArray:welf.overflowMedia];
         for (OLInstagramImage *image in welf.overflowMedia){
-            [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+            [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL size:image.size]];
         }
         if (nextRequest != nil) {
             // only insert multiple of [self numberOfCellsPerRow] images so we fill complete rows
             NSInteger overflowCount = (welf.media.count + media.count) % [welf numberOfCellsPerRow];
             [welf.media addObjectsFromArray:[media subarrayWithRange:NSMakeRange(0, media.count - overflowCount)]];
             for (OLInstagramImage *image in [media subarrayWithRange:NSMakeRange(0, media.count - overflowCount)]){
-                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL size:image.size]];
             }
             welf.overflowMedia = [media subarrayWithRange:NSMakeRange(media.count - overflowCount, overflowCount)];
         } else {
             // we've exhausted all the users images so show the remainder
             [welf.media addObjectsFromArray:media];
             for (OLInstagramImage *image in media){
-                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL]];
+                [welf.provider.collections.firstObject.array addObject:[OLAsset assetWithURL:image.fullURL size:image.size]];
             }
             welf.overflowMedia = @[];
             [self.activityIndicator stopAnimating];

@@ -35,23 +35,6 @@
 #import "OLUserSession.h"
 #import "UIView+AutoLayoutHelper.h"
 
-@interface OLProduct ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-@end
-
-@interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-@end
-
-@interface OLPrintOrder (Private)
-- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
-- (void)saveOrder;
-@end
-
 @interface OLSingleImagePosterViewController () <OLArtboardDelegate>
 - (void)saveAndDismissReviewController:(UIButton *)button;
 - (IBAction)onButtonDoneTapped:(UIButton *)sender;
@@ -98,6 +81,8 @@
     NSNumber *cornerRadius = [OLKiteABTesting sharedInstance].lightThemeButtonRoundCorners;
     if (cornerRadius){
         [ctaButton makeRoundRectWithRadius:[cornerRadius floatValue]];
+    } else {
+        [ctaButton makeRoundRectWithRadius:10];
     }
     
     [self.view addSubview:ctaButton];
@@ -112,12 +97,6 @@
     }
 #endif
     [ctaButton bottomToSuperview:bottomMargin relation:NSLayoutRelationEqual];
-    
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            [ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        }
-    }
     
     if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
         UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
@@ -242,34 +221,14 @@
     
     [self preparePhotosForCheckout];
     
-    BOOL fromEdit = NO;
-    
     NSMutableArray *photoAssets = [[NSMutableArray alloc] init];
     for (OLAsset *photo in [OLAsset userSelectedAssets]) {
         [photoAssets addObject:[photo copy]];
     }
         
-    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-    for (id<OLPrintJob> existingJob in jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            job.dateAddedToBasket = [existingJob dateAddedToBasket];
-            job.extraCopies = existingJob.extraCopies;
-            [printOrder removePrintJob:existingJob];
-            fromEdit = YES;
-        }
-    }
-    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
-    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
-    job.redeemedOffer = self.product.redeemedOffer;
-    [printOrder addPrintJob:job];
-    if (!fromEdit){
-        [OLAnalytics trackItemAddedToBasket:job];
-    }
-    
-    [printOrder saveOrder];
-    
+    [[Checkout shared] addProductToBasket:job];
+        
     if (handler){
         handler();
     }

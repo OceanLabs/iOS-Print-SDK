@@ -54,8 +54,6 @@ typedef void (^GetDataHandler)(NSData *data, NSError *error);
 
 extern NSString *const kOLMimeTypeJPEG;
 extern NSString *const kOLMimeTypePNG;
-extern NSString *const kOLMimeTypeTIFF;
-extern NSString *const kOLMimeTypePDF;
 
 /**
  *  Protocol for a custom class to implement if they want to provide the data for an OLAsset.
@@ -142,15 +140,6 @@ extern NSString *const kOLMimeTypePDF;
 + (OLAsset *)assetWithDataAsPNG:(NSData *)data;
 
 /**
- *  Asset data in the form of a pre-rendered PDF. Using a PDF will not allow any editing functionality.
- *
- *  @param data The data
- *
- *  @return The OLAsset.
- */
-+ (OLAsset *)assetWithDataAsPDF:(NSData *)data;
-
-/**
  *  Create an asset with a file path
  *
  *  @param path The file path
@@ -181,10 +170,11 @@ extern NSString *const kOLMimeTypePDF;
  *  Create an asset with a URL
  *
  *  @param url The URL
+ *  @param size The original size of the image
  *
  *  @return The OLAsset
  */
-+ (OLAsset *)assetWithURL:(NSURL *)url;
++ (OLAsset *)assetWithURL:(NSURL *)url size:(CGSize)size;
 
 /**
  *  The mime type of the asset
@@ -200,10 +190,5 @@ extern NSString *const kOLMimeTypePDF;
  *  The Kite assetID. Will only be valid upon sucessfully uploading this asset to the server i.e. OLAsset.isUploaded == YES
  */
 @property (nonatomic, readonly) long long assetId;
-
-/**
- *  The Kite previewURL. Will only be valid upon sucessfully uploading this asset to the server i.e. OLAsset.isUploaded == YES
- */
-@property (nonatomic, readonly) NSURL *previewURL;
 
 @end

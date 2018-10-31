@@ -30,18 +30,16 @@
 #import "OLKiteUtils.h"
 #import "OLKitePrintSDK.h"
 #import "OLProductHomeViewController.h"
-#import "OLPaymentViewController.h"
 #import "OLKiteABTesting.h"
-#import "OLCheckoutViewController.h"
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
 #import "OLPayPalWrapper.h"
-#import "OLStripeWrapper.h"
 #import "OLFacebookSDKWrapper.h"
 #import "OLKiteViewController+Private.h"
 
 @import Contacts;
 @import PassKit;
+@import Stripe;
 
 @interface OLKitePrintSDK (Private)
 + (NSString *)appleMerchantID;
@@ -57,21 +55,11 @@
 }
 
 + (NSBundle *)kiteResourcesBundle{
-#ifdef COCOAPODS
-    return [NSBundle bundleWithPath:[[NSBundle bundleForClass:[OLKiteViewController class]] pathForResource:@"OLKiteResources" ofType:@"bundle"]];
-#else
-    return [NSBundle bundleForClass:[OLKiteViewController class]];
-#endif
-}
-
-+ (NSString *)userEmail:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [OLUserSession currentSession].kiteVc;
-    return kiteVC.userEmail;
-}
-
-+ (NSString *)userPhone:(UIViewController *)topVC {
-    OLKiteViewController *kiteVC = [OLUserSession currentSession].kiteVc;
-    return kiteVC.userPhone;
+    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[OLKiteViewController class]] pathForResource:@"OLKiteResources" ofType:@"bundle"]];
+    if (!bundle) {
+        bundle = [NSBundle bundleForClass:[OLKiteViewController class]];
+    }
+    return bundle;
 }
 
 + (BOOL)instagramEnabled{
@@ -133,15 +121,11 @@
 }
 
 +(BOOL)isApplePayAvailable{
-    if (![OLStripeWrapper isStripeAvailable] || ![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""] || [OLKitePrintSDK isKiosk]){
+    if (![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""] || [OLKitePrintSDK isKiosk]){
         return NO;
     }
     
-    //Disable Apple Pay on iOS 8 because we need the Contacts framework. There's in issue in Xcode 8.0 that doesn't include some old symbols in PassKit that crashes iOS 9 apps built with frameworks on launch. Did Not test that they crash iOS 8, but disabled to be safe.
-    if (![CNContact class]){
-        return NO;
-    }
-    return [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
+    return [Stripe deviceSupportsApplePay];
 }
 
 + (NSArray<NSString *> *)supportedPKPaymentNetworks {
@@ -154,16 +138,6 @@
 
 + (BOOL)isPayPalAvailable{
     return [OLPayPalWrapper isPayPalAvailable];
-}
-
-+ (void)checkoutViewControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(id vc))handler{
-    OLPaymentViewController *vc = [[OLPaymentViewController alloc] initWithPrintOrder:printOrder];
-    handler(vc);
-}
-
-+ (void)shippingControllerForPrintOrder:(OLPrintOrder *)printOrder handler:(void(^)(OLCheckoutViewController *vc))handler{
-    OLCheckoutViewController *vc = [[OLCheckoutViewController alloc] initWithPrintOrder:printOrder];
-    handler(vc);
 }
 
 + (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size{
@@ -180,9 +154,9 @@
         if (![asset isKindOfClass:[OLAsset class]]){
             continue;
         }
-        if (asset.mimeType == kOLMimeTypePDF){
-            return YES;
-        }
+//        if (asset.mimeType == kOLMimeTypePDF){
+//            return YES;
+//        }
     }
     
     return NO;

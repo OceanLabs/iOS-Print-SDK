@@ -29,9 +29,9 @@
 
 #import <Foundation/Foundation.h>
 
-@class OLInstagramMediaRequest;
-@class OLOAuth2Account;
+@import NXOAuth2Client;
 
+@class OLInstagramMediaRequest;
 
 
 typedef void (^InstagramMediaRequestCompletionHandler)(NSError *error, NSArray *media, OLInstagramMediaRequest *nextPageRequest);
@@ -42,6 +42,6 @@ typedef void (^InstagramMediaRequestCompletionHandler)(NSError *error, NSArray *
 
 - (void)cancel;
 - (void)fetchMediaWithCompletionHandler:(InstagramMediaRequestCompletionHandler)completionHandler;
-- (void)fetchMediaForAccount:(OLOAuth2Account *)account completionHandler:(InstagramMediaRequestCompletionHandler)completionHandler;
+- (void)fetchMediaForAccount:(NXOAuth2Account *)account completionHandler:(InstagramMediaRequestCompletionHandler)completionHandler;
 
 @end

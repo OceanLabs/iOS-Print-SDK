@@ -38,7 +38,6 @@
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
 #import "OLNavigationController.h"
-#import "OLPrintOrder.h"
 #import "OLProduct.h"
 #import "OLProductGroup.h"
 #import "OLProductHomeViewController.h"
@@ -55,6 +54,8 @@
 #import "OLCollagePosterViewController.h"
 #import "OLLogoutViewController.h"
 #import "OLKioskLandingViewController.h"
+
+@import Photobook;
 
 static CGFloat fadeTime = 0.3;
 
@@ -117,45 +118,23 @@ static CGFloat fadeTime = 0.3;
     return _loadingImageView;
 }
 
-- (OLPrintOrder *)basketOrder{
-    return [OLUserSession currentSession].printOrder;
-}
-
 - (void)clearBasket{
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionBasket];
 }
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets{
-    NSAssert(![OLKiteUtils assetArrayContainsPDF:assets], @"If you want to use a pre-rendered PDF, please use initWithPrintOrder");
+    NSAssert(![OLKiteUtils assetArrayContainsPDF:assets], @"If you want to use a pre-rendered PDF, please use initWithPrintJobs");
     
     return [self initWithAssets:assets info:nil];
-}
-
-- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder{
-    return [self initWithPrintOrder:printOrder info:nil];
 }
 
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info{
     [OLAnalytics setExtraInfo:info];
     NSArray <OLAsset *>*assetsCopy = [assets copy]; // Prevents assets being nilled in some cases
     self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"];
-    [OLKiteABTesting sharedInstance].launchedWithPrintOrder = NO;
     [OLUserSession currentSession].appAssets = assetsCopy;
     [[OLUserSession currentSession] resetUserSelectedPhotos];
-    [OLUserSession currentSession].printOrder.userData = info;
     
-    return self;
-}
-
-- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info{
-    [OLAnalytics setExtraInfo:info];
-    if ((self = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"KiteViewController"])) {
-        [OLKiteABTesting sharedInstance].launchedWithPrintOrder = printOrder != nil;
-        [OLUserSession currentSession].appAssets = [[printOrder.jobs firstObject] assetsForUploading];
-        [[OLUserSession currentSession] resetUserSelectedPhotos];
-        [OLUserSession currentSession].printOrder = printOrder;
-        [OLUserSession currentSession].printOrder.userData = info;
-    }
     return self;
 }
 
@@ -258,6 +237,13 @@ static CGFloat fadeTime = 0.3;
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     [OLUserSession currentSession].kiteVc = self;
+    
+    if ([[PhotobookSDK shared] isProcessingOrder]) {
+        UIViewController *receiptViewController = [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES delegate:nil];
+        if (receiptViewController) {
+            [self presentViewController:receiptViewController animated:YES completion:nil];
+        }
+    }
 }
 
 - (UIViewController *)reviewViewControllerForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
@@ -277,36 +263,29 @@ static CGFloat fadeTime = 0.3;
     else if (templateUI == OLTemplateUIMug){
         return [[OL3DProductViewController alloc] init];
     }
-    
-    return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:[self reviewViewControllerIdentifierForProduct:product photoSelectionScreen:photoSelectionScreen]];
-    
-}
-
-- (NSString *)reviewViewControllerIdentifierForProduct:(OLProduct *)product photoSelectionScreen:(BOOL)photoSelectionScreen{
-    OLTemplateUI templateUI = product.productTemplate.templateUI;
-    if (templateUI == OLTemplateUIPhotobook){
-        return @"OLEditPhotobookViewController";
-    }
     else if (templateUI == OLTemplateUINonCustomizable){
-        return @"OLPaymentViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLPaymentViewController"];
     }
     else if (photoSelectionScreen){
-        return @"OLImagePickerViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    }
+    else if (templateUI == OLTemplateUIPhotobook){
+        return [[PhotobookSDK shared] photobookViewControllerWith:[OLAsset photobookAssetsFromAssets:[OLAsset userSelectedAssets]] embedInNavigation:NO delegate:[OLUserSession currentSession]];
     }
     else if (templateUI == OLTemplateUIPoster){
-        return @"OLPosterViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLPosterViewController"];
     }
     else if (templateUI == OLTemplateUIFrame || templateUI == OLTemplateUICalendar){
-        return @"FrameOrderReviewViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"FrameOrderReviewViewController"];
     }
     else{
-        return @"OrderReviewViewController";
+        return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OrderReviewViewController"];
     }
+    
 }
 
 - (IBAction) dismiss{
     self.dismissing = YES;
-    [OLAnalytics trackKiteDismissed];
     if ([self.delegate respondsToSelector:@selector(kiteControllerDidFinish:)]){
         [self.delegate kiteControllerDidFinish:self];
     }
@@ -318,12 +297,7 @@ static CGFloat fadeTime = 0.3;
 - (void)transitionToNextScreen{
     __weak OLKiteViewController *welf = self;
     [self.transitionOperation addExecutionBlock:^{
-        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant];
-        }
-        else{
-            [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
-        }
+        [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Home Screen"];
         
         // The screen we transition to will depend on what products are available based on the developers filter preferences.
         NSArray *groups = [OLProductGroup groupsWithFilters:welf.filterProducts];
@@ -331,7 +305,7 @@ static CGFloat fadeTime = 0.3;
         UIStoryboard *sb = [UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]];
         UIViewController *vc;
         OLProduct *product;
-        if (groups.count == 0 && ![OLProductTemplate isSyncInProgress] && !([OLProductTemplate templates].count != 0 && [OLKiteABTesting sharedInstance].launchedWithPrintOrder)) {
+        if (groups.count == 0 && ![OLProductTemplate isSyncInProgress]) {
                 UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Store Maintenance", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:NSLocalizedStringFromTableInBundle(@"Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") preferredStyle:UIAlertControllerStyleAlert];
                 [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                     [welf dismiss];
@@ -342,75 +316,6 @@ static CGFloat fadeTime = 0.3;
         else if ([OLKitePrintSDK isKiosk]){
             OLKioskLandingViewController *vc = [[OLKioskLandingViewController alloc] init];
             [welf fadeToViewController:[[OLNavigationController alloc] initWithRootViewController:vc]];
-            return;
-        }
-        else if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-            BOOL containsPDF = [OLKiteUtils assetArrayContainsPDF:[[[OLUserSession currentSession].printOrder.jobs firstObject] assetsForUploading]];
-            OLProduct *product = [OLProduct productWithTemplateId:[[[OLUserSession currentSession].printOrder.jobs firstObject] templateId]];
-            product.uuid = [[OLUserSession currentSession].printOrder.jobs firstObject].uuid;
-            NSString *identifier;
-            if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Overview-"] && [product isValidProductForUI]){
-                identifier = @"OLProductOverviewViewController";
-            }
-            else if (!containsPDF && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant hasPrefix:@"Review-"] && [product isValidProductForUI]){
-                identifier = [[OLUserSession currentSession].kiteVc reviewViewControllerIdentifierForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
-            }
-            else{
-                [OLKiteUtils checkoutViewControllerForPrintOrder:[OLUserSession currentSession].printOrder handler:^(id vc){
-                    [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
-                    [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
-                    if (welf.navigationController.viewControllers.count <= 1){
-                        UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-                        
-                        NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
-                        if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
-                            [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
-                                if (error) return;
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                   ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
-                                });
-                            }];
-                        }
-                        else{
-                        ((UIViewController *)vc).navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
-                        }
-                        [welf fadeToViewController:nvc];
-                    }
-                    else{
-                        [welf fadeToViewController:vc];
-                    }
-                    
-                }];
-                
-                return;
-            }
-            UIViewController *vc = [welf.storyboard instantiateViewControllerWithIdentifier:identifier];
-            [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
-            [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
-            [vc safePerformSelector:@selector(setProduct:) withObject:product];
-            if ([vc isKindOfClass:[OLImagePickerViewController class]]){
-                [(OLImagePickerViewController *)vc setOverrideImagePickerMode:YES];
-            }
-            
-            if (welf.navigationController.viewControllers.count <= 1){
-                UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
-                NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
-                if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
-                    [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
-                        if (error) return;
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithCGImage:image.CGImage scale:2.0 orientation:UIImageOrientationUp] style:UIBarButtonItemStyleDone target:welf action:@selector(dismiss)];
-                        });
-                    }];
-                }
-                else{
-                    vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamedInKiteBundle:@"x-button"] style:UIBarButtonItemStylePlain target:welf action:@selector(dismiss)];
-                }
-                [welf fadeToViewController:nvc];
-            }
-            else{
-                [welf fadeToViewController:vc];
-            }
             return;
         }
         else if (groups.count == 1) {
@@ -424,12 +329,11 @@ static CGFloat fadeTime = 0.3;
         }
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
         [vc safePerformSelector:@selector(setDelegate:) withObject:welf.delegate];
-        [vc safePerformSelector:@selector(setUserEmail:) withObject:welf.userEmail];
-        [vc safePerformSelector:@selector(setUserPhone:) withObject:welf.userPhone];
         [vc safePerformSelector:@selector(setFilterProducts:) withObject:welf.filterProducts];
         [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];
         if (welf.navigationController.viewControllers.count <= 1){
-            UINavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:vc];
+            UINavigationController *nvc = [[OLNavigationController alloc] initWithNavigationBarClass:[PhotobookNavigationBar class] toolbarClass:nil];
+            nvc.viewControllers = @[vc];
             NSURL *cancelUrl = [NSURL URLWithString:[OLKiteABTesting sharedInstance].cancelButtonIconURL];
             if (cancelUrl && ![[OLImageDownloader sharedInstance] cachedDataExistForURL:cancelUrl]){
                 [[OLImageDownloader sharedInstance] downloadImageAtURL:cancelUrl withCompletionHandler:^(UIImage *image, NSError *error){
@@ -448,8 +352,6 @@ static CGFloat fadeTime = 0.3;
             [welf fadeToViewController:vc];
         }
         
-        //Prefetch themed-SDK images
-        [[OLKiteABTesting sharedInstance] prefetchRemoteImages];
     }];
         
     [self.operationQueue addOperation:self.transitionOperation];
@@ -460,30 +362,29 @@ static CGFloat fadeTime = 0.3;
     vc.view.alpha = 0;
     [vc beginAppearanceTransition: YES animated: YES];
     [self.view addSubview:vc.view];
-    
+
     UIView *view = vc.view;
-    
+
     view.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *views = NSDictionaryOfVariableBindings(view);
     NSMutableArray *con = [[NSMutableArray alloc] init];
-    
+
     NSArray *visuals = @[@"H:|-0-[view]-0-|",
                          @"V:|-0-[view]-0-|"];
-    
-    
+
+
     for (NSString *visual in visuals) {
         [con addObjectsFromArray: [NSLayoutConstraint constraintsWithVisualFormat:visual options:0 metrics:nil views:views]];
     }
-    
+
     [view.superview addConstraints:con];
-    
+
     [UIView animateWithDuration:fadeTime animations:^(void){
         vc.view.alpha = 1;
     } completion:^(BOOL b){
         [vc endAppearanceTransition];
         self.loadingImageView.image = nil;
     }];
-    
 }
 
 - (void)templateSyncDidReturn:(NSNotification *)n{
@@ -546,10 +447,6 @@ static CGFloat fadeTime = 0.3;
     return [(UINavigationController *)self.childViewControllers.firstObject viewControllers];
 }
 
-- (OLReceiptViewController *)receiptViewControllerForPrintOrder:(OLPrintOrder *)printOrder{
-    return [[OLReceiptViewController alloc] initWithPrintOrder:printOrder];
-}
-
 - (UIViewController *)productDescriptionViewController{
     return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
 }
@@ -568,12 +465,6 @@ static CGFloat fadeTime = 0.3;
     else{
         return [self productDescriptionViewController];
     }
-}
-
-+ (UINavigationController *)orderHistoryViewController{
-    UIViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLOrderHistoryViewController"];
-    
-    return [[OLNavigationController alloc] initWithRootViewController:vc];
 }
 
 - (void)didReceiveMemoryWarning{
@@ -647,6 +538,17 @@ static CGFloat fadeTime = 0.3;
         logout();
     }
     
+}
+
+- (BOOL)shouldAutorotate {
+    if ([self.childViewControllers.firstObject respondsToSelector: @selector(shouldAutorotate)]) {
+        return self.childViewControllers.firstObject.shouldAutorotate;
+    }
+    return YES;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return self.childViewControllers.firstObject.supportedInterfaceOrientations ?: UIInterfaceOrientationMaskAll;
 }
 
 @end

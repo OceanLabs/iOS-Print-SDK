@@ -37,27 +37,16 @@
 #import "OLKiteUtils.h"
 #import "OLKiteViewController.h"
 #import "OLNavigationController.h"
-#import "OLPaymentViewController.h"
 #import "OLProductPrintJob.h"
 #import "OLProductTemplateOption.h"
 #import "OLImageCropper.h"
 #import "OLImageView.h"
 #import "OLSingleProductReviewViewController.h"
-#import "OLUpsellViewController.h"
 #import "OLUserSession.h"
 #import "UIViewController+OLMethods.h"
 #import "UIView+AutoLayoutHelper.h"
 #import "UIColor+OLHexString.h"
 #import "OLKiteViewController+Private.h"
-
-@interface OLPaymentViewController (Private)
-- (void)saveAndDismissReviewController:(UIButton *)button;
-@end
-
-@interface OLPrintOrder (Private)
-- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
-- (void)saveOrder;
-@end
 
 @interface OLImageEditViewController ()
 - (void)orderViews;
@@ -68,22 +57,9 @@
 @property (strong, nonatomic) UIViewController *presentedVc;
 @end
 
-@interface OLSingleProductReviewViewController () <OLUpsellViewControllerDelegate, OLImageEditViewControllerDelegate>
+@interface OLSingleProductReviewViewController () <OLImageEditViewControllerDelegate>
 @property (assign, nonatomic) BOOL showingBack;
 @property (strong, nonatomic) OLAsset *backAsset;
-@end
-
-@interface OLProduct ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
-- (BOOL)hasOfferIdBeenUsed:(NSUInteger)identifier;
-@end
-
-@interface OLProductPrintJob ()
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 @end
 
 @implementation OLSingleProductReviewViewController
@@ -103,6 +79,10 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    }
+    
     self.view.backgroundColor = [UIColor colorWithHexString:@"E7EBEF"];
     self.printContainerView.backgroundColor = [UIColor clearColor];
     
@@ -118,21 +98,7 @@
     
     [OLAnalytics trackReviewScreenViewed:self.product.productTemplate.name];
     
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        if ([[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-        }
-    }
-    
     [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Next", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)] || !self.presentingViewController) {
-        UIViewController *paymentVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if ([paymentVc respondsToSelector:@selector(saveAndDismissReviewController:)]){
-            [self.ctaButton setTitle:NSLocalizedStringFromTableInBundle(@"Save", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-            [self.ctaButton removeTarget:self action:@selector(onButtonDoneTapped:) forControlEvents:UIControlEventTouchUpInside];
-            [self.ctaButton addTarget:paymentVc action:@selector(saveAndDismissReviewController:) forControlEvents:UIControlEventTouchUpInside];
-        }
-    }
     
     self.ctaButton.enabled = YES;
     
@@ -218,15 +184,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if ([self.presentingViewController respondsToSelector:@selector(viewControllers)]) {
-        UIViewController *presentingVc = [(UINavigationController *)self.presentingViewController viewControllers].lastObject;
-        if (![presentingVc isKindOfClass:[OLPaymentViewController class]]){
-            [self addBasketIconToTopRight];
-        }
-    }
-    else{
-        [self addBasketIconToTopRight];
-    }
+    [self addBasketIconToTopRight];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -241,24 +199,13 @@
     }
 }
 
-- (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-    
-    if (!self.navigationController){
-        [OLAnalytics trackReviewScreenHitBack:self.product.productTemplate.name numberOfPhotos:[OLAsset userSelectedAssets].nonPlaceholderAssets.count];
-    }
-}
-
 - (void)orderViews{
     [super orderViews];
     [self.view bringSubviewToFront:self.hintView];
 }
 
 - (void)onButtonDoneTapped:(UIButton *)sender{
-    if ([self shouldDoCheckout]){
-        sender.enabled = NO;
-        [self doCheckout];
-    }
+    [self doCheckout];
 }
 
 - (void)saveJobWithCompletionHandler:(void(^)(void))handler{
@@ -296,87 +243,16 @@
     OLAsset *asset = [self.asset copy];
     NSArray *assetArray = @[asset];
     
-    BOOL fromEdit = NO;
-    
-    OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-    OLProductPrintJob *job;
-    job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
+    OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assetArray];
     for (NSString *option in self.product.selectedOptions.allKeys){
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
-    NSArray *jobs = [NSArray arrayWithArray:printOrder.jobs];
-    for (id<OLPrintJob> existingJob in jobs){
-        if ([existingJob.uuid isEqualToString:self.product.uuid]){
-            job.dateAddedToBasket = [existingJob dateAddedToBasket];
-            job.extraCopies = existingJob.extraCopies;
-            [printOrder removePrintJob:existingJob];
-            fromEdit = YES;
-        }
-    }
-    [job.acceptedOffers addObjectsFromArray:self.product.acceptedOffers.allObjects];
-    [job.declinedOffers addObjectsFromArray:self.product.declinedOffers.allObjects];
-    job.redeemedOffer = self.product.redeemedOffer;
-    [printOrder addPrintJob:job];
-    if (!fromEdit){
-        [OLAnalytics trackItemAddedToBasket:job];
-    }
     
-    [printOrder saveOrder];
+    [[Checkout shared] addProductToBasket:job];
     
     if (handler){
         handler();
     }    
-}
-
-- (BOOL)shouldDoCheckout{
-    OLUpsellOffer *offer = [self upsellOfferToShow];
-    BOOL shouldShowOffer = offer != nil;
-    if (offer){
-        shouldShowOffer &= offer.minUnits <= [OLAsset userSelectedAssets].nonPlaceholderAssets.count;
-        shouldShowOffer &= [OLProduct productWithTemplateId:offer.offerTemplate] != nil;
-    }
-    if (shouldShowOffer){
-        OLUpsellViewController *c = [[OLUserSession currentSession].kiteVc.storyboard instantiateViewControllerWithIdentifier:@"OLUpsellViewController"];
-        c.providesPresentationContextTransitionStyle = true;
-        c.definesPresentationContext = true;
-        c.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-        c.delegate = self;
-        c.offer = offer;
-        c.triggeredProduct = self.product;
-        [self presentViewController:c animated:NO completion:NULL];
-        return NO;
-    }
-    else{
-        return YES;
-    }
-}
-
-- (OLUpsellOffer *)upsellOfferToShow{
-    NSArray *upsells = self.product.productTemplate.upsellOffers;
-    if (upsells.count == 0){
-        return nil;
-    }
-    
-    OLUpsellOffer *offerToShow;
-    for (OLUpsellOffer *offer in upsells){
-        //Check if offer is valid for this point
-        if (offer.active && offer.type == OLUpsellOfferTypeItemAdd){
-            
-            if ([self.product hasOfferIdBeenUsed:offer.identifier]){
-                continue;
-            }
-            if ([[OLUserSession currentSession].printOrder hasOfferIdBeenUsed:offer.identifier]){
-                continue;
-            }
-            
-            //Find the max priority offer
-            if (!offerToShow || offerToShow.priority < offer.priority){
-                offerToShow = offer;
-            }
-        }
-    }
-    
-    return offerToShow;
 }
 
 - (void) doCheckout{
@@ -391,26 +267,12 @@
         }
         return;
     }
+    self.ctaButton.enabled = NO;
     [self saveJobWithCompletionHandler:^{
-        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder && [[OLKiteABTesting sharedInstance].launchWithPrintOrderVariant isEqualToString:@"Review-Overview-Checkout"]){
-            // The `self.storybard` may be nil if it was not initialized from storyboard.
-            // eg. Review page for phonecase (OLCaseViewController). see. OLKiteViewController.m L264
-            UIStoryboard *storyboard = self.storyboard ?: [OLUserSession currentSession].kiteVc.storyboard;
-            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"OLProductOverviewViewController"];
-            [vc safePerformSelector:@selector(setUserEmail:) withObject:[(OLKiteViewController *)vc userEmail]];
-            [vc safePerformSelector:@selector(setUserPhone:) withObject:[(OLKiteViewController *)vc userPhone]];
-            [vc safePerformSelector:@selector(setProduct:) withObject:self.product];
-            [self.navigationController pushViewController:vc animated:YES];
-        }
-        else{
-            OLPrintOrder *printOrder = [OLUserSession currentSession].printOrder;
-            [OLKiteUtils checkoutViewControllerForPrintOrder:printOrder handler:^(id vc){
-                [vc safePerformSelector:@selector(setUserEmail:) withObject:[OLKiteUtils userEmail:self]];
-                [vc safePerformSelector:@selector(setUserPhone:) withObject:[OLKiteUtils userPhone:self]];
-                
-                [self.navigationController pushViewController:vc animated:YES];
-            }];
-        }
+        UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:[OLUserSession currentSession]];
+        UIViewController *firstController = self.navigationController.viewControllers.firstObject;
+        [self.navigationController setViewControllers:@[firstController, checkoutVc] animated:YES];
+        [[OLUserSession currentSession] resetUserSelectedPhotos];
     }];
 }
 
@@ -466,81 +328,5 @@
         [vc dismissViewControllerAnimated:YES completion:NULL];
     }
 }
-
-#pragma mark OLUpsellViewControllerDelegate
-
-- (void)userDidDeclineUpsell:(OLUpsellViewController *)vc{
-    [self.product.declinedOffers addObject:vc.offer];
-    [vc dismissViewControllerAnimated:NO completion:^{
-        [self doCheckout];
-    }];
-}
-
-- (id<OLPrintJob>)addItemToBasketWithTemplateId:(NSString *)templateId{
-    OLProduct *offerProduct = [OLProduct productWithTemplateId:templateId];
-    NSMutableArray *assets = [[NSMutableArray alloc] init];
-    if (offerProduct.productTemplate.templateUI == OLTemplateUINonCustomizable){
-        //Do nothing, no assets needed
-    }
-    else if (offerProduct.quantityToFulfillOrder == 1){
-        [assets addObject:[[OLAsset userSelectedAssets].nonPlaceholderAssets.firstObject copy]];
-    }
-    else{
-        for (OLAsset *photo in [OLAsset userSelectedAssets]){
-            [assets addObject:[photo copy]];
-        }
-    }
-    
-    id<OLPrintJob> job;
-    if ([OLProductTemplate templateWithId:templateId].templateUI == OLTemplateUIPhotobook){
-        job = [OLPrintJob photobookWithTemplateId:templateId OLAssets:assets frontCoverOLAsset:nil backCoverOLAsset:nil];
-    }
-    else{
-        job = [OLPrintJob printJobWithTemplateId:templateId OLAssets:assets];
-    }
-    
-    [[OLUserSession currentSession].printOrder addPrintJob:job];
-    [OLAnalytics trackItemAddedToBasket:job];
-    return job;
-}
-
-- (void)userDidAcceptUpsell:(OLUpsellViewController *)vc{
-    //Drop previous screens from the navigation stack
-    NSMutableArray *navigationStack = self.navigationController.viewControllers.mutableCopy;
-    if (navigationStack.count > 1) {
-        NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
-        for (UIViewController *vc in self.navigationController.viewControllers){
-            [viewControllers addObject:vc];
-            if ([vc isKindOfClass:[OLKiteViewController class]]){
-                [viewControllers addObject:self];
-                [self.navigationController setViewControllers:viewControllers animated:YES];
-                break;
-            }
-        }
-        [self.navigationController setViewControllers:@[navigationStack.firstObject, self] animated:NO];
-    }
-    
-    [self.product.acceptedOffers addObject:vc.offer];
-    [vc dismissViewControllerAnimated:NO completion:^{
-        if (vc.offer.prepopulatePhotos){
-            id<OLPrintJob> job = [self addItemToBasketWithTemplateId:vc.offer.offerTemplate];
-            [(OLProductPrintJob *)job setRedeemedOffer:vc.offer];
-            [self doCheckout];
-        }
-        else{
-            [self saveJobWithCompletionHandler:^{
-                OLProduct *offerProduct = [OLProduct productWithTemplateId:vc.offer.offerTemplate];
-                UIViewController *nextVc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:offerProduct photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
-                [nextVc safePerformSelector:@selector(setKiteDelegate:) withObject:self.delegate];
-                [nextVc safePerformSelector:@selector(setProduct:) withObject:offerProduct];
-                NSMutableArray *stack = [self.navigationController.viewControllers mutableCopy];
-                [stack removeObject:self];
-                [stack addObject:nextVc];
-                [self.navigationController setViewControllers:stack animated:YES];
-            }];
-        }
-    }];
-}
-
 
 @end

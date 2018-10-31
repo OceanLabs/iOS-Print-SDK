@@ -336,8 +336,6 @@
             cropVc.asset = asset;
             
             [vc presentViewController:cropVc animated:NO completion:NULL];
-            
-            [OLAnalytics trackEditPhotoTappedForProductName:product.productTemplate.name];
         }];
     }
 }
@@ -445,11 +443,7 @@
 
     [self.sourceAssetView loadImageWithCompletionHandler:NULL];
     
-    [cropper dismissViewControllerAnimated:YES completion:NULL];
-    
-    UIViewController *vc = [self.delegate viewControllerForPresenting];
-    OLProduct *product = [vc safePerformSelectorWithReturn:@selector(product) withObject:nil];
-    [OLAnalytics trackEditScreenFinishedEditingPhotoForProductName:product.productTemplate.name];
+    [cropper dismissViewControllerAnimated:YES completion:NULL];    
 }
 
 - (void)imageEditViewController:(OLImageEditViewController *)cropper didReplaceAssetWithAsset:(OLAsset *)asset{

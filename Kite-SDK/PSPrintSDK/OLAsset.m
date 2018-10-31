@@ -49,20 +49,19 @@ static NSString *const kKeyImageURL = @"co.oceanlabs.pssdk.kKeyImageURL";
 static NSString *const kKeyPHAssetLocalId = @"co.oceanlabs.pssdk.kKeyPHAssetLocalId";
 static NSString *const kKeyImageEdits = @"co.oceanlabs.pssdk.kKeyImageEdits";
 static NSString *const kKeyKiteAssetId = @"co.oceanlabs.pssdk.kKeyKiteAssetId";
-static NSString *const kKeyKitePreviewURL = @"co.oceanlabs.pssdk.kKeyKitePreviewURL";
 static NSString *const kKeyAssetUUID = @"co.oceanlabs.pssdk.kKeyAssetUUID";
 
 
 NSString *const kOLMimeTypeJPEG = @"image/jpeg";
 NSString *const kOLMimeTypePNG  = @"image/png";
-NSString *const kOLMimeTypeTIFF = @"image/tiff";
-NSString *const kOLMimeTypePDF = @"application/pdf";
+//NSString *const kOLMimeTypeTIFF = @"image/tiff";
+//NSString *const kOLMimeTypePDF = @"application/pdf";
 
 CGSize const OLAssetMaximumSize = {-1, -1};
 
 static NSOperationQueue *imageOperationQueue;
 
-@interface OLAsset ()
+@interface OLAsset () <AssetDataSource>
 @property (nonatomic, strong) NSString *imageFilePath;
 @property (nonatomic, strong) NSData *imageData;
 @property (strong, nonatomic) PHAsset *phAsset;
@@ -73,12 +72,12 @@ static NSOperationQueue *imageOperationQueue;
 @property (assign, nonatomic) NSInteger extraCopies;
 @property (strong, nonatomic) OLPhotoEdits *edits;
 @property (strong, nonatomic) NSString *uuid;
+@property (assign, nonatomic) CGSize size;
 
 @property (strong, nonatomic) id metadata; //Not saved
 
 @property (nonatomic, readwrite) NSString *mimeType;
 @property (nonatomic, readwrite) long long assetId;
-@property (nonatomic, readwrite) NSURL *previewURL;
 @property (strong, nonatomic) NSURLSession *kiteImageUploadURLSession;
 @end
 
@@ -125,12 +124,15 @@ static NSOperationQueue *imageOperationQueue;
             _mimeType = kOLMimeTypeJPEG;
         } else if ([lower hasSuffix:@".png"]) {
             _mimeType = kOLMimeTypePNG;
-        } else if ([lower hasSuffix:@".tif"] || [lower hasSuffix:@".tiff"]) {
-            _mimeType = kOLMimeTypeTIFF;
-        } else if ([lower hasSuffix:@".pdf"]){
-            _mimeType = kOLMimeTypePDF;
-        } else {
-            NSAssert(NO, @"Only JPEG, PNG & TIFF images and pre-rendered PDF files are supported");
+        }
+//            else if ([lower hasSuffix:@".tif"] || [lower hasSuffix:@".tiff"]) {
+//            _mimeType = kOLMimeTypeTIFF;
+//        }
+//        else if ([lower hasSuffix:@".pdf"]){
+//            _mimeType = kOLMimeTypePDF;
+//        }
+        else {
+            NSAssert(NO, @"Only JPEG & PNG images are supported");
         }
     }
     
@@ -145,10 +147,11 @@ static NSOperationQueue *imageOperationQueue;
     return self;
 }
 
-- (instancetype)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType {
+- (instancetype)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType size:(CGSize)size{
     if (self = [super init]) {
         _mimeType = mimeType;
         _imageURL = url;
+        _size = size;
     }
     
     return self;
@@ -203,9 +206,9 @@ static NSOperationQueue *imageOperationQueue;
     return [[OLAsset alloc] initWithImageData:data mimeType:kOLMimeTypePNG];
 }
 
-+ (OLAsset *)assetWithDataAsPDF:(NSData *)data {
-    return [[OLAsset alloc] initWithImageData:data mimeType:kOLMimeTypePDF];
-}
+//+ (OLAsset *)assetWithDataAsPDF:(NSData *)data {
+//    return [[OLAsset alloc] initWithImageData:data mimeType:kOLMimeTypePDF];
+//}
 
 + (OLAsset *)assetWithFilePath:(NSString *)path {
     return [[OLAsset alloc] initWithImageFilePath:path];
@@ -219,164 +222,27 @@ static NSOperationQueue *imageOperationQueue;
     return [[OLAsset alloc] initWithDataSource:dataSource];
 }
 
-+ (OLAsset *)assetWithURL:(NSURL *)url {
++ (OLAsset *)assetWithURL:(NSURL *)url size:(CGSize)size{
     NSAssert([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"], @"bad url scheme (%@), only http & https are supported", url.scheme);
     
     NSString *urlStr = url.absoluteString;
     if ([urlStr hasSuffix:@"jpg"] || [urlStr hasSuffix:@"jpeg"]) {
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG size:size];
     } else if ([urlStr hasSuffix:@"png"]) {
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePNG];
-    } else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF];
-    } else if ([urlStr hasSuffix:@"pdf"]){
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePDF];
-    } else {
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePNG size:size];
+    }
+//        else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
+//        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF size:size];
+//    }
+//    else if ([urlStr hasSuffix:@"pdf"]){
+//        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypePDF size:size];
+//    }
+    else {
         // Worst case scenario just assume it's a JPEG.
-        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
+        return [[OLAsset alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG size:size];
     }
 
     return nil;
-}
-
-- (void)getImageURLWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSURL *url, NSError *error))handler{
-    if (self.assetType == kOLAssetTypeRemoteImageURL && !self.isEdited){
-        handler(self.imageURL, nil);
-    }
-    else{
-        [self uploadToKiteWithProgress:progressHandler completionHandler:^(NSError *error){
-            if (error){
-                handler(nil, error);
-            }
-            else{
-                handler(self.imageURL, nil);
-            }
-        }];
-    }
-}
-
-- (void)uploadToKiteWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSError *error))handler{
-    if (!handler){
-        return;
-    }
-    
-    [self dataWithCompletionHandler:^(NSData *imageData, NSError *error){
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://image.kite.ly/upload/"]];
-        
-        [request setValue:@"multipart/form-data; charset=utf-8; boundary=__X_KITE_BOUNDARY__" forHTTPHeaderField:@"Content-Type"];
-        
-        [request setHTTPMethod:@"POST"];
-        
-        // Build the request body
-        NSString *boundary = @"__X_KITE_BOUNDARY__";
-        NSMutableData *body = [NSMutableData data];
-        // Body part for the attachament. This is an image.
-        if (imageData) {
-            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", @"file"] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:imageData];
-            [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-        }
-        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-        if (self.kiteImageUploadURLSession){
-            [self.kiteImageUploadURLSession invalidateAndCancel];
-        }
-        self.kiteImageUploadURLSession = [NSURLSession sessionWithConfiguration:sessionConfig
-                                                              delegate:nil
-                                                         delegateQueue:nil];
-        if (error){
-            handler(error);
-        }
-        
-        [request setHTTPBody:body];
-        [[self.kiteImageUploadURLSession uploadTaskWithRequest:request fromData:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-            NSInteger httpStatusCode = [(NSHTTPURLResponse *)response statusCode];
-            if ((httpStatusCode < 200 || httpStatusCode > 299) && httpStatusCode != 0) {
-                NSString *errorMessage = ([NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"Image upload failed with a %lu HTTP response status code. Please try again.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), (unsigned long) httpStatusCode]);
-                
-                error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeUnexpectedResponse userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
-            }
-            if (error){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    handler(error);
-                });
-            }
-            NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
-            if (jsonDict[@"full"]){
-                self.imageURL = [NSURL URLWithString:jsonDict[@"full"]];
-            }
-            if (jsonDict[@"preview"]){
-                self.previewURL = [NSURL URLWithString:jsonDict[@"preview"]];
-            }
-            
-            handler(nil);
-            
-        }] resume];
-    }];
-}
-
-- (NSURL *)imageRenderURLWithOptions:(OLImageRenderOptions *)options{
-    if (!self.imageURL || !options.productId || !options.variant){
-        return nil;
-    }
-    NSMutableString *s = [[NSString stringWithFormat:@"https://image.kite.ly/render/?image=%@", [[self.imageURL absoluteString] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLUserAllowedCharacterSet]]] mutableCopy];
-    [s appendString:[NSString stringWithFormat:@"&variant=%@", options.variant]];
-    [s appendString:[NSString stringWithFormat:@"&product_id=%@", options.productId]];
-    
-    if (options.background){
-        [s appendString:[NSString stringWithFormat:@"&background=%@", [options.background hexString]]];
-        
-        CGFloat alpha;
-        [options.background getWhite:nil alpha:&alpha];
-        if (alpha != 1){
-            [s appendString:@"&format=png"];
-        }
-    }
-    return [NSURL URLWithString:s];
-}
-
-- (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL {
-    _assetId = assetId;
-    _previewURL = previewURL;
-    _uploaded = YES;
-}
-
-- (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
-    if (self.assetType == kOLAssetTypeRemoteImageURL && !self.isEdited){
-        handler(0, nil);
-        return;
-    }
-    
-    [self dataWithCompletionHandler:^(NSData *data, NSError *error){
-        handler(data.length, error);
-    }];
-}
-
-- (void)dataWithCompletionHandler:(GetDataHandler)handler {
-    if (self.assetType == kOLAssetTypeImageData && self.mimeType == kOLMimeTypePDF){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            handler(self.imageData, nil);
-        });
-        return;
-    }
-    
-    [self backgroundImageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
-        if (image && !error){
-            NSData *data = UIImageJPEGRepresentation(image, 0.7);
-            dispatch_async(dispatch_get_main_queue(), ^{
-               handler(data, error);
-            });
-            
-        }
-        else{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error getting one of your photos. Please remove or replace it.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), @"asset" : self}]);
-            });
-        }
-    }];
 }
 
 - (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler{
@@ -647,6 +513,22 @@ static NSOperationQueue *imageOperationQueue;
     return !CGRectIsEmpty(self.edits.cropImageFrame) || !CGRectIsEmpty(self.edits.cropImageRect) || !CGSizeEqualToSize(self.edits.cropImageSize, CGSizeZero) || self.edits.counterClockwiseRotations > 0 || self.edits.flipHorizontal || self.edits.flipVertical || !(CGAffineTransformIsIdentity(self.edits.cropTransform) || self.edits.textsOnPhoto.count > 0) || (self.edits.filterName && ![self.edits.filterName isEqualToString:@""]);
 }
 
+- (PhotobookAsset *)photobookAsset {
+    return [[PhotobookAsset alloc] initWithDataSource:self size:self.size date:nil];
+}
+
++ (NSArray<PhotobookAsset *> *)photobookAssetsFromAssets:(NSArray <OLAsset *>*)assets {
+    NSMutableArray *photobookAssets = [[NSMutableArray alloc] init];
+    for (OLAsset *asset in assets){
+        PhotobookAsset *photobookAsset = [asset photobookAsset];
+        if (photobookAsset) {
+            [photobookAssets addObject:photobookAsset];
+        }
+    }
+    
+    return photobookAssets;
+}
+
 - (NSUInteger) hash {
     NSUInteger val = 31 * self.mimeType.hash;
     val = 39 * val + self.imageData.hash;
@@ -715,7 +597,7 @@ static NSOperationQueue *imageOperationQueue;
     copy.uuid = self.uuid;
     copy.mimeType = self.mimeType;
     copy.assetId = self.assetId;
-    copy.previewURL = self.previewURL;
+    copy.size = self.size;
     
     return copy;
 }
@@ -730,9 +612,9 @@ static NSOperationQueue *imageOperationQueue;
     [aCoder encodeObject:self.imageURL forKey:kKeyImageURL];
     [aCoder encodeObject:[self.phAsset localIdentifier] forKey:kKeyPHAssetLocalId];
     [aCoder encodeObject:self.edits forKey:kKeyImageEdits];
-    [aCoder encodeObject:self.previewURL forKey:kKeyKitePreviewURL];
     [aCoder encodeObject:[NSNumber numberWithLongLong:self.assetId] forKey:kKeyKiteAssetId];
     [aCoder encodeObject:self.uuid forKey:kKeyAssetUUID];
+    [aCoder encodeCGSize:_size forKey:@"size"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -742,9 +624,11 @@ static NSOperationQueue *imageOperationQueue;
             _mimeType = kOLMimeTypeJPEG;
         } else if ([kOLMimeTypePNG isEqualToString:mimeType]) {
             _mimeType = kOLMimeTypePNG;
-        } else if ([kOLMimeTypeTIFF isEqualToString:mimeType]) {
-            _mimeType = kOLMimeTypeTIFF;
-        } else {
+        }
+//        else if ([kOLMimeTypeTIFF isEqualToString:mimeType]) {
+//            _mimeType = kOLMimeTypeTIFF;
+//        }
+        else {
             _mimeType = kOLMimeTypePNG;
         }
         self.imageFilePath = [aDecoder decodeObjectForKey:kKeyImageFilePath];
@@ -753,8 +637,8 @@ static NSOperationQueue *imageOperationQueue;
         self.imageURL = [aDecoder decodeObjectForKey:kKeyImageURL];
         self.edits = [aDecoder decodeObjectForKey:kKeyImageEdits];
         self.assetId = [[aDecoder decodeObjectForKey:kKeyKiteAssetId] longLongValue];
-        self.previewURL = [aDecoder decodeObjectForKey:kKeyKitePreviewURL];
         self.uuid = [aDecoder decodeObjectForKey:kKeyAssetUUID];
+        self.size = [aDecoder decodeCGSizeForKey:@"size"];
         
         NSString *localId = [aDecoder decodeObjectForKey:kKeyPHAssetLocalId];
         if (localId){
@@ -763,6 +647,71 @@ static NSOperationQueue *imageOperationQueue;
     }
     
     return self;
+}
+
+- (void)imageDataWithProgressHandler:(void (^ _Nullable)(int64_t, int64_t))progressHandler completionHandler:(void (^ _Nonnull)(NSData * _Nullable, enum AssetDataFileExtension, NSError * _Nullable))completionHandler {
+    [self dataWithCompletionHandler:^(NSData *data, NSError *error) {
+        AssetDataFileExtension extension = AssetDataFileExtensionUnsupported;
+        if ([self.mimeType isEqualToString:kOLMimeTypePNG]){
+            extension = AssetDataFileExtensionPng;
+        } else if ([self.mimeType isEqualToString:kOLMimeTypeJPEG]){
+            extension = AssetDataFileExtensionJpg;
+        } else {
+            NSAssert(NO, @"Asset type not yet supported");
+        }
+        completionHandler(data, extension, error);
+    }];
+}
+
+- (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler {
+    if (self.assetType == kOLAssetTypeRemoteImageURL && !self.isEdited){
+        handler(0, nil);
+        return;
+    }
+    
+    [self dataWithCompletionHandler:^(NSData *data, NSError *error){
+        handler(data.length, error);
+    }];
+}
+
+- (void)dataWithCompletionHandler:(GetDataHandler)handler {
+//    if (self.assetType == kOLAssetTypeImageData && self.mimeType == kOLMimeTypePDF){
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            handler(self.imageData, nil);
+//        });
+//        return;
+//    }
+    
+    [self backgroundImageWithSize:OLAssetMaximumSize applyEdits:YES progress:NULL completion:^(UIImage *image, NSError *error){
+        if (image && !error){
+            NSData *data = UIImageJPEGRepresentation(image, 0.7);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(data, error);
+            });
+            
+        }
+        else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(nil, [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeImagesCorrupt userInfo:@{NSLocalizedDescriptionKey : NSLocalizedStringFromTableInBundle(@"There was an error getting one of your photos. Please remove or replace it.", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @""), @"asset" : self}]);
+            });
+        }
+    }];
+}
+
+- (void)imageWithSize:(CGSize)size loadThumbnailFirst:(BOOL)loadThumbnailFirst progressHandler:(void (^ _Nullable)(int64_t, int64_t))progressHandler completionHandler:(void (^ _Nonnull)(UIImage * _Nullable, NSError * _Nullable))completionHandler {
+    [self imageWithSize:size applyEdits:YES progress:nil completion:completionHandler];
+}
+
+- (CGSize)size {
+    
+    if (self.assetType == kOLAssetTypePHAsset) {
+        return CGSizeMake(self.phAsset.pixelWidth, self.phAsset.pixelHeight);
+    }
+    else if (self.assetType ==  kOLAssetTypeImageData) {
+        return [UIImage imageWithData:self.imageData].size;
+    }
+    
+    return !CGSizeEqualToSize(_size, CGSizeZero) ? _size : CGSizeMake(1000, 1000);
 }
 
 @end

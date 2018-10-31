@@ -44,6 +44,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    }
+    
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     self.image = [UIImage imageNamedInKiteBundle:self.imageName];
@@ -75,14 +80,6 @@
                 }];
             });
         }];
-    }
-}
-
-- (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-    
-    if (!self.navigationController){
-        [OLAnalytics trackQualityScreenHitBack];
     }
 }
 

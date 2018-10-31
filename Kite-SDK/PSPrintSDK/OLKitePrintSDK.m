@@ -28,52 +28,32 @@
 //
 
 #import "OLKitePrintSDK.h"
-#import "OLPayPalCard.h"
 #import "OLProductTemplate.h"
-#import "OLStripeCard.h"
 #import "OLKiteABTesting.h"
 #import "OLKiteUtils.h"
 #import "OLUserSession.h"
 
+@import Photobook;
+
 static NSString *apiKey = nil;
-static NSString *applePayMerchantID = nil;
-static NSString *applePayPayToString = nil;
 static OLKitePrintSDKEnvironment environment;
 
 static NSString *const kOLAPIEndpointLive = @"https://api.kite.ly";
 static NSString *const kOLAPIEndpointSandbox = @"https://api.kite.ly";
 static NSString *const kOLStagingEndpointLive = @"https://staging.kite.ly";
 static NSString *const kOLStagingEndpointSandbox = @"https://staging.kite.ly";
-static NSString *const kOLAPIEndpointVersion = @"v4.0";
+static NSString *const kOLAPIEndpointVersion = @"v4.1";
 
-static BOOL useStripeForCreditCards = YES;
 static BOOL useStaging = NO;
 static BOOL isUnitTesting = NO;
 static BOOL isKiosk = NO;
 static BOOL allowImageZooming = YES;
 
-static NSString *paypalAccountId = nil;
-static NSString *paypalPublicKey = nil;
-static NSString *stripeAccountId = nil;
-static NSString *stripePublicKey = nil;
-
 static NSString *instagramClientID = nil;
 static NSString *instagramSecret = nil;
 static NSString *instagramRedirectURI = nil;
 
-@interface OLPrintOrder ()
-- (void)saveOrder;
-@end
-
 @implementation OLKitePrintSDK
-
-+ (BOOL)useStripeForCreditCards {
-    return useStripeForCreditCards;
-}
-
-+ (void)setUseStripeForCreditCards:(BOOL)use {
-    useStripeForCreditCards = use;
-}
 
 + (void)setUseStaging:(BOOL)staging{
     useStaging = staging;
@@ -90,11 +70,11 @@ static NSString *instagramRedirectURI = nil;
 + (void)setAPIKey:(NSString *_Nonnull)_apiKey withEnvironment:(OLKitePrintSDKEnvironment)_environment {
     apiKey = _apiKey;
     environment = _environment;
-    [OLStripeCard setClientId:[self stripePublishableKey]];
+    [[PhotobookSDK shared] setKiteApiKey:_apiKey];
     if (environment == OLKitePrintSDKEnvironmentLive) {
-        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
+        [[PhotobookSDK shared] setEnvironmentWithEnvironment:EnvironmentLive];
     } else {
-        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
+        [[PhotobookSDK shared] setEnvironmentWithEnvironment:EnvironmentTest];
     }
 }
 
@@ -133,48 +113,12 @@ static NSString *instagramRedirectURI = nil;
     [OLAnalytics setOptInToRemoteAnalytics:optIn];
 }
 
-+ (NSString *_Nonnull)paypalEnvironment {
-    switch (environment) {
-        case OLKitePrintSDKEnvironmentLive: return @"live";/*PayPalEnvironmentProduction*/;
-        case OLKitePrintSDKEnvironmentSandbox: return @"sandbox";/*PayPalEnvironmentSandbox*/;
-    }
-}
-
-+ (NSString *_Nonnull)paypalClientId {
-    return paypalPublicKey;
-}
-
 + (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
-    applePayMerchantID = mID;
+    [[PhotobookSDK shared] setApplePayMerchantId:mID];
 }
 
 + (void)setApplePayPayToString:(NSString *_Nonnull)name{
-    applePayPayToString = name;
-}
-
-+ (NSString *)applePayPayToString{
-    if (applePayPayToString){
-        return applePayPayToString;
-    }
-    else{
-        NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-        NSString *bundleName = nil;
-        if ([info objectForKey:@"CFBundleDisplayName"] == nil) {
-            bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *) kCFBundleNameKey];
-        } else {
-            bundleName = [NSString stringWithFormat:@"%@", [info objectForKey:@"CFBundleDisplayName"]];
-        }
-        
-        return [NSString stringWithFormat:@"Kite.ly (via %@)", bundleName];
-    }
-}
-
-+ (NSString *_Nonnull)appleMerchantID {
-    return applePayMerchantID;
-}
-
-+ (NSString *_Nonnull)stripePublishableKey {
-    return stripePublicKey;
+    [[PhotobookSDK shared] setApplePayPayTo:name];
 }
 
 + (NSString *)qualityGuaranteeString{
@@ -187,6 +131,41 @@ static NSString *instagramRedirectURI = nil;
 
 + (BOOL)isKiosk{
     return isKiosk;
+}
+
++ (void)setPromoCode:(NSString *)promoCode {
+    [[Checkout shared] setPromoCode:promoCode];
+}
+
++ (void)setUserEmail:(NSString *)userEmail {
+    [[Checkout shared] setUserEmail:userEmail];
+}
+
++ (void)setUserPhone:(NSString *)userPhone {
+    [[Checkout shared] setUserPhone:userPhone];
+}
+
++ (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs {
+    return [self checkoutViewControllerWithPrintJobs:printJobs info:nil];
+}
+
++ (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info{
+    if ([[PhotobookSDK shared] isProcessingOrder]) {
+        return [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES delegate:nil];
+    }
+    
+    [OLAnalytics setExtraInfo:info];
+    [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Checkout"];
+    [[Checkout shared] clearBasketOrder];
+    for (id<OLPrintJob> printJob in printJobs) {
+        [[Checkout shared] addProductToBasket:(id<Product>)printJob];
+    }
+    
+    return (UINavigationController *)[[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES delegate:[OLUserSession currentSession]];
+}
+
++ (BOOL)isProcessingOrder {
+    return [[PhotobookSDK shared] isProcessingOrder];
 }
 
 + (void)setQRCodeUploadEnabled:(BOOL)enabled{
@@ -223,37 +202,6 @@ static NSString *instagramRedirectURI = nil;
 
 + (NSString *)instagramClientID{
     return instagramClientID;
-}
-
-+ (void)setPayPalAccountId:(NSString *)accountId{
-    paypalAccountId = accountId;
-}
-
-+ (void)setPayPalPublicKey:(NSString *)publicKey{
-    paypalPublicKey = publicKey;
-    
-    if (environment == OLKitePrintSDKEnvironmentLive) {
-        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentLive];
-    } else {
-        [OLPayPalCard setClientId:[self paypalClientId] withEnvironment:kOLPayPalEnvironmentSandbox];
-    }
-}
-
-+ (void)setStripeAccountId:(NSString *)accountId{
-    stripeAccountId = accountId;
-}
-
-+ (void)setStripePublicKey:(NSString *)publicKey{
-    stripePublicKey = publicKey;
-    [OLStripeCard setClientId:[self stripePublishableKey]];
-}
-
-+ (NSString *)paypalAccountId{
-    return paypalAccountId;
-}
-
-+ (NSString *)stripeAccountId{
-    return stripeAccountId;
 }
 
 @end

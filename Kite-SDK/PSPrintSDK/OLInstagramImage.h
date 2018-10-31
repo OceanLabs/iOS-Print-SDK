@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+@import UIKit;
 
 
 /**
@@ -40,9 +40,10 @@
  
  @param thumbURL The URL to access the thumbnail image
  @param fullURL The URL to access the standard resolution image
+ @param size The size of the source image
  @return Returns an initialised OLInstagramImage instance
  */
-- (id)initWithThumbURL:(NSURL *)thumbURL fullURL:(NSURL *)fullURL;
+- (id)initWithThumbURL:(NSURL *)thumbURL fullURL:(NSURL *)fullURL size:(CGSize) size;
 
 /**
  The URL to access the thumb resolution image
@@ -53,5 +54,7 @@
  The URL to access the standard resolution image
  */
 @property (nonatomic, readonly) NSURL *fullURL;
+
+@property (nonatomic, assign) CGSize size;
 
 @end

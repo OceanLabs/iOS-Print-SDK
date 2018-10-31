@@ -82,6 +82,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    }
 
     [OLAnalytics trackCategoryListScreenViewed];
 
@@ -393,6 +397,7 @@
         self.collectionView.contentInset = UIEdgeInsetsMake([[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height, self.collectionView.contentInset.left, self.collectionView.contentInset.bottom, self.collectionView.contentInset.right);
     }
     [self addBasketIconToTopRight];
+    [(PhotobookNavigationBar *)self.navigationController.navigationBar setBarType:PhotobookNavigationBarTypeWhite];
     
     if ([OLUserSession currentSession].deeplink){
         NSString *deeplink = [[OLUserSession currentSession].deeplink lowercaseString];
@@ -752,7 +757,6 @@
         [vc safePerformSelector:@selector(setProduct:) withObject:product];
     }
     
-    [vc safePerformSelector:@selector(setAssets:) withObject:self.assets];
     [vc safePerformSelector:@selector(setDelegate:) withObject:self.delegate];
     [vc safePerformSelector:@selector(setFilterProducts:) withObject:self.filterProducts];
     [vc safePerformSelector:@selector(setTemplateClass:) withObject:product.productTemplate.templateClass];

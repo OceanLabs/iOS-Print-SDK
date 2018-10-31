@@ -145,12 +145,17 @@
     }
     
     [self addBasketIconToTopRight];
+    [(PhotobookNavigationBar *)self.navigationController.navigationBar setBarType:PhotobookNavigationBarTypeWhite];
     
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    }
     
     if ([self isPushed]){
         self.parentViewController.title = self.templateClass;
@@ -174,14 +179,6 @@
     }
     
     [OLAnalytics trackProductListScreenViewedWithTemplateClass:self.templateClass];
-}
-
-- (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-
-    if (!self.navigationController){
-        [OLAnalytics trackProductListScreenHitBackTemplateClass:self.templateClass];
-    }
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -237,7 +234,7 @@
             vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLTypeSelectionViewController"];
         }
     }
-    else if ([OLKiteABTesting sharedInstance].skipProductOverview && ![OLKiteABTesting sharedInstance].launchedWithPrintOrder && product.productTemplate.templateUI != OLTemplateUINonCustomizable){
+    else if ([OLKiteABTesting sharedInstance].skipProductOverview && product.productTemplate.templateUI != OLTemplateUINonCustomizable){
         vc = [[OLUserSession currentSession].kiteVc reviewViewControllerForProduct:product photoSelectionScreen:[OLKiteUtils imageProvidersAvailable]];
     }
     

@@ -34,7 +34,7 @@
 
 /**
  *  Protocol to be implemented by print job classes. A print job is defined by a single template ID, which means can only refer to a single product.
- *  Print jobs are part of the OLPrintOrder object which get submitted for printing.
+ *  Print jobs are part of the order object which get submitted for printing.
  */
 @protocol OLPrintJob <NSObject, NSCoding, NSCopying>
 
@@ -52,19 +52,6 @@
  *  @param option The option
  */
 - (void)setValue:(NSString *)value forOption:(NSString *)option;
-
-/**
- *  Number of items in a job (for example multiple packs of prints in a single job)
- *
- *  @return The number of items
- */
-- (NSDecimalNumber *)numberOfItemsInJob;
-
-/**
- *  An array of the OLAssets that need to be uploaded
- */
-@property (nonatomic, readonly) NSArray<OLAsset *> *assetsForUploading;
-
 
 /**
  *  The name of the product of this print job
@@ -87,11 +74,6 @@
 @property (nonatomic, readonly) NSArray *currenciesSupported;
 
 /**
- *  The shipping address of this print job (overrides the print order shipping address)
- */
-@property (nonatomic, strong) OLAddress *address;
-
-/**
  *  A unique indentifier for this job
  */
 @property (nonatomic, strong) NSString *uuid;
@@ -102,14 +84,9 @@
 @property (assign, nonatomic) NSInteger extraCopies;
 
 /**
- *  The date the job was added to the basket.
+ *  An array of the OLAssets that need to be uploaded
  */
-@property (strong, nonatomic) NSDate *dateAddedToBasket;
-
-/**
- The shipping method identifier
- */
-@property (assign, nonatomic) NSInteger selectedShippingMethodIdentifier;
+@property (nonatomic, readonly) NSArray<OLAsset *> *assetsForUploading;
 
 @end
 
@@ -117,18 +94,6 @@
  *  Abstract class that provides static methods that instantiate the appropriate print job objects.
  */
 @interface OLPrintJob : NSObject
-
-/**
- *  Creates and returns a postcard print job
- *
- *  @param templateId      The template ID of this job
- *  @param frontImageAsset The image to print on the front of the postcard
- *  @param message         The message on the back of the postcard
- *  @param address         The shipping address of the postcard
- *
- *  @return The postcard print job
- */
-+ (id<OLPrintJob>)postcardWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)address;
 
 /**
  *  Creates and returns a postcard print job
@@ -155,18 +120,6 @@
 + (id<OLPrintJob>)greetingCardWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset insideRightImageAsset:(OLAsset *)insideRightImageAsset insideLeftImageAsset:(OLAsset *)insideLeftImageAsset;
 
 /**
- *  Creates and returns a photo book print job
- *
- *  @param templateId The template ID of this job
- *  @param assets     The assets to print inside the book
- *  @param frontCover The image to print on the front cover
- *  @param backCover  The image to print on the back cover
- *
- *  @return The photo book print job
- */
-+ (id<OLPrintJob>)photobookWithTemplateId:(NSString *)templateId OLAssets:(NSArray <OLAsset *> *)assets frontCoverOLAsset:(OLAsset *)frontCover backCoverOLAsset:(OLAsset *)backCover;
-
-/**
  *  Creates and returns an apparel print job
  *
  *  @param templateId The template ID of this job
@@ -175,6 +128,16 @@
  *  @return The apparel print job
  */
 + (id<OLPrintJob>)apparelWithTemplateId:(NSString *)templateId OLAssets:(NSDictionary<NSString *, OLAsset *> *)assets;
+
+
+/**
+ Creates and returns a calendar print job
+
+ @param templateId The template ID of this job
+ @param assets The assets to print
+ @return The calendar print job
+ */
++ (id<OLPrintJob>)calendarWithTemplateId:(NSString *)templateId OLAssets:(NSArray<OLAsset *> *)assets;
 
 /**
  *  Creates and returns a print job

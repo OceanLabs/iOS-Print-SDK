@@ -63,6 +63,8 @@
  */
 @property (nonatomic, readonly) NSURL *fullURL;
 
+- (CGSize)bestSize;
+
 /**
  The Facebook album id to which this photo belongs
  */
