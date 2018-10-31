@@ -32,6 +32,8 @@
 #import "OLPlaceholderAsset.h"
 #import "NSMutableArray+OLUserSelectedAssetsUtils.h"
 
+@import Photobook;
+
 typedef enum {
     kOLAssetTypeCorrupt,
     kOLAssetTypePHAsset,
@@ -53,8 +55,9 @@ typedef enum {
 - (void)dataWithCompletionHandler:(GetDataHandler)handler;
 - (void)getImageURLWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSURL *url, NSError *error))handler;
 - (void)imageWithSize:(CGSize)size applyEdits:(BOOL)applyEdits progress:(void(^)(float progress))progress completion:(void(^)(UIImage *image, NSError *error))handler;
-- (void)setUploadedWithAssetId:(long long)assetId previewURL:(NSURL *)previewURL;
 - (void)unloadImage;
+- (PhotobookAsset *)photobookAsset;
++ (NSArray<PhotobookAsset *> *)photobookAssetsFromAssets:(NSArray <OLAsset *>*)assets;
 + (NSMutableArray<OLAsset *> *)userSelectedAssets;
 @property (assign, nonatomic) BOOL corrupt;
 @property (assign, nonatomic) NSInteger extraCopies;
@@ -65,5 +68,6 @@ typedef enum {
 @property (strong, nonatomic) OLPhotoEdits *edits;
 @property (strong, nonatomic) PHAsset *phAsset;
 @property (strong, nonatomic) id metadata;
+@property (nonatomic, strong) NSData *imageData;
 @end
 

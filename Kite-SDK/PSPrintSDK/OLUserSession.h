@@ -27,7 +27,6 @@
 //  THE SOFTWARE.
 //
 #import <Foundation/Foundation.h>
-#import "OLPrintOrder.h"
 #import "OLAsset.h"
 
 enum {
@@ -44,11 +43,12 @@ typedef NSUInteger OLUserSessionCleanupOption;
 @protocol OLKiteDelegate;
 @class OLKiteViewController;
 
-@interface OLUserSession : NSObject
+@import Photobook;
+
+@interface OLUserSession : NSObject <PhotobookDelegate>
 
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *userSelectedAssets;
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *recentPhotos;
-@property (strong, nonatomic) OLPrintOrder *printOrder;
 @property (strong, nonatomic) NSArray<OLAsset *> *appAssets;
 @property (assign, nonatomic) CGFloat screenScale;
 @property (weak, nonatomic) OLKiteViewController *kiteVc;

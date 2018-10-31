@@ -80,5 +80,15 @@
     [[OLUserSession currentSession].kiteVc setLastTouchDate:[NSDate date] forViewController:self];
 }
 
+- (BOOL)shouldAutorotate {
+    if ([self.topViewController respondsToSelector: @selector(shouldAutorotate)]) {
+        return self.topViewController.shouldAutorotate;
+    }
+    return YES;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return self.topViewController.supportedInterfaceOrientations ?: UIInterfaceOrientationMaskAll;
+}
 
 @end

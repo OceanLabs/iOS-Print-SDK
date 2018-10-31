@@ -29,8 +29,8 @@
 
 #import "OLApparelPrintJob.h"
 #import "OLProductTemplate.h"
-#import "OLAsset.h"
-#import "OLAddress.h"
+#import "OLAsset+Private.h"
+#import "OLImageDownloader.h"
 #import "OLCountry.h"
 
 static NSString *const kKeyApparelProductTemplateId = @"co.oceanlabs.pssdk.kKeyApparelProductTemplateId";
@@ -41,23 +41,17 @@ static NSString *const kKeyApparelAddress = @"co.oceanlabs.pssdk.kKeyApparelAddr
 static NSString *const kKeyApparelUuid = @"co.oceanlabs.pssdk.kKeyApparelUuid";
 static NSString *const kKeyApparelExtraCopies = @"co.oceanlabs.pssdk.kKeyApparelExtraCopies";
 static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApparelPrintJobOptions";
-static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
 
 @interface OLApparelPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (strong, nonatomic) NSMutableDictionary *options;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
+@property (strong, nonatomic) NSDictionary<NSString *, PhotobookAsset *> *photobookAssets;
 @end
 
 @implementation OLApparelPrintJob
 
-@synthesize address;
 @synthesize uuid;
 @synthesize extraCopies;
-@synthesize dateAddedToBasket;
-@synthesize selectedShippingMethodIdentifier;
 
 - (NSMutableDictionary *) options{
     if (!_options){
@@ -79,7 +73,15 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
 #endif
         self.uuid = [[NSUUID UUID] UUIDString];
         self.assets = assets;
+        NSMutableDictionary *photobookAssets = [[NSMutableDictionary alloc] init];
+        for (NSString *key in [self.assets allKeys]) {
+            photobookAssets[key] = [OLAsset photobookAssetsFromAssets:@[self.assets[key]]].firstObject;
+        }
+        self.photobookAssets = photobookAssets;
         self.templateId = templateId;
+        
+        NSString *countryCode = [OLCountry countryForCurrentLocale].codeAlpha3;
+        self.selectedShippingMethod = self.template.availableShippingMethods[countryCode].firstObject;
     }
     
     return self;
@@ -95,8 +97,11 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     
     NSMutableDictionary *assets = [[NSMutableDictionary alloc] init];
     for (NSString *key in [self.assets allKeys]){
-        if ([self.assets[key] mimeType] == kOLMimeTypePDF){
-            [pdfs setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
+//        if ([self.assets[key] mimeType] == kOLMimeTypePDF){
+//            [pdfs setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
+//        }
+        if (self.photobookAssets[key].uploadUrl) {
+            [assets setObject:self.photobookAssets[key].uploadUrl forKey:key];
         }
         else{
             [assets setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
@@ -109,22 +114,13 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     json[@"options"] = self.options;
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
-    
-    NSString *countryCode = self.address.country ? [self.address.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
-    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[countryCode];
-    if (region){
-        json[@"shipping_class"] = [NSNumber numberWithInteger:self.selectedShippingMethodIdentifier];
-    }
+    json[@"shipping_class"] = [NSNumber numberWithInteger:selectedShippingMethod.id];
     
     return json;
 }
 
 - (NSUInteger)quantity {
     return 1;
-}
-
-- (NSDecimalNumber *)numberOfItemsInJob{
-    return [NSDecimalNumber decimalNumberWithString:@"1"];
 }
 
 - (NSArray *)currenciesSupported {
@@ -135,11 +131,20 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     return [OLProductTemplate templateWithId:self.templateId].name;
 }
 
+- (NSArray <PhotobookAsset *>*)assetsToUpload {
+    NSMutableArray <PhotobookAsset *>*assets = [[NSMutableArray alloc] init];
+    for (NSString *key in [self.photobookAssets allKeys]){
+        [assets addObject:self.photobookAssets[key]];
+    }
+    return assets;
+}
+
 - (NSArray *)assetsForUploading {
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     for (NSString *key in [self.assets allKeys]){
         [assets addObject:self.assets[key]];
     }
+    
     return assets;
 }
 
@@ -154,8 +159,8 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     for (NSString *key in self.options.allKeys){
         val = 39 * val + [self.options[key] hash] + [key hash];
     }
-    val = 40 * val + [self.address hash];
     val = 41 * val + [self.uuid hash];
+    val = 42 * val + [self.selectedShippingMethod hash];
     
     return val;
 }
@@ -170,7 +175,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     }
     OLApparelPrintJob* printJob = (OLApparelPrintJob*)object;
     
-    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToDictionary:printJob.assets] && [self.options isEqualToDictionary:printJob.options] && ((!self.address && !printJob.address) || [self.address isEqual:printJob.address]);
+    return [self.templateId isEqual:printJob.templateId] && [self.assets isEqualToDictionary:printJob.assets] && [self.options isEqualToDictionary:printJob.options] && (!self.selectedShippingMethod || [self.selectedShippingMethod isEqual:printJob.selectedShippingMethod]);
 }
 
 #pragma mark - NSCopying
@@ -184,7 +189,7 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     objectCopy.options = self.options;
     objectCopy.uuid = self.uuid;
     objectCopy.extraCopies = self.extraCopies;
-    objectCopy.selectedShippingMethodIdentifier = self.selectedShippingMethodIdentifier;
+    objectCopy.selectedShippingMethod = self.selectedShippingMethod;
     return objectCopy;
 }
 
@@ -195,23 +200,93 @@ static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAdde
     [aCoder encodeObject:self.assets forKey:kKeyApparelImages];
     [aCoder encodeObject:self.uuid forKey:kKeyApparelUuid];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyApparelExtraCopies];
-    [aCoder encodeObject:self.address forKey:kKeyApparelAddress];
     [aCoder encodeObject:self.options forKey:kKeyApparelPrintJobOptions];
-    [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
+    [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.templateId = [aDecoder decodeObjectForKey:kKeyApparelProductTemplateId];
+        if (!self.template) {
+            return nil;
+        }
         self.assets = [aDecoder decodeObjectForKey:kKeyApparelImages];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyApparelExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyApparelUuid];
-        self.address = [aDecoder decodeObjectForKey:kKeyApparelAddress];
         self.options = [aDecoder decodeObjectForKey:kKeyApparelPrintJobOptions];
-        self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
+        self.selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
+        
+        NSMutableDictionary *photobookAssets = [[NSMutableDictionary alloc] init];
+        for (NSString *key in [self.assets allKeys]) {
+            photobookAssets[key] = [OLAsset photobookAssetsFromAssets:@[self.assets[key]]].firstObject;
+        }
+        self.photobookAssets = photobookAssets;
     }
     
     return self;
+}
+
+#pragma mark - Product
+
+- (NSInteger) hashValue {
+    return [self hash];
+}
+
+- (void)setIdentifier:(NSString *)s {
+    self.uuid = s;
+}
+
+- (NSString *)identifier {
+    return self.uuid;
+}
+
+- (void)setItemCount:(NSInteger)itemCount {
+    self.extraCopies = itemCount - 1;
+}
+
+- (NSInteger)itemCount {
+    return self.extraCopies + 1;
+}
+
+@synthesize selectedShippingMethod;
+
+- (OLProductTemplate *)template {
+    if (![OLProductTemplate templateWithId:self.templateId]){
+        OLProductTemplate *template = [[OLProductTemplate alloc] init];
+        template.identifier = self.templateId;
+        return template;
+    }
+    return [OLProductTemplate templateWithId:self.templateId];
+}
+
+- (NSDictionary<NSString *,id> * _Nullable)orderParameters {
+    return self.jsonRepresentation;
+}
+
+- (NSDictionary<NSString *,id> * _Nullable)costParameters {
+    return self.jsonRepresentation;
+}
+
+- (void)previewImageWithSize:(CGSize)size completionHandler:(void (^ _Nonnull)(UIImage * _Nullable))completionHandler {
+    if (![OLProductTemplate templateWithId:self.templateId]){
+        [OLProductTemplate syncTemplateId:self.templateId withCompletionHandler:^(NSArray <OLProductTemplate *>*templates, NSError *error){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completionHandler(image);
+                });
+            }];
+        }];
+        return;
+    }
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionHandler(image);
+        });
+    }];
+}
+
+- (void)processUploadedAssetsWithCompletionHandler:(void (^ _Nonnull)(NSError * _Nullable))completionHandler {
+    completionHandler(nil);
 }
 
 @end

@@ -33,10 +33,11 @@
 @class OLAddress;
 @class OLAsset;
 
+@import Photobook;
 
-@interface OLPostcardPrintJob : NSObject <OLPrintJob, NSCopying>
+@interface OLPostcardPrintJob : NSObject <OLPrintJob, NSCopying, Product>
 
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)theAddress;
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message;
 
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset;
 

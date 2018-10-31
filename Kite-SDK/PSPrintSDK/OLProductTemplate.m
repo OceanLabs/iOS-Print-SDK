@@ -29,7 +29,6 @@
 
 #import "OLProductTemplate.h"
 #import "OLProductTemplateSyncRequest.h"
-#import "OLCountry.h"
 #import "OLKitePrintSDK.h"
 #import "OLKiteABTesting.h"
 
@@ -61,7 +60,6 @@ static NSString *const kKeyShippingCosts = @"co.oceanlabs.pssdk.kKeyShippingCost
 static NSString *const kKeyGridCountX = @"co.oceanlabs.pssdk.kKeyGridCountX";
 static NSString *const kKeyGridCountY = @"co.oceanlabs.pssdk.kKeyGridCountY";
 static NSString *const kKeySupportedOptions = @"co.oceanlabs.pssdk.kKeySupportedOptions";
-static NSString *const kKeyUpsellOffers = @"co.oceanlabs.pssdk.kKeyUpsellOffers";
 static NSString *const kKeyShortDescription = @"co.oceanlabs.pssdk.kKeyShortDescription";
 static NSString *const kKeyCollectionName = @"co.oceanlabs.pssdk.kKeyCollectionName";
 static NSString *const kKeyCollectionId = @"co.oceanlabs.pssdk.kKeyCollectionId";
@@ -79,10 +77,6 @@ static BOOL partial = NO;
 @property (nonatomic, strong) NSDictionary<NSString *, NSDecimalNumber *> *costsByCurrencyCode;
 @property (nonatomic, assign, readwrite) NSUInteger quantityPerSheet;
 @property (strong, nonatomic) NSArray *_Nullable supportedOptions;
-@end
-
-@interface OLCountry (Private)
-+ (BOOL)isValidCurrencyCode:(NSString *)code;
 @end
 
 @implementation OLProductTemplate
@@ -168,9 +162,16 @@ static BOOL partial = NO;
     [OLProductTemplate syncWithCompletionHandler:NULL];
 }
 
-+ (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler{
++ (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler {
+    [OLProductTemplate syncTemplateId:nil withCompletionHandler:handler];
+}
+
++ (void)syncTemplateId:(NSString *)templateId withCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler {
     if (inProgressSyncRequest == nil) {
         inProgressSyncRequest = [[OLProductTemplateSyncRequest alloc] init];
+        if (templateId) {
+            inProgressSyncRequest.templateId = templateId;
+        }
         [inProgressSyncRequest sync:^(NSArray *templates_, NSError *error) {
             partial = [inProgressSyncRequest isInProgress];
             if (!partial){
@@ -252,7 +253,7 @@ static BOOL partial = NO;
     else if ([identifier isEqualToString:@"PHONE_CASE"]){
         return OLTemplateUICase;
     }
-    else if ([identifier isEqualToString:@"PHOTOBOOK"]){
+    else if ([identifier isEqualToString:@"PHOTOBOOK"] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
         return OLTemplateUIPhotobook;
     }
     else if ([identifier isEqualToString:@"NONCUSTOMIZABLE"]){
@@ -304,7 +305,6 @@ static BOOL partial = NO;
     [aCoder encodeInteger:self.gridCountX forKey:kKeyGridCountX];
     [aCoder encodeInteger:self.gridCountY forKey:kKeyGridCountY];
     [aCoder encodeObject:self.supportedOptions forKey:kKeySupportedOptions];
-    [aCoder encodeObject:self.upsellOffers forKey:kKeyUpsellOffers];
     [aCoder encodeObject:self.shortDescription forKey:kKeyShortDescription];
     [aCoder encodeObject:self.collectionId forKey:kKeyCollectionId];
     [aCoder encodeObject:self.collectionName forKey:kKeyCollectionName];
@@ -349,7 +349,6 @@ static BOOL partial = NO;
         _gridCountX = [aDecoder decodeIntegerForKey:kKeyGridCountX];
         _gridCountY = [aDecoder decodeIntegerForKey:kKeyGridCountY];
         self.supportedOptions = [aDecoder decodeObjectForKey:kKeySupportedOptions];
-        self.upsellOffers = [aDecoder decodeObjectForKey:kKeyUpsellOffers];
         self.shortDescription = [aDecoder decodeObjectForKey:kKeyShortDescription];
         self.collectionName = [aDecoder decodeObjectForKey:kKeyCollectionName];
         self.collectionId = [aDecoder decodeObjectForKey:kKeyCollectionId];
@@ -362,6 +361,13 @@ static BOOL partial = NO;
     }
     
     return self;
+}
+
+@synthesize availableShippingMethods;
+@synthesize countryToRegionMapping;
+
+- (NSString *)templateId {
+    return self.identifier;
 }
 
 @end

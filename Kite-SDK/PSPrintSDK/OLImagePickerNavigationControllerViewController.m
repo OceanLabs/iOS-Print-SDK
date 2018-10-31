@@ -27,7 +27,22 @@
 //  THE SOFTWARE.
 //
 
-typedef NS_ENUM(NSInteger, OLKitePrintSDKEnvironment) {
-    OLKitePrintSDKEnvironmentLive,
-    OLKitePrintSDKEnvironmentSandbox,
-};
+#import "OLImagePickerNavigationControllerViewController.h"
+
+@interface OLImagePickerNavigationControllerViewController ()
+
+@end
+
+@implementation OLImagePickerNavigationControllerViewController
+
+- (void)setAddingDelegate:(id<PhotobookAssetAddingDelegate>)addingDelegate {
+    if ([self.viewControllers.firstObject respondsToSelector:@selector(setAddingDelegate:)]) {
+        [(id<PhotobookAssetPicker>)self.viewControllers.firstObject setAddingDelegate:addingDelegate];
+    }
+}
+
+- (id<PhotobookAssetAddingDelegate>)addingDelegate {
+    return nil;
+}
+
+@end

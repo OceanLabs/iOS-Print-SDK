@@ -40,7 +40,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     if (launchOptions[UIApplicationLaunchOptionsURLKey]){
-        [self application:application openURL:launchOptions[UIApplicationLaunchOptionsURLKey] sourceApplication:launchOptions[UIApplicationLaunchOptionsSourceApplicationKey] annotation:launchOptions];
+        [self application:application openURL:launchOptions[UIApplicationLaunchOptionsURLKey] options:launchOptions];
     }
     
     return [[FBSDKApplicationDelegate sharedInstance] application:application
@@ -78,26 +78,12 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    BOOL wasHandled = [[FBSDKApplicationDelegate sharedInstance] application:application
-                                                                     openURL:url
-                                                           sourceApplication:sourceApplication
-                                                                  annotation:annotation];
-#ifdef OL_KITE_CI_DEPLOY
-    NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
-    if ([components.host isEqualToString:@"setup"]){
-        self.setupProperties = [[NSMutableDictionary alloc] init];
-        for (NSURLQueryItem *item in components.queryItems){
-            self.setupProperties[item.name] = item.value;
-        }
-        
-        CIViewController *vc = (CIViewController *)[(UINavigationController *)self.window.rootViewController topViewController];
-        [vc dismissViewControllerAnimated:NO completion:NULL];
-        [vc showKiteVcForAPIKey:nil assets:nil];
-        
-    }
-#endif
-    return wasHandled;
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
+    
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                          openURL:url
+                                                          options:options];
 }
 
 @end

@@ -218,6 +218,10 @@ CGFloat OLImagePickerMargin = 1.5;
     return previewVc;
 }
 
+- (void)previewingContext:(nonnull id<UIViewControllerPreviewing>)previewingContext commitViewController:(nonnull UIViewController *)viewControllerToCommit {
+}
+
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     self.numberOfCellsPerRow = 0;
@@ -294,10 +298,12 @@ CGFloat OLImagePickerMargin = 1.5;
         }
         
         if ([OLKiteABTesting sharedInstance].lightThemeColorPickerTick){
-            checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColorPickerTick;
+            [checkmark viewWithTag:1].tintColor = [OLKiteABTesting sharedInstance].lightThemeColorPickerTick;
         }
         else if ([OLKiteABTesting sharedInstance].lightThemeColor1){
-            checkmark.tintColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+            [checkmark viewWithTag:1].tintColor = [OLKiteABTesting sharedInstance].lightThemeColor1;
+        } else {
+            [checkmark viewWithTag:1].tintColor = [UIColor colorWithRed:0 green:0.48 blue:1 alpha:1];
         }
         
         if ([[self.imagePicker.selectedAssets copy] containsObject:asset]){
@@ -803,9 +809,8 @@ CGFloat OLImagePickerMargin = 1.5;
         
         [self.imagePicker reloadPageController];
     }]];
-     [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
+    [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"No", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") style:UIAlertActionStyleCancel handler:NULL]];
     [self.imagePicker presentViewController:ac animated:YES completion:NULL];
 }
-
 
 @end

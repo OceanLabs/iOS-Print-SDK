@@ -35,13 +35,11 @@
 #include <stdlib.h>
 
 
-static NSString *const kOLKiteABTestLaunchWithPrintOrderVariant = @"ly.kite.abtest.launch_with_print_order_variant";
 static NSString *const kOLKiteABTestQualityBannerType = @"ly.kite.abtest.quality_banner_type";
 static NSString *const kOLKiteABTestProductTileStyle = @"ly.kite.abtest.product_tile_style";
 static NSString *const kOLKiteABTestHidePrice = @"ly.kite.abtest.hide_price";
 static NSString *const kOLKiteABTestPromoBannerStyle = @"ly.kite.abtest.promo_banner_style";
 static NSString *const kOLKiteABTestPromoBannerText = @"ly.kite.abtest.promo_banner_text";
-static NSString *const kOLKiteABTestOfferPayPal = @"ly.kite.abtest.offer_paypal";
 static NSString *const kOLKiteABTestPaymentScreen = @"ly.kite.abtest.payment_screen";
 static NSString *const kOLKiteABTestCoverPhotoVariants = @"ly.kite.abtest.cover_photo_variants";
 static NSString *const kOLKiteABTestProgressiveTemplateLoading = @"ly.kite.abtest.progressive_template_loading";
@@ -63,13 +61,11 @@ static dispatch_once_t srand48OnceToken;
 @property (assign, nonatomic, readwrite) BOOL disableProductCategories;
 @property (assign, nonatomic) BOOL minimalNavigationBar;
 @property (assign, nonatomic, readwrite) BOOL hidePrice;
-@property (assign, nonatomic, readwrite) BOOL offerPayPal;
 @property (assign, nonatomic, readwrite) BOOL progressiveTemplateLoading;
 @property (strong, nonatomic, readwrite) NSString *qualityBannerType;
 @property (strong, nonatomic, readwrite) NSString *checkoutScreenType;
 @property (strong, nonatomic, readwrite) NSString *productTileStyle;
 @property (strong, nonatomic, readwrite) NSString *promoBannerText;
-@property (strong, nonatomic, readwrite) NSString *launchWithPrintOrderVariant;
 @property (strong, nonatomic, readwrite) NSString *paymentScreen;
 @property (strong, nonatomic, readwrite) NSString *coverPhotoId;
 @property (strong, nonatomic, readwrite) NSString *packReviewStyle;
@@ -85,98 +81,6 @@ static dispatch_once_t srand48OnceToken;
     return sharedInstance;
 }
 
-- (void)setUserConfig:(NSDictionary *)userConfig{
-    _userConfig = userConfig;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    NSString *s;
-    NSString *user = [self userTheme];
-    
-    s = userConfig[kOLKiteThemeHeaderLogoImageURL];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/logo.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeHeaderLogoImageURL];
-    
-    s = userConfig[kOLKiteThemeCheckoutProgress1];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress1];
-    
-    s = userConfig[kOLKiteThemeCheckoutProgress2];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator2.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress2];
-    
-    s = userConfig[kOLKiteThemeCheckoutProgress1Bg];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator_bg.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress1Bg];
-    
-    s = userConfig[kOLKiteThemeCheckoutProgress2Bg];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/checkout_progress_indicator2_bg.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeCheckoutProgress2Bg];
-    
-    s = userConfig[kOLKiteThemeReceiptSuccess];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_success.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeReceiptSuccess];
-    
-    s = userConfig[kOLKiteThemeReceiptFailure];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_failure.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeReceiptFailure];
-    
-    s = userConfig[kOLKiteThemeReceiptSuccessBg];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_success_bg.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeReceiptSuccessBg];
-    
-    s = userConfig[kOLKiteThemeReceiptFailureBg];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/receipt_failure_bg.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeReceiptFailureBg];
-    
-    s = userConfig[kOLKiteThemeCancelButtonIcon];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"https://s3.amazonaws.com/sdk-static/themes/%@/x.png", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeCancelButtonIcon];
-    
-    s = userConfig[kOLKiteThemeSupportEmail];
-    if (!s && user){
-        s = [NSString stringWithFormat:@"appsupport@%@.com", user];
-    }
-    [defaults setObject:s forKey:kOLKiteThemeSupportEmail];
-    [defaults synchronize];
-}
-
-- (void)prefetchRemoteImages{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    for (NSString *s in @[kOLKiteThemeHeaderLogoImageURL, kOLKiteThemeCheckoutProgress1, kOLKiteThemeCheckoutProgress2, kOLKiteThemeCheckoutProgress1Bg, kOLKiteThemeCheckoutProgress2Bg, kOLKiteThemeReceiptSuccess, kOLKiteThemeReceiptFailure, kOLKiteThemeReceiptSuccessBg, kOLKiteThemeReceiptFailureBg, kOLKiteThemeCancelButtonIcon, kOLKiteLightThemeSecretReveal]){
-        NSURL *url = [NSURL URLWithString:[defaults objectForKey:s]];
-        if (url){
-            [[OLImageDownloader sharedInstance] downloadImageAtURL:url withCompletionHandler:^(UIImage *image, NSError *error){
-                if (!image){
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [defaults removeObjectForKey:s];
-                        [defaults synchronize];
-                    });
-                }
-            }];
-        }
-    }
-}
-
 - (NSString *)promoBannerText{
     NSString *userConfig = self.userConfig[@"banner_message"];
     if (userConfig && ![userConfig isEqualToString:@""]){
@@ -188,46 +92,6 @@ static dispatch_once_t srand48OnceToken;
 
 - (NSString *)backButtonText{
     return self.minimalNavigationBar ? @"" : NSLocalizedStringFromTableInBundle(@"Back", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
-}
-
-- (NSString *)headerLogoURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeHeaderLogoImageURL];
-}
-
-- (NSString *)receiptSuccessURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeReceiptSuccess];
-}
-
-- (NSString *)receiptFailureURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeReceiptFailure];
-}
-
-- (NSString *)receiptSuccessBgURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeReceiptSuccessBg];
-}
-
-- (NSString *)receiptFailureBgURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeReceiptFailureBg];
-}
-
-- (NSString *)cancelButtonIconURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeCancelButtonIcon];
-}
-
-- (NSString *)lightThemeSecretRevealURL{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteLightThemeSecretReveal];
-}
-
-- (NSString *)supportEmail{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:kOLKiteThemeSupportEmail];
 }
 
 - (UIColor *)lightThemeColor1{
@@ -383,17 +247,6 @@ static dispatch_once_t srand48OnceToken;
 
 - (void)resetTheme{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:kOLKiteThemeHeaderLogoImageURL];
-    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1];
-    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2];
-    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress1Bg];
-    [defaults removeObjectForKey:kOLKiteThemeCheckoutProgress2Bg];
-    [defaults removeObjectForKey:kOLKiteThemeReceiptSuccess];
-    [defaults removeObjectForKey:kOLKiteThemeReceiptFailure];
-    [defaults removeObjectForKey:kOLKiteThemeReceiptSuccessBg];
-    [defaults removeObjectForKey:kOLKiteThemeReceiptFailureBg];
-    [defaults removeObjectForKey:kOLKiteLightThemeSecretReveal];
-    [defaults removeObjectForKey:kOLKiteThemeSupportEmail];
     [defaults removeObjectForKey:kOLKiteLightThemeFont1];
     [defaults removeObjectForKey:kOLKiteLightThemeColor1];
     [defaults removeObjectForKey:kOLKiteLightThemeColor2];
@@ -514,7 +367,7 @@ static dispatch_once_t srand48OnceToken;
     
     NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestProductTileStyle];
     if (!experimentDict) {
-        experimentDict = @{@"Classic" : @1, @"A" : @0, @"B" : @0, @"C" : @0, @"Dark" : @0, @"MinimalWhite" : @0, @"ThemeColor" : @0};
+        experimentDict = @{@"Classic" : @0, @"A" : @0, @"B" : @0, @"C" : @0, @"Dark" : @0, @"MinimalWhite" : @1, @"ThemeColor" : @0};
     }
     [OLKiteABTesting splitTestWithName:kOLKiteABTestProductTileStyle
                    conditions:@{
@@ -526,7 +379,7 @@ static dispatch_once_t srand48OnceToken;
                                 @"MinimalWhite" : safeObject(experimentDict[@"MinimalWhite"]),
                                 @"ThemeColor" : safeObject(experimentDict[@"ThemeColor"])
                                 } block:^(id choice) {
-                                    self.productTileStyle = choice;
+                                    self.productTileStyle = @"MinimalWhite";
                                 }];
 }
 
@@ -544,41 +397,6 @@ static dispatch_once_t srand48OnceToken;
                                          } block:^(id choice) {
                                              self.packReviewStyle = choice;
                                          }];
-}
-
-- (void)setupPaymentScreenTest{
-    self.paymentScreen = nil;
-    
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestPaymentScreen];
-    if (!experimentDict) {
-        experimentDict = @{@"V2" : @0, @"V3" : @1};
-    }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestPaymentScreen
-                            conditions:@{
-                                         @"V2" : safeObject(experimentDict[@"V2"]),
-                                         @"V3" : safeObject(experimentDict[@"V3"]),
-                                         } block:^(id choice) {
-                                             self.paymentScreen = choice;
-                                         }];
-}
-
-
-- (void)setupShowProductDescriptionScreenBeforeShippingTest{
-    self.launchWithPrintOrderVariant = nil;
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestLaunchWithPrintOrderVariant];
-    if (!experimentDict) {
-        experimentDict = @{@"Checkout" : @0.2, @"Overview-Checkout" : @0.2, @"Review-Overview-Checkout": @0.2, @"Review-Checkout" : @0.2, @"Overview-Review-Checkout" : @0.2};
-    }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestLaunchWithPrintOrderVariant
-                   conditions:@{
-                                @"Checkout" : safeObject(experimentDict[@"Checkout"]),
-                                @"Overview-Checkout" : safeObject(experimentDict[@"Overview-Checkout"]),
-                                @"Review-Overview-Checkout" : safeObject(experimentDict[@"Review-Overview-Checkout"]),
-                                @"Review-Checkout" : safeObject(experimentDict[@"Review-Checkout"]),
-                                @"Overview-Review-Checkout" : safeObject(experimentDict[@"Overview-Review-Checkout"])
-                                } block:^(id choice) {
-                                    self.launchWithPrintOrderVariant = choice;
-                                }];
 }
 
 - (void)setupDisableProductCategories{
@@ -699,38 +517,16 @@ static dispatch_once_t srand48OnceToken;
                    }];
 }
 
-- (void)setupOfferPayPalTest{
-    self.offerPayPal = NO;
-    NSDictionary *experimentDict = [[NSUserDefaults standardUserDefaults] objectForKey:kOLKiteABTestOfferPayPal];
-    if (!experimentDict) {
-        experimentDict = @{@"Yes" : @0.5, @"No" : @0.5};
-    }
-    [OLKiteABTesting splitTestWithName:kOLKiteABTestOfferPayPal
-                   conditions:@{
-                                @"Yes" : safeObject(experimentDict[@"Yes"]),
-                                @"No" : safeObject(experimentDict[@"No"])
-                                } block:^(id choice) {
-                                    self.offerPayPal = [choice isEqualToString:@"Yes"];
-                                }];
-}
-
-- (void)groupSetupShippingScreenTests{
-    [self setupPaymentScreenTest];
-    [self setupOfferPayPalTest];
-}
-
 - (void)setupABTestVariants{
     [self setupQualityBannerTypeTest];
     [self setupProductTileStyleTest];
     [self setupPackReviewStyleTest];
     [self setupPromoBannerTextTest];
     [self setupHidePriceTest];
-    [self setupShowProductDescriptionScreenBeforeShippingTest];
     [self setupProgressiveTemplateLoadingTest];
     [self setupSkipProductOverviewTest];
     [self setupDisableProductCategories];
     [self setupMinimalNavigationBarTest];
-    [self groupSetupShippingScreenTests];
 }
 
 #pragma mark OLKiteABTesting

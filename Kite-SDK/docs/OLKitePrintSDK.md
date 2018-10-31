@@ -20,5 +20,4 @@ You can set the environment to be either live or sandbox for testing:
 
 Next Steps
 ----------
-- If you are using the [Full mode of the SDK](../../README.md#full) then create and present or push an [`OLKiteViewController`](OLKiteViewController.md) passing it an array of OLAssets
-- Alternatively if you're building your own [Custom Checkout](../../README.md#custom-checkout) UI then it's time to [set the shipping address](shipping.md) to which the order will be delivered
+- If you are using the [Full mode of the SDK](../../README.md#full) then create and present or push an `OLKiteViewController` passing it an array of OLAssets

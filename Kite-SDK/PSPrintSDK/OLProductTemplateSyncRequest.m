@@ -33,8 +33,6 @@
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
 #import "OLKiteABTesting.h"
-#import "OLKiteTheme.h"
-#import "OLCountry.h"
 #import "OLKiteUtils.h"
 #import "OLArtboardTemplate.h"
 #import "OLProductRepresentation.h"
@@ -58,16 +56,17 @@
 
 @end
 
-@interface OLAddress ()
-@property (strong, nonatomic) NSString *companyName;
-
-@end
-
 @implementation OLProductTemplateSyncRequest
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
     NSAssert(self.req == nil, @"Oops only one template sync request should be in progress at any given time");
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/template/?limit=20", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]]];
+    NSString *urlString;
+    if (self.templateId){
+        urlString = [NSString stringWithFormat:@"%@/%@/template/?template_id__in=%@&limit=1", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion], self.templateId];
+    } else {
+        urlString = [NSString stringWithFormat:@"%@/%@/template/?limit=20", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion]];
+    }
+    NSURL *url = [NSURL URLWithString:urlString];
     [self fetchTemplatesWithURL:url templateAccumulator:[[NSMutableArray alloc] init] handler:handler];
 }
 
@@ -95,29 +94,6 @@
                     }
                 }
                 
-                id paymentKeys = json[@"payment_keys"];
-                if ([paymentKeys isKindOfClass:[NSDictionary class]]){
-                    id paypalKeys = paymentKeys[@"paypal"];
-                    if([paypalKeys isKindOfClass:[NSDictionary class]]){
-                        id accountId = paypalKeys[@"account_id"];
-                        id publicKey = paypalKeys[@"public_key"];
-                        if ([publicKey isKindOfClass:[NSString class]]){
-                            [OLKitePrintSDK setPayPalAccountId:accountId];
-                            [OLKitePrintSDK setPayPalPublicKey:publicKey];
-                        }
-                    }
-                    
-                    id stripeKeys = paymentKeys[@"stripe"];
-                    if([stripeKeys isKindOfClass:[NSDictionary class]]){
-                        id accountId = stripeKeys[@"account_id"];
-                        id publicKey = stripeKeys[@"public_key"];
-                        if ([publicKey isKindOfClass:[NSString class]]){
-                            [OLKitePrintSDK setStripeAccountId:accountId];
-                            [OLKitePrintSDK setStripePublicKey:publicKey];
-                        }
-                    }
-                }
-                
                 id userConfig = json[@"user_config"];
                 if ([userConfig isKindOfClass:[NSDictionary class]]){
                     [[OLKiteABTesting sharedInstance] setUserConfig:userConfig];
@@ -142,60 +118,6 @@
                     [OLKiteABTesting sharedInstance].paypalSupportedCurrencies = payPalSupportedCurrencies;
                 }
                 
-                id themeConfig = json[@"kiosk_config"];
-                if ([themeConfig isKindOfClass:[NSDictionary class]]){
-                    OLKiteTheme *theme = [[OLKiteTheme alloc] init];
-                    
-                    id valuesDict = themeConfig[[[NSLocale preferredLanguages] objectAtIndex:0]];
-                    if (!valuesDict){
-                        valuesDict = themeConfig[@"en"];
-                    }
-                    if (!valuesDict && [themeConfig allKeys].count > 0){
-                        valuesDict = themeConfig[[themeConfig allKeys].firstObject];
-                    }
-                    
-                    if (valuesDict){
-                        
-                        theme.burgerMenuHeader = [NSURL URLWithString:valuesDict[@"kiosk_burger_menu_header"]];
-                        theme.endSessionButton = [NSURL URLWithString:valuesDict[@"kiosk_end_session_button"]];
-                        theme.navigationIcon = [NSURL URLWithString:valuesDict[@"kiosk_navigation_icon"]];
-                        theme.privacyPolicy = [NSURL URLWithString:valuesDict[@"kiosk_privacy_policy_url"]];
-                        theme.receiptLogo = [NSURL URLWithString:valuesDict[@"kiosk_receipt_logo"]];
-                        theme.secretReveal = [NSURL URLWithString:valuesDict[@"kiosk_secret_reveal"]];
-                        theme.shippingOption1 = [NSURL URLWithString:valuesDict[@"kiosk_shipping_option_to_store"]];
-                        theme.shippingOption2 = [NSURL URLWithString:valuesDict[@"kiosk_shipping_option_to_home"]];
-                        theme.startScreenLandscape = [NSURL URLWithString:valuesDict[@"kiosk_start_screen_landscape"]];
-                        theme.startScreenPortrait = [NSURL URLWithString:valuesDict[@"kiosk_start_screen_portrait"]];
-                        theme.termsAndConditions = [NSURL URLWithString:valuesDict[@"kiosk_terms_and_conditions_url"]];
-                        theme.splashScreen = [NSURL URLWithString:valuesDict[@"kiosk_splash_screen"]];
-                        theme.ctaColor = valuesDict[@"kiosk_cta_color"];
-                    }
-                    
-                    if ([themeConfig[@"remove_payment_gateway"] isKindOfClass:[NSNumber class]]){
-                        theme.kioskEnablePayAtTheTill = [themeConfig[@"remove_payment_gateway"] boolValue];
-                    }
-                    
-                    if ([themeConfig[@"promo_code_checkout"] isKindOfClass:[NSNumber class]]){
-                        theme.kioskRequirePromoCode = [themeConfig[@"promo_code_checkout"] boolValue];
-                    }
-                    
-                    if ([themeConfig[@"ship_to_store"] isKindOfClass:[NSDictionary class]]){
-                        NSDictionary *addressDict = themeConfig[@"ship_to_store"];
-                        OLAddress *address = [[OLAddress alloc] init];
-                        address.companyName = addressDict[@"company_name"];
-                        address.line1 = addressDict[@"shipping_address_1"];
-                        address.line2 = addressDict[@"shipping_address_2"];
-                        address.city = addressDict[@"city"];
-                        address.stateOrCounty = addressDict[@"county_state"];
-                        address.zipOrPostcode = addressDict[@"postal_code"];
-                        address.country = [OLCountry countryForCode:addressDict[@"country_code"]];
-                        
-                        theme.kioskShipToStoreAddress = address;
-                    }
-                    
-                    [[OLKiteABTesting sharedInstance] setTheme:theme];
-                }
-                
                 id objects = json[@"objects"];
                 if ([objects isKindOfClass:[NSArray class]]) {
                     for (id productTemplate in objects) {
@@ -211,8 +133,6 @@
                             id costs = productTemplate[@"cost"];
                             id imagesPerSheet = productTemplate[@"images_per_page"];
                             id product = productTemplate[@"product"];
-                            
-                            NSArray *upsellOffers = [productTemplate[@"upsell_offers"] isKindOfClass:[NSArray class]] ? productTemplate[@"upsell_offers"] : nil;
                             
                             NSNumber *enabledNumber = productTemplate[@"enabled"];
                             NSString *description = productTemplate[@"description"];
@@ -547,14 +467,6 @@
                                     if ([blendMode isEqualToString:@"MULTIPLY"]){
                                         t.blendMode = OLImageBlendModeMultiply;
                                     }
-                                    
-                                    NSMutableArray <OLUpsellOffer *>*upsellOffersClean = [[NSMutableArray alloc] init];
-                                    for (NSDictionary *offerDict in upsellOffers){
-                                        if ([offerDict isKindOfClass:[NSDictionary class]]){
-                                            [upsellOffersClean addObject:[OLUpsellOffer upsellOfferWithDictionary:offerDict]];
-                                        }
-                                    }
-                                    t.upsellOffers = upsellOffersClean;
                                     
                                     for (OLProductTemplateCollection *collection in templateCollections){
                                         if ([collection containsTemplateIdentifier:identifier]){

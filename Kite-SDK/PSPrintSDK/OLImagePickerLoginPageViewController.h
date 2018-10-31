@@ -30,5 +30,5 @@
 #import "OLImagePickerPageViewController.h"
 
 @interface OLImagePickerLoginPageViewController : OLImagePickerPageViewController
-
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *labelTopConstraint;
 @end

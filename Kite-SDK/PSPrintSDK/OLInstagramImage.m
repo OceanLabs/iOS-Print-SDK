@@ -33,10 +33,11 @@ static NSString *const kKeyThumbURL = @"co.oceanlabs.InstagramImagePicker.kKeyTh
 static NSString *const kKeyFullURL = @"co.oceanlabs.InstagramImagePicker.kKeyFullURL";
 
 @implementation OLInstagramImage
-- (id)initWithThumbURL:(NSURL *)thumbURL fullURL:(NSURL *)fullURL {
+- (id)initWithThumbURL:(NSURL *)thumbURL fullURL:(NSURL *)fullURL size:(CGSize) size {
     if (self = [super init]) {
         _thumbURL = thumbURL;
         _fullURL = fullURL;
+        _size = size;
     }
     
     return self;
@@ -59,12 +60,14 @@ static NSString *const kKeyFullURL = @"co.oceanlabs.InstagramImagePicker.kKeyFul
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.thumbURL forKey:kKeyThumbURL];
     [aCoder encodeObject:self.fullURL forKey:kKeyFullURL];
+    [aCoder encodeCGSize:self.size forKey:@"size"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         _thumbURL = [aDecoder decodeObjectForKey:kKeyThumbURL];
         _fullURL = [aDecoder decodeObjectForKey:kKeyFullURL];
+        _size = [aDecoder decodeCGSizeForKey:@"size"];
     }
     
     return self;
@@ -73,7 +76,7 @@ static NSString *const kKeyFullURL = @"co.oceanlabs.InstagramImagePicker.kKeyFul
 #pragma mark - NSCopying protocol methods
 
 - (id)copyWithZone:(NSZone *)zone {
-    OLInstagramImage *copy = [[OLInstagramImage allocWithZone:zone] initWithThumbURL:self.thumbURL fullURL:self.fullURL];
+    OLInstagramImage *copy = [[OLInstagramImage allocWithZone:zone] initWithThumbURL:self.thumbURL fullURL:self.fullURL size:self.size];
     return copy;
 }
 

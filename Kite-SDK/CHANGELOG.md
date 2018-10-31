@@ -1,3 +1,22 @@
+# 7.0.0
+- New: Photobook building experience
+- New: Checkout experience
+- Improved: Cleaned up the design
+- Improved: Loading time of the Print Shop
+- Changed: Launching directly to the basket does not require syncing templates which makes loading much faster
+- Removed: Alternative journeys when launching to basket such as showing a product overview and showing the product edit screen before the basket.
+- Changed: If an order fails, the next time the SDK is launched the upload screen will show and will try to submit the order again.
+- Removed: Order history
+- Removed: Editing basket items
+- Removed: Many analytics events
+- Removed: Unused funtionality like the Promo Banner and Upsells
+- Removed: Using prerendered PDF assets and tiff images
+- Removed: Installing via Git Submodules
+- Removed: Installing via Carthage
+- Removed: Unity plugin
+- Removed: Deprecated methods.
+- Note: Theming and localization are not available in the new Photobook and checkout experiences
+
 ## 6.9.0
 - Added: Link to Kite Privacy Policy on the basket screen
 - Added: Hungarian, Polish, Slovak, Czech, Portuguese, Danish, Norwegian, Swedish, Finnish localizations

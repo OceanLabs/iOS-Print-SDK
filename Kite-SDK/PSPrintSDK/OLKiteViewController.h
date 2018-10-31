@@ -30,8 +30,8 @@
 #import <UIKit/UIKit.h>
 #import "OLViewController.h"
 #import "OLImagePickerProviderCollection.h"
+#import "OLPrintJob.h"
 
-@class OLPrintOrder;
 @class OLKiteViewController;
 @class OLAsset;
 @protocol OLCustomPickerController;
@@ -50,14 +50,6 @@
 - (void)kiteControllerDidFinish:(OLKiteViewController * _Nonnull)controller;
 
 /**
- *  Notifies the delegate of an analytics event.
- *
- *  @param info The dictionary containing the information about the event
- */
-- (void)logKiteAnalyticsEventWithInfo:(NSDictionary *_Nonnull)info;
-
-
-/**
  Asks the delegate for a UIViewController image picker to show
 
  @param name The name of the image picker
@@ -65,21 +57,11 @@
  */
 - (UIViewController<OLCustomPickerController> *_Nonnull)imagePickerViewControllerForName:(NSString *_Nonnull)name;
 
-
-
 /**
  For internal use
  */
 - (UIView *_Nonnull)viewForHeaderWithWidth:(CGFloat)width;
 - (UIViewController *_Nonnull)infoPageViewController;
-
-
-- (BOOL)kiteControllerShouldAllowUserToAddMorePhotos:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disallowUserToAddMorePhotos.");
-- (BOOL)kiteControllerShouldDisableCameraRoll:(OLKiteViewController * _Nullable)controller __deprecated_msg("This method will no longer work. Use the OLKiteViewController property disableCameraRoll.");
-- (BOOL)shouldShowPhoneEntryOnCheckoutScreen __deprecated_msg("This method will no longer work.");
-- (BOOL)shouldShowContinueShoppingButton __deprecated_msg("This method will no longer work. Use the OLKiteViewController property hideContinueShoppingButton.");
-- (BOOL)shouldStoreDeliveryAddresses __deprecated_msg("This method will no longer work. Use the OLKiteViewController property discardDeliveryAddresses.");
-- (BOOL)shouldShowOptOutOfEmailsCheckbox __deprecated_msg("This method will no longer work. Use the OLKiteViewController property showOptOutOfEmailsCheckbox.");
 
 @end
 
@@ -114,31 +96,6 @@
 @property (assign, nonatomic) BOOL qrCodeUploadEnabled;
 
 /**
- *  Set to hide the phone entry field at checkout.
- */
-@property (assign, nonatomic) BOOL hidePhoneEntryOnCheckoutScreen __deprecated;
-
-/**
- *  Set to hide the Continue Shopping button on the payment screen. The default value is NO.
- */
-@property (assign, nonatomic) BOOL hideContinueShoppingButton;
-
-/**
- *  Set to discard delivery addresses after the order is placed. The default value is NO.
- */
-@property (assign, nonatomic) BOOL discardDeliveryAddresses;
-
-/**
- *  Set to show a checkbox that allows the user to opt out of emails. The default value is NO.
- */
-@property (assign, nonatomic) BOOL showOptOutOfEmailsCheckbox;
-
-/**
- Set to hide the promo code field on the basket screen
- */
-@property (assign, nonatomic) BOOL hidePromoCodeField;
-
-/**
  Show the Print at Home tile if the HP SDK is installed
  */
 @property (assign, nonatomic) BOOL showPrintAtHome;
@@ -147,16 +104,6 @@
  *  The delegate object that will be notified about certain events
  */
 @property (weak, nonatomic) id<OLKiteDelegate> _Nullable delegate;
-
-/**
- *  Speed up checkout by prepopulating the users email in the Shipping details if you know it
- */
-@property (copy, nonatomic, nullable) NSString *userEmail;
-
-/**
- *  Speed up checkout by prepopulating the users phone number in the Shipping details if you know it
- */
-@property (copy, nonatomic, nullable) NSString *userPhone;
 
 /**
  *  A set of product template_id strings which if present will restrict which products ultimate show up in the product selection journey
@@ -186,16 +133,9 @@
  */
 @property (assign, nonatomic) BOOL preserveExistingTemplates;
 
-
 /**
- Request a view controller that shows the user's complete order history
-
- @return A UINavigationController that is ready to be presented
- */
-+ (UINavigationController *_Nonnull)orderHistoryViewController;
-
-/**
- *  Initializer that accepts an array of OLAssets for the user to personalize their products with
+ *  Initializer that accepts an array of OLAssets for the user to personalize their products with.
+ *  Note: If there is a processing order in progress, the upload screen will be presented on top of the Print Shop and everything will be handled internally. It might be useful to let the user know about that beforehand. Please look at [OLKitePrintSDK isProcessingOrder]
  *
  *  @param assets The array of OLAssets for the user to personalize their products with
  *
@@ -204,16 +144,8 @@
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets;
 
 /**
- *  Initializer that accepts a ready to checkout OLPrintOrder
- *
- *  @param printOrder The printOrder to checkout
- *
- *  @return An instance of OLKiteViewController to present
- */
-- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder;
-
-/**
  *  Initializer that accepts an array of OLAssets for the user to personalize their products with. Provides an extra argument for extra info.
+ *  Note: If there is a processing order in progress, the upload screen will be presented on top of the Print Shop and everything will be handled internally. It might be useful to let the user know about that beforehand. Please look at [OLKitePrintSDK isProcessingOrder]
  *
  *  @param assets The array of OLAssets for the user to personalize their products with
  *  @param info   Extra information that could be useful for analytics
@@ -223,28 +155,11 @@
 - (instancetype _Nullable)initWithAssets:(NSArray <OLAsset *>*_Nonnull)assets info:(NSDictionary *_Nullable)info;
 
 /**
- *  Initializer that accepts a ready to checkout OLPrintOrder. Provides an extra argument for extra info.
- *
- *  @param printOrder The printOrder to checkout
- *  @param info       Extra information that could be useful for analytics
- *
- *  @return An instance of OLKiteViewController to present
- */
-- (instancetype _Nullable)initWithPrintOrder:(OLPrintOrder *_Nullable)printOrder info:(NSDictionary * _Nullable)info;
-
-/**
- *  Clear all the orders that have been saved in the shopping basket.
- */
-- (void)clearBasket;
-
-
-/**
  Start loading the products in the background
 
  @param handler Completion handler that is called when all network requests are finished and the Kite View Controller is ready to be shown.
  */
 - (void)startLoadingWithCompletionHandler:(void(^_Nonnull)(void))handler;
-
 
 /**
  Set the assets to use. Use this if you've previously initialized the Kite View Controller. Otherwise use initWithAssets:
@@ -252,15 +167,6 @@
  @param assets The assets
  */
 - (void)setAssets:(NSArray *_Nonnull)assets;
-
-/**
- Returns the printOrder object that is used to handle the active basket
- 
- Note: A new object may be created when the user has successfully paid for and submitted their basket.
-
- @return the basket print order object
- */
-- (OLPrintOrder *_Nonnull)basketOrder;
 
 /**
  *  Add a custom source for the photo picker
@@ -281,7 +187,6 @@
  *  @param icon An image to be used as an icon (where applicable)
  */
 - (void)addCustomPhotoProviderWithViewController:(UIViewController<OLCustomPickerController> *_Nonnull)vc name:(NSString *_Nonnull)name icon:(UIImage *_Nullable)icon;
-
 
 /**
  *  Add your own photo picker View Controller.

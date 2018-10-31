@@ -66,9 +66,9 @@
         x.tintColor = textColor;
     }
     else{
-        banner.backgroundColor = [UIColor colorWithRed:1.000 green:0.776 blue:0.043 alpha:0.900];
-        label.textColor = [UIColor blackColor];
-        x.tintColor = [UIColor blackColor];
+        banner.backgroundColor = [UIColor lightGrayColor];
+        label.textColor = [UIColor whiteColor];
+        x.tintColor = [UIColor whiteColor];
     }
     
     

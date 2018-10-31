@@ -28,10 +28,10 @@
 //
 
 #import "OLPostcardPrintJob.h"
-#import "OLAddress.h"
-#import "OLCountry.h"
-#import "OLAsset.h"
+#import "OLAsset+Private.h"
 #import "OLProductTemplate.h"
+#import "OLImageDownloader.h"
+#import "OLCountry.h"
 
 static NSString *const kKeyFrontImage = @"co.oceanlabs.pssdk.kKeyFrontImage";
 static NSString *const kKeyBackImage = @"co.oceanlabs.pssdk.kKeyBackImage";
@@ -41,46 +41,22 @@ static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductT
 static NSString *const kKeyPostcardPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPostcardPrintJobOptions";
 static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
-static NSString *const kKeyDateAddedToBasket = @"co.oceanlabs.pssdk.kKeyDateAddedToBasket";
-
-static id stringOrEmptyString(NSString *str) {
-    return str ? str : @"";
-}
 
 @interface OLPostcardPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) OLAsset *frontImageAsset;
 @property (nonatomic, strong) OLAsset *backImageAsset;
+@property (nonatomic, strong) PhotobookAsset *frontPhotobookAsset;
+@property (nonatomic, strong) PhotobookAsset *backPhotobookAsset;
 @property (nonatomic, copy) NSString *message;
 @property (strong, nonatomic) NSMutableDictionary *options;
-
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*declinedOffers;
-@property (strong, nonatomic) NSMutableSet <OLUpsellOffer *>*acceptedOffers;
-@property (strong, nonatomic) OLUpsellOffer *redeemedOffer;
 
 @end
 
 @implementation OLPostcardPrintJob
 
-@synthesize address;
 @synthesize uuid;
 @synthesize extraCopies;
-@synthesize dateAddedToBasket;
-@synthesize selectedShippingMethodIdentifier;
-
--(NSMutableSet *) declinedOffers{
-    if (!_declinedOffers){
-        _declinedOffers = [[NSMutableSet alloc] init];
-    }
-    return _declinedOffers;
-}
-
--(NSMutableSet *) acceptedOffers{
-    if (!_acceptedOffers){
-        _acceptedOffers = [[NSMutableSet alloc] init];
-    }
-    return _acceptedOffers;
-}
 
 -(NSMutableDictionary *) options{
     if (!_options){
@@ -93,44 +69,43 @@ static id stringOrEmptyString(NSString *str) {
     self.options[option] = value;
 }
 
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message address:(OLAddress *)theAddress {
-    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:nil message:message address:theAddress];
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message {
+    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:nil message:message];
 }
 
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset {
-    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:backImageAsset message:nil address:nil];
+    return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:backImageAsset message:nil];
 }
 
-- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset message:(NSString *)message address:(OLAddress *)theAddress {
+- (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset message:(NSString *)message {
     if (self = [super init]) {
         self.uuid = [[NSUUID UUID] UUIDString];
-        self.frontImageAsset = frontImageAsset;
-        self.backImageAsset = backImageAsset;
+        if (frontImageAsset) {
+            self.frontPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[frontImageAsset]].firstObject;
+            self.frontImageAsset = frontImageAsset;
+        }
+        if (backImageAsset) {
+            self.backPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[backImageAsset]].firstObject;
+            self.backImageAsset = backImageAsset;
+        }
         self.message = message;
-        self.address = theAddress;
         self.templateId = templateId;
+        
+        NSString *countryCode = [OLCountry countryForCurrentLocale].codeAlpha3;
+        self.selectedShippingMethod = self.template.availableShippingMethods[countryCode].firstObject;
     }
     return self;
 }
 
-- (NSString *)templateId {
-    return _templateId;
-}
-
-- (NSUInteger)quantity {
-    return 1;
-}
-
-- (NSDecimalNumber *)numberOfItemsInJob{
-    return [NSDecimalNumber decimalNumberWithString:@"1"];
-}
-
-- (NSString *)productName {
-    return [OLProductTemplate templateWithId:self.templateId].name;
-}
-
-- (NSArray *)currenciesSupported {
-    return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
+- (NSArray <PhotobookAsset *> *)assetsToUpload {
+    NSMutableArray <PhotobookAsset *>*assets = [[NSMutableArray alloc] init];
+    if (self.frontImageAsset) {
+        [assets addObject:self.frontPhotobookAsset];
+    }
+    if (self.backImageAsset) {
+        [assets addObject:self.backPhotobookAsset];
+    }
+    return assets;
 }
 
 - (NSArray<OLAsset *> *)assetsForUploading {
@@ -141,6 +116,22 @@ static id stringOrEmptyString(NSString *str) {
     }
 }
 
+- (NSString *)templateId {
+    return _templateId;
+}
+
+- (NSUInteger)quantity {
+    return 1;
+}
+
+- (NSString *)productName {
+    return [OLProductTemplate templateWithId:self.templateId].name;
+}
+
+- (NSArray *)currenciesSupported {
+    return [OLProductTemplate templateWithId:self.templateId].currenciesSupported;
+}
+
 - (NSDictionary *)jsonRepresentation {
     NSMutableDictionary *json = [[NSMutableDictionary alloc] init];
     [json setObject:self.templateId forKey:@"template_id"];
@@ -148,16 +139,22 @@ static id stringOrEmptyString(NSString *str) {
     NSMutableDictionary *assets = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *pdfs = [[NSMutableDictionary alloc] init];
     
-    if (self.frontImageAsset.mimeType == kOLMimeTypePDF){
-        pdfs[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
+//    if (self.frontImageAsset.mimeType == kOLMimeTypePDF){
+//        pdfs[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
+//    }
+    if (self.frontPhotobookAsset.uploadUrl){
+        assets[@"front_image"] = self.frontPhotobookAsset.uploadUrl;
     }
     else{
         assets[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
     }
     
     if (self.backImageAsset){
-        if (self.backImageAsset.mimeType == kOLMimeTypePDF){
-            pdfs[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
+//        if (self.backImageAsset.mimeType == kOLMimeTypePDF){
+//            pdfs[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
+//        }
+        if (self.backPhotobookAsset.uploadUrl){
+            assets[@"back_image"] = self.backPhotobookAsset.uploadUrl;
         }
         else{
             assets[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
@@ -175,26 +172,7 @@ static id stringOrEmptyString(NSString *str) {
     
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
-    
-    if (self.address) {
-        NSDictionary *shippingAddress = @{@"recipient_name": stringOrEmptyString(self.address.fullNameFromFirstAndLast),
-                                          @"recipient_first_name": stringOrEmptyString(self.address.recipientFirstName),
-                                          @"recipient_last_name": stringOrEmptyString(self.address.recipientLastName),
-                                          @"address_line_1": stringOrEmptyString(self.address.line1),
-                                          @"address_line_2": stringOrEmptyString(self.address.line2),
-                                          @"city": stringOrEmptyString(self.address.city),
-                                          @"county_state": stringOrEmptyString(self.address.stateOrCounty),
-                                          @"postcode": stringOrEmptyString(self.address.zipOrPostcode),
-                                          @"country_code": stringOrEmptyString(self.address.country.codeAlpha3)
-                                          };
-        [json setObject:shippingAddress forKey:@"shipping_address"];
-    }
-    
-    NSString *countryCode = self.address.country ? [self.address.country codeAlpha3] : [[OLCountry countryForCurrentLocale] codeAlpha3];
-    NSString *region = [OLProductTemplate templateWithId:self.templateId].countryMapping[countryCode];
-    if (region){
-        json[@"shipping_class"] = [NSNumber numberWithInteger:self.selectedShippingMethodIdentifier];
-    }
+    json[@"shipping_class"] = [NSNumber numberWithInteger:selectedShippingMethod.id];
     
     return json;
 }
@@ -210,11 +188,10 @@ static id stringOrEmptyString(NSString *str) {
     if (self.frontImageAsset) val *= [self.frontImageAsset hash];
     if (self.backImageAsset) val *= [self.backImageAsset hash];
     if (self.message && [self.message hash] > 0) val *= [self.message hash];
-    if (self.address) val *= [self.address hash];
     if (self.extraCopies) val *= self.extraCopies+1;
     val = 18 * val + [self.options hash];
     val = 41 * val + [self.uuid hash];
-    val = 42 * val + self.selectedShippingMethodIdentifier;
+    val = 42 * val + [self.selectedShippingMethod hash];
     
     return val;
 }
@@ -233,8 +210,8 @@ static id stringOrEmptyString(NSString *str) {
     if (self.frontImageAsset) result &= [self.frontImageAsset isEqual:printJob.frontImageAsset];
     if (self.backImageAsset) result &= [self.backImageAsset isEqual:printJob.backImageAsset];
     if (self.message) result &= [self.message isEqual:printJob.message];
-    if (self.address) result &= [self.address isEqual:printJob.address];
     result &= [self.options isEqualToDictionary:printJob.options];
+    if (self.selectedShippingMethod) result &= [self.selectedShippingMethod isEqual:printJob.selectedShippingMethod];
     return result;
 }
 
@@ -244,30 +221,98 @@ static id stringOrEmptyString(NSString *str) {
     [aCoder encodeObject:self.frontImageAsset forKey:kKeyFrontImage];
     [aCoder encodeObject:self.backImageAsset forKey:kKeyBackImage];
     [aCoder encodeObject:self.message forKey:kKeyMessage];
-    [aCoder encodeObject:self.address forKey:kKeyAddress];
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
     [aCoder encodeObject:self.options forKey:kKeyPostcardPrintJobOptions];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
-    [aCoder encodeObject:self.dateAddedToBasket forKey:kKeyDateAddedToBasket];
-    [aCoder encodeInteger:self.selectedShippingMethodIdentifier forKey:@"selectedShippingMethodIdentifier"];
+    [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.frontImageAsset = [aDecoder decodeObjectForKey:kKeyFrontImage];
         self.backImageAsset = [aDecoder decodeObjectForKey:kKeyBackImage];
+        if (self.frontImageAsset) {
+            self.frontPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[self.frontImageAsset]].firstObject;
+        }
+        if (self.backImageAsset) {
+            self.backPhotobookAsset = [OLAsset photobookAssetsFromAssets:@[self.backImageAsset]].firstObject;
+        }
         self.message = [aDecoder decodeObjectForKey:kKeyMessage];
-        self.address = [aDecoder decodeObjectForKey:kKeyAddress];
         self.templateId = [aDecoder decodeObjectForKey:kKeyProductTemplateId];
+        if (!self.template) {
+            return nil;
+        }
         self.options = [aDecoder decodeObjectForKey:kKeyPostcardPrintJobOptions];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
-        self.dateAddedToBasket = [aDecoder decodeObjectForKey:kKeyDateAddedToBasket];
-        self.selectedShippingMethodIdentifier = [aDecoder decodeIntegerForKey:@"selectedShippingMethodIdentifier"];
+        self.selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
     }
     
     return self;
+}
+
+#pragma mark - Product
+
+- (NSInteger) hashValue {
+    return [self hash];
+}
+
+- (void)setIdentifier:(NSString *)s {
+    self.uuid = s;
+}
+
+- (NSString *)identifier {
+    return self.uuid;
+}
+
+- (void)setItemCount:(NSInteger)itemCount {
+    self.extraCopies = itemCount - 1;
+}
+
+- (NSInteger)itemCount {
+    return self.extraCopies + 1;
+}
+
+@synthesize selectedShippingMethod;
+
+- (OLProductTemplate *)template {
+    if (![OLProductTemplate templateWithId:self.templateId]){
+        OLProductTemplate *template = [[OLProductTemplate alloc] init];
+        template.identifier = self.templateId;
+        return template;
+    }
+    return [OLProductTemplate templateWithId:self.templateId];
+}
+
+- (NSDictionary<NSString *,id> * _Nullable)orderParameters {
+    return self.jsonRepresentation;
+}
+
+- (NSDictionary<NSString *,id> * _Nullable)costParameters {
+    return self.jsonRepresentation;
+}
+
+- (void)previewImageWithSize:(CGSize)size completionHandler:(void (^ _Nonnull)(UIImage * _Nullable))completionHandler {
+    if (![OLProductTemplate templateWithId:self.templateId]){
+        [OLProductTemplate syncTemplateId:self.templateId withCompletionHandler:^(NSArray <OLProductTemplate *>*templates, NSError *error){
+            [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completionHandler(image);
+                });
+            }];
+        }];
+        return;
+    }
+    [[OLImageDownloader sharedInstance] downloadImageAtURL:[OLProductTemplate templateWithId:self.templateId].coverPhotoURL withCompletionHandler:^(UIImage *image, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionHandler(image);
+        });
+    }];
+}
+
+- (void)processUploadedAssetsWithCompletionHandler:(void (^ _Nonnull)(NSError * _Nullable))completionHandler {
+    completionHandler(nil);
 }
 
 @end

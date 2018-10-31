@@ -1,60 +1,24 @@
 ENGLISH/INTERNAL,TO TRANSLATE,COMMENT/CONTEXT
-%@ working days,%@ working days,"/* Examples: 2-5 working days, 7 working days */"
 %ldx%ld Collage,%ldx%ld Collage,/* example: 5x7 Collage */
 "**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!","**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!",
-1 working day,1 working day,
-401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,401 Unauthorized Request Error whilst trying to upload an asset. Please check you included an Authorization header and that the supplied auth credentials are correct.,
-500 Internal Server Error whilst trying to upload an asset. Please try again.,500 Internal Server Error whilst trying to upload an asset. Please try again.,
-Add,Add,
-Add %ld %@!,Add %ld %@!,
-Add a %@!,Add a %@!,
 Add a photo\non this side,Add a photo\non this side,/* this side [of the shirt] */
-Add Address,Add Address,
-Add another %@!,Add another %@!,
-Add Credit Card,Add Credit Card,
-Add Credit Card (TEST),Add Credit Card (TEST),
-Add Credit/Debit Card,Add Credit/Debit Card,
 Add more,Add more,/* Add more [photos] */
-Add New Address,Add New Address,
-Add Payment Method,Add Payment Method,
 Add Text,Add Text,/* Add text on image */
 Add to Basket,Add to Basket,
-Address Book,Address Book,
 All Photos,All Photos,
 Alternatively type the following URL into your mobile browser's address bar,Alternatively type the following URL into your mobile browser's address bar,
-Are you sure you want to delete this item?,Are you sure you want to delete this item?,/* Refers to a basket item */
 Are you sure?,Are you sure?,
 Authorise,Authorise,
-Back,Back,
 BACK,BACK,/* Back of the photo */
+Back,Back,
 Back Image Is Too Small,Back Image Is Too Small,
-Basket is empty,Basket is empty,
 Cancel,Cancel,
-Card Number,Card Number,
-Checking Code,Checking Code,/* Checking promo code */
-Checkout,Checkout,
-Checkout for Free!,Checkout for Free!,
-Choose Address,Choose Address,
-Choose Country,Choose Country,
-Choose Delivery Address,Choose Delivery Address,
 Choose Photo,Choose Photo,
 Choose Photos,Choose Photos,
-City,City,
-Clearing Code,Clearing Code,/* Clearing promo code */
 cm,cm,/* Centimeters */
-Completed Orders,Completed Orders,
-Continue Shopping,Continue Shopping,
-County,County,
-Create a %@ for\nonly %@ %@,Create a %@ for\nonly %@ %@,
-Create a pack for\nonly %@ %@,Create a pack for\nonly %@ %@,
-Create another %@ for\nonly %@ %@,Create another %@ for\nonly %@ %@,
-Create another pack for\nonly %@ %@,Create another pack for\nonly %@ %@,
 Create Image,Create Image,
 Crop,Crop,/* Crop image */
-CVV,CVV,/* The credit card security code */
 Default,Default,
-Delete Item,Delete Item,/* Delete [basket item] */
-Delivery Details,Delivery Details,
 Description,Description,/* Product description */
 Details,Details,/* Product Details */
 Discard Edits,Discard Edits,
@@ -62,86 +26,39 @@ Do you want to log out of %@?,Do you want to log out of %@?,/* Log out of Instag
 Do you want to remove this photo?,Do you want to remove this photo?,
 Done,Done,
 Edit,Edit,/* Edit image */
-Edit Address,Edit Address,
-Email,Email,
 End Session,End Session,
-Enter a valid card number,Enter a valid card number,
-Enter a valid CVV number,Enter a valid CVV number,/* The credit card security number */
-Enter a valid expiry date,Enter a valid expiry date,/* For credit cards */
-Enter Address Manually,Enter Address Manually,
-Error validating the order. Please try again later.,Error validating the order. Please try again later.,
 Failed to download phone case mask. Please check your internet connectivity and try again,Failed to download phone case mask. Please check your internet connectivity and try again,
-Failed to get the price of the order. Please try again.,Failed to get the price of the order. Please try again.,
 Failed to get upload URL. Try again later.,Failed to get upload URL. Try again later.,
 Failed to log in to Instagram. Please check your internet connectivity and try again,Failed to log in to Instagram. Please check your internet connectivity and try again,
-Failed to store card details with PayPal. Please try again.,Failed to store card details with PayPal. Please try again.,
 Failed to synchronize product templates. Please try again.,Failed to synchronize product templates. Please try again.,
-"Failed to validate card details, please try again.","Failed to validate card details, please try again.",
-Failed to validate the order. Please try again.,Failed to validate the order. Please try again.,
 Filters,Filters,/* Image filters */
-First Name,First Name,
 Flip,Flip,/* Horizontally flip image */
 Fonts,Fonts,
 For only %@ extra,For only %@ extra,/* [Add a photo on this side of the shirt] for only $4.00 extra */
-FREE,FREE,"/* Free, no cost */"
 From,From,
 FRONT,FRONT,/* Front of the photo */
-Great gifts for all the family,Great gifts for all the family,
 Image Is Too Small,Image Is Too Small,
 IMAGE TOOLS,IMAGE TOOLS,
-Image upload failed with a %lu HTTP response status code. Please try again.,Image upload failed with a %lu HTTP response status code. Please try again.,
 inches,inches,
-Invalid Email Address,Invalid Email Address,
-Invalid Phone Number,Invalid Phone Number,
 Large,Large,
-Last Name,Last Name,
 Let's pick\nan image!,Let's pick\nan image!,"/* Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half. */"
-Line 1,Line 1,
-Line 2,Line 2,
 Log In,Log In,
 Log out,Log out,
 Login,Login,
 Maximum Photos Reached,Maximum Photos Reached,
 Medium,Medium,
-Missing Delivery Address,Missing Delivery Address,
-MM/YY,MM/YY,/* Credit card date format: MonthMonth/YearYear */
 MORE ITEMS\nCOMING SOON!,MORE ITEMS\nCOMING SOON!,
-Move Pages,Move Pages,/* Title of a screen that allows the user to move the pages of a book around */
-New Payment,New Payment,
 Next,Next,
 No,No,
-No Thanks,No Thanks,
 "No, keep it","No, keep it","/* No, keep [the photo] */"
-Not now,Not now,
 OK,OK,/* Acknowledgent to an alert dialog. */
-Only registered %d/%d image URLs with the asset endpoint,Only registered %d/%d image URLs with the asset endpoint,
 Oops!,Oops!,
-OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,OOPS\nSOMETHING WENT WRONG\n PLEASE RETRY BELOW,
 Or print on a product below ▼,Or print on a product below ▼,
-Order History,Order History,
-Order Id,Order Id,
-Order Summary,Order Summary,
 Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.,Our store is currently undergoing maintenance so no products are available for purchase at this time. Please try again a little later.,
 Pack of,Pack of,/* Pack of [20 square photos] */
-Pay %@,Pay %@,/* Pay [$10.00] */
-Paying With,Paying With,/* Paying with [PayPal/Credit Card] */
-Payment,Payment,
-Payment (TEST),Payment (TEST),
-Payment Method,Payment Method,
-Phone,Phone,
 Photo Library,Photo Library,
 Please add %d more.,Please add %d more.,/* Please add [a number] more [photos] */
 Please add some photos,Please add some photos,
-Please add some photos to your photo book,Please add some photos to your photo book,
-Please choose an address to have your order shipped to,Please choose an address to have your order shipped to,
-Please enter a card expiry date in the future,Please enter a card expiry date in the future,/* For credit cards */
-Please enter a valid card number,Please enter a valid card number,
-Please enter a valid email address,Please enter a valid email address,
-Please enter a valid phone number,Please enter a valid phone number,
-Please enter your first and last name.,Please enter your first and last name.,
-Please fill in Line 1 of the address.,Please fill in Line 1 of the address.,
-Please fill in your city.,Please fill in your city.,
-Please fill in your postal code.,Please fill in your postal code.,
 Please scan the QR code using a QR reader app on your device.,Please scan the QR code using a QR reader app on your device.,
 Please select %d images.,Please select %d images.,/* Please select [number] images */
 Please select %ld photos,Please select %ld photos,
@@ -151,23 +68,15 @@ Please select only %ld photo,Please select only %ld photo,
 Please select some images.,Please select some images.,
 Please select up to %ld photos,Please select up to %ld photos,
 Please zoom out or pick a higher quality image,Please zoom out or pick a higher quality image,
-Postcode,Postcode,
 Price,Price,
 PRINT AT HOME,PRINT AT HOME,
 Print It Anyway,Print It Anyway,
-Print order submission failed with a %lu HTTP response status code. Please try again.,Print order submission failed with a %lu HTTP response status code. Please try again.,
 Print Shop,Print Shop,
 Print these,Print these,
-Privacy Policy,Privacy Policy,
-Processing,Processing,/* Processing the order */
 PRODUCT OPTIONS,PRODUCT OPTIONS,
-Promo Code,Promo Code,
-Promotional Discount,Promotional Discount,
 Quantity,Quantity,/* Quantity of photos */
-Receipt,Receipt,
 Recents,Recents,/* Recent photos used */
 Remove?,Remove?,/* Remove [photo]? */
-Required by the postal service in case there are any issues during delivery.,Required by the postal service in case there are any issues during delivery.,
 Retry,Retry,
 Review,Review,/* Title of a screen where the user can review the product before ordering */
 Rotate,Rotate,/* Rotate image by 90 degrees */
@@ -176,7 +85,6 @@ Save as Copy,Save as Copy,
 Scan QR Code,Scan QR Code,
 Select Size,Select Size,/* Example: Shirt size */
 Shipping,Shipping,
-Shipping Method,Shipping Method,
 Single Photo Poster,Single Photo Poster,
 Size,Size,/* Physical size of the product */
 Small,Small,
@@ -193,29 +101,14 @@ Text Colour,Text Colour,
 TEXT TOOLS,TEXT TOOLS,
 There was a problem getting Print Shop products. Check your Internet connectivity or try again later.,There was a problem getting Print Shop products. Check your Internet connectivity or try again later.,
 There was an error getting one of your photos. Please remove or replace it.,There was an error getting one of your photos. Please remove or replace it.,
-There was an error trying to validate the card. Please try again later.,There was an error trying to validate the card. Please try again later.,
-This is the 3-4 digit verification number/security code normally found on the back of your card,This is the 3-4 digit verification number/security code normally found on the back of your card,
 This will discard your edits.,This will discard your edits.,"/* The image edits, like crop, filters, etc */"
 "This will log out of any accounts, clear selected photos and start over","This will log out of any accounts, clear selected photos and start over",
-Total,Total,
-Tracked,Tracked,
-Uploading book,Uploading book,
-Uploading Images \n%lu / %lu,Uploading Images \n%lu / %lu,
-View Item,View Item,/* View [basket] item */
-WE HAVE RECEIVED\nYOUR ORDER,WE HAVE RECEIVED\nYOUR ORDER,
 We need access to your %@ photos,We need access to your %@ photos,/* Example: We need access to your iPhone photos */
-We'll send you confirmation and order updates.,We'll send you confirmation and order updates.,
-We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,We'll send you confirmation and order updates. Uncheck this box to opt out of email campaigns.,
 Yes,Yes,
-Yes Please,Yes Please,
 "Yes, remove it","Yes, remove it","/* Yes, remove [the photo] */"
 You can add %d more for the same price.,You can add %d more for the same price.,
 You need to authorize the app to access your Instagram account if you want to import photos from there.,You need to authorize the app to access your Instagram account if you want to import photos from there.,
 You've only selected %d photo.,You've only selected %d photo.,
 You've only selected %d photos.,You've only selected %d photos.,
 You've selected %d photos.,You've selected %d photos.,
-Your 15-16 digit card number,Your 15-16 digit card number,
-Your card expiry date,Your card expiry date,
-Your payment was not approved (transaction state: %@). Please try again.,Your payment was not approved (transaction state: %@). Please try again.,
 Your Phone,Your Phone,"/* Device, not number */"
-ZIP Code,ZIP Code,

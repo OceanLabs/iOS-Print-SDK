@@ -28,7 +28,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OLPrintOrder.h"
 #import "OLKiteViewController.h"
 #import "OLViewController.h"
 
@@ -37,7 +36,4 @@
 @interface OLProductOverviewViewController : OLViewController
 @property (strong, nonatomic) OLProduct *product;
 @property (weak, nonatomic) id<OLKiteDelegate> delegate;
-
-@property (copy, nonatomic) NSString *userEmail;
-@property (copy, nonatomic) NSString *userPhone;
 @end

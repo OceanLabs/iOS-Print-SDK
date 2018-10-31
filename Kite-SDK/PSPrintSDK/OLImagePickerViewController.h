@@ -44,7 +44,7 @@
 
 @end
 
-@interface OLImagePickerViewController : OLViewController
+@interface OLImagePickerViewController : OLViewController <PhotobookAssetPicker>
 
 @property (strong, nonatomic) OLProduct *product;
 @property (weak, nonatomic) IBOutlet UIButton *ctaButton;

@@ -27,7 +27,10 @@
 //  THE SOFTWARE.
 //
 
-typedef NS_ENUM(NSInteger, OLKitePrintSDKEnvironment) {
-    OLKitePrintSDKEnvironmentLive,
-    OLKitePrintSDKEnvironmentSandbox,
-};
+#import "OLNavigationController.h"
+
+@import Photobook;
+
+@interface OLImagePickerNavigationControllerViewController : OLNavigationController <PhotobookAssetPicker>
+
+@end

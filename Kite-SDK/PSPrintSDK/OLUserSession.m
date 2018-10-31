@@ -29,12 +29,8 @@
 
 #import "OLUserSession.h"
 #import "OLKiteUtils.h"
-#import "OLOAuth2AccountStore.h"
 #import "OLAsset+Private.h"
-#import "OLPayPalCard.h"
-#import "OLStripeCard.h"
 #import "OLKiteABTesting.h"
-#import "OLAddress+AddressBook.h"
 #import "OLFacebookSDKWrapper.h"
 #import "OLImagePickerProvider.h"
 #import "OLKiteViewController.h"
@@ -42,11 +38,13 @@
 #import "OLKiteViewController+Private.h"
 #include <sys/sysctl.h>
 #import "OLKitePrintSDK.h"
+#import "OLImagePickerViewController.h"
+#import "OLNavigationController.h"
+#import "OLImagePickerNavigationControllerViewController.h"
+#import "NSObject+Utils.h"
 
-@interface OLPrintOrder (Private)
-- (void)saveOrder;
-+ (id)loadOrder;
-@end
+@import Photobook;
+@import NXOAuth2Client;
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
@@ -67,12 +65,6 @@
 -(NSMutableArray *) userSelectedAssets{
     if (!_userSelectedAssets){
         _userSelectedAssets = [[NSMutableArray alloc] init];
-        
-        if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-            for (OLAsset *asset in self.appAssets){
-                [_userSelectedAssets addObject:asset];
-            }
-        }
     }
     return _userSelectedAssets;
 }
@@ -82,16 +74,6 @@
         _recentPhotos = [[NSMutableArray alloc] init];
     }
     return _recentPhotos;
-}
-
--(OLPrintOrder *) printOrder{
-    if (!_printOrder){
-        _printOrder = [OLPrintOrder loadOrder];
-    }
-    if (!_printOrder){
-        _printOrder = [[OLPrintOrder alloc] init];
-    }
-    return _printOrder;
 }
 
 - (void)resetUserSelectedPhotos{
@@ -134,9 +116,9 @@
         }
     }
     
-    NSArray *instagramAccounts = [[OLOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-    for (OLOAuth2Account *account in instagramAccounts) {
-        [[OLOAuth2AccountStore sharedStore] removeAccount:account];
+    NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
+    for (NXOAuth2Account *account in instagramAccounts) {
+        [[NXOAuth2AccountStore sharedStore] removeAccount:account];
     }
 }
 
@@ -157,20 +139,16 @@
         }
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionBasket) == OLUserSessionCleanupOptionBasket){
-        self.printOrder = [[OLPrintOrder alloc] init];
-        [self.printOrder saveOrder];
+        [[Checkout shared] clearBasketOrder];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionPayment) == OLUserSessionCleanupOptionPayment){
-        [OLPayPalCard clearLastUsedCard];
-        [OLStripeCard clearLastUsedCard];
+        
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionSocial) == OLUserSessionCleanupOptionSocial){
         [self logoutOfInstagram];
         [self logoutOfFacebook];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionPersonal) == OLUserSessionCleanupOptionPersonal){
-        [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientLastName = nil;
-        [OLKiteABTesting sharedInstance].theme.kioskShipToStoreAddress.recipientFirstName = nil;
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyEmailAddress"];
@@ -185,7 +163,6 @@
         [defaults removeObjectForKey:@"co.oceanlabs.pssdk.kKeyCountry"];
         [defaults synchronize];
         
-        [OLAddress clearAddressBook];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionAll) == OLUserSessionCleanupOptionAll){
         [self cleanupUserSession:OLUserSessionCleanupOptionPhotos | OLUserSessionCleanupOptionBasket | OLUserSessionCleanupOptionSocial | OLUserSessionCleanupOptionPersonal];
@@ -204,17 +181,7 @@
 }
 
 - (BOOL)shouldLoadTemplatesProgressively{
-    if ([OLKiteABTesting sharedInstance].launchedWithPrintOrder){
-        return NO;
-    }
-    if (self.kiteVc.filterProducts.count > 0){
-        return NO;
-    }
-    if (self.deeplink){
-        return NO;
-    }
-    
-    return YES;
+    return NO;
 }
 
 
@@ -231,6 +198,25 @@
     
     free(answer);
     return results;
+}
+
+- (void)wantsToDismiss:(UIViewController *)viewController {
+    if (!self.kiteVc){
+        [viewController dismissViewControllerAnimated:YES completion:NULL];
+    }
+    else if ([viewController isKindOfClass:[NSClassFromString(@"Photobook.PhotobookViewController") class]]){
+        [viewController.navigationController popViewControllerAnimated:YES];
+    } else {
+        [viewController.navigationController popToRootViewControllerAnimated:YES];
+    }
+}
+
+- (id<PhotobookAssetPicker>) assetPickerViewController {
+    OLImagePickerViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
+    vc.selectedAssets = [[NSMutableArray alloc] init];
+    vc.maximumPhotos = 1;
+    
+    return [[OLImagePickerNavigationControllerViewController alloc] initWithRootViewController:vc];
 }
 
 @end

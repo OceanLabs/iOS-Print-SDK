@@ -29,10 +29,11 @@
 
 #import <Foundation/Foundation.h>
 #import "OLProductTemplateOption.h"
-#import "OLUpsellOffer.h"
 #import "OLProductRepresentation.h"
 #import "OLFulfilmentItem.h"
 #import "OLShippingClass.h"
+
+@import Photobook;
 
 typedef void (^TemplateSyncHandler)(NSError *_Nullable error);
 
@@ -64,8 +65,8 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 @class OLProductTemplateSyncRequest;
 @class OLCountry;
 
-@interface OLProductTemplate : NSObject <NSCoding>
-@property (nonatomic, copy, readonly) NSString *_Nonnull identifier;
+@interface OLProductTemplate : NSObject <NSCoding, Template>
+@property (nonatomic, copy) NSString *_Nonnull identifier;
 @property (nonatomic, copy, readonly) NSString *_Nonnull name;
 @property (nonatomic, assign, readonly) NSUInteger quantityPerSheet;
 @property (nonatomic, assign, readonly) BOOL enabled;
@@ -94,7 +95,6 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 @property (strong, nonatomic) NSString *_Nullable productDescriptionMarkdown;
 @property (assign, nonatomic) NSInteger gridCountX;
 @property (assign, nonatomic) NSInteger gridCountY;
-@property (strong, nonatomic) NSArray <OLUpsellOffer *>*_Nullable upsellOffers;
 @property (strong, nonatomic) NSArray <OLProductTemplateOption *>*_Nullable options;
 @property (strong, nonatomic) OLProductRepresentation *_Nullable productRepresentation;
 @property (assign, nonatomic) BOOL printInStore;
@@ -114,6 +114,7 @@ typedef NS_ENUM(NSInteger, OLImageBlendMode) {
 
 + (void)sync;
 + (void)syncWithCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;
++ (void)syncTemplateId:(NSString *_Nullable)templateId withCompletionHandler:(void(^_Nullable)(NSArray <OLProductTemplate *>* _Nullable templates, NSError * _Nullable error))handler;
 + (BOOL)isSyncInProgress;
 + (void)cancelSyncInProgress;
 + (OLProductTemplate *_Nullable)templateWithId:(NSString *_Nonnull)identifier;
