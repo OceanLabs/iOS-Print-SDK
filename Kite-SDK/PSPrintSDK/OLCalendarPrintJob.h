@@ -6,7 +6,7 @@
 //  Copyright © 2018 Kite.ly. All rights reserved.
 //
 
-#import <KiteSDK/KiteSDK.h>
+#import "OLProductPrintJob.h"
 
 @interface OLCalendarPrintJob : OLProductPrintJob
 
