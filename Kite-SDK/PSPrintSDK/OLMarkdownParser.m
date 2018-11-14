@@ -8,19 +8,19 @@
 
 #import "OLMarkdownParser.h"
 
-@interface TSExpressionBlockPair : NSObject
+@interface OLTSExpressionBlockPair : NSObject
 
 @property (nonatomic, strong) NSRegularExpression *regularExpression;
 @property (nonatomic, strong) OLMarkDownParserMatchBlock block;
 
-+ (TSExpressionBlockPair *)pairWithRegularExpression:(NSRegularExpression *)regularExpression block:(OLMarkDownParserMatchBlock)block;
++ (OLTSExpressionBlockPair *)pairWithRegularExpression:(NSRegularExpression *)regularExpression block:(OLMarkDownParserMatchBlock)block;
 
 @end
 
-@implementation TSExpressionBlockPair
+@implementation OLTSExpressionBlockPair
 
-+ (TSExpressionBlockPair *)pairWithRegularExpression:(NSRegularExpression *)regularExpression block:(OLMarkDownParserMatchBlock)block {
-    TSExpressionBlockPair *pair = [TSExpressionBlockPair new];
++ (OLTSExpressionBlockPair *)pairWithRegularExpression:(NSRegularExpression *)regularExpression block:(OLMarkDownParserMatchBlock)block {
+    OLTSExpressionBlockPair *pair = [OLTSExpressionBlockPair new];
     pair.regularExpression = regularExpression;
     pair.block = block;
     return pair;
@@ -286,7 +286,7 @@ static NSString *const OLMarkDownEmRegex        = @"([\\*|_]{1}).+?\\1";
 
 - (void)addParsingRuleWithRegularExpression:(NSRegularExpression *)regularExpression withBlock:(OLMarkDownParserMatchBlock)block {
     @synchronized (self) {
-        [self.parsingPairs addObject:[TSExpressionBlockPair pairWithRegularExpression:regularExpression block:block]];
+        [self.parsingPairs addObject:[OLTSExpressionBlockPair pairWithRegularExpression:regularExpression block:block]];
     }
 }
 
@@ -312,7 +312,7 @@ static NSString *const OLMarkDownEmRegex        = @"([\\*|_]{1}).+?\\1";
     }
     
     @synchronized (self) {
-        for (TSExpressionBlockPair *expressionBlockPair in self.parsingPairs) {
+        for (OLTSExpressionBlockPair *expressionBlockPair in self.parsingPairs) {
             NSTextCheckingResult *match;
             while((match = [expressionBlockPair.regularExpression firstMatchInString:mutableAttributedString.string options:0 range:NSMakeRange(0, mutableAttributedString.string.length)])){
                 expressionBlockPair.block(match, mutableAttributedString);
