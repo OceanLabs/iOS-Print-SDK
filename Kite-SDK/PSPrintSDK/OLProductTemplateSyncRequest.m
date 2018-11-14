@@ -40,6 +40,9 @@
 #import "OLUserSession.h"
 #import "OLShippingClass.h"
 
+@import PayPalDynamicLoader;
+@import Stripe;
+
 @interface OLProductTemplateSyncRequest ()
 @property (nonatomic, strong) OLBaseRequest *req;
 @property (strong, nonatomic) NSURL *nextPage;
@@ -49,10 +52,6 @@
 
 + (NSString *)apiEndpoint;
 + (NSString *)apiVersion;
-+ (void)setPayPalAccountId:(NSString *)accountId;
-+ (void)setPayPalPublicKey:(NSString *)publicKey;
-+ (void)setStripeAccountId:(NSString *)accountId;
-+ (void)setStripePublicKey:(NSString *)publicKey;
 
 @end
 
@@ -91,6 +90,31 @@
                     id next = meta[@"next"];
                     if ([next isKindOfClass:[NSString class]]) {
                         self.nextPage = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [OLKitePrintSDK apiEndpoint], next]];
+                    }
+                }
+                
+                id paymentKeys = json[@"payment_keys"];
+                if ([paymentKeys isKindOfClass:[NSDictionary class]]){
+                    id paypalKeys = paymentKeys[@"paypal"];
+                    if([paypalKeys isKindOfClass:[NSDictionary class]]){
+                        id publicKey = paypalKeys[@"public_key"];
+                        if ([publicKey isKindOfClass:[NSString class]]){
+                            if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox){
+                                [OLPayPalWrapper initializeWithClientIdsForEnvironments:@{@"sandbox": publicKey}];
+                                [OLPayPalWrapper preconnectWithEnvironment:@"sandbox"];
+                            } else {
+                                [OLPayPalWrapper initializeWithClientIdsForEnvironments:@{@"live": publicKey}];
+                                [OLPayPalWrapper preconnectWithEnvironment:@"live"];
+                            }
+                        }
+                    }
+                    
+                    id stripeKeys = paymentKeys[@"stripe"];
+                    if([stripeKeys isKindOfClass:[NSDictionary class]]){
+                        id publicKey = stripeKeys[@"public_key"];
+                        if ([publicKey isKindOfClass:[NSString class]]){
+                            [Stripe setDefaultPublishableKey:publicKey];
+                        }
                     }
                 }
                 

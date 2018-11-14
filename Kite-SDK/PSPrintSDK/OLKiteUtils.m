@@ -120,26 +120,6 @@
     return YES;
 }
 
-+(BOOL)isApplePayAvailable{
-    if (![OLKitePrintSDK appleMerchantID] || [[OLKitePrintSDK appleMerchantID] isEqualToString:@""] || [OLKitePrintSDK isKiosk]){
-        return NO;
-    }
-    
-    return [Stripe deviceSupportsApplePay];
-}
-
-+ (NSArray<NSString *> *)supportedPKPaymentNetworks {
-    NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
-    if ((&PKPaymentNetworkDiscover) != NULL) {
-        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
-    }
-    return supportedNetworks;
-}
-
-+ (BOOL)isPayPalAvailable{
-    return [OLPayPalWrapper isPayPalAvailable];
-}
-
 + (UIFont *)fontWithName:(NSString *)name size:(CGFloat)size{
     UIFont *font = [UIFont fontWithName:name size:size];
     if (!font){

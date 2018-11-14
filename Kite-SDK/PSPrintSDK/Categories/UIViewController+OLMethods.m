@@ -48,9 +48,6 @@
 - (void)kioskLogout;
 @end
 
-@interface UIViewController () <DismissDelegate>
-@end
-
 @implementation UIViewController (OLMethods)
 
 - (void)addBasketIconToTopRight{
@@ -148,7 +145,9 @@
 }
 
 - (IBAction)onButtonBasketClicked:(UIBarButtonItem *)sender {    
-    UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES delegate:self];
+    UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES dismissClosure:^(UIViewController *viewController, BOOL success){
+        [viewController dismissViewControllerAnimated:YES completion:NULL];
+    }];
     if (checkoutVc) {
         [self presentViewController:checkoutVc animated:YES completion:NULL];
     }
@@ -161,10 +160,6 @@
         }
     }
     return NO;
-}
-
-- (void)wantsToDismiss:(UIViewController *)viewController {
-    [viewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
 @end

@@ -2,8 +2,10 @@ platform :ios, '9.0'
 use_frameworks!
 
 target 'KiteSDK' do
-	pod 'Photobook'
+	pod 'Photobook', :git => 'https://github.com/OceanLabs/Photobook-iOS', :branch => 'print-sdk-fixes'
 	pod 'NXOAuth2Client'
+	pod 'FBSDKLoginKit'
+	pod 'FBSDKCoreKit'
 end
 
 target 'KiteSDK-Demo' do

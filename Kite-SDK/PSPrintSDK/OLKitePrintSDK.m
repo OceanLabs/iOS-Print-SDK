@@ -72,9 +72,9 @@ static NSString *instagramRedirectURI = nil;
     environment = _environment;
     [[PhotobookSDK shared] setKiteApiKey:_apiKey];
     if (environment == OLKitePrintSDKEnvironmentLive) {
-        [[PhotobookSDK shared] setEnvironmentWithEnvironment:EnvironmentLive];
+        [[PhotobookSDK shared] setEnvironment:EnvironmentLive];
     } else {
-        [[PhotobookSDK shared] setEnvironmentWithEnvironment:EnvironmentTest];
+        [[PhotobookSDK shared] setEnvironment:EnvironmentTest];
     }
 }
 
@@ -151,7 +151,9 @@ static NSString *instagramRedirectURI = nil;
 
 + (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info{
     if ([[PhotobookSDK shared] isProcessingOrder]) {
-        return [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES delegate:nil];
+        return [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES dismissClosure:^(UIViewController *viewController, BOOL success){
+            [viewController dismissViewControllerAnimated:YES completion:NULL];
+        }];
     }
     
     [OLAnalytics setExtraInfo:info];
@@ -161,7 +163,16 @@ static NSString *instagramRedirectURI = nil;
         [[Checkout shared] addProductToBasket:(id<Product>)printJob];
     }
     
-    return (UINavigationController *)[[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES delegate:[OLUserSession currentSession]];
+    return (UINavigationController *)[[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES dismissClosure:^(UIViewController *viewController, BOOL success){
+        if (![OLUserSession currentSession].kiteVc){
+            [viewController dismissViewControllerAnimated:YES completion:NULL];
+        }
+        else if ([viewController isKindOfClass:[NSClassFromString(@"Photobook.PhotobookViewController") class]]){
+            [viewController.navigationController popViewControllerAnimated:YES];
+        } else {
+            [viewController.navigationController popToRootViewControllerAnimated:YES];
+        }
+    }];
 }
 
 + (BOOL)isProcessingOrder {
