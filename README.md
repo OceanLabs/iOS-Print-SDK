@@ -3,6 +3,7 @@
 ![Kite](Kite-SDK/docs/kite.png)
 
 ![Platform](https://img.shields.io/badge/platform-iOS-lightgrey.svg)
+![Cocoapods](https://img.shields.io/cocoapods/v/Kite-Print-SDK.svg)
 [![Twitter](https://img.shields.io/badge/twitter-@kite_ly-yellow.svg?style=flat)](http://twitter.com/kite_ly)
 
 The Kite SDK makes it easy to add print on demand functionality to your app.
