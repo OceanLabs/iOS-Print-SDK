@@ -2,15 +2,19 @@ platform :ios, '9.0'
 use_frameworks!
 
 target 'KiteSDK' do
-	pod 'Photobook'
+	pod 'Photobook', :git => 'https://github.com/Oceanlabs/Photobook-iOS.git', :branch => 'remove-fb'
 	pod 'NXOAuth2Client'
 end
 
 target 'KiteSDK-Demo' do
     pod 'PayPal-iOS-SDK/Core'
+    pod 'FBSDKCoreKit'
+    pod 'FBSDKLoginKit'
 end
 
 target 'Kite-CI-Deploy' do
     pod 'PayPal-iOS-SDK/Core'
+    pod 'FBSDKCoreKit'
+    pod 'FBSDKLoginKit'
     pod 'KITAssetsPickerController', :git => 'https://github.com/kkarayannis/KITAssetsPickerController.git'
 end
