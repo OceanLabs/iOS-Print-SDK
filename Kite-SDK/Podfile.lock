@@ -1,5 +1,5 @@
 PODS:
-  - Analytics (3.6.9)
+  - Analytics (3.6.10)
   - Bolts (1.9.0):
     - Bolts/AppLinks (= 1.9.0)
     - Bolts/Tasks (= 1.9.0)
@@ -16,17 +16,17 @@ PODS:
   - NXOAuth2Client (1.2.8)
   - PayPal-iOS-Dynamic-Loader (1.0.1)
   - PayPal-iOS-SDK/Core (2.18.1)
-  - Photobook (1.0.0):
+  - Photobook (1.1.0):
     - Analytics (~> 3.0)
     - KeychainSwift (~> 11.0.0)
     - PayPal-iOS-Dynamic-Loader
     - SDWebImage (~> 4.4.0)
     - Stripe
   - PureLayout (3.0.2)
-  - SDWebImage (4.4.2):
-    - SDWebImage/Core (= 4.4.2)
-  - SDWebImage/Core (4.4.2)
-  - Stripe (13.2.0)
+  - SDWebImage (4.4.3):
+    - SDWebImage/Core (= 4.4.3)
+  - SDWebImage/Core (4.4.3)
+  - Stripe (14.0.0)
 
 DEPENDENCIES:
   - FBSDKCoreKit
@@ -34,7 +34,7 @@ DEPENDENCIES:
   - KITAssetsPickerController (from `https://github.com/kkarayannis/KITAssetsPickerController.git`)
   - NXOAuth2Client
   - PayPal-iOS-SDK/Core
-  - Photobook (from `https://github.com/OceanLabs/Photobook-iOS`, branch `print-sdk-fixes`)
+  - Photobook (from `https://github.com/OceanLabs/Photobook-iOS`, branch `develop`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -54,7 +54,7 @@ EXTERNAL SOURCES:
   KITAssetsPickerController:
     :git: https://github.com/kkarayannis/KITAssetsPickerController.git
   Photobook:
-    :branch: print-sdk-fixes
+    :branch: develop
     :git: https://github.com/OceanLabs/Photobook-iOS
 
 CHECKOUT OPTIONS:
@@ -62,11 +62,11 @@ CHECKOUT OPTIONS:
     :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
     :git: https://github.com/kkarayannis/KITAssetsPickerController.git
   Photobook:
-    :commit: 297e5f864923e6ae79a10efc99fad8b4e91f4739
+    :commit: f72313afb14650da745de8f3d16a2eb6bf84118d
     :git: https://github.com/OceanLabs/Photobook-iOS
 
 SPEC CHECKSUMS:
-  Analytics: 6541ce337e99d9f7a2240a8b3953940a7be5f998
+  Analytics: 63744ad4afa65c3bcdcdb7a94b62515bde5b3900
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   FBSDKCoreKit: 8d47857400e2f5bdea697a80daff882e91c84ef6
   FBSDKLoginKit: 4621c690d9dd8628031a4791497062183ea34b0d
@@ -75,11 +75,11 @@ SPEC CHECKSUMS:
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-Dynamic-Loader: a32db083fe7e8f8d9ad4309e483e369c9a47e5eb
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
-  Photobook: 20700dfcdf870766af8c153ee652c81d3d5f89a3
+  Photobook: afea90f136e1d4f6e34d38152615aac618c20529
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
-  SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
-  Stripe: 2c69e216061d54d9c538204bb4f58bd597ddfc5b
+  SDWebImage: c5594f1a19c48d526d321e548902b56b479cd508
+  Stripe: db29ad197c74aca6fb981e4e8355cf7ebd0fca5a
 
-PODFILE CHECKSUM: a514316caeb6adbcd2cad4011eacf85f715f9530
+PODFILE CHECKSUM: 250d2c32ab4c6eaba771ef770fc14b345827b588
 
 COCOAPODS: 1.5.3

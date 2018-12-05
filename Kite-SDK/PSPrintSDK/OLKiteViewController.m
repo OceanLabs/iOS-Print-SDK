@@ -272,7 +272,7 @@ static CGFloat fadeTime = 0.3;
         return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     }
     else if (templateUI == OLTemplateUIPhotobook){
-        return [[PhotobookSDK shared] photobookViewControllerWith:[OLAsset photobookAssetsFromAssets:[OLAsset userSelectedAssets]] embedInNavigation:NO delegate:[OLUserSession currentSession] completion:^(UIViewController *viewController, BOOL success){
+        return [[PhotobookSDK shared] photobookViewControllerWith:[OLAsset photobookAssetsFromAssets:[OLAsset userSelectedAssets]] embedInNavigation:NO navigatesToCheckout:YES delegate:[OLUserSession currentSession] completion:^(UIViewController *viewController, BOOL success){
             if (![OLUserSession currentSession].kiteVc){
                 [viewController dismissViewControllerAnimated:YES completion:NULL];
             }
