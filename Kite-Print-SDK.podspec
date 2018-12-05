@@ -11,7 +11,7 @@ Pod::Spec.new do |spec|
   spec.social_media_url    = 'https://twitter.com/dbotha'
   spec.module_name         = 'KiteSDK'
   spec.default_subspec     = 'Core'
-  spec.dependency "Photobook"
+  spec.dependency "Photobook", "~> 1.1.0"
   spec.dependency "NXOAuth2Client"
 
   spec.subspec 'Core' do |core|
