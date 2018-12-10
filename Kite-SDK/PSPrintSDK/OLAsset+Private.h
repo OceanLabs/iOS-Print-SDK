@@ -47,10 +47,10 @@ typedef enum {
 
 @property (nonatomic, strong) id<OLAssetDataSource> dataSource;
 
+- (instancetype)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType size:(CGSize)size;
 + (void)cancelAllImageOperations;
 - (BOOL)isEdited;
 - (BOOL)isEqual:(id)object ignoreEdits:(BOOL)ignoreEdits;
-- (instancetype)initWithImageURL:(NSURL *)url mimeType:(NSString *)mimeType;
 - (void)dataLengthWithCompletionHandler:(GetDataLengthHandler)handler;
 - (void)dataWithCompletionHandler:(GetDataHandler)handler;
 - (void)getImageURLWithProgress:(void(^)(float progress, float total))progressHandler completionHandler:(void(^)(NSURL *url, NSError *error))handler;

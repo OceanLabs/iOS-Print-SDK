@@ -65,9 +65,9 @@
     
     NSString *urlStr = url.absoluteString;
     if ([urlStr hasSuffix:@"jpg"] || [urlStr hasSuffix:@"jpeg"]) {
-        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
+        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG size:CGSizeZero];
     } else if ([urlStr hasSuffix:@"png"]) {
-        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypePNG];
+        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypePNG size:CGSizeZero];
     }
 //    else if ([urlStr hasSuffix:@"tiff"] || [urlStr hasSuffix:@"tif"]) {
 //        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeTIFF];
@@ -77,7 +77,7 @@
 //    }
     else {
         // Worst case scenario just assume it's a JPEG.
-        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG];
+        return [[AssetDataSource alloc] initWithImageURL:url mimeType:kOLMimeTypeJPEG size:CGSizeZero];
     }
     
     return nil;
