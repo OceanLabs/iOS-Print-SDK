@@ -239,7 +239,9 @@ static CGFloat fadeTime = 0.3;
     [OLUserSession currentSession].kiteVc = self;
     
     if ([[PhotobookSDK shared] isProcessingOrder]) {
-        UIViewController *receiptViewController = [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES delegate:nil];
+        UIViewController *receiptViewController = [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES dismissClosure:^(UIViewController *viewController, BOOL success){
+            [viewController dismissViewControllerAnimated:YES completion:NULL];
+        }];
         if (receiptViewController) {
             [self presentViewController:receiptViewController animated:YES completion:nil];
         }
@@ -270,7 +272,16 @@ static CGFloat fadeTime = 0.3;
         return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     }
     else if (templateUI == OLTemplateUIPhotobook){
-        return [[PhotobookSDK shared] photobookViewControllerWith:[OLAsset photobookAssetsFromAssets:[OLAsset userSelectedAssets]] embedInNavigation:NO delegate:[OLUserSession currentSession]];
+        return [[PhotobookSDK shared] photobookViewControllerWith:[OLAsset photobookAssetsFromAssets:[OLAsset userSelectedAssets]] embedInNavigation:NO navigatesToCheckout:YES delegate:[OLUserSession currentSession] completion:^(UIViewController *viewController, BOOL success){
+            if (![OLUserSession currentSession].kiteVc){
+                [viewController dismissViewControllerAnimated:YES completion:NULL];
+            }
+            else if ([viewController isKindOfClass:[NSClassFromString(@"Photobook.PhotobookViewController") class]]){
+                [viewController.navigationController popViewControllerAnimated:YES];
+            } else {
+                [viewController.navigationController popToRootViewControllerAnimated:YES];
+            }
+        }];
     }
     else if (templateUI == OLTemplateUIPoster){
         return [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLPosterViewController"];

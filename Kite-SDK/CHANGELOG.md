@@ -1,3 +1,6 @@
+### 7.0.1
+- Updated for the newest Photobook
+
 # 7.0.0
 - New: Photobook building experience
 - New: Checkout experience

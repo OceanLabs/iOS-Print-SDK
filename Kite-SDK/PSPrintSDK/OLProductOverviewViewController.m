@@ -343,7 +343,16 @@
 - (void)doCheckout {
     [self saveJobWithCompletionHandler:NULL];
     
-    UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO delegate:[OLUserSession currentSession]];
+    UIViewController *checkoutVc = [[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:NO dismissClosure:^(UIViewController *viewController, BOOL success){
+        if (![OLUserSession currentSession].kiteVc){
+            [viewController dismissViewControllerAnimated:YES completion:NULL];
+        }
+        else if ([viewController isKindOfClass:[NSClassFromString(@"Photobook.PhotobookViewController") class]]){
+            [viewController.navigationController popViewControllerAnimated:YES];
+        } else {
+            [viewController.navigationController popToRootViewControllerAnimated:YES];
+        }
+    }];
     UIViewController *firstController = self.navigationController.viewControllers.firstObject;
     [self.navigationController setViewControllers:@[firstController, checkoutVc] animated:YES];
     [[OLUserSession currentSession] resetUserSelectedPhotos];

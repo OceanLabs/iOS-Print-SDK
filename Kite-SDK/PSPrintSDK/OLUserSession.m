@@ -200,17 +200,6 @@
     return results;
 }
 
-- (void)wantsToDismiss:(UIViewController *)viewController {
-    if (!self.kiteVc){
-        [viewController dismissViewControllerAnimated:YES completion:NULL];
-    }
-    else if ([viewController isKindOfClass:[NSClassFromString(@"Photobook.PhotobookViewController") class]]){
-        [viewController.navigationController popViewControllerAnimated:YES];
-    } else {
-        [viewController.navigationController popToRootViewControllerAnimated:YES];
-    }
-}
-
 - (id<PhotobookAssetPicker>) assetPickerViewController {
     OLImagePickerViewController *vc = [[UIStoryboard storyboardWithName:@"OLKiteStoryboard" bundle:[OLKiteUtils kiteResourcesBundle]] instantiateViewControllerWithIdentifier:@"OLImagePickerViewController"];
     vc.selectedAssets = [[NSMutableArray alloc] init];

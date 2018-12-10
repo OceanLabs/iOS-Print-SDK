@@ -4,6 +4,8 @@ use_frameworks!
 target 'KiteSDK' do
 	pod 'Photobook', :git => 'https://github.com/Oceanlabs/Photobook-iOS.git', :branch => 'remove-fb'
 	pod 'NXOAuth2Client'
+	pod 'FBSDKLoginKit'
+	pod 'FBSDKCoreKit'
 end
 
 target 'KiteSDK-Demo' do

@@ -46,9 +46,6 @@
 + (BOOL)facebookEnabled;
 + (BOOL)instagramEnabled;
 + (BOOL)qrCodeUploadEnabled;
-+ (NSArray<NSString *> *)supportedPKPaymentNetworks;
-+ (BOOL)isApplePayAvailable;
-+ (BOOL)isPayPalAvailable;
 + (BOOL)recentsAvailable;
 + (NSInteger)numberOfProvidersAvailable;
 
