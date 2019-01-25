@@ -96,7 +96,7 @@
                 id paymentKeys = json[@"payment_keys"];
                 if ([paymentKeys isKindOfClass:[NSDictionary class]]){
                     id paypalKeys = paymentKeys[@"paypal"];
-                    if([paypalKeys isKindOfClass:[NSDictionary class]]){
+                    if([OLPayPalWrapper isPayPalAvailable] && [paypalKeys isKindOfClass:[NSDictionary class]]){
                         id publicKey = paypalKeys[@"public_key"];
                         if ([publicKey isKindOfClass:[NSString class]]){
                             if ([OLKitePrintSDK environment] == OLKitePrintSDKEnvironmentSandbox){

@@ -1,3 +1,6 @@
+### 7.0.2
+- Fixed crash if PayPal is not installed
+
 ### 7.0.1
 - Updated for the newest Photobook
 
