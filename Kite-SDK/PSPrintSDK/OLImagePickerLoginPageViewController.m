@@ -105,7 +105,7 @@
         }];
     }
     else if (self.provider.providerType == OLImagePickerProviderTypePhotoLibrary){
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{} completionHandler:NULL];
     }
 }
 

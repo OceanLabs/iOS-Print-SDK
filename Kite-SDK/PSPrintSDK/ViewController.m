@@ -132,12 +132,6 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     [self addCatsAndDogsImagePickersToKite:vc];
     
     [self presentViewController:vc animated:YES completion:NULL];
-    
-    //Register for push notifications
-    NSUInteger types = (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
-    [[UIApplication sharedApplication] registerUserNotificationSettings:
-     [UIUserNotificationSettings settingsForTypes:types categories:nil]];
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
 - (IBAction)onButtonPrintRemotePhotos:(id)sender {
     if (![self isAPIKeySet]) return;
