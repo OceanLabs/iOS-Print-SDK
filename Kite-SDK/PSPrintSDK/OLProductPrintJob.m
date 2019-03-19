@@ -176,7 +176,6 @@ static id stringOrEmptyString(NSString *str) {
             
             NSString *borderText = asset.edits.bottomBorderText.text;
             [borderTextArray addObject:stringOrEmptyString(borderText)];
-            
 //        }
     }
     
@@ -186,7 +185,6 @@ static id stringOrEmptyString(NSString *str) {
     if (pdfs.count > 0){
         json[@"pdf"] = [pdfs firstObject];
     }
-    json[@"frame_contents"] = @{};
     
     NSMutableDictionary *options = [self.options mutableCopy];
     options[@"polaroid_text"] = borderTextArray;
