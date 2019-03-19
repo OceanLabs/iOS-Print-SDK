@@ -277,7 +277,7 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
     } else{
         job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[NSArray arrayWithArray:[NSArray arrayWithArray:[OLAsset userSelectedAssets]]]];
     }
-    [[Checkout shared] addProductToBasket:job];
+    [[PhotobookSDK shared] addProductToBasket:job];
     
     if (handler){
         handler();

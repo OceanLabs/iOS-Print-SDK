@@ -107,19 +107,11 @@
 
 
 /**
- Speed up checkout by prepopulating the users email in the Shipping details if you know it
+ Speed up checkout by prepopulating the user's delivery details
 
- @param userEmail The user's email
+ @param deliveryDetails The user's delivery details
  */
-+ (void)setUserEmail:(NSString *)userEmail;
-
-
-/**
- Speed up checkout by prepopulating the users phone number in the Shipping details if you know it
-
- @param userPhone The user's phone number
- */
-+ (void)setUserPhone:(NSString *)userPhone;
++ (void)setDeliveryDetails:(OLDeliveryDetails *)deliveryDetails;
 
 /**
  Allow the SDK to track events in the SDK for analytics purposes. Default value is false

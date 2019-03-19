@@ -118,7 +118,7 @@
         [job setValue:self.product.selectedOptions[option] forOption:option];
     }
     
-    [[Checkout shared] addProductToBasket:(id<Product>)job];
+    [[PhotobookSDK shared] addProductToBasket:(id<Product>)job];
     
     if (handler){
         handler();

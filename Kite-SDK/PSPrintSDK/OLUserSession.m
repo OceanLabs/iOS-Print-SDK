@@ -139,7 +139,7 @@
         }
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionBasket) == OLUserSessionCleanupOptionBasket){
-        [[Checkout shared] clearBasketOrder];
+        [[PhotobookSDK shared] clearBasketOrder];
     }
     if ((cleanupOptions & OLUserSessionCleanupOptionPayment) == OLUserSessionCleanupOptionPayment){
         

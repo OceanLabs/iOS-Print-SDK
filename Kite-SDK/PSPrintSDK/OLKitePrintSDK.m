@@ -134,22 +134,18 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (void)setPromoCode:(NSString *)promoCode {
-    [[Checkout shared] setPromoCode:promoCode];
+    [[PhotobookSDK shared] setPromoCode: promoCode];
 }
 
-+ (void)setUserEmail:(NSString *)userEmail {
-    [[Checkout shared] setUserEmail:userEmail];
-}
-
-+ (void)setUserPhone:(NSString *)userPhone {
-    [[Checkout shared] setUserPhone:userPhone];
++ (void)setDeliveryDetails:(OLDeliveryDetails *)deliveryDetails {
+    [[PhotobookSDK shared] setDeliveryDetails: deliveryDetails];
 }
 
 + (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs {
     return [self checkoutViewControllerWithPrintJobs:printJobs info:nil];
 }
 
-+ (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info{
++ (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info {
     if ([[PhotobookSDK shared] isProcessingOrder]) {
         return [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES dismissClosure:^(UIViewController *viewController, BOOL success){
             [viewController dismissViewControllerAnimated:YES completion:NULL];
@@ -158,9 +154,9 @@ static NSString *instagramRedirectURI = nil;
     
     [OLAnalytics setExtraInfo:info];
     [OLAnalytics trackKiteViewControllerLoadedWithEntryPoint:@"Checkout"];
-    [[Checkout shared] clearBasketOrder];
+    [[PhotobookSDK shared] clearBasketOrder];
     for (id<OLPrintJob> printJob in printJobs) {
-        [[Checkout shared] addProductToBasket:(id<Product>)printJob];
+        [[PhotobookSDK shared] addProductToBasket:(id<Product>)printJob];
     }
     
     return (UINavigationController *)[[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES dismissClosure:^(UIViewController *viewController, BOOL success){

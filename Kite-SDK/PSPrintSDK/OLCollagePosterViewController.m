@@ -227,7 +227,7 @@
     }
         
     OLProductPrintJob *job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:photoAssets];
-    [[Checkout shared] addProductToBasket:job];
+    [[PhotobookSDK shared] addProductToBasket:job];
         
     if (handler){
         handler();

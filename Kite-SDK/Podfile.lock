@@ -23,9 +23,9 @@ PODS:
     - SDWebImage (~> 4.4.0)
     - Stripe
   - PureLayout (3.0.2)
-  - SDWebImage (4.4.4):
-    - SDWebImage/Core (= 4.4.4)
-  - SDWebImage/Core (4.4.4)
+  - SDWebImage (4.4.6):
+    - SDWebImage/Core (= 4.4.6)
+  - SDWebImage/Core (4.4.6)
   - Stripe (14.0.0)
 
 DEPENDENCIES:
@@ -34,7 +34,7 @@ DEPENDENCIES:
   - KITAssetsPickerController (from `https://github.com/kkarayannis/KITAssetsPickerController.git`)
   - NXOAuth2Client
   - PayPal-iOS-SDK/Core
-  - Photobook
+  - Photobook (from `https://github.com/OceanLabs/Photobook-iOS`, branch `story/ATL-186`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -46,7 +46,6 @@ SPEC REPOS:
     - NXOAuth2Client
     - PayPal-iOS-Dynamic-Loader
     - PayPal-iOS-SDK
-    - Photobook
     - PureLayout
     - SDWebImage
     - Stripe
@@ -54,11 +53,17 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   KITAssetsPickerController:
     :git: https://github.com/kkarayannis/KITAssetsPickerController.git
+  Photobook:
+    :branch: story/ATL-186
+    :git: https://github.com/OceanLabs/Photobook-iOS
 
 CHECKOUT OPTIONS:
   KITAssetsPickerController:
     :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
     :git: https://github.com/kkarayannis/KITAssetsPickerController.git
+  Photobook:
+    :commit: 415eb4a2ec612cc5d3dd1b8aa334dbadb7284624
+    :git: https://github.com/OceanLabs/Photobook-iOS
 
 SPEC CHECKSUMS:
   Analytics: 63744ad4afa65c3bcdcdb7a94b62515bde5b3900
@@ -70,11 +75,11 @@ SPEC CHECKSUMS:
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-Dynamic-Loader: a32db083fe7e8f8d9ad4309e483e369c9a47e5eb
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
-  Photobook: 3928611b6792ea198a63f16efe45e64421a90df3
+  Photobook: d77ca6ab1e3ab3f3f40dd62c8d61def7533b61d0
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
-  SDWebImage: c00ec18ab25d10e5ffac109b0f78d1b4341c9691
+  SDWebImage: 3f3f0c02f09798048c47a5ed0a13f17b063572d8
   Stripe: db29ad197c74aca6fb981e4e8355cf7ebd0fca5a
 
-PODFILE CHECKSUM: 8ed41edaed29555ac22a2ec81a93460ff9263db2
+PODFILE CHECKSUM: 9a9bf4cdc34ac2513594e1273f638f8c8fce2a5d
 
 COCOAPODS: 1.5.3

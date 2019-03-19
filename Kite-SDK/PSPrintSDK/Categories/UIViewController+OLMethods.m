@@ -72,7 +72,7 @@
     basketButton.frame = CGRectMake(0,0,50,buttonHeight);
     [basketButton addTarget:self action:@selector(onButtonBasketClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    NSInteger count = [[Checkout shared] numberOfItemsInBasket];
+    NSInteger count = [[PhotobookSDK shared] numberOfItemsInBasket];
     
     if (count != 0){
         [imageView setImage:[UIImage imageNamedInKiteBundle:@"cart-full"]];
