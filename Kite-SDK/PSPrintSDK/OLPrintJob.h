@@ -96,6 +96,16 @@
 @interface OLPrintJob : NSObject
 
 /**
+ *  Creates and returns a polaroid print job
+ *
+ *  @param templateId The template ID of this job
+ *  @param assets     The assets to print
+ *
+ *  @return The polaroid print job
+ */
++ (id<OLPrintJob>)polaroidWithTemplateId:(NSString *)templateId OLAssets:(NSArray<OLAsset *> *)assets;
+
+/**
  *  Creates and returns a postcard print job
  *
  *  @param templateId      The template ID of this job

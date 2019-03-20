@@ -34,8 +34,13 @@
 #import "OLApparelPrintJob.h"
 #import "OLGreetingCardPrintJob.h"
 #import "OLCalendarPrintJob.h"
+#import "OLPolaroidPrintJob.h"
 
 @implementation OLPrintJob
+
++ (id<OLPrintJob>)polaroidWithTemplateId:(NSString *)templateId OLAssets:(NSArray<OLAsset *> *)assets {
+    return [[OLPolaroidPrintJob alloc] initWithTemplateId:templateId OLAssets:assets];
+}
 
 + (id<OLPrintJob>)postcardWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset backImageOLAsset:(OLAsset *)backImageAsset {
     return [[OLPostcardPrintJob alloc] initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:backImageAsset];

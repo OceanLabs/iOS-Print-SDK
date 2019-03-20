@@ -286,6 +286,8 @@
 		2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */; };
 		2EEF0D0C1D9A781700C81086 /* OLCustomPickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EEF0D0B1D9A781700C81086 /* OLCustomPickerController.h */; };
 		301525A75530C65C1B2490DE /* Pods_KiteSDK_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EACCED93BDD9221399C58BFC /* Pods_KiteSDK_Demo.framework */; };
+		6FE975532240FE70008BACA2 /* OLPolaroidPrintJob.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FE975512240FE70008BACA2 /* OLPolaroidPrintJob.h */; };
+		6FE975542240FE70008BACA2 /* OLPolaroidPrintJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE975522240FE70008BACA2 /* OLPolaroidPrintJob.m */; };
 		DADF009D8603A0F2E3B69B53 /* Pods_KiteSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FE2EBE11479D55603F4DCDC /* Pods_KiteSDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -563,6 +565,8 @@
 		3FE2EBE11479D55603F4DCDC /* Pods_KiteSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KiteSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48EA1821F95A31ABAF57DA36 /* Pods-Kite-CI-Deploy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kite-CI-Deploy.release.xcconfig"; path = "Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy.release.xcconfig"; sourceTree = "<group>"; };
 		5D5311AEC977293456E67B5B /* libPods-KitePrintSDKTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KitePrintSDKTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FE975512240FE70008BACA2 /* OLPolaroidPrintJob.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OLPolaroidPrintJob.h; sourceTree = "<group>"; };
+		6FE975522240FE70008BACA2 /* OLPolaroidPrintJob.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OLPolaroidPrintJob.m; sourceTree = "<group>"; };
 		8B41929BCC906276818C848C /* Pods-Kite-CI-Deploy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kite-CI-Deploy.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Kite-CI-Deploy/Pods-Kite-CI-Deploy.debug.xcconfig"; sourceTree = "<group>"; };
 		8C8DC5956A7484FCBB61D58E /* Pods-KiteSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK/Pods-KiteSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		BACD716F7C64DB24E38A9440 /* Pods-KiteSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiteSDK.release.xcconfig"; path = "Pods/Target Support Files/Pods-KiteSDK/Pods-KiteSDK.release.xcconfig"; sourceTree = "<group>"; };
@@ -1192,6 +1196,8 @@
 				2E37B17A1D227EDA003DAA84 /* OLArtboardTemplate.m */,
 				2E37B17F1D229162003DAA84 /* OLProductRepresentation.h */,
 				2E37B1801D229162003DAA84 /* OLProductRepresentation.m */,
+				6FE975512240FE70008BACA2 /* OLPolaroidPrintJob.h */,
+				6FE975522240FE70008BACA2 /* OLPolaroidPrintJob.m */,
 			);
 			name = Print;
 			sourceTree = "<group>";
@@ -1263,6 +1269,7 @@
 				2EB8FE6C1D95685100E26BDF /* OLImagePreviewViewController.h in Headers */,
 				2EB8FDF71D95685100E26BDF /* OLProductTemplateOption.h in Headers */,
 				2ED2B7B41DB8B4D90036B536 /* OLHPSDKWrapper.h in Headers */,
+				6FE975532240FE70008BACA2 /* OLPolaroidPrintJob.h in Headers */,
 				2EB8FDE01D95685100E26BDF /* OLImageCachingManager.h in Headers */,
 				2EB8FDE21D95685100E26BDF /* OLTextOnPhoto.h in Headers */,
 				2E451DCC1D9554B40080F1C1 /* KiteSDK.h in Headers */,
@@ -1798,6 +1805,7 @@
 				2E5B27341EC06A4700F3AED3 /* OLCollagePosterViewController.m in Sources */,
 				2E451DDD1D9555540080F1C1 /* OLImageCachingManager.m in Sources */,
 				2E451E011D9555620080F1C1 /* OLImageDownloader.m in Sources */,
+				6FE975542240FE70008BACA2 /* OLPolaroidPrintJob.m in Sources */,
 				2E451E5B1D9555DE0080F1C1 /* UIView+RMUtils.m in Sources */,
 				2E451E421D9555D30080F1C1 /* OLImageEditViewController.m in Sources */,
 				2E451E471D9555D30080F1C1 /* OLFrameOrderReviewViewController.m in Sources */,

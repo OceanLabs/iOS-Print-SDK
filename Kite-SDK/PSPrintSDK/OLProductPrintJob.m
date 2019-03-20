@@ -160,7 +160,6 @@ static id stringOrEmptyString(NSString *str) {
 - (NSDictionary *)jsonRepresentation {
     NSMutableArray *assets = [[NSMutableArray alloc] init];
     NSMutableArray *pdfs = [[NSMutableArray alloc] init];
-    NSMutableArray *borderTextArray = [[NSMutableArray alloc] init];
     
     for (NSUInteger i = 0; i < self.assetsForUploading.count; i++) {
         OLAsset *asset = self.assetsForUploading[i];
@@ -168,14 +167,13 @@ static id stringOrEmptyString(NSString *str) {
 //            [pdfs addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
 //        }
 //        else{
+        for (NSInteger j = 0; j <= asset.extraCopies; j++) {
             if (i < self.assetsToUpload.count && self.assetsToUpload[i].uploadUrl) {
                 [assets addObject:self.assetsToUpload[i].uploadUrl];
             } else {
                 [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
             }
-            
-            NSString *borderText = asset.edits.bottomBorderText.text;
-            [borderTextArray addObject:stringOrEmptyString(borderText)];
+        }
 //        }
     }
     
@@ -185,10 +183,6 @@ static id stringOrEmptyString(NSString *str) {
     if (pdfs.count > 0){
         json[@"pdf"] = [pdfs firstObject];
     }
-    
-    NSMutableDictionary *options = [self.options mutableCopy];
-    options[@"polaroid_text"] = borderTextArray;
-    json[@"options"] = options;
     
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];

@@ -268,14 +268,17 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 
 - (void)saveJobWithCompletionHandler:(void(^)(void))handler{
     [self preparePhotosForCheckout];
+    NSArray<OLAsset *> *assets = [[OLAsset userSelectedAssets] nonPlaceholderAssets];
     
     id<Product> job;
-    if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided){
-        job = (id<Product>)[OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:[OLAsset userSelectedAssets].firstObject backImageOLAsset:[OLAsset userSelectedAssets].lastObject];
+    if (self.product.productTemplate.supportsTextOnBorder) { // NOTE: There should be a better way to identify polaroid products
+        job = (id<Product>)[OLPrintJob polaroidWithTemplateId:self.product.templateId OLAssets:assets];
+    } else if (self.product.productTemplate.templateUI == OLTemplateUIDoubleSided) {
+        job = (id<Product>)[OLPrintJob postcardWithTemplateId:self.product.templateId frontImageOLAsset:assets.firstObject backImageOLAsset:assets.lastObject];
     } else if (self.product.productTemplate.templateUI == OLTemplateUICalendar) {
-        job = (id<Product>)[OLPrintJob calendarWithTemplateId:self.product.productTemplate.identifier OLAssets:[NSArray arrayWithArray:[OLAsset userSelectedAssets]]];
+        job = (id<Product>)[OLPrintJob calendarWithTemplateId:self.product.productTemplate.identifier OLAssets:assets];
     } else{
-        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:[NSArray arrayWithArray:[NSArray arrayWithArray:[OLAsset userSelectedAssets]]]];
+        job = [[OLProductPrintJob alloc] initWithTemplateId:self.product.templateId OLAssets:assets];
     }
     [[PhotobookSDK shared] addProductToBasket:job];
     
@@ -393,16 +396,23 @@ typedef NS_ENUM(NSUInteger, OLPackReviewStyle) {
 }
 
 - (void)preparePhotosForCheckout{
-    NSMutableArray *checkoutPhotos = [[NSMutableArray alloc] init];
-    [checkoutPhotos addObjectsFromArray:[[OLAsset userSelectedAssets] nonPlaceholderAssets]];
-    for (int i = 0; i < [OLAsset userSelectedAssets].nonPlaceholderAssets.count; i++) {
-        NSInteger numberOfCopies = [[[OLAsset userSelectedAssets] objectAtIndex:i] extraCopies];
-        for (NSInteger j = 0; j < numberOfCopies; j++){
-            [checkoutPhotos addObject:[[OLAsset userSelectedAssets] objectAtIndex:i]];
+    NSArray<OLAsset *> *assets = [[OLAsset userSelectedAssets] nonPlaceholderAssets];
+    
+    NSInteger numOrders = 1 + (MAX(0, assets.count - 1 + [self totalNumberOfExtras]) / self.product.quantityToFulfillOrder);
+    NSInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
+    NSInteger totalItems = assets.count + [self totalNumberOfExtras];
+    
+    NSInteger additionalCopies = quantityToFulfilOrder - totalItems;
+    if (additionalCopies > 0) {
+        NSInteger assetIndex = 0;
+        for (NSInteger i = 0; i < additionalCopies; i++) {
+            assets[assetIndex].extraCopies = assets[assetIndex].extraCopies + 1;
+            ++assetIndex;
+            if (assetIndex == assets.count) {
+                assetIndex = 0;
+            }
         }
-        [OLAsset userSelectedAssets][i].extraCopies = 0;
-    }
-    [OLUserSession currentSession].userSelectedAssets = checkoutPhotos;
+    }    
 }
 
 #pragma mark UICollectionView data source and delegate methods
