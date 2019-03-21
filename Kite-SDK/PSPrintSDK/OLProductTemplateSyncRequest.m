@@ -28,7 +28,6 @@
 //
 
 #import "OLProductTemplateSyncRequest.h"
-#import "OLBaseRequest.h"
 #import "OLKitePrintSDK.h"
 #import "OLProductTemplate.h"
 #import "OLConstants.h"
@@ -39,13 +38,14 @@
 #import "OLProductTemplateCollection.h"
 #import "OLUserSession.h"
 #import "OLShippingClass.h"
+#import "OLAPIClient.h"
 
 @import PayPalDynamicLoader;
 @import Stripe;
 
 @interface OLProductTemplateSyncRequest ()
-@property (nonatomic, strong) OLBaseRequest *req;
 @property (strong, nonatomic) NSURL *nextPage;
+@property (nonatomic, strong) NSNumber *requestIdentifier;
 @end
 
 @interface OLKitePrintSDK (Private)
@@ -58,7 +58,7 @@
 @implementation OLProductTemplateSyncRequest
 
 - (void)sync:(OLTemplateSyncRequestCompletionHandler)handler {
-    NSAssert(self.req == nil, @"Oops only one template sync request should be in progress at any given time");
+    NSAssert(self.requestIdentifier == nil, @"Oops only one template sync request should be in progress at any given time");
     NSString *urlString;
     if (self.templateId){
         urlString = [NSString stringWithFormat:@"%@/%@/template/?template_id__in=%@&limit=1", [OLKitePrintSDK apiEndpoint], [OLKitePrintSDK apiVersion], self.templateId];
@@ -71,16 +71,18 @@
 
 - (void)fetchTemplatesWithURL:(NSURL *)url templateAccumulator:(NSMutableArray *)acc handler:(OLTemplateSyncRequestCompletionHandler)handler {
     NSDictionary *headers = @{@"Authorization": [NSString stringWithFormat:@"ApiKey %@:", [OLKitePrintSDK apiKey]]};
-    self.req = [[OLBaseRequest alloc] initWithURL:url httpMethod:kOLHTTPMethodGET headers:headers body:nil];
-    [self.req startWithCompletionHandler:^(NSInteger httpStatusCode, id json, NSError *error) {
+    
+    NSNumber *identifier = nil;
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    [[OLAPIClient shared] getWithURL:url parameters:nil headers:headers requestIdentifier:&identifier completionHandler:^(NSInteger httpStatusCode, id json, NSError *error) {
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (error) {
-            
             if (httpStatusCode == 401) {
                 // unauthorized
                 error = [NSError errorWithDomain:kOLKiteSDKErrorDomain code:kOLKiteSDKErrorCodeUnauthorized userInfo:@{NSLocalizedDescriptionKey: kOLKiteSDKErrorMessageUnauthorized}];
             }
             
-            self.req = nil;
+            self.requestIdentifier = nil;
             handler(nil, error);
         } else {
             if (httpStatusCode >= 200 & httpStatusCode <= 299) {
@@ -515,7 +517,7 @@
                     [self fetchTemplatesWithURL:self.nextPage templateAccumulator:acc handler:handler];
                 }
                 else {
-                    self.req = nil;
+                    self.requestIdentifier = nil;
                     NSMutableSet *coverPhotoVariants = [[NSMutableSet alloc] init];
                     
                     for (OLProductTemplate *t in acc){
@@ -545,15 +547,20 @@
             }
         }
     }];
+    self.requestIdentifier = identifier;
 }
 
 - (void)cancel {
-    [self.req cancel];
-    self.req = nil;
+    if (self.requestIdentifier == nil) {
+        return;
+    }
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    [[OLAPIClient shared] cancelRequestWithIdentifier:self.requestIdentifier];
+    self.requestIdentifier = nil;
 }
 
 - (BOOL)isInProgress{
-    return self.req != nil || self.nextPage;
+    return self.requestIdentifier != nil || self.nextPage;
 }
 
 @end
