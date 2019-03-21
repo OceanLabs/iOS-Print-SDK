@@ -43,7 +43,7 @@ extern NSString *_Nonnull const kNotificationKeyTemplateSyncError;
 
 typedef NS_ENUM(NSInteger, OLTemplateUI) {
     OLTemplateUINA,
-    OLTemplateUIRectagle,
+    OLTemplateUIRectangle,
     OLTemplateUICircle,
     OLTemplateUIFrame,
     OLTemplateUIPoster,

@@ -519,8 +519,8 @@
             if (![self.product isMultipack]){
                 numOrders = 1;
             }
-            NSUInteger quanityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
-            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)[self assetCount] + [self totalNumberOfExtras], (unsigned long)quanityToFulfilOrder];
+            NSUInteger quantityToFulfilOrder = numOrders * self.product.quantityToFulfillOrder;
+            self.title = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)[self assetCount] + [self totalNumberOfExtras], (unsigned long)quantityToFulfilOrder];
         }
         else{
             self.title = [NSString stringWithFormat:@"%lu", (unsigned long)[self assetCount]];

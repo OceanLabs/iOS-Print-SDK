@@ -203,8 +203,8 @@ typedef enum {
     if (!sheetCost){
         return nil;
     }
-    NSUInteger sheetQuanity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
-    NSUInteger numSheets = (NSUInteger) ceil(self.quantityToFulfillOrder / sheetQuanity);
+    NSUInteger sheetQuantity = productTemplate.quantityPerSheet == 0 ? 1 : productTemplate.quantityPerSheet;
+    NSUInteger numSheets = (NSUInteger) ceil(self.quantityToFulfillOrder / sheetQuantity);
     NSDecimalNumber *unitCost = [sheetCost decimalNumberByMultiplyingBy:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lu", (unsigned long)numSheets]]];
     return unitCost;
 }
@@ -249,7 +249,7 @@ typedef enum {
 }
 
 - (BOOL)isMultipack{
-    if (self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUICircle || self.productTemplate.templateUI == OLTemplateUIRectagle || (self.productTemplate.templateUI == OLTemplateUIPoster && self.quantityToFulfillOrder > 1)){
+    if (self.productTemplate.templateUI == OLTemplateUIFrame || self.productTemplate.templateUI == OLTemplateUICircle || self.productTemplate.templateUI == OLTemplateUIRectangle || (self.productTemplate.templateUI == OLTemplateUIPoster && self.quantityToFulfillOrder > 1)){
         return YES;
     }
     

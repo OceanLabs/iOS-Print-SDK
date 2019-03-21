@@ -239,7 +239,7 @@ static BOOL partial = NO;
 
 +(OLTemplateUI)templateUIWithIdentifier:(NSString *)identifier{
     if ([identifier isEqualToString:@"RECTANGLE"]){
-        return OLTemplateUIRectagle;
+        return OLTemplateUIRectangle;
     }
     else if ([identifier isEqualToString:@"FRAME"]){
         return OLTemplateUIFrame;
