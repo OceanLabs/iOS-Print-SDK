@@ -49,7 +49,6 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
 @property (nonatomic, strong) PhotobookAsset *frontPhotobookAsset;
 @property (nonatomic, strong) PhotobookAsset *backPhotobookAsset;
 @property (nonatomic, copy) NSString *message;
-@property (strong, nonatomic) NSMutableDictionary *options;
 
 @end
 
@@ -58,16 +57,7 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
 @synthesize uuid;
 @synthesize extraCopies;
 
--(NSMutableDictionary *) options{
-    if (!_options){
-        _options = [[NSMutableDictionary alloc] init];
-    }
-    return _options;
-}
-
-- (void)setValue:(NSString *)value forOption:(NSString *)option{
-    self.options[option] = value;
-}
+- (void)setValue:(NSString *)value forOption:(NSString *)option {}
 
 - (id)initWithTemplateId:(NSString *)templateId frontImageOLAsset:(OLAsset *)frontImageAsset message:(NSString *)message {
     return [self initWithTemplateId:templateId frontImageOLAsset:frontImageAsset backImageOLAsset:nil message:message];
@@ -168,7 +158,6 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
     
     json[@"pdf"] = pdfs[@"front_image"];
     json[@"assets"] = assets;
-    json[@"options"] = self.options;
     
     json[@"job_id"] = [self uuid];
     json[@"multiples"] = [NSNumber numberWithInteger:self.extraCopies + 1];
@@ -188,8 +177,7 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
     if (self.frontImageAsset) val *= [self.frontImageAsset hash];
     if (self.backImageAsset) val *= [self.backImageAsset hash];
     if (self.message && [self.message hash] > 0) val *= [self.message hash];
-    if (self.extraCopies) val *= self.extraCopies+1;
-    val = 18 * val + [self.options hash];
+    if (self.extraCopies) val *= self.extraCopies + 1;
     val = 41 * val + [self.uuid hash];
     val = 42 * val + [self.selectedShippingMethod hash];
     
@@ -210,7 +198,6 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
     if (self.frontImageAsset) result &= [self.frontImageAsset isEqual:printJob.frontImageAsset];
     if (self.backImageAsset) result &= [self.backImageAsset isEqual:printJob.backImageAsset];
     if (self.message) result &= [self.message isEqual:printJob.message];
-    result &= [self.options isEqualToDictionary:printJob.options];
     if (self.selectedShippingMethod) result &= [self.selectedShippingMethod isEqual:printJob.selectedShippingMethod];
     return result;
 }
@@ -222,7 +209,6 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
     [aCoder encodeObject:self.backImageAsset forKey:kKeyBackImage];
     [aCoder encodeObject:self.message forKey:kKeyMessage];
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
-    [aCoder encodeObject:self.options forKey:kKeyPostcardPrintJobOptions];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
     [aCoder encodeObject:self.selectedShippingMethod forKey:@"selectedShippingMethod"];
@@ -243,7 +229,6 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
         if (!self.template) {
             return nil;
         }
-        self.options = [aDecoder decodeObjectForKey:kKeyPostcardPrintJobOptions];
         self.extraCopies = [aDecoder decodeIntegerForKey:kKeyExtraCopies];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
         self.selectedShippingMethod = [aDecoder decodeObjectForKey:@"selectedShippingMethod"];
