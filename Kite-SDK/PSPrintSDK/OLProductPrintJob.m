@@ -41,10 +41,6 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
 static NSString *const kKeyProductPringJobAddress = @"co.oceanlabs.pssdk.kKeyProductPringJobAddress";
 static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyProductPrintJobOptions";
 
-static id stringOrEmptyString(NSString *str) {
-    return str ? str : @"";
-}
-
 @interface OLProductPrintJob ()
 @property (nonatomic, strong) NSString *templateId;
 @property (nonatomic, strong) NSArray *assetsForUploading;
@@ -182,6 +178,10 @@ static id stringOrEmptyString(NSString *str) {
     json[@"assets"] = assets;
     if (pdfs.count > 0){
         json[@"pdf"] = [pdfs firstObject];
+    }
+
+    if (self.options != nil && self.options.count > 0) {
+        json[@"options"] = self.options;
     }
     
     json[@"job_id"] = [self uuid];
