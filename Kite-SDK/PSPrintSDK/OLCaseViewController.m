@@ -715,11 +715,9 @@
     [super doCheckout];
 }
 
-- (void)renderImageWithCompletionHandler:(void (^)(void))handler{
+- (void)renderImageWithCompletionHandler:(void (^)(void))handler {
     if (![self isUsingMultiplyBlend]  || self.maskActivityIndicator.isAnimating || [[[UIDevice currentDevice] systemVersion] floatValue] < 10 || self.presentedViewController){
-        if (handler){
-            handler();
-        }
+        if (handler) handler();
         return;
     }
 
@@ -727,6 +725,7 @@
     [self.printContainerView insertSubview:self.highlightsView aboveSubview:self.artboard];
     [self.highlightsView fillSuperView];
     self.highlightsView.hidden = NO;
+    if (handler) handler();
 }
 
 #pragma mark - RMImageCropperDelegate methods
