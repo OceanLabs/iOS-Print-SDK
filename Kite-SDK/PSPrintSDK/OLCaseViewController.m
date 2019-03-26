@@ -112,11 +112,7 @@
     [super viewDidLoad];
     
     self.printContainerView.backgroundColor = [self containerBackgroundColor];
-    
-    if ([self isUsingMultiplyBlend]){
-        [self.artboard.assetViews.firstObject setGesturesEnabled:NO];
-    }
-    
+
     if (self.product.productTemplate.fulfilmentItems.count > 1){
         self.artboard.backgroundColor = [UIColor clearColor];
         
@@ -606,9 +602,6 @@
         }
     } completion:^(BOOL finished){
         [self renderImageWithCompletionHandler:NULL];
-        if ([self isUsingMultiplyBlend]){
-            [self.artboard.assetViews.firstObject setGesturesEnabled:NO];
-        }
     }];
 }
 
@@ -729,36 +722,11 @@
         }
         return;
     }
-    
-    @autoreleasepool{
+
+    self.highlightsView.layer.compositingFilter = @"multiplyBlendMode";
+    [self.printContainerView insertSubview:self.highlightsView aboveSubview:self.artboard];
+    [self.highlightsView fillSuperView];
     self.highlightsView.hidden = NO;
-    self.renderedImageView.image = nil;
-    UIGraphicsBeginImageContextWithOptions(self.highlightsView.bounds.size, NO, [UIScreen mainScreen].scale);
-    [self.highlightsView drawViewHierarchyInRect:self.highlightsView.bounds afterScreenUpdates:YES];
-    UIImage *highlightsSnapshot = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    UIGraphicsBeginImageContextWithOptions(self.printContainerView.bounds.size, NO, [UIScreen mainScreen].scale);
-    [self.printContainerView drawViewHierarchyInRect:self.printContainerView.bounds afterScreenUpdates:YES];
-    UIImage *productSnapshot = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    CIImage *filterImage = [CIImage imageWithCGImage:productSnapshot.CGImage];
-    CIFilter *filter = [CIFilter filterWithName:@"CIMultiplyCompositing"];
-    [filter setValue:filterImage forKey:@"inputBackgroundImage"];
-    [filter setValue:[CIImage imageWithCGImage:highlightsSnapshot.CGImage] forKey:@"inputImage"];
-    
-    CIContext *context = [CIContext contextWithOptions:nil];
-    CGImageRef cgImage = [context createCGImage:filter.outputImage fromRect:filterImage.extent];
-    UIImage *renderedImage = [UIImage imageWithCGImage:cgImage];
-    self.renderedImageView.image = renderedImage;
-    
-    self.renderedImageView.hidden = NO;
-    self.highlightsView.hidden = YES;
-    }
-    if (handler){
-        handler();
-    }
 }
 
 #pragma mark - RMImageCropperDelegate methods
