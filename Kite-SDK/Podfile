@@ -2,7 +2,7 @@ platform :ios, '10.0'
 use_frameworks!
 
 target 'KiteSDK' do
-	pod 'Photobook', :git => 'https://github.com/OceanLabs/Photobook-iOS', :branch => 'story/ATL-186'
+	pod 'Photobook'
 	pod 'NXOAuth2Client'
 	pod 'FBSDKLoginKit'
 	pod 'FBSDKCoreKit'

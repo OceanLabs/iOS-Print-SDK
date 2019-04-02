@@ -1,3 +1,8 @@
+# 8.0.0
+- Minimum supported iOS is now 10.0
+- Updated to Photobook 2.0.0
+- The checkout now uses Stripe's standard integration and accepts a pre-populated delivery address
+
 ### 7.0.3
 - Updated to the latest Photobook
 

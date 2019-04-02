@@ -16,7 +16,7 @@ PODS:
   - NXOAuth2Client (1.2.8)
   - PayPal-iOS-Dynamic-Loader (1.0.1)
   - PayPal-iOS-SDK/Core (2.18.1)
-  - Photobook (1.3.0):
+  - Photobook (2.0.0):
     - Analytics (~> 3.0)
     - KeychainSwift (~> 11.0.0)
     - PayPal-iOS-Dynamic-Loader
@@ -26,7 +26,7 @@ PODS:
   - SDWebImage (4.4.6):
     - SDWebImage/Core (= 4.4.6)
   - SDWebImage/Core (4.4.6)
-  - Stripe (14.0.0)
+  - Stripe (15.0.0)
 
 DEPENDENCIES:
   - FBSDKCoreKit
@@ -34,7 +34,7 @@ DEPENDENCIES:
   - KITAssetsPickerController (from `https://github.com/kkarayannis/KITAssetsPickerController.git`)
   - NXOAuth2Client
   - PayPal-iOS-SDK/Core
-  - Photobook (from `https://github.com/OceanLabs/Photobook-iOS`, branch `story/ATL-186`)
+  - Photobook
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -46,6 +46,7 @@ SPEC REPOS:
     - NXOAuth2Client
     - PayPal-iOS-Dynamic-Loader
     - PayPal-iOS-SDK
+    - Photobook
     - PureLayout
     - SDWebImage
     - Stripe
@@ -53,17 +54,11 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   KITAssetsPickerController:
     :git: https://github.com/kkarayannis/KITAssetsPickerController.git
-  Photobook:
-    :branch: story/ATL-186
-    :git: https://github.com/OceanLabs/Photobook-iOS
 
 CHECKOUT OPTIONS:
   KITAssetsPickerController:
     :commit: b08f373301d1a3c17c09104a5577d61a1255ba8c
     :git: https://github.com/kkarayannis/KITAssetsPickerController.git
-  Photobook:
-    :commit: 53f1f07996c935d7fc160e77c0790940c1b65ff6
-    :git: https://github.com/OceanLabs/Photobook-iOS
 
 SPEC CHECKSUMS:
   Analytics: 63744ad4afa65c3bcdcdb7a94b62515bde5b3900
@@ -75,11 +70,11 @@ SPEC CHECKSUMS:
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-Dynamic-Loader: a32db083fe7e8f8d9ad4309e483e369c9a47e5eb
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
-  Photobook: d77ca6ab1e3ab3f3f40dd62c8d61def7533b61d0
+  Photobook: 4a06a17210a265aa257cca004afe418cc08a723f
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   SDWebImage: 3f3f0c02f09798048c47a5ed0a13f17b063572d8
-  Stripe: db29ad197c74aca6fb981e4e8355cf7ebd0fca5a
+  Stripe: 312b22a67af9fa55c246d26148b3f3a9636a0ff2
 
-PODFILE CHECKSUM: 9a9bf4cdc34ac2513594e1273f638f8c8fce2a5d
+PODFILE CHECKSUM: 078d39570ad0103dcf7ccd358d629d21e4d52636
 
 COCOAPODS: 1.5.3
