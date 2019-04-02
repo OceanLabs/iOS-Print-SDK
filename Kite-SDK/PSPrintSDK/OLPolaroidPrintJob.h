@@ -6,7 +6,7 @@
 //  Copyright © 2019 Kite.ly. All rights reserved.
 //
 
-#import <KiteSDK/KiteSDK.h>
+#import "OLProductPrintJob.h"
 
 @interface OLPolaroidPrintJob : OLProductPrintJob
 
