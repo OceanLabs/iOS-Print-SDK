@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.summary             = "Add physical print functionality in minutes! Print magnets, photo prints, postcards, polaroids, posters, stickers, canvas', phone cases, photo books, etc"
   spec.source              = {:git => 'https://github.com/OceanLabs/iOS-Print-SDK.git', :tag => "v" + spec.version.to_s }
   spec.requires_arc        = true
-  spec.platform            = :ios, '9.0'
+  spec.platform            = :ios, '10.0'
   spec.social_media_url    = 'https://twitter.com/dbotha'
   spec.module_name         = 'KiteSDK'
   spec.default_subspec     = 'Core'
