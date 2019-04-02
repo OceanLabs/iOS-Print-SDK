@@ -2,7 +2,7 @@
 - Minimum supported iOS is now 10.0
 - Updated to Photobook 2.0.0
 - The checkout now uses Stripe's standard integration and accepts a pre-populated delivery address
-- Adds OLPolaroidPrintJob for polaroid products
+- Polaroid jobs now need to use a specific class method in OLPrintJob
 
 ### 7.0.3
 - Updated to the latest Photobook
