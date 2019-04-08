@@ -8,6 +8,7 @@ Pod::Spec.new do |spec|
   spec.source              = {:git => 'https://github.com/OceanLabs/iOS-Print-SDK.git', :tag => "v" + spec.version.to_s }
   spec.requires_arc        = true
   spec.platform            = :ios, '10.0'
+  spec.swift_version       = '4.2'
   spec.social_media_url    = 'https://twitter.com/dbotha'
   spec.module_name         = 'KiteSDK'
   spec.default_subspec     = 'Core'
