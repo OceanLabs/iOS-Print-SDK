@@ -16,7 +16,7 @@ PODS:
   - NXOAuth2Client (1.2.8)
   - PayPal-iOS-Dynamic-Loader (1.0.1)
   - PayPal-iOS-SDK/Core (2.18.1)
-  - Photobook (2.0.0):
+  - Photobook (2.0.1):
     - Analytics (~> 3.0)
     - KeychainSwift (~> 11.0.0)
     - PayPal-iOS-Dynamic-Loader
@@ -70,11 +70,11 @@ SPEC CHECKSUMS:
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-Dynamic-Loader: a32db083fe7e8f8d9ad4309e483e369c9a47e5eb
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
-  Photobook: 4a06a17210a265aa257cca004afe418cc08a723f
+  Photobook: b236d0712905facdeb2325e3b626fbe94950b4df
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   SDWebImage: 3f3f0c02f09798048c47a5ed0a13f17b063572d8
   Stripe: 312b22a67af9fa55c246d26148b3f3a9636a0ff2
 
 PODFILE CHECKSUM: 078d39570ad0103dcf7ccd358d629d21e4d52636
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.1

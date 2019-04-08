@@ -1,3 +1,6 @@
+### 8.0.1
+- Updated to the latest Photobook
+
 # 8.0.0
 - Minimum supported iOS is now 10.0
 - Updated to Photobook 2.0.0
