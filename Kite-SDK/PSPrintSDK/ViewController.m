@@ -131,6 +131,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     
     [self addCatsAndDogsImagePickersToKite:vc];
     
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:NULL];
 }
 - (IBAction)onButtonPrintRemotePhotos:(id)sender {
