@@ -252,6 +252,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     
     [vc addCustomPhotoProviderWithViewController:nil name:@"External" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
     
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:NULL];
 }
 
