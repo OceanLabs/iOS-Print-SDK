@@ -101,10 +101,10 @@ static NSString *const kKeyApparelPrintJobOptions = @"co.oceanlabs.pssdk.kKeyApp
 //            [pdfs setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
 //        }
         if (self.photobookAssets[key].uploadUrl) {
-            [assets setObject:self.photobookAssets[key].uploadUrl forKey:key];
+            assets[key] = self.photobookAssets[key].uploadUrl;
         }
         else{
-            [assets setObject:[NSString stringWithFormat:@"%lld", [self.assets[key] assetId]] forKey:key];
+            assets[key] = @(self.assets[key].assetId);
         }
     }
     if (pdfs.allKeys.count > 0){

@@ -167,7 +167,7 @@ static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPro
             if (i < self.assetsToUpload.count && self.assetsToUpload[i].uploadUrl) {
                 [assets addObject:self.assetsToUpload[i].uploadUrl];
             } else {
-                [assets addObject:[NSString stringWithFormat:@"%lld", asset.assetId]];
+                [assets addObject:@(asset.assetId)];
             }
         }
 //        }

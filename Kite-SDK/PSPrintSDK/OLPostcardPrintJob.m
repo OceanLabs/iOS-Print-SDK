@@ -136,7 +136,7 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
         assets[@"front_image"] = self.frontPhotobookAsset.uploadUrl;
     }
     else{
-        assets[@"front_image"] = [NSString stringWithFormat:@"%lld", self.frontImageAsset.assetId];
+        assets[@"front_image"] = @(self.frontImageAsset.assetId);
     }
     
     if (self.backImageAsset){
@@ -147,7 +147,7 @@ static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
             assets[@"back_image"] = self.backPhotobookAsset.uploadUrl;
         }
         else{
-            assets[@"back_image"] = [NSString stringWithFormat:@"%lld", self.backImageAsset.assetId];
+            assets[@"back_image"] = @(self.backImageAsset.assetId);
         }
     }
     

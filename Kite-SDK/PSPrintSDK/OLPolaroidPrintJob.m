@@ -25,7 +25,7 @@
             if (i < self.assetsToUpload.count && self.assetsToUpload[i].uploadUrl) {
                 assetDictionary[@"asset"] = self.assetsToUpload[i].uploadUrl;
             } else {
-                assetDictionary[@"asset"] = [NSString stringWithFormat:@"%lld", asset.assetId];
+                assetDictionary[@"asset"] = @(asset.assetId);
             }
         
             NSString *borderText = asset.edits.bottomBorderText.text;
