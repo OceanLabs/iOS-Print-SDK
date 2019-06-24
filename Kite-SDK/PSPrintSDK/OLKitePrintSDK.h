@@ -68,6 +68,14 @@
 + (void)addPushDeviceToken:(NSData *_Nonnull)deviceToken;
 
 /**
+ Call this method from your app delegate to handle the return from Safari as part of the credit card authorization process
+
+ @param url The return URL passed to the application
+ @return Yes if the URL should be handled by the SDK, no otherwise
+ */
++ (BOOL)handleUrlCallBack:(NSURL * _Nonnull)url;
+
+/**
  *  Initializer that accepts a ready to checkout array of OLPrintJobs.
  *  This will clear any existing basket items.
  *
@@ -75,7 +83,7 @@
  *
  *  @return A checkout ViewController to present
  */
-+ (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs;
++ (UIViewController * _Nullable)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs;
 
 /**
  *  Initializer that accepts ready to checkout array of OLPrintJobs. Provides an extra argument for extra info.
@@ -88,7 +96,7 @@
  *
  *  @return A checkout ViewController to present
  */
-+ (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info;
++ (UIViewController * _Nullable)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info;
 
 
 /**
@@ -103,7 +111,7 @@
 
  @param promoCode A promo code. You can register codes in the Kite Dashboard
  */
-+ (void)setPromoCode:(NSString *)promoCode;
++ (void)setPromoCode:(NSString * _Nullable)promoCode;
 
 
 /**
@@ -111,7 +119,7 @@
 
  @param deliveryDetails The user's delivery details
  */
-+ (void)setDeliveryDetails:(OLDeliveryDetails *)deliveryDetails;
++ (void)setDeliveryDetails:(OLDeliveryDetails * _Nonnull)deliveryDetails;
 
 /**
  Allow the SDK to track events in the SDK for analytics purposes. Default value is false
