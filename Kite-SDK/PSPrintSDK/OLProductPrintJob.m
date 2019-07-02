@@ -38,6 +38,8 @@ static NSString *const kKeyProductTemplateId = @"co.oceanlabs.pssdk.kKeyProductT
 static NSString *const kKeyImages = @"co.oceanlabs.pssdk.kKeyImages";
 static NSString *const kKeyUUID = @"co.oceanlabs.pssdk.kKeyUUID";
 static NSString *const kKeyExtraCopies = @"co.oceanlabs.pssdk.kKeyExtraCopies";
+static NSString *const kKeyTemplateShippingMethods = @"co.oceanlabs.pssdk.kKeyTemplateShippingMethods";
+static NSString *const kKeyTemplateCountryToRegionMapping = @"co.oceanlabs.pssdk.kKeyTemplateCountryToRegionMapping";
 static NSString *const kKeyProductPringJobAddress = @"co.oceanlabs.pssdk.kKeyProductPringJobAddress";
 static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyProductPrintJobOptions";
 
@@ -231,8 +233,6 @@ static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPro
     }
     OLProductPrintJob* printJob = (OLProductPrintJob*)object;
     
-    
-    
     return [self.templateId isEqual:printJob.templateId] && [self.assetsForUploading isEqualToArray:printJob.assetsForUploading] && [self.options isEqualToDictionary:printJob.options] && (!self.selectedShippingMethod || [self.selectedShippingMethod isEqual:printJob.selectedShippingMethod]);
 }
 
@@ -241,6 +241,8 @@ static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPro
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.templateId forKey:kKeyProductTemplateId];
+    [aCoder encodeObject:self.template.availableShippingMethods forKey:kKeyTemplateShippingMethods];
+    [aCoder encodeObject:self.template.countryToRegionMapping forKey:kKeyTemplateCountryToRegionMapping];
     [aCoder encodeObject:self.assetsForUploading forKey:kKeyImages];
     [aCoder encodeObject:self.uuid forKey:kKeyUUID];
     [aCoder encodeInteger:self.extraCopies forKey:kKeyExtraCopies];
@@ -254,6 +256,8 @@ static NSString *const kKeyProductPrintJobOptions = @"co.oceanlabs.pssdk.kKeyPro
         if (!self.template) {
             return nil;
         }
+        self.template.availableShippingMethods = [aDecoder decodeObjectForKey:kKeyTemplateShippingMethods];
+        self.template.countryToRegionMapping = [aDecoder decodeObjectForKey:kKeyTemplateCountryToRegionMapping];
         self.assetsForUploading = [aDecoder decodeObjectForKey:kKeyImages];
         self.assetsToUpload = [OLAsset photobookAssetsFromAssets:self.assetsForUploading];
         self.uuid = [aDecoder decodeObjectForKey:kKeyUUID];
