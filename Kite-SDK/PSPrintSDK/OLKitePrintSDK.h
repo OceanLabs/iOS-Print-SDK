@@ -51,6 +51,15 @@
  */
 + (NSString *_Nullable)apiKey;
 
+
+/**
+ Sets up a URL scheme to be used for callbacks at checkout
+
+ @note Set a unique scheme for every single application in which the Kite SDK is used
+ @param scheme The scheme
+ */
++ (void)setURLScheme:(NSString *_Nonnull)scheme;
+
 /**
  *  The payment environment previously set
  *

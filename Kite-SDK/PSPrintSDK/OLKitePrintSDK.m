@@ -60,6 +60,10 @@ static NSString *instagramRedirectURI = nil;
     [[PhotobookSDK shared] setShouldUseStaging:useStaging];
 }
 
++ (void)setURLScheme:(NSString *_Nonnull)scheme {
+    [[PhotobookSDK shared] setKiteUrlScheme:scheme];
+}
+
 + (void)setIsUnitTesting {
     isUnitTesting = YES;
 }
