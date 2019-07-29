@@ -81,9 +81,10 @@
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
     
-    return [[FBSDKApplicationDelegate sharedInstance] application:application
-                                                          openURL:url
-                                                          options:options];
+    BOOL kiteHandled = [OLKitePrintSDK handleUrlCallBack:url];
+    return kiteHandled || [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                                         openURL:url
+                                                                         options:options];
 }
 
 @end

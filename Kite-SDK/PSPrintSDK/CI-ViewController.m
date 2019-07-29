@@ -36,6 +36,8 @@ static NSString *const kAPIKeyLive = @"REPLACE_WITH_YOUR_API_KEY"; // replace wi
 static NSString *const kApplePayMerchantIDKey = @"merchant.ly.kite.sdk"; // Replace with your merchant ID
 static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your business name
 
+static NSString *const kURLScheme = @"kitely";
+
 #import "CI-ViewController.h"
 #import "OLKitePrintSDK.h"
 #import "OLImageCachingManager.h"
@@ -79,6 +81,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     
     [OLKitePrintSDK setApplePayMerchantID:kApplePayMerchantIDKey];
     [OLKitePrintSDK setApplePayPayToString:kApplePayBusinessName];
+    [OLKitePrintSDK setURLScheme:kURLScheme];
     
     [OLAnalytics sharedInstance].delegate = self;
 }
@@ -252,6 +255,7 @@ static NSString *const kApplePayBusinessName = @"Kite.ly"; //Replace with your b
     
     [vc addCustomPhotoProviderWithViewController:nil name:@"External" icon:[UIImage imageNamed:@"cat"] prepopulatedAssets:assets];
     
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:NULL];
 }
 

@@ -1,3 +1,7 @@
+## 8.1.0
+- Added support for 3DS2 payments
+- Fixes and improvements
+
 ### 8.0.1
 - Updated to the latest Photobook
 

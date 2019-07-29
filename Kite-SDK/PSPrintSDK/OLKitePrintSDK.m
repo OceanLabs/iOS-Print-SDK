@@ -55,15 +55,20 @@ static NSString *instagramRedirectURI = nil;
 
 @implementation OLKitePrintSDK
 
-+ (void)setUseStaging:(BOOL)staging{
++ (void)setUseStaging:(BOOL)staging {
     useStaging = staging;
+    [[PhotobookSDK shared] setShouldUseStaging:useStaging];
 }
 
-+ (void)setIsUnitTesting{
++ (void)setURLScheme:(NSString *_Nonnull)scheme {
+    [[PhotobookSDK shared] setKiteUrlScheme:scheme];
+}
+
++ (void)setIsUnitTesting {
     isUnitTesting = YES;
 }
 
-+ (BOOL)isUnitTesting{
++ (BOOL)isUnitTesting {
     return isUnitTesting;
 }
 
@@ -87,7 +92,7 @@ static NSString *instagramRedirectURI = nil;
 }
 
 + (NSString *)apiEndpoint {
-    if (useStaging){
+    if (useStaging) {
         switch (environment) {
             case OLKitePrintSDKEnvironmentLive: return kOLStagingEndpointLive;
             case OLKitePrintSDKEnvironmentSandbox: return kOLStagingEndpointSandbox;
@@ -101,11 +106,11 @@ static NSString *instagramRedirectURI = nil;
     }
 }
 
-+ (NSString *)apiVersion{
++ (NSString *)apiVersion {
     return kOLAPIEndpointVersion;
 }
 
-+ (void) addPushDeviceToken:(NSData *)deviceToken{
++ (void)addPushDeviceToken:(NSData *)deviceToken {
     [OLAnalytics addPushDeviceToken:deviceToken];
 }
 
@@ -113,23 +118,27 @@ static NSString *instagramRedirectURI = nil;
     [OLAnalytics setOptInToRemoteAnalytics:optIn];
 }
 
-+ (void)setApplePayMerchantID:(NSString *_Nonnull)mID{
++ (void)setApplePayMerchantID:(NSString * _Nonnull)mID {
     [[PhotobookSDK shared] setApplePayMerchantId:mID];
 }
 
-+ (void)setApplePayPayToString:(NSString *_Nonnull)name{
++ (void)setApplePayPayToString:(NSString * _Nonnull)name {
     [[PhotobookSDK shared] setApplePayPayTo:name];
 }
 
-+ (NSString *)qualityGuaranteeString{
++ (BOOL)handleUrlCallBack:(NSURL * _Nonnull)url {
+    return [[PhotobookSDK shared] handleUrlCallBackWith:url];
+}
+
++ (NSString *)qualityGuaranteeString {
     return NSLocalizedStringFromTableInBundle(@"**Quality Guarantee**\nOur products are of the highest quality and we’re confident you will love yours. If not, we offer a no quibble money back guarantee. Enjoy!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"");
 }
 
-+ (void)setIsKiosk:(BOOL)enabled{
++ (void)setIsKiosk:(BOOL)enabled {
     isKiosk = enabled;
 }
 
-+ (BOOL)isKiosk{
++ (BOOL)isKiosk {
     return isKiosk;
 }
 
@@ -147,7 +156,7 @@ static NSString *instagramRedirectURI = nil;
 
 + (UIViewController *)checkoutViewControllerWithPrintJobs:(NSArray <id<OLPrintJob>>*_Nullable)printJobs info:(NSDictionary * _Nullable)info {
     if ([[PhotobookSDK shared] isProcessingOrder]) {
-        return [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES dismissClosure:^(UIViewController *viewController, BOOL success){
+        return [[PhotobookSDK shared] receiptViewControllerWithEmbedInNavigation:YES dismissClosure:^(UIViewController *viewController, BOOL success) {
             [viewController dismissViewControllerAnimated:YES completion:NULL];
         }];
     }
@@ -159,11 +168,11 @@ static NSString *instagramRedirectURI = nil;
         [[PhotobookSDK shared] addProductToBasket:(id<Product>)printJob];
     }
     
-    return (UINavigationController *)[[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES dismissClosure:^(UIViewController *viewController, BOOL success){
+    return (UINavigationController *)[[PhotobookSDK shared] checkoutViewControllerWithEmbedInNavigation:YES dismissClosure:^(UIViewController *viewController, BOOL success) {
         if (![OLUserSession currentSession].kiteVc){
             [viewController dismissViewControllerAnimated:YES completion:NULL];
         }
-        else if ([viewController isKindOfClass:[NSClassFromString(@"Photobook.PhotobookViewController") class]]){
+        else if ([viewController isKindOfClass:[NSClassFromString(@"Photobook.PhotobookViewController") class]]) {
             [viewController.navigationController popViewControllerAnimated:YES];
         } else {
             [viewController.navigationController popToRootViewControllerAnimated:YES];
@@ -175,23 +184,22 @@ static NSString *instagramRedirectURI = nil;
     return [[PhotobookSDK shared] isProcessingOrder];
 }
 
-+ (void)setQRCodeUploadEnabled:(BOOL)enabled{
++ (void)setQRCodeUploadEnabled:(BOOL)enabled {
 }
 
-+ (void)endCustomerSession{
++ (void)endCustomerSession {
     [[OLUserSession currentSession] cleanupUserSession:OLUserSessionCleanupOptionAll];
 }
 
-+ (void)setAllowsImageZooming:(BOOL)allowZoom{
++ (void)setAllowsImageZooming:(BOOL)allowZoom {
     allowImageZooming = allowZoom;
 }
 
-+ (BOOL)allowsImageZooming{
++ (BOOL)allowsImageZooming {
     return allowImageZooming;
 }
 
 #pragma mark - Internal
-
 
 + (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
     instagramSecret = secret;
@@ -203,11 +211,11 @@ static NSString *instagramRedirectURI = nil;
     return instagramRedirectURI;
 }
 
-+ (NSString *)instagramSecret{
++ (NSString *)instagramSecret {
     return instagramSecret;
 }
 
-+ (NSString *)instagramClientID{
++ (NSString *)instagramClientID {
     return instagramClientID;
 }
 
