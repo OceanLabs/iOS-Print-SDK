@@ -1,32 +1,30 @@
 PODS:
   - Analytics (3.6.10)
-  - Bolts (1.9.0):
-    - Bolts/AppLinks (= 1.9.0)
-    - Bolts/Tasks (= 1.9.0)
-  - Bolts/AppLinks (1.9.0):
-    - Bolts/Tasks
-  - Bolts/Tasks (1.9.0)
-  - FBSDKCoreKit (4.40.0):
-    - Bolts (~> 1.9)
-  - FBSDKLoginKit (4.40.0):
-    - FBSDKCoreKit
-  - KeychainSwift (11.0.0)
+  - FBSDKCoreKit (5.2.3):
+    - FBSDKCoreKit/Basics (= 5.2.3)
+    - FBSDKCoreKit/Core (= 5.2.3)
+  - FBSDKCoreKit/Basics (5.2.3)
+  - FBSDKCoreKit/Core (5.2.3):
+    - FBSDKCoreKit/Basics
+  - FBSDKLoginKit (5.2.3):
+    - FBSDKCoreKit (~> 5.0)
+  - KeychainSwift (16.0.1)
   - KITAssetsPickerController (1.0.9):
     - PureLayout (~> 3.0.0)
   - NXOAuth2Client (1.2.8)
   - PayPal-iOS-Dynamic-Loader (1.0.1)
   - PayPal-iOS-SDK/Core (2.18.1)
-  - Photobook (2.0.1):
-    - Analytics (~> 3.0)
-    - KeychainSwift (~> 11.0.0)
+  - Photobook (2.1.0):
+    - Analytics (~> 3.6.10)
+    - KeychainSwift (~> 16.0.1)
     - PayPal-iOS-Dynamic-Loader
     - SDWebImage (~> 4.4.0)
-    - Stripe
+    - Stripe (~> 15.0.1)
   - PureLayout (3.0.2)
-  - SDWebImage (4.4.6):
-    - SDWebImage/Core (= 4.4.6)
-  - SDWebImage/Core (4.4.6)
-  - Stripe (15.0.0)
+  - SDWebImage (4.4.7):
+    - SDWebImage/Core (= 4.4.7)
+  - SDWebImage/Core (4.4.7)
+  - Stripe (15.0.1)
 
 DEPENDENCIES:
   - FBSDKCoreKit
@@ -39,7 +37,6 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Analytics
-    - Bolts
     - FBSDKCoreKit
     - FBSDKLoginKit
     - KeychainSwift
@@ -62,19 +59,18 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Analytics: 63744ad4afa65c3bcdcdb7a94b62515bde5b3900
-  Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
-  FBSDKCoreKit: ae214474b25033399c131dc81d258e412582a2ba
-  FBSDKLoginKit: 7a1e411d46acc8834588eca437daf34de42e1d52
-  KeychainSwift: bea6bd9f98af7b8d7ca4aa79fe105c00fab532db
+  FBSDKCoreKit: 5154c35d9058fd7dfa0445ba19e194c4b172fc32
+  FBSDKLoginKit: dc98b6bf12334f1a42f28d0457fffc9aa3d1eca5
+  KeychainSwift: 4209611373ca4a098e09b1e547eebd87c544dcc4
   KITAssetsPickerController: bcb94b0b3267006fa666041f18a2370a00a9b105
   NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-Dynamic-Loader: a32db083fe7e8f8d9ad4309e483e369c9a47e5eb
   PayPal-iOS-SDK: 10654cd111e911a9807bddb96fae81aacb8e9915
-  Photobook: b236d0712905facdeb2325e3b626fbe94950b4df
+  Photobook: 6c5b7511265553ff304b3d00fc1c7229fe5f3ee2
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
-  SDWebImage: 3f3f0c02f09798048c47a5ed0a13f17b063572d8
-  Stripe: 312b22a67af9fa55c246d26148b3f3a9636a0ff2
+  SDWebImage: c10d14a8883ebd89664f02a422006f66a85c0c5d
+  Stripe: 2c4d0a88817361a102886315ff452d90f65e898b
 
 PODFILE CHECKSUM: 078d39570ad0103dcf7ccd358d629d21e4d52636
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.7.3

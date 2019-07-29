@@ -40,7 +40,7 @@ Use our SDK to unlock hidden revenue streams and add value for your users. *In u
 
 ## Requirements
 
-* Xcode 10.0
+* Xcode 10.2
 * iOS 10.0+ target deployment
 
 ## Installation
@@ -89,7 +89,49 @@ Swift:
 ```swift
 OLKitePrintSDK.setAPIKey("YOUR_API_KEY", with: .live) //Or .sandbox for testing
 ```
-* **Step 3:** Create and present Kite:
+* **Step 3:** Set up 3D Secure 2 payments:
+
+Read about SCA (Strong Customer Authentication) requirements [here](https://stripe.com/gb/guides/strong-customer-authentication).
+
+Add a URL Scheme to your info.plist:
+```
+<key>CFBundleURLTypes</key>
+<array>
+	<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>myappname123456</string>
+		</array>
+	</dict>
+</array>
+```
+
+Pass the URL Scheme you defined to the Kite SDK:
+
+Objective-C:
+```obj-c
+[OLKitePrintSDK setUrlScheme:@"myappname123456"];
+```
+Swift:
+```swift
+OLKitePrintSDK.urlScheme = "myappname123456"
+```
+
+Implement the following method in your app delegate:
+
+Objective-C
+```obj-c
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+	return [OLKitePrintSDK handleUrlCallBack:url];   
+}
+```
+Swift:
+```swift
+func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+   	return OLKitePrintSDK.handleUrlCallBack(with: url)
+}
+```
+* **Step 4:** Create and present Kite:
 
 Objective-C:
 ```obj-c
@@ -101,7 +143,7 @@ Swift:
 let kiteViewController = OLKiteViewController.init(assets: [OLAsset(url: URL(string: "http://psps.s3.amazonaws.com/sdk_static/4.jpg"))])
 present(kiteViewController!, animated: true, completion: nil)
 ```
-* **Step 4:**: 🎉Profit🎉
+* **Step 5:**: 🎉Profit🎉
 
 💰💵💶💷💴
 
