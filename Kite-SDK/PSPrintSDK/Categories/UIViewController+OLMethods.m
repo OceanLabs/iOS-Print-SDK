@@ -149,6 +149,7 @@
         [viewController dismissViewControllerAnimated:YES completion:NULL];
     }];
     if (checkoutVc) {
+        checkoutVc.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:checkoutVc animated:YES completion:NULL];
     }
 }
