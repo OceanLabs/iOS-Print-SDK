@@ -9,13 +9,11 @@ target 'KiteSDK' do
 end
 
 target 'KiteSDK-Demo' do
-    pod 'PayPal-iOS-SDK/Core'
     pod 'FBSDKCoreKit'
     pod 'FBSDKLoginKit'
 end
 
 target 'Kite-CI-Deploy' do
-    pod 'PayPal-iOS-SDK/Core'
     pod 'FBSDKCoreKit'
     pod 'FBSDKLoginKit'
     pod 'KITAssetsPickerController', :git => 'https://github.com/kkarayannis/KITAssetsPickerController.git'
