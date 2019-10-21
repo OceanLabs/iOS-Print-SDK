@@ -1,4 +1,4 @@
-### 8.0.1
+### 8.1.1
 - Updated to the latest Photobook
 - Fixed interface to light mode
 
