@@ -21,14 +21,12 @@
 "Description" = "Descrição";
 "Details" = "Detalhes";
 "Discard Edits" = "Eliminar edições";
-"Do you want to log out of %@?" = "Pretende terminar a sessão de %@?";
 "Do you want to remove this photo?" = "Pretende remover esta fotografia?";
 "Done" = "Concluído";
 "Edit" = "Editar";
 "End Session" = "Terminar sessão";
 "Failed to download phone case mask. Please check your internet connectivity and try again" = "Falha ao transferir a máscara de capa para telemóvel. Verifique a sua ligação à Internet e tente novamente";
 "Failed to get upload URL. Try again later." = "Falha ao obter o URL de carregamento. Tente novamente mais tarde.";
-"Failed to log in to Instagram. Please check your internet connectivity and try again" = "Falha ao iniciar sessão no Instagram. Verifique a sua ligação à Internet e tente novamente";
 "Failed to synchronize product templates. Please try again." = "Falha ao sincronizar os modelos de produtos. Tente novamente.";
 "Filters" = "Filtros";
 "Flip" = "Rodar";
@@ -41,9 +39,6 @@
 "inches" = "polegadas";
 "Large" = "Visor central";
 "Let's pick\nan image!" = "Vamos escolher\numa imagem!";
-"Log In" = "Iniciar sessão";
-"Log out" = "Terminar sessão";
-"Login" = "Iniciar sessão";
 "Maximum Photos Reached" = "Número máximo de fotografias atingido";
 "Medium" = "Média";
 "MORE ITEMS\nCOMING SOON!" = "MAIS ARTIGOS\nEM BREVE!";
@@ -106,7 +101,6 @@
 "Yes" = "Sim";
 "Yes, remove it" = "Sim, remover";
 "You can add %d more for the same price." = "Pode adicionar mais %d pelo mesmo preço.";
-"You need to authorize the app to access your Instagram account if you want to import photos from there." = "Se quiser importar as fotografias da sua conta de Instagram, tem de dar autorização à aplicação para aceder à conta.";
 "You've only selected %d photo." = "Selecionou apenas %d fotografia.";
 "You've only selected %d photos." = "Selecionou apenas %d fotografias.";
 "You've selected %d photos." = "Selecionou %d fotografias.";

@@ -31,10 +31,8 @@
 #import "UIView+RoundRect.h"
 #import "OLImagePickerViewController.h"
 #import "OLKitePrintSDK.h"
-#import "OLInstagramLoginWebViewController.h"
 #import "OLNavigationController.h"
 #import "OLKiteUtils.h"
-#import "OLFacebookSDKWrapper.h"
 #import "OLKiteABTesting.h"
 
 @interface OLImagePickerLoginPageViewController ()
@@ -50,15 +48,7 @@
     [super viewDidLoad];
     
     NSString *providerName;
-    if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
-        providerName = @"Instagram";
-        [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Login", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-    }
-    else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
-        providerName = @"Facebook";
-        [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Login", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
-    }
-    else if (self.provider.providerType == OLImagePickerProviderTypePhotoLibrary){
+    if (self.provider.providerType == OLImagePickerProviderTypePhotoLibrary){
         providerName = [UIDevice currentDevice].localizedModel;
         [self.loginButton setTitle:NSLocalizedStringFromTableInBundle(@"Authorise", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") forState:UIControlStateNormal];
     }
@@ -84,27 +74,7 @@
 }
 
 - (IBAction)onButtonLoginTapped:(UIButton *)sender {
-    if (self.provider.providerType == OLImagePickerProviderTypeInstagram){
-        OLInstagramLoginWebViewController *loginVC = [[OLInstagramLoginWebViewController alloc] init];
-        loginVC.imagePicker = self.imagePicker;
-        
-        OLNavigationController *nvc = [[OLNavigationController alloc] initWithRootViewController:loginVC];
-        [self presentViewController:nvc animated:YES completion:NULL];
-    }
-    else if (self.provider.providerType == OLImagePickerProviderTypeFacebook){
-        [OLFacebookSDKWrapper login:[OLFacebookSDKWrapper loginManager] withReadPermissions:@[@"public_profile", @"user_photos"] fromViewController:self handler:^(id result, NSError *error) {
-            if (error) {
-                UIAlertController *ac = [UIAlertController alertControllerWithTitle:NSLocalizedStringFromTableInBundle(@"Oops!", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"") message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [ac addAction:[UIAlertAction actionWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"KitePrintSDK", [OLKiteUtils kiteLocalizationBundle], @"Acknowledgent to an alert dialog.")  style:UIAlertActionStyleDefault handler:NULL]];
-                [self.imagePicker presentViewController:ac animated:YES completion:NULL];
-            } else if ([result isCancelled]) {
-                //Do nothing
-            } else {
-                [self.imagePicker reloadPageController];
-            }
-        }];
-    }
-    else if (self.provider.providerType == OLImagePickerProviderTypePhotoLibrary){
+    if (self.provider.providerType == OLImagePickerProviderTypePhotoLibrary){
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{} completionHandler:NULL];
     }
 }

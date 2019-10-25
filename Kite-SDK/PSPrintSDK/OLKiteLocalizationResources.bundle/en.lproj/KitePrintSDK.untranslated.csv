@@ -22,14 +22,12 @@ Default,Default,
 Description,Description,/* Product description */
 Details,Details,/* Product Details */
 Discard Edits,Discard Edits,
-Do you want to log out of %@?,Do you want to log out of %@?,/* Log out of Instagram/Facebook */
 Do you want to remove this photo?,Do you want to remove this photo?,
 Done,Done,
 Edit,Edit,/* Edit image */
 End Session,End Session,
 Failed to download phone case mask. Please check your internet connectivity and try again,Failed to download phone case mask. Please check your internet connectivity and try again,
 Failed to get upload URL. Try again later.,Failed to get upload URL. Try again later.,
-Failed to log in to Instagram. Please check your internet connectivity and try again,Failed to log in to Instagram. Please check your internet connectivity and try again,
 Failed to synchronize product templates. Please try again.,Failed to synchronize product templates. Please try again.,
 Filters,Filters,/* Image filters */
 Flip,Flip,/* Horizontally flip image */
@@ -42,9 +40,6 @@ IMAGE TOOLS,IMAGE TOOLS,
 inches,inches,
 Large,Large,
 Let's pick\nan image!,Let's pick\nan image!,"/* Let's pick an image! The \n means there is a line break there. Please put it in the middle of the phrase, as best as you can. If one needs to be longer, it should be the first half. */"
-Log In,Log In,
-Log out,Log out,
-Login,Login,
 Maximum Photos Reached,Maximum Photos Reached,
 Medium,Medium,
 MORE ITEMS\nCOMING SOON!,MORE ITEMS\nCOMING SOON!,
@@ -107,7 +102,6 @@ We need access to your %@ photos,We need access to your %@ photos,/* Example: We
 Yes,Yes,
 "Yes, remove it","Yes, remove it","/* Yes, remove [the photo] */"
 You can add %d more for the same price.,You can add %d more for the same price.,
-You need to authorize the app to access your Instagram account if you want to import photos from there.,You need to authorize the app to access your Instagram account if you want to import photos from there.,
 You've only selected %d photo.,You've only selected %d photo.,
 You've only selected %d photos.,You've only selected %d photos.,
 You've selected %d photos.,You've selected %d photos.,

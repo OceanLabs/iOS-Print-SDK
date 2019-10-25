@@ -21,14 +21,12 @@
 "Description" = "Beskrivning";
 "Details" = "Detaljer";
 "Discard Edits" = "Ångra redigeringar";
-"Do you want to log out of %@?" = "Vill du logga ut från %@?";
 "Do you want to remove this photo?" = "Vill du ta bort det här fotot?";
 "Done" = "Klart";
 "Edit" = "Redigera";
 "End Session" = "Avsluta session";
 "Failed to download phone case mask. Please check your internet connectivity and try again" = "Det gick inte att hämta masken för telefonskalet. Kontrollera din internet-anslutning och försök igen";
 "Failed to get upload URL. Try again later." = "Det gick inte att överföra webbadressen. Försök igen senare.";
-"Failed to log in to Instagram. Please check your internet connectivity and try again" = "Det gick inte att logga in på Instagram. Kontrollera din internet-anslutning och försök igen";
 "Failed to synchronize product templates. Please try again." = "Det gick inte att synkronisera produktmallar. Försök igen.";
 "Filters" = "Filter";
 "Flip" = "Vänd";
@@ -41,9 +39,6 @@
 "inches" = "tum";
 "Large" = "Stor,";
 "Let's pick\nan image!" = "Välj \nen bild!";
-"Log In" = "Logga in";
-"Log out" = "Logga ut";
-"Login" = "Logga in";
 "Maximum Photos Reached" = "Maximalt antal foton har uppnåtts";
 "Medium" = "Medel";
 "MORE ITEMS\nCOMING SOON!" = "FLER ARTIKLAR\NKOMMER SNART!";
@@ -106,7 +101,6 @@
 "Yes" = "Ja";
 "Yes, remove it" = "Ja, ta bort den";
 "You can add %d more for the same price." = "Du kan lägga till ytterligare %d för samma pris.";
-"You need to authorize the app to access your Instagram account if you want to import photos from there." = "Du måste ge appen tillgång till Instagram-kontot om du vill importera foton från det.";
 "You've only selected %d photo." = "Du har endast valt %d foto.";
 "You've only selected %d photos." = "Du har endast valt %d foton.";
 "You've selected %d photos." = "Du har valt %d foton.";

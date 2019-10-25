@@ -51,19 +51,10 @@ If you're using [CocoaPods](http://cocoapods.org) just add the following to your
 
 ```ruby
 pod "Kite-Print-SDK"
-pod 'PayPal-iOS-SDK/Core', '~> 2.18.0'
-
-#Uncomment these lines if you want Facebook photo picking support
-#pod 'FBSDKCoreKit', '~> 4.27.1'
-#pod 'FBSDKLoginKit', '~> 4.27.1'
-
 ```
-
-If you'd like to offer your users the opportunity to add photos via Instagram or Facebook then uncomment the appropriate lines above and follow the instructions to [Enable Facebook & Instagram Photo Selection](Kite-SDK/docs/social_photo_sources.md).
 
 You can also provide your own photo source (for example from within your app or a custom back end). Please read the documentation [here](Kite-SDK/docs/custom_photo_sources.md).
 
-PayPal functionality is also optional although recommended as you'll typically see a higher conversion rate with it.
 
 You can find example projects for [Swift](https://github.com/OceanLabs/Example-Kite-iOS-Cocoapods) and [Objective-C](https://github.com/OceanLabs/Example-Kite-iOS-Cocoapods-Objc).
 
@@ -235,9 +226,6 @@ We also have a [REST print API](https://www.kite.ly/docs/1.1/) for those who pre
 
 ## Migration from older Kite SDK versions
 Please see the [Migration Documentation](Kite-SDK/docs/migration.md) to migrate to newer versions
-
-## HP Print SDK
-You can optionally offer print-at-home functionality by enabling the HP Print SDK, which will integrate it nicely within the Kite SDK. Please see [here](Kite-SDK/docs/hp_sdk.md) for details. 
 
 ## Open Source Acknowledgements
 The iOS Print SDK uses software created by the Open Source community, you can find a full list of acknowledgements [here](https://kite.uservoice.com/knowledgebase/articles/1141681-open-source).

@@ -21,14 +21,12 @@
 "Description" = "Beschrijving";
 "Details" = "Details";
 "Discard Edits" = "Bewerkingen verwijderen";
-"Do you want to log out of %@?" = "Wil je uitloggen bij %@?";
 "Do you want to remove this photo?" = "Wil je deze foto verwijderen?";
 "Done" = "Klaar";
 "Edit" = "Bewerken";
 "End Session" = "Sessie beëindigen";
 "Failed to download phone case mask. Please check your internet connectivity and try again" = "Downloaden van het template is mislukt. Controleer je internetverbinding en probeer het opnieuw";
 "Failed to get upload URL. Try again later." = "Upload URL niet ontvangen. Probeer het later opnieuw.";
-"Failed to log in to Instagram. Please check your internet connectivity and try again" = "Aanmelden bij Instagram is mislukt. Controleer je internetverbinding en probeer het opnieuw";
 "Failed to synchronize product templates. Please try again." = "Het is niet gelukt om productsjablonen te synchroniseren. Probeer het alsjeblieft nog eens.";
 "Filters" = "Filters";
 "Flip" = "Kantelen";
@@ -41,9 +39,6 @@
 "inches" = "inches";
 "Large" = "Groot";
 "Let's pick\nan image!" = "Laten we een \nfoto kiezen!";
-"Log In" = "Aanmelden";
-"Log out" = "Afmelden";
-"Login" = "Inloggen";
 "Maximum Photos Reached" = "Maximaal aantal foto's is bereikt";
 "Medium" = "Medium";
 "MORE ITEMS\nCOMING SOON!" = "BINNENKORT\nMEER ITEMS!";
@@ -106,7 +101,6 @@
 "Yes" = "Ja";
 "Yes, remove it" = "Ja, verwijderen";
 "You can add %d more for the same price." = "U kunt %d meer toevoegen voor dezelfde prijs.";
-"You need to authorize the app to access your Instagram account if you want to import photos from there." = "Je dient deze app toestemming te geven voor toegang tot je Instagram-account wanneer je daarvandaan foto's wilt importeren.";
 "You've only selected %d photo." = "Je hebt slechts %d foto geselecteerd.";
 "You've only selected %d photos." = "Je hebt slechts %d foto's geselecteerd.";
 "You've selected %d photos." = "U hebt %d foto's geselecteerd.";

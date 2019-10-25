@@ -21,14 +21,12 @@
 "Description" = "Kuvaus";
 "Details" = "Tiedot";
 "Discard Edits" = "Hylkää muutokset";
-"Do you want to log out of %@?" = "Haluatko kirjautua ulos palvelusta %@?";
 "Do you want to remove this photo?" = "Haluatko poistaa tämän valokuvan?";
 "Done" = "Valmis";
 "Edit" = "Muokkaa";
 "End Session" = "Lopeta istunto";
 "Failed to download phone case mask. Please check your internet connectivity and try again" = "Suojakuoren kuvan lataus epäonnistui. Tarkista internetyhteys ja yritä uudelleen";
 "Failed to get upload URL. Try again later." = "Latauksen URL-osoitteen haku epäonnistui. Yritä uudelleen myöhemmin.";
-"Failed to log in to Instagram. Please check your internet connectivity and try again" = "Kirjautuminen Instagramiin epäonnistui. Tarkista internetyhteys ja yritä uudelleen";
 "Failed to synchronize product templates. Please try again." = "Tuotemallien synkronointi epäonnistui. Yritä uudelleen.";
 "Filters" = "Suotimet";
 "Flip" = "Käännä vaakasuorassa";
@@ -41,9 +39,6 @@
 "inches" = "tuumaa";
 "Large" = "Suuri";
 "Let's pick\nan image!" = "Valitse\nkuva!";
-"Log In" = "Kirjaudu sisään";
-"Log out" = "Kirjaudu ulos";
-"Login" = "Kirjaudu sisään";
 "Maximum Photos Reached" = "Kuvien enimmäismäärä saavutettu";
 "Medium" = "Keskikokoinen";
 "MORE ITEMS\nCOMING SOON!" = "LISÄÄ TUOTTEITA\nTULOSSA PIAN!";
@@ -106,7 +101,6 @@
 "Yes" = "Kyllä";
 "Yes, remove it" = "Kyllä, poista";
 "You can add %d more for the same price." = "Voit tilata %d lisää samaan hintaan.";
-"You need to authorize the app to access your Instagram account if you want to import photos from there." = "Jos haluat käyttää Instagramin kuvia, anna sovellukselle lupa käyttää Instagram-tiliäsi.";
 "You've only selected %d photo." = "Olet valinnut vain %d kuvan.";
 "You've only selected %d photos." = "Olet valinnut vain %d kuvaa.";
 "You've selected %d photos." = "Olet valinnut %d kuvaa.";

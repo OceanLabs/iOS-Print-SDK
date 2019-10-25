@@ -1,19 +1,10 @@
 PODS:
   - Analytics (3.7.0)
-  - FBSDKCoreKit (5.2.3):
-    - FBSDKCoreKit/Basics (= 5.2.3)
-    - FBSDKCoreKit/Core (= 5.2.3)
-  - FBSDKCoreKit/Basics (5.2.3)
-  - FBSDKCoreKit/Core (5.2.3):
-    - FBSDKCoreKit/Basics
-  - FBSDKLoginKit (5.2.3):
-    - FBSDKCoreKit (~> 5.0)
   - KeychainSwift (17.0.0)
   - KITAssetsPickerController (1.0.9):
     - PureLayout (~> 3.0.0)
-  - NXOAuth2Client (1.2.8)
   - PayPal-iOS-Dynamic-Loader (1.0.1)
-  - Photobook (2.1.1):
+  - Photobook (2.1.2):
     - Analytics (~> 3.7.0)
     - KeychainSwift (~> 17.0.0)
     - PayPal-iOS-Dynamic-Loader
@@ -26,23 +17,16 @@ PODS:
   - Stripe (18.0.0)
 
 DEPENDENCIES:
-  - FBSDKCoreKit
-  - FBSDKLoginKit
   - KITAssetsPickerController (from `https://github.com/kkarayannis/KITAssetsPickerController.git`)
-  - NXOAuth2Client
   - Photobook
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
-    - FBSDKCoreKit
-    - FBSDKLoginKit
-    - NXOAuth2Client
-    - PureLayout
   trunk:
     - Analytics
     - KeychainSwift
     - PayPal-iOS-Dynamic-Loader
     - Photobook
+    - PureLayout
     - SDWebImage
     - Stripe
 
@@ -57,17 +41,14 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Analytics: 77fd5fb102a4a5eedafa2c2b0245ceb7b7c15e45
-  FBSDKCoreKit: 5154c35d9058fd7dfa0445ba19e194c4b172fc32
-  FBSDKLoginKit: dc98b6bf12334f1a42f28d0457fffc9aa3d1eca5
   KeychainSwift: 9f43f562dffc88af6efadb57d74b14c598eb337f
   KITAssetsPickerController: bcb94b0b3267006fa666041f18a2370a00a9b105
-  NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   PayPal-iOS-Dynamic-Loader: a32db083fe7e8f8d9ad4309e483e369c9a47e5eb
-  Photobook: 4d1c1b830755c4ca8df7f8b7d8383d5f8669721e
+  Photobook: cd264fc74310f065a162aa91a73c411db77ae2ee
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   SDWebImage: 46a7f73228f84ce80990c786e4372cf4db5875ce
   Stripe: 8c9ac6b717a38ed4f373d4db9204cfe8c4120d65
 
-PODFILE CHECKSUM: b53f413e9b38431c6575c3b60dc0e5e535eccbde
+PODFILE CHECKSUM: 5b634b89130e8e7f533077c606b05b10f5595556
 
 COCOAPODS: 1.8.3

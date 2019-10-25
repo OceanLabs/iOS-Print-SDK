@@ -34,8 +34,6 @@ typedef NS_ENUM(NSInteger, OLImagePickerProviderType) {
     OLImagePickerProviderTypeCustom,
     OLImagePickerProviderTypeRecents,
     OLImagePickerProviderTypePhotoLibrary,
-    OLImagePickerProviderTypeFacebook,
-    OLImagePickerProviderTypeInstagram,
     OLImagePickerProviderTypeQRCode,
     OLImagePickerProviderTypeViewController
 };

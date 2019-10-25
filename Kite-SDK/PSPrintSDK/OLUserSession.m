@@ -31,7 +31,6 @@
 #import "OLKiteUtils.h"
 #import "OLAsset+Private.h"
 #import "OLKiteABTesting.h"
-#import "OLFacebookSDKWrapper.h"
 #import "OLImagePickerProvider.h"
 #import "OLKiteViewController.h"
 #import "OLCustomViewControllerPhotoProvider.h"
@@ -44,7 +43,6 @@
 #import "NSObject+Utils.h"
 
 @import Photobook;
-@import NXOAuth2Client;
 
 @interface OLImagePickerProviderCollection ()
 @property (strong, nonatomic) NSMutableArray<OLAsset *> *array;
@@ -99,26 +97,6 @@
                 [collection.array removeAllObjects];
             }
         }
-    }
-}
-
-- (void)logoutOfFacebook{
-    [OLFacebookSDKWrapper logout];
-}
-
-- (void)logoutOfInstagram{
-    NSHTTPCookie *cookie;
-    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    NSArray *cookies = [NSArray arrayWithArray:[storage cookies]];
-    for (cookie in cookies) {
-        if ([cookie.domain containsString:@"instagram.com"]) {
-            [storage deleteCookie:cookie];
-        }
-    }
-    
-    NSArray *instagramAccounts = [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"];
-    for (NXOAuth2Account *account in instagramAccounts) {
-        [[NXOAuth2AccountStore sharedStore] removeAccount:account];
     }
 }
 

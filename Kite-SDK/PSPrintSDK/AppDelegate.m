@@ -34,8 +34,6 @@
 #import "CI-ViewController.h"
 #endif
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -43,8 +41,7 @@
         [self application:application openURL:launchOptions[UIApplicationLaunchOptionsURLKey] options:launchOptions];
     }
     
-    return [[FBSDKApplicationDelegate sharedInstance] application:application
-                                    didFinishLaunchingWithOptions:launchOptions];
+    return YES;
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -82,9 +79,7 @@
             openURL:(NSURL *)url options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
     
     BOOL kiteHandled = [OLKitePrintSDK handleUrlCallBack:url];
-    return kiteHandled || [[FBSDKApplicationDelegate sharedInstance] application:application
-                                                                         openURL:url
-                                                                         options:options];
+    return kiteHandled;
 }
 
 @end

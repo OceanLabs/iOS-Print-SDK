@@ -21,14 +21,12 @@
 "Description" = "Description";
 "Details" = "Details";
 "Discard Edits" = "Discard Edits";
-"Do you want to log out of %@?" = "Do you want to log out of %@?";
 "Do you want to remove this photo?" = "Do you want to remove this photo?";
 "Done" = "Done";
 "Edit" = "Edit";
 "End Session" = "End Session";
 "Failed to download phone case mask. Please check your internet connectivity and try again" = "Failed to download phone case mask. Please check your internet connectivity and try again";
 "Failed to get upload URL. Try again later." = "Failed to get upload URL. Try again later.";
-"Failed to log in to Instagram. Please check your internet connectivity and try again" = "Failed to log in to Instagram. Please check your internet connectivity and try again";
 "Failed to synchronize product templates. Please try again." = "Failed to synchronize product templates. Please try again.";
 "Filters" = "Filters";
 "Flip" = "Flip";
@@ -41,9 +39,6 @@
 "inches" = "inches";
 "Large" = "Large";
 "Let's pick\nan image!" = "Let's pick\nan image!";
-"Log In" = "Log In";
-"Log out" = "Log out";
-"Login" = "Login";
 "Maximum Photos Reached" = "Maximum Photos Reached";
 "Medium" = "Medium";
 "MORE ITEMS\nCOMING SOON!" = "MORE ITEMS\nCOMING SOON!";
@@ -106,7 +101,6 @@
 "Yes" = "Yes";
 "Yes, remove it" = "Yes, remove it";
 "You can add %d more for the same price." = "You can add %d more for the same price.";
-"You need to authorize the app to access your Instagram account if you want to import photos from there." = "You need to authorize the app to access your Instagram account if you want to import photos from there.";
 "You've only selected %d photo." = "You've only selected %d photo.";
 "You've only selected %d photos." = "You've only selected %d photos.";
 "You've selected %d photos." = "You've selected %d photos.";

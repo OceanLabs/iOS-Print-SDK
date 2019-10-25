@@ -21,14 +21,12 @@
 "Description" = "Termékleírás";
 "Details" = "Részletek";
 "Discard Edits" = "Szerkesztések elvetése";
-"Do you want to log out of %@?" = "Szeretnél kijelentkezni a következőből: %@?";
 "Do you want to remove this photo?" = "Szeretnéd eltávolítani ezt a fényképet?";
 "Done" = "Kész";
 "Edit" = "Szerkesztés";
 "End Session" = "Munkamenet befejezése";
 "Failed to download phone case mask. Please check your internet connectivity and try again" = "Sikertelen volt a telefontok maszkjának letöltése. Ellenőrizd az internetkapcsolatot, majd próbáld újra.";
 "Failed to get upload URL. Try again later." = "Sikertelen volt az URL-cím betöltése. Próbáld újra később.";
-"Failed to log in to Instagram. Please check your internet connectivity and try again" = "Sikertelen volt a bejelentkezés az Instagramra. Ellenőrizd az internetkapcsolatot, majd próbáld újra.";
 "Failed to synchronize product templates. Please try again." = "A terméksablonok szinkronizálása sikertelen. Próbáld meg újra.";
 "Filters" = "Szűrők";
 "Flip" = "Tükrözés";
@@ -41,9 +39,6 @@
 "inches" = "hüvelyk";
 "Large" = "Nagy";
 "Let's pick\nan image!" = "Válassz egy\nképet!";
-"Log In" = "Bejelentkezés";
-"Log out" = "Kijelentkezés";
-"Login" = "Bejelentkezés";
 "Maximum Photos Reached" = "Elérte a fényképek maximális számát";
 "Medium" = "Közepes";
 "MORE ITEMS\nCOMING SOON!" = "MÉG TÖBB TERMÉK\nHAMAROSAN!";
@@ -106,7 +101,6 @@
 "Yes" = "Igen";
 "Yes, remove it" = "Igen, távolítsa el";
 "You can add %d more for the same price." = "%d további hozzáadása lehetséges ezen az áron.";
-"You need to authorize the app to access your Instagram account if you want to import photos from there." = "Ha Instagram-fiókodból szeretnél fényképeket importálni, engedélyezned kell az alkalmazásnak a fiókhoz való hozzáférést.";
 "You've only selected %d photo." = "Csak %d fényképet választottál ki.";
 "You've only selected %d photos." = "Csak %d fényképet választottál ki.";
 "You've selected %d photos." = "%d fényképet választottál ki.";

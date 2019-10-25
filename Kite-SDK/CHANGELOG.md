@@ -1,3 +1,7 @@
+## 8.2.1
+- Removed Facebook & Instagram option from image picker
+- Updated to the latest Photobook
+
 ### 8.1.1
 - Updated to the latest Photobook
 - Fixed interface to light mode

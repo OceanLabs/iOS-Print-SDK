@@ -34,7 +34,6 @@
 #import "OLKiteViewController.h"
 #import "OLUserSession.h"
 #import "OLPayPalWrapper.h"
-#import "OLFacebookSDKWrapper.h"
 #import "OLKiteViewController+Private.h"
 
 @import Contacts;
@@ -62,20 +61,8 @@
     return bundle;
 }
 
-+ (BOOL)instagramEnabled{
-    if (YES){ //Check what needs to be checked in terms of installation
-        return [OLKitePrintSDK instagramSecret] && ![[OLKitePrintSDK instagramSecret] isEqualToString:@""] && [OLKitePrintSDK instagramClientID] && ![[OLKitePrintSDK instagramClientID] isEqualToString:@""] && [OLKitePrintSDK instagramRedirectURI] && ![[OLKitePrintSDK instagramRedirectURI] isEqualToString:@""];
-    }
-    
-    return NO;
-}
-
 + (BOOL)qrCodeUploadEnabled {
     return [OLUserSession currentSession].kiteVc.qrCodeUploadEnabled;
-}
-
-+ (BOOL)facebookEnabled{
-    return [OLFacebookSDKWrapper isFacebookAvailable];
 }
 
 + (BOOL)recentsAvailable{
@@ -85,12 +72,6 @@
 + (NSInteger)numberOfProvidersAvailable{
     NSInteger providers = 0;
     if ([self cameraRollEnabled]){
-        providers++;
-    }
-    if ([self instagramEnabled]){
-        providers++;
-    }
-    if ([self facebookEnabled]){
         providers++;
     }
     if ([self qrCodeUploadEnabled]){

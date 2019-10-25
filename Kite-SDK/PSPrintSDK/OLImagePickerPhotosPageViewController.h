@@ -32,13 +32,6 @@
 #import "OLImagePickerViewController.h"
 #import "OLImagePickerPageViewController.h"
 
-#import "OLFacebookAlbumRequest.h"
-#import "OLFacebookAlbum.h"
-#import "OLFacebookPhotosForAlbumRequest.h"
-#import "OLFacebookImage.h"
-
-#import "OLInstagramMediaRequest.h"
-
 @interface OLImagePickerPhotosPageViewController : OLImagePickerPageViewController
 
 @property (assign, nonatomic) NSInteger quantityPerItem;
@@ -52,26 +45,5 @@
 
 - (NSUInteger)numberOfCellsPerRow;
 - (void)closeAlbumsDrawer;
-
-
-//Facebook
-@property (nonatomic, strong) OLFacebookAlbumRequest *albumRequestForNextPage;
-@property (nonatomic, strong) OLFacebookAlbumRequest *inProgressRequest;
-@property (nonatomic, strong) OLFacebookPhotosForAlbumRequest *nextPageRequest;
-@property (nonatomic, strong) OLFacebookPhotosForAlbumRequest *inProgressPhotosRequest;
-@property (nonatomic, strong) UIView *loadingFooter;
-@property (nonatomic, weak) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property (nonatomic, strong) NSError *getAlbumError;
-@property (nonatomic, strong) NSMutableArray<OLFacebookAlbum *> *albums;
-
-@property (nonatomic, strong) NSMutableArray<OLFacebookImage *> *photos;
-@property (nonatomic, strong) NSArray<OLFacebookImage *> *overflowPhotos;
-
-//Instagram
-@property (nonatomic, strong) NSMutableArray *media;
-@property (nonatomic, strong) OLInstagramMediaRequest *inProgressMediaRequest;
-@property (nonatomic, strong) OLInstagramMediaRequest *nextMediaRequest;
-@property (nonatomic, strong) NSArray *overflowMedia;
-
 
 @end

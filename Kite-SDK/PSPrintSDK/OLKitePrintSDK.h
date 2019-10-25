@@ -138,18 +138,6 @@
 + (void)setOptInToRemoteAnalytics:(BOOL)optIn;
 
 /**
- *  Optionally enable Instagram photo picking functionality (you'll need to take 5 minutes to register your app https://instagram.com/developer/)
- *  After you have registered, call this method to set everything up.
- *  (Needs the 'Instagram' subspec or this method won't do anything. See
- *  https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/social_photo_sources.md for details)
- *
- *  @param clientID    Your Instagram app's clientID
- *  @param secret      Your Instagram app's secret
- *  @param redirectURI Your Instagram app's redirectURI
- */
-+ (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI;
-
-/**
  *  Optionally enable Apple Pay in your app. Use this method to set your Apple Pay Merchant ID. However there is an extra step involved to get your certificate to Kite's Stripe account for payment validations. Please get in touch with Kite for this: hello@kite.ly
  *  (Needs the 'ApplePay' subspec or this method won't do anything. See
  *  https://github.com/OceanLabs/iOS-Print-SDK/blob/master/Kite-SDK/docs/applepay.md for details)

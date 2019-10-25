@@ -21,14 +21,12 @@
 "Description" = "Beskrivelse";
 "Details" = "Detaljer";
 "Discard Edits" = "Forkast endringer";
-"Do you want to log out of %@?" = "Vil du logge av %@?";
 "Do you want to remove this photo?" = "Ønsker du å fjerne dette bildet?";
 "Done" = "Fullført";
 "Edit" = "Rediger";
 "End Session" = "Avslutt økt";
 "Failed to download phone case mask. Please check your internet connectivity and try again" = "Kunne ikke laste ned telefonetuimaske. Kontroller Internett-tilkoblingen din, og prøv på nytt";
 "Failed to get upload URL. Try again later." = "Kunne ikke hente URL-adressen for opplasting. Prøv igjen senere.";
-"Failed to log in to Instagram. Please check your internet connectivity and try again" = "Kunne ikke logge på Instagram. Kontroller Internett-tilkoblingen din, og prøv på nytt";
 "Failed to synchronize product templates. Please try again." = "Kunne ikke synkronisere produktmaler. Prøv på nytt.";
 "Filters" = "Filtre";
 "Flip" = "Snu";
@@ -41,9 +39,6 @@
 "inches" = "tommer";
 "Large" = "Stor";
 "Let's pick\nan image!" = "La oss velge\net bilde!";
-"Log In" = "Logg på";
-"Log out" = "Logg ut";
-"Login" = "Logg på";
 "Maximum Photos Reached" = "Maksimalt antall bilder er nådd";
 "Medium" = "Medium";
 "MORE ITEMS\nCOMING SOON!" = "FLERE VARER\nKOMMER SNART!";
@@ -106,7 +101,6 @@
 "Yes" = "Ja";
 "Yes, remove it" = "Ja, fjern den";
 "You can add %d more for the same price." = "Du kan legge til %d til for samme pris.";
-"You need to authorize the app to access your Instagram account if you want to import photos from there." = "Du må godkjenne appen for å få tilgang til Instagram-kontoen din hvis du vil importere bilder derfra.";
 "You've only selected %d photo." = "Du har bare valgt %d bilde.";
 "You've only selected %d photos." = "Du har bare valgt %d bilder.";
 "You've selected %d photos." = "Du har valgt %d bilder.";

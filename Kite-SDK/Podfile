@@ -2,19 +2,12 @@ platform :ios, '10.0'
 use_frameworks!
 
 target 'KiteSDK' do
-	pod 'Photobook'
-	pod 'NXOAuth2Client'
-	pod 'FBSDKLoginKit'
-	pod 'FBSDKCoreKit'
+    pod 'Photobook'
 end
 
 target 'KiteSDK-Demo' do
-    pod 'FBSDKCoreKit'
-    pod 'FBSDKLoginKit'
 end
 
 target 'Kite-CI-Deploy' do
-    pod 'FBSDKCoreKit'
-    pod 'FBSDKLoginKit'
     pod 'KITAssetsPickerController', :git => 'https://github.com/kkarayannis/KITAssetsPickerController.git'
 end

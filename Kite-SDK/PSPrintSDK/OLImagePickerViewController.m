@@ -32,7 +32,6 @@
 #import "OLAsset+Private.h"
 #import "OLCustomPickerController.h"
 #import "OLCustomViewControllerPhotoProvider.h"
-#import "OLFacebookSDKWrapper.h"
 #import "OLImagePickerLoginPageViewController.h"
 #import "OLImagePickerPhotosPageViewController.h"
 #import "OLImagePickerProvider.h"
@@ -335,24 +334,6 @@
     [self.providers addObject:provider];
 }
 
-- (void)setupFacebookProvider{
-    if (![OLKiteUtils facebookEnabled]){
-        return;
-    }
-    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:[@[] mutableCopy] name:@"Facebook" icon:[UIImage imageNamedInKiteBundle:@"import_facebook"]];
-    provider.providerType = OLImagePickerProviderTypeFacebook;
-    [self.providers addObject:provider];
-}
-
-- (void)setupInstagramProvider{
-    if (![OLKiteUtils instagramEnabled]){
-        return;
-    }
-    OLImagePickerProvider *provider = [[OLImagePickerProvider alloc] initWithCollections:[@[] mutableCopy] name:@"Instagram" icon:[UIImage imageNamedInKiteBundle:@"import_instagram"]];
-    provider.providerType = OLImagePickerProviderTypeInstagram;
-    [self.providers addObject:provider];
-}
-
 - (void)setupCustomProviders{
     for (OLImagePickerProvider *customProvider in [OLUserSession currentSession].kiteVc.customImageProviders){
         if ([customProvider isKindOfClass:[OLCustomViewControllerPhotoProvider class]]){
@@ -393,8 +374,6 @@
 - (void)setupProviders{
     [self setupRecentsProvider];
     [self setupLibraryProviderAtIndex:self.providers.count];
-    [self setupFacebookProvider];
-    [self setupInstagramProvider];
     [self setupCustomProviders];
     [self setupQRCodeProvider];
     
@@ -561,27 +540,10 @@
     if(index < 0 || index >= self.providers.count){
         return nil;
     }
-    
-    if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram){
-        [[NXOAuth2AccountStore sharedStore] setClientID:[OLKitePrintSDK instagramClientID]
-                                                 secret:[OLKitePrintSDK instagramSecret]
-                                       authorizationURL:[NSURL URLWithString:@"https://api.instagram.com/oauth/authorize"]
-                                               tokenURL:[NSURL URLWithString:@"https://api.instagram.com/oauth/access_token/"]
-                                            redirectURL:[NSURL URLWithString:[OLKitePrintSDK instagramRedirectURI]]
-                                         forAccountType:@"instagram"];
-    }
-    
+        
     OLImagePickerPageViewController *vc;
     
-    if (self.providers[index].providerType == OLImagePickerProviderTypeFacebook && ![OLFacebookSDKWrapper currentAccessToken]){
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
-        vc.pageIndex = index;
-    }
-    else if (self.providers[index].providerType == OLImagePickerProviderTypeInstagram && [[NXOAuth2AccountStore sharedStore] accountsWithAccountType:@"instagram"].count == 0){
-        vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
-        vc.pageIndex = index;
-    }
-    else if (self.providers[index].providerType == OLImagePickerProviderTypePhotoLibrary && [PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized){
+    if (self.providers[index].providerType == OLImagePickerProviderTypePhotoLibrary && [PHPhotoLibrary authorizationStatus] != PHAuthorizationStatusAuthorized){
         vc = [self.storyboard instantiateViewControllerWithIdentifier:@"OLImagePickerLoginPageViewController"];
         vc.pageIndex = index;
     }

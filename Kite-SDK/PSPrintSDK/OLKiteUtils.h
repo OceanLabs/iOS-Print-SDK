@@ -43,8 +43,6 @@
 
 + (BOOL)imageProvidersAvailable;
 + (BOOL)cameraRollEnabled;
-+ (BOOL)facebookEnabled;
-+ (BOOL)instagramEnabled;
 + (BOOL)qrCodeUploadEnabled;
 + (BOOL)recentsAvailable;
 + (NSInteger)numberOfProvidersAvailable;

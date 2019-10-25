@@ -21,14 +21,12 @@
 "Description" = "Popis";
 "Details" = "Podrobnosti";
 "Discard Edits" = "Zahodiť úpravy";
-"Do you want to log out of %@?" = "Chcete sa odhlásiť z %@?";
 "Do you want to remove this photo?" = "Chcete odstrániť túto fotografiu?";
 "Done" = "Hotovo";
 "Edit" = "Upraviť";
 "End Session" = "Ukončiť reláciu";
 "Failed to download phone case mask. Please check your internet connectivity and try again" = "Nepodarilo sa prevziať masku puzdra telefónu. Skontrolujte internetové pripojenie a skúste znova";
 "Failed to get upload URL. Try again later." = "Nepodarilo sa získať webovú adresu na odovzdanie. Skúste znova neskôr.";
-"Failed to log in to Instagram. Please check your internet connectivity and try again" = "Nepodarilo sa prihlásiť na Instagram. Skontrolujte internetové pripojenie a skúste znova";
 "Failed to synchronize product templates. Please try again." = "Nepodarilo sa synchronizovať vzory produktov. Skúste to znova.";
 "Filters" = "Filtre";
 "Flip" = "Prevrátiť";
@@ -41,9 +39,6 @@
 "inches" = "palce";
 "Large" = "Veľký";
 "Let's pick\nan image!" = "Vyberte\nobrázok!";
-"Log In" = "Prihlásiť sa";
-"Log out" = "Odhlásiť sa";
-"Login" = "Prihlásenie";
 "Maximum Photos Reached" = "Dosiahli ste maximálny počet fotografií";
 "Medium" = "Stredný";
 "MORE ITEMS\nCOMING SOON!" = "ČOSKORO PRIBUDNÚ\nĎALŠIE POLOŽKY!";
@@ -106,7 +101,6 @@
 "Yes" = "Áno";
 "Yes, remove it" = "Áno, odstrániť";
 "You can add %d more for the same price." = "Za rovnakú cenu môžete pridať uvedený počet ďalších: %d";
-"You need to authorize the app to access your Instagram account if you want to import photos from there." = "Ak chcete importovať fotografie z Instagramu, musíte aplikácii udeliť oprávnenie na prístup k vášmu účtu.";
 "You've only selected %d photo." = "Vybrali ste iba %d fotografiu.";
 "You've only selected %d photos." = "Vybrali ste iba %d fotografie/fotografií.";
 "You've selected %d photos." = "Vybrali ste %d fotografie/fotografií.";

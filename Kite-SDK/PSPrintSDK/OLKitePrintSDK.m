@@ -199,24 +199,4 @@ static NSString *instagramRedirectURI = nil;
     return allowImageZooming;
 }
 
-#pragma mark - Internal
-
-+ (void)setInstagramEnabledWithClientID:(NSString *_Nonnull)clientID secret:(NSString *_Nonnull)secret redirectURI:(NSString *_Nonnull)redirectURI {
-    instagramSecret = secret;
-    instagramClientID = clientID;
-    instagramRedirectURI = redirectURI;
-}
-
-+ (NSString *)instagramRedirectURI {
-    return instagramRedirectURI;
-}
-
-+ (NSString *)instagramSecret {
-    return instagramSecret;
-}
-
-+ (NSString *)instagramClientID {
-    return instagramClientID;
-}
-
 @end

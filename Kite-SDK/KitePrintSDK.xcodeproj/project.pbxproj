@@ -72,15 +72,6 @@
 		2E451E001D9555620080F1C1 /* OLKiteUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EA13E221BBC242F005F3D71 /* OLKiteUtils.m */; };
 		2E451E011D9555620080F1C1 /* OLImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EBDA6DC1CEB1B0500397082 /* OLImageDownloader.m */; };
 		2E451E021D9555620080F1C1 /* OLImageDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5BDC3D1CEDBF8200257B1A /* OLImageDownloadDelegate.m */; };
-		2E451E071D9555860080F1C1 /* OLInstagramMediaRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */; };
-		2E451E081D9555860080F1C1 /* OLInstagramImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */; };
-		2E451E091D9555860080F1C1 /* OLInstagramImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */; };
-		2E451E0A1D9555860080F1C1 /* OLFacebookImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66ED1D479617002524A4 /* OLFacebookImage.m */; };
-		2E451E0B1D9555860080F1C1 /* OLFacebookAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */; };
-		2E451E0C1D9555860080F1C1 /* OLFacebookAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */; };
-		2E451E0D1D9555870080F1C1 /* OLFacebookPhotosForAlbumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */; };
-		2E451E0E1D9555870080F1C1 /* OLFacebookImagePickerConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */; };
-		2E451E0F1D9555870080F1C1 /* OLFacebookSDKWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */; };
 		2E451E141D9555870080F1C1 /* OLMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F04C1D93CDE100014C19 /* OLMarkdownParser.m */; };
 		2E451E151D9555870080F1C1 /* OLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E10F0331D93CC0900014C19 /* OLCircularProgressView.m */; };
 		2E451E271D9555870080F1C1 /* OLColorSelectionCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E67B9291D267A3E00914D56 /* OLColorSelectionCollectionViewCell.m */; };
@@ -100,10 +91,7 @@
 		2E451E381D9555870080F1C1 /* OLImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E884F451D37B566007CA45A /* OLImagePickerViewController.m */; };
 		2E451E391D9555870080F1C1 /* OLImagePickerPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */; };
 		2E451E3A1D9555870080F1C1 /* OLImagePickerPhotosPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */; };
-		2E451E3B1D9555870080F1C1 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */; };
-		2E451E3C1D9555870080F1C1 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */; };
 		2E451E3D1D9555870080F1C1 /* OLImagePickerLoginPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */; };
-		2E451E3E1D9555870080F1C1 /* OLInstagramLoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */; };
 		2E451E421D9555D30080F1C1 /* OLImageEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0A72651A6FB07000BC5AE7 /* OLImageEditViewController.m */; };
 		2E451E431D9555D30080F1C1 /* OLSingleProductReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5259001A9C91DF00DBC69B /* OLSingleProductReviewViewController.m */; };
 		2E451E441D9555D30080F1C1 /* OLCaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E20BD851AD4229700FB2446 /* OLCaseViewController.m */; };
@@ -208,15 +196,6 @@
 		2EB8FE021D95685100E26BDF /* OLKiteUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EA13E211BBC242F005F3D71 /* OLKiteUtils.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE031D95685100E26BDF /* OLImageDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE041D95685100E26BDF /* OLImageDownloadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5BDC3C1CEDBF8200257B1A /* OLImageDownloadDelegate.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE091D95685100E26BDF /* OLInstagramMediaRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612F71D48AFE800B48E29 /* OLInstagramMediaRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE0A1D95685100E26BDF /* OLInstagramImagePickerConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612F91D48AFE800B48E29 /* OLInstagramImagePickerConstants.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE0B1D95685100E26BDF /* OLInstagramImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612FB1D48AFE800B48E29 /* OLInstagramImage.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE0C1D95685100E26BDF /* OLFacebookImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66EC1D479617002524A4 /* OLFacebookImage.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE0D1D95685100E26BDF /* OLFacebookAlbum.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66DA1D4795EE002524A4 /* OLFacebookAlbum.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE0E1D95685100E26BDF /* OLFacebookAlbumRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66DC1D4795EE002524A4 /* OLFacebookAlbumRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE0F1D95685100E26BDF /* OLFacebookPhotosForAlbumRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66DE1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE101D95685100E26BDF /* OLFacebookImagePickerConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66F91D47A653002524A4 /* OLFacebookImagePickerConstants.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE111D95685100E26BDF /* OLFacebookSDKWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB00A1A1D92735300668B29 /* OLFacebookSDKWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE181D95685100E26BDF /* OLMarkdownParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F04B1D93CDE100014C19 /* OLMarkdownParser.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE191D95685100E26BDF /* OLCircularProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E10F0321D93CC0900014C19 /* OLCircularProgressView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE301D95685100E26BDF /* OLColorSelectionCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E67B9281D267A3E00914D56 /* OLColorSelectionCollectionViewCell.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -236,10 +215,7 @@
 		2EB8FE411D95685100E26BDF /* OLImagePickerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E884F441D37B566007CA45A /* OLImagePickerViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE421D95685100E26BDF /* OLImagePickerPageViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66CD1D477B78002524A4 /* OLImagePickerPageViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE431D95685100E26BDF /* OLImagePickerPhotosPageViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E28CDFB1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE441D95685100E26BDF /* OLImagePickerPhotosPageViewController+Facebook.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612E41D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE451D95685100E26BDF /* OLImagePickerPhotosPageViewController+Instagram.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612EA1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE461D95685100E26BDF /* OLImagePickerLoginPageViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E1E66D31D478052002524A4 /* OLImagePickerLoginPageViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		2EB8FE471D95685100E26BDF /* OLInstagramLoginWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EB612F01D48AF9400B48E29 /* OLInstagramLoginWebViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE481D95685100E26BDF /* OLImageEditViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0A72641A6FB07000BC5AE7 /* OLImageEditViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE491D95685100E26BDF /* OLSingleProductReviewViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E5258FF1A9C91DF00DBC69B /* OLSingleProductReviewViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2EB8FE4A1D95685100E26BDF /* OLCaseViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E20BD841AD4229700FB2446 /* OLCaseViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -378,16 +354,6 @@
 		2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerPageViewController.m; sourceTree = "<group>"; };
 		2E1E66D31D478052002524A4 /* OLImagePickerLoginPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImagePickerLoginPageViewController.h; sourceTree = "<group>"; };
 		2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLImagePickerLoginPageViewController.m; sourceTree = "<group>"; };
-		2E1E66DA1D4795EE002524A4 /* OLFacebookAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookAlbum.h; sourceTree = "<group>"; };
-		2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookAlbum.m; sourceTree = "<group>"; };
-		2E1E66DC1D4795EE002524A4 /* OLFacebookAlbumRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookAlbumRequest.h; sourceTree = "<group>"; };
-		2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookAlbumRequest.m; sourceTree = "<group>"; };
-		2E1E66DE1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookPhotosForAlbumRequest.h; sourceTree = "<group>"; };
-		2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookPhotosForAlbumRequest.m; sourceTree = "<group>"; };
-		2E1E66EC1D479617002524A4 /* OLFacebookImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookImage.h; sourceTree = "<group>"; };
-		2E1E66ED1D479617002524A4 /* OLFacebookImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookImage.m; sourceTree = "<group>"; };
-		2E1E66F91D47A653002524A4 /* OLFacebookImagePickerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookImagePickerConstants.h; sourceTree = "<group>"; };
-		2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookImagePickerConstants.m; sourceTree = "<group>"; };
 		2E20BD841AD4229700FB2446 /* OLCaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCaseViewController.h; sourceTree = "<group>"; };
 		2E20BD851AD4229700FB2446 /* OLCaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCaseViewController.m; sourceTree = "<group>"; };
 		2E23EB981D5091FC00E2BF42 /* CI-Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "CI-Main.storyboard"; sourceTree = "<group>"; };
@@ -497,24 +463,10 @@
 		2EAD11501BD79ED0000BC80E /* OLProductDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLProductDetailsViewController.h; sourceTree = "<group>"; };
 		2EAD11511BD79ED0000BC80E /* OLProductDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLProductDetailsViewController.m; sourceTree = "<group>"; };
 		2EADD8651BE79D6D0051CD31 /* KiteSDK-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KiteSDK-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2EB00A1A1D92735300668B29 /* OLFacebookSDKWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLFacebookSDKWrapper.h; sourceTree = "<group>"; };
-		2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLFacebookSDKWrapper.m; sourceTree = "<group>"; };
 		2EB0DC741DC8DB7400B556CE /* OL3DProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OL3DProductViewController.h; sourceTree = "<group>"; };
 		2EB0DC751DC8DB7400B556CE /* OL3DProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OL3DProductViewController.m; sourceTree = "<group>"; };
 		2EB1C40F1B551D6000EFE0D0 /* OLKiteABTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLKiteABTesting.h; sourceTree = "<group>"; };
 		2EB1C4101B551D6000EFE0D0 /* OLKiteABTesting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLKiteABTesting.m; sourceTree = "<group>"; };
-		2EB612E41D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLImagePickerPhotosPageViewController+Facebook.h"; sourceTree = "<group>"; };
-		2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLImagePickerPhotosPageViewController+Facebook.m"; sourceTree = "<group>"; };
-		2EB612EA1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OLImagePickerPhotosPageViewController+Instagram.h"; sourceTree = "<group>"; };
-		2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OLImagePickerPhotosPageViewController+Instagram.m"; sourceTree = "<group>"; };
-		2EB612F01D48AF9400B48E29 /* OLInstagramLoginWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramLoginWebViewController.h; sourceTree = "<group>"; };
-		2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramLoginWebViewController.m; sourceTree = "<group>"; };
-		2EB612F71D48AFE800B48E29 /* OLInstagramMediaRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramMediaRequest.h; sourceTree = "<group>"; };
-		2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramMediaRequest.m; sourceTree = "<group>"; };
-		2EB612F91D48AFE800B48E29 /* OLInstagramImagePickerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramImagePickerConstants.h; sourceTree = "<group>"; };
-		2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramImagePickerConstants.m; sourceTree = "<group>"; };
-		2EB612FB1D48AFE800B48E29 /* OLInstagramImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLInstagramImage.h; sourceTree = "<group>"; };
-		2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLInstagramImage.m; sourceTree = "<group>"; };
 		2EBA8EE82114580400BB87DE /* OLCountry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OLCountry.m; sourceTree = "<group>"; };
 		2EBA8EE92114580400BB87DE /* OLCountry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLCountry.h; sourceTree = "<group>"; };
 		2EBDA6DB1CEB1B0500397082 /* OLImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OLImageDownloader.h; sourceTree = "<group>"; };
@@ -789,25 +741,6 @@
 			name = "3rd Party";
 			sourceTree = "<group>";
 		};
-		2E1E66D91D4795C8002524A4 /* Facebook */ = {
-			isa = PBXGroup;
-			children = (
-				2E1E66EC1D479617002524A4 /* OLFacebookImage.h */,
-				2E1E66ED1D479617002524A4 /* OLFacebookImage.m */,
-				2E1E66DA1D4795EE002524A4 /* OLFacebookAlbum.h */,
-				2E1E66DB1D4795EE002524A4 /* OLFacebookAlbum.m */,
-				2E1E66DC1D4795EE002524A4 /* OLFacebookAlbumRequest.h */,
-				2E1E66DD1D4795EE002524A4 /* OLFacebookAlbumRequest.m */,
-				2E1E66DE1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.h */,
-				2E1E66DF1D4795EE002524A4 /* OLFacebookPhotosForAlbumRequest.m */,
-				2E1E66F91D47A653002524A4 /* OLFacebookImagePickerConstants.h */,
-				2E1E66FA1D47A653002524A4 /* OLFacebookImagePickerConstants.m */,
-				2EB00A1A1D92735300668B29 /* OLFacebookSDKWrapper.h */,
-				2EB00A1B1D92735300668B29 /* OLFacebookSDKWrapper.m */,
-			);
-			name = Facebook;
-			sourceTree = "<group>";
-		};
 		2E1E66F21D479674002524A4 /* Image Picker */ = {
 			isa = PBXGroup;
 			children = (
@@ -817,14 +750,8 @@
 				2E1E66CE1D477B78002524A4 /* OLImagePickerPageViewController.m */,
 				2E28CDFB1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.h */,
 				2E28CDFC1D38EEAF00E9AFEA /* OLImagePickerPhotosPageViewController.m */,
-				2EB612E41D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.h */,
-				2EB612E51D489E4700B48E29 /* OLImagePickerPhotosPageViewController+Facebook.m */,
-				2EB612EA1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.h */,
-				2EB612EB1D48AF3200B48E29 /* OLImagePickerPhotosPageViewController+Instagram.m */,
 				2E1E66D31D478052002524A4 /* OLImagePickerLoginPageViewController.h */,
 				2E1E66D41D478052002524A4 /* OLImagePickerLoginPageViewController.m */,
-				2EB612F01D48AF9400B48E29 /* OLInstagramLoginWebViewController.h */,
-				2EB612F11D48AF9400B48E29 /* OLInstagramLoginWebViewController.m */,
 				2EEF0D001D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h */,
 				2EEF0D0B1D9A781700C81086 /* OLCustomPickerController.h */,
 				E2AABA0F1C6CFA2B0007C1D7 /* OLQRCodeUploadViewController.h */,
@@ -920,8 +847,6 @@
 			isa = PBXGroup;
 			children = (
 				2ED2B7B61DB8B4DF0036B536 /* HP SDK */,
-				2EB612F61D48AFDA00B48E29 /* Instagram */,
-				2E1E66D91D4795C8002524A4 /* Facebook */,
 			);
 			name = Wrappers;
 			sourceTree = "<group>";
@@ -958,19 +883,6 @@
 			);
 			name = Categories;
 			path = ..;
-			sourceTree = "<group>";
-		};
-		2EB612F61D48AFDA00B48E29 /* Instagram */ = {
-			isa = PBXGroup;
-			children = (
-				2EB612F71D48AFE800B48E29 /* OLInstagramMediaRequest.h */,
-				2EB612F81D48AFE800B48E29 /* OLInstagramMediaRequest.m */,
-				2EB612F91D48AFE800B48E29 /* OLInstagramImagePickerConstants.h */,
-				2EB612FA1D48AFE800B48E29 /* OLInstagramImagePickerConstants.m */,
-				2EB612FB1D48AFE800B48E29 /* OLInstagramImage.h */,
-				2EB612FC1D48AFE800B48E29 /* OLInstagramImage.m */,
-			);
-			name = Instagram;
 			sourceTree = "<group>";
 		};
 		2ED2B7B61DB8B4DF0036B536 /* HP SDK */ = {
@@ -1292,7 +1204,6 @@
 				2E7ECBA51FA1FE4E00F90AB3 /* OLBasketItemTableViewCell.h in Headers */,
 				2EB8FDEF1D95685100E26BDF /* OLGreetingCardPrintJob.h in Headers */,
 				2EBA8EEB2114580400BB87DE /* OLCountry.h in Headers */,
-				2EB8FE441D95685100E26BDF /* OLImagePickerPhotosPageViewController+Facebook.h in Headers */,
 				2EB8FE6A1D95685100E26BDF /* OLKiteViewController.h in Headers */,
 				6FE9754F223FC654008BACA2 /* OLAPIClient.h in Headers */,
 				2EB8FE3B1D95685100E26BDF /* OLProductHomeViewController.h in Headers */,
@@ -1300,7 +1211,6 @@
 				2E0B5B4D1ECC5394005C0C03 /* OLTouchReporterView.h in Headers */,
 				2EB8FE691D95685100E26BDF /* UIView+RMUtils.h in Headers */,
 				2EB8FDE31D95685100E26BDF /* OLImagePickerProvider.h in Headers */,
-				2EB8FE471D95685100E26BDF /* OLInstagramLoginWebViewController.h in Headers */,
 				2E0290F01F26356000F7A5B0 /* OLCollectionViewController.h in Headers */,
 				2EB8FE031D95685100E26BDF /* OLImageDownloader.h in Headers */,
 				2EB8FE781D95685100E26BDF /* UIImageView+FadeIn.h in Headers */,
@@ -1311,11 +1221,8 @@
 				2E149AE81DB7B00D000E5849 /* OLProductTemplateCollection.h in Headers */,
 				2EB8FE491D95685100E26BDF /* OLSingleProductReviewViewController.h in Headers */,
 				2E451E9A1D9565D40080F1C1 /* OLKitePrintSDK.h in Headers */,
-				2EB8FE451D95685100E26BDF /* OLImagePickerPhotosPageViewController+Instagram.h in Headers */,
 				2EB8FE721D95685100E26BDF /* UIColor+OLHexString.h in Headers */,
 				2EB8FDD61D95685100E26BDF /* OLProductTemplateSyncRequest.h in Headers */,
-				2EB8FE091D95685100E26BDF /* OLInstagramMediaRequest.h in Headers */,
-				2EB8FE101D95685100E26BDF /* OLFacebookImagePickerConstants.h in Headers */,
 				2EB8FE4C1D95685100E26BDF /* OLPackProductViewController.h in Headers */,
 				2EB8FE4A1D95685100E26BDF /* OLCaseViewController.h in Headers */,
 				2EB8FE3A1D95685100E26BDF /* OLInfoBanner.h in Headers */,
@@ -1330,29 +1237,23 @@
 				2EB8FE4D1D95685100E26BDF /* OLFrameOrderReviewViewController.h in Headers */,
 				2EC455DA1DB669D700DC5FD1 /* OLPlaceholderAsset.h in Headers */,
 				2EB8FDEB1D95685100E26BDF /* OLUserSession.h in Headers */,
-				2EB8FE0A1D95685100E26BDF /* OLInstagramImagePickerConstants.h in Headers */,
 				2EB0DC761DC8DB7400B556CE /* OL3DProductViewController.h in Headers */,
 				2E7D39721DAE39820046D255 /* OLImageRenderOptions.h in Headers */,
 				2E7FB64E1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.h in Headers */,
 				2EB8FDDE1D95685100E26BDF /* OLAsset.h in Headers */,
-				2EB8FE0D1D95685100E26BDF /* OLFacebookAlbum.h in Headers */,
 				2EB8FDFF1D95685100E26BDF /* OLAnalytics.h in Headers */,
 				2EB8FE6D1D95685100E26BDF /* OLInfoPageViewController.h in Headers */,
 				2EB8FE7C1D95685100E26BDF /* UIImage+ImageNamedInKiteBundle.h in Headers */,
-				2EB8FE0F1D95685100E26BDF /* OLFacebookPhotosForAlbumRequest.h in Headers */,
 				2E65FEA01E4E058400A301BB /* OLTouchTolerantView.h in Headers */,
 				2EB8FDFA1D95685100E26BDF /* OLProductGroup.h in Headers */,
 				2EB8FDFB1D95685100E26BDF /* OLProduct.h in Headers */,
-				2EB8FE0B1D95685100E26BDF /* OLInstagramImage.h in Headers */,
 				2E4638D921089E7700ECC010 /* OLImagePickerNavigationControllerViewController.h in Headers */,
 				2E870D3A1E49EF2100623C54 /* OLFulfilmentItem.h in Headers */,
-				2EB8FE0C1D95685100E26BDF /* OLFacebookImage.h in Headers */,
 				2EEF0D011D9964C600C81086 /* OLCustomImagePickerViewControllerDelegate.h in Headers */,
 				2EB8FE001D95685100E26BDF /* OLKiteABTesting.h in Headers */,
 				2EB8FE3C1D95685100E26BDF /* OLProductTypeSelectionViewController.h in Headers */,
 				2E0290EF1F26356000F7A5B0 /* OLNavigationController.h in Headers */,
 				2EB8FDE51D95685100E26BDF /* OLCustomViewControllerPhotoProvider.h in Headers */,
-				2EB8FE111D95685100E26BDF /* OLFacebookSDKWrapper.h in Headers */,
 				2EB8FDD11D95671400E26BDF /* OLConstants.h in Headers */,
 				2EB8FE7B1D95685100E26BDF /* UIView+RoundRect.h in Headers */,
 				2EB8FE021D95685100E26BDF /* OLKiteUtils.h in Headers */,
@@ -1370,7 +1271,6 @@
 				2E07BD1721186009006FA50B /* OLCalendarPrintJob.h in Headers */,
 				2EB8FE041D95685100E26BDF /* OLImageDownloadDelegate.h in Headers */,
 				2EB8FE321D95685100E26BDF /* OLCircleMaskCollectionViewCell.h in Headers */,
-				2EB8FE0E1D95685100E26BDF /* OLFacebookAlbumRequest.h in Headers */,
 				2EB8FE481D95685100E26BDF /* OLImageEditViewController.h in Headers */,
 				2EB8FE3D1D95685100E26BDF /* OLProductOverviewViewController.h in Headers */,
 				2EB8FDED1D95685100E26BDF /* OLPrintJob.h in Headers */,
@@ -1652,21 +1552,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E451DE91D95555C0080F1C1 /* OLUserSession.m in Sources */,
-				2E451E0E1D9555870080F1C1 /* OLFacebookImagePickerConstants.m in Sources */,
 				2E0290E81F26333200F7A5B0 /* OLKioskLandingViewController.m in Sources */,
 				2E451E3A1D9555870080F1C1 /* OLImagePickerPhotosPageViewController.m in Sources */,
 				2E451DED1D95555C0080F1C1 /* OLApparelPrintJob.m in Sources */,
-				2E451E3B1D9555870080F1C1 /* OLImagePickerPhotosPageViewController+Facebook.m in Sources */,
 				2E0290E21F26330300F7A5B0 /* OLViewController.m in Sources */,
 				2E451DFE1D9555620080F1C1 /* OLKiteABTesting.m in Sources */,
 				2E149AE91DB7B00D000E5849 /* OLProductTemplateCollection.m in Sources */,
 				2EB8FE7E1D95692000E26BDF /* UIColor+OLHexString.m in Sources */,
 				2E451DE01D9555540080F1C1 /* OLImagePickerProvider.m in Sources */,
 				2EB0DC771DC8DB7400B556CE /* OL3DProductViewController.m in Sources */,
-				2E451E3C1D9555870080F1C1 /* OLImagePickerPhotosPageViewController+Instagram.m in Sources */,
 				2E451DE81D95555C0080F1C1 /* OLKitePrintSDK.m in Sources */,
 				2E451E601D9555EF0080F1C1 /* OLInfoPageViewController.m in Sources */,
-				2E451E0C1D9555860080F1C1 /* OLFacebookAlbumRequest.m in Sources */,
 				2E451DF41D95555D0080F1C1 /* OLProductTemplateOption.m in Sources */,
 				2E451E331D9555870080F1C1 /* OLProductTypeSelectionViewController.m in Sources */,
 				2E870D3B1E49EF2100623C54 /* OLFulfilmentItem.m in Sources */,
@@ -1676,7 +1572,6 @@
 				2E9CB6141EAE22710079F7AE /* OLShippingClass.m in Sources */,
 				2E451DDF1D9555540080F1C1 /* OLTextOnPhoto.m in Sources */,
 				2E451E391D9555870080F1C1 /* OLImagePickerPageViewController.m in Sources */,
-				2E451E0A1D9555860080F1C1 /* OLFacebookImage.m in Sources */,
 				2E4638DA21089E7700ECC010 /* OLImagePickerNavigationControllerViewController.m in Sources */,
 				2E451E291D9555870080F1C1 /* OLCircleMaskCollectionViewCell.m in Sources */,
 				2EC455DB1DB669D700DC5FD1 /* OLPlaceholderAsset.m in Sources */,
@@ -1710,7 +1605,6 @@
 				2E0290E41F26330300F7A5B0 /* OLCollectionViewController.m in Sources */,
 				2ECA34ED1E82743800D56220 /* OLApparelViewController.m in Sources */,
 				2E451DEF1D95555C0080F1C1 /* OLProductPrintJob.m in Sources */,
-				2E451E0D1D9555870080F1C1 /* OLFacebookPhotosForAlbumRequest.m in Sources */,
 				2EBA8EEA2114580400BB87DE /* OLCountry.m in Sources */,
 				2E451E301D9555870080F1C1 /* OLEditingToolsView.m in Sources */,
 				2E451DDB1D9555540080F1C1 /* OLURLShortener.m in Sources */,
@@ -1721,7 +1615,6 @@
 				2E451DDC1D9555540080F1C1 /* OLAsset.m in Sources */,
 				2E7FB64F1E8BEC6900777078 /* NSMutableArray+OLUserSelectedAssetsUtils.m in Sources */,
 				2EB8FE871D95692000E26BDF /* UIView+RoundRect.m in Sources */,
-				2E451E0F1D9555870080F1C1 /* OLFacebookSDKWrapper.m in Sources */,
 				2E451E2F1D9555870080F1C1 /* OLCircleSelectedCollectionViewCell.m in Sources */,
 				2E5B27341EC06A4700F3AED3 /* OLCollagePosterViewController.m in Sources */,
 				2E451DDD1D9555540080F1C1 /* OLImageCachingManager.m in Sources */,
@@ -1733,7 +1626,6 @@
 				2E12DBC91E795511000A6CEF /* UIView+AutoLayoutHelper.m in Sources */,
 				2E451DF91D95555D0080F1C1 /* OLArtboardTemplate.m in Sources */,
 				2E451E351D9555870080F1C1 /* OLProductOverviewPageContentViewController.m in Sources */,
-				2E451E0B1D9555860080F1C1 /* OLFacebookAlbum.m in Sources */,
 				2E451E5D1D9555EC0080F1C1 /* OLQRCodeUploadViewController.m in Sources */,
 				2E451E361D9555870080F1C1 /* OLProductDetailsViewController.m in Sources */,
 				2E451DF81D95555D0080F1C1 /* OLProduct.m in Sources */,
@@ -1742,22 +1634,18 @@
 				2E07BD1821186009006FA50B /* OLCalendarPrintJob.m in Sources */,
 				2E451DDE1D9555540080F1C1 /* OLPhotoEdits.m in Sources */,
 				2E451E321D9555870080F1C1 /* OLProductHomeViewController.m in Sources */,
-				2E451E091D9555860080F1C1 /* OLInstagramImage.m in Sources */,
 				6FE97550223FC654008BACA2 /* OLAPIClient.m in Sources */,
 				2E451E021D9555620080F1C1 /* OLImageDownloadDelegate.m in Sources */,
 				2E451E281D9555870080F1C1 /* OLButtonCollectionViewCell.m in Sources */,
-				2E451E071D9555860080F1C1 /* OLInstagramMediaRequest.m in Sources */,
 				2E451DF51D95555D0080F1C1 /* OLProductTemplateOptionChoice.m in Sources */,
 				2E451E641D9556090080F1C1 /* NSDictionary+RequestParameterData.m in Sources */,
 				2E451E2C1D9555870080F1C1 /* OLImageCropper.m in Sources */,
-				2E451E3E1D9555870080F1C1 /* OLInstagramLoginWebViewController.m in Sources */,
 				2E451E3D1D9555870080F1C1 /* OLImagePickerLoginPageViewController.m in Sources */,
 				2E451E141D9555870080F1C1 /* OLMarkdownParser.m in Sources */,
 				2E451DE11D9555540080F1C1 /* OLImagePickerProviderCollection.m in Sources */,
 				2E451DE21D9555540080F1C1 /* OLCustomViewControllerPhotoProvider.m in Sources */,
 				2E451DD41D9555540080F1C1 /* OLProductTemplateSyncRequest.m in Sources */,
 				2E451E5A1D9555DE0080F1C1 /* RMImageCropper.m in Sources */,
-				2E451E081D9555860080F1C1 /* OLInstagramImagePickerConstants.m in Sources */,
 				2E451DEB1D95555C0080F1C1 /* OLPostcardPrintJob.m in Sources */,
 				2E451DF31D95555D0080F1C1 /* OLProductTemplate.m in Sources */,
 				2E451E2E1D9555870080F1C1 /* OLSelectedEffectButton.m in Sources */,
@@ -1918,7 +1806,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KiteSDK-Demo.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1936,7 +1824,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 8.1.1;
+				MARKETING_VERSION = 8.2.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2014,7 +1902,7 @@
 				CODE_SIGN_ENTITLEMENTS = "KiteSDK-Demo.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Kite Tech LTD (L78L4U72YJ)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2032,7 +1920,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 8.1.1;
+				MARKETING_VERSION = 8.2.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
