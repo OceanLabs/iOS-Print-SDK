@@ -1,4 +1,4 @@
-# iOS SDK
+# iOS Kite SDK
 
 ![Kite](Kite-SDK/docs/kite.png)
 
